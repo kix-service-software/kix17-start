@@ -857,29 +857,35 @@ sub SendEmail {
             }
         }
 
-        my $ValidationResult = $BackendObject->EditFieldValueValidate(
-            DynamicFieldConfig   => $DynamicFieldConfig,
-            PossibleValuesFilter => $PossibleValuesFilter,
-            ParamObject          => $ParamObject,
-            Mandatory =>
-                $Config->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
-        );
+        my $ValidationResult;
 
-        if ( !IsHashRefWithData($ValidationResult) ) {
-            return $LayoutObject->ErrorScreen(
-                Message =>
-                    $LayoutObject->{LanguageObject}
-                    ->Translate(
-                    'Could not perform validation on field %s!',
-                    $DynamicFieldConfig->{Label}
-                    ),
-                Comment => Translatable('Please contact the administrator.'),
+        # do not validate if field is disabled
+        if ( $DynamicFieldConfig->{Shown} ) {
+
+            $ValidationResult = $BackendObject->EditFieldValueValidate(
+                DynamicFieldConfig   => $DynamicFieldConfig,
+                PossibleValuesFilter => $PossibleValuesFilter,
+                ParamObject          => $ParamObject,
+                Mandatory =>
+                    $Config->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
             );
-        }
 
-        # propagate validation error to the Error variable to be detected by the frontend
-        if ( $ValidationResult->{ServerError} ) {
-            $Error{ $DynamicFieldConfig->{Name} } = ' ServerError';
+            if ( !IsHashRefWithData($ValidationResult) ) {
+                return $LayoutObject->ErrorScreen(
+                    Message =>
+                        $LayoutObject->{LanguageObject}
+                        ->Translate(
+                        'Could not perform validation on field %s!',
+                        $DynamicFieldConfig->{Label}
+                        ),
+                    Comment => Translatable('Please contact the administrator.'),
+                );
+            }
+
+            # propagate validation error to the Error variable to be detected by the frontend
+            if ( $ValidationResult->{ServerError} ) {
+                $Error{ $DynamicFieldConfig->{Name} } = ' ServerError';
+            }
         }
 
         # get field html
@@ -1341,6 +1347,7 @@ sub SendEmail {
     DYNAMICFIELD:
     for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
         next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
+        next DYNAMICFIELD if !$DynamicFieldConfig->{Shown};
 
         # set the object ID (TicketID or ArticleID) depending on the field configuration
         my $ObjectID = $DynamicFieldConfig->{ObjectType} eq 'Article' ? $ArticleID : $Self->{TicketID};
