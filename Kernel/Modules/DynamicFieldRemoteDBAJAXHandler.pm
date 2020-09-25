@@ -65,7 +65,14 @@ sub Run {
                 Priority => 'error',
                 Message => "DynamicFieldRemoteDBAJAXHandler: DynamicField doesn't refer to type RemoteDB.",
             );
-            return;
+
+            # send JSON response
+            return $Self->{LayoutObject}->Attachment(
+                ContentType => 'application/json; charset=' . $Self->{LayoutObject}->{Charset},
+                Content     => '""',
+                Type        => 'inline',
+                NoCache     => 1,
+            );
         }
 
         # get needed params
@@ -289,7 +296,13 @@ sub Run {
                             SQL   => $SQL,
                         );
                         if ( !$Success ) {
-                            return;
+                            # send JSON response
+                            return $Self->{LayoutObject}->Attachment(
+                                ContentType => 'application/json; charset=' . $Self->{LayoutObject}->{Charset},
+                                Content     => '""',
+                                Type        => 'inline',
+                                NoCache     => 1,
+                            );
                         }
 
                         my $MaxCount = 1;
@@ -513,7 +526,13 @@ sub Run {
                         SQL   => $SQL,
                     );
                     if ( !$Success ) {
-                        return;
+                        # send JSON response
+                        return $Self->{LayoutObject}->Attachment(
+                            ContentType => 'application/json; charset=' . $Self->{LayoutObject}->{Charset},
+                            Content     => '""',
+                            Type        => 'inline',
+                            NoCache     => 1,
+                        );
                     }
 
                     RESULT:
@@ -574,7 +593,7 @@ sub Run {
     # send JSON response
     return $Self->{LayoutObject}->Attachment(
         ContentType => 'application/json; charset=' . $Self->{LayoutObject}->{Charset},
-        Content     => $JSON || '',
+        Content     => $JSON || '""',
         Type        => 'inline',
         NoCache     => 1,
     );
