@@ -342,17 +342,21 @@ sub Sender {
         QueueID => $Param{QueueID},
     );
 
+    # check config for agent real name
+    my $UseAgentRealName = $ConfigObject->Get('Ticket::DefineEmailFrom');
+
     # get data from current agent
     my %UserData = $UserObject->GetUserData(
         UserID        => $Param{UserID},
         NoOutOfOffice => 1,
     );
+
+    # use config for agent real name if agent preference is set
     if ( $UserData{'TicketDefineEmailFrom'} ) {
         $UseAgentRealName = $UserData{'TicketDefineEmailFrom'};
     }
 
-    # check config for agent real name
-    my $UseAgentRealName = $ConfigObject->Get('Ticket::DefineEmailFrom');
+    # prepare real name
     if ( $UseAgentRealName && $UseAgentRealName =~ /^(AgentName|AgentNameSystemAddressName)$/ ) {
 
         # set real name with user name
