@@ -452,6 +452,8 @@ sub Data {
         = 'Meine automatisch abonnierten Suchprofilkategorien';
     $Lang->{'Auto-subscribe search profiles from other agents depending on selected categories.'}
         = 'Automatisches Abonnieren von Suchprofilen anderer Agenten auf der Grundlage von gewählten Kategorien.';
+    $Lang->{'"From" field format'} = '"Von"-Feld Format';
+    $Lang->{'System setting'}      = 'System-Einstellung';
 
     # changed translations
     $Lang->{'Article(s)'}    = 'Artikel';
