@@ -245,17 +245,6 @@ sub Run {
         }
 # ---
     }
-
-    # convert dynamic field values into a structure for ACLs
-    my %DynamicFieldACLParameters;
-    DYNAMICFIELD:
-    for my $DynamicField ( sort keys %DynamicFieldValues ) {
-        next DYNAMICFIELD if !$DynamicField;
-        next DYNAMICFIELD if !$DynamicFieldValues{$DynamicField};
-
-        $DynamicFieldACLParameters{ 'DynamicField_' . $DynamicField } = $DynamicFieldValues{$DynamicField};
-    }
-    $GetParam{DynamicField} = \%DynamicFieldACLParameters;
 # ---
 # ITSMIncidentProblemManagement
 # ---
@@ -391,14 +380,33 @@ sub Run {
                 && IsHashRefWithData( $TemplateData{$Key} )
             ) {
                 for my $DynamicField ( keys %{ $TemplateData{$Key} } ) {
-                    $GetParam{$DynamicField} = $TemplateData{$Key}->{$DynamicField};
+                    my $DynamicFieldName = $DynamicField;
+                    $DynamicFieldName   =~ s/^DynamicField_//;
+
+                    $GetParam{$DynamicField}                 = $TemplateData{$Key}->{$DynamicField};
+                    $DynamicFieldValues{ $DynamicFieldName } = $TemplateData{$Key}->{$DynamicField};
                 }
             }
         }
-        @MultipleCustomer = @{ $TemplateData{MultipleCustomer} }
-            if defined $TemplateData{MultipleCustomer}
-                && ref $TemplateData{MultipleCustomer} eq 'ARRAY';
+
+        if (
+            defined $TemplateData{MultipleCustomer}
+            && ref( $TemplateData{MultipleCustomer} eq 'ARRAY' )
+        ) {
+            @MultipleCustomer = @{ $TemplateData{MultipleCustomer} };
+        }
     }
+
+    # convert dynamic field values into a structure for ACLs
+    my %DynamicFieldACLParameters;
+    DYNAMICFIELD:
+    for my $DynamicField ( sort keys %DynamicFieldValues ) {
+        next DYNAMICFIELD if !$DynamicField;
+        next DYNAMICFIELD if !$DynamicFieldValues{$DynamicField};
+
+        $DynamicFieldACLParameters{ 'DynamicField_' . $DynamicField } = $DynamicFieldValues{$DynamicField};
+    }
+    $GetParam{DynamicField} = \%DynamicFieldACLParameters;
 
     if ( !$Self->{Subaction} || $Self->{Subaction} eq 'Created' ) {
 
