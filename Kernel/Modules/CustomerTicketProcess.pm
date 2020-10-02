@@ -4625,12 +4625,8 @@ sub _GetServices {
     # get service
     my %Service;
 
-    # check needed
-    return \%Service if !$Param{QueueID} && !$Param{TicketID};
-
     # get options for default services for unknown customers
-    my $DefaultServiceUnknownCustomer
-        = $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Service::Default::UnknownCustomer');
+    my $DefaultServiceUnknownCustomer = $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Service::Default::UnknownCustomer');
 
     # if no CustomerUserID is present, consider the logged in customer
     if ( !$Param{CustomerUserID} ) {
@@ -4640,7 +4636,10 @@ sub _GetServices {
     # check if still no CustomerUserID is selected
     # if $DefaultServiceUnknownCustomer = 0 leave CustomerUserID empty, it will not get any services
     # if $DefaultServiceUnknownCustomer = 1 set CustomerUserID to get default services
-    if ( !$Param{CustomerUserID} && $DefaultServiceUnknownCustomer ) {
+    if (
+        !$Param{CustomerUserID}
+        && $DefaultServiceUnknownCustomer
+    ) {
         $Param{CustomerUserID} = '<DEFAULT>';
     }
 
