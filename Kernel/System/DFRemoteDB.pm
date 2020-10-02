@@ -15,6 +15,7 @@ use warnings;
 
 use DBI;
 use List::Util();
+use Try::Tiny;
 
 use Kernel::System::VariableCheck qw(:all);
 
@@ -192,19 +193,23 @@ sub Connect {
     }
 
     # db connect
-    $Self->{dbh} = DBI->connect(
-        $Self->{DSN},
-        $Self->{USER},
-        $Self->{PW},
-        $Self->{Backend}->{'DB::Attribute'},
-    );
-
-    if ( !$Self->{dbh} ) {
+    try {
+        $Self->{dbh} = DBI->connect(
+            $Self->{DSN},
+            $Self->{USER},
+            $Self->{PW},
+            $Self->{Backend}->{'DB::Attribute'},
+        )
+    }
+    catch {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Caller   => 1,
             Priority => 'Error',
-            Message  => $DBI::errstr,
+            Message  => 'Error connecting to DB: ' . $_,
         );
+    };
+
+    if ( !$Self->{dbh} ) {
         return;
     }
 
