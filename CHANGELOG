@@ -1,6 +1,11 @@
 # Change log of KIX
 * Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.13.0-RC8 (2020/10/02)
+ * (2020/10/02) - Bugfix: KIX17-1435 (fixed log entry for AgentTicketWatcher) (millinger)
+ * (2020/09/28) - Bugfix: KIX17-1297 (fixed preparation of dynamic field template data) (millinger)
+ * (2020/09/28) - Bugfix: KIX17-1365 (removed requirement of queue and ticket to get service list) (millinger)
+
 # 17.13.0-RC7 (2020/09/25)
  * (2020/09/25) - Bugfix: KIX17-1451 (fixed global symbol error) (millinger)
 
