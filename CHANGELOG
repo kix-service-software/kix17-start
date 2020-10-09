@@ -1,6 +1,9 @@
 # Change log of KIX
 * Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.13.0-RC9 (2020/10/09)
+ * (2020/10/02) - Bugfix: KIX17-1126 (fixed ISE of remote db connection error) (fjacquemin)
+
 # 17.13.0-RC8 (2020/10/02)
  * (2020/10/02) - Bugfix: KIX17-1435 (fixed log entry for AgentTicketWatcher) (millinger)
  * (2020/09/28) - Bugfix: KIX17-1297 (fixed preparation of dynamic field template data) (millinger)
