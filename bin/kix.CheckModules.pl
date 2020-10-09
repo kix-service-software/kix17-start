@@ -398,6 +398,16 @@ my @NeededModules = (
         },
     },
     {
+        Module    => 'Try::Tiny',
+        Required  => 1,
+        Comment   => 'Required for db connection check.',
+        InstTypes => {
+            aptget => 'libtry-tiny-perl',
+            yum    => 'perl(Try::Tiny)',
+            zypper => 'perl(Try::Tiny)',
+        },
+    },
+    {
         # perlcore
         Module   => 'Time::Piece',
         Required => 1,
