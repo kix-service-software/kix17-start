@@ -1,6 +1,9 @@
 # Change log of KIX
 * Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.13.0 (2020/10/14)
+ * (2020/10/14) - productive release
+
 # 17.13.0-RC9 (2020/10/09)
  * (2020/10/02) - Bugfix: KIX17-1126 (fixed ISE of remote db connection error) (fjacquemin)
 
