@@ -344,13 +344,20 @@ sub Sender {
 
     # check config for agent real name
     my $UseAgentRealName = $ConfigObject->Get('Ticket::DefineEmailFrom');
-    if ( $UseAgentRealName && $UseAgentRealName =~ /^(AgentName|AgentNameSystemAddressName)$/ ) {
 
-        # get data from current agent
-        my %UserData = $UserObject->GetUserData(
-            UserID        => $Param{UserID},
-            NoOutOfOffice => 1,
-        );
+    # get data from current agent
+    my %UserData = $UserObject->GetUserData(
+        UserID        => $Param{UserID},
+        NoOutOfOffice => 1,
+    );
+
+    # use config for agent real name if agent preference is set
+    if ( $UserData{'TicketDefineEmailFrom'} ) {
+        $UseAgentRealName = $UserData{'TicketDefineEmailFrom'};
+    }
+
+    # prepare real name
+    if ( $UseAgentRealName && $UseAgentRealName =~ /^(AgentName|AgentNameSystemAddressName)$/ ) {
 
         # set real name with user name
         if ( $UseAgentRealName eq 'AgentName' ) {

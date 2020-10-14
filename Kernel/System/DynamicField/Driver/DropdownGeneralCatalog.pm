@@ -146,7 +146,7 @@ sub EditFieldRender {
     my $FieldName   = 'DynamicField_' . $Param{DynamicFieldConfig}->{Name};
     my $FieldLabel  = $Param{DynamicFieldConfig}->{Label};
 
-    my $Value = '';
+    my $Value;
 
     # set the field value or default
     if ( $Param{UseDefaultValue} ) {
@@ -189,18 +189,8 @@ sub EditFieldRender {
         $FieldClass .= ' ServerError';
     }
 
-    # get general catalog class
-    my $GeneralCatalogClass = $FieldConfig->{GeneralCatalogClass};
-
-    # set PossibleValues
-    my $PossibleValues = $Kernel::OM->Get('Kernel::System::GeneralCatalog')->ItemList(
-        Class => $GeneralCatalogClass,
-    );
-
-    # set empty value
-    if ( defined $FieldConfig->{PossibleNone} && $FieldConfig->{PossibleNone} ) {
-        $PossibleValues->{'-'} = '-';
-    }
+    # set PossibleValues, use PossibleValuesFilter if defined
+    my $PossibleValues = $Param{PossibleValuesFilter} // $Self->PossibleValuesGet(%Param);
 
     my $Size = 1;
 
@@ -237,11 +227,11 @@ sub EditFieldRender {
         # for client side validation
         $HTMLString .= <<"EOF";
 
-    <div id="$DivID" class="TooltipErrorMessage">
-        <p>
+<div id="$DivID" class="TooltipErrorMessage">
+    <p>
         $FieldRequiredMessage
-        </p>
-    </div>
+    </p>
+</div>
 EOF
     }
 
@@ -254,11 +244,11 @@ EOF
         # for server side validation
         $HTMLString .= <<"EOF";
 
-    <div id="$DivID" class="TooltipErrorMessage">
-        <p>
+<div id="$DivID" class="TooltipErrorMessage">
+    <p>
         $ErrorMessage
-        </p>
-    </div>
+    </p>
+</div>
 EOF
     }
 
@@ -278,9 +268,9 @@ EOF
 
         # add js to call FormUpdate()
         $Param{LayoutObject}->AddJSOnDocumentComplete( Code => <<"EOF");
-    \$('$FieldSelector').bind('change', function (Event) {
-        Core.AJAX.FormUpdate(\$(this).parents('form'), 'AJAXUpdate', '$FieldName', [ $FieldsToUpdate ]);
-    });
+\$('$FieldSelector').bind('change', function (Event) {
+    Core.AJAX.FormUpdate(\$(this).parents('form'), 'AJAXUpdate', '$FieldName', [ $FieldsToUpdate ]);
+});
 EOF
     }
 
@@ -335,7 +325,7 @@ sub EditFieldValueValidate {
         }
 
         # validate if value is in possible values list (but let pass empty values)
-        if ( $Value && $Value ne '-' && !$PossibleValues->{$Value} ) {
+        if ( $Value && !$PossibleValues->{$Value} ) {
             $ServerError  = 1;
             $ErrorMessage = 'The field content is invalid';
         }
@@ -406,7 +396,7 @@ sub DisplayValueRender {
         }
     }
 
-    # set field link form config
+    # set field link from config
     my $Link = $Param{DynamicFieldConfig}->{Config}->{Link} || '';
 
     my $Data = {
@@ -543,8 +533,11 @@ sub SearchFieldParameterBuild {
             # set the display value
             $DisplayValue = $PossibleValues->{$Value};
 
-            if ( $Param{DynamicFieldConfig}->{Config}->{TranslatableValues} ) {
-                # translate the value
+            # translate the value
+            if (
+                $Param{DynamicFieldConfig}->{Config}->{TranslatableValues}
+                && defined $Param{LayoutObject}
+            ) {
                 $DisplayValue = $Param{LayoutObject}->{LanguageObject}->Translate($DisplayValue);
             }
         }

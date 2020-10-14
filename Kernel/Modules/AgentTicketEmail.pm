@@ -389,17 +389,6 @@ sub Run {
         }
 # ---
     }
-
-    # convert dynamic field values into a structure for ACLs
-    my %DynamicFieldACLParameters;
-    DYNAMICFIELD:
-    for my $DynamicField ( sort keys %DynamicFieldValues ) {
-        next DYNAMICFIELD if !$DynamicField;
-        next DYNAMICFIELD if !$DynamicFieldValues{$DynamicField};
-
-        $DynamicFieldACLParameters{ 'DynamicField_' . $DynamicField } = $DynamicFieldValues{$DynamicField};
-    }
-    $GetParam{DynamicField} = \%DynamicFieldACLParameters;
 # ---
 # ITSMIncidentProblemManagement
 # ---
@@ -541,14 +530,45 @@ sub Run {
                 && IsHashRefWithData( $TemplateData{$Key} )
             ) {
                 for my $DynamicField ( keys %{ $TemplateData{$Key} } ) {
-                    $GetParam{$DynamicField} = $TemplateData{$Key}->{$DynamicField};
+                    my $DynamicFieldName = $DynamicField;
+                    $DynamicFieldName   =~ s/^DynamicField_//;
+
+                    $GetParam{$DynamicField}                 = $TemplateData{$Key}->{$DynamicField};
+                    $DynamicFieldValues{ $DynamicFieldName } = $TemplateData{$Key}->{$DynamicField};
                 }
             }
         }
-        @MultipleCustomer       = @{ $TemplateData{MultipleCustomer} } if defined $TemplateData{MultipleCustomer} && ref $TemplateData{MultipleCustomer}  eq 'ARRAY';
-        @MultipleCustomerCc     = @{ $TemplateData{MultipleCustomerCc} } if defined $TemplateData{MultipleCustomerCc} && ref $TemplateData{MultipleCustomerCc}  eq 'ARRAY';
-        @MultipleCustomerBcc    = @{ $TemplateData{MultipleCustomerBcc} } if defined $TemplateData{MultipleCustomerBcc} && ref $TemplateData{MultipleCustomerBcc}  eq 'ARRAY';
+
+        if (
+            defined $TemplateData{MultipleCustomer}
+            && ref $TemplateData{MultipleCustomer} eq 'ARRAY'
+        ) {
+            @MultipleCustomer = @{ $TemplateData{MultipleCustomer} };
+        }
+        if (
+            defined $TemplateData{MultipleCustomerCc}
+            && ref $TemplateData{MultipleCustomerCc} eq 'ARRAY'
+        ) {
+            @MultipleCustomerCc = @{ $TemplateData{MultipleCustomerCc} };
+        }
+        if (
+            defined $TemplateData{MultipleCustomerBcc}
+            && ref $TemplateData{MultipleCustomerBcc} eq 'ARRAY'
+        ) {
+            @MultipleCustomerBcc = @{ $TemplateData{MultipleCustomerBcc} };
+        }
     }
+
+    # convert dynamic field values into a structure for ACLs
+    my %DynamicFieldACLParameters;
+    DYNAMICFIELD:
+    for my $DynamicField ( sort keys %DynamicFieldValues ) {
+        next DYNAMICFIELD if !$DynamicField;
+        next DYNAMICFIELD if !$DynamicFieldValues{$DynamicField};
+
+        $DynamicFieldACLParameters{ 'DynamicField_' . $DynamicField } = $DynamicFieldValues{$DynamicField};
+    }
+    $GetParam{DynamicField} = \%DynamicFieldACLParameters;
 
     if ( !$Self->{Subaction} || $Self->{Subaction} eq 'Created' ) {
 
@@ -2905,17 +2925,16 @@ sub _GetServices {
     # get service
     my %Service;
 
-    # check needed
-    return \%Service if !$Param{QueueID} && !$Param{TicketID};
-
     # get options for default services for unknown customers
-    my $DefaultServiceUnknownCustomer
-        = $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Service::Default::UnknownCustomer');
+    my $DefaultServiceUnknownCustomer = $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Service::Default::UnknownCustomer');
 
     # check if no CustomerUserID is selected
     # if $DefaultServiceUnknownCustomer = 0 leave CustomerUserID empty, it will not get any services
     # if $DefaultServiceUnknownCustomer = 1 set CustomerUserID to get default services
-    if ( !$Param{CustomerUserID} && $DefaultServiceUnknownCustomer ) {
+    if (
+        !$Param{CustomerUserID}
+        && $DefaultServiceUnknownCustomer
+    ) {
         $Param{CustomerUserID} = '<DEFAULT>';
     }
 

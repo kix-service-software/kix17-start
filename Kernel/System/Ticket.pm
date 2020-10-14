@@ -2352,18 +2352,15 @@ sub TicketTypeSet {
 to get all possible services for a ticket (depends on workflow, if configured)
 
     my %Services = $TicketObject->TicketServiceList(
-        QueueID        => 123,
-        UserID         => 123,
+        UserID => 123,
     );
 
     my %Services = $TicketObject->TicketServiceList(
         CustomerUserID => 123,
-        QueueID        => 123,
     );
 
     my %Services = $TicketObject->TicketServiceList(
         CustomerUserID => 123,
-        TicketID       => 123,
         UserID         => 123,
     );
 
@@ -2389,24 +2386,14 @@ sub TicketServiceList {
         return;
     }
 
-    # check needed stuff
-    if ( !$Param{QueueID} && !$Param{TicketID} ) {
-        $Kernel::OM->Get('Kernel::System::Log')->Log(
-            Priority => 'error',
-            Message  => 'Need QueueID or TicketID!',
-        );
-        return;
-    }
-
     # get service object
     my $ServiceObject = $Kernel::OM->Get('Kernel::System::Service');
 
     my %Services;
     if ( !$Param{CustomerUserID} ) {
         %Services = $ServiceObject->ServiceList(
-            UserID => 1,
-            KeepChildren =>
-                $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Service::KeepChildren'),
+            UserID       => 1,
+            KeepChildren => $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Service::KeepChildren'),
         );
     }
     else {

@@ -404,6 +404,9 @@
         z-index: 1;
     }
     .FieldHelpContainer > span {
+        display: none;
+    }
+    .FieldHelpTooltip {
         font-size: 12px;
         left: 15px;
         line-height: 110%;
@@ -418,15 +421,11 @@
         border-radius: 5px;
         top: 5px;
         width: 200px;
-        display: none;
         -webkit-opacity: 0.8;
         -moz-opacity: 0.8;
         -ms-opacity: 0.8;
         -o-opacity: 0.8;
         opacity: 0.8;
-    }
-    .FieldHelpContainer:hover > span {
-        display: block;
     }
 
 

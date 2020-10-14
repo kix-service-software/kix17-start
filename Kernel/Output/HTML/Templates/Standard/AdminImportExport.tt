@@ -130,7 +130,6 @@
                         <label for="Name">[% Translate("Name") | html %]:</label>
                         <div class="Field">
 
-<!-- Validate_Required -->
                             <input id="Name" class="[% Data.NameClass %]" type="text" name="Name" value="[% Data.Name | html %]" size="50" maxlength="200" />
                             <div id="NameError" class="TooltipErrorMessage">
                                 <p>[% Translate("Name is required!") | html %]</p>
@@ -365,21 +364,28 @@
 [% RenderBlockEnd("TemplateEdit4MapNumberColumn") %]
                                 <td class="Center">
 [% RenderBlockStart("TemplateEdit4UpButton") %]
-                                    <button class="ArrowUp"type="submit" name="MappingUp::[% Data.MappingID | html %]" value="[% Translate("Up") | html %]"> [% Translate("Up") | html %] </button>
+                                    <button class="ArrowUp"type="submit" name="MappingUp::[% Data.MappingID | html %]" value="[% Translate("Up") | html %]" title="[% Translate("Up") | html %]">
+                                        <i class="fa fa-chevron-up fa-lg"></i>
+                                    </button>
 [% RenderBlockEnd("TemplateEdit4UpButton") %]
 [% RenderBlockStart("TemplateEdit4NoUpButton") %]
-                                    <button class="ArrowUp" type="submit" disabled="disabled"> [% Translate("Up") | html %]</button>
+                                    <button class="ArrowUp" type="submit" disabled="disabled" title="[% Translate("Up") | html %]">
+                                        <i class="fa fa-chevron-up fa-lg"></i>
+                                    </button>
 [% RenderBlockEnd("TemplateEdit4NoUpButton") %]
                                 </td>
                                 <td class="Center">
 [% RenderBlockStart("TemplateEdit4DownButton") %]
-                                    <button class="ArrowDown" type="submit" name="MappingDown::[% Data.MappingID | html %]" value="[% Translate("Down") | html %]"> [% Translate("Down") | html %]</button>
+                                    <button class="ArrowDown" type="submit" name="MappingDown::[% Data.MappingID | html %]" value="[% Translate("Down") | html %]" title="[% Translate("Down") | html %]">
+                                        <i class="fa fa-chevron-down fa-lg"></i>
+                                    </button>
 [% RenderBlockEnd("TemplateEdit4DownButton") %]
 [% RenderBlockStart("TemplateEdit4NoDownButton") %]
-                                    <button class="ArrowDown" type="submit" disabled="disabled"> [% Translate("Down") | html %]</button>
+                                    <button class="ArrowDown" type="submit" disabled="disabled" title="[% Translate("Down") | html %]">
+                                        <i class="fa fa-chevron-down fa-lg"></i>
+                                    </button>
 [% RenderBlockEnd("TemplateEdit4NoDownButton") %]
                                 </td>
-
                                 <td class="Center">
                                     <a href="#" class="DeleteColumn" title="[% Translate("Delete") | html %]">
                                         <i class="fa fa-trash-o">
@@ -388,7 +394,6 @@
                                     </a>
                                     <input type="hidden" name="MappingDelete::[% Data.MappingID | html %]" value="" />
                                 </td>
-
                             </tr>
 [% RenderBlockEnd("TemplateEdit4Row") %]
                         </tbody>

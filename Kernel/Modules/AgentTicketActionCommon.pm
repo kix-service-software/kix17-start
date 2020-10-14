@@ -3064,26 +3064,20 @@ sub _GetServices {
     my %Service;
 
     # get options for default services for unknown customers
-    my $DefaultServiceUnknownCustomer
-        = $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Service::Default::UnknownCustomer');
+    my $DefaultServiceUnknownCustomer = $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Service::Default::UnknownCustomer');
 
     # check if no CustomerUserID is selected
     # if $DefaultServiceUnknownCustomer = 0 leave CustomerUserID empty, it will not get any services
     # if $DefaultServiceUnknownCustomer = 1 set CustomerUserID to get default services
-    if ( !$Param{CustomerUserID} && $DefaultServiceUnknownCustomer ) {
+    if (
+        !$Param{CustomerUserID}
+        && $DefaultServiceUnknownCustomer
+    ) {
         $Param{CustomerUserID} = '<DEFAULT>';
     }
 
     # get service list
-    if (
-        ( defined $Param{CustomerUserID} && $Param{CustomerUserID} )
-        || $DefaultServiceUnknownCustomer
-    ) {
-
-        if ( !$Param{CustomerUserID} ) {
-            $Param{CustomerUserID} = '<DEFAULT>';
-        }
-
+    if ( $Param{CustomerUserID} ) {
         %Service = $Kernel::OM->Get('Kernel::System::Ticket')->TicketServiceList(
             %Param,
             TicketID => $Self->{TicketID},
