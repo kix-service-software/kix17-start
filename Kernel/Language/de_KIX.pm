@@ -452,6 +452,8 @@ sub Data {
         = 'Meine automatisch abonnierten Suchprofilkategorien';
     $Lang->{'Auto-subscribe search profiles from other agents depending on selected categories.'}
         = 'Automatisches Abonnieren von Suchprofilen anderer Agenten auf der Grundlage von gewählten Kategorien.';
+    $Lang->{'"From" field format'} = '"Von"-Feld Format';
+    $Lang->{'System setting'}      = 'System-Einstellung';
 
     # changed translations
     $Lang->{'Article(s)'}    = 'Artikel';
@@ -4538,6 +4540,22 @@ sub Data {
     $Lang->{'Defines obfuscation pattern for support bundle generation. Keys are search pattern. Values are replacement pattern. The global modification is always set.'}
         = 'Definiert die Verschleierung für die Support-Bundle -Erzeugung. Schlüssel sind Suchpattern. Werte sind Ersetzungspattern. Der Global-Modifizierer ist immer gesetzt.';
     # $$STOP$$
+
+    # LoginHeaders
+    $Lang->{'Defines the prefix that is placed before the name of the application. This only applies to the "login" and "forgot password" mask.'}
+        = 'Definiert den Präfix der vor dem Namen der Anwendung gesetzt wird. Dies gilt nur für die Maske "Login" und "Passwort vergessen".';
+    $Lang->{'Defines the prefix that is placed before the name of the application. This only applies to the "login", "forgot password" and "register" mask.'}
+        = 'Definiert den Präfix der vor dem Namen der Anwendung gesetzt wird. Dies gilt nur für die Maske "Login", "Passwort vergessen" und "Registieren".';
+    $Lang->{'Defines the suffix that is placed after the name of the application. This only applies to the "login" and "forgot password" mask.'}
+        = 'Definiert den Suffix der nach dem Namen der Anwendung gesetzt wird. Dies gilt nur für die Maske "Login" und "Passwort vergessen".';
+    $Lang->{'Defines the suffix that is placed after the name of the application. This only applies to the "login", "forgot password" and "register" mask.'}
+        = 'Definiert den Suffix der nach dem Namen der Anwendung gesetzt wird. Dies gilt nur für die Maske "Login", "Passwort vergessen" und "Registieren".';
+    $Lang->{'Defines a subheading which is placed under the main heading. Only applies to the login mask.'}
+        = 'Definiert eine Zwischenüberschrift welche unter dem Hauptüberschrift gesetzt wird. Gilt nur für die Maske Login.';
+    $Lang->{'Activates the greeting heading in the login.'}
+        = 'Aktiviert die Begrüßung Überschrift im Login.';
+    $Lang->{'Welcome to'} = 'Willkommen bei';
+    # EO LoginHeaders
 
     return 0;
 }

@@ -137,28 +137,24 @@ sub ValueSet {
         @Values = ( $Param{Value} );
     }
 
-    # check for valid CustomerCompany
+    # get complete customer company list
+    my %CustomerCompanyList = $Self->{CustomerCompanyObject}->CustomerCompanyList(
+        Limit => 0,
+    );
+
+    # process all values
     for my $Object (@Values) {
 
         next if !$Object;
 
-        # check if valid CustomerLogin
-        my %CustomerCompanyList =
-            $Self->{CustomerCompanyObject}
-            ->CustomerCompanyList();
+        # check for valid CustomerCompany
+        my $CompanyName = $CustomerCompanyList{ $Object };
 
-        my $Match = 0;
-        for my $Company ( keys %CustomerCompanyList ) {
-            next if $Company ne $Object;
-            $Match = 1;
-            last;
-        }
-
-        if ( !$Match ) {
+        if ( !$CompanyName ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
-                Message  => "The value for the field CustomerUser is invalid!\n"
-                    . "No Customer with login "
+                Message  => "The value for the field CustomerCompany is invalid!\n"
+                    . "No Company with ID "
                     . $Object
                     . " found in configured backend(s).",
             );
@@ -212,26 +208,24 @@ sub ValueValidate {
         @Values = ( $Param{Value} );
     }
 
-    # check for valid CustomerCompany
+    # get complete customer company list
+    my %CustomerCompanyList = $Self->{CustomerCompanyObject}->CustomerCompanyList(
+        Limit => 0,
+    );
+
+    # process all values
     for my $Object (@Values) {
 
-        # check if valid CustomerLogin
-        my %CustomerCompanyList =
-            $Self->{CustomerCompanyObject}
-            ->CustomerCompanyList();
+        next if !$Object;
 
-        my $Match = 0;
-        for my $Company ( keys %CustomerCompanyList ) {
-            next if $Company ne $Object;
-            $Match = 1;
-            last;
-        }
+        # check for valid CustomerCompany
+        my $CompanyName = $CustomerCompanyList{ $Object };
 
-        if ( !$Match ) {
+        if ( !$CompanyName ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
-                Message  => "The value for the field CustomerUser is invalid!\n"
-                    . "No Customer with login "
+                Message  => "The value for the field CustomerCompany is invalid!\n"
+                    . "No Company with ID "
                     . $Object
                     . " found in configured backend(s).",
             );
@@ -522,23 +516,19 @@ sub EditFieldValueValidate {
     }
     else {
 
-        # check if valid CustomerLogin
+        # get complete customer company list
+        my %CustomerCompanyList = $Self->{CustomerCompanyObject}->CustomerCompanyList(
+            Limit => 0,
+        );
+
+        # process all values
         for my $Object ( @{$Values} ) {
             next if !$Object;
 
-            # check if valid CustomerLogin
-            my %CustomerCompanyList =
-                $Self->{CustomerCompanyObject}
-                ->CustomerCompanyList();
+            # check for valid CustomerCompany
+            my $CompanyName = $CustomerCompanyList{ $Object };
 
-            my $Match = 0;
-            for my $Company ( keys %CustomerCompanyList ) {
-                next if $Company ne $Object;
-                $Match = 1;
-                last;
-            }
-
-            if ( !$Match ) {
+            if ( !$CompanyName ) {
                 $ServerError  = 1;
                 $ErrorMessage = 'The field content is invalid';
             }

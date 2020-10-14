@@ -1349,10 +1349,7 @@ sub _JobRunTicket {
         # for the current dynamic field
         if (
             defined $Value
-            && (
-                $DynamicFieldConfig->{Config}->{PossibleNone}
-                || $Value ne ''
-            )
+            && $Value ne ''
         ) {
             my $Success = $DynamicFieldBackendObject->ValueSet(
                 DynamicFieldConfig => $DynamicFieldConfig,

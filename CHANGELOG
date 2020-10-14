@@ -1,8 +1,58 @@
 # Change log of KIX
 * Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
-# 17.13.0 (2020/08/27)
- * (2020/08/27) - productive release
+# 17.13.0 (2020/10/14)
+ * (2020/10/14) - productive release
+
+# 17.13.0-RC9 (2020/10/09)
+ * (2020/10/02) - Bugfix: KIX17-1126 (fixed ISE of remote db connection error) (fjacquemin)
+
+# 17.13.0-RC8 (2020/10/02)
+ * (2020/10/02) - Bugfix: KIX17-1435 (fixed log entry for AgentTicketWatcher) (millinger)
+ * (2020/09/28) - Bugfix: KIX17-1297 (fixed preparation of dynamic field template data) (millinger)
+ * (2020/09/28) - Bugfix: KIX17-1365 (removed requirement of queue and ticket to get service list) (millinger)
+
+# 17.13.0-RC7 (2020/09/25)
+ * (2020/09/25) - Bugfix: KIX17-1451 (fixed global symbol error) (millinger)
+
+# 17.13.0-RC6 (2020/09/25)
+ * (2020/09/24) - CR: KIX17-1444 (implemented agent preference for sysconfig 'Ticket::DefineEmailFrom') (millinger)
+ * (2020/09/23) - Bugfix: KIX17-1413 (fixed handling of valid flag in customer company search) (millinger)
+ * (2020/09/23) - Bugfix: KIX17-1410 (fixed handling of empty values for DF RemoteDB and CIReference) (millinger)
+ * (2020/09/23) - Bugfix: KIX17-1364 (fixed handling of disabled dynamic fields for ticket forwarding) (millinger)
+ * (2020/09/23) - CR: KIX17-1360 (enabled dynamic field type 'Checkbox' to trigger form update) (millinger)
+ * (2020/09/23) - CR: KIX17-1331 (added hints for migration) (millinger)
+ * (2020/09/23) - Bugfix: KIX17-1126 (Fixed internal server error when the connection of the RemoteDB failed) (fjacquemin)
+ * (2020/09/17) - Bugfix: KIX17-1363 (can not set every valid customer company in dynamic field) (millinger)
+
+# 17.13.0-RC5 (2020/09/21)
+ * (2020/09/21) - Bugfix: KIX17-1427 (fixed missing display of dynamic fields in the article list) (fjacquemin)
+ * (2020/09/17) - CR: KIX17-943 (added vacation day calculation for datepicker) (millinger)
+ * (2020/09/15) - Bugfix: KIX17-1338 (fixed behavior of GenericAgent) (millinger)
+ * (2020/08/27) - Bugfix: KIX17-1338 (dynamic field based on general calatlog does not respect initial value filter) (millinger)
+ * (2020/08/17) - Bugfix: Console command Dev::Tools::TranslationsUpdate (fixed output of comand) (millinger)
+ * (2020/07/28) - Bugfix: Kernel::System::Crypt::SMIME (useless concatenation in void context) (millinger)
+ * (2020/07/28) - CR: change for PerlCritic (no critic on explicit usage of STDIN) (millinger)
+
+# 17.13.0-RC4 (2020/09/14)
+ * (2020/09/10) - Bugfix: KIX17-1358 (fixed incorrect display of the FieldHelpContainer tooltip in process dialog) (fjacquemin)
+ * (2020/07/16) - CR: KIX17-1221 (cleanup empty required data on config item import) (tto)
+ * (2020/04/21) - Bugfix: KIX17-868 (Missing CSS to display PreMenu in overviews) (fjacquemin)
+
+# 17.13.0-RC3 (2020/09/09)
+ * (2020/09/09) - Bugfix: KIX17-1358 (fixed incorrect display of the FieldHelpContainer tooltip) (fjacquemin)
+ * (2020/09/07) - Bugfix: KIX17-1092 (changed link "Download this email" to an widget action icon) (fjacquemin)
+ * (2020/09/07) - Bugfix: KIX17-1092 (fixed overlap of selected object reference in dynamic field edit mode) (fjacquemin)
+ * (2020/09/07) - Bugfix: KIX17-1092 (changed color of disabled buttons) (fjacquemin)
+ * (2020/09/07) - Bugfix: KIX17-1092 (Replaced import export column move arrow images to icons) (fjacquemin)
+ * (2020/09/07) - Bugfix: KIX17-1092 (fixed label / value field position in the ticket search dialog) (fjacquemin)
+ * (2020/09/07) - Bugfix: KIX17-1092 (fixed label / value field position in the ticket template form (admin interface)) (fjacquemin)
+ * (2020/09/04) - CR: KIX17-1349 (Changed result return of the ticket template list from the cache) (fjacquemin)
+ * (2020/08/27) - Bugfix: KIX17-1285 (fix handling of sub-definitions without data) (millinger)
+ * (2020/07/10) - CR: KIX17-1180 (editable login labels) (fjacquemin)
+ * (2020/05/05) - CR: KIX17-943 (holiday calculation) (millinger)
+
+# 17.13.0-RC2 (2020/08/27)
  * (2020/08/24) - Bugfix: KIX17-1125 (remove '::undefined' suffix in faq search profile name) (millinger)
 
 # 17.13.0-RC1 (2020/08/25)

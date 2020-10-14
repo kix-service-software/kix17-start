@@ -49,8 +49,29 @@ sub TicketTemplateList {
 
     # check if result is cached
     my $CacheKey = 'Cache::TicketTemplateList';
+
+    if ( $Param{Result} ) {
+        $CacheKey .= '::' . $Param{Result};
+    }
+
     if ( $Self->{$CacheKey} ) {
-        return %{ $Self->{$CacheKey} };
+        if (
+            defined $Param{Result}
+            && $Param{Result} eq 'ID'
+        ) {
+            my @Templates = keys %{$Self->{$CacheKey}};
+            return @Templates;
+        }
+        elsif (
+            defined $Param{Result}
+            && $Param{Result} eq 'Name'
+        ) {
+            my @Templates = values %{$Self->{$CacheKey}};
+            return @Templates;
+        }
+        else {
+            return %{ $Self->{$CacheKey} };
+        }
     }
 
     # get ticket templates
@@ -133,11 +154,17 @@ sub TicketTemplateList {
         %Templates,
     };
 
-    if ( defined $Param{Result} && $Param{Result} eq 'ID' ) {
+    if (
+        defined $Param{Result}
+        && $Param{Result} eq 'ID'
+    ) {
         my @Templates = keys %Templates;
         return @Templates;
     }
-    elsif ( defined $Param{Result} && $Param{Result} eq 'Name' ) {
+    elsif (
+        defined $Param{Result}
+        && $Param{Result} eq 'Name'
+    ) {
         my @Templates = values %Templates;
         return @Templates;
     }
@@ -166,8 +193,10 @@ sub TicketTemplateGet {
 
     # check needed stuff
     if ( !$Param{ID} && !$Param{Name} ) {
-        $Kernel::OM->Get('Kernel::System::Log')
-            ->Log( Priority => 'error', Message => "TicketTemplateGet: Need Name or ID!" );
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
+            Priority => 'error',
+            Message  => "TicketTemplateGet: Need Name or ID!"
+        );
         return;
     }
 
@@ -201,8 +230,11 @@ sub TicketTemplateGet {
 
     # get ticket template configuration
     return () if !$Self->{DBObject}->Prepare(
-        SQL =>
-            'SELECT preferences_key, preferences_value FROM kix_ticket_template_prefs WHERE template_id = ?',
+        SQL => <<'END',
+    SELECT preferences_key, preferences_value
+    FROM kix_ticket_template_prefs
+    WHERE template_id = ?
+END
         Bind => [ \$Param{ID} ],
     );
     while ( my @Row = $Self->{DBObject}->FetchrowArray() ) {
@@ -218,8 +250,11 @@ sub TicketTemplateGet {
 
     # get frontend template data
     return () if !$Self->{DBObject}->Prepare(
-        SQL =>
-            'SELECT f_agent, f_customer, customer_portal_group_id FROM kix_ticket_template WHERE id = ?',
+        SQL => <<'END',
+    SELECT f_agent, f_customer, customer_portal_group_id
+    FROM kix_ticket_template
+    WHERE id = ?
+END
         Bind => [ \$Param{ID} ],
     );
     while ( my @Row = $Self->{DBObject}->FetchrowArray() ) {
@@ -255,8 +290,10 @@ sub TicketTemplateLookup {
 
     # check needed stuff
     if ( !$Param{ID} && !$Param{Name} ) {
-        $Kernel::OM->Get('Kernel::System::Log')
-            ->Log( Priority => 'error', Message => "TicketTemplateLookup: Need Name or ID!" );
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
+            Priority => 'error',
+            Message  => "TicketTemplateLookup: Need Name or ID!"
+        );
         return;
     }
 
@@ -519,7 +556,7 @@ sub TicketTemplateUpdate {
     }
 
     # prepare CustomerPortalGroupID
-    $Param{Data}->{CustomerPortalGroupID} ||= 0; 
+    $Param{Data}->{CustomerPortalGroupID} ||= 0;
 
     # reset CustomerPortalGroupID if ticket template is not activated for customer frontend
     if ( !$Param{Data}->{Customer} ) {
@@ -620,20 +657,18 @@ sub TicketTemplatePreferencesDelete {
     # check needed stuff
     for my $Needed (qw(UserID)) {
         if ( !$Param{$Needed} ) {
-            $Kernel::OM->Get('Kernel::System::Log')
-                ->Log(
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => "TicketTemplatePreferencesDelete: Need $Needed!"
-                );
+            );
             return;
         }
     }
     if ( !$Param{ID} && !$Param{Name} ) {
-        $Kernel::OM->Get('Kernel::System::Log')
-            ->Log(
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => "TicketTemplatePreferencesDelete: Need Name or ID!"
-            );
+        );
         return;
     }
 
@@ -678,14 +713,18 @@ sub TicketTemplateDelete {
     # check needed stuff
     for my $Needed (qw(UserID)) {
         if ( !$Param{$Needed} ) {
-            $Kernel::OM->Get('Kernel::System::Log')
-                ->Log( Priority => 'error', Message => "TicketTemplateDelete: Need $Needed!" );
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'error',
+                Message  => "TicketTemplateDelete: Need $Needed!"
+            );
             return;
         }
     }
     if ( !$Param{ID} && !$Param{Name} ) {
-        $Kernel::OM->Get('Kernel::System::Log')
-            ->Log( Priority => 'error', Message => "TicketTemplateDelete: Need Name or ID!" );
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
+            Priority => 'error',
+            Message  => "TicketTemplateDelete: Need Name or ID!"
+        );
         return;
     }
 
@@ -775,7 +814,10 @@ sub _ImportTicketTemplateXML {
     # check required params...
     for (qw( XMLString UserID )) {
         if ( !defined( $Param{$_} ) ) {
-            $Kernel::OM->Get('Kernel::System::Log')->Log( Priority => 'error', Message => "Need $_!" );
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'error',
+                Message  => "Need $_!"
+            );
             return;
         }
     }
@@ -811,10 +853,9 @@ sub _ImportTicketTemplateXML {
                     next if !$TMArrRef->{$Key}->[1]->{Content};
 
                     if ( $Key eq 'Queue' ) {
-                        $UpdateData{QueueID}
-                            = $Kernel::OM->Get('Kernel::System::Queue')->QueueLookup(
+                        $UpdateData{QueueID} = $Kernel::OM->Get('Kernel::System::Queue')->QueueLookup(
                             Queue => $TMArrRef->{$Key}->[1]->{Content}
-                            );
+                        );
                     }
                     elsif ( $Key eq 'Type' ) {
                         $UpdateData{TypeID} = $Kernel::OM->Get('Kernel::System::Type')->TypeLookup(
@@ -822,28 +863,25 @@ sub _ImportTicketTemplateXML {
                         );
                     }
                     elsif ( $Key eq 'State' ) {
-                        $UpdateData{StateID}
-                            = $Kernel::OM->Get('Kernel::System::State')->StateLookup(
+                        $UpdateData{StateID} = $Kernel::OM->Get('Kernel::System::State')->StateLookup(
                             State => $TMArrRef->{$Key}->[1]->{Content}
-                            );
+                        );
                     }
                     elsif ( $Key eq 'Priority' ) {
                         $UpdateData{PriorityID}
                             = $Kernel::OM->Get('Kernel::System::Priority')->PriorityLookup(
                             Priority => $TMArrRef->{$Key}->[1]->{Content}
-                            );
+                        );
                     }
                     elsif ( ( $Key eq 'Owner' || $Key eq 'Responsible' ) ) {
-                        $UpdateData{ $Key . 'ID' }
-                            = $Kernel::OM->Get('Kernel::System::User')->UserLookup(
+                        $UpdateData{ $Key . 'ID' } = $Kernel::OM->Get('Kernel::System::User')->UserLookup(
                             UserLogin => $TMArrRef->{$Key}->[1]->{Content}
-                            );
+                        );
                     }
                     elsif ( $Key eq 'Service' ) {
-                        $UpdateData{ServiceID}
-                            = $Kernel::OM->Get('Kernel::System::Service')->ServiceLookup(
+                        $UpdateData{ServiceID} = $Kernel::OM->Get('Kernel::System::Service')->ServiceLookup(
                             Name => $TMArrRef->{$Key}->[1]->{Content}
-                            );
+                        );
                     }
                     elsif ( $Key eq 'SLA' ) {
                         $UpdateData{SLAID} = $Kernel::OM->Get('Kernel::System::SLA')->SLALookup(
@@ -947,51 +985,44 @@ sub _CreateTicketTemplateExportXML {
             $CurrTM{$CurrKey}->[0] = undef;
 
             if ( $CurrKey eq 'QueueID' && $TicketTemplate{$CurrKey} ne '-' ) {
-                $CurrTM{Queue}->[1]->{Content}
-                    = $Kernel::OM->Get('Kernel::System::Queue')->QueueLookup(
+                $CurrTM{Queue}->[1]->{Content} = $Kernel::OM->Get('Kernel::System::Queue')->QueueLookup(
                     QueueID => $TicketTemplate{$CurrKey}
-                    );
+                );
             }
             elsif ( $CurrKey eq 'TypeID' ) {
-                $CurrTM{Type}->[1]->{Content}
-                    = $Kernel::OM->Get('Kernel::System::Type')->TypeLookup(
+                $CurrTM{Type}->[1]->{Content} = $Kernel::OM->Get('Kernel::System::Type')->TypeLookup(
                     TypeID => $TicketTemplate{$CurrKey}
-                    );
+                );
             }
             elsif ( $CurrKey eq 'StateID' ) {
-                $CurrTM{State}->[1]->{Content}
-                    = $Kernel::OM->Get('Kernel::System::State')->StateLookup(
+                $CurrTM{State}->[1]->{Content} = $Kernel::OM->Get('Kernel::System::State')->StateLookup(
                     StateID => $TicketTemplate{$CurrKey}
-                    );
+                );
             }
             elsif ( $CurrKey eq 'PriorityID' ) {
-                $CurrTM{Priority}->[1]->{Content}
-                    = $Kernel::OM->Get('Kernel::System::Priority')->PriorityLookup(
+                $CurrTM{Priority}->[1]->{Content} = $Kernel::OM->Get('Kernel::System::Priority')->PriorityLookup(
                     PriorityID => $TicketTemplate{$CurrKey}
-                    );
+                );
             }
             elsif ( $CurrKey eq 'OwnerID' || $CurrKey eq 'ResponsibleID' ) {
-                $CurrTM{ substr( $CurrKey, 0, -2 ) }->[1]->{Content}
-                    = $Kernel::OM->Get('Kernel::System::User')->UserLookup(
+                $CurrTM{ substr( $CurrKey, 0, -2 ) }->[1]->{Content} = $Kernel::OM->Get('Kernel::System::User')->UserLookup(
                     UserID => $TicketTemplate{$CurrKey}
-                    );
+                );
             }
             elsif ( $CurrKey eq 'ServiceID' ) {
-                $CurrTM{Service}->[1]->{Content}
-                    = $Kernel::OM->Get('Kernel::System::Service')->ServiceLookup(
+                $CurrTM{Service}->[1]->{Content} = $Kernel::OM->Get('Kernel::System::Service')->ServiceLookup(
                     ServiceID => $TicketTemplate{$CurrKey}
-                    );
+                );
             }
             elsif ( $CurrKey eq 'SLAID' ) {
                 $CurrTM{SLA}->[1]->{Content}
                     = $Kernel::OM->Get('Kernel::System::SLA')->SLALookup(
                     SLAID => $TicketTemplate{$CurrKey}
-                    );
+                );
             }
             elsif ( $CurrKey =~ m/^DynamicField_.*/ ) {
                 if ( ref $TicketTemplate{$CurrKey} ne 'ARRAY' ) {
-                    $CurrTM{$CurrKey}->[1]->{Content}
-                        = $TicketTemplate{$CurrKey};
+                    $CurrTM{$CurrKey}->[1]->{Content} = $TicketTemplate{$CurrKey};
                 }
                 else {
                     for my $Item ( @{ $TicketTemplate{$CurrKey} } ) {
@@ -1015,9 +1046,8 @@ sub _CreateTicketTemplateExportXML {
     push( @XMLHashArray, undef );
 
     my %XMLHashTicketTemplate = ();
-    $XMLHashTicketTemplate{'TicketTemplateList'}->[0] = undef;
-    $XMLHashTicketTemplate{'TicketTemplateList'}->[1]->{'TicketTemplateEntry'}
-        = \@ExportDataArray;
+    $XMLHashTicketTemplate{'TicketTemplateList'}->[0]                          = undef;
+    $XMLHashTicketTemplate{'TicketTemplateList'}->[1]->{'TicketTemplateEntry'} = \@ExportDataArray;
 
     push( @XMLHashArray, \%XMLHashTicketTemplate );
 

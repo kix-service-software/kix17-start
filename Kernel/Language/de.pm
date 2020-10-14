@@ -431,12 +431,16 @@ sub Data {
         'There was a problem uninstalling %s.' => 'Es gab ein Problem beim De-Installieren der %s.',
 
         # Template: AAACalendar
-        'New Year\'s Day' => 'Neujahr',
+        'New Year\'s Day'             => 'Neujahr',
         'International Workers\' Day' => 'Tag der Arbeit',
-        'Christmas Eve' => 'Heiligabend',
-        'First Christmas Day' => '1. Weihnachtstag',
-        'Second Christmas Day' => '2. Weihachtstag',
-        'New Year\'s Eve' => 'Silvester',
+        'Christmas Eve'               => 'Heiligabend',
+        'First Christmas Day'         => '1. Weihnachtstag',
+        'Second Christmas Day'        => '2. Weihnachtstag',
+        'New Year\'s Eve'             => 'Silvester',
+        'Good Friday'                 => 'Karfreitag',
+        'Easter Monday'               => 'Ostermontag',
+        'Ascension Day'               => 'Christi Himmelfahrt',
+        'Whit Monday'                 => 'Pfingstmontag',
 
         # Template: AAAGenericInterface
         'KIX as requester' => 'KIX als Requester',

@@ -44,17 +44,28 @@ sub DatepickerGetVacationDays {
 
     # get config object
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+    my $TimeObject   = $Kernel::OM->Get('Kernel::System::Time');
 
     # get the defined vacation days
     my $TimeVacationDays        = $ConfigObject->Get('TimeVacationDays');
-    my $TimeVacationDaysOneTime = $ConfigObject->Get('TimeVacationDaysOneTime');
     if ( $Param{Calendar} ) {
         if ( $ConfigObject->Get( "TimeZone::Calendar" . $Param{Calendar} . "Name" ) ) {
             $TimeVacationDays        = $ConfigObject->Get( "TimeVacationDays::Calendar" . $Param{Calendar} );
-            $TimeVacationDaysOneTime = $ConfigObject->Get(
-                "TimeVacationDaysOneTime::Calendar" . $Param{Calendar}
-            );
         }
+    }
+
+    # prepare moveable vacation days
+    my $TimeVacationDaysOneTime;
+    my ($CurrSec, $CurrMin, $CurrHour, $CurrDay, $CurrMonth, $CurrYear, $CurrWeekDay) = $TimeObject->SystemTime2Date(
+        SystemTime => $TimeObject->SystemTime(),
+    );
+    my $FirstYear = $CurrYear - 1;
+    my $LastYear  = $CurrYear + 10;
+    for my $Year ( $FirstYear..$LastYear ) {
+        $TimeVacationDaysOneTime->{ $Year } = $TimeObject->PrepareVacationDaysOfYear(
+            Calendar => $Param{Calendar},
+            Year     => $Year,
+        );
     }
 
     # translate the vacation description if possible

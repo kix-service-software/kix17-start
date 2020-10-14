@@ -1145,21 +1145,21 @@ sub _GetServices {
     my %Service;
 
     if ( !$Param{AllServices} ) {
-        # check needed
-        return \%Service if !$Param{QueueID};
-
         # get options for default services for unknown customers
         my $DefaultServiceUnknownCustomer = $ConfigObject->Get('Ticket::Service::Default::UnknownCustomer');
 
         # check if no CustomerUserID is selected
         # if $DefaultServiceUnknownCustomer = 0 leave CustomerUserID empty, it will not get any services
         # if $DefaultServiceUnknownCustomer = 1 set CustomerUserID to get default services
-        if ( !$Param{CustomerUserID} && $DefaultServiceUnknownCustomer ) {
+        if (
+            !$Param{CustomerUserID}
+            && $DefaultServiceUnknownCustomer
+        ) {
             $Param{CustomerUserID} = '<DEFAULT>';
         }
 
         # get service list
-        if ( $Param{CustomerUserID} || $DefaultServiceUnknownCustomer ) {
+        if ( $Param{CustomerUserID} ) {
             %Service = $TicketObject->TicketServiceList(
                 %Param,
                 Action => $Self->{Action},
