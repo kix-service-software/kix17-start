@@ -2691,6 +2691,8 @@ sub Data {
         'Reset Filter' => 'Filter zurücksetzen',
         'Show one article' => 'Einen Beitrag anzeigen',
         'Show all articles' => 'Alle Beiträge anzeigen',
+        'Reset Columns Width' => 'Spaltenbreite zurücksetzen',
+        'Reset columns width' => 'Spaltenbreite zurücksetzen',
         'Unread articles' => 'Ungelesene Beiträge',
         'No.' => 'Nr.',
         'Important' => 'Wichtig',

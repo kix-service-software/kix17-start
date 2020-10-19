@@ -322,8 +322,13 @@
     .Sortable.DataTable th.SortDescending a {
         padding-left: 15px;
     }
+    .DataTable th.headerSortUp a,
+    .DataTable th.headerSortDown a {
+        padding-left: 8px;
+    }
     .DataTable thead .SortAscending > a::after,
-    .TableSmall thead .SortAscending > a::after {
+    .TableSmall thead .SortAscending > a::after,
+    .DataTable th.headerSortUp > a::after {
         content: "\25B2";
         display: block;
         position: absolute;
@@ -331,7 +336,8 @@
         top: 3px;
     }
     .DataTable thead .SortDescending > a::after,
-    .TableSmall thead .SortDescending > a::after {
+    .TableSmall thead .SortDescending > a::after,
+    .DataTable th.headerSortDown > a::after {
         content: "\25BC";
         display: block;
         position: absolute;
@@ -409,6 +415,7 @@
     .ArticleView,
     .ArticlePage,
     .ArticleFilter,
+    .ResetColumnWidth,
     .ArticleTicketMarkAsRead {
         float: left;
     }
@@ -591,4 +598,41 @@
         display: inline-block;
     }
 
+
+    /**
+    *   @subsection table column resize
+    */
+    .table-resizable.resizing,
+    .table-resizable th::before {
+        cursor: col-resize;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+    .table-resizable.resizing th.moved {
+        border-right-width: 2px;
+        border-right-style: solid;
+    }
+    .table-resizable th {
+        position: relative;
+    }
+    .table-resizable th::before {
+        content: "";
+        display: block;
+        height: 100%;
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 0.2em;
+    }
+    .table-resizable th:last-of-type::before {
+        display: none;
+    }
+    .table-resizable td {
+        max-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
 }

@@ -87,6 +87,13 @@ sub new {
         }
     }
 
+    if ( $UserPreferences{UserArticleTableColumnResizing} ) {
+        $Self->{ColumnResizing} = $UserPreferences{UserArticleTableColumnResizing};
+    }
+    else {
+        $Self->{ColumnResizing} = '';
+    }
+
     if ( !defined $Self->{ZoomExpandSort} ) {
         $Self->{ZoomExpandSort} = $ConfigObject->Get('Ticket::Frontend::ZoomExpandSort');
     }
@@ -1482,7 +1489,8 @@ sub MaskAgentZoom {
         Name => 'TicketZoomInit',
         Data => {
             %Param,
-            TicketID => $Self->{TicketID},
+            TicketID       => $Self->{TicketID},
+            ColumnResizing => $Self->{ColumnResizing}
         },
     );
 

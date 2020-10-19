@@ -137,10 +137,10 @@
     div.UnreadArticles em {
         display: none;
     }
-
     table tr.MasterAction {
         cursor: pointer;
     }
+
 
     /**
     * @subsection TableSmall
@@ -188,6 +188,7 @@
     .TableSmall td:first-child {
         padding-top: 1px;
     }
+
 
     /**
     * @subsection DataTable
@@ -321,8 +322,13 @@
     .Sortable.DataTable th.SortDescending a {
         padding-left: 15px;
     }
+    .DataTable th.headerSortUp a,
+    .DataTable th.headerSortDown a {
+        padding-left: 8px;
+    }
     .DataTable thead .SortAscending > a::after,
-    .TableSmall thead .SortAscending > a::after {
+    .TableSmall thead .SortAscending > a::after,
+    .DataTable th.headerSortUp > a::after {
         content: "\25B2";
         display: block;
         position: absolute;
@@ -330,7 +336,8 @@
         top: 3px;
     }
     .DataTable thead .SortDescending > a::after,
-    .TableSmall thead .SortDescending > a::after {
+    .TableSmall thead .SortDescending > a::after,
+    .DataTable th.headerSortDown > a::after {
         content: "\25BC";
         display: block;
         position: absolute;
@@ -343,7 +350,6 @@
     .TableSmall thead th.OverviewHeader .ColumnSettingsContainer {
         position: relative;
     }
-
     .DataTable thead th.DashboardHeader .ColumnSettingsBox,
     .TableSmall thead th.OverviewHeader .ColumnSettingsBox {
         -moz-border-radius: 3px;
@@ -397,7 +403,6 @@
         position: relative;
         z-index: 99;
     }
-
     .DataTableNoHighlight tbody tr td input,
     .DataTableNoHighlight tbody tr td select {
         width: 85%;
@@ -410,6 +415,7 @@
     .ArticleView,
     .ArticlePage,
     .ArticleFilter,
+    .ResetColumnWidth,
     .ArticleTicketMarkAsRead {
         float: left;
     }
@@ -429,6 +435,9 @@
     #ArticleTableBody .Scroller .DataTable {
         border: 0px;
     }
+    .DataTable tr.UnreadArticles > td {
+        font-weight: bold;
+    }
 
 
     /**
@@ -446,7 +455,6 @@
     .WidgetSimple .Field.LayoutGrid .Tablelike {
         width: 98%;
     }
-
     ul.Tablelike:first-child {
         margin-right: 8px;
     }
@@ -476,7 +484,6 @@
     .WidgetSimple .Field.LayoutGrid ul.Tablelike {
         width: 100%;
     }
-
     ul.AllocationList {
         min-height: 25px;
         max-height: 300px;
@@ -513,10 +520,10 @@
         max-height: 155px;
     }
 
+
     /**
     * @subsection ticket list
     */
-
     .TicketList table {
         border-collapse: separate;
         position: relative;
@@ -525,6 +532,7 @@
     .TicketList td {
         line-height: 18px;
     }
+
 
     /**
     *   @subsection data collector
@@ -580,14 +588,12 @@
         font: normal normal normal 14px/1 FontAwesome;
         display: inline-block;
     }
-
     .IconNotReadyGrey::before {
         content: "\f00d";
         line-height: 16px;
         font: normal normal normal 14px/1 FontAwesome;
         display: inline-block;
     }
-
     .IconReady::before {
         content: "\f00c";
         line-height: 16px;
@@ -595,4 +601,41 @@
         display: inline-block;
     }
 
+
+    /**
+    *   @subsection table column resize
+    */
+    .table-resizable.resizing,
+    .table-resizable th::before {
+        cursor: col-resize;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+    .table-resizable.resizing th.moved {
+        border-right-width: 2px;
+        border-right-style: solid;
+    }
+    .table-resizable th {
+        position: relative;
+    }
+    .table-resizable th::before {
+        content: "";
+        display: block;
+        height: 100%;
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 0.2em;
+    }
+    .table-resizable th:last-of-type::before {
+        display: none;
+    }
+    .table-resizable td {
+        max-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
 }
