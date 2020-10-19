@@ -414,6 +414,9 @@
     .DataTable tbody tr.Invalid {
        color: #AAAAAA;
     }
+    .table-resizable.resizing th.moved {
+        border-right-color: #0A7CB3;
+    }
 
 
     /*

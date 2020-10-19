@@ -118,5 +118,110 @@ Core.UI.Table = (function (TargetNS) {
         });
     };
 
+    /**
+     * @name InitColumnResize
+     * @memberof Core.UI.Table
+     * @function
+     * @param {jQueryObject} $Element - Table element.
+     * @description
+     *      This function initializes resizeable columns of a table.
+     */
+    TargetNS.InitColumnResize = function ($Element, Identifiere, Action, customResizing) {
+        var startX,
+            startWidth,
+            $handle,
+            pressed       = false,
+            minWidth      = 0,
+            tableWidth    = $Element.width(),
+            resetIcon     = $Element.closest('.WidgetSimple').find('.ResetColumnWidth'),
+            storeResizing = '';
+
+        if ( customResizing ) {
+            customResizing = customResizing.split(',');
+            if ( customResizing.length === $Element.find('th').length ) {
+                resetIcon.removeClass('Hidden');
+                $.each(customResizing, function(index, value) {
+                    var newWidth = tableWidth * value;
+                    $($Element.find('th').get(index)).width(newWidth);
+                });
+            }
+        }
+
+        resetIcon.on('click',function() {
+            if ( Identifiere === 'ArticleTable' ) {
+                Core.Agent.TicketZoom.AdjustTableHead($Element.children('thead'), $Element.children('tbody'), 0);
+
+            } else {
+                $Element.find('th').width('');
+            }
+
+            if ( Action.match(/^Customer/) ) {
+                Core.Customer.PreferencesUpdate('User' + Identifiere + 'ColumnResizing', '');
+            }
+            else {
+                Core.Agent.PreferencesUpdate('User' + Identifiere + 'ColumnResizing', '');
+            }
+            resetIcon.addClass('Hidden');
+        });
+
+        $Element.addClass('table-resizable');
+        $Element.on({
+            mousemove: function(event) {
+                var curWidth = startWidth + (event.pageX - startX);
+                event.preventDefault();
+                if (pressed) {
+                    if ( minWidth >= curWidth ) {
+                        $handle.width(minWidth);
+                    } else {
+                        $handle.width(curWidth);
+                    }
+                }
+            },
+            mouseup: function(event) {
+                event.preventDefault();
+
+                if (pressed) {
+                    $Element.removeClass('resizing');
+                    $handle.removeClass('moved');
+                    pressed       = false;
+                    storeResizing = '';
+
+                    $.each($Element.find('th'), function () {
+                        if ( storeResizing ) {
+                            storeResizing += ',';
+                        }
+                        storeResizing += ($(this).width() / tableWidth ).toFixed(4);
+                    });
+
+                    if ( Action.match(/^Customer/) ) {
+                        Core.Customer.PreferencesUpdate('User' + Identifiere + 'ColumnResizing', storeResizing);
+                    }
+                    else {
+                        Core.Agent.PreferencesUpdate('User' + Identifiere + 'ColumnResizing', storeResizing);
+                    }
+
+                    resetIcon.removeClass('Hidden');
+                }
+            }
+        });
+
+        $Element.find('th').on('mousedown', function(event) {
+            event.preventDefault();
+
+            minWidth    = 0;
+            $handle     = $(this);
+            pressed     = true;
+            startX      = event.pageX;
+            startWidth  = $handle.width();
+
+            $Element.addClass('resizing');
+            $handle.addClass('moved');
+
+            $.each($handle.find('a,span'), function() {
+                minWidth += $(this).width();
+            });
+        });
+    };
+
     return TargetNS;
 }(Core.UI.Table || {}));
