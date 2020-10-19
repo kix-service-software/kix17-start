@@ -1,6 +1,9 @@
 # Change log of KIX
 * Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.14.0-RC1 (2020/10/19)
+ * (2020/10/14) - CR: KIX17-1334 (Added resizing of the column of the article table) (fjacquemin)
+
 # 17.13.0 (2020/10/14)
  * (2020/10/14) - productive release
 
