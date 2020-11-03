@@ -10015,6 +10015,18 @@ via the Preferences button after logging in.
             </FrontendModuleReg>
         </Setting>
     </ConfigItem>
+    <ConfigItem Name="Frontend::Module###LinkObjectAJAXHandler" Required="1" Valid="1">
+        <Description Translatable="1">Frontend module registration for the agent interface.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Frontend::Agent::ModuleRegistration</SubGroup>
+        <Setting>
+            <FrontendModuleReg>
+                <Description>Link Object AJAX handler</Description>
+                <Title>Link Object AJAX handler</Title>
+                <NavBarName>Ticket</NavBarName>
+            </FrontendModuleReg>
+        </Setting>
+    </ConfigItem>
     <ConfigItem Name="Frontend::Module###AgentInfo" Required="0" Valid="1">
         <Description Translatable="1">Frontend module registration for the agent interface.</Description>
         <Group>Framework</Group>
@@ -10983,6 +10995,20 @@ via the Preferences button after logging in.
         <SubGroup>Core::Stats</SubGroup>
         <Setting>
             <String Regex="^[0-9]{1,5}$">1000</String>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Stats::D3::SkipHeader" Required="0" Valid="0">
+        <Description Translatable="1">Defines column header to be skipped for D3 graphs.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Stats</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Age">1</Item>
+                <Item Key="Alter">1</Item>
+                <Item Key="Ticket#">1</Item>
+                <Item Key="Titel">1</Item>
+                <Item Key="Title">1</Item>
+            </Hash>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Core::MirrorDB::DSN" Required="0" Valid="0" ConfigLevel="200">

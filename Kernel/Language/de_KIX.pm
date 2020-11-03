@@ -908,12 +908,12 @@ sub Data {
         'Definiert E-Mail-Aktionen für Artikeltypen.';
 
     # LinkObject
-    $Lang->{'Allows a search with empty search parameters in link object mask.'} =
-        'Erlaubt Suche mit leeren Suchparametern in LinkObject-Maske.';
-    $Lang->{
-        'Frontend module registration for the AgentLinkObjectUtils.'
-        }
+    $Lang->{'Allows a search with empty search parameters in link object mask.'}
+        = 'Erlaubt Suche mit leeren Suchparametern in LinkObject-Maske.';
+    $Lang->{'Frontend module registration for the AgentLinkObjectUtils.'}
         = 'Frontendmodul-Registration des Moduls AgentLinkObjectUtils.';
+    $Lang->{'Dynamic fields shown in the linked tickets screen of the agent interface. Possible settings: 0 = Disabled, 1 = Available, 2 = Enabled by default.'}
+        = 'Dynamische Felder, die auf dem Bildschirm für verknüpfte Tickets der Agentenschnittstelle angezeigt werden. Mögliche Einstellungen: 0 = Deaktiviert, 1 = Verfügbar, 2 = Standardmäßig aktiviert.';
 
     # ResponsibleAutoSetPerTicketType
     $Lang->{'Workflowmodule which sets the ticket responsible based on ticket type if not given.'} =
@@ -1261,27 +1261,17 @@ sub Data {
 
     # graph visualization related translations...
     $Lang->{'CI-Classes to consider'} = 'Zu betrachtende CI-Klassen';
-    $Lang->{'Defines parameters for the AgentITSMConfigItemZoomTab "LinkGraph".'} =
-        'Bestimmt die Parameter für AgentITSMConfigItemZoomTab "Verknüpfungsgraph".';
-    $Lang->{
-        'Required permissions to use the ITSM configuration item zoom screen in the agent interface.'
-        }
+    $Lang->{'Defines parameters for the AgentITSMConfigItemZoomTab "LinkGraph".'}
+        = 'Bestimmt die Parameter für AgentITSMConfigItemZoomTab "Verknüpfungsgraph".';
+    $Lang->{'Required permissions to use the ITSM configuration item zoom screen in the agent interface.'}
         = 'Benötigte Berechtigungen, um den ITSM Configuration Item Zoom Tab im Agenten-Interface nutzen zu können.';
-    $Lang->{
-        'Defines which class-attribute should be considered for the icons. Sub-attributes are possible. Value must be key not name of attribute!'
-        }
+    $Lang->{'Defines which class-attribute should be considered for the icons. Sub-attributes are possible. Value must be key not name of attribute!'}
         = 'Bestimmt welches Klassen-Attribut für die Icons beachtet werden soll. Unterattribute sind möglich. Der Wert muss der Key, nicht der Name des Attributes sein!';
-    $Lang->{
-        'Defines the icons for node visualization - key could be a CI-Class (if applicable - e.g. "Computer") or a CI-Class followed by a triple colon and a value of the specified class-attribute (if attribute is "Type" - e.g. "Computer:::Server"). The Icon for a CI-Class is the fallback if no icon for the class-attribute is specified and "Default" is the fallback if no icon for a CI-Class is specified.'
-        }
+    $Lang->{'Defines the icons for node visualization - key could be a CI-Class (if applicable - e.g. "Computer") or a CI-Class followed by a triple colon and a value of the specified class-attribute (if attribute is "Type" - e.g. "Computer:::Server"). The Icon for a CI-Class is the fallback if no icon for the class-attribute is specified and "Default" is the fallback if no icon for a CI-Class is specified.'}
         = 'Definiert die Icons für die Knotendarstellung - der Schlüssel kann eine CI-Klasse (falls zutreffend - z.B. "Computer") oder eine CI-Klasse gefolgt von einem dreifachen Doppelpunkt und einem Wert des angegebenen Klassenattributes (falls "Type" das Attribut ist - z.B. "Computer:::Server") sein. Das Icon der CI-Klasse ist der Fallback, falls kein Icon für das Klassenattribute definiert ist und "Default" ist der Fallback wenn kein Icon für eine CI-Klasse angegeben ist.';
-    $Lang->{
-        'Defines the icons for node visualization if CIs with a certain deployment state are not shown in CMDB overview (postproductive or configured) - key could be a CI-Class (if applicable - e.g. "Computer") or a CI-Class followed by a triple colon and a value of the specified class-attribute (if attribute is "Type" - e.g. "Computer:::Server"). The Icon for a CI-Class is the fallback if no icon for the class-attribute is specified and "Default" is the fallback if no icon for a CI-Class is specified.'
-        }
+    $Lang->{'Defines the icons for node visualization if CIs with a certain deployment state are not shown in CMDB overview (postproductive or configured) - key could be a CI-Class (if applicable - e.g. "Computer") or a CI-Class followed by a triple colon and a value of the specified class-attribute (if attribute is "Type" - e.g. "Computer:::Server"). The Icon for a CI-Class is the fallback if no icon for the class-attribute is specified and "Default" is the fallback if no icon for a CI-Class is specified.'}
         = 'Definiert die Icons für die Knotendarstellung falls CIs mit einem bestimmten Verwendungsstatus in der CMDB-Übersicht nicht angezeigt werden (postproductive oder konfiguriert) - der Schlüssel kann eine CI-Klasse (falls zutreffend - z.B. "Computer") oder eine CI-Klasse gefolgt von einem dreifachen Doppelpunkt und einem Wert des angegebenen Klassenattributes (falls "Type" das Attribut ist - z.B. "Computer:::Server") sein. Das Icon der CI-Klasse ist der Fallback, falls kein Icon für das Klassenattribute definiert ist und "Default" ist der Fallback wenn kein Icon für eine CI-Klasse angegeben ist.';
-    $Lang->{
-        'Defines the icons for the incident-states - key is the state-type (if applicable - e.g. "operational").'
-        }
+    $Lang->{'Defines the icons for the incident-states - key is the state-type (if applicable - e.g. "operational").'}
         = 'Definiert die Icons für die Vorfallstatus - der Schlüssel ist der Status (falls zutreffend - z.B. "operational")';
     $Lang->{'Show linked services'}     = 'Zeige verknüpfte Services';
     $Lang->{'Linked Services'}          = 'Verknüpfte Services';
@@ -1289,9 +1279,10 @@ sub Data {
     $Lang->{'Considered CI-Classes'}    = 'Betrachtete CI-Klassen';
     $Lang->{'Saved graphs for this CI'} = 'Gespeicherte Graphen für dieses CI';
     $Lang->{'Too many nodes'}           = 'Zu viele Knoten';
-    $Lang->{'More than 100 nodes not possible (currently number: %s)!'} = 'Mehr als 100 Knoten sind nicht möglich (aktuelle Anzahl: %s)!';
-
-    $Lang->{''} = '';
+    $Lang->{'More than 100 nodes not possible (currently number: %s)!'}
+        = 'Mehr als 100 Knoten sind nicht möglich (aktuelle Anzahl: %s)!';
+    $Lang->{'Opens the graph in a separate window.'}
+        = 'Öffnet den Graphen in einem separaten Fenster.';
 
     # ITSMConfigItemEvents
     $Lang->{
@@ -2629,7 +2620,7 @@ sub Data {
 
     # Perl Module: Kernel/Modules/AgentITSMConfigItemSearch.pm
     $Lang->{'No Result!'}                 = 'Kein Ergebnis!';
-    $Lang->{'Config Item Search Results'} = '';
+    $Lang->{'Config Item Search Results'} = 'ConfigItem Suchergebnisse';
 
     # SysConfig
     $Lang->{
@@ -4556,6 +4547,16 @@ sub Data {
         = 'Aktiviert die Begrüßung Überschrift im Login.';
     $Lang->{'Welcome to'} = 'Willkommen bei';
     # EO LoginHeaders
+
+    # Response Order
+    $Lang->{'Select the response format'}     = 'Wählen Sie das Antwortformat';
+    $Lang->{'Select response format'}         = 'Antwortformat auswählen';
+    $Lang->{'Which response format to use?'}  = 'Welches Antwortformat soll verwendet werden?';
+    $Lang->{'Response formats'}               = 'Antwortformate';
+    $Lang->{'System configuration'}           = 'Systemkonfiguration';
+    $Lang->{'Quote before response template'} = 'Zitat vor Antwortvorlage';
+    $Lang->{'Quote after response template'}  = 'Zitat nach Antwortvorlage';
+    # EO Response Order
 
     return 0;
 }

@@ -1,0 +1,236 @@
+# --
+# Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file LICENSE for license information (AGPL). If you
+# did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
+# --
+
+[% RenderBlockStart("TableComplex") %]
+[% RenderBlockStart("TableComplexBlock") %]
+[% RenderBlockStart("TableComplexBlockActionRow") %]
+    <div class="Bottom">
+        <ul class="Actions">
+[% RenderBlockStart("TableComplexBlockActionRowBulk") %]
+            <li class="Bulk">
+                <span>
+                    <input type="checkbox" class="SelectAll" title="[% Translate("Select all") | html %]" id="SelectAllLinks[% Translate(Data.TableNumber) | html %]" autocomplete="off" />
+                    <label class="Label" for="SelectAllLinks[% Translate(Data.TableNumber) | html %]">[% Translate("Select all") | html %]</label>
+                </span>
+            </li>
+[% RenderBlockEnd("TableComplexBlockActionRowBulk") %]
+        </ul>
+        <div class="ClearLeft"></div>
+    </div>
+[% RenderBlockEnd("TableComplexBlockActionRow") %]
+    <form action="[% Env("CGIHandle") %]" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="Source" value="[% Data.Source %]" />
+        <input type="hidden" name="Target" value="[% Data.Target %]" />
+        <input type="hidden" name="ClassID" value="[% Data.ClassID %]" />
+        <input type="hidden" name="ItemID" value="[% Data.ItemID %]" />
+        <input type="hidden" name="CallingAction" value="[% Data.CallingAction %]" />
+        <table class="DataTable">
+            <thead>
+                <tr>
+[% RenderBlockStart("TableComplexBlockColumn") %]
+                    <th class="DashboardHeader [% Data.OrderCSS %]" data-column="[% Data.Sortable %]" title="[% Data.SortTitle | html %]">
+[% IF Data.Sortable %]
+                        <a class="SortColumn" href="#" >[% Translate(Data.Content) | html %]</a>
+[% ELSE %]
+                        <span class="Gray" >[% Translate(Data.Content) | html %]</span>
+[% END %]
+                    </th>
+[% RenderBlockEnd("TableComplexBlockColumn") %]
+                </tr>
+            </thead>
+            <tbody>
+[% RenderBlockStart("TableComplexBlockRow") %]
+                <tr>
+[% RenderBlockStart("TableComplexBlockRowColumn") %]
+                    <td class="LinkedObjects [% Data.Css | html %]" >
+                        [% Data.Content %]
+                    </td>
+[% RenderBlockEnd("TableComplexBlockRowColumn") %]
+                </tr>
+[% RenderBlockEnd("TableComplexBlockRow") %]
+            </tbody>
+        </table>
+    </form>
+[% RenderBlockStart("TableComplexBlockFooterNormal") %]
+[% RenderBlockEnd("TableComplexBlockFooterNormal") %]
+
+[% RenderBlockStart("TableComplexBlockFooterAdd") %]
+        <div class="SpacingTopSmall">
+            [% Data.LinkTypeStrg %]
+            <button class="Primary" id="AddLinks" name="AddLinks" type="submit" title="[% Translate("Add links") | html %]">[% Translate("Add links") | html %]</button>
+        </div>
+        <input type="hidden" name="SubmitLink" value="[% Translate("Link") | html %]" />
+[% RenderBlockEnd("TableComplexBlockFooterAdd") %]
+
+[% RenderBlockStart("TableComplexBlockFooterDelete") %]
+        <div class="SpacingTopSmall">
+            <button class="Primary CallForAction" type="submit" title="[% Translate("Delete links") | html %]"><span>[% Translate("Delete links") | html %]</span></button>
+        </div>
+        <input type="hidden" name="SubmitDelete" value="[% Translate("Delete") | html %]" />
+[% RenderBlockEnd("TableComplexBlockFooterDelete") %]
+[% RenderBlockEnd("TableComplexBlock") %]
+
+[% RenderBlockEnd("TableComplex") %]
+
+<script type="text/javascript">//<![CDATA[
+    $('.SelectAll').bind('click', function () {
+        var Status = $(this).prop('checked');
+        $(this).closest('.WidgetSimple').find('table input[type=checkbox]').prop('checked', Status);
+    });
+
+    $('.SortColumn').off('click').on('click', function(Event) {
+        var sortBy  = $(this).closest('th').attr('data-column'),
+            orderBy = 'Down',
+            Ingore  = {},
+            Action  = $(this).closest('form').children('input[name=CallingAction]').val(),
+            LinkPage;
+
+        if ( $(this).closest('th').hasClass('SortDescendingLarge') ) {
+            orderBy = 'Up';
+        }
+
+        Ingore['ChallengeToken'] = '1';
+        $.each($('.ColumnFilter'), function() {
+            Ingore[$(this).attr('name')] = '1';
+        });
+
+        if (
+            Action === 'AgentLinkObject'
+        ) {
+            Ingore['Source'] = '1';
+            Ingore['ItemID'] = '1';
+        }
+
+        LinkPage = Core.AJAX.SerializeForm($(this).closest('form'), Ingore);
+        LinkPage += ';OrderBy=' + orderBy;
+        LinkPage += ';SortBy=' + sortBy;
+
+        if (
+            Action === 'AgentLinkObject'
+        ) {
+            LinkPage += ';Source=' + $('input[name="SourceObject"]').val();
+            LinkPage += ';ItemID=' + $('input[name="SourceKey"]').val();
+        }
+
+        if (
+            Action === 'AgentITSMConfigItemZoomTabLinkedObjects'
+            && $(this).closest('.Content').find('.WidgetActionBox').length
+        ) {
+            $(this).closest('.Content')
+                .find('.WidgetActionBox')
+                .addClass('Hidden')
+                .appendTo( $(this).closest('.MainBox') );
+
+            Core.AJAX.ContentUpdate(
+                $(this).closest('.MainBox').find('.Content'),
+                '[% Env("Baselink") %]Action=LinkObjectAJAXHandler;Name=[% Data.Name | html %];' + LinkPage, function () {
+                    $('.WidgetActionBox.Hidden')
+                        .appendTo( $('.WidgetActionBox.Hidden')
+                        .closest('.MainBox')
+                        .find('div.Bottom') )
+                        .removeClass('Hidden');
+                }
+            );
+        } else {
+            Core.AJAX.ContentUpdate(
+                $(this).closest('.WidgetSimple').find('.Content'),
+                '[% Env("Baselink") %]Action=LinkObjectAJAXHandler;Name=[% Data.Name | html %];' + LinkPage, function () {}
+            );
+        }
+
+        Event.preventDefault();
+        return false;
+    });
+
+    $('.ColumnSettingsTrigger').off('click').on('click', function() {
+
+        var $TriggerObj = $(this),
+            $ColumnSettingsContainer = $TriggerObj.next('.ColumnSettingsContainer'),
+            FilterName;
+
+        if ($TriggerObj.hasClass('Active')) {
+
+            $TriggerObj
+                .next('.ColumnSettingsContainer')
+                .find('.ColumnSettingsBox')
+                .fadeOut('fast', function() {
+                    $TriggerObj.removeClass('Active');
+                });
+        }
+        else {
+
+            // slide up all open settings widgets
+            $('.ColumnSettingsTrigger')
+                .next('.ColumnSettingsContainer')
+                .find('.ColumnSettingsBox')
+                .fadeOut('fast', function() {
+                    $(this).parent().prev('.ColumnSettingsTrigger').removeClass('Active');
+                });
+
+            // show THIS settings widget
+            $ColumnSettingsContainer
+                .find('.ColumnSettingsBox')
+                .fadeIn('fast', function() {
+
+                    $TriggerObj.addClass('Active');
+
+                    // only show and use the delete filter icon in case of autocomplete fields
+                    // because in regular dropdowns we have a different way to delete the filter
+                    if ($TriggerObj.closest('th').hasClass('FilterActive') && $ColumnSettingsContainer.find('select.ColumnFilter').hasClass('Hidden')) {
+                        $ColumnSettingsContainer
+                            .find('.DeleteFilter')
+                            .removeClass('Hidden')
+                            .off()
+                            .on('click', function() {
+                                $(this)
+                                    .closest('.ColumnSettingsContainer')
+                                    .find('select')
+                                    .val('DeleteFilter')
+                                    .trigger('change');
+
+                                return false;
+                            });
+                    }
+
+                    // refresh filter dropdown
+                    FilterName = $ColumnSettingsContainer
+                        .find('select')
+                        .attr('name');
+
+                    if ( $TriggerObj.closest('th').hasClass('CustomerID') || $TriggerObj.closest('th').hasClass('CustomerUserID') || $TriggerObj.closest('th').hasClass('Responsible') || $TriggerObj.closest('th').hasClass('Owner') ) {
+
+                        if (!$TriggerObj.parent().find('.SelectedValue').length) {
+                            Core.AJAX.FormUpdate($TriggerObj.parents('form'), 'AJAXFilterUpdate', FilterName, [ FilterName ], function() {
+                                var AutoCompleteValue = $ColumnSettingsContainer
+                                        .find('select')
+                                        .val(),
+                                    AutoCompleteText  = $ColumnSettingsContainer
+                                        .find('select')
+                                        .find('option:selected')
+                                        .text();
+
+                                if (AutoCompleteValue !== 'DeleteFilter') {
+
+                                    $ColumnSettingsContainer
+                                        .find('select')
+                                        .after('<span class="SelectedValue Hidden"><span title="' + AutoCompleteText + ' (' + AutoCompleteValue + ')">' + AutoCompleteText + ' (' + AutoCompleteValue + ')</span></span>');
+                                }
+                            }, 'LinkObjectAJAXHandler');
+                        }
+                    }
+                    else {
+                        Core.AJAX.FormUpdate($TriggerObj.parents('form'), 'AJAXFilterUpdate', FilterName, [ FilterName ], function() {}, 'LinkObjectAJAXHandler');
+                    }
+            });
+        }
+
+        return false;
+    });
+
+    Core.KIX4OTRS.SelectLinkedObjects('[% Data.Action %]','[% Data.UserLanguage %]');
+//]]></script>

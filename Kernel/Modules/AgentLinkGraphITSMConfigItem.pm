@@ -61,19 +61,17 @@ sub new {
     bless( $Self, $Type );
 
     # create needed objects
-    $Self->{ConfigObject}         = $Kernel::OM->Get('Kernel::Config');
-    $Self->{LayoutObject}         = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-    $Self->{GeneralCatalogObject} = $Kernel::OM->Get('Kernel::System::GeneralCatalog');
-    $Self->{GroupObject}          = $Kernel::OM->Get('Kernel::System::Group');
-    $Self->{ConfigItemObject}     = $Kernel::OM->Get('Kernel::System::ITSMConfigItem');
-    $Self->{LogObject}            = $Kernel::OM->Get('Kernel::System::Log');
-    $Self->{ParamObject}          = $Kernel::OM->Get('Kernel::System::Web::Request');
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
-    $Self->{Config} = $Self->{ConfigObject}->Get("Frontend::Agent::$Self->{Action}");
+    # get config of frontend module
+    $Self->{Config} = $ConfigObject->Get("Frontend::Agent::$Self->{Action}");
 
-    $Self->{BaseURL}
-        = $Self->{ConfigObject}->Get('HttpType') . '://' . $Self->{ConfigObject}->Get('FQDN')
-        . '/' . $Self->{ConfigObject}->Get('ScriptAlias') . 'index.pl';
+    $Self->{BaseURL} = $ConfigObject->Get('HttpType')
+        . '://'
+        . $ConfigObject->Get('FQDN')
+        . '/'
+        . $ConfigObject->Get('ScriptAlias')
+        . 'index.pl';
 
     return $Self;
 }
@@ -81,33 +79,250 @@ sub new {
 sub Run {
     my ( $Self, %Param ) = @_;
 
-    $Param{ObjectType} = 'ITSMConfigItem';
+    # create needed objects
+    my $ConfigObject         = $Kernel::OM->Get('Kernel::Config');
+    my $LayoutObject         = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $GeneralCatalogObject = $Kernel::OM->Get('Kernel::System::GeneralCatalog');
+    my $ConfigItemObject     = $Kernel::OM->Get('Kernel::System::ITSMConfigItem');
+    my $LinkObject           = $Kernel::OM->Get('Kernel::System::LinkObject');
+    my $UserObject           = $Kernel::OM->Get('Kernel::System::User');
+    my $ParamObject          = $Kernel::OM->Get('Kernel::System::Web::Request');
 
-    if ( !$Param{ObjectType} ) {
-        $Self->{LogObject}->Log(
-            Priority => 'error',
-            Message  => "Kernel::Modules::AgentLinkGraph - got no ObjectType!",
+    # get params
+    my %GetParam = ();
+    for my $Param (
+        qw(
+            ObjectType ObjectID Template OpenWindow
+            MaxSearchDepth RelevantLinkTypes RelevantObjectSubTypes AdjustingStrength
+        )
+    ) {
+        $GetParam{$Param} = $ParamObject->GetParam( Param => $Param ) || '';
+    }
+
+    # check needed stuff
+    for ( qw(ObjectType ObjectID) ) {
+        if ( !$GetParam{$_} ) {
+            return $LayoutObject->ErrorScreen(
+                Message => 'No ' . $_ . ' is given!',
+                Comment => 'Please contact the admin.',
+            );
+        }
+    }
+    if ( $GetParam{ObjectType} ne 'ITSMConfigItem' ) {
+        return $LayoutObject->ErrorScreen(
+            Message => 'Wrong ObjectType is given!',
+            Comment => 'Please contact the admin.',
         );
     }
 
+    if ( $GetParam{Template} ) {
+        # reset template
+        if ( $Self->{Subaction} eq 'ResetTemplate' ) {
+            for my $Param ( qw(MaxSearchDepth RelevantLinkTypes RelevantObjectSubTypes AdjustingStrength) ) {
+                $UserObject->SetPreferences(
+                    Key    => 'CIGTemplate::' . $GetParam{Template} . '::' . $Param,
+                    Value  => '',
+                    UserID => $Self->{UserID},
+                );
+            }
+        }
+        # edit template
+        elsif ( $Self->{Subaction} eq 'SetTemplate' ) {
+            for my $Param ( qw(MaxSearchDepth RelevantLinkTypes RelevantObjectSubTypes AdjustingStrength) ) {
+                $UserObject->SetPreferences(
+                    Key    => 'CIGTemplate::' . $GetParam{Template} . '::' . $Param,
+                    Value  => $GetParam{$Param} || '',
+                    UserID => $Self->{UserID},
+                );
+            }
+        }
+    }
+
+    # prepare templates
+    my %UserPreferences = $UserObject->GetPreferences(
+        UserID => $Self->{UserID},
+    );
+    if ( !$GetParam{Template} ) {
+        $GetParam{Template} = $UserPreferences{CIGTemplate} || $Self->{Config}->{DefaultTemplate} || '';
+    }
+
+    # set preference
+    $UserObject->SetPreferences(
+        Key    => 'CIGTemplate',
+        Value  => $GetParam{Template},
+        UserID => $Self->{UserID},
+    );
+
+    my $TemplateConfig = $ConfigObject->Get('CIGraphConfigTemplate');
+    my %Templates      = ();
+    TEMPLATE:
+    for my $Template ( keys ( %{ $TemplateConfig->{Name} } ) ) {
+        # check template
+        next TEMPLATE if (
+            !$Template
+            || !$TemplateConfig->{Name}->{$Template}
+            || !$TemplateConfig->{Permission}->{$Template}
+            || !$TemplateConfig->{MaxSearchDepth}->{$Template}
+            || !$TemplateConfig->{RelevantLinkTypes}->{$Template}
+            || !$TemplateConfig->{RelevantObjectSubTypes}->{$Template}
+            || !$TemplateConfig->{AdjustingStrength}->{$Template}
+        );
+
+        # check for access rights
+        my $HasAccess = $ConfigItemObject->Permission(
+            Scope  => 'Item',
+            ItemID => $GetParam{ObjectID},
+            UserID => $Self->{UserID},
+            Type   => $TemplateConfig->{Permission}->{$Template},
+        );
+        next TEMPLATE if ( !$HasAccess );
+
+        # add template
+        $Templates{$Template} = $TemplateConfig->{Name}->{$Template};
+
+        # check current template
+        if ( $Template eq $GetParam{Template} ) {
+            $GetParam{MaxSearchDepth}         = $UserPreferences{'CIGTemplate::' . $GetParam{Template} . '::MaxSearchDepth'}         || $TemplateConfig->{MaxSearchDepth}->{$Template}         || '';
+            $GetParam{RelevantLinkTypes}      = $UserPreferences{'CIGTemplate::' . $GetParam{Template} . '::RelevantLinkTypes'}      || $TemplateConfig->{RelevantLinkTypes}->{$Template}      || '';
+            $GetParam{RelevantObjectSubTypes} = $UserPreferences{'CIGTemplate::' . $GetParam{Template} . '::RelevantObjectSubTypes'} || $TemplateConfig->{RelevantObjectSubTypes}->{$Template} || '';
+            $GetParam{AdjustingStrength}      = $UserPreferences{'CIGTemplate::' . $GetParam{Template} . '::AdjustingStrength'}      || $TemplateConfig->{AdjustingStrength}->{$Template}      || '';
+
+            if ($GetParam{RelevantObjectSubTypes} =~ m/[A-Za-z]/) {
+                my @Temp = split(/,/, $GetParam{RelevantObjectSubTypes});
+                my @IDs  = ();
+                for my $SubTyp ( @Temp ) {
+                    my $ItemRef = $GeneralCatalogObject->ItemGet(
+                        Class => 'ITSM::ConfigItem::Class',
+                        Name  => $SubTyp,
+                    );
+                    push(@IDs, $ItemRef->{ItemID});
+                }
+                $GetParam{RelevantObjectSubTypes} = join(',', @IDs);
+            }
+        }
+    }
+
+    $GetParam{TemplateString} = $LayoutObject->BuildSelection(
+        Name         => 'Template',
+        Data         => \%Templates,
+        SelectedID   => $GetParam{Template},
+        Translation  => 1,
+        Multiple     => 0,
+        PossibleNone => 1,
+        Class        => 'Modernize',
+    );
+
+    # max search depth
+    my %MaxSearchDepthSelectionValues = ();
+    for ( my $Count = 1; $Count < 10; $Count++ ) {
+        $MaxSearchDepthSelectionValues{$Count} = $Count;
+    }
+    $GetParam{MaxSearchDepthString} = $LayoutObject->BuildSelection(
+        Name         => 'TemplateMaxSearchDepth',
+        Data         => \%MaxSearchDepthSelectionValues,
+        SelectedID   => $GetParam{MaxSearchDepth},
+        Translation  => 0,
+        Multiple     => 0,
+        PossibleNone => 0,
+        Class        => 'Modernize',
+    );
+
+    # link types
+    my %LinkTypeSelectionValues;
+    my %LinkTypeList = $LinkObject->PossibleTypesList(
+        UserID  => $Self->{UserID},
+        Object1 => 'ITSMConfigItem',
+        Object2 => 'ITSMConfigItem',
+    );
+
+    for my $CurrKey ( keys %LinkTypeList ) {
+
+        # lookup real name for this type (two steps needed)
+        my $TypeID = $LinkObject->TypeLookup(
+            Name   => $CurrKey,
+            UserID => 1,
+        );
+        my %Type = $LinkObject->TypeGet(
+            TypeID => $TypeID,
+            UserID => 1,
+        );
+
+        $LinkTypeSelectionValues{$CurrKey}
+            = $Type{SourceName};
+    }
+    my @RelevantLinkTypeIDs;
+    if ( $GetParam{RelevantLinkTypes} ) {
+        @RelevantLinkTypeIDs = split(/,/, $GetParam{RelevantLinkTypes});
+    }
+    $GetParam{RelevantLinkTypesString} = $LayoutObject->BuildSelection(
+        Data         => \%LinkTypeSelectionValues,
+        SelectedID   => \@RelevantLinkTypeIDs,
+        Translation  => 1,
+        Name         => 'TemplateRelevantLinkTypes',
+        Multiple     => 1,
+        PossibleNone => 0,
+        Class        => 'Modernize',
+    );
+
+    # classes
+    my $CIClassListRef = $GeneralCatalogObject->ItemList(
+        Class => 'ITSM::ConfigItem::Class',
+        Valid => 1,
+    );
+    my @RelevantObjectSubTypeIDs;
+    if ( $GetParam{RelevantObjectSubTypes} ) {
+        for my $SubTypeID ( split(/,/, $GetParam{RelevantObjectSubTypes}) ) {
+            next if $SubTypeID eq '';
+            push( @RelevantObjectSubTypeIDs, $SubTypeID);
+        }
+    }
+
+    $GetParam{RelevantObjectSubTypesString} = $LayoutObject->BuildSelection(
+        Data         => $CIClassListRef,
+        SelectedID   => \@RelevantObjectSubTypeIDs,
+        Translation  => 1,
+        Name         => 'TemplateRelevantObjectSubTypes',
+        Multiple     => 1,
+        PossibleNone => 0,
+        Class        => 'Modernize',
+    );
+
+    # strength
+    my %AdjustingStrengthSelectionValues = (
+        1 => 'Strong',
+        2 => 'Medium',
+        3 => 'Weak',
+    );
+
+    $GetParam{AdjustingStrengthString} = $LayoutObject->BuildSelection(
+        Data         => \%AdjustingStrengthSelectionValues,
+        SelectedID   => $GetParam{AdjustingStrength},
+        Translation  => 1,
+        Name         => 'TemplateAdjustingStrength',
+        Multiple     => 0,
+        PossibleNone => 0,
+        Sort         => 'NumericKey',
+        Class        => 'Modernize',
+    );
+
     # get saved graphs and their config
     if ( $Self->{Subaction} eq 'GetSavedGraphs' ) {
-        $Self->GetSavedGraphs( \%Param );
-        for my $Graph ( keys %{ $Param{SavedGraphs} } ) {
+        my %Graphs = $Self->GetSavedGraphs( %GetParam );
+        for my $Graph ( keys %Graphs ) {
             if ( $Graph =~ m/\d+/ ) {
-                $Param{SavedGraphs}->{$Graph}->{SubTypes} = $Self->_GetClassNames(
-                    ClassIDString => $Param{SavedGraphs}->{$Graph}->{SubTypes},
+                $Graphs{$Graph}->{SubTypes} = $Self->_GetClassNames(
+                    ClassIDString => $Graphs{$Graph}->{SubTypes},
                 );
             }
         }
 
-        my $JSON = $Self->{LayoutObject}->JSONEncode(
+        my $JSON = $LayoutObject->JSONEncode(
             Data => {
-                Graphs => $Param{SavedGraphs},
+                Graphs => \%Graphs,
             },
         );
-        return $Self->{LayoutObject}->Attachment(
-            ContentType => 'application/json; charset=' . $Self->{LayoutObject}->{Charset},
+        return $LayoutObject->Attachment(
+            ContentType => 'application/json; charset=' . $LayoutObject->{Charset},
             Content     => $JSON || '',
             Type        => 'inline',
             NoCache     => 1,
@@ -116,31 +331,31 @@ sub Run {
 
     # get linked services and show them
     elsif ( $Self->{Subaction} eq 'ShowServices' ) {
-        return $Self->ShowServices( \%Param );
+        return $Self->ShowServices( %GetParam );
     }
 
     # create print output
     elsif ( $Self->{Subaction} eq 'CreatePrintOutput' ) {
-        return $Self->CreatePrintOutput( \%Param );
+        return $Self->CreatePrintOutput( %GetParam );
     }
 
     # save graph
     elsif ( $Self->{Subaction} eq 'SaveGraph' ) {
-        $Self->SaveGraph( \%Param );
-        $Param{GraphConfig}{SubTypes} = $Self->_GetClassNames(
-            ClassIDString => $Param{GraphConfig}{SubTypes}
+        my %Result = $Self->SaveGraph( %GetParam );
+        $Result{GraphConfig}->{SubTypes} = $Self->_GetClassNames(
+            ClassIDString => $Result{GraphConfig}->{SubTypes},
         );
 
-        my $JSON = $Self->{LayoutObject}->JSONEncode(
+        my $JSON = $LayoutObject->JSONEncode(
             Data => {
-                ID => $Param{Result}->{ID} || 0,
-                GraphConfig     => $Param{GraphConfig},
-                LastChangedTime => $Param{LastChangedTime},
-                LastChangedBy   => $Param{LastChangedBy}
+                ID              => $Result{Result}->{ID} || 0,
+                GraphConfig     => $Result{GraphConfig},
+                LastChangedTime => $Result{LastChangedTime},
+                LastChangedBy   => $Result{LastChangedBy}
             },
         );
-        return $Self->{LayoutObject}->Attachment(
-            ContentType => 'application/json; charset=' . $Self->{LayoutObject}->{Charset},
+        return $LayoutObject->Attachment(
+            ContentType => 'application/json; charset=' . $LayoutObject->{Charset},
             Content     => $JSON || '',
             Type        => 'inline',
             NoCache     => 1,
@@ -149,65 +364,61 @@ sub Run {
 
     # load object data, build it and give it to graph
     elsif ( $Self->{Subaction} eq 'InsertNode' ) {
-        return $Self->_InsertCI(%Param);
+        return $Self->_InsertCI(%GetParam);
     }
 
     # write created connection into database
     elsif ( $Self->{Subaction} eq 'SaveNewConnection' ) {
-        $Param{SourceInciStateType} =
-            $Self->{ParamObject}->GetParam( Param => 'SourceInciStateType' );
-        $Param{TargetInciStateType} =
-            $Self->{ParamObject}->GetParam( Param => 'TargetInciStateType' );
+        $GetParam{SourceInciStateType} = $ParamObject->GetParam( Param => 'SourceInciStateType' );
+        $GetParam{TargetInciStateType} = $ParamObject->GetParam( Param => 'TargetInciStateType' );
 
         # do saving
-        $Param{Result} = $Self->SaveCon( \%Param );
+        $GetParam{Result} = $Self->SaveCon(%GetParam);
 
-        return $Self->_PropagateInciState(%Param);
+        return $Self->_PropagateInciState(%GetParam);
     }
 
     # remove link in database
     elsif ( $Self->{Subaction} eq 'DeleteConnection' ) {
-        $Param{SourceInciStateType} =
-            $Self->{ParamObject}->GetParam( Param => 'SourceInciStateType' );
-        $Param{TargetInciStateType} =
-            $Self->{ParamObject}->GetParam( Param => 'TargetInciStateType' );
+        $GetParam{SourceInciStateType} = $ParamObject->GetParam( Param => 'SourceInciStateType' );
+        $GetParam{TargetInciStateType} = $ParamObject->GetParam( Param => 'TargetInciStateType' );
 
         # do deletion
-        $Param{Result} = $Self->DelCon( \%Param );
+        $GetParam{Result} = $Self->DelCon(%GetParam);
 
-        return $Self->_PropagateInciState(%Param);
+        return $Self->_PropagateInciState(%GetParam);
     }
 
     # get object names
     elsif ( $Self->{Subaction} eq 'GetObjectNames' ) {
-        return $Self->_GetCINamesForLoadedGraph( \%Param );
+        return $Self->_GetCINamesForLoadedGraph(%GetParam);
     }
 
     #---------------------------------------------------------------------------
     # do general preparations
-    %Param = $Self->DoPreparations(%Param);
+    %GetParam = $Self->DoPreparations(%GetParam);
 
     # do ConfigItem specific preparations
-    %Param = $Self->_PrepareITSMConfigItem(%Param);
+    %GetParam = $Self->_PrepareITSMConfigItem(%GetParam);
 
-    $Param{NodeObject} = 'CI';
-
-    $Param{VisitedNodes}     = {};
-    $Param{DiscoveredEdges}  = {};
-    $Param{Nodes}            = {};
-    $Param{UserCIEditRights} = {};
-    %Param                   = $Self->_GetObjectsAndLinks(
+    $GetParam{NodeObject}       = 'CI';
+    $GetParam{VisitedNodes}     = {};
+    $GetParam{DiscoveredEdges}  = {};
+    $GetParam{Nodes}            = {};
+    $GetParam{UserCIEditRights} = {};
+    %GetParam = $Self->_GetObjectsAndLinks(
         %Param,
-        CurrentObjectID   => $Param{ObjectID},
-        CurrentObjectType => $Param{ObjectType},
+        %GetParam,
+        CurrentObjectID   => $GetParam{ObjectID},
+        CurrentObjectType => $GetParam{ObjectType},
         CurrentDepth      => 1,
     );
-    if ( $Param{UserCIEditRights}->{String} ) {
-        $Param{UserCIEditRights}->{String} =~ s/(.*)_-_$/$1/;
-        $Param{UserCIEditRights} = $Param{UserCIEditRights}->{String};
+    if ( $GetParam{UserCIEditRights}->{String} ) {
+        $GetParam{UserCIEditRights}->{String} =~ s/(.*)_-_$/$1/;
+        $GetParam{UserCIEditRights} = $GetParam{UserCIEditRights}->{String};
     }
 
-    my $Graph = $Self->{LayoutObject}->Attachment( $Self->FinishGraph(%Param) );
+    my $Graph = $LayoutObject->Attachment( $Self->FinishGraph(%GetParam) );
 
     # remove unnecessary meta information
     if ( $Graph =~ m/.+8;..+8;.*/sig ) {
@@ -222,9 +433,18 @@ sub Run {
 sub _PrepareITSMConfigItem {
     my ( $Self, %Param ) = @_;
 
+    # create needed objects
+    my $ConfigObject         = $Kernel::OM->Get('Kernel::Config');
+    my $LayoutObject         = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $GeneralCatalogObject = $Kernel::OM->Get('Kernel::System::GeneralCatalog');
+    my $GroupObject          = $Kernel::OM->Get('Kernel::System::Group');
+    my $ConfigItemObject     = $Kernel::OM->Get('Kernel::System::ITSMConfigItem');
+
     # prepare object sub type limit...
     for my $CurrID ( @{ $Param{RelSubTypeArray} } ) {
-        my $ItemRef = $Self->{GeneralCatalogObject}->ItemGet(
+        next if $CurrID eq '';
+
+        my $ItemRef = $GeneralCatalogObject->ItemGet(
             ItemID => $CurrID,
         );
         if (
@@ -238,43 +458,41 @@ sub _PrepareITSMConfigItem {
 
     # get possible deployment state list for config items to be in color
     # get relevant functionality
-    my $ColorDeploymentStatePostproductive = $Self->{ConfigObject}->Get('ConfigItemOverview::ShowDeploymentStatePostproductive');
-    my @ColorFunctionality                 = ( 'preproductive', 'productive' );
-    if ($ColorDeploymentStatePostproductive) {
-        push( @ColorFunctionality, 'postproductive' );
+    my $ShowDeploymentStatePostproductive = $ConfigObject->Get('ConfigItemOverview::ShowDeploymentStatePostproductive');
+    my @Functionality                     = ( 'preproductive', 'productive' );
+    if ($ShowDeploymentStatePostproductive) {
+        push( @Functionality, 'postproductive' );
     }
     # get state list
-    my $ColorStateList = $Self->{GeneralCatalogObject}->ItemList(
+    my $StateList = $GeneralCatalogObject->ItemList(
         Class       => 'ITSM::ConfigItem::DeploymentState',
         Preferences => {
-            Functionality => \@ColorFunctionality,
+            Functionality => \@Functionality,
         },
     );
+
     # remove excluded deployment states from state list
-    my %ColorDeplStateList = %{$ColorStateList};
-    if ( $Self->{ConfigObject}->Get('ConfigItemOverview::ExcludedDeploymentStates') ) {
-        my @ExcludedStates = split(
-            /,/,
-            $Self->{ConfigObject}->Get('ConfigItemOverview::ExcludedDeploymentStates')
-        );
-        for my $Item ( keys %ColorDeplStateList ) {
-            next if !( grep { /^$ColorDeplStateList{$Item}$/ } @ExcludedStates );
-            delete $ColorDeplStateList{$Item};
+    my %DeplStateList = %{$StateList};
+    if ( $ConfigObject->Get('ConfigItemOverview::ExcludedDeploymentStates') ) {
+        my @ExcludedStates = split( /,/, $ConfigObject->Get('ConfigItemOverview::ExcludedDeploymentStates') );
+        for my $Item ( keys %DeplStateList ) {
+            next if !( grep( {/$DeplStateList{$Item}/} @ExcludedStates ) );
+            delete $DeplStateList{$Item};
         }
     }
-    $Param{DeplStatesColor} = \%ColorDeplStateList;
+    $Param{DeplStatesColor} = \%DeplStateList;
 
-    $Param{StateHighlighting} = $Self->{ConfigObject}->Get('ConfigItemLinkGraph::HighlightMapping');
+    $Param{StateHighlighting} = $ConfigObject->Get('ConfigItemOverview::HighlightMapping');
 
     # get all possible linkable CI classes
-    my $CIClassListRef = $Self->{GeneralCatalogObject}->ItemList(
+    my $CIClassListRef = $GeneralCatalogObject->ItemList(
         Class => 'ITSM::ConfigItem::Class',
         Valid => 1,
     );
 
     # check for Class read rights
     for my $ClassID ( keys %{$CIClassListRef} ) {
-        my $RoRight = $Self->{ConfigItemObject}->Permission(
+        my $RoRight = $ConfigItemObject->Permission(
             Scope   => 'Class',
             ClassID => $ClassID,
             UserID  => $Self->{UserID},
@@ -291,7 +509,7 @@ sub _PrepareITSMConfigItem {
 
     # get ro/rw groups for later check of special right for each CI
     $Param{GroupsRO} = [
-        $Self->{GroupObject}->GroupMemberList(
+        $GroupObject->GroupMemberList(
             UserID => $Self->{UserID},
             Type   => 'ro',
             Result => 'ID',
@@ -300,20 +518,20 @@ sub _PrepareITSMConfigItem {
     ];
 
     # get config item specific class selection
-    $Param{ObjectSpecificLinkSel} = $Self->{LayoutObject}->BuildSelection(
+    $Param{ObjectSpecificLinkSel} = $LayoutObject->BuildSelection(
         Data         => $CIClassListRef,
         SelectedID   => 1,
         Translation  => 1,
         Name         => 'CIClasses',
         Multiple     => 0,
         PossibleNone => 0,
-        # Class        => 'Modernize', # bugfix: T#2017062990000842
+        Class        => 'Modernize',
     );
 
     # remember selected CI classes for print header
     my @RelCIClasses;
     for my $SubTypeName ( keys %{ $Param{RelevantObjectSubTypeNames} } ) {
-        push( @RelCIClasses, $Self->{LayoutObject}->{LanguageObject}->Translate($SubTypeName) );
+        push( @RelCIClasses, $LayoutObject->{LanguageObject}->Translate($SubTypeName) );
     }
     $Param{RelSubTypesString} ||= '';
     for my $CIClass ( sort @RelCIClasses ) {
@@ -327,13 +545,19 @@ sub _PrepareITSMConfigItem {
 sub _GetObjectsAndLinks {
     my ( $Self, %Param ) = @_;
 
+    # create needed objects
+    my $ConfigItemObject     = $Kernel::OM->Get('Kernel::System::ITSMConfigItem');
+    my $LogObject            = $Kernel::OM->Get('Kernel::System::Log');
+    my $ConfigObject         = $Kernel::OM->Get('Kernel::Config');
+    my $GeneralCatalogObject = $Kernel::OM->Get('Kernel::System::GeneralCatalog');
+
     # check required params...
     for my $CurrKey (
         qw( CurrentObjectID CurrentObjectType CurrentDepth RelevantObjectSubTypeNames
         MaxSearchDepth VisitedNodes Nodes DiscoveredEdges RelevantObjectTypeNames)
     ) {
         if ( !$Param{$CurrKey} ) {
-            $Self->{LogObject}->Log(
+            $LogObject->Log(
                 Priority => 'error',
                 Message  => "Kernel::Modules::AgentLinkGraph::"
                     . "_GetObjectsAndLinks - param $CurrKey "
@@ -352,9 +576,7 @@ sub _GetObjectsAndLinks {
     # if object is already visited and with smaller search depth return --> a known shorter path
     if (
         $Param{VisitedNodes}->{ $Param{CurrentObjectType} . '-' . $Param{CurrentObjectID} }
-        &&
-        $Param{VisitedNodes}->{ $Param{CurrentObjectType} . '-' . $Param{CurrentObjectID} } <
-        $Param{CurrentDepth}
+        && $Param{VisitedNodes}->{ $Param{CurrentObjectType} . '-' . $Param{CurrentObjectID} } < $Param{CurrentDepth}
     ) {
         return 1;
     }
@@ -384,7 +606,7 @@ sub _GetObjectsAndLinks {
         if ( defined $Self->{Config}->{ClassAttributesToConsider} ) {
             $ConsiderAttribute = 1;
         }
-        $CurrVersionData = $Self->{ConfigItemObject}->VersionGet(
+        $CurrVersionData = $ConfigItemObject->VersionGet(
             ConfigItemID => $Param{CurrentObjectID},
         );
 
@@ -394,7 +616,7 @@ sub _GetObjectsAndLinks {
             next if ( $ClassAttributeHash->{Input}->{Type} ne 'CIGroupAccess' );
             $KeyName = $ClassAttributeHash->{Key};
         }
-        my $Array = $Self->{ConfigItemObject}->GetAttributeContentsByKey(
+        my $Array = $ConfigItemObject->GetAttributeContentsByKey(
             KeyName       => $KeyName,
             XMLData       => $CurrVersionData->{XMLData}->[1]->{Version}->[1],
             XMLDefinition => $CurrVersionData->{XMLDefinition},
@@ -407,7 +629,7 @@ sub _GetObjectsAndLinks {
                 push @AccessGroupIDs, $Group;
             }
 
-      # if user has no ro rights for object, do not 'build' it and return 0, else remember rw rigths
+            # if user has no ro rights for object, do not 'build' it and return 0, else remember rw rigths
             my $HasCIAccess = 0;
             for my $MustHaveGroupID (@AccessGroupIDs) {
                 if ( grep { $_ eq $MustHaveGroupID } @{ $Param{GroupsRO} } ) {
@@ -433,12 +655,12 @@ sub _GetObjectsAndLinks {
         if ( $Param{StartObjectID} ne $Param{CurrentObjectID} ) {
             # get possible deployment state list for config items to be shown
             # get relevant functionality
-            my $ShowDeploymentStatePostproductive = $Self->{ConfigObject}->Get('ConfigItemLinkGraph::ShowDeploymentStatePostproductive');
+            my $ShowDeploymentStatePostproductive = $ConfigObject->Get('ConfigItemLinkGraph::ShowDeploymentStatePostproductive');
             my @ShowFunctionality                 = ( 'preproductive', 'productive' );
             if ($ShowDeploymentStatePostproductive) {
                 push( @ShowFunctionality, 'postproductive' );
             }
-            my $ShowStateList = $Self->{GeneralCatalogObject}->ItemList(
+            my $ShowStateList = $GeneralCatalogObject->ItemList(
                 Class       => 'ITSM::ConfigItem::DeploymentState',
                 Preferences => {
                     Functionality => \@ShowFunctionality,
@@ -446,11 +668,11 @@ sub _GetObjectsAndLinks {
             );
             # remove excluded deployment states from state list
             my %ShowDeplStateList = %{$ShowStateList};
-            if ( $Self->{ConfigObject}->Get('ConfigItemLinkGraph::ExcludedDeploymentStates') ) {
+            if ( $ConfigObject->Get('ConfigItemLinkGraph::ExcludedDeploymentStates') ) {
                 my @ExcludedStates =
                     split(
                     /,/,
-                    $Self->{ConfigObject}->Get('ConfigItemLinkGraph::ExcludedDeploymentStates')
+                    $ConfigObject->Get('ConfigItemLinkGraph::ExcludedDeploymentStates')
                 );
                 for my $Item ( keys %ShowDeplStateList ) {
                     next if !( grep { /^$ShowDeplStateList{$Item}$/ } @ExcludedStates );
@@ -501,8 +723,7 @@ sub _GetObjectsAndLinks {
         $Param{Nodes}->{ $Param{CurrentObjectType} . '-' . $Param{CurrentObjectID} } = $String;
 
         # remember node as visited
-        $Param{VisitedNodes}->{ $Param{CurrentObjectType} . '-' . $Param{CurrentObjectID} } =
-            $Param{CurrentDepth};
+        $Param{VisitedNodes}->{ $Param{CurrentObjectType} . '-' . $Param{CurrentObjectID} } = $Param{CurrentDepth};
     }
 
     # look for neighbouring nodes ... and return
@@ -512,10 +733,15 @@ sub _GetObjectsAndLinks {
 sub _BuildNodes {
     my ( $Self, %Param ) = @_;
 
+    # create needed objects
+    my $LayoutObject     = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $ConfigItemObject = $Kernel::OM->Get('Kernel::System::ITSMConfigItem');
+    my $LogObject        = $Kernel::OM->Get('Kernel::System::Log');
+
     # check required params...
     for my $CurrKey (qw( DeplStatesColor CurrentObjectType CurrentObjectID CurrVersionData )) {
         if ( !$Param{$CurrKey} ) {
-            $Self->{LogObject}->Log(
+            $LogObject->Log(
                 Priority => 'error',
                 Message  => "Kernel::System::LinkGraph::ITSMConfigItem::"
                     . "_BuildNodes - param $CurrKey "
@@ -538,12 +764,11 @@ sub _BuildNodes {
 
     # if sysconfig-entry about icons for class-attributes is active, look for defined icon
     if ( $Param{ConsiderAttribute} ) {
-        my $AttToConsider =
-            $Self->{Config}->{ClassAttributesToConsider}->{ $Param{CurrVersionData}->{Class} };
+        my $AttToConsider = $Self->{Config}->{ClassAttributesToConsider}->{ $Param{CurrVersionData}->{Class} };
 
         # get icon for class-attribute
         if ($AttToConsider) {
-            my $AttValue = $Self->{ConfigItemObject}->GetAttributeValuesByKey(
+            my $AttValue = $ConfigItemObject->GetAttributeValuesByKey(
                 KeyName       => $AttToConsider,
                 XMLData       => $Param{CurrVersionData}->{XMLData}->[1]->{Version}->[1],
                 XMLDefinition => $Param{CurrVersionData}->{XMLDefinition},
@@ -552,16 +777,12 @@ sub _BuildNodes {
 
                 # get class-attribute icon in gray if necessary
                 if ( !$WithColor ) {
-                    $Image =
-                        $Self->{Config}->{ObjectImagesNotActive}
-                        ->{ $Param{CurrVersionData}->{Class} . ':::' . $AttValue->[0] };
+                    $Image = $Self->{Config}->{ObjectImagesNotActive}->{ $Param{CurrVersionData}->{Class} . ':::' . $AttValue->[0] };
                 }
 
                 # no image? get class-attribute icon in color
                 if ( !$Image ) {
-                    $Image =
-                        $Self->{Config}->{ObjectImages}
-                        ->{ $Param{CurrVersionData}->{Class} . ':::' . $AttValue->[0] };
+                    $Image = $Self->{Config}->{ObjectImages}->{ $Param{CurrVersionData}->{Class} . ':::' . $AttValue->[0] };
                 }
             }
         }
@@ -588,14 +809,13 @@ sub _BuildNodes {
     }
 
     # build object
-    $Self->{LayoutObject}->Block(
+    $LayoutObject->Block(
         Name => 'ITSMConfigItem',
         Data => {
-            CurrentObjectType => $Param{CurrentObjectType},
-            CurrentObjectID   => $Param{CurrentObjectID},
-            Session           => ";$Self->{SessionName}=$Self->{SessionID}",
-            IncidentImage     => $Self->{Config}->{IncidentStateImages}
-                ->{ $Param{CurrVersionData}->{CurInciStateType} },
+            CurrentObjectType    => $Param{CurrentObjectType},
+            CurrentObjectID      => $Param{CurrentObjectID},
+            Session              => ";$Self->{SessionName}=$Self->{SessionID}",
+            IncidentImage        => $Self->{Config}->{IncidentStateImages}->{ $Param{CurrVersionData}->{CurInciStateType} },
             Image                => $Image,
             Start                => $Param{Start},
             Name                 => $Param{CurrVersionData}->{Name},
@@ -609,24 +829,29 @@ sub _BuildNodes {
         },
     );
 
-    return $Self->{LayoutObject}->Output(
+    return $LayoutObject->Output(
         TemplateFile => 'AgentLinkGraphAdditionalITSMConfigItem',
         Data         => \%Param,
     );
 }
 
 sub _GetCINamesForLoadedGraph {
-    my ( $Self, $Param ) = @_;
+    my ( $Self, %Param ) = @_;
 
-    my $LostNodesString = $Self->{ParamObject}->GetParam( Param => 'LostNodesString' );
-    my $NewNodesString  = $Self->{ParamObject}->GetParam( Param => 'NewNodesString' );
+    # create needed objects
+    my $LayoutObject     = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $ConfigItemObject = $Kernel::OM->Get('Kernel::System::ITSMConfigItem');
+    my $ParamObject      = $Kernel::OM->Get('Kernel::System::Web::Request');
+
+    my $LostNodesString = $ParamObject->GetParam( Param => 'LostNodesString' );
+    my $NewNodesString  = $ParamObject->GetParam( Param => 'NewNodesString' );
 
     my %LostNodes;
     $LostNodes{None} = 1;
     my @LostNodes = split( ':::', $LostNodesString );
     for my $LostNode (@LostNodes) {
         $LostNode =~ s/ITSMConfigitem-(\d+)/$1/i;
-        my $Version = $Self->{ConfigItemObject}->VersionGet(
+        my $Version = $ConfigItemObject->VersionGet(
             ConfigItemID => $LostNode,
         );
         $LostNodes{$LostNode} = {
@@ -641,7 +866,7 @@ sub _GetCINamesForLoadedGraph {
     my @NewNodes = split( ':::', $NewNodesString );
     for my $NewNode (@NewNodes) {
         $NewNode =~ s/ITSMConfigitem-(\d+)/$1/i;
-        my $Version = $Self->{ConfigItemObject}->VersionGet(
+        my $Version = $ConfigItemObject->VersionGet(
             ConfigItemID => $NewNode,
         );
         $NewNodes{$NewNode} = {
@@ -651,14 +876,14 @@ sub _GetCINamesForLoadedGraph {
         $NewNodes{None} = 0;
     }
 
-    my $JSON = $Self->{LayoutObject}->JSONEncode(
+    my $JSON = $LayoutObject->JSONEncode(
         Data => {
             LostNodes => \%LostNodes,
             NewNodes  => \%NewNodes,
         },
     );
-    return $Self->{LayoutObject}->Attachment(
-        ContentType => 'application/json; charset=' . $Self->{LayoutObject}->{Charset},
+    return $LayoutObject->Attachment(
+        ContentType => 'application/json; charset=' . $LayoutObject->{Charset},
         Content     => $JSON || '',
         Type        => 'inline',
         NoCache     => 1,
@@ -668,12 +893,17 @@ sub _GetCINamesForLoadedGraph {
 sub _PropagateInciState {
     my ( $Self, %Param ) = @_;
 
+    # create needed objects
+    my $ConfigObject     = $Kernel::OM->Get('Kernel::Config');
+    my $LayoutObject     = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $ConfigItemObject = $Kernel::OM->Get('Kernel::System::ITSMConfigItem');
+
     my $Direction      = 0;
     my $PropagateStart = 0;
     my $NewInciState   = 'operational';
 
     # get relevant link types and their direction
-    my $RelevantLinkTypes = $Self->{ConfigObject}->Get('ITSM::Core::IncidentLinkTypeDirection');
+    my $RelevantLinkTypes = $ConfigObject->Get('ITSM::Core::IncidentLinkTypeDirection');
 
     # check if current link type is equal to relevant link type from config
     if (
@@ -682,13 +912,13 @@ sub _PropagateInciState {
     ) {
 
         # get attributes of source
-        my $CIAttsSource = $Self->{ConfigItemObject}->VersionGet(
+        my $CIAttsSource = $ConfigItemObject->VersionGet(
             ConfigItemID => $Param{SourceID},
             XMLDataGet   => 0,
         );
 
         # get attributes of target
-        my $CIAttsTarget = $Self->{ConfigItemObject}->VersionGet(
+        my $CIAttsTarget = $ConfigItemObject->VersionGet(
             ConfigItemID => $Param{TargetID},
             XMLDataGet   => 0,
         );
@@ -714,19 +944,18 @@ sub _PropagateInciState {
         }
     }
 
-    my $JSON = $Self->{LayoutObject}->JSONEncode(
+    my $JSON = $LayoutObject->JSONEncode(
         Data => {
-            Result    => $Param{Result},
-            Direction => $Direction,
-            LinkType  => $Param{LinkType},
-            Image     => $Self->{ConfigObject}->Get('Frontend::ImagePath')
-                . $Self->{Config}->{IncidentStateImages}->{$NewInciState},
-            InciState      => $Self->{LayoutObject}->{LanguageObject}->Translate($NewInciState),
+            Result         => $Param{Result},
+            Direction      => $Direction,
+            LinkType       => $Param{LinkType},
+            Image          => $ConfigObject->Get('Frontend::ImagePath') . $Self->{Config}->{IncidentStateImages}->{$NewInciState},
+            InciState      => $LayoutObject->{LanguageObject}->Translate($NewInciState),
             PropagateStart => $PropagateStart,
         },
     );
-    return $Self->{LayoutObject}->Attachment(
-        ContentType => 'application/json; charset=' . $Self->{LayoutObject}->{Charset},
+    return $LayoutObject->Attachment(
+        ContentType => 'application/json; charset=' . $LayoutObject->{Charset},
         Content     => $JSON || '',
         Type        => 'inline',
         NoCache     => 1,
@@ -736,30 +965,42 @@ sub _PropagateInciState {
 sub _GetClassNames {
     my ( $Self, %Param ) = @_;
 
+    # create needed objects
+    my $LayoutObject         = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $GeneralCatalogObject = $Kernel::OM->Get('Kernel::System::GeneralCatalog');
+
     # get class-names
-    my @GraphSubTypes = split( ',', $Param{ClassIDString} );
     my $ClassesString = '';
-    for my $ClassID (@GraphSubTypes) {
-        my $ItemRef = $Self->{GeneralCatalogObject}->ItemGet(
-            ItemID => $ClassID,
-        );
-        if (
-            $ItemRef
-            && ref($ItemRef) eq 'HASH'
-            && $ItemRef->{Class} eq 'ITSM::ConfigItem::Class'
-        ) {
-            $ClassesString .=
-                $Self->{LayoutObject}->{LanguageObject}->Translate( $ItemRef->{Name} ) . ', ';
+    if ( $Param{ClassIDString} ) {
+        my @GraphSubTypes = split( ',', $Param{ClassIDString} );
+        for my $ClassID (@GraphSubTypes) {
+            my $ItemRef = $GeneralCatalogObject->ItemGet(
+                ItemID => $ClassID,
+            );
+            if (
+                $ItemRef
+                && ref($ItemRef) eq 'HASH'
+                && $ItemRef->{Class} eq 'ITSM::ConfigItem::Class'
+            ) {
+                $ClassesString .= $LayoutObject->{LanguageObject}->Translate( $ItemRef->{Name} ) . ', ';
+            }
         }
+        $ClassesString =~ s/(.*), $/$1/i;
     }
-    $ClassesString =~ s/(.*), $/$1/i;
     return $ClassesString;
 }
 
 sub _InsertCI {
     my ( $Self, %Param ) = @_;
 
-    my @CurObject = split( '-', $Self->{ParamObject}->GetParam( Param => 'DestObject' ) );
+    # create needed objects
+    my $ConfigObject         = $Kernel::OM->Get('Kernel::Config');
+    my $LayoutObject         = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $GeneralCatalogObject = $Kernel::OM->Get('Kernel::System::GeneralCatalog');
+    my $ConfigItemObject     = $Kernel::OM->Get('Kernel::System::ITSMConfigItem');
+    my $ParamObject          = $Kernel::OM->Get('Kernel::System::Web::Request');
+
+    my @CurObject = split( '-', $ParamObject->GetParam( Param => 'DestObject' ) );
 
     # get CI attributes
     my $CurrVersionData;
@@ -767,13 +1008,13 @@ sub _InsertCI {
     # check if xml data is needed
     my $ConsiderAttribute;
     if ( defined $Self->{Config}->{ClassAttributesToConsider} ) {
-        $CurrVersionData = $Self->{ConfigItemObject}->VersionGet(
+        $CurrVersionData = $ConfigItemObject->VersionGet(
             ConfigItemID => $CurObject[1],
         );
         $ConsiderAttribute = 1;
     }
     else {
-        $CurrVersionData = $Self->{ConfigItemObject}->VersionGet(
+        $CurrVersionData = $ConfigItemObject->VersionGet(
             ConfigItemID => $CurObject[1],
             XMLDataGet   => 0,
         );
@@ -783,57 +1024,53 @@ sub _InsertCI {
     if ($CurrVersionData) {
         my $DeplStateColor;
         if (
-            $Self->{ConfigObject}->Get('ConfigItemLinkGraph::HighlightMapping')->{ $CurrVersionData->{CurDeplState} }
+            $ConfigObject->Get('ConfigItemOverview::HighlightMapping')->{ $CurrVersionData->{CurDeplState} }
         ) {
-            $DeplStateColor = $Self->{ConfigObject}->Get('ConfigItemLinkGraph::HighlightMapping')->{ $CurrVersionData->{CurDeplState} };
+            $DeplStateColor = $ConfigObject->Get('ConfigItemOverview::HighlightMapping')->{ $CurrVersionData->{CurDeplState} };
         }
 
         # get possible deployment state list for config items to be in color
-        # get relevant functionality
-        my $ColorDeploymentStatePostproductive = $Self->{ConfigObject}->Get('ConfigItemOverview::ShowDeploymentStatePostproductive');
-        my @ColorFunctionality                 = ( 'preproductive', 'productive' );
-        if ($ColorDeploymentStatePostproductive) {
-            push( @ColorFunctionality, 'postproductive' );
+        my $ShowDeploymentStatePostproductive = $ConfigObject->Get('ConfigItemOverview::ShowDeploymentStatePostproductive');
+        my @Functionality                     = ( 'preproductive', 'productive' );
+        if ($ShowDeploymentStatePostproductive) {
+            push( @Functionality, 'postproductive' );
         }
-        # get state list
-        my $ColorStateList = $Self->{GeneralCatalogObject}->ItemList(
+        my $StateList = $GeneralCatalogObject->ItemList(
             Class       => 'ITSM::ConfigItem::DeploymentState',
             Preferences => {
-                Functionality => \@ColorFunctionality,
+                Functionality => \@Functionality,
             },
         );
+
         # remove excluded deployment states from state list
-        my %ColorDeplStateList = %{$ColorStateList};
-        if ( $Self->{ConfigObject}->Get('ConfigItemOverview::ExcludedDeploymentStates') ) {
-            my @ExcludedStates = split(
-                /,/,
-                $Self->{ConfigObject}->Get('ConfigItemOverview::ExcludedDeploymentStates')
-            );
-            for my $Item ( keys %ColorDeplStateList ) {
-                next if !( grep { /^$ColorDeplStateList{$Item}$/ } @ExcludedStates );
-                delete $ColorDeplStateList{$Item};
+        my %DeplStateList = %{$StateList};
+        if ( $ConfigObject->Get('ConfigItemOverview::ExcludedDeploymentStates') ) {
+            my @ExcludedStates = split( /,/, $ConfigObject->Get('ConfigItemOverview::ExcludedDeploymentStates') );
+            for my $Item ( keys %DeplStateList ) {
+                next if !( grep( {/$DeplStateList{$Item}/} @ExcludedStates ) );
+                delete $DeplStateList{$Item};
             }
         }
 
         $CIString = $Self->_BuildNodes(
             %Param,
-            CurrVersionData   => $CurrVersionData,
-            CurrentObjectType => $CurObject[0],
-            CurrentObjectID   => $CurObject[1],
-            DeplStatesColor   => \%ColorDeplStateList,
-            ConsiderAttribute => $ConsiderAttribute,
-            DeplStateColor    => $DeplStateColor,
+            CurrVersionData     => $CurrVersionData,
+            CurrentObjectType   => $CurObject[0],
+            CurrentObjectID     => $CurObject[1],
+            DeplStatesColor     => \%DeplStateList,
+            ConsiderAttribute   => $ConsiderAttribute,
+            DeplStateColor      => $DeplStateColor,
         );
     }
 
-    my $JSON = $Self->{LayoutObject}->JSONEncode(
+    my $JSON = $LayoutObject->JSONEncode(
         Data => {
             NodeString => $CIString,
         },
     );
 
-    return $Self->{LayoutObject}->Attachment(
-        ContentType => 'application/json; charset=' . $Self->{LayoutObject}->{Charset},
+    return $LayoutObject->Attachment(
+        ContentType => 'application/json; charset=' . $LayoutObject->{Charset},
         Content     => $JSON || '',
         Type        => 'inline',
         NoCache     => 1,

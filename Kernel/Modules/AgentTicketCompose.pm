@@ -1536,10 +1536,10 @@ sub Run {
                 for my $Key (qw( Subject ReplyTo Reply-To Cc OrigTo OrigFrom )) {
                     if ( $Data{$Key} ) {
                         my $KeyText;
-                        if ($Key eq "OrigTo") { 
+                        if ($Key eq "OrigTo") {
                             $KeyText = $LayoutObject->{LanguageObject}->Translate("To");
                         }
-                        elsif ($Key eq "OrigFrom") { 
+                        elsif ($Key eq "OrigFrom") {
                             $KeyText = $LayoutObject->{LanguageObject}->Translate("From");
                         }
                         else {
@@ -1614,7 +1614,20 @@ sub Run {
             }
         }
 
-        my $ResponseFormat = $ConfigObject->Get('Ticket::Frontend::ResponseFormat') || <<'END';
+        my $ResponseFormat;
+        if ( defined $Preferences{UserResponseFormat} ) {
+            if ( $Preferences{UserResponseFormat} eq 'BEFORE' ) {
+                $ResponseFormat = <<'END';
+[% Data.Salutation | html %]
+[% Data.Created | Localize("TimeShort") %] - [% Data.OrigFromName | html %] [% Translate("wrote") | html %]:
+[% Data.Body | html %]
+
+[% Data.StdResponse | html %]
+[% Data.Signature | html %]
+END
+            }
+            elsif ( $Preferences{UserResponseFormat} eq 'AFTER' ) {
+                $ResponseFormat = <<'END';
 [% Data.Salutation | html %]
 [% Data.StdResponse | html %]
 [% Data.Signature | html %]
@@ -1622,6 +1635,19 @@ sub Run {
 [% Data.Created | Localize("TimeShort") %] - [% Data.OrigFromName | html %] [% Translate("wrote") | html %]:
 [% Data.Body | html %]
 END
+            }
+        }
+
+        if ( !$ResponseFormat ) {
+            $ResponseFormat = $ConfigObject->Get('Ticket::Frontend::ResponseFormat') || <<'END';
+[% Data.Salutation | html %]
+[% Data.StdResponse | html %]
+[% Data.Signature | html %]
+
+[% Data.Created | Localize("TimeShort") %] - [% Data.OrigFromName | html %] [% Translate("wrote") | html %]:
+[% Data.Body | html %]
+END
+        }
 
         if ($NoResponse) {
             $Data{Subject} = $TicketObject->TicketSubjectBuild(

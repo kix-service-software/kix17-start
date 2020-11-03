@@ -1466,6 +1466,18 @@ sub StatsFieldParameterBuild {
         }
     }
 
+    if (
+        !@ITSMConfigItemClasses
+        || !$ITSMConfigItemClasses[0]
+    ) {
+        return {
+            Values  => {},
+            Name    => $Param{DynamicFieldConfig}->{Label},
+            Element => 'DynamicField_' . $Param{DynamicFieldConfig}->{Name},
+            Block   => 'MultiSelectField',
+        };
+    }
+
     # set PossibleValues
     my $Values;
 

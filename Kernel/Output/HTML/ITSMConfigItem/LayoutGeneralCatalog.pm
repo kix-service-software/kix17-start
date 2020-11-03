@@ -217,24 +217,45 @@ sub SearchFormDataGet {
     my ( $Self, %Param ) = @_;
 
     # check needed stuff
-    if ( !$Param{Key} ) {
-        $Kernel::OM->Get('Kernel::System::Log')->Log(
-            Priority => 'error',
-            Message  => 'Need Key!',
-        );
-        return;
+    for my $Argument (qw(Key Item)) {
+        if ( !$Param{$Argument} ) {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'error',
+                Message  => "Need $Argument!",
+            );
+            return;
+        }
     }
 
     # get form data
-    my @Values;
+    my @FormValues;
     if ( $Param{Value} ) {
-        @Values = @{ $Param{Value} };
+        @FormValues = @{ $Param{Value} };
     }
     else {
-        @Values = $Kernel::OM->Get('Kernel::System::Web::Request')->GetArray( Param => $Param{Key} );
+        @FormValues = $Kernel::OM->Get('Kernel::System::Web::Request')->GetArray( Param => $Param{Key} );
     }
 
-    return \@Values;
+    # get class list
+    my $ClassList = $Kernel::OM->Get('Kernel::System::GeneralCatalog')->ItemList(
+        Class => $Param{Item}->{Input}->{Class},
+    );
+
+    # prepare search values
+    my @SearchValues;
+    for my $FormValue ( @FormValues ) {
+        # process class entries
+        ITEM:
+        for my $ItemID ( keys( %{ $ClassList } ) ) {
+            if ( $ClassList->{ $ItemID } eq $FormValue ) {
+                # add id to values
+                push( @SearchValues, $ItemID );
+                last ITEM;
+            }
+        }
+    }
+
+    return \@SearchValues;
 }
 
 =item SearchInputCreate()
@@ -262,7 +283,15 @@ sub SearchInputCreate {
         }
     }
 
-    my $Values = $Self->SearchFormDataGet(%Param);
+    # get form data
+    my @FormValues;
+    if ( $Param{Value} ) {
+        @FormValues = @{ $Param{Value} };
+    }
+    else {
+        @FormValues = $Kernel::OM->Get('Kernel::System::Web::Request')->GetArray( Param => $Param{Key} );
+    }
+    my $Values = \@FormValues;
 
     # translation on or off
     my $Translation = 0;
@@ -270,14 +299,34 @@ sub SearchInputCreate {
         $Translation = 1;
     }
 
-    # get class list
-    my $ClassList = $Kernel::OM->Get('Kernel::System::GeneralCatalog')->ItemList(
-        Class => $Param{Item}->{Input}->{Class} || '',
-    );
+    # prepare data
+    my %Data = ();
+    if ( ref( $Param{Item}->{Input}->{Class} ) eq 'ARRAY' ) {
+        for my $Class ( @{ $Param{Item}->{Input}->{Class} } ) {
+            # get class list
+            my $ClassList = $Kernel::OM->Get('Kernel::System::GeneralCatalog')->ItemList(
+                Class => $Class,
+            );
+            # add values to data
+            for my $Value ( values( %{ $ClassList } ) ) {
+                $Data{ $Value } = $Value;
+            }
+        }
+    }
+    else {
+        # get class list
+        my $ClassList = $Kernel::OM->Get('Kernel::System::GeneralCatalog')->ItemList(
+            Class => $Param{Item}->{Input}->{Class} || '',
+        );
+        # add values to data
+        for my $Value ( values( %{ $ClassList } ) ) {
+            $Data{ $Value } = $Value;
+        }
+    }
 
     # generate string
     my $String = $Kernel::OM->Get('Kernel::Output::HTML::Layout')->BuildSelection(
-        Data        => $ClassList,
+        Data        => \%Data,
         Name        => $Param{Key},
         Size        => 5,
         Multiple    => 1,
