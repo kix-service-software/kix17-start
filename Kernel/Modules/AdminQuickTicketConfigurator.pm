@@ -188,24 +188,41 @@ sub Run {
             next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
             my $PossibleValuesFilter;
+            
+            my $IsACLReducible = $BackendObject->HasBehavior(
+                DynamicFieldConfig => $DynamicFieldConfig,
+                Behavior           => 'IsACLReducible',
+            );
 
-            # check if field has PossibleValues property in its configuration
-            if ( IsHashRefWithData( $DynamicFieldConfig->{Config}->{PossibleValues} ) ) {
+            if ($IsACLReducible) {
 
-                # set possible values filter from ACLs
-                my $ACL = $TicketObject->TicketAcl(
-                    %TicketTemplateData,
-                    %GetParam,
-                    %ACLCompatGetParam,
-                    Action        => $Self->{Action},
-                    ReturnType    => 'Ticket',
-                    ReturnSubType => 'DynamicField_' . $DynamicFieldConfig->{Name},
-                    Data          => $DynamicFieldConfig->{Config}->{PossibleValues},
-                    UserID        => $Self->{UserID},
+                # get PossibleValues
+                my $PossibleValues = $BackendObject->PossibleValuesGet(
+                    DynamicFieldConfig   => $DynamicFieldConfig,
+                    OverridePossibleNone => 1,
                 );
-                if ($ACL) {
-                    my %Filter = $TicketObject->TicketAclData();
-                    $PossibleValuesFilter = \%Filter;
+
+                # check if field has PossibleValues property in its configuration
+                if ( IsHashRefWithData($PossibleValues) ) {
+                    # convert possible values key => value to key => key for ACLs using a Hash slice
+                    my %AclData = %{$PossibleValues};
+                    @AclData{ keys %AclData } = keys %AclData;
+
+                    # set possible values filter from ACLs
+                    my $ACL = $TicketObject->TicketAcl(
+                        %TicketTemplateData,
+                        %GetParam,
+                        %ACLCompatGetParam,
+                        Action        => $Self->{Action},
+                        ReturnType    => 'Ticket',
+                        ReturnSubType => 'DynamicField_' . $DynamicFieldConfig->{Name},
+                        Data          => \%AclData,
+                        UserID        => $Self->{UserID},
+                    );
+                    if ($ACL) {
+                        my %Filter = $TicketObject->TicketAclData();
+                        $PossibleValuesFilter = \%Filter;
+                    }
                 }
             }
 
@@ -374,23 +391,40 @@ sub Run {
                 next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
                 my $PossibleValuesFilter;
+            
+                my $IsACLReducible = $BackendObject->HasBehavior(
+                    DynamicFieldConfig => $DynamicFieldConfig,
+                    Behavior           => 'IsACLReducible',
+                );
 
-                # check if field has PossibleValues property in its configuration
-                if ( IsHashRefWithData( $DynamicFieldConfig->{Config}->{PossibleValues} ) ) {
+                if ($IsACLReducible) {
 
-                    # set possible values filter from ACLs
-                    my $ACL = $TicketObject->TicketAcl(
-                        %GetParam,
-                        %ACLCompatGetParam,
-                        Action        => $Self->{Action},
-                        ReturnType    => 'Ticket',
-                        ReturnSubType => 'DynamicField_' . $DynamicFieldConfig->{Name},
-                        Data          => $DynamicFieldConfig->{Config}->{PossibleValues},
-                        UserID        => $Self->{UserID},
+                    # get PossibleValues
+                    my $PossibleValues = $BackendObject->PossibleValuesGet(
+                        DynamicFieldConfig   => $DynamicFieldConfig,
+                        OverridePossibleNone => 1,
                     );
-                    if ($ACL) {
-                        my %Filter = $TicketObject->TicketAclData();
-                        $PossibleValuesFilter = \%Filter;
+
+                    # check if field has PossibleValues property in its configuration
+                    if ( IsHashRefWithData($PossibleValues) ) {
+                        # convert possible values key => value to key => key for ACLs using a Hash slice
+                        my %AclData = %{$PossibleValues};
+                        @AclData{ keys %AclData } = keys %AclData;
+ 
+                        # set possible values filter from ACLs
+                        my $ACL = $TicketObject->TicketAcl(
+                            %GetParam,
+                            %ACLCompatGetParam,
+                            Action        => $Self->{Action},
+                            ReturnType    => 'Ticket',
+                            ReturnSubType => 'DynamicField_' . $DynamicFieldConfig->{Name},
+                            Data          => \%AclData,
+                            UserID        => $Self->{UserID},
+                        );
+                        if ($ACL) {
+                            my %Filter = $TicketObject->TicketAclData();
+                            $PossibleValuesFilter = \%Filter;
+                        }
                     }
                 }
 
