@@ -2620,7 +2620,7 @@ sub Data {
 
     # Perl Module: Kernel/Modules/AgentITSMConfigItemSearch.pm
     $Lang->{'No Result!'}                 = 'Kein Ergebnis!';
-    $Lang->{'Config Item Search Results'} = '';
+    $Lang->{'Config Item Search Results'} = 'ConfigItem Suchergebnisse';
 
     # SysConfig
     $Lang->{
