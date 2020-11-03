@@ -43,13 +43,13 @@ sub new {
     $Self->{QueueList}    = { $Self->{QueueObject}->QueueList() };
     $Self->{ServiceList}  = {
         $Self->{ServiceObject}->ServiceList(
-            Valid  => 1,
+            Valid  => 0,
             UserID => 1,
             )
     };
     $Self->{SLAList} = {
         $Self->{SLAObject}->SLAList(
-            Valid  => 1,
+            Valid  => 0,
             UserID => 1,
             )
     };
