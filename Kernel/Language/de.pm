@@ -4788,6 +4788,8 @@ Ihr Helpdesk-Team
         'Defines the default history type in the customer interface.' => 'Definiert den Standard-Historientyp im Kunden-Interface.',
         'Defines the default maximum number of X-axis attributes for the time scale.' =>
             'Definiert die standardmäßig eingestellte maximale Anzahl von Attributen für die x-Achse für die Zeitachse.',
+        'Defines column header to be skipped for D3 graphs.' =>
+            'Definiert Spaltenköpfe die bei D3-Graphen ausgelassen werden.',
         'Defines the default maximum number of statistics per page on the overview screen.' =>
             'Steuert die maximale Anzahl angezeigter Statistiken pro Seite in der Übersicht.',
         'Defines the default next state for a ticket after customer follow-up in the customer interface.' =>
