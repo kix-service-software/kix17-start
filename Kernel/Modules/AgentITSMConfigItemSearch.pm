@@ -1087,12 +1087,9 @@ sub Run {
                 $ClassName = $ClassID;
             }
 
-            my $Title
-                = $LayoutObject->{LanguageObject}->Translate('Config Item Search Results')
-                . ' '
-                . $LayoutObject->{LanguageObject}->Translate('Class')
-                . ' '
-                . $LayoutObject->{LanguageObject}->Translate($ClassName);
+            my $Title = $LayoutObject->{LanguageObject}->Translate('Config Item Search Results')
+                . ': '
+                . $LayoutObject->{LanguageObject}->Translate('Class');
 
             $Output .= $LayoutObject->ITSMConfigItemListShow(
                 ConfigItemIDs => $SearchResultList,
