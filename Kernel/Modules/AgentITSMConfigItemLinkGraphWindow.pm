@@ -1,12 +1,12 @@
 # --
-# Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
 # did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
 # --
 
-package Kernel::Modules::AgentITSMConfigItemZoomTabLinkGraph;
+package Kernel::Modules::AgentITSMConfigItemLinkGraphWindow;
 
 use strict;
 use warnings;
@@ -24,7 +24,10 @@ sub new {
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
     # get config of frontend module
-    $Self->{Config} = $ConfigObject->Get("ITSMConfigItem::Frontend::$Self->{Action}");
+    %{$Self->{Config}} = (
+        %{$ConfigObject->Get("ITSMConfigItem::Frontend::AgentITSMConfigItemZoomTabLinkGraph")},
+        %{$ConfigObject->Get("Frontend::Agent::AgentLinkGraphITSMConfigItem")}
+    );
 
     return $Self;
 }
@@ -77,15 +80,16 @@ sub Run {
 
     #---------------------------------------------------------------------------
     # generate output...
-    my $Output = $LayoutObject->Output(
-        TemplateFile => 'AgentITSMConfigItemZoomTabLinkGraph',
+    my $Output = $LayoutObject->Header( Type => 'Small' );
+    $Output .= $LayoutObject->Output(
+        TemplateFile => 'AgentITSMConfigItemLinkGraphWindow',
         Data         => {
             %{ $Self->{Config}->{IFrameConfig} },
             %GetParam,
             ObjectType => 'ITSMConfigItem',
         },
     );
-    $Output .= $LayoutObject->Footer( Type => 'TicketZoomTab' );
+    $Output .= $LayoutObject->Footer( Type => 'Small' );
     return $Output;
 }
 

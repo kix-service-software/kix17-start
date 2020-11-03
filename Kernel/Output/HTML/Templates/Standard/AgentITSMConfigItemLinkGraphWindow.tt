@@ -1,0 +1,42 @@
+# --
+# Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file LICENSE for license information (AGPL). If you
+# did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
+# --
+
+<div class="ARIARoleMain CITabLinkGraph">
+    <form action="" method="" enctype="" class="" name="IFrameParam" id="IFrameParam">
+        <input type="hidden" id="ObjectType" name="ObjectType" value="[% Data.ObjectType | html %]"/>
+        <input type="hidden" id="ObjectID" name="ObjectID" value="[% Data.ConfigItemID | html %]"/>
+        <input type="hidden" id="Template" name="Template" value="[% Data.Template | html %]"/>
+        <input type="hidden" id="OpenWindow" name="OpenWindow" value="0"/>
+    </form>
+    <iframe
+        id="displayGraphIFrame"
+        src=""
+        name="[% Data.Title | html %]"
+        frameborder="[% Data.Frameborder | html %]"
+        align="[% Data.Align | html %]"
+        scrolling="no"></iframe>
+</div>
+
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    function IframeResize() {
+
+        $('iframe').attr({
+            height: $(window).innerHeight() + 'px',
+            width: $(window).innerWidth() + 'px'
+        });
+    }
+    $(window).resize(function() {
+        IframeResize();
+    });
+    IframeResize();
+
+    ITSM.Agent.LinkGraph.LoadIFrameContent();
+//]]>
+</script>
+[% END %]
