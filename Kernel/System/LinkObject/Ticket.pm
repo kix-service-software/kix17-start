@@ -113,7 +113,7 @@ sub LinkListWithData {
                 my %TicketData = $TicketObject->TicketGet(
                     TicketID      => $TicketID,
                     UserID        => $Param{UserID},
-                    DynamicFields => 0,
+                    DynamicFields => 1,
                 );
 
                 # remove id from hash if ticket can not get

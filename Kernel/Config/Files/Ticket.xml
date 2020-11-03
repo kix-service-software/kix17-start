@@ -12490,6 +12490,15 @@ Thanks for your help!
             </Hash>
         </Setting>
     </ConfigItem>
+    <ConfigItem Name="LinkObject::Ticket###DynamicField" Required="0" Valid="1">
+        <Description Translatable="1">Dynamic fields shown in the linked tickets screen of the agent interface. Possible settings: 0 = Disabled, 1 = Available, 2 = Enabled by default.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Core::LinkObject::Ticket</SubGroup>
+        <Setting>
+            <Hash>
+            </Hash>
+        </Setting>
+    </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::ZoomCollectMeta" Required="0" Valid="1">
         <Description Translatable="1">Whether or not to collect meta information from articles using filters configured in Ticket::Frontend::ZoomCollectMetaFilters.</Description>
         <Group>Ticket</Group>

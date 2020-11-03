@@ -90,7 +90,7 @@ if (Core.UI.Popup.CurrentIsPopupWindow()) {
         <div class="WidgetAction Toggle" title="[% Translate("Show or hide the content.") | html %]" ></div>
         <h2><span>[% Translate(Data.BlockDescription) | html %]: [% Translate(Data.Blockname) | html %]</span></h2>
     </div>
-    <div class="Content AutoHeight ">
+    <div id="ContentID_[% Data.PreferencesID %]" class="Content AutoHeight LinkObjectContent">
 [% RenderBlockStart("TableComplexBlockActionRow") %]
     <div class="Bottom">
         <ul class="Actions">
@@ -106,11 +106,23 @@ if (Core.UI.Popup.CurrentIsPopupWindow()) {
         <div class="ClearLeft"></div>
     </div>
 [% RenderBlockEnd("TableComplexBlockActionRow") %]
+    <form action="[% Env("CGIHandle") %]" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="Source" value="[% Data.Source %]" />
+        <input type="hidden" name="Target" value="[% Data.Target %]" />
+        <input type="hidden" name="ClassID" value="[% Data.ClassID %]" />
+        <input type="hidden" name="ItemID" value="[% Data.ItemID %]" />
+        <input type="hidden" name="CallingAction" value="[% Data.CallingAction %]" />
         <table class="DataTable">
             <thead>
                 <tr>
 [% RenderBlockStart("TableComplexBlockColumn") %]
-                    <th> [% Translate(Data.Content) | html %] </th>
+                    <th class="DashboardHeader [% Data.OrderCSS %]" data-column="[% Data.Sortable %]" title="[% Data.SortTitle | html %]">
+[% IF Data.Sortable %]
+                        <a class="SortColumn" href="#" >[% Translate(Data.Content) | html %]</a>
+[% ELSE %]
+                        <span class="Gray" >[% Translate(Data.Content) | html %]</span>
+[% END %]
+                    </th>
 [% RenderBlockEnd("TableComplexBlockColumn") %]
                 </tr>
             </thead>
@@ -122,11 +134,16 @@ if (Core.UI.Popup.CurrentIsPopupWindow()) {
                         [% Data.Content %]
                     </td>
 [% RenderBlockEnd("TableComplexBlockRowColumn") %]
+[% RenderBlockStart("TableComplexBlockRowColumnFilter") %]
+                    <td colspan="100%">
+                        <p class="SpacingTop Center">[% Translate("The filter settings you selected did not produce any results.") %]</p>
+                    </td>
+[% RenderBlockEnd("TableComplexBlockRowColumnFilter") %]
                 </tr>
 [% RenderBlockEnd("TableComplexBlockRow") %]
             </tbody>
         </table>
-
+    </form>
 [% RenderBlockStart("TableComplexBlockFooterNormal") %]
 [% RenderBlockEnd("TableComplexBlockFooterNormal") %]
 
@@ -151,6 +168,50 @@ if (Core.UI.Popup.CurrentIsPopupWindow()) {
 [% END %]
 [% RenderBlockEnd("TableComplexBlock") %]
 
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    $(".LinkObjectContent").each(function () {
+        var $WidgetElement = $(this).parent('div'),
+            ContentDivID   = Core.UI.GetID($(this));
+
+        // fallback to Expanded if default state was not given
+        if (!$WidgetElement.hasClass('Expanded') && !$WidgetElement.hasClass('Collapsed')){
+            $WidgetElement.addClass('Expanded');
+        }
+
+        $WidgetElement.find('.WidgetAction > a')
+            .attr('aria-controls', ContentDivID)
+            .attr('aria-expanded', $WidgetElement.hasClass('Expanded'))
+            .off('click.WidgetToggle')
+            .on('click.WidgetToggle', function (Event) {
+                var $WidgetElement = $(this).closest("div.Header").parent('div'),
+                    Animate = $WidgetElement.hasClass('Animate'),
+                    $that = $(this);
+
+                function ToggleWidget() {
+                    $WidgetElement
+                        .toggleClass('Collapsed')
+                        .toggleClass('Expanded')
+                        .end()
+                        .end()
+                        .attr('aria-expanded', $that.closest("div.Header").parent('div').hasClass('Expanded'));
+                        Core.App.Publish('Event.UI.ToggleWidget', [$WidgetElement]);
+                }
+
+                if (Animate && Core.Config.Get('AnimationEnabled')) {
+                    $WidgetElement.addClass('AnimationRunning').find('.Content').slideToggle("fast", function () {
+                        ToggleWidget();
+                        $WidgetElement.removeClass('AnimationRunning');
+                    });
+                } else {
+                    ToggleWidget();
+                }
+
+                Event.preventDefault();
+            });
+    });
+//]]></script>
+[% END %]
 [% RenderBlockEnd("TableComplex") %]
 
 [% WRAPPER JSOnDocumentComplete %]
@@ -160,6 +221,154 @@ if (Core.UI.Popup.CurrentIsPopupWindow()) {
         $(this).closest('.WidgetSimple').find('table input[type=checkbox]').prop('checked', Status);
     });
 
+    $('.SortColumn').off('click').on('click', function(Event) {
+        var sortBy  = $(this).closest('th').attr('data-column'),
+            orderBy = 'Down',
+            Ingore  = {},
+            Action  = $(this).closest('form').children('input[name=CallingAction]').val(),
+            LinkPage;
+
+        if ( $(this).closest('th').hasClass('SortDescendingLarge') ) {
+            orderBy = 'Up';
+        }
+
+        Ingore['ChallengeToken'] = '1';
+        $.each($('.ColumnFilter'), function() {
+            Ingore[$(this).attr('name')] = '1';
+        });
+
+        if (
+            Action === 'AgentLinkObject'
+        ) {
+            Ingore['Source'] = '1';
+            Ingore['ItemID'] = '1';
+        }
+
+        LinkPage = Core.AJAX.SerializeForm($(this).closest('form'), Ingore);
+        LinkPage += ';OrderBy=' + orderBy;
+        LinkPage += ';SortBy=' + sortBy;
+
+        if (
+            Action === 'AgentLinkObject'
+        ) {
+            LinkPage += ';Source=' + $('input[name="SourceObject"]').val();
+            LinkPage += ';ItemID=' + $('input[name="SourceKey"]').val();
+        }
+
+        if (
+            Action === 'AgentITSMConfigItemZoomTabLinkedObjects'
+            && $(this).closest('.Content').find('.WidgetActionBox').length
+        ) {
+            $(this).closest('.Content')
+                .find('.WidgetActionBox')
+                .addClass('Hidden')
+                .appendTo( $(this).closest('.MainBox') );
+
+            Core.AJAX.ContentUpdate(
+                $(this).closest('.MainBox').find('.Content'),
+                '[% Env("Baselink") %]Action=LinkObjectAJAXHandler;Name=[% Data.Name | html %];' + LinkPage, function () {
+                    $('.WidgetActionBox.Hidden')
+                        .appendTo( $('.WidgetActionBox.Hidden')
+                        .closest('.MainBox')
+                        .find('div.Bottom') )
+                        .removeClass('Hidden');
+                }
+            );
+        } else {
+            Core.AJAX.ContentUpdate(
+                $(this).closest('.WidgetSimple').find('.Content'),
+                '[% Env("Baselink") %]Action=LinkObjectAJAXHandler;Name=[% Data.Name | html %];' + LinkPage, function () {}
+            );
+        }
+
+        Event.preventDefault();
+        return false;
+    });
+
+    $('.ColumnSettingsTrigger').off('click').on('click', function() {
+
+        var $TriggerObj = $(this),
+            $ColumnSettingsContainer = $TriggerObj.next('.ColumnSettingsContainer'),
+            FilterName;
+
+        if ($TriggerObj.hasClass('Active')) {
+
+            $TriggerObj
+                .next('.ColumnSettingsContainer')
+                .find('.ColumnSettingsBox')
+                .fadeOut('fast', function() {
+                    $TriggerObj.removeClass('Active');
+                });
+        }
+        else {
+
+            // slide up all open settings widgets
+            $('.ColumnSettingsTrigger')
+                .next('.ColumnSettingsContainer')
+                .find('.ColumnSettingsBox')
+                .fadeOut('fast', function() {
+                    $(this).parent().prev('.ColumnSettingsTrigger').removeClass('Active');
+                });
+
+            // show THIS settings widget
+            $ColumnSettingsContainer
+                .find('.ColumnSettingsBox')
+                .fadeIn('fast', function() {
+
+                    $TriggerObj.addClass('Active');
+
+                    // only show and use the delete filter icon in case of autocomplete fields
+                    // because in regular dropdowns we have a different way to delete the filter
+                    if ($TriggerObj.closest('th').hasClass('FilterActive') && $ColumnSettingsContainer.find('select.ColumnFilter').hasClass('Hidden')) {
+                        $ColumnSettingsContainer
+                            .find('.DeleteFilter')
+                            .removeClass('Hidden')
+                            .off()
+                            .on('click', function() {
+                                $(this)
+                                    .closest('.ColumnSettingsContainer')
+                                    .find('select')
+                                    .val('DeleteFilter')
+                                    .trigger('change');
+
+                                return false;
+                            });
+                    }
+
+                    // refresh filter dropdown
+                    FilterName = $ColumnSettingsContainer
+                        .find('select')
+                        .attr('name');
+
+                    if ( $TriggerObj.closest('th').hasClass('CustomerID') || $TriggerObj.closest('th').hasClass('CustomerUserID') || $TriggerObj.closest('th').hasClass('Responsible') || $TriggerObj.closest('th').hasClass('Owner') ) {
+
+                        if (!$TriggerObj.parent().find('.SelectedValue').length) {
+                            Core.AJAX.FormUpdate($TriggerObj.parents('form'), 'AJAXFilterUpdate', FilterName, [ FilterName ], function() {
+                                var AutoCompleteValue = $ColumnSettingsContainer
+                                        .find('select')
+                                        .val(),
+                                    AutoCompleteText  = $ColumnSettingsContainer
+                                        .find('select')
+                                        .find('option:selected')
+                                        .text();
+
+                                if (AutoCompleteValue !== 'DeleteFilter') {
+
+                                    $ColumnSettingsContainer
+                                        .find('select')
+                                        .after('<span class="SelectedValue Hidden"><span title="' + AutoCompleteText + ' (' + AutoCompleteValue + ')">' + AutoCompleteText + ' (' + AutoCompleteValue + ')</span></span>');
+                                }
+                            }, 'LinkObjectAJAXHandler');
+                        }
+                    }
+                    else {
+                        Core.AJAX.FormUpdate($TriggerObj.parents('form'), 'AJAXFilterUpdate', FilterName, [ FilterName ], function() {}, 'LinkObjectAJAXHandler');
+                    }
+            });
+        }
+
+        return false;
+    });
 //]]></script>
 [% END %]
 
