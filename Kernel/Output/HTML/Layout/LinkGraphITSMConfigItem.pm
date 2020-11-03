@@ -61,18 +61,6 @@ sub GetConfigItemSpecificLayoutContentForGraph {
         Data         => $Param,
     );
 
-    # get specific JavaScript
-    $Self->Block(
-        Name => 'SpecificJavaScript',
-        Data => {
-            %{$Param},
-        },
-    );
-    $Param->{ObjectSpecificJavaScript} = $Self->Output(
-        TemplateFile => 'AgentLinkGraphAdditionalITSMConfigItem',
-        Data         => $Param,
-    );
-
     return 1;
 }
 
