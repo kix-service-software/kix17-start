@@ -1,6 +1,17 @@
 # Change log of KIX
 * Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.14.0-RC2 (2020/11/03)
+ * (2020/11/02) - CR: KIX17-1553 (updating display and function of the ITSMConfigItem LinkGraph) (fjacquemin)
+ * (2020/10/30) - Bugfix: KIX17-1505 (skip certain column header for D3 statistic format) (millinger)
+ * (2020/10/28) - CR: KIX17-1554 (added sortable and filterable columns of link objects) (fjacquemin)
+ * (2020/10/27) - Bugfix: KIX17-1521 (handle invalid class definition for dynamic field ITSMConfigItemReference) (millinger)
+ * (2020/10/27) - CR: KIX17-1543 (added generic interface operation 'LinkAdd') (millinger)
+ * (2020/10/26) - CR: KIX17-1490 (added user preferences "UserResponseFormat" and additional response formats) (fjacquemin)
+ * (2020/10/26) - Bugfix: KIX17-1042 (Fixed incorrect display of the title of the search result) (fjacquemin)
+ * (2020/10/23) - Bugfix: KIX17-1556 (fixed handling of dropdown dynamic fields at ticket template configurator) (millinger)
+ * (2020/10/22) - Bugfix: KIX17-1547 (pinned service with invalid parent service not available) (millinger)
+
 # 17.14.0-RC1 (2020/10/19)
  * (2020/10/14) - CR: KIX17-1334 (Added resizing of the column of the article table) (fjacquemin)
 
