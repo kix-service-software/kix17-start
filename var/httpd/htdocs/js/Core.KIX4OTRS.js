@@ -63,7 +63,7 @@ Core.KIX4OTRS = (function(TargetNS) {
 
         // bind delete button
         $CurrentTab.find('.Primary').bind('click', function() {
-            var $SelectedLinks = $(this).parent().parent().find(':checked');
+            var $SelectedLinks = $(this).parent().parent().find('input:checked');
 
             if ($SelectedLinks.length == 0) {
                 return;

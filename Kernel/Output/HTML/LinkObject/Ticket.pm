@@ -85,6 +85,16 @@ sub new {
         ObjectType => ['Ticket'],
     );
 
+    # set field behaviors
+    $Self->{Behaviors} = {
+        'IsSortable'  => 1,
+    };
+
+    # define sortable columns
+    $Self->{ValidSortableColumns} = {
+        'TicketNumber'           => 1,
+    };
+
     return $Self;
 }
 
@@ -171,10 +181,11 @@ sub TableCreateComplex {
     }
 
     # get user object
-    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-    my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
-    my $TimeObject   = $Kernel::OM->Get('Kernel::System::Time');
-    my $UserObject   = $Kernel::OM->Get('Kernel::System::User');
+    my $LayoutObject  = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $TicketObject  = $Kernel::OM->Get('Kernel::System::Ticket');
+    my $TimeObject    = $Kernel::OM->Get('Kernel::System::Time');
+    my $UserObject    = $Kernel::OM->Get('Kernel::System::User');
+    my $BackendObject = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
 
     # get user preferences
     my %UserPreferences = $UserObject->GetPreferences( UserID => $Self->{UserID} );
@@ -223,13 +234,37 @@ sub TableCreateComplex {
         }
     }
 
+    my @SortedList;
+    my $SortBy  = $Param{SortBy}  || 'TicketNumber';
+    my $OrderBy = $Param{OrderBy} || 'Down';
+
+    if ( $OrderBy eq 'Down' ) {
+        @SortedList = sort { lc $LinkList{$a}{Data}->{$SortBy} cmp lc $LinkList{$b}{Data}->{$SortBy} } keys %LinkList;
+    } else {
+        @SortedList = sort { lc $LinkList{$b}{Data}->{$SortBy} cmp lc $LinkList{$a}{Data}->{$SortBy} } keys %LinkList;
+    }
+
+    TICKET:
     for my $TicketID (
-        sort { $LinkList{$a}{Data}->{Age} <=> $LinkList{$b}{Data}->{Age} }
-        keys %LinkList
+        @SortedList
     ) {
 
         # extract ticket data
         my $Ticket = $LinkList{$TicketID}{Data};
+
+        if (
+            $Self->{Behaviors}->{IsFilterable}
+            && $Param{ColumnFilter}
+        ) {
+            FILTER:
+            for my $Key ( sort keys %{$Param{ColumnFilter}} ) {
+                my $FilterColumn = $Key;
+                $FilterColumn =~ s/IDs$/ID/i;
+
+                next FILTER if $FilterColumn eq 'LinkTypeID';
+                next TICKET if !grep( {$_ eq $Ticket->{$FilterColumn} } @{$Param{ColumnFilter}->{$Key}} );
+            }
+        }
 
         # set css
         my $CssStyle = '';
@@ -348,23 +383,35 @@ sub TableCreateComplex {
                 elsif ( $Column eq 'SLA' ) {
                     $TmpHash{Translate} = $Kernel::OM->Get('Kernel::Config')->Get('Ticket::SLATranslation') || 0;
                 }
-            }
-            elsif ( $Column eq 'CustomerName' ) {
-                if ( $Ticket->{CustomerUserID} ) {
-                    my $CustomerName = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerName(
-                        UserLogin => $Ticket->{CustomerUserID},
-                    );
-                    $TmpHash{Content} = $CustomerName;
-                }
-            }
-            elsif ( $Column eq 'CustomerCompanyName' ) {
-                if ( $Ticket->{CustomerID} ) {
-                    my %CustomerCompanyData = $Kernel::OM->Get('Kernel::System::CustomerCompany')->CustomerCompanyGet(
-                        CustomerID => $Ticket->{CustomerID},
-                    );
-                    if ( %CustomerCompanyData ) {
-                        $TmpHash{Content} = $CustomerCompanyData{CustomerCompanyName};
+
+                if ( $Column =~ /^DynamicField_(.*)/ ) {
+                    my $Fieldname          = $1;
+                    my $DynamicFieldConfig = {};
+
+                    DYNAMICFIELD:
+                    for my $DFConfig ( @{ $Self->{DynamicField} } ) {
+                        next DYNAMICFIELD if !IsHashRefWithData($DFConfig);
+                        next DYNAMICFIELD if $DFConfig->{Name} ne $Fieldname;
+
+                        $DynamicFieldConfig = $DFConfig;
+                        last DYNAMICFIELD;
                     }
+                    next if !IsHashRefWithData($DynamicFieldConfig);
+
+                    # get field value
+                    my $Value = $BackendObject->ValueGet(
+                        DynamicFieldConfig => $DynamicFieldConfig,
+                        ObjectID           => $TicketID,
+                    );
+
+                    my $Valuetrg = $BackendObject->DisplayValueRender(
+                        DynamicFieldConfig => $DynamicFieldConfig,
+                        Value              => $Value,
+                        ValueMaxChars      => 20,
+                        LayoutObject       => $LayoutObject,
+                    );
+
+                    $TmpHash{Content} = $Valuetrg->{Value} || '';
                 }
             }
             push( @ItemColumns, \%TmpHash );
@@ -372,8 +419,6 @@ sub TableCreateComplex {
 
         push @ItemList, \@ItemColumns;
     }
-
-    return if !@ItemList;
 
     # define the block data
     my $TicketHook        = $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Hook');
@@ -394,8 +439,87 @@ sub TableCreateComplex {
         if ( $Column eq 'TicketNumber' ) {
             $Content = $TicketHook;
         }
+
+        elsif ( $Column =~ /^DynamicField_(.*)/ ) {
+            my $Fieldname          = $1;
+            my $DynamicFieldConfig = {};
+
+            DYNAMICFIELD:
+            for my $DFConfig ( @{ $Self->{DynamicField} } ) {
+                next DYNAMICFIELD if !IsHashRefWithData($DFConfig);
+                next DYNAMICFIELD if $DFConfig->{Name} ne $Fieldname;
+
+                $DynamicFieldConfig = $DFConfig;
+                last DYNAMICFIELD;
+            }
+            if ( IsHashRefWithData($DynamicFieldConfig) ) {
+                $Content = $LayoutObject->{LanguageObject}->Translate($DynamicFieldConfig->{Label} || '');
+            }
+        }
+
         else {
             $Content = $TranslationHash{$Column} || $Column;
+        }
+
+        if (
+            $Self->{Behaviors}->{IsSortable}
+            && $Self->{ValidSortableColumns}->{$Column}
+        ) {
+            $TmpHash{Sortable} = $Column;
+            if ( $SortBy eq $Column ) {
+                $TmpHash{OrderCSS}  = $OrderBy eq 'Down' ? 'SortDescendingLarge' : 'SortAscendingLarge';
+                $TmpHash{SortTitle} = $OrderBy eq 'Down' ? Translatable('sorted descending') : Translatable('sorted ascending');
+            }
+        }
+
+        if (
+            $Self->{Behaviors}->{IsSortable}
+            && $Self->{Behaviors}->{IsFilterable}
+            && $Self->{ValidSortableColumns}->{$Column}
+            && $Self->{ValidFilterableColumns}->{$Column}
+        ) {
+
+            my $Css;
+            if (
+                $Column eq 'CustomerID'
+                || $Column eq 'Responsible'
+                || $Column eq 'Owner'
+            ) {
+                $Css = 'Hidden';
+
+            }
+
+            $TmpHash{FilterTitle} = Translatable('filter not active');
+            if (
+                $Param{GetColumnFilterSelect}
+                 && $Param{GetColumnFilterSelect}->{$Column}
+            ) {
+                $TmpHash{OrderCSS} .= ' FilterActive';
+                $TmpHash{FilterTitle} = Translatable('filter active');
+            }
+
+            # variable to save the filter's HTML code
+            $TmpHash{ColumnFilterStrg} = $Self->_InitialColumnFilter(
+                ColumnName => $Column,
+                Css        => $Css,
+            );
+            $TmpHash{ColumnFilterCSS} = $Css;
+        }
+
+        if (
+            $Self->{Behaviors}->{IsFilterable}
+            && $Self->{ValidFilterableColumns}->{$Column}
+        ) {
+            if ( $Column eq 'CustomerID' ) {
+                 $TmpHash{SearchableCustomer} = 1;
+            }
+            if (
+                $Column eq 'Responsible'
+                || $Column eq 'Owner'
+            ) {
+                 $TmpHash{SearchableUser} = 1;
+            }
+            $TmpHash{Filterable} = 1;
         }
 
         $TmpHash{Content} = $Content;
@@ -797,6 +921,152 @@ sub SearchOptionList {
     }
 
     return @SearchOptionList;
+}
+
+sub _InitialColumnFilter {
+    my ( $Self, %Param ) = @_;
+
+    return if !$Param{ColumnName};
+
+    # get layout object
+    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+
+    my $Label = $Param{Label} || $Param{ColumnName};
+    $Label = $LayoutObject->{LanguageObject}->Translate($Label);
+
+    # set fixed values
+    my $Data = [
+        {
+            Key   => '',
+            Value => uc $Label,
+        },
+    ];
+
+    # define if column filter values should be translatable
+    my $TranslationOption = 0;
+
+    if (
+        $Param{ColumnName} eq 'State'
+        || $Param{ColumnName} eq 'Lock'
+        || $Param{ColumnName} eq 'Priority'
+    ) {
+        $TranslationOption = 1;
+    }
+
+    my $Class = 'ColumnFilter';
+    if ( $Param{Css} ) {
+        $Class .= ' ' . $Param{Css};
+    }
+
+    # build select HTML
+    my $ColumnFilterHTML = $LayoutObject->BuildSelection(
+        Name        => 'TicketColumnFilter' . $Param{ColumnName},
+        Data        => $Data,
+        Class       => $Class,
+        Translation => $TranslationOption,
+        SelectedID  => '',
+    );
+    return $ColumnFilterHTML;
+}
+
+sub FilterContent {
+    my ( $Self, %Param ) = @_;
+
+    return if !$Param{FilterColumn};
+
+    my $FunctionName = $Param{FilterColumn} . 'FilterValuesGet';
+    if ( $Param{FilterColumn} eq 'CustomerID' ) {
+        $FunctionName = 'CustomerFilterValuesGet';
+    }
+
+    my $ColumnValues = $Kernel::OM->Get('Kernel::System::Ticket::ColumnFilter')->$FunctionName(
+        TicketIDs    => $Param{ItemIDs},
+        HeaderColumn => $Param{FilterColumn},
+        UserID       => $Self->{UserID},
+    );
+
+    # make sure that even a value of 0 is passed as a Selected value, e.g. Unchecked value of a
+    # check-box dynamic field.
+    my $SelectedValue = defined $Param{GetColumnFilter}->{ $Param{FilterColumn} } ? $Param{GetColumnFilter}->{ $Param{FilterColumn} } : '';
+
+    my $LabelColumn = $Param{FilterColumn};
+
+    # variable to save the filter's HTML code
+    my $ColumnFilterJSON = $Self->_ColumnFilterJSON(
+        ColumnName    => $Param{FilterColumn},
+        Label         => $LabelColumn,
+        ColumnValues  => $ColumnValues,
+        SelectedValue => $SelectedValue,
+    );
+    return $ColumnFilterJSON;
+}
+
+sub _ColumnFilterJSON {
+    my ( $Self, %Param ) = @_;
+
+    return if !$Param{ColumnName};
+    return if !$Self->{ValidFilterableColumns}->{ $Param{ColumnName} };
+
+    # get layout object
+    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+
+    my $Label = $Param{Label};
+    $Label = $LayoutObject->{LanguageObject}->Translate($Label);
+
+    # set fixed values
+    my $Data = [
+        {
+            Key   => 'DeleteFilter',
+            Value => uc $Label,
+        },
+        {
+            Key      => '-',
+            Value    => '-',
+            Disabled => 1,
+        },
+    ];
+
+    if ( $Param{ColumnValues} && ref $Param{ColumnValues} eq 'HASH' ) {
+
+        my %Values = %{ $Param{ColumnValues} };
+
+        # set possible values
+        for my $ValueKey ( sort { lc $Values{$a} cmp lc $Values{$b} } keys %Values ) {
+            push @{$Data}, {
+                Key   => $ValueKey,
+                Value => $Values{$ValueKey}
+            };
+        }
+    }
+
+    # define if column filter values should be translatable
+    my $TranslationOption = 0;
+
+    if (
+        $Param{ColumnName} eq 'State'
+        || $Param{ColumnName} eq 'Lock'
+        || $Param{ColumnName} eq 'Priority'
+    ) {
+        $TranslationOption = 1;
+    }
+
+    # build select HTML
+    my $JSON = $LayoutObject->BuildSelectionJSON(
+        [
+            {
+                Name         => 'TicketColumnFilter' . $Param{ColumnName},
+                Data         => $Data,
+                Class        => 'ColumnFilter',
+                Sort         => 'AlphanumericKey',
+                TreeView     => 1,
+                SelectedID   => $Param{SelectedValue},
+                Translation  => $TranslationOption,
+                AutoComplete => 'off',
+            },
+        ],
+    );
+
+    return $JSON;
 }
 
 1;
