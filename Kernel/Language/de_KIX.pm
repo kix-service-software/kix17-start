@@ -4548,6 +4548,16 @@ sub Data {
     $Lang->{'Welcome to'} = 'Willkommen bei';
     # EO LoginHeaders
 
+    # Response Order
+    $Lang->{'Select the response format'}     = 'Wählen Sie das Antwortformat';
+    $Lang->{'Select response format'}         = 'Antwortformat auswählen';
+    $Lang->{'Which response format to use?'}  = 'Welches Antwortformat soll verwendet werden?';
+    $Lang->{'Response formats'}               = 'Antwortformate';
+    $Lang->{'System configuration'}           = 'Systemkonfiguration';
+    $Lang->{'Quote before response template'} = 'Zitat vor Antwortvorlage';
+    $Lang->{'Quote after response template'}  = 'Zitat nach Antwortvorlage';
+    # EO Response Order
+
     return 0;
 }
 
