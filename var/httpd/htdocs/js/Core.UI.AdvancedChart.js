@@ -87,6 +87,7 @@ Core.UI.AdvancedChart = (function (TargetNS) {
      */
     function DrawLineChart(RawData, Element, Options) {
         var Headings,
+            SkipHeader,
             ResultData = [],
             ValueFormat = 'd', // y axis format is by default "integer"
             Counter = 0,
@@ -95,7 +96,8 @@ Core.UI.AdvancedChart = (function (TargetNS) {
 
         // First RawData element is not needed
         RawData.shift();
-        Headings = RawData.shift();
+        Headings   = RawData.shift();
+        SkipHeader = RawData.shift();
 
         if (PreferencesData && typeof PreferencesData.Line !== 'undefined') {
             PreferencesData = PreferencesData.Line;
@@ -128,6 +130,11 @@ Core.UI.AdvancedChart = (function (TargetNS) {
                 }
                 // Ignore sum col
                 if (HeadingElement === 'Sum') {
+                    return;
+                }
+
+                // Skip provided header
+                if (SkipHeader[HeadingElement] === "1") {
                     return;
                 }
 
@@ -234,13 +241,15 @@ Core.UI.AdvancedChart = (function (TargetNS) {
      */
     function DrawSimpleLineChart(RawData, Element, Options) {
         var Headings,
+            SkipHeader,
             ResultData = [],
             ValueFormat = 'd', // y axis format is by default "integer"
             Counter = 0;
 
         // First RawData element is not needed
         RawData.shift();
-        Headings = RawData.shift();
+        Headings   = RawData.shift();
+        SkipHeader = RawData.shift();
 
         $.each(RawData, function(DataIndex, DataElement) {
             var ResultLine;
@@ -258,10 +267,15 @@ Core.UI.AdvancedChart = (function (TargetNS) {
                 values: []
             };
 
-            $.each(Headings, function(HeadingIndex){
+            $.each(Headings, function(HeadingIndex, HeadingElement){
                 var Value;
                 // First element is x axis label
                 if (HeadingIndex === 0){
+                    return;
+                }
+
+                // Skip provided header
+                if (SkipHeader[HeadingElement] === "1") {
                     return;
                 }
 
@@ -368,6 +382,7 @@ Core.UI.AdvancedChart = (function (TargetNS) {
     function DrawBarChart(RawData, Element, Options) {
 
         var Headings,
+            SkipHeader,
             ResultData = [],
             ValueFormat = 'd', // y axis format is by default "integer"
             PreferencesKey = Options.PreferencesKey,
@@ -376,7 +391,8 @@ Core.UI.AdvancedChart = (function (TargetNS) {
 
         // First RawData element is not needed
         RawData.shift();
-        Headings = RawData.shift();
+        Headings   = RawData.shift();
+        SkipHeader = RawData.shift();
 
         if (PreferencesData && typeof PreferencesData.Bar !== 'undefined') {
             PreferencesData = PreferencesData.Bar;
@@ -412,6 +428,11 @@ Core.UI.AdvancedChart = (function (TargetNS) {
                 }
                 // Ignore sum col
                 if (HeadingElement === 'Sum') {
+                    return;
+                }
+
+                // Skip provided header
+                if (SkipHeader[HeadingElement] === "1") {
                     return;
                 }
 
@@ -529,6 +550,7 @@ Core.UI.AdvancedChart = (function (TargetNS) {
     function DrawStackedAreaChart(RawData, Element, Options) {
 
         var Headings,
+            SkipHeader,
             ResultData = [],
             Counter = 0,
             PreferencesKey = Options.PreferencesKey,
@@ -536,7 +558,8 @@ Core.UI.AdvancedChart = (function (TargetNS) {
 
         // First RawData element is not needed
         RawData.shift();
-        Headings = RawData.shift();
+        Headings   = RawData.shift();
+        SkipHeader = RawData.shift();
 
         if (PreferencesData && typeof PreferencesData.StackedArea !== 'undefined') {
             PreferencesData = PreferencesData.StackedArea;
@@ -569,6 +592,11 @@ Core.UI.AdvancedChart = (function (TargetNS) {
                 }
                 // Ignore sum col
                 if (HeadingElement === 'Sum') {
+                    return;
+                }
+
+                // Skip provided header
+                if (SkipHeader[HeadingElement] === "1") {
                     return;
                 }
 

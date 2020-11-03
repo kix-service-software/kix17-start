@@ -10985,6 +10985,20 @@ via the Preferences button after logging in.
             <String Regex="^[0-9]{1,5}$">1000</String>
         </Setting>
     </ConfigItem>
+    <ConfigItem Name="Stats::D3::SkipHeader" Required="0" Valid="0">
+        <Description Translatable="1">Defines column header to be skipped for D3 graphs.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Stats</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Age">1</Item>
+                <Item Key="Alter">1</Item>
+                <Item Key="Ticket#">1</Item>
+                <Item Key="Titel">1</Item>
+                <Item Key="Title">1</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
     <ConfigItem Name="Core::MirrorDB::DSN" Required="0" Valid="0" ConfigLevel="200">
         <Description Translatable="1">KIX can use one or more readonly mirror databases for expensive operations like fulltext search or statistics generation. Here you can specify the DSN for the first mirror database.</Description>
         <Group>Framework</Group>
