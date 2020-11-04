@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<database Name="kix">
+    <TableAlter Name="generic_agent_jobs">
+        <ColumnChange NameOld="job_value" NameNew="job_value" Type="VARCHAR" Size="65535" Required="false"/>
+    </TableAlter>
+</database>

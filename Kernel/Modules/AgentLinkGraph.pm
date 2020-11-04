@@ -161,7 +161,7 @@ sub FinishGraph {
     }
 
     $Output .= $LayoutObject->Output(
-        TemplateFile => 'AgentZoomTabLinkGraphIframe',
+        TemplateFile => 'AgentZoomTabLinkGraphIFrame',
         Data         => \%Param,
     );
 
