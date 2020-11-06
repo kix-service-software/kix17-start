@@ -202,8 +202,8 @@ sub Data {
         ;
     $Lang->{'List of CSS files to always be loaded for the customer interface.'}
         = 'Liste von CSS-Dateien, die immer im Kunden-Interface geladen werden.';
-    $Lang->{'Configure an stylesheet dependent on ticket state.'}
-        = 'Legt ein Stylesheet fest, welches auf dem Ticketstatus basiert.';
+    $Lang->{'Configures which ticket should receive which style, there are two possibilities for this. The first is a dependency on attributes such as Service, SLA, Type, State or Priority and its value name. The key consists of 000###attribute:::value name or as a combination with several attributes 000###attribute:::value name|||attribute2:::value name (||| is a logical AND). Several values (separated simicolon, corresponds to the logical OR) can be checked for each attribute. Furthermore, the value "EMPTY" can be used to check for empty values or with "[regexp]" via regular expressions. The second option would be to simply store the desired ticket status as a key (fallback).'}
+        = 'Konfiguriert welches Ticket welchen Style erhalten soll, es gibt hierfür zwei möglichkeiten. Die erste ist eine Abhängigkeit nach Attributen wie Service, SLA, Type, State oder Priority und dessen Wertname. Der Schlüssel besteht aus 000###Attribut:::Wertname oder als Kombination mit mehreren Attributen 000###Attribut:::Wertname|||Attribut2:::Wertname (||| ist ein logisches UND). Es kann zu jedem Attribut mehrere Werte (Simikolon separiert, enrspricht dem logischen ODER) geprüft werden. Des weiterem kann mit dem Wert "EMPTY" nach leerwerten oder mit "[regexp]" über requläre Ausdrücke geprüft werden. Die zweite Möglichkeit wäre einfach den gewünschten Ticketstatus als Schlüssel zu hinterlegen (Fallback).';
     $Lang->{'List of CSS files to always be loaded for the agent interface.'}
         = 'Liste von CSS-Dateien, die immer im Agenten-Interface geladen werden.';
     $Lang->{'PostmasterFilter which sets destination queue in X-headers depending on email suffix.'}

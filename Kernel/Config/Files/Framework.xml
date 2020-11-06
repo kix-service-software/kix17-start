@@ -320,7 +320,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="KIX4OTRSTicketOverviewSmallHighlightMapping" Required="1" Valid="1">
-        <Description Translatable="1">Configure an stylesheet dependent on ticket state.</Description>
+        <Description Translatable="1">Configures which ticket should receive which style, there are two possibilities for this. The first is a dependency on attributes such as Service, SLA, Type, State or Priority and its value name. The key consists of 000###attribute:::value name or as a combination with several attributes 000###attribute:::value name|||attribute2:::value name (||| is a logical AND). Several values (separated simicolon, corresponds to the logical OR) can be checked for each attribute. Furthermore, the value "EMPTY" can be used to check for empty values or with "[regexp]" via regular expressions. The second option would be to simply store the desired ticket status as a key (fallback).</Description>
         <Group>Framework</Group>
         <SubGroup>Core::Web</SubGroup>
         <Setting>
@@ -335,7 +335,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="KIX4OTRSTicketOverviewLargeHighlightMapping" Required="1" Valid="1">
-        <Description Translatable="1">Configure an stylesheet dependent on ticket state.</Description>
+        <Description Translatable="1">Configures which ticket should receive which style, there are two possibilities for this. The first is a dependency on attributes such as Service, SLA, Type, State or Priority and its value name. The key consists of 000###attribute:::value name or as a combination with several attributes 000###attribute:::value name|||attribute2:::value name (||| is a logical AND). Several values (separated simicolon, corresponds to the logical OR) can be checked for each attribute. Furthermore, the value "EMPTY" can be used to check for empty values or with "[regexp]" via regular expressions. The second option would be to simply store the desired ticket status as a key (fallback).</Description>
         <Group>Framework</Group>
         <SubGroup>Core::Web</SubGroup>
         <Setting>

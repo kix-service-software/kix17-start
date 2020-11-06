@@ -45,9 +45,9 @@
             </thead>
             <tbody>
 [% RenderBlockStart("TableComplexBlockRow") %]
-                <tr>
+                <tr class="[% Data.HighlightClass %]" style="[% Data.CustomCSSStyle %]" >
 [% RenderBlockStart("TableComplexBlockRowColumn") %]
-                    <td class="LinkedObjects [% Data.Css | html %]" >
+                    <td class="LinkedObjects" >
                         [% Data.Content %]
                     </td>
 [% RenderBlockEnd("TableComplexBlockRowColumn") %]

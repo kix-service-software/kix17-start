@@ -431,14 +431,16 @@ sub LinkObjectTableCreateComplex {
 
                 # define check-box delete cell
                 my $CheckboxCell = {
-                    Type         => 'CheckboxDelete',
-                    Object       => $Block->{Object},
-                    Content      => '',
-                    Key          => $Item->[0]->{Key},
-                    LinkTypeList => $LinkList{ $Block->{Object} }->{ $Item->[0]->{Key} },
-                    Translate    => 1,
-                    SourceObject => $SourceObject,
-                    SourceKey    => $SourceKey
+                    HighlightClass => $Item->[0]->{HighlightClass},
+                    CustomCSSStyle => $Item->[0]->{CustomCSSStyle},
+                    Type           => 'CheckboxDelete',
+                    Object         => $Block->{Object},
+                    Content        => '',
+                    Key            => $Item->[0]->{Key},
+                    LinkTypeList   => $LinkList{ $Block->{Object} }->{ $Item->[0]->{Key} },
+                    Translate      => 1,
+                    SourceObject   => $SourceObject,
+                    SourceKey      => $SourceKey
                 };
 
                 if (
@@ -574,6 +576,9 @@ sub LinkObjectTableCreateComplex {
                 # output a table row block
                 $LayoutObject->Block(
                     Name => 'TableComplexBlockRow',
+                    Data => {
+                        %{$Row->[0]}
+                    }
                 );
 
                 for my $Column ( @{$Row} ) {
@@ -601,6 +606,9 @@ sub LinkObjectTableCreateComplex {
             # output a table row block
             $LayoutObject->Block(
                 Name => 'TableComplexBlockRow',
+                Data => {
+                    %{$Row->[0]}
+                }
             );
 
             if ( $UseFilter ) {

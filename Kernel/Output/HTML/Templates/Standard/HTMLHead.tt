@@ -64,6 +64,11 @@
             [% Data.CSSToolbar | html %]
         }
 [% RenderBlockEnd("CustomCSSTop")%]
+[% RenderBlockStart("CustomTicketHighlight")%]
+        .[% Data.Selector %] {
+            [% Data.SelectorCSS | html %]
+        }
+[% RenderBlockEnd("CustomTicketHighlight")%]
     </style>
 
     <style type="text/css">

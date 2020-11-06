@@ -2176,14 +2176,11 @@ sub Run {
             );
         }
 
-        my $StateHighlighting = $ConfigObject->Get('KIX4OTRSTicketOverviewSmallHighlightMapping');
-        if (
-            $StateHighlighting
-            && ref($StateHighlighting) eq 'HASH'
-            && $StateHighlighting->{ $Ticket{State} }
-        ) {
-            $Ticket{LineStyle} = $StateHighlighting->{ $Ticket{State} };
-        }
+        # get class for ticket highlight
+        $Ticket{HighlightClass} = $LayoutObject->GetTicketHighlight(
+            View   => 'Small',
+            Ticket => \%Ticket
+        );
 
         # show ticket
         $LayoutObject->Block(

@@ -266,24 +266,21 @@ sub TableCreateComplex {
             }
         }
 
-        # set css
-        my $CssStyle = '';
+        # set css class
+        my $HighlightClass = $LayoutObject->GetTicketHighlight(
+            View   => 'Small',
+            Ticket => $Ticket
+        );
 
-        my $StateHighlighting = $Kernel::OM->Get('Kernel::Config')->Get('KIX4OTRSTicketOverviewSmallHighlightMapping');
-
+        my $CustomCSSStyle = '';
         if (
-            $StateHighlighting
-            && ref($StateHighlighting) eq 'HASH'
-            && $StateHighlighting->{ $Ticket->{State} }
+            $HighlightClass
+            && (
+                $Ticket->{StateType} eq 'closed'
+                || $Ticket->{StateType} eq 'merged'
+            )
         ) {
-
-            if ( $Ticket->{StateType} eq 'closed' || $Ticket->{StateType} eq 'merged' ) {
-                $CssStyle = ' style="text-decoration: line-through; '
-                    . $StateHighlighting->{ $Ticket->{State} } . '"';
-            }
-            else {
-                $CssStyle = ' style="' . $StateHighlighting->{ $Ticket->{State} } . '"';
-            }
+           $CustomCSSStyle = 'text-decoration: line-through;';
         }
 
         my @ItemColumns;
@@ -301,10 +298,11 @@ sub TableCreateComplex {
         for my $Column (@ColumnsEnabled) {
 
             my %TmpHash;
-            $TmpHash{Content}  = $Ticket->{$Column};
-            $TmpHash{Key}      = $TicketID;
-            $TmpHash{CssStyle} = $CssStyle;
-            $TmpHash{Type}     = 'Text';
+            $TmpHash{Content}        = $Ticket->{$Column};
+            $TmpHash{Key}            = $TicketID;
+            $TmpHash{HighlightClass} = $HighlightClass;
+            $TmpHash{CustomCSSStyle} = $CustomCSSStyle;
+            $TmpHash{Type}           = 'Text';
 
             if ( $TmpHash{Content} ) {
 
