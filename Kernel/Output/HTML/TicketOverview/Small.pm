@@ -545,14 +545,11 @@ sub Run {
                 Size         => 500,
             );
 
-            my $StateHighlighting = $ConfigObject->Get('KIX4OTRSTicketOverviewSmallHighlightMapping');
-            if (
-                $StateHighlighting
-                && ref($StateHighlighting) eq 'HASH'
-                && $StateHighlighting->{ $Article{State} }
-            ) {
-                $Article{LineStyle} = $StateHighlighting->{ $Article{State} };
-            }
+            # get class for ticket highlight
+            $Article{HighlightClass} = $LayoutObject->GetTicketHighlight(
+                View   => 'Small',
+                Ticket => \%Article
+            );
 
             # prepare subject
             $Article{Subject} = $TicketObject->TicketSubjectClean(

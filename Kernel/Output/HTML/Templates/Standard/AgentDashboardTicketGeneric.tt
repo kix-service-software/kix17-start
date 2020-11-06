@@ -474,7 +474,7 @@ $('.DashboardHeader').off('click').on('click', '.ColumnSettingsTrigger', functio
 
         <tbody>
 [% RenderBlockStart("ContentLargeTicketGenericRow") %]
-            <tr class="MasterAction">
+            <tr class="MasterAction [% Data.HighlightClass %]">
 
 [% RenderBlockStart("GeneralOverviewRow") %]
 
@@ -491,15 +491,6 @@ $('.DashboardHeader').off('click').on('click', '.ColumnSettingsTrigger', functio
 [% RenderBlockEnd("ContentLargeTicketGenericRowMetaImage") %]
                 </td>
 [% RenderBlockEnd("ContentLargeTicketGenericRowMeta") %]
-
-#            <td class="W10pc">
-#                <a href="[% Env("Baselink") %]Action=AgentTicketZoom;TicketID=[% Data.TicketID %]" title="[% Data.Title | html %]" class="AsBlock MasterActionLink">[% Data.TicketNumber %]</a>
-#            </td>
-#            <td class="W50pc">
-#                <div title="[% Data.Title | html %]">[% Data.Title | truncate(70) | html %]</div>
-#            </td>
-#            <td>[% Data.Time | html %]</td>
-
 [% RenderBlockStart("ContentLargeTicketGenericTicketColumn") %]
 [% RenderBlockStart("ContentLargeTicketGenericTicketNumber") %]
                 <td>
