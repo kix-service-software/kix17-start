@@ -287,6 +287,7 @@ sub Run {
     my @ChartData = (
         $LayoutObject->{LanguageObject}->Translate('7 Day Stats'),
         \@TicketWeekdays,
+        {},
         [ $CreatedText, reverse @TicketsCreated ],
         [ $ClosedText,  reverse @TicketsClosed ],
     );
