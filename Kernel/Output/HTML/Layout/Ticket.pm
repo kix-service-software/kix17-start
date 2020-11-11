@@ -1367,8 +1367,11 @@ sub GetTicketHighlight {
 
         my ($Prio, $Restrictions) = split( /###/, $Key);
 
+        next RULE if !$Restrictions;
+
         # check data match
         my @MatchRules = split( '\|\|\|', $Restrictions );
+        my $MatchCount = 0;
 
         MATCHRULE:
         for my $MatchRule (@MatchRules) {
@@ -1454,27 +1457,26 @@ sub GetTicketHighlight {
                         && $ConditionElement =~ /$RegExpPatternCondition/
                     )
                 ) {
-                    $Selector = $Prio;
-                    $Selector =~ s/\s+//gm;
-                    $Selector =~ s/[:\.,\\\/]//;
-                    $Selector =~ s/[+]/Plus/;
-                    $Selector =~ s/[-]/Minus/;
-                    $Selector = 'Highlight' . $View . $Selector;
-
                     $Match = 1;
+                    $MatchCount++;
 
                     last RESTRICTEDVALUE;
                 }
             }
 
-            if ( !$Match ) {
-                $Selector = '';
-            }
-
             # check match of restriction
-            if ( !$Selector ) {
+            if ( !$Match ) {
                 next RULE;
             }
+        }
+
+        if ( $MatchCount == scalar(@MatchRules) ) {
+            $Selector = $Prio;
+            $Selector =~ s/\s+//gm;
+            $Selector =~ s/[:\.,\\\/]//;
+            $Selector =~ s/[+]/Plus/;
+            $Selector =~ s/[-]/Minus/;
+            $Selector = 'Highlight' . $View . $Selector;
         }
     }
 
