@@ -883,7 +883,10 @@ sub FAQShowLatestNewsBox {
             );
 
             # show the RSS Feed icon
-            if ( $Param{Mode} eq 'Public' ) {
+            if (
+                $Param{Mode} eq 'Public'
+                && $ConfigObject->Get('PublicFrontend::Module')->{PublicFAQRSS}
+            ) {
 
                 $Self->Block(
                     Name => 'InfoBoxFAQMiniListNewsRSS',
@@ -1030,7 +1033,10 @@ sub FAQShowTop10 {
             );
 
             # show the RSS Feed icon
-            if ( $Param{Mode} eq 'Public' ) {
+            if (
+                $Param{Mode} eq 'Public'
+                && $ConfigObject->Get('PublicFrontend::Module')->{PublicFAQRSS}
+            ) {
 
                 $Self->Block(
                     Name => 'InfoBoxFAQMiniListNewsRSS',
