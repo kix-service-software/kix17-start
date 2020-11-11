@@ -76,7 +76,18 @@ sub GetObjectAttributes {
     my $Today     = sprintf "%s 23:59:59", $Date;
 
     my %ConfigItemAttributes = %{ $Self->_ConfigItemAttributes() };
-    my %OrderBy              = map { $_ => $ConfigItemAttributes{$_} } grep { $_ ne 'Number' } keys %ConfigItemAttributes;
+
+    my %OrderBy = (
+        ClassID => 'Class',
+        Number  => 'Number',
+        Name    => 'Name',
+
+        DeplStateID => 'Deployment State',
+        InciStateID => 'Incident State',
+
+        CreateTime => 'Create Time',
+        ChangeTime => 'Change Time',
+    );
 
     my %SortSequence = (
         Up   => Translatable('ascending'),
@@ -257,48 +268,58 @@ sub GetStatTable {
     my $SortRef  = first { $_->{Element} eq 'SortSequence' } @{ $Param{ValueSeries} };
     my $Sort     = $SortRef ? $SortRef->{SelectedValues} : ['Down'];
 
-    # init hash of static restriction parameters
-    my %SkipElements = (
-        'ClassIDs'         => 1,
-        'DeplStateIDs'     => 1,
-        'InciStateIDs'     => 1,
-        'Number'           => 1,
-        'Name'             => 1,
-        'CreateTime'       => 1,
-        'ChangeTime'       => 1,
-        'EmptyFields'      => 1,
+    # prepare search parameter
+    my %SearchParameter = ();
+    my %SkipParameter   = (
+        'EmptyFields' => 1,
     );
-
-    # prepare xml search parameter
+    my %StaticParameter = (
+        'ClassIDs'                      => 1,
+        'DeplStateIDs'                  => 1,
+        'InciStateIDs'                  => 1,
+        'Number'                        => 1,
+        'Name'                          => 1,
+        'ConfigItemCreateTimeNewerDate' => 1,
+        'ConfigItemCreateTimeOlderDate' => 1,
+        'ConfigItemChangeTimeNewerDate' => 1,
+        'ConfigItemChangeTimeOlderDate' => 1,
+    );
     ELEMENT:
     for my $Element ( keys( %{ $Param{Restrictions} } ) ) {
-        # skip static restrictions
-        next ELEMENT if ( $SkipElements{ $Element } );
+        # skip certain restrictions
+        next ELEMENT if ( $SkipParameter{ $Element } );
 
-        # prepare search key
-        my $SearchKey = $Element;
-        $SearchKey =~ s[ :: ]['}[%]{']xmsg;
+        # handle static parameter
+        if ( $StaticParameter{ $Element } ) {
+            $SearchParameter{ $Element } = $Param{Restrictions}->{ $Element };
+        }
+        # handle xml parameter
+        else {
+            # prepare search key
+            my $SearchKey = $Element;
+            $SearchKey =~ s[ :: ]['}[%]{']xmsg;
 
-        my %SearchHash = (
-            '[1]{\'Version\'}[1]{\'' . $SearchKey . '\'}[%]{\'Content\'}' => $Param{Restrictions}->{ $Element },
-        );
+            my %SearchHash = (
+                '[1]{\'Version\'}[1]{\'' . $SearchKey . '\'}[%]{\'Content\'}' => $Param{Restrictions}->{ $Element },
+            );
 
-        # add search values to what
-        if ( %SearchHash ) {
-            if ( !defined( $Param{Restrictions}->{What} ) ) {
-                $Param{Restrictions}->{What} = [];
+            # add search values to what
+            if ( %SearchHash ) {
+                if ( !defined( $SearchParameter{What} ) ) {
+                    $SearchParameter{What} = [];
+                }
+                push( @{ $SearchParameter{What} }, \%SearchHash );
             }
-            push( @{ $Param{Restrictions}->{What} }, \%SearchHash );
         }
     }
 
     # don't be irritated of the mixture OrderBy <> Sort and SortBy <> OrderBy
     # the meaning is different as in common handling
-    $Param{Restrictions}{OrderBy}          = $OrderBy;
-    $Param{Restrictions}{OrderByDirection} = $Sort;
+    $SearchParameter{OrderBy}          = $OrderBy;
+    $SearchParameter{OrderByDirection} = $Sort;
 
     # start config item extended search
-    my $ConfigItemIDs = $ConfigItemObject->ConfigItemSearchExtended(%{$Param{Restrictions}});
+    my $ConfigItemIDs = $ConfigItemObject->ConfigItemSearchExtended(%SearchParameter);
 
     # generate the configitem list
     my @StatArray;
