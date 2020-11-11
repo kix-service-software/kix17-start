@@ -202,6 +202,7 @@ Core.Agent.CustomerCompanySearch = (function (TargetNS) {
             var ID = $(this).attr('id');
 
             $(this).attr('id', ID + Suffix);
+            $(this).attr('name', ID);
             $(this).val(CustomerCompanyKey);
 
             // set customer key if present
