@@ -240,7 +240,7 @@
 
                         <div class="Field [% Data.HiddenClassContainer %]">
                             <div class="CustomerIDTemplate Hidden">
-                                <input name="CustomerCompanyKey" id="CustomerCompanyKey" class="CustomerCompanyKey" type="hidden" value=""/>
+                                <input id="CustomerCompanyKey" class="CustomerCompanyKey" type="hidden" value=""/>
                                 <input class="CustomerIDText" title="[% Translate("CustomerID") | html %]" name="CustomerIDText" id="CustomerIDText" type="text" value="" readonly="readonly" />
                                 <a href="#" id="RemoveCustomerID" class="RemoveButton CustomerIDRemove">
                                     <i class="fa fa-minus-square-o"></i>
@@ -252,7 +252,7 @@
 
 [% RenderBlockStart("MultipleCustomerID") %]
                                 <div>
-                                    <input name="CustomerCompanyKey_[% Data.Count | html %]" id="CustomerCompanyKey_[% Data.Count | html %]" class="CustomerCompanyKey" type="hidden" value="[% Data.CustomerCompanyKey | html %]"/>
+                                    <input name="CustomerCompanyKey" id="CustomerCompanyKey_[% Data.Count | html %]" class="CustomerCompanyKey" type="hidden" value="[% Data.CustomerCompanyKey | html %]"/>
                                     <input class="CustomerIDText Radio [% Data.CustomerError | html %]" title="[% Translate("Contact") | html %]" name="CustomerIDText_[% Data.Count %]" id="CustomerIDText_[% Data.Count %]" type="text" value="[% Data.CustomerElement | html %]" readonly="readonly" />
                                     <a href="#" id="RemoveCustomerTicket_[% Data.Count %]" class="RemoveButton CustomerTicketRemove">
                                         <i class="fa fa-minus-square-o"></i>
