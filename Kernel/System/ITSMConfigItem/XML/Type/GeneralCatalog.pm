@@ -114,10 +114,30 @@ sub StatsAttributeCreate {
         }
     }
 
-    # get item list
-    my $ItemList = $Kernel::OM->Get('Kernel::System::GeneralCatalog')->ItemList(
-        Class => $Param{Item}->{Input}->{Class} || '',
-    );
+    # prepare data
+    my %Data = ();
+    if ( ref( $Param{Item}->{Input}->{Class} ) eq 'ARRAY' ) {
+        for my $Class ( @{ $Param{Item}->{Input}->{Class} } ) {
+            # get class list
+            my $ClassList = $Kernel::OM->Get('Kernel::System::GeneralCatalog')->ItemList(
+                Class => $Class,
+            );
+            # add values to data
+            for my $Key ( keys( %{ $ClassList } ) ) {
+                $Data{ $Key } = $ClassList->{ $Key };
+            }
+        }
+    }
+    else {
+        # get class list
+        my $ClassList = $Kernel::OM->Get('Kernel::System::GeneralCatalog')->ItemList(
+            Class => $Param{Item}->{Input}->{Class} || '',
+        );
+        # add values to data
+        for my $Key ( keys( %{ $ClassList } ) ) {
+            $Data{ $Key } = $ClassList->{ $Key };
+        }
+    }
 
     # create attribute
     my $Attribute = [
@@ -128,7 +148,7 @@ sub StatsAttributeCreate {
             UseAsRestriction => 1,
             Element          => $Param{Key},
             Block            => 'MultiSelectField',
-            Values           => $ItemList || {},
+            Values           => \%Data,
         },
     ];
 
