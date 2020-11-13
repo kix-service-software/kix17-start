@@ -1,6 +1,16 @@
 # Change log of KIX
 * Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.14.0-RC3 (2020/11/13)
+ * (2020/11/11) - Bugfix: KIX17-1607 (fixed incomplete storage of the selected CustomerIDs) (fjacquemin)
+ * (2020/11/10) - Bugfix: KIX17-1368 (fixed missing check the display of the Public FAQ RSS) (fjacquemin)
+ * (2020/11/09) - Bugfix: KIX17-1448 (fixed error handling after add attachment at AgentTicketZoomTabActionCommon) (fjacquemin)
+ * (2020/11/09) - Bugfix: KIX17-1542 (removed StopAfterMatch from ACL 500_RestrictTicketActionsOnMerged) (fjacquemin)
+ * (2020/11/05) - Bugfix: KIX17-1505 (applied fix for ticket stats dashboard) (millinger)
+ * (2020/11/05) - CR: KIX17-1582 (Changed the color highlighting of tickets in agent interface) (fjacquemin)
+ * (2020/11/04) - Bugfix: KIX17-1388 (removed input max length of dynamic fields of generic agents) (fjacquemin)
+ * (2020/10/14) - Bugfix: KIX17-1512 (extended config item search with general catalog attribute) (millinger)
+
 # 17.14.0-RC2 (2020/11/03)
  * (2020/11/02) - CR: KIX17-1553 (updating display and function of the ITSMConfigItem LinkGraph) (fjacquemin)
  * (2020/10/30) - Bugfix: KIX17-1505 (skip certain column header for D3 statistic format) (millinger)
