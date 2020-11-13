@@ -1,6 +1,9 @@
 # Change log of KIX
 * Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.14.0-RC4 (2020/11/13)
+ * (2020/11/13) - Bugfix: KIX17-1582 (Fixed incorrectly positioned variable in layout LinkObject) (fjacquemin)
+
 # 17.14.0-RC3 (2020/11/13)
  * (2020/11/11) - Bugfix: KIX17-1607 (fixed incomplete storage of the selected CustomerIDs) (fjacquemin)
  * (2020/11/10) - Bugfix: KIX17-1368 (fixed missing check the display of the Public FAQ RSS) (fjacquemin)
