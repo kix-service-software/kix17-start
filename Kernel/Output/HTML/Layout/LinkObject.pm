@@ -605,10 +605,7 @@ sub LinkObjectTableCreateComplex {
         if ( !$HasRows ) {
             # output a table row block
             $LayoutObject->Block(
-                Name => 'TableComplexBlockRow',
-                Data => {
-                    %{$Row->[0]}
-                }
+                Name => 'TableComplexBlockRow'
             );
 
             if ( $UseFilter ) {
