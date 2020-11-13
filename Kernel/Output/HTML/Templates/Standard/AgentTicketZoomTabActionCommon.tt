@@ -419,6 +419,23 @@ $('#StandardTemplateID').bind('change', function (Event) {
                                 <label for="FileUpload">[% Translate("Attachment") | html %]:</label>
                                 <div class="Field FileUpload">
                                     <ul>
+[% RenderBlockStart("Attachment") %]
+                                        <li>
+                                            [% Data.Filename | html %] ([% Data.Filesize | html %])
+                                            <button type="button" id="AttachmentDeleteButton[% Data.FileID | html %]" name="AttachmentDeleteButton[% Data.FileID | html %]" value="[% Translate("Delete") | html %]" class="SpacingLeft">[% Translate("Delete") | html %]</button>
+                                            <input type="hidden" id="AttachmentDelete[% Data.FileID | html %]" name="AttachmentDelete[% Data.FileID | html %]" />
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+$('#AttachmentDeleteButton[% Data.FileID | html %]').bind('click', function () {
+    var $Form = $('#AttachmentDeleteButton[% Data.FileID | html %]').closest('form');
+    $('#AttachmentDelete[% Data.FileID | html %]').val(1);
+    Core.Form.Validate.DisableValidation($Form);
+    $Form.trigger('submit');
+});
+//]]></script>
+[% END %]
+                                        </li>
+[% RenderBlockEnd("Attachment") %]
                                         <li>
                                             <input name="FileUpload" id="FileUpload" type="file" multiple="multiple" size="30" />
                                             <input type="hidden" id="AttachmentUpload" name="AttachmentUpload" value="0" />
@@ -477,6 +494,8 @@ $('#FileUpload').bind('change', function (Event) {
     if($.browser.msie || $.browser.webkit) {
         SubmittingFileForm.find('#FileUpload').after(SubmittingFileForm.find('#FileUpload').clone(true)).remove();
     }
+    // re-enable form validation
+    Core.Form.Validate.EnableValidation(SubmittingFileForm);
 });
 
 $('#UploadFinish').bind('change', function (Event) {

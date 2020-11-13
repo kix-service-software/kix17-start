@@ -671,19 +671,19 @@ sub _Show {
         }
     }
 
-    my $StateHighlighting
-        = $ConfigObject->Get('KIX4OTRSTicketOverviewLargeHighlightMapping');
-    if (
-        $StateHighlighting
-        && ref($StateHighlighting) eq 'HASH'
-        && $StateHighlighting->{ $Article{State} }
-    ) {
+    # get class for ticket highlight
+    my $HighlightClass = $LayoutObject->GetTicketHighlight(
+        View   => 'Large',
+        Ticket => \%Article
+    );
+
+    if ( $HighlightClass ) {
         $LayoutObject->Block(
             Name => 'MetaIcon',
             Data => {
-                Class => 'Flag TicketOverviewHighlightClass',
-                Style => $StateHighlighting->{ $Article{State} } . ' ;',
-                Title => $Article{State}
+                Class     => 'Flag TicketOverviewHighlightClass',
+                ClassSpan => $HighlightClass,
+                Title     => $Article{State}
             },
         );
     }

@@ -68,7 +68,6 @@ sub Run {
         PossibleNot => {
             Action => \@RestrictedActions
         },
-        StopAfterMatch => 1,
     };
 
     return 1;

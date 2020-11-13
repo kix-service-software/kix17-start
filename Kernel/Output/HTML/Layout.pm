@@ -1568,6 +1568,8 @@ sub Header {
         }
     }
 
+    $Self->_BuildCustomHighlight();
+
     # create & return output
     $Output .= $Self->Output(
         TemplateFile => "Header$Type",
@@ -6273,6 +6275,52 @@ sub _BuildCustomFooter{
                     }
                 );
             }
+        }
+    }
+
+    return 1;
+}
+
+sub _BuildCustomHighlight{
+    my ($Self, %Param) = @_;
+
+    # get needed objects
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+
+    for my $View ( qw(Small Large) ) {
+
+        next if !$ConfigObject->Get('KIX4OTRSTicketOverview' . $View . 'HighlightMapping');
+
+        my $Config = $ConfigObject->Get('KIX4OTRSTicketOverview' . $View . 'HighlightMapping');
+
+        CONFIG:
+        for my $Key ( sort keys %{$Config} ) {
+            next CONFIG if $Config->{$Key} eq '';
+
+            my $Selector = $Key;
+
+            if ( $Key =~ /###/ ) {
+                my ($Prio, $Restrictions) = split(/###/, $Key);
+                $Selector = $Prio;
+            }
+
+            $Selector =~ s/\s+//mg;
+            $Selector =~ s/[:\.,\\\/]//;
+            $Selector =~ s/[+]/Plus/;
+            $Selector =~ s/[-]/Minus/;
+            $Selector = 'Highlight' . $View . $Selector;
+
+            if ( $View eq 'Large' ) {
+                $Selector = 'Flag span.' . $Selector;
+            }
+
+            $Self->Block(
+                Name => 'CustomTicketHighlight',
+                Data => {
+                    Selector    => $Selector,
+                    SelectorCSS => $Config->{$Key},
+                }
+            );
         }
     }
 
