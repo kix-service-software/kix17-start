@@ -73,12 +73,11 @@ sub Run {
     my ( $Self, %Param ) = @_;
 
     # get needed objects
-    my $LayoutObject  = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-    my $TicketObject  = $Kernel::OM->Get('Kernel::System::Ticket');
     my $ConfigObject  = $Kernel::OM->Get('Kernel::Config');
-    my $ParamObject   = $Kernel::OM->Get('Kernel::System::Web::Request');
-    my $ServiceObject = $Kernel::OM->Get('Kernel::System::Service');
+    my $LayoutObject  = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my $SessionObject = $Kernel::OM->Get('Kernel::System::AuthSession');
+    my $TicketObject  = $Kernel::OM->Get('Kernel::System::Ticket');
+    my $ParamObject   = $Kernel::OM->Get('Kernel::System::Web::Request');
 
     # the following allows us to easily register new ticket actions
     # without own dtl's and pm's...
@@ -232,6 +231,7 @@ sub Run {
                 $Output .= $LayoutObject->Footer(
                     Type => 'TicketZoomTab',
                 );
+                return $Output;
             }
 
             # show back link
@@ -252,7 +252,7 @@ sub Run {
         NewStateID NewPriorityID TimeUnits ArticleTypeID Title Body Subject NewQueueID
         Year Month Day Hour Minute NewOwnerID NewResponsibleID TypeID ServiceID SLAID
         Expand ReplyToArticle StandardTemplateID CreateArticle
-        DestQueue  NewOwnerType OldOwnerID ElementChanged
+        DestQueue NewOwnerType OldOwnerID ElementChanged
         )
     ) {
         $GetParam{$Key} = $ParamObject->GetParam( Param => $Key );
@@ -695,8 +695,12 @@ sub Run {
             next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
             my $ValidationResult;
+
             # do not validate on attachment upload or if field is disabled
-            if ( !$IsUpload && $DynamicFieldConfig->{Shown} ) {
+            if (
+                !$IsUpload
+                && $DynamicFieldConfig->{Shown}
+            ) {
 
                 $ValidationResult = $DynamicFieldBackendObject->EditFieldValueValidate(
                     DynamicFieldConfig   => $DynamicFieldConfig,
@@ -707,9 +711,10 @@ sub Run {
 
                 if ( !IsHashRefWithData($ValidationResult) ) {
                     return $LayoutObject->ErrorScreen(
-                        Message =>
-                            $LayoutObject->{LanguageObject}
-                            ->Translate( 'Could not perform validation on field %s!', $DynamicFieldConfig->{Label} ),
+                        Message => $LayoutObject->{LanguageObject}->Translate(
+                            'Could not perform validation on field %s!',
+                            $DynamicFieldConfig->{Label}
+                        ),
                         Comment => Translatable('Please contact the administrator.'),
                     );
                 }
@@ -1162,7 +1167,7 @@ sub Run {
             FormID => $Self->{FormID},
         );
         my $DeleteTitle = $LayoutObject->{LanguageObject}->Translate('Delete');
-    for my $Attachment (@Attachments) {
+        for my $Attachment (@Attachments) {
             $Content
                 .= '<li id="AttachmentLI'
                 . $Attachment->{FileID} . '">'
@@ -1244,7 +1249,7 @@ sub Run {
             # build the response
             %Response = (
                 CurInciSignal => $InciSignals{ $Service{CurInciStateType} },
-                CurInciState  => $LayoutObject->{LanguageObject}->Get( $Service{CurInciState} ),
+                CurInciState  => $LayoutObject->{LanguageObject}->Translate($Service{CurInciState}),
             );
         }
 
@@ -1263,12 +1268,8 @@ sub Run {
 
     # ---
     elsif ( $Self->{Subaction} eq 'AJAXUpdate' ) {
-        # my $CustomerUser = $Ticket{CustomerUserID};
         my $CustomerUser = $GetParam{SelectedCustomerUser} || $Ticket{CustomerUserID};
-        my $NewQueueID = $GetParam{NewQueueID};
-
         my $ElementChanged = $ParamObject->GetParam( Param => 'ElementChanged' ) || '';
-
         my $ServiceID;
 
         # get service value from param if field is visible in the screen
@@ -1981,15 +1982,23 @@ sub _Mask {
 
     # Widget Ticket Actions
     if (
-        ( $ConfigObject->Get('Ticket::Type') && $Config->{TicketType} )
-        ||
-        ( $ConfigObject->Get('Ticket::Service')     && $Config->{Service} )     ||
-        ( $ConfigObject->Get('Ticket::Responsible') && $Config->{Responsible} ) ||
-        $Config->{Title} ||
-        $Config->{Queue} ||
-        $Config->{Owner} ||
-        $Config->{State} ||
-        $Config->{Priority}
+        (
+            $ConfigObject->Get('Ticket::Type')
+            && $Config->{TicketType}
+        )
+        || (
+            $ConfigObject->Get('Ticket::Service')
+            && $Config->{Service}
+        )
+        || (
+            $ConfigObject->Get('Ticket::Responsible')
+            && $Config->{Responsible}
+        )
+        || $Config->{Title}
+        || $Config->{Queue}
+        || $Config->{Owner}
+        || $Config->{State}
+        || $Config->{Priority}
     ) {
         $LayoutObject->Block(
             Name => 'WidgetTicketActions',
@@ -2098,7 +2107,7 @@ sub _Mask {
                 TreeView        => $TreeView,
                 Sort            => 'TreeView',
                 DisabledOptions => $ListOptionJson->{Services}->{DisabledOptions} || 0,
-                Translation      => 0,
+                Translation     => 0,
                 Max             => 200,
             );
 
@@ -2294,7 +2303,7 @@ sub _Mask {
         # build string
         $Param{OwnerStrg} = $LayoutObject->BuildSelection(
             Data       => \%ShownUsers,
-            SelectedID => $Param{NewOwnerID},
+            SelectedID => $Param{NewOwnerID} || $InitialSelected{OwnerID},
             Name       => 'NewOwnerID',
             Class      => 'Modernize '
                 . ( $Config->{OwnerMandatory} ? 'Validate_Required ' : '' )
@@ -2364,7 +2373,7 @@ sub _Mask {
         # get responsible
         $Param{ResponsibleStrg} = $LayoutObject->BuildSelection(
             Data         => \%ShownUsers,
-            SelectedID   => $Param{NewResponsibleID} || $Ticket{ResponsibleID},
+            SelectedID   => $Param{NewResponsibleID} || $InitialSelected{ResponsibleID},
             Name         => 'NewResponsibleID',
             Class        => 'Modernize',
             PossibleNone => 1,
@@ -2463,11 +2472,11 @@ sub _Mask {
         }
         $Priority{SelectedID} ||= $Param{PriorityID};
         $Param{PriorityStrg} = $LayoutObject->BuildSelection(
+            %Priority,
             Data        => \%PriorityList,
             Name        => 'NewPriorityID',
             Class       => 'Modernize',
             Translation => 1,
-            %Priority,
         );
         $LayoutObject->Block(
             Name => 'Priority',
@@ -2482,11 +2491,11 @@ sub _Mask {
             Name => 'WidgetDynamicFields',
         );
     }
-# ---
-# ITSMIncidentProblemManagement
-# ---
+    # ---
+    # ITSMIncidentProblemManagement
+    # ---
     my @IndividualDynamicFields;
-# ---
+    # ---
 
     # Dynamic fields
     # cycle trough the activated Dynamic Fields for this screen
@@ -2502,15 +2511,17 @@ sub _Mask {
 
         # get the html strings form $Param
         my $DynamicFieldHTML = $Param{DynamicFieldHTML}->{ $DynamicFieldConfig->{Name} };
-# ---
-# ITSMIncidentProblemManagement
-# ---
+
+        # ---
+        # ITSMIncidentProblemManagement
+        # ---
         # remember dynamic fields that should be displayed individually
         if ( $DynamicFieldConfig->{Name} eq 'ITSMImpact' ) {
             push @IndividualDynamicFields, $DynamicFieldConfig;
             next DYNAMICFIELD;
         }
-# ---
+        # ---
+
         if ( !$DynamicFieldConfig->{Shown} ) {
             my $DynamicFieldName = $DynamicFieldConfig->{Name};
 
@@ -2539,9 +2550,10 @@ END
             },
         );
     }
-# ---
-# ITSMIncidentProblemManagement
-# ---
+
+    # ---
+    # ITSMIncidentProblemManagement
+    # ---
     # cycle trough dynamic fields that should be displayed individually
     DYNAMICFIELD:
     for my $DynamicFieldConfig ( @IndividualDynamicFields ) {
@@ -3115,8 +3127,9 @@ sub _GetServices {
     if ( $Param{CustomerUserID} ) {
         %Service = $Kernel::OM->Get('Kernel::System::Ticket')->TicketServiceList(
             %Param,
-            Action => $Self->{Action},
-            UserID => $Self->{UserID},
+            TicketID => $Self->{TicketID},
+            Action   => $Self->{Action},
+            UserID   => $Self->{UserID},
         );
     }
     return \%Service;
@@ -3145,8 +3158,9 @@ sub _GetSLAs {
     if ( $Param{ServiceID} ) {
         %SLA = $Kernel::OM->Get('Kernel::System::Ticket')->TicketSLAList(
             %Param,
-            Action => $Self->{Action},
-            UserID => $Self->{UserID},
+            TicketID => $Self->{TicketID},
+            Action   => $Self->{Action},
+            UserID   => $Self->{UserID},
         );
     }
     return \%SLA;
@@ -3350,8 +3364,9 @@ sub _GetTypes {
     if ( $Param{QueueID} || $Param{TicketID} ) {
         %Type = $Kernel::OM->Get('Kernel::System::Ticket')->TicketTypeList(
             %Param,
-            Action => $Self->{Action},
-            UserID => $Self->{UserID},
+            TicketID => $Self->{TicketID},
+            Action   => $Self->{Action},
+            UserID   => $Self->{UserID},
         );
     }
     return \%Type;
@@ -3391,6 +3406,7 @@ sub _GetShownDynamicFields {
             }
         }
     }
+
     return 1;
 }
 
