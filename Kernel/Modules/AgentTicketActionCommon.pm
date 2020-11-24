@@ -73,10 +73,11 @@ sub Run {
     my ( $Self, %Param ) = @_;
 
     # get needed objects
-    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-    my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-    my $ParamObject  = $Kernel::OM->Get('Kernel::System::Web::Request');
+    my $ConfigObject  = $Kernel::OM->Get('Kernel::Config');
+    my $LayoutObject  = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $SessionObject = $Kernel::OM->Get('Kernel::System::AuthSession');
+    my $TicketObject  = $Kernel::OM->Get('Kernel::System::Ticket');
+    my $ParamObject   = $Kernel::OM->Get('Kernel::System::Web::Request');
 
     # the following allows us to easily register new ticket actions
     # without own dtl's and pm's...
@@ -166,6 +167,7 @@ sub Run {
         },
     );
 
+    # show right header
     if ( $Self->{PretendAction} ) {
         my $HeaderTitle =
             $ConfigObject->Get('Frontend::Module')->{ $Self->{PretendAction} }->{Title};
@@ -177,7 +179,6 @@ sub Run {
         );
     }
     else {
-
         $LayoutObject->Block(
             Name => 'Header' . $Self->{Action},
             Data => {
@@ -493,7 +494,7 @@ sub Run {
         for my $Count ( reverse sort @AttachmentIDs ) {
             my $Delete = $ParamObject->GetParam( Param => "AttachmentDelete$Count" );
             next COUNT if !$Delete;
-            %Error = ();
+            %Error                   = ();
             $Error{AttachmentDelete} = 1;
             $UploadCacheObject->FormIDRemoveFile(
                 FormID => $Self->{FormID},
@@ -674,6 +675,7 @@ sub Run {
                     $ACL = $TicketObject->TicketAcl(
                         %GetParam,
                         %ACLCompatGetParam,
+                        QueueID       => $GetParam{NewQueueID} || $GetParam{QueueID} || 0,
                         Action        => $Self->{Action},
                         TicketID      => $Self->{TicketID},
                         ReturnType    => 'Ticket',
@@ -685,9 +687,7 @@ sub Run {
                         my %Filter = $TicketObject->TicketAclData();
 
                         # convert Filer key => key back to key => value using map
-                        %{ $DynamicFieldConfig->{ShownPossibleValues} }
-                            = map { $_ => $PossibleValues->{$_} }
-                            keys %Filter;
+                        %{$DynamicFieldConfig->{ShownPossibleValues}} = map { $_ => $PossibleValues->{$_} } keys %Filter;
                     }
                 }
             }
@@ -830,7 +830,6 @@ sub Run {
                 $GetParam{NewOwnerID}
                 && $GetParam{NewOwnerID} != $Ticket{OwnerID}
             ) {
-
                 $TicketObject->TicketLockSet(
                     TicketID => $Self->{TicketID},
                     Lock     => 'lock',
@@ -845,7 +844,10 @@ sub Run {
                 $UnlockOnAway = 0;
 
                 # remember to not notify owner twice
-                if ( $Success && $Success eq "1" ) {
+                if (
+                    defined $Success
+                    && $Success eq '1'
+                ) {
                     push @NotifyDone, $GetParam{NewOwnerID};
                 }
             }
@@ -865,7 +867,10 @@ sub Run {
                 );
 
                 # remember to not notify responsible twice
-                if ( $Success && $Success eq "1" ) {
+                if (
+                    defined $Success
+                    && $Success eq '1'
+                ) {
                     push @NotifyDone, $GetParam{NewResponsibleID};
                 }
             }
@@ -980,7 +985,7 @@ sub Run {
             }
 
             # get pre loaded attachment
-            @Attachments = $UploadCacheObject->FormIDGetAllFilesData(
+            my @NewAttachments = $UploadCacheObject->FormIDGetAllFilesData(
                 FormID => $Self->{FormID},
             );
 
@@ -989,7 +994,7 @@ sub Run {
                 Param => 'FileUpload',
             );
             if (%UploadStuff) {
-                push @Attachments, \%UploadStuff;
+                push @NewAttachments, \%UploadStuff;
             }
 
             my $MimeType = 'text/plain';
@@ -999,7 +1004,7 @@ sub Run {
                 # remove unused inline images
                 my @NewAttachmentData;
                 ATTACHMENT:
-                for my $Attachment (@Attachments) {
+                for my $Attachment (@NewAttachments) {
                     my $ContentID = $Attachment->{ContentID};
                     if (
                         $ContentID
@@ -1022,7 +1027,7 @@ sub Run {
                     # remember inline images and normal attachments
                     push @NewAttachmentData, \%{$Attachment};
                 }
-                @Attachments = @NewAttachmentData;
+                @NewAttachments = @NewAttachmentData;
 
                 # verify html document
                 $GetParam{Body} = $LayoutObject->RichTextDocumentComplete(
@@ -1067,7 +1072,7 @@ sub Run {
                 ForceNotificationToUserID       => \@NotifyUserIDs,
                 ExcludeMuteNotificationToUserID => \@NotifyDone,
                 UnlockOnAway                    => $UnlockOnAway,
-                Attachment                      => \@Attachments,
+                Attachment                      => \@NewAttachments,
                 %GetParam,
             );
             if ( !$ArticleID ) {
@@ -1156,9 +1161,10 @@ sub Run {
             URL => $ReturnURL,
         );
     }
-# ---
-# ITSMIncidentProblemManagement
-# ---
+
+    # ---
+    # ITSMIncidentProblemManagement
+    # ---
     elsif ( $Self->{Subaction} eq 'GetServiceIncidentState' ) {
 
         # get the selected service id
@@ -1199,9 +1205,10 @@ sub Run {
             NoCache     => 1,
         );
     }
-# ---
+
+    # ---
     elsif ( $Self->{Subaction} eq 'AJAXUpdate' ) {
-        my $CustomerUser   = $GetParam{SelectedCustomerUser}                     || $Ticket{CustomerUserID};
+        my $CustomerUser = $GetParam{SelectedCustomerUser} || $Ticket{CustomerUserID};
         my $ElementChanged = $ParamObject->GetParam( Param => 'ElementChanged' ) || '';
         my $ServiceID;
 
@@ -1374,7 +1381,7 @@ sub Run {
                 %ACLCompatGetParam,
                 Action        => $Self->{Action},
                 TicketID      => $Self->{TicketID},
-                QueueID       => $GetParam{NewQueueID} || $QueueID || 0,,
+                QueueID       => $GetParam{NewQueueID} || $QueueID || 0,
                 ReturnType    => 'Ticket',
                 ReturnSubType => 'DynamicField_' . $DynamicFieldConfig->{Name},
                 Data          => \%AclData,
@@ -1393,17 +1400,15 @@ sub Run {
                 Value              => $DynamicFieldValues{ $DynamicFieldConfig->{Name} },
             ) || $PossibleValues;
 
-            $DynamicFieldHTML{ $DynamicFieldConfig->{Name} } =
-                $DynamicFieldBackendObject->EditFieldRender(
+            $DynamicFieldHTML{ $DynamicFieldConfig->{Name} } = $DynamicFieldBackendObject->EditFieldRender(
                 DynamicFieldConfig   => $DynamicFieldConfig,
                 PossibleValuesFilter => $PossibleValues,
-                Mandatory =>
-                    $Config->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
-                LayoutObject    => $LayoutObject,
-                ParamObject     => $ParamObject,
-                AJAXUpdate      => 1,
-                UpdatableFields => $Self->_GetFieldsToUpdate(),
-                );
+                Mandatory            => $Config->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
+                LayoutObject         => $LayoutObject,
+                ParamObject          => $ParamObject,
+                AJAXUpdate           => 1,
+                UpdatableFields      => $Self->_GetFieldsToUpdate(),
+            );
 
             # add dynamic field to the list of fields to update
             push(
@@ -1422,6 +1427,8 @@ sub Run {
         my %Output;
         DYNAMICFIELD:
         for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
+
+            next DYNAMICFIELD if $DynamicFieldConfig->{ObjectType} ne 'Ticket';
 
             for my $DynamicFieldHTMLKey ( ('Label', 'Field') ) {
                 my $CurrentDynamicFieldHTML
@@ -1586,6 +1593,14 @@ sub Run {
                     Max          => 100,
                 },
                 {
+                    Name         => 'OldOwnerID',
+                    Data         => $OldOwners,
+                    SelectedID   => $GetParam{OldOwnerID},
+                    Translation  => 0,
+                    PossibleNone => 1,
+                    Max          => 100,
+                },
+                {
                     Name         => 'NewResponsibleID',
                     Data         => $ResponsibleUsers,
                     SelectedID   => $GetParam{NewResponsibleID},
@@ -1655,6 +1670,46 @@ sub Run {
             NoCache     => 1,
         );
     }
+
+    # update position
+    elsif ( $Self->{Subaction} eq 'UpdatePosition' ) {
+
+        # challenge token check for write action
+        $LayoutObject->ChallengeTokenCheck();
+
+        my @Backends = $ParamObject->GetArray( Param => 'Backend' );
+
+        # get new order
+        my $Key  = $Self->{Action} . 'Position';
+        my $Data = '';
+        for my $Backend (@Backends) {
+            $Data .= $Backend . ';';
+        }
+
+        # update ssession
+        $SessionObject->UpdateSessionID(
+            SessionID => $Self->{SessionID},
+            Key       => $Key,
+            Value     => $Data,
+        );
+
+        # update preferences
+        if ( !$ConfigObject->Get('DemoSystem') ) {
+            $Kernel::OM->Get('Kernel::System::User')->SetPreferences(
+                UserID => $Self->{UserID},
+                Key    => $Key,
+                Value  => $Data,
+            );
+        }
+
+        # redirect
+        return $LayoutObject->Attachment(
+            ContentType => 'text/html',
+            Charset     => $LayoutObject->{UserCharset},
+            Content     => '',
+        );
+    }
+
     else {
 
         my $Body = '';
@@ -1724,45 +1779,6 @@ sub Run {
         elsif ( !defined $GetParam{Subject} && $Config->{Subject} ) {
             $GetParam{Subject} = $LayoutObject->Output(
                 Template => $Config->{Subject},
-            );
-        }
-
-        # update position
-        elsif ( $Self->{Subaction} eq 'UpdatePosition' ) {
-
-            # challenge token check for write action
-            $LayoutObject->ChallengeTokenCheck();
-
-            my @Backends = $ParamObject->GetArray( Param => 'Backend' );
-
-            # get new order
-            my $Key  = $Self->{Action} . 'Position';
-            my $Data = '';
-            for my $Backend (@Backends) {
-                $Data .= $Backend . ';';
-            }
-
-            # update ssession
-            $Kernel::OM->Get('Kernel::System::AuthSession')->UpdateSessionID(
-                SessionID => $Self->{SessionID},
-                Key       => $Key,
-                Value     => $Data,
-            );
-
-            # update preferences
-            if ( !$ConfigObject->Get('DemoSystem') ) {
-                $Kernel::OM->Get('Kernel::System::User')->SetPreferences(
-                    UserID => $Self->{UserID},
-                    Key    => $Key,
-                    Value  => $Data,
-                );
-            }
-
-            # redirect
-            return $LayoutObject->Attachment(
-                ContentType => 'text/html',
-                Charset     => $LayoutObject->{UserCharset},
-                Content     => '',
             );
         }
 
@@ -2146,9 +2162,7 @@ sub _Mask {
     my %InitialSelected;
     if (
         $ConfigObject->Get('Ticket::ProcessingOptions::InitialDataShown')
-        &&
-        $ConfigObject->Get('Ticket::ProcessingOptions::InitialDataShown')
-        ->{ $Self->{Action} }
+        && $ConfigObject->Get('Ticket::ProcessingOptions::InitialDataShown')->{ $Self->{Action} }
     ) {
         $InitialSelected{OwnerID}       = $Ticket{OwnerID};
         $InitialSelected{ResponsibleID} = $Ticket{ResponsibleID};
@@ -2249,7 +2263,7 @@ sub _Mask {
         # build string
         $Param{OwnerStrg} = $LayoutObject->BuildSelection(
             Data       => \%ShownUsers,
-            SelectedID => $Param{NewOwnerID},
+            SelectedID => $Param{NewOwnerID} || $InitialSelected{OwnerID},
             Name       => 'NewOwnerID',
             Class      => 'Modernize '
                 . ( $Config->{OwnerMandatory} ? 'Validate_Required ' : '' )
@@ -2319,7 +2333,7 @@ sub _Mask {
         # get responsible
         $Param{ResponsibleStrg} = $LayoutObject->BuildSelection(
             Data         => \%ShownUsers,
-            SelectedID   => $Param{NewResponsibleID},
+            SelectedID   => $Param{NewResponsibleID} || $InitialSelected{ResponsibleID},
             Name         => 'NewResponsibleID',
             Class        => 'Modernize',
             PossibleNone => 1,
@@ -2340,9 +2354,10 @@ sub _Mask {
             TicketID => $Self->{TicketID},
             UserID   => $Self->{UserID},
         );
+
+        # set selected state
         if ( !$Param{NewStateID} ) {
-            $State{SelectedValue} =
-                $Config->{StateDefault}
+            $State{SelectedValue} = $Config->{StateDefault}
                 || $InitialSelected{State}
                 || '';
         }
@@ -2378,12 +2393,11 @@ sub _Mask {
 
                 $Param{DateString} = $LayoutObject->BuildDateSelection(
                     %Param,
-                    Format           => 'DateInputFormatLong',
-                    YearPeriodPast   => 0,
-                    YearPeriodFuture => 5,
-                    DiffTime         => $ConfigObject->Get('Ticket::Frontend::PendingDiffTime')
-                        || 0,
-                    Class => $Param{DateInvalid} || ' ',
+                    Format               => 'DateInputFormatLong',
+                    YearPeriodPast       => 0,
+                    YearPeriodFuture     => 5,
+                    DiffTime             => $ConfigObject->Get('Ticket::Frontend::PendingDiffTime') || 0,
+                    Class                => $Param{DateInvalid} || ' ',
                     Validate             => 1,
                     ValidateDateInFuture => 1,
                     Calendar             => $Calendar,
@@ -2409,7 +2423,6 @@ sub _Mask {
             if ( $Config->{PriorityDefault} ) {
                 $Priority{SelectedValue} = $Config->{PriorityDefault};
             }
-
             else {
                 $Priority{SelectedValue} = $Ticket{Priority};
             }
@@ -2419,10 +2432,10 @@ sub _Mask {
         }
         $Priority{SelectedID} ||= $Param{PriorityID};
         $Param{PriorityStrg} = $LayoutObject->BuildSelection(
-            Data  => \%PriorityList,
-            Name  => 'NewPriorityID',
-            Class => 'Modernize',
             %Priority,
+            Data        => \%PriorityList,
+            Name        => 'NewPriorityID',
+            Class       => 'Modernize',
             Translation => 1,
         );
         $LayoutObject->Block(
@@ -2430,7 +2443,6 @@ sub _Mask {
             Data => \%Param,
         );
     }
-
     # End Widget Ticket Actions
 
     # Widget Dynamic Fields
@@ -2439,11 +2451,11 @@ sub _Mask {
             Name => 'WidgetDynamicFields',
         );
     }
-# ---
-# ITSMIncidentProblemManagement
-# ---
+    # ---
+    # ITSMIncidentProblemManagement
+    # ---
     my @IndividualDynamicFields;
-# ---
+    # ---
 
     # Dynamic fields
     # cycle trough the activated Dynamic Fields for this screen
@@ -2504,7 +2516,7 @@ END
     # ---
     # cycle trough dynamic fields that should be displayed individually
     DYNAMICFIELD:
-    for my $DynamicFieldConfig (@IndividualDynamicFields) {
+    for my $DynamicFieldConfig ( @IndividualDynamicFields ) {
 
         # get the html strings form $Param
         my $DynamicFieldHTML = $Param{DynamicFieldHTML}->{ $DynamicFieldConfig->{Name} };
@@ -2519,8 +2531,7 @@ END
             },
         );
     }
-
-    # ---
+# ---
 
     # End Widget Dynamic Fields
 
@@ -2546,9 +2557,8 @@ END
             $Param{BodyRequired}    = 'Validate_Required';
         }
         else {
-            $Param{SubjectRequired}
-                = 'Validate_DependingRequiredAND Validate_Depending_CreateArticle';
-            $Param{BodyRequired} = 'Validate_DependingRequiredAND Validate_Depending_CreateArticle';
+            $Param{SubjectRequired} = 'Validate_DependingRequiredAND Validate_Depending_CreateArticle';
+            $Param{BodyRequired}    = 'Validate_DependingRequiredAND Validate_Depending_CreateArticle';
         }
 
         $LayoutObject->Block(
@@ -2667,8 +2677,7 @@ END
                 }
             }
 
-            my $InvolvedAgentSize
-                = $ConfigObject->Get('Ticket::Frontend::InvolvedAgentMaxSize') || 3;
+            my $InvolvedAgentSize = $ConfigObject->Get('Ticket::Frontend::InvolvedAgentMaxSize') || 3;
             $Param{InvolvedAgentStrg} = $LayoutObject->BuildSelection(
                 Data       => \@InvolvedAgents,
                 SelectedID => \@InvolvedUserID,
@@ -2698,9 +2707,8 @@ END
                 }
             }
 
-            my $InformAgentSize = $ConfigObject->Get('Ticket::Frontend::InformAgentMaxSize')
-                || 3;
-            $Param{OptionStrg} = $LayoutObject->BuildSelection(
+            my $InformAgentSize = $ConfigObject->Get('Ticket::Frontend::InformAgentMaxSize') || 3;
+            $Param{OptionStrg}  = $LayoutObject->BuildSelection(
                 Data       => \%ShownUsers,
                 SelectedID => \@InformUserID,
                 Name       => 'InformUserID',
@@ -2806,11 +2814,10 @@ END
         }
 
         # build text template string
-        my %StandardTemplates
-            = $Kernel::OM->Get('Kernel::System::StandardTemplate')->StandardTemplateList(
+        my %StandardTemplates = $Kernel::OM->Get('Kernel::System::StandardTemplate')->StandardTemplateList(
             Valid => 1,
             Type  => 'Note',
-            );
+        );
 
         my $QueueStandardTemplates = $Self->_GetStandardTemplates(
             %Param,
@@ -2824,10 +2831,10 @@ END
             )
         ) {
             $Param{StandardTemplateStrg} = $LayoutObject->BuildSelection(
-                Data       => $QueueStandardTemplates    || {},
-                Name       => 'StandardTemplateID',
-                SelectedID => $Param{StandardTemplateID} || '',
-                Class      => 'Modernize',
+                Data         => $QueueStandardTemplates    || {},
+                Name         => 'StandardTemplateID',
+                SelectedID   => $Param{StandardTemplateID} || '',
+                Class        => 'Modernize',
                 PossibleNone => 1,
                 Sort         => 'AlphanumericValue',
                 Translation  => 1,
@@ -2952,7 +2959,7 @@ sub _GetResponsible {
         );
         my %MemberList = $Kernel::OM->Get('Kernel::System::Group')->PermissionGroupGet(
             GroupID => $GID,
-            Type    => 'responsible',
+            Type    => 'rw',
         );
         for my $UserID ( sort keys %MemberList ) {
             $ShownUsers{$UserID} = $AllGroupsMembers{$UserID};
@@ -3195,8 +3202,7 @@ sub _GetQuotedReplyBody {
                 );
 
                 my $ResponseFormat
-                    = $LayoutObject->{LanguageObject}
-                    ->FormatTimeString( $Param{Created}, 'DateFormat', 'NoSeconds' );
+                    = $LayoutObject->{LanguageObject}->FormatTimeString( $Param{Created}, 'DateFormat', 'NoSeconds' );
                 $ResponseFormat .= ' - ' . $Param{From} . ' ';
                 $ResponseFormat
                     .= $LayoutObject->{LanguageObject}->Translate('wrote') . ':';
