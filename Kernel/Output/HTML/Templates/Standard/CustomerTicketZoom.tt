@@ -48,7 +48,6 @@
                         <label>[% Translate("State") | html %]:</label>
                         <p class="Value"  title="[% Translate(Data.State) | html %]">[% Translate(Data.State) | html %]</p>
                         <div class="Clear"></div>
-# EO Robotron-capeIT
 [% RenderBlockEnd("State") %]
 # ---
 # ITSMIncidentProblemManagement
