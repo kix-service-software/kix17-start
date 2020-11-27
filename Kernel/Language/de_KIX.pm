@@ -4174,8 +4174,7 @@ sub Data {
     $Lang->{'ITSM SLA Overview.'}                                         = '';
     $Lang->{'ITSM Service Overview.'}                                     = '';
     $Lang->{'Incident'}                                                   = '';
-    $Lang->{'Incident State Type'}                                        = '';
-    $Lang->{'Incident State Type.'}                                       = '';
+    $Lang->{'Incident State Type'}                                        = 'Vorfallsstatus-Typ';
     $Lang->{'Manage priority matrix.'}                                    = '';
     $Lang->{'Module to show back link in service menu.'}                  = '';
     $Lang->{'Module to show back link in sla menu.'}                      = '';

@@ -380,7 +380,7 @@
                 <Item Key="Module">Kernel::Output::HTML::GeneralCatalogPreferences::Generic</Item>
                 <Item Key="Class">ITSM::Core::IncidentState</Item>
                 <Item Key="Label" Translatable="1">Incident State Type</Item>
-                <Item Key="Desc" Translatable="1">Incident State Type.</Item>
+                <Item Key="Desc" Translatable="1">Incident State Type</Item>
                 <Item Key="Data">
                     <Hash>
                         <Item Key="warning" Translatable="1">Warning</Item>
