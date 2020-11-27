@@ -1,6 +1,10 @@
 # Change log of KIX
 * Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.14.0-RC5 (2020/11/27)
+ * (2020/11/20) - Bugfix: KIX17-1518 (fixed required lock check for tab action common) (millinger)
+ * (2020/11/11) - CR: KIX17-1586 (added dynamic report ITSMConfigItemList) (millinger)
+
 # 17.14.0-RC4 (2020/11/13)
  * (2020/11/13) - Bugfix: KIX17-1582 (Fixed incorrectly positioned variable in layout LinkObject) (fjacquemin)
 
