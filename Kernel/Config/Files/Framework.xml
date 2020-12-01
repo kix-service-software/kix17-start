@@ -4712,6 +4712,16 @@
             </Hash>
         </Setting>
     </ConfigItem>
+        <ConfigItem Name="Stats::DynamicObjectRegistration###ITSMConfigItemList" Required="0" Valid="1">
+        <Description Translatable="1">Enables the stats module to generate statistics that lists config items.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Stats</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::System::Stats::Dynamic::ITSMConfigItemList</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
     <ConfigItem Name="ImportExport::ObjectBackendRegistration###ITSMConfigItem" Required="0" Valid="1">
         <Description Translatable="1">Object backend module registration for the import/export module.</Description>
         <Group>Framework</Group>
