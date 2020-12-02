@@ -4712,7 +4712,7 @@
             </Hash>
         </Setting>
     </ConfigItem>
-        <ConfigItem Name="Stats::DynamicObjectRegistration###ITSMConfigItemList" Required="0" Valid="1">
+    <ConfigItem Name="Stats::DynamicObjectRegistration###ITSMConfigItemList" Required="0" Valid="1">
         <Description Translatable="1">Enables the stats module to generate statistics that lists config items.</Description>
         <Group>Framework</Group>
         <SubGroup>Core::Stats</SubGroup>
