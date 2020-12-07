@@ -390,8 +390,8 @@ sub Run {
         }
 
         if (
-            defined $TemplateData{MultipleCustomer}
-            && ref( $TemplateData{MultipleCustomer} eq 'ARRAY' )
+            defined( $TemplateData{MultipleCustomer} )
+            && ref( $TemplateData{MultipleCustomer} ) eq 'ARRAY'
         ) {
             @MultipleCustomer = @{ $TemplateData{MultipleCustomer} };
         }
