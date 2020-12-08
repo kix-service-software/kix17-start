@@ -2095,7 +2095,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="CIGraphConfigTemplate###Name" Required="1" Valid="1">
-        <Description Translatable="1">Defines the display name for an object graph template.</Description>
+        <Description Translatable="1">Defines the display name for an link graph template. The key is used with the same notation in all following preferences.</Description>
         <Group>ITSM</Group>
         <SubGroup>ITSMConfigItem::LinkGraph::Templates</SubGroup>
         <Setting>
@@ -2105,7 +2105,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="CIGraphConfigTemplate###Permission" Required="1" Valid="1">
-        <Description Translatable="1">>Defines the needed permission for an object graph template.</Description>
+        <Description Translatable="1">Defines the needed permission for an link graph template. Key has to be the same defined in CIGraphConfigTemplate###Name.</Description>
         <Group>ITSM</Group>
         <SubGroup>ITSMConfigItem::LinkGraph::Templates</SubGroup>
         <Setting>
@@ -2115,7 +2115,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="CIGraphConfigTemplate###MaxSearchDepth" Required="1" Valid="1">
-        <Description Translatable="1">>Defines the maximum link depth for an object graph template.</Description>
+        <Description Translatable="1">Defines the maximum link depth for an link graph template. Key has to be the same defined in CIGraphConfigTemplate###Name.</Description>
         <Group>ITSM</Group>
         <SubGroup>ITSMConfigItem::LinkGraph::Templates</SubGroup>
         <Setting>
@@ -2125,7 +2125,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="CIGraphConfigTemplate###RelevantLinkTypes" Required="1" Valid="1">
-        <Description Translatable="1">>Defines the maximum link depth for an object graph template.</Description>
+        <Description Translatable="1">Defines the relevant object sub types for an link graph template.  Key has to be the same defined in CIGraphConfigTemplate###Name.</Description>
         <Group>ITSM</Group>
         <SubGroup>ITSMConfigItem::LinkGraph::Templates</SubGroup>
         <Setting>
@@ -2135,7 +2135,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="CIGraphConfigTemplate###RelevantObjectSubTypes" Required="1" Valid="1">
-        <Description Translatable="1">>Defines the relevant object sub types for an object graph template.</Description>
+        <Description Translatable="1">Defines adjusting strength for an link graph template.  Key has to be the same defined in CIGraphConfigTemplate###Name.</Description>
         <Group>ITSM</Group>
         <SubGroup>ITSMConfigItem::LinkGraph::Templates</SubGroup>
         <Setting>
@@ -2145,7 +2145,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="CIGraphConfigTemplate###AdjustingStrength" Required="1" Valid="1">
-        <Description Translatable="1">>Defines adjusting strength for an object graph template.</Description>
+        <Description Translatable="1">Defines adjusting strength for an link graph template. Key has to be the same defined in CIGraphConfigTemplate###Name.</Description>
         <Group>ITSM</Group>
         <SubGroup>ITSMConfigItem::LinkGraph::Templates</SubGroup>
         <Setting>
