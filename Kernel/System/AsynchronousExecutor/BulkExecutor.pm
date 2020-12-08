@@ -221,6 +221,28 @@ sub _BulkDo {
         );
     }
 
+    if (
+        $Self->{ConfigObject}->Get('Ticket::Watcher')
+        && $Config->{TicketWatch}
+    ) {
+        if ( $GetParam{'Watch'} ) {
+            if ( $GetParam{'Watch'} eq 'Watch' ) {
+                $Self->{TicketObject}->TicketWatchSubscribe(
+                    TicketID    => $Param{TicketID},
+                    WatchUserID => $Param{UserID},
+                    UserID      => $Param{UserID},
+                );
+            }
+            elsif ( $GetParam{'Watch'} eq 'Unwatch' ) {
+                $Self->{TicketObject}->TicketWatchUnsubscribe(
+                    TicketID    => $Param{TicketID},
+                    WatchUserID => $Param{UserID},
+                    UserID      => $Param{UserID},
+                );
+            }
+        }
+    }
+
     # send email
     my $EmailArticleID;
     if (

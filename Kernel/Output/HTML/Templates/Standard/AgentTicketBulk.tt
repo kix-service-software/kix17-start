@@ -216,7 +216,13 @@ $('#QueueID').on('change', function () {
                     </div>
                     <div class="Clear"></div>
 [% RenderBlockEnd("Priority") %]
-
+[% RenderBlockStart("Watch") %]
+                    <label for="Watch">[% Translate("Watch") | html %]:</label>
+                    <div class="Field">
+                        [% Data.WatchStrg %]
+                    </div>
+                    <div class="Clear"></div>
+[% RenderBlockEnd("Watch") %]
                     <label>[% Translate("Merge") | html %]:</label>
                     <div class="Field">
                         <div>
