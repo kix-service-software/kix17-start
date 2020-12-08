@@ -162,10 +162,6 @@ sub Run {
             !$Template
             || !$TemplateConfig->{Name}->{$Template}
             || !$TemplateConfig->{Permission}->{$Template}
-            || !$TemplateConfig->{MaxSearchDepth}->{$Template}
-            || !$TemplateConfig->{RelevantLinkTypes}->{$Template}
-            || !$TemplateConfig->{RelevantObjectSubTypes}->{$Template}
-            || !$TemplateConfig->{AdjustingStrength}->{$Template}
         );
 
         # check for access rights
