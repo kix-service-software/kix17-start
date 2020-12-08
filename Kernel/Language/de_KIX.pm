@@ -1881,6 +1881,7 @@ sub Data {
     $Lang->{'timestamp'}                 = 'Zeitstempel';
     $Lang->{'Types'}                     = 'Typen';
     $Lang->{'Bulk-Action'}               = 'Sammelaktion';
+    $Lang->{'Un-/subscribe ticket watch in the ticket bulk screen of the agent interface.'}               = 'Aktiviert das Setzen oder Aufheben von Beobachten an Tickets in der Sammelaktion des Agentenfrontends.';
     $Lang->{'Responsible Tickets'}       = 'Verantwortliche Tickets';
     $Lang->{'Ticket is locked for another agent!'} =
         'Ticket ist durch einen anderen Agenten gesperrt';
