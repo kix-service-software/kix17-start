@@ -4134,8 +4134,8 @@ sub Data {
         'Send unencrypted notification' => 'Unverschlüsselte Benachrichtigung senden',
 
         # Perl Module: Kernel/System/Web/InterfaceAgent.pm
-        'Panic, user authenticated but no user data can be found in KIX DB!! Perhaps the user is invalid.' =>
-            'Achtung, der Benutzer wurde authentifiziert, aber es konnten keine Benutzerdaten in der Datenbank gefunden worden. Möglicherweise ist der Benutzer ungültig.',
+        'You could not be logged in to the system. Please check that your username and password have been entered correctly.' =>
+            'Sie konnten nicht angemeldet werden. Bitte prüfen Sie, ob Nutzername und Passwort korrekt eingegeben wurden.',
         'Can`t remove SessionID' => 'Kann SessionID nicht enfernen',
         'Logout successful.' => 'Abmeldung erfolgreich.',
         'Panic! Invalid Session!!!' => 'Fehler: Ungültige Sitzung.',
