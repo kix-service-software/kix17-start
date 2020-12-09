@@ -476,4 +476,37 @@
         display: block;
         margin: 5px 0px 5px 0px;
     }
+
+    /**
+    *   @subsection text modules bulk
+    */
+
+    #BulkTextModulesSelectionContainer > .Loader::after {
+        font-size: 4em;
+        line-height: 5em;
+    }
+    #BulkTextModulesSelectionContainer {
+        height: 250px;
+        background-color: #FFFFFF;
+        border: 1px solid #CCCCCC;
+        overflow: auto;
+        padding: 0px 10px 10px 10px;
+    }
+    .BulkTextModulesFocus {
+        padding: 5px 0;
+        display: block;
+        height: 14px;
+    }
+    .BulkTextModulesFocus * {
+        float:left;
+    }
+    .BulkTextModulesFocus > div {
+        font-weight: bold;
+        margin-left: 10px;
+    }
+
+    .BulkNotify, .WINotify {
+        box-sizing: border-box;
+    }
+
 }
