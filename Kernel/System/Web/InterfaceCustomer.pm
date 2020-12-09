@@ -318,7 +318,7 @@ sub Run {
                 Output => \$LayoutObject->CustomerLogin(
                     Title   => 'Panic!',
                     Message => Translatable(
-                        'Authentication succeeded, but no customer record is found in the customer backend. Please contact the administrator.'
+                        'You could not be logged in to the system. Please check that your username and password have been entered correctly.'
                     ),
                     %Param,
                 ),

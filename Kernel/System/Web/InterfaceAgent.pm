@@ -321,7 +321,7 @@ sub Run {
                     Title => 'Panic!',
                     Message =>
                         Translatable(
-                        'Panic, user authenticated but no user data can be found in KIX DB!! Perhaps the user is invalid.'
+                        'You could not be logged in to the system. Please check that your username and password have been entered correctly.'
                         ),
                     %Param,
                     MessageType => 'Error',
