@@ -624,9 +624,9 @@ sub Data {
     # SLADisabled
     $Lang->{'Defines MethodName.'} = 'Defines Methodenname.';
     $Lang->{
-        'Defines state names for which the SLA time is disabled. Is a ticket set to on of these states, the SLA-destination times are set to hold. The time a ticket stays in this state is not SLA-relevant.'
+        'Defines state names for which the solution time is disabled. Is a ticket set to on of these states, the solution time is set to hold.'
         }
-        = 'Definiert Statusnamen für die SLA-Zeiten ausgesetzt werden. Wird ein Ticket in einen dieser Status gesetzt, wird die SLA-Zielberechnung ausgesetzt. Die Dauer die ein Ticket in diesen Status verbringt, wird nicht auf SLA-Erfuellungszeiten angerechnet.';
+        = 'Definiert Statusnamen, für die Lösungszeiten ausgesetzt werden. Befindet sich ein Ticket in einem dieser Status, wird die Lösungszeitberechnung angehalten.';
     $Lang->{'Defines ticket type names for which the SLA calulation time is disabled.'}
         = 'Definiert Tickettypen für die keine SLA-Zeiten berechnet werden.';
     $Lang->{
@@ -667,10 +667,6 @@ sub Data {
         = 'Deaktiviert Antwortzeit-SLA wenn Ticket ein Telefonticket ist.';
     $Lang->{'Restricts the ResponsetimeSetByPhoneTicket to these ticket types.'}
         = 'Beschränkt die ResponsetimeSetByPhoneTicket auf diese Tickettypen.';
-    $Lang->{
-        'Defines state names for which the SLA time is disabled. Is a ticket set to on of these states, the SLA-destination times are set to hold. The time a ticket stays in this state is not SLA-relevant.'
-        }
-        = 'Definiert Statusnamen für die SLA-Zeiten ausgesetzt werden. Wird ein Ticket in einen dieser Status gesetzt, wird die SLA-Zielberechnung ausgesetzt. Die Dauer die ein Ticket in diesen Status verbringt, wird nicht auf SLA-Erfuellungszeiten angerechnet.';
     $Lang->{'List of JS files to always be loaded for the agent interface.'}
         = 'Liste von JS-Dateien, die immer im Agenten-Interface geladen werden.';
     $Lang->{

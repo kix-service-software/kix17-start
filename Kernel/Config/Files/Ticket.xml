@@ -12701,7 +12701,7 @@ Thanks for your help!
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::EscalationDisabled::RelevantStates" Required="0" Valid="1">
-        <Description Translatable="1">Defines state names for which the SLA time is disabled. Is a ticket set to on of these states, the SLA-destination times are set to hold. The time a ticket stays in this state is not SLA-relevant.</Description>
+        <Description Translatable="1">Defines state names for which the solution time is disabled. Is a ticket set to on of these states, the solution time is set to hold.</Description>
         <Group>Ticket</Group>
         <SubGroup>Core::Ticket</SubGroup>
         <Setting>
