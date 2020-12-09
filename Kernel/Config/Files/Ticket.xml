@@ -5436,7 +5436,42 @@
             </Option>
         </Setting>
     </ConfigItem>    
-    
+    <ConfigItem Name="Frontend::KIXSidebarBackend###BulkTextModules" Required="0" Valid="1">
+        <Description Translatable="1">Parameters for the KIXSidebar backend BulkTextModules.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::KIXSidebarBackend</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::Output::HTML::KIXSidebar::BulkTextModules</Item>
+                <Item Key="Title">Text Modules</Item>
+                <Item Key="Description">Show or hide the text modules</Item>
+                <Item Key="Prio">0100</Item>
+                <Item Key="Actions">AgentTicketBulk</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Frontend::Module###BulkTextModuleAJAXHandler" Required="0" Valid="1">
+        <Description Translatable="1">Frontend module registration for the BulkTextModuleAJAXHandler object.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::ModuleRegistration</SubGroup>
+        <Setting>
+            <FrontendModuleReg>
+                <Description>Text Module AJAX handle</Description>
+                <Title>Text Module AJAX handler</Title>
+                <NavBarName>Ticket</NavBarName>
+            </FrontendModuleReg>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentTicketBulk###PlaceholderWhitelist" Required="1" Valid="1">
+        <Description Translatable="1">Defines a list of allowed placeholders that must be replaced with information. The placeholders entered must be specified without "&lt;KIX_" or "&lt;OTRS_" and "&gt;" (these are added automatically). It is also possible to use a regular expression as a placeholder (example: TICKET_.*). (Key: priority; value: placeholder)</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewBulk</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="000">.*</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::MoveType" Required="1" Valid="1">
         <Description Translatable="1">Determines if the list of possible queues to move to ticket into should be displayed in a dropdown list or in a new window in the agent interface. If "New Window" is set you can add a move note to the ticket.</Description>
         <Group>Ticket</Group>
@@ -17704,4 +17739,14 @@ Here you may define a default text for the forward function. You find this confi
         </Setting>
     </ConfigItem>
     <!-- EO QUICK STATE -->
+    <ConfigItem Name="Loader::Agent::CommonJS###900-BulkTextModules" Required="1" Valid="1">
+        <Description Translatable="1">List of JS files to always be loaded for the agent interface.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Core::Web</SubGroup>
+        <Setting>
+            <Array>
+                <Item>Core.Agent.BulkTextModules.js</Item>
+            </Array>
+        </Setting>
+    </ConfigItem>
 </otrs_config>

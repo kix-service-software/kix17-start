@@ -4564,6 +4564,15 @@ sub Data {
     $Lang->{'Quote after response template'}  = 'Zitat nach Antwortvorlage';
     # EO Response Order
 
+    # BulkTextModules
+    $Lang->{'Focused on'} = 'Fokussiert auf';
+    $Lang->{'Parameters for the KIXSidebar backend BulkTextModules.'}
+        = 'Parameter für das KIXSidebar-Backend BulkTextModules.';
+    $Lang->{'Frontend module registration for the BulkTextModuleAJAXHandler object.'}
+        = 'Frontendmodul-Registration des Moduls BulkTextModuleAJAXHandler.';
+    $Lang->{'Defines a list of allowed placeholders that must be replaced with information. The placeholders entered must be specified without "<KIX_" or "<OTRS_" and ">" (these are added automatically). It is also possible to use a regular expression as a placeholder (example: TICKET_.*). (Key: priority; value: placeholder)'}
+        = 'Legt eine Liste mit zulässigen Platzhaltern fest, die mit Informationen ersetzt werden dürfen. Die eingetragenen Platzhalter müssen ohne "<KIX_" oder "<OTRS_" und ">" angegeben werden (diese werden automatisch ergänzt). Es ist möglich auch ein regulären Ausdruck als Platzhalter anzuwenden (Beispiel: TICKET_.*). (Schlüssel: Priorität; Wert: Platzhalter) ';
+
     return 0;
 }
 

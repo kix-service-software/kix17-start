@@ -847,6 +847,9 @@ sub _Mask {
         }
     }
 
+    # load KIXSidebar
+    $Param{KIXSidebarContent} = $LayoutObject->AgentKIXSidebar();
+
     if ( $Param{ArticleTypeID} ) {
         $Param{NoteStrg} = $LayoutObject->BuildSelection(
             Data       => \%NoteTypes,
