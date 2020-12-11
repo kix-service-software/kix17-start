@@ -669,9 +669,11 @@ $('#FileUpload').bind('change', function () {
                     </div>
                     <div class="Clear"></div>
 
-                    <label for="NextStateID">[% Translate("Next ticket state") | html %]:</label>
+                    <label class="Mandatory" for="NextStateID"><span class="Marker">*</span> [% Translate("Next ticket state") | html %]:</label>
                     <div class="Field">
                         [% Data.NextStatesStrg %]
+                        <div id="NextStateIDError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
+                        <div id="NextStateIDServerError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
     $('#NextStateID').bind('change', function (Event) {
@@ -705,9 +707,11 @@ $('#FileUpload').bind('change', function () {
                     </div>
 [% RenderBlockEnd("DynamicField_ITSMImpact") %]
 # ---
-                    <label for="PriorityID">[% Translate("Priority") | html %]:</label>
+                    <label class="Mandatory" for="PriorityID"><span class="Marker">*</span> [% Translate("Priority") | html %]:</label>
                     <div class="Field">
                         [% Data.PriorityStrg %]
+                        <div id="PriorityIDError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
+                        <div id="PriorityIDServerError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
     $('#PriorityID').bind('change', function (Event) {

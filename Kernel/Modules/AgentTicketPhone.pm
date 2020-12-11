@@ -1609,6 +1609,12 @@ sub Run {
                 $Error{'SLAInvalid'} = ' ServerError';
             }
 
+            if ( !$GetParam{NextStateID} ) {
+                $Error{'NextStateIDInvalid'} = ' ServerError';
+            }
+            if ( !$GetParam{PriorityID} ) {
+                $Error{'PriorityIDInvalid'} = ' ServerError';
+            }
             if ( ( !$GetParam{TypeID} ) && ( $ConfigObject->Get('Ticket::Type') ) ) {
                 $Error{'TypeIDInvalid'} = ' ServerError';
             }
@@ -3054,7 +3060,7 @@ sub _MaskPhoneNew {
     $Param{NextStatesStrg} = $LayoutObject->BuildSelection(
         Data          => $Param{NextStates},
         Name          => 'NextStateID',
-        Class         => 'Modernize',
+        Class         => 'Validate_Required Modernize ' . ( $Param{Errors}->{NextStateIDInvalid} || ' ' ),
         Translation   => 1,
         SelectedValue => $Param{NextState} || $Config->{StateDefault},
     );
@@ -3317,7 +3323,7 @@ sub _MaskPhoneNew {
         Name          => 'PriorityID',
         SelectedID    => $Param{PriorityID},
         SelectedValue => $Param{Priority},
-        Class         => 'Modernize',
+        Class         => 'Validate_Required Modernize ' . ( $Param{Errors}->{PriorityIDInvalid} || ' ' ),
         Translation   => 1,
     );
 
