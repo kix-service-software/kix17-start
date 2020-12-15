@@ -14738,6 +14738,28 @@ Thanks for your help!
             </Hash>
         </Setting>
     </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentTicketZoomTabArticle###ArticleFlagsShared" Required="0" Valid="1">
+        <Description Translatable="1">Defines if flag is shared with other agents.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewTicketZoomTabArticle</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="2">0</Item>
+                <Item Key="Important">0</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentTicketZoomTabArticle###ArticleFlagsWithoutEdit" Required="0" Valid="1">
+        <Description Translatable="1">Defines if flag has no edit function.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewTicketZoomTabArticle</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="2">0</Item>
+                <Item Key="Important">0</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::AgentTicketZoomTabArticle###ArticleFlagsRemoveOnTicketClose" Required="0" Valid="1">
         <Description Translatable="1">Defines whether article flags should be removed if ticket closed. This value could be empty. Use 'UserPref' if user could choose this preference by itself and system if not.</Description>
         <Group>Ticket</Group>

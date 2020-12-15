@@ -1077,6 +1077,14 @@ sub Data {
         = 'Nur der Ticketverantwortlicher darf Artikel des Tickets bearbeiten.';
     $Lang->{'Determines whether the selection fields in the action bar should be displayed as "Modernize".'}
         = 'Legt fest, ob die Auswahlfelder in der Aktionsleiste als "Modernize" dargestellt werden sollen.';
+    $Lang->{'Defines if flag is shared with other agents.'} = 'Legt fest, ob ein Flag mit anderen Agenten geteilt wird.';
+    $Lang->{'Defines if flag has no edit function.'} = 'Legt fest, ob das Flag keine Bearbeiten-Funktion hat.';
+    $Lang->{'show details for flag'} = 'Zeige Details für Flag';
+    $Lang->{'edit details for flag'} = 'Bearbeite Details von Flag';
+    $Lang->{'remove flag'}           = 'Entferne Flag';
+    $Lang->{'Article Flag Options'}  = 'Artikel-Flag Optionen';
+    $Lang->{'show details'}          = 'Details anzeigen';
+    $Lang->{'for Article'}           = 'für Artikel';
 
     # AgentArticleEdit
     $Lang->{'History type for this action.'} = 'Historientyp für diese Aktion.';
