@@ -4388,6 +4388,8 @@ sub Data {
     $Lang->{'Delete/Empty Ticket Attributes'} = 'Ticket-Attribute löschen/leeren';
     $Lang->{'Ticket Attributes'}              = 'Ticket-Attribute';
     $Lang->{'Clone Job'}                      = 'Job kopieren';
+    $Lang->{'The following tags can be used in the subject and body'}
+        = 'Die folgenden Platzhalter können in Betreff und Nachrichtentext verwendet werden';
 
     # Quick State
     $Lang->{'QuickState'}             = 'Statuswechsel';
