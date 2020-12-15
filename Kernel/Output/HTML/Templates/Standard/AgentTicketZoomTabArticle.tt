@@ -333,11 +333,19 @@ $(document.body).on('change', '.ArticleFlagSelection', function() {
                                     <span class="FlagIcon" id="ArticleFlag_[% Data.ArticleID | html %]_[% Data.ArticleFlagKey | html %]" style="[% Data.CSS | html %]">
                                          <i class="fa fa-[% Data.ArticleFlagIcon | html %]"></i>
                                     </span>
+[% RenderBlockStart("TreeItemArticleFlagDialog") %]
 # show edit / delete dialog (hidden)
                                     <div class="Hidden" id="ArticleFlagOptions_[% Data.ArticleID | html %]_[% Data.ArticleFlagKey | html %]" value="2">
                                         <div class="ArticleFlagOptionsDialog">
-                                            <a href="" class="ArticleFlag" title="show details for flag [% Translate(Data.ArticleFlagValue) | html %]" rel="[% Data.ArticleID | html %]_[% Data.ArticleFlagKey | html %]">[% Translate("show details / edit") | html %]</a>
-                                            <a href="" class="ArticleFlag" title="remove flag [% Translate(Data.ArticleFlagValue) | html %]" rel="[% Data.ArticleID | html %]_[% Data.ArticleFlagKey | html %]">[% Translate("remove") | html %]</a>
+[% RenderBlockStart("TreeItemArticleFlagOptionShow") %]
+                                            <a href="" class="ArticleFlag" title="[% Translate("show details for flag") | html %] [% Translate(Data.ArticleFlagValue) | html %]" rel="[% Data.ArticleID | html %]_[% Data.ArticleFlagKey | html %]" data-action="show">[% Translate("show details") | html %]</a>
+[% RenderBlockEnd("TreeItemArticleFlagOptionShow") %]
+[% RenderBlockStart("TreeItemArticleFlagOptionEdit") %]
+                                            <a href="" class="ArticleFlag" title="[% Translate("edit details for flag") | html %] [% Translate(Data.ArticleFlagValue) | html %]" rel="[% Data.ArticleID | html %]_[% Data.ArticleFlagKey | html %]" data-action="show">[% Translate("show details / edit") | html %]</a>
+[% RenderBlockEnd("TreeItemArticleFlagOptionEdit") %]
+[% RenderBlockStart("TreeItemArticleFlagOptionDelete") %]
+                                            <a href="" class="ArticleFlag" title="[% Translate("remove flag") | html %] [% Translate(Data.ArticleFlagValue) | html %]" rel="[% Data.ArticleID | html %]_[% Data.ArticleFlagKey | html %]" data-action="delete">[% Translate("remove") | html %]</a>
+[% RenderBlockEnd("TreeItemArticleFlagOptionDelete") %]
                                         </div>
                                     </div>
 # edit dialog box
@@ -349,23 +357,24 @@ $(document.body).on('change', '.ArticleFlagSelection', function() {
                                             <input type="hidden" value="[% Data.TicketID | html %]" name="TicketID"/>
                                             <input type="hidden" value="[% Data.ArticleID | html %]" name="ArticleID"/>
                                             <fieldset class="TableLike">
-                                                <label for="ArticleFlagSubject">[% Translate("Subject") | html %]:</label>
+                                                <label for="ArticleFlagSubject_[% Data.ArticleID | html %]_[% Data.ArticleFlagKey | html %]">[% Translate("Subject") | html %]:</label>
                                                 <div class="Field">
-                                                    <input type="text" id="ArticleFlagSubject" name="ArticleFlagSubject" value="[% Data.ArticleFlagSubject | html %]" />
+                                                    <input type="text" id="ArticleFlagSubject_[% Data.ArticleID | html %]_[% Data.ArticleFlagKey | html %]" name="ArticleFlagSubject" value="[% Data.ArticleFlagSubject | html %]"[% IF(!Data.AllowFlagEdit) %] readonly="readonly"[% END %] />
                                                 </div>
                                                 <div class="Clear"></div>
-                                                <label for="ArticleFlagKeywords">[% Translate("Keywords") | html %]:</label>
+                                                <label for="ArticleFlagKeywords_[% Data.ArticleID | html %]_[% Data.ArticleFlagKey | html %]">[% Translate("Keywords") | html %]:</label>
                                                 <div class="Field">
-                                                    <input type="text" id="ArticleFlagKeywords" name="ArticleFlagKeywords" value="[% Data.ArticleFlagKeywords | html %]" />
+                                                    <input type="text" id="ArticleFlagKeywords_[% Data.ArticleID | html %]_[% Data.ArticleFlagKey | html %]" name="ArticleFlagKeywords" value="[% Data.ArticleFlagKeywords | html %]"[% IF(!Data.AllowFlagEdit) %] readonly="readonly"[% END %] />
                                                 </div>
                                                 <div class="Clear"></div>
-                                                <label for="ArticleFlagNote">[% Translate("Notes") | html %]:</label>
+                                                <label for="ArticleFlagNote_[% Data.ArticleID | html %]_[% Data.ArticleFlagKey | html %]">[% Translate("Notes") | html %]:</label>
                                                 <div class="Field">
-                                                    <textarea cols="40" rows="20" id="ArticleFlagNote" name="ArticleFlagNote">[% Data.ArticleFlagNote | html %]</textarea>
+                                                    <textarea cols="40" rows="20" id="ArticleFlagNote_[% Data.ArticleID | html %]_[% Data.ArticleFlagKey | html %]" name="ArticleFlagNote"[% IF(!Data.AllowFlagEdit) %] readonly="readonly"[% END %]>[% Data.ArticleFlagNote | html %]</textarea>
                                                 </div>
                                             </fieldset>
                                         </form>
                                     </div>
+[% RenderBlockEnd("TreeItemArticleFlagDialog") %]
 
 [% RenderBlockEnd("TreeItemArticleFlagSet") %]
 [% RenderBlockStart("TreeItemNoNewArticle") %]
@@ -499,7 +508,7 @@ $(document.body).on('change', '.ArticleFlagSelection', function() {
                     <p class="Value" title="[% Translate(Data.Note) | html %]">
                         <span class="FlagIcon" style="[% Data.CSS | html %]">
                             <i class="fa fa-[% Data.ArticleFlagIcon | html %]"></i>
-                        </span> [% Translate(Data.Value) | html %] - [% Translate("Subject") | html %]: [% Translate(Data.Subject) | html %]
+                        </span> [% Translate(Data.Value) | html %][% IF(Data.Subject) %] - [% Translate("Subject") | html %]: [% Translate(Data.Subject) | html %][% END %]
                     </p>
                     <div class="Clear"></div>
 [% RenderBlockEnd("ArticleFlagOption") %]
@@ -613,8 +622,11 @@ function CheckIFrameHeight(IFrameID) {
 <script type="text/javascript">//<![CDATA[
     Core.Config.Set('UserArticleTableColumnResizing', '[% Data.ColumnResizing %]');
     Core.KIX4OTRS.TicketZoomTabs.SetArticleFlagColumnWidth();
-    Core.KIX4OTRS.TicketZoomTabs.ShowArticleFlagOptionsDialog();
-    Core.KIX4OTRS.TicketZoomTabs.ArticleFlagOptions([% Data.TicketID | html %],'[% Translate("Apply") | html %]','[% Translate("Set article flag") | html %]');
+[% RenderBlockStart("ArticleFlagsWithoutEdit") %]
+    Core.Config.Set('ArticleFlagsWithoutEdit::[% Data.FlagKey | html %]', '1');
+[% RenderBlockEnd("ArticleFlagsWithoutEdit") %]
+    Core.KIX4OTRS.TicketZoomTabs.ShowArticleFlagOptionsDialog('[% Translate("Article Flag Options") | html %]');
+    Core.KIX4OTRS.TicketZoomTabs.ArticleFlagOptions([% Data.TicketID | html %],'[% Translate("Apply") | html %]','[% Translate("Set article flag") | html %]','[% Translate("for Article") | html %]');
     Core.KIX4OTRS.TicketZoomTabs.PopUpInit();
     Core.Agent.TicketZoom.Init({ ArticleTableHeight: parseInt('[% Env("UserTicketZoomArticleTableHeight") %]',10)},'AgentTicketZoomTabArticle');
     Core.Config.Set('Ticket::Frontend::HTMLArticleHeightDefault', parseInt("[% Config("Ticket::Frontend::HTMLArticleHeightDefault") %]" || 0, 10));
