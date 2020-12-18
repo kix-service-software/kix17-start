@@ -42,6 +42,7 @@
     #TreeContainer #TreeSearch input {
         width: 100%;
         box-sizing: border-box;
+        height: initial;
     }
     #TreeContainer input.CallForAction {
         padding: 3px 10px;
