@@ -1258,6 +1258,10 @@ generates the HTML for the page begin in the Agent interface.
 sub Header {
     my ( $Self, %Param ) = @_;
 
+    # get needed objects
+    my $ConfigObject            = $Kernel::OM->Get('Kernel::Config');
+    my $TemplateGeneratorObject = $Kernel::OM->Get('Kernel::System::TemplateGenerator');
+
     my $Type = $Param{Type} || '';
 
     # check params
@@ -1268,8 +1272,6 @@ sub Header {
     if ( !defined $Param{ShowPrefLink} ) {
         $Param{ShowPrefLink} = 1;
     }
-
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
     # do not show preferences link if the preferences module is disabled
     my $Modules = $ConfigObject->Get('Frontend::Module');
@@ -1380,7 +1382,14 @@ sub Header {
         );
 
         if ($Access) {
-            $Param{TitleArea} = $Ticket{Title};
+            my $TitleTemplate = $ConfigObject->Get('Ticket::Frontend::AgentTicketZoom')->{BrowserTitle} || '<KIX_TICKET_Title>';
+            $Param{TitleArea} = $TemplateGeneratorObject->ReplacePlaceHolder(
+                Text     => $TitleTemplate,
+                Data     => {},
+                RichText => '0',
+                TicketID => $Self->{TicketID},
+                UserID   => $Self->{UserID},
+            );
         }
     }
 
@@ -4150,9 +4159,11 @@ sub CustomerLogin {
 sub CustomerHeader {
     my ( $Self, %Param ) = @_;
 
-    my $Type = $Param{Type} || '';
+    # get needed objects
+    my $ConfigObject            = $Kernel::OM->Get('Kernel::Config');
+    my $TemplateGeneratorObject = $Kernel::OM->Get('Kernel::System::TemplateGenerator');
 
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+    my $Type = $Param{Type} || '';
 
     # add cookies if exists
     my $Output = '';
@@ -4250,7 +4261,20 @@ sub CustomerHeader {
             TicketID => $Self->{TicketID},
         );
 
-        $Param{TitleArea} = $Ticket{Title};
+        my $TitleTemplate;
+        if ( $Self->{Action} eq 'CustomerTicketZoom' ) {
+            $TitleTemplate = $ConfigObject->Get('Ticket::Frontend::CustomerTicketZoom')->{BrowserTitle} || '<KIX_TICKET_Title>';
+        }
+        else {
+            $TitleTemplate = $Param{Title} = $ConfigObject->Get('Ticket::Frontend::PublicTicketZoom')->{BrowserTitle} || '<KIX_TICKET_Title>';
+        }
+        $Param{TitleArea} = $TemplateGeneratorObject->ReplacePlaceHolder(
+            Text     => $TitleTemplate,
+            Data     => {},
+            RichText => '0',
+            TicketID => $Self->{TicketID},
+            UserID   => $Self->{UserID},
+        );
     }
 
     my $Frontend;
