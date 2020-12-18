@@ -1,6 +1,22 @@
 # Change log of KIX
 * Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.14.0-RC6 (2020/12/18)
+ * (2020/12/17) - CR: KIX17-1724 (configurable browser title for ticket zoom) (millinger)
+ * (2020/12/17) - Bugfix: KIX17-333 (show tree view icon) (ddoerffel)
+ * (2020/12/15) - CR: KIX17-1640 (added placeholder for generic agent subject and body) (ddoerffel)
+ * (2020/12/11) - CR: KIX17-1707 (dynamic field support for event DynamicFieldFromCustomerUser) (dbormann)
+ * (2020/12/11) - Bugfix: KIX17-1389 (mark state and priority as mandatory for ticket creation) (millinger)
+ * (2020/12/09) - Bugfix: KIX17-1316 (changed column size for notification text) (ddoerffel)
+ * (2020/12/09) - Bugfix: KIX17-1211 (changed solution time disabled text for states) (ddoerffel)
+ * (2020/12/09) - Bugfix: KIX17-1660 (added other warning for failed login) (ddoerffel)
+ * (2020/12/07) - CR: KIX17-1603 (added text modules for bulk action) (ddoerffel)
+ * (2020/12/07) - Bugfix: KIX17-1653 (fixed loading of customer user from template) (millinger)
+ * (2020/12/07) - Bugfix: KIX17-1016 (fixed initialisation of datepicker) (millinger)
+ * (2020/12/04) - CR: KIX17-1613 (add article flag all agents) (ddoerffel)
+ * (2020/12/04) - CR: KIX17-1604 (bulk action for ticket watcher) (ddoerffel)
+ * (2020/11/12) - CR: KIX17-1713 (additional holidays) (millinger)
+
 # 17.14.0-RC5 (2020/11/27)
  * (2020/11/20) - Bugfix: KIX17-1518 (fixed required lock check for tab action common) (millinger)
  * (2020/11/11) - CR: KIX17-1586 (added dynamic report ITSMConfigItemList) (millinger)
