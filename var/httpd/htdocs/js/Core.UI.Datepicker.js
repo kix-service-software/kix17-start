@@ -160,6 +160,16 @@ Core.UI.Datepicker = (function (TargetNS) {
             }
         }
 
+        // get highest Datepicker id
+        DatepickerCount = 0;
+        $('input[id^="Datepicker"]').each( function() {
+            var DatepickerID = $(this).attr('id');
+            var ID = DatepickerID.substring(10);
+            if ( DatepickerCount < ID ) {
+                DatepickerCount = ID;
+            }
+        });
+
         // Increment number of initialized datepickers on this site
         DatepickerCount++;
 

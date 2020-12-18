@@ -813,6 +813,47 @@ Core.Agent.Admin.GenericAgent.Init({
                         </div>
                         <div class="Clear"></div>
                     </fieldset>
+                    <div class="WidgetSimple SpacingTop Collapsed">
+                        <div class="Header">
+                            <div class="WidgetAction Toggle" title="[% Translate(Data.Description) | html %]"></div>
+                            <h2><span>[% Translate("Tag Reference") | html %]</span></h2>
+                        </div>
+
+                        <div class="Content">
+                            <p>[% Translate("The following tags can be used in the subject and body") | html %]:</p>
+                            <dl>
+                                <dt><code>&lt;KIX_TICKET_*&gt;</code></dt>
+                                <dd>
+                                    [% Translate("Attributes of the ticket data") | html %]
+                                    ([% Translate(" e. g.") | html %] <code>&lt;KIX_TICKET_TicketNumber&gt;, &lt;KIX_TICKET_TicketID&gt;,
+                                    &lt;KIX_TICKET_Queue&gt;, &lt;KIX_TICKET_State&gt;</code>).
+                                </dd>
+                                <dt><code>&lt;KIX_TICKET_OWNER_*&gt;</code></dt>
+                                <dd>
+                                    [% Translate("Attributes of the current ticket owner user data") | html %]
+                                    ([% Translate(" e. g.") | html %] <code>&lt;KIX_TICKET_OWNER_UserFirstname&gt;</code>).
+                                </dd>
+
+                                <dt><code>&lt;KIX_TICKET_RESPONSIBLE_*&gt;</code></dt>
+                                <dd>
+                                    [% Translate("Attributes of the current ticket responsible user data") | html %]
+                                    ([% Translate(" e. g.") | html %] <code>&lt;KIX_TICKET_RESPONSIBLE_UserFirstname&gt;</code>).
+                                </dd>
+                                <dt><code>&lt;KIX_TICKET_DynamicField_*&gt;</code></dt>
+                                <dd>
+                                    [% Translate("Ticket dynamic fields internal key values") | html %]
+                                    ([% Translate(" e. g.") | html %] <code>&lt;KIX_TICKET_DynamicField_TestField&gt;,
+                                    &lt;KIX_TICKET_DynamicField_TicketFreeText1&gt;</code>).
+                                </dd>
+                                <dt><code>&lt;KIX_TICKET_DynamicField_*_Value&gt;</code></dt>
+                                <dd>
+                                    [% Translate("Ticket dynamic fields display values, useful for Dropdown and Multiselect fields") | html %]
+                                    ([% Translate(" e. g.") | html %] <code>&lt;KIX_TICKET_DynamicField_TestField_Value&gt;,
+                                    &lt;KIX_TICKET_DynamicField_TicketFreeText1_Value&gt;</code>).
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="WidgetSimple SpacingTop Collapsed">

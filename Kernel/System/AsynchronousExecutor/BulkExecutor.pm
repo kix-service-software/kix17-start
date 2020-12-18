@@ -34,14 +34,15 @@ sub new {
     my $Self = {};
     bless( $Self, $Type );
 
-    $Self->{ConfigObject}       = $Kernel::OM->Get('Kernel::Config');
-    $Self->{CustomerUserObject} = $Kernel::OM->Get('Kernel::System::CustomerUser');
-    $Self->{JSONObject}         = $Kernel::OM->Get('Kernel::System::JSON');
-    $Self->{LogObject}          = $Kernel::OM->Get('Kernel::System::Log');
-    $Self->{StateObject}        = $Kernel::OM->Get('Kernel::System::State');
-    $Self->{TicketObject}       = $Kernel::OM->Get('Kernel::System::Ticket');
-    $Self->{UploadCacheObject}  = $Kernel::OM->Get('Kernel::System::Web::UploadCache');
-    $Self->{UserObject}         = $Kernel::OM->Get('Kernel::System::User');
+    $Self->{ConfigObject}            = $Kernel::OM->Get('Kernel::Config');
+    $Self->{CustomerUserObject}      = $Kernel::OM->Get('Kernel::System::CustomerUser');
+    $Self->{JSONObject}              = $Kernel::OM->Get('Kernel::System::JSON');
+    $Self->{LogObject}               = $Kernel::OM->Get('Kernel::System::Log');
+    $Self->{StateObject}             = $Kernel::OM->Get('Kernel::System::State');
+    $Self->{TicketObject}            = $Kernel::OM->Get('Kernel::System::Ticket');
+    $Self->{UploadCacheObject}       = $Kernel::OM->Get('Kernel::System::Web::UploadCache');
+    $Self->{UserObject}              = $Kernel::OM->Get('Kernel::System::User');
+    $Self->{TemplateGeneratorObject} = $Kernel::OM->Get('Kernel::System::TemplateGenerator');
 
     return $Self;
 }
@@ -221,12 +222,52 @@ sub _BulkDo {
         );
     }
 
+    if (
+        $Self->{ConfigObject}->Get('Ticket::Watcher')
+        && $Config->{TicketWatch}
+    ) {
+        if ( $GetParam{'Watch'} ) {
+            if ( $GetParam{'Watch'} eq 'Watch' ) {
+                $Self->{TicketObject}->TicketWatchSubscribe(
+                    TicketID    => $Param{TicketID},
+                    WatchUserID => $Param{UserID},
+                    UserID      => $Param{UserID},
+                );
+            }
+            elsif ( $GetParam{'Watch'} eq 'Unwatch' ) {
+                $Self->{TicketObject}->TicketWatchUnsubscribe(
+                    TicketID    => $Param{TicketID},
+                    WatchUserID => $Param{UserID},
+                    UserID      => $Param{UserID},
+                );
+            }
+        }
+    }
+
     # send email
     my $EmailArticleID;
     if (
         $GetParam{'EmailSubject'}
         && $GetParam{'EmailBody'}
     ) {
+
+        $GetParam{EmailSubject} = $Self->_ReplacePlaceHolder(
+            Text      => $GetParam{EmailSubject},
+            Data      => {},
+            RichText  => 0,
+            UserID    => $Param{UserID},
+            TicketID  => $Param{TicketID},
+            WhiteList => $Config->{PlaceholderWhitelist} || ''
+        );
+        $GetParam{EmailBody} = $Self->_ReplacePlaceHolder(
+            Text      => $GetParam{EmailBody},
+            Data      => {},
+            RichText  => $Self->{ConfigObject}->Get('Frontend::RichText'),
+            UserID    => $Param{UserID},
+            TicketID  => $Param{TicketID},
+            WhiteList => $Config->{PlaceholderWhitelist} || ''
+        );
+
         my $MimeType = 'text/plain';
         if ( $Self->{LayoutObject}->{BrowserRichText} ) {
             $MimeType = 'text/html';
@@ -313,6 +354,26 @@ sub _BulkDo {
         && $GetParam{'Body'}
         && ( $GetParam{'ArticleTypeID'} || $GetParam{'ArticleType'} )
     ) {
+
+        $GetParam{Subject} = $Self->_ReplacePlaceHolder(
+            Text      => $GetParam{Subject},
+            Data      => {},
+            RichText  => 0,
+            UserID    => $Param{UserID},
+            TicketID  => $Param{TicketID},
+            Frontend  => 'Agent',
+            WhiteList => $Config->{PlaceholderWhitelist} || ''
+        );
+        $GetParam{Body} = $Self->_ReplacePlaceHolder(
+            Text      => $GetParam{Body},
+            Data      => {},
+            RichText  => $Self->{ConfigObject}->Get('Frontend::RichText'),
+            UserID    => $Param{UserID},
+            TicketID  => $Param{TicketID},
+            Frontend  => 'Agent',
+            WhiteList => $Config->{PlaceholderWhitelist} || ''
+        );
+
         my $MimeType = 'text/plain';
         if ( $Self->{LayoutObject}->{BrowserRichText} ) {
             $MimeType = 'text/html';
@@ -717,6 +778,67 @@ sub _PrepareLinkAdd {
     }
 
     return;
+}
+
+sub _ReplacePlaceHolder {
+    my ( $Self, %Param ) = @_;
+
+    # check needed stuff
+    for (qw(Text RichText)) {
+        if ( !defined $Param{$_} ) {
+            $Self->{LogObject}->Log(
+                Priority => 'error',
+                Message  => "Need $_!"
+            );
+            return;
+        }
+    }
+
+    my $Text = $Param{Text};
+    $Text =~ s{OTRS_}{KIX_}g;
+
+    my $Start = '<';
+    my $End   = '>';
+    if ( $Param{RichText} ) {
+        $Start = '&lt;';
+        $End   = '&gt;';
+        $Text =~ s/(\n|\r)//g;
+    }
+
+    if ( !$Param{WhiteList} ) {
+        my $Tag = $Start . 'KIX_.*' . $End;
+        $Text =~ s/$Tag/-/;
+    }
+    else {
+        my $Tag     = $Start . 'KIX_.*?' . $End;
+        my @Matches = $Text =~ /($Tag)/gm;
+
+        if ( scalar(@Matches) ){
+            my %Matchlist = map{ $_ => 0 } @Matches;
+
+            for my $Match ( sort keys %Matchlist ) {
+                for my $Prio ( sort keys %{$Param{WhiteList}} ) {
+                    my $TagPattern = $Start . 'KIX_' . $Param{WhiteList}->{$Prio} . $End;
+                    if ( $Match =~ /$TagPattern/ ) {
+                        $Matchlist{$Match}++;
+                    }
+                }
+            }
+
+            for my $Match ( sort keys %Matchlist ) {
+                next if $Matchlist{$Match};
+
+                $Text =~ s/$Match/-/;
+            }
+
+            $Text = $Self->{TemplateGeneratorObject}->ReplacePlaceHolder(
+                %Param,
+                Text => $Text
+            );
+        }
+    }
+
+    return $Text;
 }
 
 1;

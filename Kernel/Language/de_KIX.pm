@@ -624,9 +624,9 @@ sub Data {
     # SLADisabled
     $Lang->{'Defines MethodName.'} = 'Defines Methodenname.';
     $Lang->{
-        'Defines state names for which the SLA time is disabled. Is a ticket set to on of these states, the SLA-destination times are set to hold. The time a ticket stays in this state is not SLA-relevant.'
+        'Defines state names for which the solution time is disabled. Is a ticket set to on of these states, the solution time is set to hold.'
         }
-        = 'Definiert Statusnamen für die SLA-Zeiten ausgesetzt werden. Wird ein Ticket in einen dieser Status gesetzt, wird die SLA-Zielberechnung ausgesetzt. Die Dauer die ein Ticket in diesen Status verbringt, wird nicht auf SLA-Erfuellungszeiten angerechnet.';
+        = 'Definiert Statusnamen, für die Lösungszeiten ausgesetzt werden. Befindet sich ein Ticket in einem dieser Status, wird die Lösungszeitberechnung angehalten.';
     $Lang->{'Defines ticket type names for which the SLA calulation time is disabled.'}
         = 'Definiert Tickettypen für die keine SLA-Zeiten berechnet werden.';
     $Lang->{
@@ -667,10 +667,6 @@ sub Data {
         = 'Deaktiviert Antwortzeit-SLA wenn Ticket ein Telefonticket ist.';
     $Lang->{'Restricts the ResponsetimeSetByPhoneTicket to these ticket types.'}
         = 'Beschränkt die ResponsetimeSetByPhoneTicket auf diese Tickettypen.';
-    $Lang->{
-        'Defines state names for which the SLA time is disabled. Is a ticket set to on of these states, the SLA-destination times are set to hold. The time a ticket stays in this state is not SLA-relevant.'
-        }
-        = 'Definiert Statusnamen für die SLA-Zeiten ausgesetzt werden. Wird ein Ticket in einen dieser Status gesetzt, wird die SLA-Zielberechnung ausgesetzt. Die Dauer die ein Ticket in diesen Status verbringt, wird nicht auf SLA-Erfuellungszeiten angerechnet.';
     $Lang->{'List of JS files to always be loaded for the agent interface.'}
         = 'Liste von JS-Dateien, die immer im Agenten-Interface geladen werden.';
     $Lang->{
@@ -1081,6 +1077,14 @@ sub Data {
         = 'Nur der Ticketverantwortlicher darf Artikel des Tickets bearbeiten.';
     $Lang->{'Determines whether the selection fields in the action bar should be displayed as "Modernize".'}
         = 'Legt fest, ob die Auswahlfelder in der Aktionsleiste als "Modernize" dargestellt werden sollen.';
+    $Lang->{'Defines if flag is shared with other agents.'} = 'Legt fest, ob ein Flag mit anderen Agenten geteilt wird.';
+    $Lang->{'Defines if flag has no edit function.'} = 'Legt fest, ob das Flag keine Bearbeiten-Funktion hat.';
+    $Lang->{'show details for flag'} = 'Zeige Details für Flag';
+    $Lang->{'edit details for flag'} = 'Bearbeite Details von Flag';
+    $Lang->{'remove flag'}           = 'Entferne Flag';
+    $Lang->{'Article Flag Options'}  = 'Artikel-Flag Optionen';
+    $Lang->{'show details'}          = 'Details anzeigen';
+    $Lang->{'for Article'}           = 'für Artikel';
 
     # AgentArticleEdit
     $Lang->{'History type for this action.'} = 'Historientyp für diese Aktion.';
@@ -1283,6 +1287,12 @@ sub Data {
         = 'Mehr als 100 Knoten sind nicht möglich (aktuelle Anzahl: %s)!';
     $Lang->{'Opens the graph in a separate window.'}
         = 'Öffnet den Graphen in einem separaten Fenster.';
+    $Lang->{'Defines the display name for an link graph template. The key is used with the same notation in all following preferences.'} = 'Legt den Anzeigename einer Vorlage für den Verknüpfungsgraph fest. Der Schlüssel wird in den folgenden Einstellungen in der gleichen Schreibweise verwendet.';    
+    $Lang->{'Defines the needed permission for an link graph template. Key has to be the same defined in CIGraphConfigTemplate###Name.'} = 'Legt die Berechtigungen einer Vorlage für den Verknüpfungsgraph fest. Der Schlüssel muss der gleiche sein, wie unter CIGraphConfigTemplate###Name festgelegt.';    
+    $Lang->{'Defines the maximum link depth for an link graph template. Key has to be the same defined in CIGraphConfigTemplate###Name.'} = 'Legt die Verknüpfungstiefe einer Vorlage für den Verknüpfungsgraph fest. Der Schlüssel muss der gleiche sein, wie unter CIGraphConfigTemplate###Name festgelegt.';    
+    $Lang->{'Defines the relevant link types for an object graph template.  Key has to be the same defined in CIGraphConfigTemplate###Name.'} = 'Legt die relevanten Linktypen einer Vorlage für den Verknüpfungsgraph fest. Der Schlüssel muss der gleiche sein, wie unter CIGraphConfigTemplate###Name festgelegt.';    
+    $Lang->{'Defines the relevant object sub types for an link graph template.  Key has to be the same defined in CIGraphConfigTemplate###Name.'} = 'Legt die relevanten Sub-Typen (Klassen) einer Vorlage für den Verknüpfungsgraph fest. Der Schlüssel muss der gleiche sein, wie unter CIGraphConfigTemplate###Name festgelegt.';    
+    $Lang->{'Defines adjusting strength for an link graph template. Key has to be the same defined in CIGraphConfigTemplate###Name.'} = 'Legt die Ausrichtungsstärke einer Vorlage für den Verknüpfungsgraph fest. Der Schlüssel muss der gleiche sein, wie unter CIGraphConfigTemplate###Name festgelegt.';    
 
     # ITSMConfigItemEvents
     $Lang->{
@@ -1881,6 +1891,7 @@ sub Data {
     $Lang->{'timestamp'}                 = 'Zeitstempel';
     $Lang->{'Types'}                     = 'Typen';
     $Lang->{'Bulk-Action'}               = 'Sammelaktion';
+    $Lang->{'Un-/subscribe ticket watch in the ticket bulk screen of the agent interface.'}               = 'Aktiviert das Setzen oder Aufheben von Beobachten an Tickets in der Sammelaktion des Agentenfrontends.';
     $Lang->{'Responsible Tickets'}       = 'Verantwortliche Tickets';
     $Lang->{'Ticket is locked for another agent!'} =
         'Ticket ist durch einen anderen Agenten gesperrt';
@@ -4377,6 +4388,8 @@ sub Data {
     $Lang->{'Delete/Empty Ticket Attributes'} = 'Ticket-Attribute löschen/leeren';
     $Lang->{'Ticket Attributes'}              = 'Ticket-Attribute';
     $Lang->{'Clone Job'}                      = 'Job kopieren';
+    $Lang->{'The following tags can be used in the subject and body'}
+        = 'Die folgenden Platzhalter können in Betreff und Nachrichtentext verwendet werden';
 
     # Quick State
     $Lang->{'QuickState'}             = 'Statuswechsel';
@@ -4556,6 +4569,19 @@ sub Data {
     $Lang->{'Quote before response template'} = 'Zitat vor Antwortvorlage';
     $Lang->{'Quote after response template'}  = 'Zitat nach Antwortvorlage';
     # EO Response Order
+
+    # BulkTextModules
+    $Lang->{'Focused on'} = 'Fokussiert auf';
+    $Lang->{'Parameters for the KIXSidebar backend BulkTextModules.'}
+        = 'Parameter für das KIXSidebar-Backend BulkTextModules.';
+    $Lang->{'Frontend module registration for the BulkTextModuleAJAXHandler object.'}
+        = 'Frontendmodul-Registration des Moduls BulkTextModuleAJAXHandler.';
+    $Lang->{'Defines a list of allowed placeholders that must be replaced with information. The placeholders entered must be specified without "<KIX_" or "<OTRS_" and ">" (these are added automatically). It is also possible to use a regular expression as a placeholder (example: TICKET_.*). (Key: priority; value: placeholder)'}
+        = 'Legt eine Liste mit zulässigen Platzhaltern fest, die mit Informationen ersetzt werden dürfen. Die eingetragenen Platzhalter müssen ohne "<KIX_" oder "<OTRS_" und ">" angegeben werden (diese werden automatisch ergänzt). Es ist möglich auch ein regulären Ausdruck als Platzhalter anzuwenden (Beispiel: TICKET_.*). (Schlüssel: Priorität; Wert: Platzhalter) ';
+
+    # TicketZoom Browsertitle
+    $Lang->{'Defines the browser title of the ticket zoom. It is possible to use KIX placeholder.'}
+        = 'Definiert den Browsertitel der Ticketansicht. Es ist möglich KIX-Platzhalter zu verwenden.';
 
     return 0;
 }

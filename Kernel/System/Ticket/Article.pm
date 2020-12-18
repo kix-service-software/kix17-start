@@ -2793,6 +2793,17 @@ sub ArticleFlagDelete {
         }
     }
 
+    my $ZoomTabArticleConfig = $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Frontend::AgentTicketZoomTabArticle');
+    if (
+        ref($ZoomTabArticleConfig) eq 'HASH'
+        && $ZoomTabArticleConfig->{ArticleFlagsShared}
+        && ref($ZoomTabArticleConfig->{ArticleFlagsShared}) eq 'HASH'
+        && $ZoomTabArticleConfig->{ArticleFlagsShared}->{$Param{Key}}
+    ) {
+        $Param{AllUsers} = 1;
+        $Param{UserID}   = 0;
+    }
+
     if ( !$Param{AllUsers} && !$Param{UserID} ) {
         if ( !$Param{$_} ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
@@ -2888,6 +2899,32 @@ sub ArticleFlagGet {
         $Flag{ $Row[0] } = $Row[1];
     }
 
+    my $ZoomTabArticleConfig = $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Frontend::AgentTicketZoomTabArticle');
+    if (
+        ref($ZoomTabArticleConfig) eq 'HASH'
+        && $ZoomTabArticleConfig->{ArticleFlagsShared}
+        && ref($ZoomTabArticleConfig->{ArticleFlagsShared}) eq 'HASH'
+    ) {
+        FLAG:
+        for my $Flag ( keys( %{$ZoomTabArticleConfig->{ArticleFlagsShared}} ) ) {
+            next FLAG if (!$ZoomTabArticleConfig->{ArticleFlagsShared}->{$Flag});
+            next FLAG if ($Flag{$Flag});
+
+            # sql query
+            return %Flag if !$DBObject->Prepare(
+                SQL => 'SELECT article_key, article_value'
+                     . ' FROM article_flag'
+                     . ' WHERE article_id = ?'
+                     . '  AND article_key = ?',
+                Bind  => [ \$Param{ArticleID}, \$Flag ],
+                Limit => 1,
+            );
+
+            while ( my @Row = $DBObject->FetchrowArray() ) {
+                $Flag{ $Row[0] } = $Row[1];
+            }
+        }
+    }
     return %Flag;
 }
 

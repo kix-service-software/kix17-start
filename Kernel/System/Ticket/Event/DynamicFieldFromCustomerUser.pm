@@ -87,7 +87,8 @@ sub Run {
     my $DynamicFieldsReverse = { reverse %{$DynamicFields} };
 
     my %CustomerUserData = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerUserDataGet(
-        User => $Ticket{CustomerUserID},
+        User          => $Ticket{CustomerUserID},
+        DynamicFields => 1,
     );
 
     # also continue if there was no CustomerUser data found - erase values

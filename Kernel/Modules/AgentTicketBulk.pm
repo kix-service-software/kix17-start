@@ -397,8 +397,9 @@ sub Run {
             qw(OwnerID Owner ResponsibleID Responsible PriorityID Priority QueueID Queue Subject
             Body ArticleTypeID ArticleType TypeID StateID State MergeToSelection MergeTo LinkTogether
             EmailSubject EmailBody EmailTimeUnits
-            LinkTogetherParent Unlock MergeToChecked MergeToOldestChecked)
-        ) {
+            LinkTogetherParent Unlock MergeToChecked MergeToOldestChecked Watch)
+            )
+        {
             $GetParam{$Key} = $ParamObject->GetParam( Param => $Key ) || '';
         }
 
@@ -846,6 +847,9 @@ sub _Mask {
         }
     }
 
+    # load KIXSidebar
+    $Param{KIXSidebarContent} = $LayoutObject->AgentKIXSidebar();
+
     if ( $Param{ArticleTypeID} ) {
         $Param{NoteStrg} = $LayoutObject->BuildSelection(
             Data       => \%NoteTypes,
@@ -961,6 +965,27 @@ sub _Mask {
         );
         $LayoutObject->Block(
             Name => 'Type',
+            Data => {%Param},
+        );
+    }
+
+    # watch
+    if ( $ConfigObject->Get('Ticket::Watcher') && $Config->{TicketWatch} ) {
+        my %Watch = (
+            'Watch'   => 'Watch',
+            'Unwatch' => 'Unwatch'
+        );
+        $Param{WatchStrg} = $LayoutObject->BuildSelection(
+            Data         => \%Watch,
+            PossibleNone => 1,
+            Name         => 'Watch',
+            SelectedID   => $Param{Watch},
+            Sort         => 'AlphanumericValue',
+            Translation  => 1,
+            Class        => 'Modernize',
+        );
+        $LayoutObject->Block(
+            Name => 'Watch',
             Data => {%Param},
         );
     }
