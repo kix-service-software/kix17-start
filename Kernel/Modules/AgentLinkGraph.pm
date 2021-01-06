@@ -652,6 +652,7 @@ sub _SeperateGraphConfig {
     # get real link-names
     my $LinkTypesString = '';
     for my $LinkType (@GraphLinkTypes) {
+        next if !$LinkType;
         my %Type = $LinkObject->TypeGet(
             TypeID => $LinkObject->TypeLookup(
                 Name   => $LinkType,
