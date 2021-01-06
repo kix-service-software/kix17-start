@@ -1455,6 +1455,7 @@ sub Data {
     $Lang->{'Default size'}       = 'Standardgröße';
     $Lang->{'Fit in'}             = 'Einpassen';
 
+    $Lang->{'Edit selected template'}        = 'Ausgewählte Vorlage anpassen';
     $Lang->{'Fits the graph into the visible area'}
         = 'Passt den Graph in den sichtbaren Bereich ein';
     $Lang->{'Zoom in'}                       = 'Vergrößern';
@@ -1462,6 +1463,7 @@ sub Data {
     $Lang->{'Zoom to 100%'}                  = 'Auf 100% vergrößern';
     $Lang->{'Tool for defining a zoom-area'} = 'Werkzeug zum Aufziehen des Zoombereiches';
     $Lang->{'Adjust the graph'}              = 'Den Graph ausrichten';
+    $Lang->{'Load a graph'}                  = 'Einen Graph laden';
     $Lang->{'Save the graph'}                = 'Den Graph speichern';
     $Lang->{'Print the graph'}               = 'Den Graph drucken';
 
@@ -1478,6 +1480,7 @@ sub Data {
     $Lang->{'Link could not be removed!'} = 'Verknüpfung konnte nicht entfernt werden!';
     $Lang->{'Please look into the error-log for more information.'} =
         'Bitte schauen Sie in das Error-Log für mehr Informationen.';
+    $Lang->{'Edit current template'}        = 'Aktuelle Vorlage anpassen';
     $Lang->{'Load Graph'}                   = 'Graph Laden';
     $Lang->{'Saved graphs for this object'} = 'Gespeicherte Graphen für dieses Objekt';
     $Lang->{'There are no saved graphs!'}   = 'Es gibt keine gespeicherten Graphen!';
