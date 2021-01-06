@@ -590,7 +590,8 @@ sub Search {
 search a local certifcate
 
     my @Result = $CryptObject->CertificateSearch(
-        Search => 'some text to search',
+        Search      => 'some text to search',
+        OnlySubject => (0|1),                   # Optional. If set, search will only lookup subject attribute. Default 0
     );
 
 =cut
@@ -598,7 +599,8 @@ search a local certifcate
 sub CertificateSearch {
     my ( $Self, %Param ) = @_;
 
-    my $Search = $Param{Search} || '';
+    my $Search      = $Param{Search} || '';
+    my $OnlySubject = $Param{OnlySubject} || 0;
 
     # 1 - Get certificate list
     my @CertList = $Self->CertificateList();
@@ -609,7 +611,8 @@ sub CertificateSearch {
         # 2 - For the certs in list get its attributes and add them to @Results
         @Result = $Self->_CheckCertificateList(
             CertificateList => \@CertList,
-            Search          => $Search
+            Search          => $Search,
+            OnlySubject     => $OnlySubject,
         );
     }
 
@@ -628,7 +631,8 @@ sub CertificateSearch {
             if (@CertList) {
                 @Result = $Self->_CheckCertificateList(
                     CertificateList => \@CertList,
-                    Search          => $Search
+                    Search          => $Search,
+                    OnlySubject     => $OnlySubject,
                 );
             }
         }
@@ -640,8 +644,9 @@ sub CertificateSearch {
 sub _CheckCertificateList {
     my ( $Self, %Param ) = @_;
 
-    my @CertList = @{ $Param{CertificateList} };
-    my $Search = $Param{Search} || '';
+    my @CertList    = @{ $Param{CertificateList} };
+    my $Search      = $Param{Search} || '';
+    my $OnlySubject = $Param{OnlySubject} || 0;
 
     my @Result;
 
@@ -655,6 +660,10 @@ sub _CheckCertificateList {
         if ($Search) {
             ATTRIBUTE:
             for my $Attribute ( sort keys %Attributes ) {
+                next ATTRIBUTE if (
+                    $OnlySubject
+                    && $Attribute ne 'Subject'
+                );
                 if ( $Attributes{$Attribute} =~ m{\Q$Search\E}ixms ) {
                     $Hit = 1;
                     last ATTRIBUTE;
@@ -1258,7 +1267,8 @@ sub CertificateRead {
 returns private keys
 
     my @Result = $CryptObject->PrivateSearch(
-        Search => 'some text to search',
+        Search      => 'some text to search',
+        OnlySubject => (0|1),                   # Optional. If set, search will only lookup subject attribute. Default 0
     );
 
 =cut
@@ -1266,9 +1276,10 @@ returns private keys
 sub PrivateSearch {
     my ( $Self, %Param ) = @_;
 
-    my $Search = $Param{Search} || '';
-    my @Result;
+    my $Search       = $Param{Search} || '';
+    my $OnlySubject  = $Param{OnlySubject} || 0;
     my @Certificates = $Self->CertificateList();
+    my @Result;
 
     for my $File (@Certificates) {
         my $Certificate = $Self->CertificateGet( Filename => $File );
@@ -1281,6 +1292,10 @@ sub PrivateSearch {
         if ($Search) {
             ATTRIBUTE:
             for my $Attribute ( sort keys %Attributes ) {
+                next ATTRIBUTE if (
+                    $OnlySubject
+                    && $Attribute ne 'Subject'
+                );
                 if ( $Attributes{$Attribute} =~ m{\Q$Search\E}ixms ) {
                     $Hit = 1;
                     last ATTRIBUTE;

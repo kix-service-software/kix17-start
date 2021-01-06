@@ -168,7 +168,8 @@ sub Data {
         my $SMIMEObject = $Kernel::OM->Get('Kernel::System::Crypt::SMIME');
         if ($SMIMEObject) {
             my @PublicKeys = $SMIMEObject->CertificateSearch(
-                Search => $SearchAddress[0]->address(),
+                Search      => $SearchAddress[0]->address(),
+                OnlySubject => 1,
             );
             for my $DataRef (@PublicKeys) {
                 my $EndDate = '';
