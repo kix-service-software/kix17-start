@@ -1501,7 +1501,7 @@ ITSM.Agent.LinkGraph = ( function (TargetNS) {
             }
             $Dialog.css({
                 left: ($('body').width()-$Dialog.width())/2,
-                top:  ($('body').height()-$Dialog.height())/2
+                top:  ($('body').height()-$Dialog.height())/3
             });
         });
     };
