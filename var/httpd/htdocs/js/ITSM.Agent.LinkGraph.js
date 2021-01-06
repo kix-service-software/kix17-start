@@ -1114,7 +1114,7 @@ ITSM.Agent.LinkGraph = ( function (TargetNS) {
 
         Core.UI.Dialog.ShowDialog({
             Modal: true,
-            Title: $('#LoadGraphTitle').val(),
+            Title: $('#TemplateEditTitle').val(),
             HTML:  $('#TemplateEditPopup').html(),
             PositionTop:  '45%',
             PositionLeft: '45%',
