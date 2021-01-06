@@ -326,13 +326,25 @@ sub CustomerSearch {
 
             # if mapping exists
             if ( defined $CustomerIDsMap[5] && $CustomerIDsMap[5] ) {
-                my $MultipleCustomerID = '%'.$CustomerID.'%';
-                push @Bind, \$MultipleCustomerID;
+                my $MultipleCustomerID1 = $CustomerID;
+                my $MultipleCustomerID2 = $CustomerID . ',%';
+                my $MultipleCustomerID3 = '%,' . $CustomerID;
+                my $MultipleCustomerID4 = '%,' . $CustomerID . ',%';
+                push( @Bind, \$MultipleCustomerID1 );
+                push( @Bind, \$MultipleCustomerID2 );
+                push( @Bind, \$MultipleCustomerID3 );
+                push( @Bind, \$MultipleCustomerID4 );
                 if ( $Self->{CaseSensitive} ) {
-                    $SQL .= " OR $CustomerIDsMap[2] LIKE ? $LikeEscapeString";
+                    $SQL .= " OR $CustomerIDsMap[2] LIKE ? $LikeEscapeString"
+                          . " OR $CustomerIDsMap[2] LIKE ? $LikeEscapeString"
+                          . " OR $CustomerIDsMap[2] LIKE ? $LikeEscapeString"
+                          . " OR $CustomerIDsMap[2] LIKE ? $LikeEscapeString";
                 }
                 else {
                     $SQL .= " OR LOWER($CustomerIDsMap[2]) LIKE LOWER(?) $LikeEscapeString"
+                          . " OR LOWER($CustomerIDsMap[2]) LIKE LOWER(?) $LikeEscapeString"
+                          . " OR LOWER($CustomerIDsMap[2]) LIKE LOWER(?) $LikeEscapeString"
+                          . " OR LOWER($CustomerIDsMap[2]) LIKE LOWER(?) $LikeEscapeString";
                 }
             }
         }
