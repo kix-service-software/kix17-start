@@ -381,7 +381,10 @@ sub CustomerSearch {
             }
 
             if ( scalar @CustomerIDsMap && $CustomerIDsMap[5] eq 'array' ) {
-                $Filter .= " || ( $Self->{CustomerIDs} =~ m/$Param{CustomerID}/ )";
+                $Filter = '(|'
+                        . $Filter
+                        . '(' . $CustomerIDsMap[2] . '=' . escape_filter_value( $Param{CustomerID} ) . ')'
+                        . ')';
             }
         }
     }
