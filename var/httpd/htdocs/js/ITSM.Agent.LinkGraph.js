@@ -1476,7 +1476,7 @@ ITSM.Agent.LinkGraph = ( function (TargetNS) {
             $Dialog.find('.Header > h1').css('padding-right', '25px');
             if (
                 !Result.Graphs.NoSavedGraphs
-                && SavedGraphs[SavedGraphID] !== undefined
+                && SavedGraphs !== undefined
             ) {
                 $Dialog.find('#LoadGraphSelection').html(SavedGraphs.Selection);
                 $Dialog.find('#SavedGraphs').removeClass('Hidden');
