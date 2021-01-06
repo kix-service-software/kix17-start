@@ -42,7 +42,7 @@ sub Run {
     my $Jx   = ( $Year + int( $Year / 4 ) - int( $Year / 100 ) + int( $Year / 400 ) ) % 7;
 
     # get day and month
-    my $Month = 1;
+    my $Month = 11;
     my $Day   = 22 - $Jx;
 
     # add to return value
