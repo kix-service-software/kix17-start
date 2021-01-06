@@ -136,7 +136,8 @@ sub Data {
         my $SMIMEObject = $Kernel::OM->Get('Kernel::System::Crypt::SMIME');
         if ($SMIMEObject) {
             my @PrivateKeys = $SMIMEObject->PrivateSearch(
-                Search => $SearchAddress[0]->address(),
+                Search      => $SearchAddress[0]->address(),
+                OnlySubject => 1,
             );
             for my $DataRef (@PrivateKeys) {
                 $KeyList{"SMIME::Detached::$DataRef->{Filename}"}
