@@ -6,4 +6,7 @@
     <TableAlter Name="notification_event_message">
         <ColumnChange NameOld="text" NameNew="text" Type="VARCHAR" Size="10000" Required="true"/>
     </TableAlter>
+    <TableAlter Name="search_profile">
+        <ColumnChange NameOld="profile_value" NameNew="profile_value" Type="VARCHAR" Size="10000" Required="false"/>
+    </TableAlter>
 </database>

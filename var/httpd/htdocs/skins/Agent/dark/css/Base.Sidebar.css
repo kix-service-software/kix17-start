@@ -1,0 +1,140 @@
+/**
+ * This software is part of the KIX project, https://www.kixdesk.com/
+ * Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
+ * --
+ * @project KIX (https://www.kixdesk.com) <https://www.kixdesk.com> - Agent Frontend
+ * @copyright c.a.p.e. IT GmbH
+ * @license AGPL (https://www.gnu.org/licenses/agpl.txt) <https://www.gnu.org/licenses/agpl.txt>
+ * --
+ * This software comes with ABSOLUTELY NO WARRANTY. For details, see
+ * the enclosed file LICENSE for license information (AGPL). If you
+ * did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
+ *
+ */
+
+@media screen,projection,tv,handheld {
+
+    .SidebarColumn .WidgetSimple .InputField_Search,
+    .SidebarColumn .WidgetSimple .InputField_Autocomplete {
+        min-width: 80px;
+    }
+
+    .DashboardUserOnline .UserRow p {
+        display: inline;
+        padding-bottom: 3px;
+    }
+    .DashboardUser .UserRow,
+    .DashboardUserOnline .UserRow p {
+        padding-top: 3px;
+        clear: both;
+    }
+
+    /**
+    * @subsection TextModules
+    */
+    #TextModulesSelectionContainer {
+        height: 250px;
+        border-width: 0px;
+        border-style: solid;
+        overflow: auto;
+        padding: 0px 10px 10px 10px;
+    }
+
+    #ServiceIncidentStateContainer .Flag, .SidebarColumn fieldset.TableLike div.Value .Flag {
+        margin-top: 2px;
+    }
+
+    /**
+    * @subsection CustomerDetails
+    */
+    .OwnerDetailsMagnifier,
+    .ResponsibleDetailsMagnifier {
+        cursor: pointer;
+    }
+
+    /**
+    * @subsection CustomerDetails
+    */
+    .CustomerDetailsMagnifier {
+        cursor: pointer;
+        position: absolute;
+        right: 25px;
+    }
+    #CustomerInfo .ItemRow {
+        margin-left: 10px;
+    }
+    #CustomerInfo > .Content {
+        min-height: 14px;
+    }
+    .KIXSidebarCustomerEmailSelection {
+        border-bottom: none;
+        margin: 0px;
+        padding: 10px;
+    }
+    .SidebarColumn .WidgetSimple.Collapsed .KIXSidebarCustomerEmailSelection {
+        display: none;
+    }
+
+    /**
+    *   @subsection Checklist
+    */
+    #KIXSidebarChecklistDisplay {
+        overflow: visible;
+    }
+    #ChecklistTasks {
+        width: 90%;
+        height: 250px;
+    }
+    #ChecklistTable > tbody > tr {
+        height: 20px;
+    }
+    .ChecklistIcon {
+        padding: 2px;
+        cursor: pointer;
+        font-size: 12pt;
+        width: 20px;
+    }
+    .ChecklistHint {
+        padding: 5px;
+    }
+    .ChecklistIconList {
+        position: absolute;
+        font-size: 12pt;
+        z-index: 20;
+    }
+    .ChecklistIconList > span {
+        padding: 5px;
+    }
+    .ChecklistIconItem {
+        display: block;
+    }
+
+    /**
+    *   @subsection CISearch
+    */
+    #CIClassSelection.Content {
+        border-bottom: none;
+    }
+
+    /***
+    *   @subsection PadNotes
+    */
+    #ScratchPadNotes {
+        width: 96%;
+    }
+
+    /***
+    *   @subsection CustomerDashboardFurtherInformationNotes
+    */
+    #CustomerDashboardFurtherInformationNotes {
+        width: 97%;
+    }
+
+    /**
+    *   @subsection DisableSibebars
+    */
+    .HideSidebar {
+        display: none;
+    }
+
+}

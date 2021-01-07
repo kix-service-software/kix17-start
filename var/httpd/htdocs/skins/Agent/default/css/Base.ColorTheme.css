@@ -1,6 +1,6 @@
 /**
  * This software is part of the KIX project, https://www.kixdesk.com/
- * Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
+ * Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
  * --
  * @project KIX (https://www.kixdesk.com) <https://www.kixdesk.com> - Agent Frontend
  * @copyright c.a.p.e. IT GmbH
@@ -656,6 +656,10 @@
     #TreeContainer #TreeSearch span {
         color: #777777;
         background-color: #DDDDDD;
+    }
+    .JSTreeSelectionContainer {
+        background-color: #FFFFFF;
+        border-color: #C0C0C0;
     }
 
 
@@ -1710,6 +1714,10 @@
     }
     .ActionList p {
         color: #888888;
+    }
+    #TextModulesSelectionContainer {
+        background-color: #FFFFFF;
+        border-color: #CCCCCC;
     }
 
 

@@ -1,5 +1,5 @@
 // --
-// Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
+// Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
 // --
 // This software comes with ABSOLUTELY NO WARRANTY. For details, see
 // the enclosed file LICENSE for license information (AGPL). If you
@@ -1114,7 +1114,7 @@ ITSM.Agent.LinkGraph = ( function (TargetNS) {
 
         Core.UI.Dialog.ShowDialog({
             Modal: true,
-            Title: $('#LoadGraphTitle').val(),
+            Title: $('#TemplateEditTitle').val(),
             HTML:  $('#TemplateEditPopup').html(),
             PositionTop:  '45%',
             PositionLeft: '45%',
@@ -1476,7 +1476,7 @@ ITSM.Agent.LinkGraph = ( function (TargetNS) {
             $Dialog.find('.Header > h1').css('padding-right', '25px');
             if (
                 !Result.Graphs.NoSavedGraphs
-                && SavedGraphs[SavedGraphID] !== undefined
+                && SavedGraphs !== undefined
             ) {
                 $Dialog.find('#LoadGraphSelection').html(SavedGraphs.Selection);
                 $Dialog.find('#SavedGraphs').removeClass('Hidden');
@@ -1501,7 +1501,7 @@ ITSM.Agent.LinkGraph = ( function (TargetNS) {
             }
             $Dialog.css({
                 left: ($('body').width()-$Dialog.width())/2,
-                top:  ($('body').height()-$Dialog.height())/2
+                top:  ($('body').height()-$Dialog.height())/3
             });
         });
     };

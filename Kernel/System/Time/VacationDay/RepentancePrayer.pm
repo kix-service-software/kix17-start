@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -42,7 +42,7 @@ sub Run {
     my $Jx   = ( $Year + int( $Year / 4 ) - int( $Year / 100 ) + int( $Year / 400 ) ) % 7;
 
     # get day and month
-    my $Month = 1;
+    my $Month = 11;
     my $Day   = 22 - $Jx;
 
     # add to return value

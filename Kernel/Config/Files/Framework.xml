@@ -331,6 +331,12 @@
                 <Item Key="pending auto close+">color: darkblue;</Item>
                 <Item Key="pending auto close-">color: darkblue;</Item>
                 <Item Key="pending reminder">color: darkblue;</Item>
+                <Item Key="900###State:::new|||UserSkin:::dark">color: #38BD38;</Item>
+                <Item Key="901###State:::closed successful|||UserSkin:::dark">color: #A9A9A9;</Item>
+                <Item Key="902###State:::closed unsuccessful|||UserSkin:::dark">color: #A9A9A9;</Item>
+                <Item Key="903###State:::pending auto close+|||UserSkin:::dark">color: #1A1A84;</Item>
+                <Item Key="904###State:::pending auto close-|||UserSkin:::dark">color: #1A1A84;</Item>
+                <Item Key="905###State:::pending reminder|||UserSkin:::dark">color: #1A1A84;</Item>
             </Hash>
         </Setting>
     </ConfigItem>
@@ -12101,14 +12107,14 @@ via the Preferences button after logging in.
             </Hash>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="Loader::Agent::Skin###002-dark" Required="0" Valid="0">
+    <ConfigItem Name="Loader::Agent::Skin###002-dark" Required="0" Valid="1">
         <Description Translatable="1">Default skin for the agent interface (dark version).</Description>
         <Group>Framework</Group>
         <SubGroup>Frontend::Agent</SubGroup>
         <Setting>
             <Hash>
                 <Item Key="InternalName">dark</Item>
-                <Item Key="VisibleName" Translatable="1">Dark Mode (Beta)</Item>
+                <Item Key="VisibleName" Translatable="1">Dark Mode</Item>
                 <Item Key="Description" Translatable="1">This skin changes the color of the standard skin to "Dark" for the agent interface.</Item>
                 <Item Key="HomePage">www.kixdesk.com</Item>
             </Hash>
