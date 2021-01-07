@@ -52,7 +52,7 @@ my %Special = (
 
 # get all table names from DB
 $DBObject->Connect() || die "Unable to connect to database!";
-my %Tables = map { (split(/\./, $_))[1] => 1 } $DBObject->{dbh}->tables('', 'public', '', 'TABLE');
+my %Tables = map { my $Table = (split(/\./, $_))[1]; $Table =~ s/\`//g; $Table => 1 } $DBObject->{dbh}->tables('', $DBObject->{'DB::Type'} eq 'postgresql' ? 'public' : '', '', 'TABLE');
 
 my $HTTPResponse = "Status: 200 OK\nContent-Type: application/json\n\n";
 my $Output;
