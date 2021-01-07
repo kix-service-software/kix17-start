@@ -1,6 +1,18 @@
 # Change log of KIX
 * Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.14.0-RC7 (2021/01/07)
+ * (2021/01/06) - Bugfix: KIX17-1538 (only show smime certificates for crypt and sign with matching subject) (millinger)
+ * (2021/01/06) - Bugfix: KIX17-1761 (fixed incorrect display of the dialog box for loading graphs when the graph window is used in full screen) (fjacquemin)
+ * (2021/01/06) - Bugfix: KIX17-1530 (extended size for search profile values) (millinger)
+ * (2021/01/06) - Bugfix: KIX17-1761 (fixed missing display of saved graphs that can be loaded) (fjacquemin)
+ * (2021/01/06) - CR: KIX17-1721 (added endpoint for migration to KIX18) (millinger)
+ * (2021/01/06) - CR: KIX17-1762 (completion dark skin) (fjacquemin)
+ * (2021/01/05) - Bugfix: KIX17-1607 (fixed handling of multiple customer ids) (millinger)
+ * (2021/01/05) - CR: KIX17-1742 (updated copyright) (millinger)
+ * (2021/01/04) - Bugfix: KIX17-1713 (fixed month for Day of Repentance and Prayer) (millinger)
+ * (2021/01/04) - Bugfix: KIX17-1553 (added missing translations) (millinger)
+
 # 17.14.0-RC6 (2020/12/18)
  * (2020/12/17) - CR: KIX17-1724 (configurable browser title for ticket zoom) (millinger)
  * (2020/12/17) - Bugfix: KIX17-333 (show tree view icon) (ddoerffel)
