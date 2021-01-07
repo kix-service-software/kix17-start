@@ -115,12 +115,16 @@
     }
 
     .FilterInputContainer {
-        width: 98%;
+        width: 100%;
+        box-sizing: border-box;
     }
     .FilterInputContainer input {
-        width: 95%;
+        width: 100%;
         display: block;
         margin: 7px auto;
+        box-sizing: border-box;
+        height: 22px;
+        border-width: 1px 0;
     }
     .FilterInputContainer input.FilterAvailableFields {
         margin: 0;
@@ -407,8 +411,8 @@
         display: block;
     }
     .JSTreeSelectionContainer {
-        background-color: white;
-        border: 1px solid silver;
+        border-style: solid;
+        border-width: 1px
         padding: 5px;
         overflow: auto;
     }

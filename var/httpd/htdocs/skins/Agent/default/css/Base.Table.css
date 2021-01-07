@@ -269,7 +269,6 @@
         content: "\25BC";
         position: absolute;
         left: -6px;
-        text-shadow: 1px 1px 0px #fff;
         z-index: 1;
     }
     .DataTable thead .SortAscendingLarge > a::after,
@@ -277,7 +276,6 @@
         content: "\25B2";
         position: absolute;
         left: -6px;
-        text-shadow: 1px 1px 0px #fff;
         z-index: 1;
     }
     .DataTable thead th.DashboardHeader.SortDescendingLarge,
@@ -447,7 +445,7 @@
         padding-top: 7px;
     }
     .LayoutGrid > .Size1of2 {
-        width: 50%;
+        width: 49.6%;
     }
     .LayoutGrid > div, .LayoutGrid > li {
         float: left;
@@ -479,7 +477,7 @@
         overflow: hidden;
     }
     .WidgetSimple .Field.LayoutGrid .Tablelike {
-        width: 98%;
+        width: 100%;
     }
     ul.AllocationList {
         min-height: 25px;

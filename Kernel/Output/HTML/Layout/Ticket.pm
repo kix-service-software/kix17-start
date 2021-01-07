@@ -1431,6 +1431,14 @@ sub GetTicketHighlight {
                 $ConditionElement = $Ticket{Priority} || '';
             }
 
+            # user skin
+            elsif (
+                $Restriction[0] eq 'UserSkin'
+                && $Self->{UserSkin}
+            ) {
+                $ConditionElement = $Self->{UserSkin} || '';
+            }
+
             my $Match = 0;
 
             RESTRICTEDVALUE:

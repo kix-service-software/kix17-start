@@ -34,7 +34,7 @@
     */
     #TextModulesSelectionContainer {
         height: 250px;
-        border-width: 1px;
+        border-width: 0px;
         border-style: solid;
         overflow: auto;
         padding: 0px 10px 10px 10px;
