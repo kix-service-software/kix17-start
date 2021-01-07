@@ -30,7 +30,7 @@ local $Kernel::OM = Kernel::System::ObjectManager->new(
 
 use vars qw(%INC);
 
-# remove obsolete perl files
+# remove obsolete files
 _RemoveObsoleteFiles();
 
 exit 0;
