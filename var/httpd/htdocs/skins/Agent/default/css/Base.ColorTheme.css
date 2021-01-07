@@ -657,6 +657,10 @@
         color: #777777;
         background-color: #DDDDDD;
     }
+    .JSTreeSelectionContainer {
+        background-color: #FFFFFF;
+        border-color: #C0C0C0;
+    }
 
 
     /**
@@ -1710,6 +1714,10 @@
     }
     .ActionList p {
         color: #888888;
+    }
+    #TextModulesSelectionContainer {
+        background-color: #FFFFFF;
+        border-color: #CCCCCC;
     }
 
 

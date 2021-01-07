@@ -156,7 +156,7 @@ Core.UI.RichTextEditor = (function (TargetNS) {
             filebrowserUploadUrl: UploadURL,
             extraPlugins: Core.Config.Get('RichText.SpellChecker') ? 'aspell,splitquote,contextmenu_linkopen,preventimagepaste' : 'splitquote,contextmenu_linkopen,preventimagepaste',
             entities: false,
-            skin: 'bootstrapck'
+            skin: 'bootstrapck' + (Core.Config.Get('UserSkin') == 'dark' ? '_dark' : '')
         });
         /*eslint-enable camelcase */
 

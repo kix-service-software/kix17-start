@@ -35,6 +35,7 @@ Core.App.Ready(function () {
         Images: '[% Config("Frontend::ImagePath") %]',
         UserLanguage: '[% Env("UserLanguage") | html %]',
         UserID: '[% Env("UserID") | html %]',
+        UserSkin: '[% Env("UserSkin") | html %]',
         SpellChecker: '[% Config("SpellChecker") | html %]',
         NeedSpellCheck: '[% Config("Ticket::Frontend::NeedSpellCheck") | html %]',
         RichTextSet: '[% Config("Frontend::RichText") | html %]',
