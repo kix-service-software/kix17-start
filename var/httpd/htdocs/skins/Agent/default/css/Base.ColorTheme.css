@@ -1203,6 +1203,9 @@
     .Flag span.redled {
         background-color: #FF505E;
     }
+    .Flag span.yellowled {
+        background-color: #FFDD50;
+    }
 
 
     /**
