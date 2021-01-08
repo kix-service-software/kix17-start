@@ -1775,6 +1775,10 @@
         background: #E31E24;
         color: #FFFFFF;
     }
+    .MessageBox.Warning {
+        background: #FF9050;
+        color: #FFFFFF;
+    }
 
 
     /**
