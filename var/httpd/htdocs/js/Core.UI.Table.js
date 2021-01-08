@@ -161,6 +161,10 @@ Core.UI.Table = (function (TargetNS) {
             else {
                 Core.Agent.PreferencesUpdate('User' + Identifiere + 'ColumnResizing', '');
             }
+
+            Core.Config.Set('UserArticleTableColumnResizing', '');
+            customResizing = '';
+
             resetIcon.addClass('Hidden');
         });
 
@@ -199,6 +203,9 @@ Core.UI.Table = (function (TargetNS) {
                     else {
                         Core.Agent.PreferencesUpdate('User' + Identifiere + 'ColumnResizing', storeResizing);
                     }
+
+                    Core.Config.Set('UserArticleTableColumnResizing', storeResizing);
+                    customResizing = storeResizing;
 
                     resetIcon.removeClass('Hidden');
                 }
