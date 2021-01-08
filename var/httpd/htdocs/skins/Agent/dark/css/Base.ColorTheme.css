@@ -1913,6 +1913,10 @@
         background: #C5383C;
         color: #FFFFFF;
     }
+    .MessageBox.Warning {
+        background: #FF9050;
+        color: #FFFFFF;
+    }
 
 
     /**
