@@ -784,6 +784,10 @@
         padding-bottom: 7px;
         font-size: 12px;
     }
+    .WidgetSimple > .Content.ProcessInfo .ActionMessage {
+        line-height: 18px;
+        font-size: 11px;
+    }
     .WidgetSimple > .Content.ProcessInfo fieldset .FieldContainer {
         float: left;
         width: 255px;
