@@ -187,6 +187,10 @@
         margin-top: 5px;
         margin-bottom: 5px;
     }
+    .ui-resizable-w {
+        width: 15px;
+        left: -8px;
+    }
 
 
     /**
