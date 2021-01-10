@@ -1261,6 +1261,7 @@ sub Data {
         = 'Einstellungen für persönliche Ticketlistendarstellung';
     $Lang->{'Asset Location'} = 'Asset-Standort';
     $Lang->{'Parent Location'} = 'Übergeordneter Standort';
+    $Lang->{'Check for empty fields'} = 'Auf leere Felder prüfen';
 
 
     # graph visualization related translations...
