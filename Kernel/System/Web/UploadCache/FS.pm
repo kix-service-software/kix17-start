@@ -59,9 +59,9 @@ sub FormIDRemove {
         return;
     }
 
-### Patch licensed under the GPL-3.0, Copyright (C) 2001-2018 OTRS AG, https://otrs.com/ ###
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2021 OTRS AG, https://otrs.com/ ###
     return if !$Self->_FormIDValidate( $Param{FormID} );
-### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2018 OTRS AG, https://otrs.com/ ###
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2021 OTRS AG, https://otrs.com/ ###
 
     # get main object
     my $MainObject = $Kernel::OM->Get('Kernel::System::Main');
@@ -94,9 +94,9 @@ sub FormIDAddFile {
         }
     }
 
-### Patch licensed under the GPL-3.0, Copyright (C) 2001-2018 OTRS AG, https://otrs.com/ ###
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2021 OTRS AG, https://otrs.com/ ###
     return if !$Self->_FormIDValidate( $Param{FormID} );
-### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2018 OTRS AG, https://otrs.com/ ###
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2021 OTRS AG, https://otrs.com/ ###
 
     # create content id
     my $ContentID = $Param{ContentID};
@@ -157,9 +157,9 @@ sub FormIDRemoveFile {
         }
     }
 
-### Patch licensed under the GPL-3.0, Copyright (C) 2001-2018 OTRS AG, https://otrs.com/ ###
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2021 OTRS AG, https://otrs.com/ ###
     return if !$Self->_FormIDValidate( $Param{FormID} );
-### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2018 OTRS AG, https://otrs.com/ ###
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2021 OTRS AG, https://otrs.com/ ###
 
     my @Index = @{ $Self->FormIDGetAllFilesMeta(%Param) };
 
@@ -203,11 +203,11 @@ sub FormIDGetAllFilesData {
         return;
     }
 
-### Patch licensed under the GPL-3.0, Copyright (C) 2001-2018 OTRS AG, https://otrs.com/ ###
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2021 OTRS AG, https://otrs.com/ ###
     my @Data;
 
     return \@Data if !$Self->_FormIDValidate( $Param{FormID} );
-### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2018 OTRS AG, https://otrs.com/ ###
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2021 OTRS AG, https://otrs.com/ ###
 
     # get main object
     my $MainObject = $Kernel::OM->Get('Kernel::System::Main');
@@ -307,11 +307,11 @@ sub FormIDGetAllFilesMeta {
         return;
     }
 
-### Patch licensed under the GPL-3.0, Copyright (C) 2001-2018 OTRS AG, https://otrs.com/ ###
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2021 OTRS AG, https://otrs.com/ ###
     my @Data;
 
     return \@Data if !$Self->_FormIDValidate( $Param{FormID} );
-### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2018 OTRS AG, https://otrs.com/ ###
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2021 OTRS AG, https://otrs.com/ ###
 
     # get main object
     my $MainObject = $Kernel::OM->Get('Kernel::System::Main');
@@ -424,7 +424,7 @@ sub FormIDCleanUp {
     return 1;
 }
 
-### Patch licensed under the GPL-3.0, Copyright (C) 2001-2018 OTRS AG, https://otrs.com/ ###
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2021 OTRS AG, https://otrs.com/ ###
 sub _FormIDValidate {
     my ( $Self, $FormID ) = @_;
 
@@ -443,7 +443,7 @@ sub _FormIDValidate {
 
     return 1;
 }
-### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2018 OTRS AG, https://otrs.com/ ###
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2021 OTRS AG, https://otrs.com/ ###
 
 1;
 

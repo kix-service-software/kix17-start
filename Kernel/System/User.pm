@@ -1247,9 +1247,9 @@ sub SetPreferences {
     );
 
     return 0 if $Blacklisted{ $Param{Key} };
-### Patch licensed under the GPL-3.0, Copyright (C) 2001-2018 OTRS AG, https://otrs.com/ ###
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2021 OTRS AG, https://otrs.com/ ###
     return 0 if substr( $Param{Key}, 0, 11 ) eq 'UserIsGroup';
-### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2018 OTRS AG, https://otrs.com/ ###
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2021 OTRS AG, https://otrs.com/ ###
 
     # get current setting
     my %Preferences = $Self->GetPreferences(
