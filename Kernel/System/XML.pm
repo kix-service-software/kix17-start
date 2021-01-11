@@ -805,9 +805,9 @@ sub XMLParse {
                 Start     => sub { $Self->_HS(@_); },
                 End       => sub { $Self->_ES(@_); },
                 Char      => sub { $Self->_CS(@_); },
-### Patch licensed under the GPL-3.0, Copyright (C) 2001-2019 OTRS AG, https://otrs.com/ ###
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2021 OTRS AG, https://otrs.com/ ###
                 ExternEnt => sub { return '' },         # suppress loading of external entities
-### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2019 OTRS AG, https://otrs.com/ ###
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2021 OTRS AG, https://otrs.com/ ###
             },
         );
 
@@ -842,9 +842,9 @@ sub XMLParse {
                 Start     => sub { $Self->_HS(@_); },
                 End       => sub { $Self->_ES(@_); },
                 Char      => sub { $Self->_CS(@_); },
-### Patch licensed under the GPL-3.0, Copyright (C) 2001-2019 OTRS AG, https://otrs.com/ ###
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2021 OTRS AG, https://otrs.com/ ###
                 ExternEnt => sub { return '' },         # suppress loading of external entities
-### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2019 OTRS AG, https://otrs.com/ ###
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2021 OTRS AG, https://otrs.com/ ###
             },
         );
         $Parser->parse( $Param{String} );

@@ -1065,7 +1065,7 @@ sub _SOAPOutputRecursion {
             next KEY;
         }
 
-### Patch licensed under the GPL-3.0, Copyright (C) 2001-2019 OTRS AG, https://otrs.com/ ###
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2021 OTRS AG, https://otrs.com/ ###
         # Clean up empty hash references for data and empty array references for sort.
         if (
             $Key eq 'Data' && $Ref eq 'HASH'
@@ -1075,7 +1075,7 @@ sub _SOAPOutputRecursion {
             $Type{$Key}  = 'UNDEFINED';
             next KEY;
         }
-### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2019 OTRS AG, https://otrs.com/ ###
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2021 OTRS AG, https://otrs.com/ ###
 
         # everything else is invalid - throw error
         if ( $Ref =~ m{ \A (?: ARRAY | HASH ) \z }xms ) {
@@ -1087,12 +1087,12 @@ sub _SOAPOutputRecursion {
         };
     }
 
-### Patch licensed under the GPL-3.0, Copyright (C) 2001-2019 OTRS AG, https://otrs.com/ ###
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2021 OTRS AG, https://otrs.com/ ###
     # If there is no data to be sorted set sorting accordingly.
     if ( $Type{Data} eq 'UNDEFINED' && $Type{Sort} ne 'UNDEFINED' ) {
         $Type{Sort} = 'UNDEFINED';
     }
-### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2019 OTRS AG, https://otrs.com/ ###
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2021 OTRS AG, https://otrs.com/ ###
 
     # types of data and sort must match if sorting is used (=is defined)
     # if data is hash ref sort must be array ref
@@ -1112,14 +1112,14 @@ sub _SOAPOutputRecursion {
 
     # undefined variables are processed as empty string
     if ( $Type{Data} eq 'UNDEFINED' ) {
-### Patch licensed under the GPL-3.0, Copyright (C) 2001-2019 OTRS AG, https://otrs.com/ ###
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2021 OTRS AG, https://otrs.com/ ###
 #        $Param{Data} = '';
 #        $Type{Data}  = 'STRING';
         return {
             Success => 1,
             Data    => '',
         };
-### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2019 OTRS AG, https://otrs.com/ ###
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2021 OTRS AG, https://otrs.com/ ###
     }
 
     # process string
@@ -1276,10 +1276,10 @@ sub _SOAPOutputHashRecursion {
 
     # set result based on data type
     my $Result;
-### Patch licensed under the GPL-3.0, Copyright (C) 2001-2019 OTRS AG, https://otrs.com/ ###
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2021 OTRS AG, https://otrs.com/ ###
 #    if ( !defined $Param{Data} || IsString( $Param{Data} ) ) {
     if ( !defined $Param{Data} || IsString( $Param{Data} ) || IsString( $RecurseResult->{Data} ) ) {
-### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2019 OTRS AG, https://otrs.com/ ###
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2021 OTRS AG, https://otrs.com/ ###
         $Result = $RecurseResult->{Data};
     }
     elsif ( IsArrayRefWithData( $Param{Data} ) ) {

@@ -29,7 +29,7 @@ my $DBDump = '';
 getopt( 'hbd', \%Opts );
 if ( exists $Opts{h} ) {
     print "restore.pl - restore script\n";
-    print "Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de\n";
+    print "Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de\n";
     print "usage: restore.pl -b /data_backup/<TIME>/ -d /opt/kix17/\n";
     exit 1;
 }

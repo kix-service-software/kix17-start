@@ -16,9 +16,9 @@
 
 [% RenderBlockStart("Attribute") %]
     <fieldset class="TableLike Element Element[% Data.Element | html %] ElementBlock[% Data.Block | html %]" data-element="[% Data.Element | html %]">
-### Patch licensed under the GPL-3.0, Copyright (C) 2001-2019 OTRS AG, https://otrs.com/ ###
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2021 OTRS AG, https://otrs.com/ ###
         <input type="hidden" name="Select[% Data.Element | html %]" value="1" />
-### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2019 OTRS AG, https://otrs.com/ ###
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2021 OTRS AG, https://otrs.com/ ###
         <legend>
         <span>[% Translate(Data.Name) | html %]</span>
         <a class="RemoveButton" href="#"><i class="fa fa-minus-square-o"></i><span class="InvisibleText">[% Translate("Delete") | html %]</span></a>
@@ -69,9 +69,9 @@
 [% RenderBlockEnd("Time") %]
         <label></label>
         <div class="Field">
-### Patch licensed under the GPL-3.0, Copyright (C) 2001-2019 OTRS AG, https://otrs.com/ ###
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2021 OTRS AG, https://otrs.com/ ###
             <input type="checkbox" name="Fixed[% Data.Element | html %]" value="1" [% Data.Fixed %]/>
-### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2019 OTRS AG, https://otrs.com/ ###
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2021 OTRS AG, https://otrs.com/ ###
             [% Translate("Do not allow changes to this element when the statistic is generated.") | html %]
         </label>
         <div class="Clear"></div>
