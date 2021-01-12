@@ -255,34 +255,36 @@ Core.Agent.TicketZoom = (function (TargetNS) {
             typeof File !== 'undefined'
             && File == 'AgentTicketZoomTabArticle'
         ) {
-            customResizing = Core.Config.Get('UserArticleTableColumnResizing');
-
             Core.UI.Resizable.Init($('#ArticleTableBody'), Options.ArticleTableHeight, function (Event, UI, Height) {
                 // remember new height for next reload
                 window.clearTimeout(ResizeTimeoutScroller);
                 ResizeTimeoutScroller = window.setTimeout(function () {
                     Core.Agent.PreferencesUpdate('UserTicketZoomArticleTableHeight', Height);
+
+                    if ( !Core.Config.Get('UserArticleTableColumnResizing') ) {
+                        Core.UI.Table.InitColumnResize($('#ArticleTable'), 'ArticleTable', File, Core.Config.Get('UserArticleTableColumnResizing') );
+                    }
                 }, 1000);
             });
             $THead = $('#ArticleTable thead');
             $TBody = $('#ArticleTable tbody');
 
-            if ( !customResizing ) {
+            if ( !Core.Config.Get('UserArticleTableColumnResizing') ) {
                 // initial adjustion of the tablehead elements
                 Core.Agent.TicketZoom.AdjustTableHead($THead, $TBody, 0);
             }
 
             // initial custom column resizing
             // Table element, Identifiere, Action
-            Core.UI.Table.InitColumnResize($('#ArticleTable'), 'ArticleTable', File, customResizing );
+            Core.UI.Table.InitColumnResize($('#ArticleTable'), 'ArticleTable', File, Core.Config.Get('UserArticleTableColumnResizing') );
 
             $(window).bind('resize', function () {
                 window.clearTimeout(ResizeTimeoutWindow);
                 ResizeTimeoutWindow = window.setTimeout(function () {
-                    if ( !customResizing ) {
+                    if ( !Core.Config.Get('UserArticleTableColumnResizing') ) {
                         Core.Agent.TicketZoom.AdjustTableHead($THead, $TBody, 0);
                     }
-                    Core.UI.Table.InitColumnResize($('#ArticleTable'), 'ArticleTable', File, customResizing );
+                    Core.UI.Table.InitColumnResize($('#ArticleTable'), 'ArticleTable', File, Core.Config.Get('UserArticleTableColumnResizing') );
                 }, 50);
             });
 

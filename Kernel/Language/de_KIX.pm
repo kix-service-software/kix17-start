@@ -260,6 +260,7 @@ sub Data {
         'All 3rd person contacts who are linked with this ticket and have been selected (Linked Persons)'
         }
         = 'Alle "Dritte" die mit dem Ticket verlinkt sind und auswählt wurden (Verlinkte Personen)';
+    $Lang->{'empty answer'} = 'Leere Antwort';
 
     # ticket template extensions
     $Lang->{'Create new ticket from template'} = 'Neues Ticket aus Vorlage erstellen';
@@ -1261,6 +1262,7 @@ sub Data {
         = 'Einstellungen für persönliche Ticketlistendarstellung';
     $Lang->{'Asset Location'} = 'Asset-Standort';
     $Lang->{'Parent Location'} = 'Übergeordneter Standort';
+    $Lang->{'Check for empty fields'} = 'Auf leere Felder prüfen';
 
 
     # graph visualization related translations...
@@ -1868,8 +1870,8 @@ sub Data {
     $Lang->{'Without Ticketnumber'} = 'Ohne Ticketnummer';
 
     # Agent Overlay
-    $Lang->{'Agent Notifications'}                  = 'Agentenbenachrichtungen';
-    $Lang->{'Agent Notification (Popup/Dashboard)'} = 'Agentenbenachrichtung (Popup/Dashboard)';
+    $Lang->{'Agent Notifications'}                  = 'Agentenbenachrichtigungen';
+    $Lang->{'Agent Notification (Popup/Dashboard)'} = 'Agentenbenachrichtigung (Popup/Dashboard)';
     $Lang->{'Decay'}                                = 'Verfallszeit';
     $Lang->{'BusinessTime'}                         = 'Geschäftszeit';
     $Lang->{'Article sender type'}                  = 'Artikel-Absender-Typ';
@@ -1934,9 +1936,16 @@ sub Data {
     $Lang->{'Show'}                             = 'Anzeigen';
 
     # translations missing in ImportExport...
-    $Lang->{'Column Seperator'}           = 'Spaltentrenner';
-    $Lang->{'Charset'}                    = 'Zeichensatz';
-    $Lang->{'Restrict export per search'} = 'Export mittels Suche einschränken';
+    $Lang->{'Column Seperator'}                                    = 'Spaltentrenner';
+    $Lang->{'Charset'}                                             = 'Zeichensatz';
+    $Lang->{'Restrict export per search'}                          = 'Export mittels Suche einschränken';
+    $Lang->{'Step 1 of 5 - Edit common information'}               = 'Schritt 1 von 5 - Allgemeine Informationen bearbeiten';
+    $Lang->{'Step 2 of 5 - Edit object information'}               = 'Schritt 2 von 5 - Objektinformationen bearbeiten';
+    $Lang->{'Step 3 of 5 - Edit format information'}               = 'Schritt 3 von 5 - Formatinformationen bearbeiten';
+    $Lang->{'Step 4 of 5 - Edit mapping information'}              = 'Schritt 4 von 5 - Mappinginformationen bearbeiten';
+    $Lang->{'Step 5 of 5 - Edit search information'}               = 'Schritt 5 von 5 - ';
+    $Lang->{'Force import in configured customer company backend'} = 'Import in ausgewähltes Kunden-Firmen-Backend erzwingen';
+    $Lang->{'Customer Company Backend'}                            = 'Kunden-Firma-Backend';
 
     # service2customeruser ex-/import...
     $Lang->{'Service available for CU'} = 'Service für Kundennutzer verfügbar';

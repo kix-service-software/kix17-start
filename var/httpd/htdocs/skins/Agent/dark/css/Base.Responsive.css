@@ -403,6 +403,8 @@
     #Navigation .Search {
         width: auto;
     }
+    .WidgetSimple div.Pagination,
+    .OverviewActions div.Pagination,
     .WidgetSimple span.Pagination,
     .OverviewActions span.Pagination {
         text-align: center;
@@ -414,10 +416,13 @@
     .WidgetSimple .AllocationListContainer .FilterInputContainer {
         margin: 0 auto;
     }
+    .WidgetSimple div.Pagination.AsBlock,
     .WidgetSimple span.Pagination.AsBlock {
         display: block;
         margin: 10px 0;
     }
+    .WidgetSimple div.Pagination a,
+    .OverviewActions div.Pagination a,
     .WidgetSimple span.Pagination a,
     .OverviewActions span.Pagination a {
         display: inline-block;
@@ -426,7 +431,9 @@
         float: none;
     }
     .WidgetSimple span.Pagination a.Selected,
-    .OverviewActions span.Pagination a.Selected {
+    .OverviewActions span.Pagination a.Selected,
+    .WidgetSimple div.Pagination a.Selected,
+    .OverviewActions div.Pagination a.Selected {
         font-weight: normal;
     }
     .WidgetSimple > .Header  {

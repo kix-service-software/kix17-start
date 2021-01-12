@@ -1277,6 +1277,9 @@
     .Flag span.redled {
         background-color: #FF505E;
     }
+    .Flag span.yellowled {
+        background-color: #FFDD50;
+    }
 
 
     /**
@@ -1910,6 +1913,10 @@
         background: #C5383C;
         color: #FFFFFF;
     }
+    .MessageBox.Warning {
+        background: #FF9050;
+        color: #FFFFFF;
+    }
 
 
     /**
@@ -2016,11 +2023,15 @@
     body:not(.Visible-ScreenXL) #ToolBar {
         background-color: #676767;
     }
+    body:not(.Visible-ScreenXL) .WidgetSimple div.Pagination a,
+    body:not(.Visible-ScreenXL) .OverviewActions div.Pagination a
     body:not(.Visible-ScreenXL) .WidgetSimple span.Pagination a,
     body:not(.Visible-ScreenXL) .OverviewActions span.Pagination a {
         background-color: #AAAAAA;
         color: #FFFFFF;
     }
+    body:not(.Visible-ScreenXL) .WidgetSimple div.Pagination a.Selected,
+    body:not(.Visible-ScreenXL) .OverviewActions div.Pagination a.Selected
     body:not(.Visible-ScreenXL) .WidgetSimple span.Pagination a.Selected,
     body:not(.Visible-ScreenXL) .OverviewActions span.Pagination a.Selected {
         background-color: #555555;

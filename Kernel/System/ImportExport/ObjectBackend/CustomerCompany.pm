@@ -107,7 +107,7 @@ sub ObjectAttributesGet {
                 Type         => 'Selection',
                 Data         => \%CSList,
                 Required     => 1,
-                Translation  => 0,
+                Translation  => 1,
                 PossibleNone => 0,
             },
         },

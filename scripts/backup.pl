@@ -31,7 +31,7 @@ my $DBDump      = '';
 getopt( 'hcrtd', \%Opts );
 if ( exists $Opts{h} ) {
     print "backup.pl - backup script\n";
-    print "Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de\n";
+    print "Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de\n";
     print "usage: backup.pl -d /data_backup_dir/ [-c gzip|bzip2] [-r 30] [-t fullbackup|nofullbackup|dbonly]\n";
     exit 1;
 }

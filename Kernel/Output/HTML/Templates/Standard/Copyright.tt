@@ -9,10 +9,8 @@
 # --
 
 
-<!--                                                                               -->
-<!--   KIX: Copyright (C) 2006-2018 c.a.p.e. IT GmbH. Web: http://www.cape-it.de   -->
-<!--   This Software is under the AGPL.                                            -->
-<!--   GNU AFFERO General Public License: http://www.gnu.org/licenses/agpl.txt     -->
-<!--                                                                               -->
-# nofilter(TidyAll::Plugin::OTRS::Common::HeaderlineFilename)
-# nofilter(TidyAll::Plugin::OTRS::Legal::AGPLValidator)
+<!--                                                                                -->
+<!--   KIX: Copyright (C) 2006-2021 c.a.p.e. IT GmbH. Web: https://www.cape-it.de   -->
+<!--   This Software is under the AGPL.                                             -->
+<!--   GNU AFFERO General Public License: https://www.gnu.org/licenses/agpl.txt     -->
+<!--                                                                                -->

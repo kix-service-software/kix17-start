@@ -533,6 +533,7 @@ sub Run {
                     Prefix => 'Object::' . $AttributeRowCounter . '::',
                     Value  => $MappingObjectData->{ $Item->{Key} },
                     ID     => $Item->{Key} . $AttributeRowCounter,
+                    Class  => 'Modernize'
                 );
 
                 # output attribute row
