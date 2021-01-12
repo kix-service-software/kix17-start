@@ -538,6 +538,17 @@ Core.Agent.BulkTextModules = (function(TargetNS) {
                 $('#BulkTextModulesFocus').val('Note');
             }
         });
+
+        Core.App.Subscribe('Event.UI.RichTextEditor.Focus', function (Editor) {
+            if ( Editor.name == 'EmailBody' ) {
+                $('#BulkTextModulesFocusType').html(Config.Email);
+                $('#BulkTextModulesFocus').val('Email');
+            }
+            else {
+                $('#BulkTextModulesFocusType').html(Config.Note);
+                $('#BulkTextModulesFocus').val('Note');
+            }
+        });
         return true;
     }
 
