@@ -3798,7 +3798,7 @@ sub Data {
 
         # Perl Module: Kernel/System/ProcessManagement/DB/Process/State.pm
         'Inactive' => 'Inaktiv',
-        'FadeAway' => 'Ausblendend',
+        'FadeAway' => 'Auslaufend',
 
         # Perl Module: Kernel/System/Registration.pm
         'Can\'t get Token from sever' => 'Kann Token nicht vom Server ermitteln!',
@@ -5401,7 +5401,7 @@ Ihr Helpdesk-Team
             'Schaltet das Caching von Templates an oder aus. Warnung: Schalten Sie auf Produktivsystemen das Template-Caching nicht ab, da hierdurch massive Performance-Beeinträchtigungen auftreten werden. Diese Einstellung sollte nur zur Fehlerbehebung abgeschaltet werden.',
         'Enables or disables the debug mode over frontend interface.' => 'Aktiviert oder deaktiviert den Debug-Modus für das Frontend.',
         'Enables or disables the ticket watcher feature, to keep track of tickets without being the owner nor the responsible.' =>
-            'Aktiviert oder deaktiviert das Ticket beobachten-Feature, das das beobachten von Tickets erlaubt, ohne der Bearbeiter oder Verantwortliche zu sein.',
+            'Aktiviert oder deaktiviert das Ticket-Beobachten-Feature, das das beobachten von Tickets erlaubt, ohne der Bearbeiter oder Verantwortliche zu sein.',
         'Enables performance log (to log the page response time). It will affect the system performance. Frontend::Module###AdminPerformanceLog must be enabled.' =>
             'Aktiviert den Performance-Log zum erfassen der Seiten-Antwortzeiten. Diese Einstellung beeinflusst die Gesamtperformance des Systems. Frontend::Module###AdminPerformanceLog muss aktiviert sein.',
         'Enables spell checker support.' => 'Aktiviert die Unterstützung für die Rechtschreibprüfung.',
@@ -5413,7 +5413,7 @@ Ihr Helpdesk-Team
             'Aktiviert das Stapelverarbeitungs-Feature nur für die eingetragenen Gruppen.',
         'Enables ticket responsible feature, to keep track of a specific ticket.' =>
             'Aktiviert das Verantwortlicher-Feature, das das Verfolgen von Tickets erlaubt.',
-        'Enables ticket watcher feature only for the listed groups.' => 'Aktiviert das Ticket beobachten-Feature nur für die eingetragenen Gruppen.',
+        'Enables ticket watcher feature only for the listed groups.' => 'Aktiviert das Ticket-Beobachten-Feature nur für die eingetragenen Gruppen.',
         'English (Canada)' => 'Englisch (Kanada)',
         'English (United Kingdom)' => 'Englisch (Vereinigtes Königreich)',
         'English (United States)' => 'Englisch (Vereinigte Staaten)',
