@@ -336,9 +336,11 @@
     .PageLink {
         cursor: pointer;
     }
+    div.Pagination a.Selected,
     span.Pagination a.Selected {
         font-weight: bold;
     }
+    div.Pagination form,
     span.Pagination form {
         display: inline;
     }
