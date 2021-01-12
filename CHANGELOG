@@ -1,6 +1,21 @@
 # Change log of KIX
 * Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.14.0-RC8 (2021/01/12)
+ * (2021/01/12) - Bugfix: KIX17-551 (removed translation errors) (ddoerffel)
+ * (2021/01/11) - CR: KIX17-1738 (added subscribe that reacts to the focus of the editor) (fjacquemin)
+ * (2021/01/08) - Bugfix: KIX17-1463 (fixed missing css of selected current page) (fjacquemin)
+ * (2021/01/08) - Bugfix: KIX17-1463 (fixed incorrect coloring of warning message box) (fjacquemin)
+ * (2021/01/08) - Bugfix: KIX17-1463 (changed grab zone to widen / reduce the widget width) (fjacquemin)
+ * (2021/01/08) - Bugfix: KIX17-1463 (fixed missing color of incident state warning) (fjacquemin)
+ * (2021/01/08) - Bugfix: KIX17-1463 (fixed incorrect form field position in AdminQuickTicketConfigurator) (fjacquemin)
+ * (2021/01/08) - Bugfix: KIX17-1463 (fixed incorrect display of the ImportExport form of step 2 if screen width small 1400px) (fjacquemin)
+ * (2021/01/08) - Bugfix: KIX17-1463 (changed display of the ImportExport mapping selection by step 4) (fjacquemin)
+ * (2021/01/08) - Bugfix: KIX17-1463 (fixed incorrect display of layer in the process information tab) (fjacquemin)
+ * (2021/01/08) - Bugfix: KIX17-1770 (removed invalid events from sysconfig list) (millinger)
+ * (2021/01/08) - Bugfix: KIX17-1463 (Fixed overlapping widget toggles) (fjacquemin)
+ * (2021/01/08) - CR: KIX17-1694 (updated resizing of the column of the article table) (fjacquemin)
+
 # 17.14.0-RC7 (2021/01/07)
  * (2021/01/06) - Bugfix: KIX17-1538 (only show smime certificates for crypt and sign with matching subject) (millinger)
  * (2021/01/06) - Bugfix: KIX17-1761 (fixed incorrect display of the dialog box for loading graphs when the graph window is used in full screen) (fjacquemin)
