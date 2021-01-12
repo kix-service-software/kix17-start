@@ -520,11 +520,11 @@
     .CallForAction:disabled {
         border-color: #C6C6C6;
         background-color: #F5F5F5;
-        color: #CCCCCC;
+        color: #9E9E9E;
     }
     .CallForAction:disabled:hover span,
     .CallForAction:disabled:hover span i {
-        color: #CCCCCC;
+        color: #9E9E9E;
     }
     button.Add,
     button.Remove,
@@ -924,7 +924,7 @@
     .QueueOverview .Oldest,
     .QueueOverview .Oldest .jstree-anchor,
     .QueueOverview .OlderLevel2 {
-        color: #C5383C;
+        color: #FF505E;
     }
 
 
@@ -935,7 +935,7 @@
         color: #FFA500;
     }
     .ServiceOverview .OlderLevel2 {
-        color: #F80010;
+        color: #FF505E;
     }
     .WidgetSimple > .ServiceTreeContent,
     .ServiceTreeContent {
@@ -943,7 +943,7 @@
     }
     .Node.Oldest,
     .Node.Oldest .jstree-anchor {
-        color: #C5383C;
+        color: #FF505E;
     }
 
 
@@ -1648,11 +1648,14 @@
     }
     .GraphNode p,
     .GraphNode p > a {
-        color: #111;
+        color: #111111;
     }
     .GraphNode p:hover,
     .GraphNode p > a:hover {
         color: #0A7CB3;
+    }
+    .LinkLabel {
+        color:#111111;
     }
 
 
@@ -1696,7 +1699,7 @@
     *   @subsection vote
     */
     .RateButton i {
-        color: #5B5B5B;
+        color: #9E9E9E;
     }
     .RateButton:hover i.fa-star-o {
         color: #0A7CB3;
@@ -1930,13 +1933,19 @@
     form label.LabelError .Marker {
         color: #C5383C;
     }
-    .Error,
-    tr.Error td {
+    .Error {
         color: #C5383C;
     }
-    .Warning,
-    tr.Warning td {
+    .Warning {
         color: #FF9050;
+    }
+    tr.Warning td {
+        background-color: #FF9050;
+        color: #FFFFFF;
+    }
+    tr.Error td {
+        background-color: #C5383C;
+        color: #FFFFFF;
     }
     .ErrorBox {
         color: #C5383C;
