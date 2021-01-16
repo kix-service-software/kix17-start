@@ -412,7 +412,7 @@
     }
     .JSTreeSelectionContainer {
         border-style: solid;
-        border-width: 0px
+        border-width: 0px;
         padding: 5px;
         overflow: auto;
     }
