@@ -203,7 +203,7 @@
     fieldset.TableLike.FixedLabelSmall > .Value,
     fieldset.TableLike.FixedLabelSmall > .Row > .Value {
         margin-left: 100px;
-        margin-right: 7px;
+        margin-right: 0;
         word-wrap: break-word;
     }
     fieldset.TableLike.FixedLabelLarge > label,

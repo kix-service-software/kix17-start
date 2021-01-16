@@ -1,0 +1,384 @@
+{
+   "_type":"export",
+   "__export_format":4,
+   "__export_date":"2020-12-17T07:33:24.647Z",
+   "__export_source":"insomnia.desktop.app:v2020.5.2",
+   "resources":[
+      {
+         "_id":"req_98a2b533f88e400cb38656a1dee1b664",
+         "parentId":"wrk_7af9c81a87ed40d48da07416021d1841",
+         "modified":1608189988090,
+         "created":1608130838092,
+         "url":"{{ host  }}/{{ _.webapi_configitem }}/ConfigItem?SessionID={{ _.session }}",
+         "name":"ConfigItemSearch",
+         "description":"",
+         "method":"POST",
+         "body":{
+            "mimeType":"application/json",
+            "text":"{\n  \"ConfigItem\": \n      {\n      \"Class\": \"Allgemeine Services\",\n      \"InciState\": \"Incident\"\n    }\n  \n}"
+         },
+         "parameters":[
+            
+         ],
+         "headers":[
+            {
+               "name":"Content-Type",
+               "value":"application/json",
+               "id":"pair_5486f8217568440da79389ac5f02e45a"
+            }
+         ],
+         "authentication":{
+            
+         },
+         "metaSortKey":-1608130838092,
+         "isPrivate":false,
+         "settingStoreCookies":true,
+         "settingSendCookies":true,
+         "settingDisableRenderRequestBody":false,
+         "settingEncodeUrl":true,
+         "settingRebuildPath":true,
+         "settingFollowRedirects":"global",
+         "_type":"request"
+      },
+      {
+         "_id":"wrk_7af9c81a87ed40d48da07416021d1841",
+         "parentId":null,
+         "modified":1594041399410,
+         "created":1594041399410,
+         "name":"KIX17",
+         "description":"",
+         "scope":null,
+         "_type":"workspace"
+      },
+      {
+         "_id":"req_b833ffcbedf74a3da143d7fc2748edf5",
+         "parentId":"wrk_7af9c81a87ed40d48da07416021d1841",
+         "modified":1608189972517,
+         "created":1608130831917,
+         "url":"{{ host  }}/{{ _.webapi_configitem }}/ConfigItem/444?SessionID={{ _.session }}",
+         "name":"ConfigItemUpdate",
+         "description":"",
+         "method":"PATCH",
+         "body":{
+            "mimeType":"application/json",
+            "text":"{\n  \"ConfigItem\": \n      {\n      \"Class\": \"Allgemeine Services\",\n      \"Name\": \"Infrastruktur\",\n      \"InciState\": \"Incident\",\n      \"DeplState\": \"Planned\",\n\t\t\t\"CIXMLData\": {\n        \"Field2\": \"Feldwert\",\n        \"Field1\": \"\"\n      }\n    }\n  \n}"
+         },
+         "parameters":[
+            
+         ],
+         "headers":[
+            {
+               "name":"Content-Type",
+               "value":"application/json",
+               "id":"pair_45f3b6dd7790404c88436f944427da86"
+            }
+         ],
+         "authentication":{
+            
+         },
+         "metaSortKey":-1608130831918,
+         "isPrivate":false,
+         "settingStoreCookies":true,
+         "settingSendCookies":true,
+         "settingDisableRenderRequestBody":false,
+         "settingEncodeUrl":true,
+         "settingRebuildPath":true,
+         "settingFollowRedirects":"global",
+         "_type":"request"
+      },
+      {
+         "_id":"req_6d7cebb2d1244422a6ae522c4f704d64",
+         "parentId":"wrk_7af9c81a87ed40d48da07416021d1841",
+         "modified":1608132857330,
+         "created":1608130822982,
+         "url":"{{ host  }}/{{ _.webapi_configitem }}/ConfigItem/222?SessionID={{ _.session }}",
+         "name":"ConfigItemGet",
+         "description":"",
+         "method":"GET",
+         "body":{
+            "mimeType":"application/json",
+            "text":""
+         },
+         "parameters":[
+            
+         ],
+         "headers":[
+            {
+               "name":"Content-Type",
+               "value":"application/json",
+               "id":"pair_5e76adc516a9413db1b35969f9a87350"
+            }
+         ],
+         "authentication":{
+            
+         },
+         "metaSortKey":-1608130822983,
+         "isPrivate":false,
+         "settingStoreCookies":true,
+         "settingSendCookies":true,
+         "settingDisableRenderRequestBody":false,
+         "settingEncodeUrl":true,
+         "settingRebuildPath":true,
+         "settingFollowRedirects":"global",
+         "_type":"request"
+      },
+      {
+         "_id":"req_a1e155d5d80e4dcfb22c12dbeef34792",
+         "parentId":"wrk_7af9c81a87ed40d48da07416021d1841",
+         "modified":1608189964127,
+         "created":1608130812156,
+         "url":"{{ host  }}/{{ _.webapi_configitem }}/ConfigItem?SessionID={{ _.session }}",
+         "name":"ConfigItemCreate",
+         "description":"",
+         "method":"PUT",
+         "body":{
+            "mimeType":"application/json",
+            "text":"{\n  \"ConfigItem\": \n      {\n      \"Class\": \"Allgemeine Services\",\n      \"Name\": \"Infrastruktur\",\n      \"InciState\": \"Incident\",\n      \"DeplState\": \"Planned\",\n\t\t\t\"CIXMLData\": {\n        \"Field2\": \"Feldwert\",\n        \"Field1\": \"\"\n      }\n    }\n  \n}"
+         },
+         "parameters":[
+            
+         ],
+         "headers":[
+            {
+               "name":"Content-Type",
+               "value":"application/json",
+               "id":"pair_12fc51768e284417b0c6c0ded8329819"
+            }
+         ],
+         "authentication":{
+            
+         },
+         "metaSortKey":-1608130812225,
+         "isPrivate":false,
+         "settingStoreCookies":true,
+         "settingSendCookies":true,
+         "settingDisableRenderRequestBody":false,
+         "settingEncodeUrl":true,
+         "settingRebuildPath":true,
+         "settingFollowRedirects":"global",
+         "_type":"request"
+      },
+      {
+         "_id":"req_8ea6c3a875f84b7f9e05b298d2c301f9",
+         "parentId":"wrk_7af9c81a87ed40d48da07416021d1841",
+         "modified":1608190353628,
+         "created":1608129288116,
+         "url":"{{ host  }}/{{ _.webapi_ticket }}/Ticket/1021?SessionID={{ _.session }}",
+         "name":"TicketUpdate",
+         "description":"",
+         "method":"PATCH",
+         "body":{
+            "mimeType":"application/json",
+            "text":"{\n   \"Ticket\" : {\n      \"Queue\" : \"Raw\",\n      \"Priority\" : \"3 normal\",\n      \"CustomerUser\" : \"mustermann\",\n      \"Title\" : \"REST Create Test\",\n      \"State\" : \"open\",\n      \"Type\" : \"Unclassified\"\n   }\n}"
+         },
+         "parameters":[
+            
+         ],
+         "headers":[
+            {
+               "name":"Content-Type",
+               "value":"application/json",
+               "id":"pair_2449e3e4a67b4b2b988bd6d86a0f6bce"
+            }
+         ],
+         "authentication":{
+            
+         },
+         "metaSortKey":-1608129288116,
+         "isPrivate":false,
+         "settingStoreCookies":true,
+         "settingSendCookies":true,
+         "settingDisableRenderRequestBody":false,
+         "settingEncodeUrl":true,
+         "settingRebuildPath":true,
+         "settingFollowRedirects":"global",
+         "_type":"request"
+      },
+      {
+         "_id":"req_bc385d86afa2421ab550e7c4896f19c5",
+         "parentId":"wrk_7af9c81a87ed40d48da07416021d1841",
+         "modified":1608130955052,
+         "created":1608129281238,
+         "url":"{{ host  }}/{{ _.webapi_ticket }}/Ticket?SessionID={{ _.session }}",
+         "name":"TicketSearch",
+         "description":"",
+         "method":"GET",
+         "body":{
+            
+         },
+         "parameters":[
+            
+         ],
+         "headers":[
+            
+         ],
+         "authentication":{
+            
+         },
+         "metaSortKey":-1608129281238,
+         "isPrivate":false,
+         "settingStoreCookies":true,
+         "settingSendCookies":true,
+         "settingDisableRenderRequestBody":false,
+         "settingEncodeUrl":true,
+         "settingRebuildPath":true,
+         "settingFollowRedirects":"global",
+         "_type":"request"
+      },
+      {
+         "_id":"req_a40b7b840de8462abdf0f2f7ddfda970",
+         "parentId":"wrk_7af9c81a87ed40d48da07416021d1841",
+         "modified":1608190322454,
+         "created":1608129248222,
+         "url":"{{ host  }}/{{ _.webapi_ticket }}/Ticket?SessionID={{ _.session }}",
+         "name":"TicketCreate",
+         "description":"",
+         "method":"POST",
+         "body":{
+            "mimeType":"application/json",
+            "text":"{\n   \"Ticket\" : {\n      \"Queue\" : \"Raw\",\n      \"Priority\" : \"3 normal\",\n      \"CustomerUser\" : \"mustermann\",\n      \"Title\" : \"REST Create Test\",\n      \"State\" : \"open\",\n      \"Type\" : \"Unclassified\"\n   },\n   \"Article\" : {\n      \"ContentType\" : \"text/plain; charset=utf8\",\n      \"Subject\" : \"Rest Create Test\",\n      \"Body\" : \"This is only a test\",\n\t\t  \"TimeUnit\" : \"2\"\n   }\n}"
+         },
+         "parameters":[
+            
+         ],
+         "headers":[
+            {
+               "name":"Content-Type",
+               "value":"application/json",
+               "id":"pair_af360576112742f6927a223ab6b0c91d"
+            }
+         ],
+         "authentication":{
+            
+         },
+         "metaSortKey":-1608129248296,
+         "isPrivate":false,
+         "settingStoreCookies":true,
+         "settingSendCookies":true,
+         "settingDisableRenderRequestBody":false,
+         "settingEncodeUrl":true,
+         "settingRebuildPath":true,
+         "settingFollowRedirects":"global",
+         "_type":"request"
+      },
+      {
+         "_id":"req_c07d6869eec5402abf805022e10553f5",
+         "parentId":"wrk_7af9c81a87ed40d48da07416021d1841",
+         "modified":1608130939485,
+         "created":1608127874873,
+         "url":"{{ host  }}/{{ _.webapi_ticket }}/Ticket/1021?SessionID={{ _.session }}",
+         "name":"TicketGet",
+         "description":"",
+         "method":"GET",
+         "body":{
+            
+         },
+         "parameters":[
+            
+         ],
+         "headers":[
+            
+         ],
+         "authentication":{
+            
+         },
+         "metaSortKey":-1608127874873,
+         "isPrivate":false,
+         "settingStoreCookies":true,
+         "settingSendCookies":true,
+         "settingDisableRenderRequestBody":false,
+         "settingEncodeUrl":true,
+         "settingRebuildPath":true,
+         "settingFollowRedirects":"global",
+         "_type":"request"
+      },
+      {
+         "_id":"req_0fa2ed20678b4f0e82a621548087f52e",
+         "parentId":"wrk_7af9c81a87ed40d48da07416021d1841",
+         "modified":1608190335518,
+         "created":1608127072904,
+         "url":"{{ host  }}/{{ _.webapi_ticket }}/Session",
+         "name":"SessionCreate",
+         "description":"",
+         "method":"POST",
+         "body":{
+            "mimeType":"application/json",
+            "text":"{\n\t\"UserLogin\": \"mustermann\",\n\t\"Password\": \"password\"\n}"
+         },
+         "parameters":[
+            
+         ],
+         "headers":[
+            {
+               "name":"Content-Type",
+               "value":"application/json",
+               "id":"pair_0a9702e9c3c04791b90e070cb04f5099"
+            },
+            {
+               "name":"SessionID",
+               "value":"{{ _.session }}",
+               "description":"",
+               "id":"pair_ff46cbb4719e48c3acd5967389d623de"
+            }
+         ],
+         "authentication":{
+            
+         },
+         "metaSortKey":-1608127072904,
+         "isPrivate":false,
+         "settingStoreCookies":true,
+         "settingSendCookies":true,
+         "settingDisableRenderRequestBody":false,
+         "settingEncodeUrl":true,
+         "settingRebuildPath":true,
+         "settingFollowRedirects":"global",
+         "_type":"request"
+      },
+      {
+         "_id":"env_e20911c6c110aa2651740ff3c4195603f922f47b",
+         "parentId":"wrk_7af9c81a87ed40d48da07416021d1841",
+         "modified":1608131214282,
+         "created":1594041399674,
+         "name":"Base Environment",
+         "data":{
+            "host":"localhost",
+            "session":"{% response 'body', 'req_0fa2ed20678b4f0e82a621548087f52e', 'b64::JC5TZXNzaW9uSUQ=::46b', 'never', 60 %}",
+            "webapi_ticket":"kix/nph-genericinterface.pl/Webservice/GenericTicketConnectorREST",
+            "webapi_configitem":"kix/nph-genericinterface.pl/Webservice/GenericCMDBConnectorREST"
+         },
+         "dataPropertyOrder":{
+            "&":[
+               "host",
+               "session",
+               "webapi_ticket",
+               "webapi_configitem"
+            ]
+         },
+         "color":null,
+         "isPrivate":false,
+         "metaSortKey":1594041399674,
+         "_type":"environment"
+      },
+      {
+         "_id":"jar_e20911c6c110aa2651740ff3c4195603f922f47b",
+         "parentId":"wrk_7af9c81a87ed40d48da07416021d1841",
+         "modified":1594041399681,
+         "created":1594041399681,
+         "name":"Default Jar",
+         "cookies":[
+            
+         ],
+         "_type":"cookie_jar"
+      },
+      {
+         "_id":"spc_14030c3e376348409fb0a90bc7a53afe",
+         "parentId":"wrk_7af9c81a87ed40d48da07416021d1841",
+         "modified":1607525350207,
+         "created":1607525350207,
+         "fileName":"KIX17",
+         "contents":"",
+         "contentType":"yaml",
+         "_type":"api_spec"
+      }
+   ]
+}
