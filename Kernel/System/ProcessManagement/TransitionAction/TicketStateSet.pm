@@ -122,78 +122,21 @@ sub Run {
     $Success = 0;
     my %StateData;
 
-    # If Ticket's StateID is already the same as the Value we
-    # should set it to, we got nothing to do and return success
-    if (
-        defined $Param{Config}->{StateID}
-        && $Param{Config}->{StateID} eq $Param{Ticket}->{StateID}
-    ) {
-        return 1;
-    }
-
-    # If Ticket's StateID is not the same as the Value we
-    # should set it to, set the StateID
-    elsif (
-        defined $Param{Config}->{StateID}
-        && $Param{Config}->{StateID} ne $Param{Ticket}->{StateID}
-    ) {
+    # get state data by state id
+    if ( defined( $Param{Config}->{StateID} ) ) {
         %StateData = $Kernel::OM->Get('Kernel::System::State')->StateGet(
             ID => $Param{Config}->{StateID},
         );
-        $Success = $Kernel::OM->Get('Kernel::System::Ticket')->TicketStateSet(
-            TicketID => $Param{Ticket}->{TicketID},
-            StateID  => $Param{Config}->{StateID},
-            UserID   => $Param{UserID},
-        );
-
-        if ( !$Success ) {
-            $Kernel::OM->Get('Kernel::System::Log')->Log(
-                Priority => 'error',
-                Message  => $CommonMessage
-                    . 'Ticket StateID '
-                    . $Param{Config}->{StateID}
-                    . ' could not be updated for Ticket: '
-                    . $Param{Ticket}->{TicketID} . '!',
-            );
-        }
     }
-
-    # If Ticket's State is already the same as the Value we
-    # should set it to, we got nothing to do and return success
-    elsif (
-        defined $Param{Config}->{State}
-        && $Param{Config}->{State} eq $Param{Ticket}->{State}
-    ) {
-        return 1;
-    }
-
-    # If Ticket's State is not the same as the Value we
-    # should set it to, set the State
-    elsif (
-        defined $Param{Config}->{State}
-        && $Param{Config}->{State} ne $Param{Ticket}->{State}
-    ) {
+    # get state data by state name
+    elsif ( defined( $Param{Config}->{State} ) ) {
         %StateData = $Kernel::OM->Get('Kernel::System::State')->StateGet(
             Name => $Param{Config}->{State},
         );
-        $Success = $Kernel::OM->Get('Kernel::System::Ticket')->TicketStateSet(
-            TicketID => $Param{Ticket}->{TicketID},
-            State    => $Param{Config}->{State},
-            UserID   => $Param{UserID},
-        );
-
-        if ( !$Success ) {
-            $Kernel::OM->Get('Kernel::System::Log')->Log(
-                Priority => 'error',
-                Message  => $CommonMessage
-                    . 'Ticket State '
-                    . $Param{Config}->{State}
-                    . ' could not be updated for Ticket: '
-                    . $Param{Ticket}->{TicketID} . '!',
-            );
-        }
     }
-    else {
+
+    # check state data
+    if ( !IsHashRefWithData( \%StateData ) ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => $CommonMessage
@@ -202,12 +145,31 @@ sub Run {
         return;
     }
 
+    # check if state update is needed
+    if ( $StateData{ID} ne $Param{Ticket}->{StateID} ) {
+        $Success = $Kernel::OM->Get('Kernel::System::Ticket')->TicketStateSet(
+            TicketID => $Param{Ticket}->{TicketID},
+            StateID  => $StateData{ID},
+            UserID   => $Param{UserID},
+        );
+
+        if ( !$Success ) {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'error',
+                Message  => $CommonMessage
+                    . 'Ticket State "'
+                    . $StateData{Name}
+                    . '" ('
+                    . $StateData{ID}
+                    . ') could not be updated for Ticket: '
+                    . $Param{Ticket}->{TicketID} . '!',
+            );
+            return;
+        }
+    }
+
     # set pending time
-    if (
-        $Success
-        && IsHashRefWithData( \%StateData )
-        && $StateData{TypeName} =~ m{\A pending}msxi
-    ) {
+    if ( $StateData{TypeName} =~ m{\A pending}msxi ) {
 
         # get time object
         my $TimeObject = $Kernel::OM->Get('Kernel::System::Time');
@@ -233,11 +195,13 @@ sub Run {
             );
 
         }
-        elsif ( $Param{Config}->{PendingDateTime} && ref $Param{Placeholder} eq 'HASH' ) {
+        elsif (
+            $Param{Config}->{PendingDateTime}
+            && ref( $Param{Placeholder} ) eq 'HASH'
+        ) {
             if (
-                defined $Param{Placeholder}->{PendingDateTime}
-                && $Param{Placeholder}->{PendingDateTime}
-                =~ /\<(KIX|OTRS)_TICKET_DynamicField_(.*?)\>/i
+                defined( $Param{Placeholder}->{PendingDateTime} )
+                && $Param{Placeholder}->{PendingDateTime} =~ /\<(KIX|OTRS)_TICKET_DynamicField_(.*?)\>/i
             ) {
                 my $DynamicField = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldGet(
                     Name => $2,
@@ -261,7 +225,7 @@ sub Run {
                 }
 
                 # handle BOB and EOB
-                if ( $Param{Config}->{TimeTarget} =~ /^(BOB|EOB)$/g ) {
+                if ( $Param{Config}->{TimeTarget} =~ /^(?:BOB|EOB)$/g ) {
                     my $Calendar;
                     if ( $Param{Ticket}->{SLAID} ) {
 
@@ -293,12 +257,11 @@ sub Run {
 
                     # speacial handling for EOB
                     if ( $Param{Config}->{TimeTarget} eq 'EOB' ) {
-                        my ( $Sec, $Min, $Hour, $Day, $Month, $Year, $WeekDay )
-                            = $TimeObject->SystemTime2Date(
+                        my ( $Sec, $Min, $Hour, $Day, $Month, $Year, $WeekDay ) = $TimeObject->SystemTime2Date(
                             SystemTime => $TimeObject->TimeStamp2SystemTime(
                                 String => $PendingTime,
-                                )
-                            );
+                            )
+                        );
                         my %WeekDays = (
                             0 => 'Sun',
                             1 => 'Mon',
@@ -313,10 +276,9 @@ sub Run {
                         if ($Calendar) {
                             $Calendar = '::Calendar' . $Calendar;
                         }
-                        my $WorkingHours = $Kernel::OM->Get('Kernel::Config')
-                            ->Get( 'TimeWorkingHours' . $Calendar );
-                        my $EOB = pop @{ $WorkingHours->{ $WeekDays{$WeekDay} } };
-                        $PendingTime =~ s/^(.*?)\s(.*?)$/"$1 $EOB:59:59"/g;
+                        my $WorkingHours = $Kernel::OM->Get('Kernel::Config')->Get( 'TimeWorkingHours' . $Calendar );
+                        my $EOB          = pop @{ $WorkingHours->{ $WeekDays{$WeekDay} } };
+                        $PendingTime     =~ s/^(.*?)\s(.*?)$/"$1 $EOB:59:59"/g;
                     }
                 }
 
