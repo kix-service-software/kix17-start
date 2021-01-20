@@ -88,8 +88,8 @@ Core.Agent.Admin.GenericInterfaceDebugger = (function (TargetNS) {
         };
 
 
-        Data.FilterFrom = FormatISODate($('#FilterFromYear').val(), $('#FilterFromMonth').val(), $('#FilterFromDay').val()) + ' 00:00:00';
-        Data.FilterTo = FormatISODate($('#FilterToYear').val(), $('#FilterToMonth').val(), $('#FilterToDay').val()) + ' 23:59:59';
+        Data.FilterFrom = FormatISODate($('#FilterFromYear').val(), $('#FilterFromMonth').val(), $('#FilterFromDay').val()) + ' ' + $('#FilterFromHour').val() + ':' + $('#FilterFromMinute').val() + ':00';
+        Data.FilterTo = FormatISODate($('#FilterToYear').val(), $('#FilterToMonth').val(), $('#FilterToDay').val()) + ' ' + $('#FilterToHour').val() + ':' + $('#FilterToMinute').val() + ':59';
 
         $('#CommunicationDetails').css('visibility', 'hidden');
         $('.RequestListWidget').addClass('Loading');
