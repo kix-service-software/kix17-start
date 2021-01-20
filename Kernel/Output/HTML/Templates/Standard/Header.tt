@@ -114,8 +114,10 @@ if ($('#ToolBar li.Extended.SearchFulltext').length) {
 [% RenderBlockEnd("Logout") %]
     </div>
 
+[% IF !Data.NoSystemMessage %]
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
     Core.UI.SystemMessage.Init('Header', null, null);
 //]]></script>
+[% END %]
 [% END %]

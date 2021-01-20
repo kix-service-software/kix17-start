@@ -306,7 +306,7 @@ sub ToDecimalDegree {
 
                 elsif ( $Format eq 'DecimalDegree' ) {
                     my ($Operator, $Degree) = $Values->{$Key . 'Degree'} =~ /^(\+|-)(.*)/;
-                    my $DecimalDeg          = int($Values->{$Key . 'DecimalDeg'});
+                    my $DecimalDeg          = $Values->{$Key . 'DecimalDeg'};
                     $Degree                 = int($Degree);
 
                     if ( !$Operator ) {

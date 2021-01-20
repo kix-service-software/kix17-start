@@ -586,6 +586,9 @@ sub Send {
 
                 $Parser->output_dir( $ConfigObject->Get('TempDir') );
                 $Entity = $Parser->parse_data( $SMIMEHeader . $Sign );
+
+                # set 'mail_hdr_modify' for header to enable line folding
+                $Entity->head()->modify(1);
             }
         }
     }
@@ -683,6 +686,9 @@ sub Send {
 
         $Parser->output_dir( $ConfigObject->Get('TempDir') );
         $Entity = $Parser->parse_data( $SMIMEHeader . $Crypt );
+
+        # set 'mail_hdr_modify' for header to enable line folding
+        $Entity->head()->modify(1);
     }
 
     # get header from Entity

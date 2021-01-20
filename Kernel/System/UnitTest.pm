@@ -18,6 +18,7 @@ use Kernel::System::UnitTest::Utils;
 
 our @ObjectDependencies = (
     'Kernel::Config',
+    'Kernel::System::Cache',
     'Kernel::System::JSON',
     'Kernel::System::Log',
     'Kernel::System::Main',
@@ -88,7 +89,8 @@ sub Run {
     }
 
     # get needed objects
-    my $MainObject = $Kernel::OM->Get('Kernel::System::Main');
+    my $CacheObject = $Kernel::OM->Get('Kernel::System::Cache');
+    my $MainObject  = $Kernel::OM->Get('Kernel::System::Main');
 
     # init params
     $Self->{'OutputDirectory'} = $Param{'OutputDirectory'};
@@ -103,6 +105,9 @@ sub Run {
     # process test files
     FILE:
     for my $File (@Files) {
+        # clear cache
+        $CacheObject->CleanUp();
+
         # init data for test file
         $Self->_TestFileStart(
             File => $File,

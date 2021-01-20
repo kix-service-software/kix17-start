@@ -1179,35 +1179,16 @@
     }
 
 
-
-    /**
-    *   @subsection import/export
-    */
-    .MapHeaderRow label {
-        color: #999999;
-    }
-    button.ArrowUp[disabled="disabled"] {
-        background: url(../img/icons/importexport_arrow_up_disabled.png);
-    }
-    button.ArrowUp {
-        background: url(../img/icons/importexport_arrow_up.png);
-    }
-    button.ArrowDown[disabled="disabled"] {
-        background: url(../img/icons/importexport_arrow_down_disabled.png);
-    }
-    button.ArrowDown {
-        background: url(../img/icons/importexport_arrow_down.png);
-    }
-
-
     /**
     * @subsection WidgetPopup
     */
     div.WidgetPopup {
-        border-color: #CCCCCC;
-        background-color: #EEEEEE;
-        background-image: url(../img/widget_bg_100.png);
-        background-repeat: repeat-x;
+        border-color: #9E9E9E;
+        background-color: #FFFFFF;
+    }
+    div.WidgetPopup > .Header {
+        border-bottom: 1px solid #9E9E9E;
+        background-color: #F0F0F0;
     }
 
 

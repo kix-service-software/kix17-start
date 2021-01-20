@@ -37,20 +37,19 @@ sub PreRun {
         $Self->{RequestedURL} = 'Action=';
     }
 
-    # redirect if no primary group is selected
-    if ( !$Self->{ $Self->{InfoKey} } && $Self->{Action} ne 'CustomerAccept' ) {
+    my $Panels = $Kernel::OM->Get('Kernel::Config')->Get('CustomerPanelPreApplicationModule');
 
-        # remove requested url from session storage
-        $Kernel::OM->Get('Kernel::System::AuthSession')->UpdateSessionID(
-            SessionID => $Self->{SessionID},
-            Key       => 'UserRequestedURL',
-            Value     => $Self->{RequestedURL},
-        );
-        return $Kernel::OM->Get('Kernel::Output::HTML::Layout')->Redirect( OP => 'Action=CustomerAccept' );
-    }
-    else {
-        return;
-    }
+    return if $Self->{ $Self->{InfoKey} };
+    return if $Panels->{$Self->{Action}} || $Self->{'Action'} eq 'CustomerAccept';
+
+    # remove requested url from session storage
+    $Kernel::OM->Get('Kernel::System::AuthSession')->UpdateSessionID(
+        SessionID => $Self->{SessionID},
+        Key       => 'UserRequestedURL',
+        Value     => $Self->{RequestedURL},
+    );
+
+    return $Kernel::OM->Get('Kernel::Output::HTML::Layout')->Redirect( OP => 'Action=CustomerAccept' );
 }
 
 sub Run {
@@ -105,7 +104,9 @@ sub Run {
     else {
 
         # show info
-        $Output = $LayoutObject->CustomerHeader();
+        $Output = $LayoutObject->CustomerHeader(
+            NoSystemMessage => 1
+        );
         $Output
             .= $LayoutObject->Output(
             TemplateFile => $Self->{InfoFile},

@@ -40,6 +40,7 @@ Check methods of system module Kernel::System::State:
 * StateLookup
 * StateTypeList
 * StateTypeLookup
+* NameExistsCheck
 END
 );
 
@@ -51,28 +52,30 @@ $Self->{'TestCase'}->{'PlanSteps'} = {
     '0004' => 'Add first state with random state type',
     '0005' => 'Add second state with comment and random state type',
     '0006' => 'Add existing state',
-    '0007' => 'Get first state data by ID',
-    '0008' => 'Get first state data by name',
-    '0009' => 'Lookup first state name by ID',
-    '0010' => 'Lookup first state ID by name',
-    '0011' => 'Update first state to existing name',
-    '0012' => 'Update first state to new name',
-    '0013' => 'Update first state to random type',
-    '0014' => 'Update first state to invalid',
-    '0015' => 'Get state list without parameter "Valid"',
-    '0016' => 'Get state list with parameter "Valid" value "0"',
-    '0017' => 'Get state list with parameter "Valid" value "1"',
-    '0018' => 'Check state list without parameter not equals list with parameter value "0"',
-    '0019' => 'Check state list without parameter equals list with parameter value "1"',
-    '0020' => 'Get state list by type with parameter "Type" value "Viewable"',
-    '0021' => 'Get state list by type with parameter "StateType" value matching content for SysConfig "Ticket::ViewableStateType"',
-    '0022' => 'Check state list parameter "Type" equals list with parameter "StateType"',
-    '0023' => 'Get state id array by type with parameter "Type" value "Viewable"',
-    '0024' => 'Get state id array by type with parameter "StateType" value matching content for SysConfig "Ticket::ViewableStateType"',
-    '0025' => 'Check state id array parameter "Type" equals list with parameter "StateType"',
-    '0026' => 'Get state name array by type with parameter "Type" value "Viewable"',
-    '0027' => 'Get state name array by type with parameter "StateType" value matching content for SysConfig "Ticket::ViewableStateType"',
-    '0028' => 'Check state name array parameter "Type" equals list with parameter "StateType"',
+    '0007' => 'Check first state name does exist without ID',
+    '0008' => 'Check first state name does exist with ID',
+    '0009' => 'Get first state data by ID',
+    '0010' => 'Get first state data by name',
+    '0011' => 'Lookup first state name by ID',
+    '0012' => 'Lookup first state ID by name',
+    '0013' => 'Update first state to existing name',
+    '0014' => 'Update first state to new name',
+    '0015' => 'Update first state to random type',
+    '0016' => 'Update first state to invalid',
+    '0017' => 'Get state list without parameter "Valid"',
+    '0018' => 'Get state list with parameter "Valid" value "0"',
+    '0019' => 'Get state list with parameter "Valid" value "1"',
+    '0020' => 'Check state list without parameter not equals list with parameter value "0"',
+    '0021' => 'Check state list without parameter equals list with parameter value "1"',
+    '0022' => 'Get state list by type with parameter "Type" value "Viewable"',
+    '0023' => 'Get state list by type with parameter "StateType" value matching content for SysConfig "Ticket::ViewableStateType"',
+    '0024' => 'Check state list parameter "Type" equals list with parameter "StateType"',
+    '0025' => 'Get state id array by type with parameter "Type" value "Viewable"',
+    '0026' => 'Get state id array by type with parameter "StateType" value matching content for SysConfig "Ticket::ViewableStateType"',
+    '0027' => 'Check state id array parameter "Type" equals list with parameter "StateType"',
+    '0028' => 'Get state name array by type with parameter "Type" value "Viewable"',
+    '0029' => 'Get state name array by type with parameter "StateType" value matching content for SysConfig "Ticket::ViewableStateType"',
+    '0030' => 'Check state name array parameter "Type" equals list with parameter "StateType"',
 };
 
 # begin transaction on database
@@ -86,7 +89,7 @@ my %StateTypeList = $StateObject->StateTypeList(
 );
 $Success = $Self->IsNotDeeply(
     TestName   => 'Get state type list',
-    CheckValue => undef,
+    CheckValue => {},
     TestValue  => \%StateTypeList,
     StartTime  => $StartTime,
 );
@@ -184,70 +187,101 @@ $Success = $Self->Is(
 return 1 if ( !$Success );
 # EO TEST STEP
 
-# TEST STEP - Get first state data by ID
+# TEST STEP - Check first state name does exist without ID
 delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0007'} );
 $StartTime = $Self->GetMilliTimeStamp();
-my %State0007 = $StateObject->StateGet(
-        ID => $StateID0004,
+my $Exist0007 = $StateObject->NameExistsCheck(
+    Name => $StateNameCreate1,
+);
+$Success = $Self->Is(
+    TestName   => 'Check first state name does exist without ID',
+    CheckValue => 1,
+    TestValue  => $Exist0007,
+    StartTime  => $StartTime,
+);
+return 1 if ( !$Success );
+# EO TEST STEP
+
+# TEST STEP - Check first state name does exist with ID
+delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0008'} );
+$StartTime = $Self->GetMilliTimeStamp();
+my $Exist0008 = $StateObject->NameExistsCheck(
+    Name => $StateNameCreate1,
+    ID   => $StateID0004,
+);
+$Success = $Self->Is(
+    TestName   => 'Check first state name does exist with ID',
+    CheckValue => 0,
+    TestValue  => $Exist0008,
+    StartTime  => $StartTime,
+);
+return 1 if ( !$Success );
+# EO TEST STEP
+
+# TEST STEP - Get first state data by ID
+delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0009'} );
+$StartTime = $Self->GetMilliTimeStamp();
+my %State0009 = $StateObject->StateGet(
+    ID => $StateID0004,
 );
 $Success = $Self->IsNotDeeply(
     TestName   => 'Get first state data by ID',
-    CheckValue => undef,
-    TestValue  => \%State0007,
+    CheckValue => {},
+    TestValue  => \%State0009,
     StartTime  => $StartTime,
 );
 return 1 if ( !$Success );
 # EO TEST STEP
 
 # TEST STEP - Get first state data by name
-delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0008'} );
+delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0010'} );
 $StartTime = $Self->GetMilliTimeStamp();
-my %State0008 = $StateObject->StateGet(
-        Name => $StateNameCreate1,
+my %State0010 = $StateObject->StateGet(
+    Name => $StateNameCreate1,
 );
 $Success = $Self->IsNotDeeply(
     TestName   => 'Get first state data by name',
-    CheckValue => undef,
-    TestValue  => \%State0008,
+    CheckValue => {},
+    TestValue  => \%State0010,
     StartTime  => $StartTime,
 );
 return 1 if ( !$Success );
 # EO TEST STEP
 
 # TEST STEP - Lookup first state name by ID
-delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0009'} );
+delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0011'} );
 $StartTime = $Self->GetMilliTimeStamp();
-my $StateName0009 = $StateObject->StateLookup(
-        StateID => $StateID0004,
+my $StateName0011 = $StateObject->StateLookup(
+    StateID => $StateID0004,
 );
 $Success = $Self->Is(
     TestName   => 'Lookup first state name by ID',
     CheckValue => $StateNameCreate1,
-    TestValue  => $StateName0009,
+    TestValue  => $StateName0011,
     StartTime  => $StartTime,
 );
 return 1 if ( !$Success );
 # EO TEST STEP
 
 # TEST STEP - Lookup first state ID by name
-delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0010'} );
+delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0012'} );
 $StartTime = $Self->GetMilliTimeStamp();
-my $StateID0010 = $StateObject->StateLookup(
-        State => $StateNameCreate1,
+my $StateID0012 = $StateObject->StateLookup(
+    State => $StateNameCreate1,
 );
 $Success = $Self->Is(
     TestName   => 'Lookup first state ID by name',
     CheckValue => $StateID0004,
-    TestValue  => $StateID0010,
+    TestValue  => $StateID0012,
     StartTime  => $StartTime,
 );
 return 1 if ( !$Success );
 # EO TEST STEP
 
 # TEST STEP - Update first state to existing name
-delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0011'} );
+delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0013'} );
 $StartTime = $Self->GetMilliTimeStamp();
-my $Update0011 = $StateObject->StateUpdate(
+my $Update0013 = $StateObject->StateUpdate(
     ID      => $StateID0004,
     Name    => $StateNameCreate2,
     TypeID  => $StateTypeKeys[ $StateTypeIDIndex0004 ],
@@ -257,16 +291,16 @@ my $Update0011 = $StateObject->StateUpdate(
 $Success = $Self->Is(
     TestName   => 'Update first state to existing name',
     CheckValue => undef,
-    TestValue  => $Update0011,
+    TestValue  => $Update0013,
     StartTime  => $StartTime,
 );
 return 1 if ( !$Success );
 # EO TEST STEP
 
 # TEST STEP - Update first state to new name
-delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0012'} );
+delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0014'} );
 $StartTime = $Self->GetMilliTimeStamp();
-my $Update0012 = $StateObject->StateUpdate(
+my $Update0014 = $StateObject->StateUpdate(
     ID      => $StateID0004,
     Name    => $StateNameUpdate1,
     TypeID  => $StateTypeKeys[ $StateTypeIDIndex0004 ],
@@ -276,245 +310,245 @@ my $Update0012 = $StateObject->StateUpdate(
 $Success = $Self->Is(
     TestName   => 'Update first state to new name',
     CheckValue => '1',
-    TestValue  => $Update0012,
-    StartTime  => $StartTime,
-);
-return 1 if ( !$Success );
-# EO TEST STEP
-
-# TEST STEP - Update first state to random type
-delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0013'} );
-$StartTime = $Self->GetMilliTimeStamp();
-my $StateTypeIDIndex0013 = int( rand( $StateTypeCount ) );
-my $Update0013 = $StateObject->StateUpdate(
-    ID      => $StateID0004,
-    Name    => $StateNameUpdate1,
-    TypeID  => $StateTypeKeys[ $StateTypeIDIndex0013 ],
-    ValidID => 1,
-    UserID  => 1,
-);
-$Success = $Self->Is(
-    TestName   => 'Update first state to random type',
-    CheckValue => '1',
-    TestValue  => $Update0013,
-    StartTime  => $StartTime,
-);
-return 1 if ( !$Success );
-# EO TEST STEP
-
-# TEST STEP - Update first state to invalid
-delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0014'} );
-$StartTime = $Self->GetMilliTimeStamp();
-my $Update0014 = $StateObject->TypeUpdate(
-    ID      => $StateID0004,
-    Name    => $StateNameUpdate1,
-    TypeID  => $StateTypeKeys[ $StateTypeIDIndex0013 ],
-    ValidID => 2,
-    UserID  => 1,
-);
-$Success = $Self->Is(
-    TestName   => 'Update first state to invalid',
-    CheckValue => '1',
     TestValue  => $Update0014,
     StartTime  => $StartTime,
 );
 return 1 if ( !$Success );
 # EO TEST STEP
 
-# TEST STEP - Get state list without parameter "Valid"
+# TEST STEP - Update first state to random type
 delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0015'} );
 $StartTime = $Self->GetMilliTimeStamp();
-my %List0015 = $StateObject->StateList();
+my $StateTypeIDIndex0015 = int( rand( $StateTypeCount ) );
+my $Update0015 = $StateObject->StateUpdate(
+    ID      => $StateID0004,
+    Name    => $StateNameUpdate1,
+    TypeID  => $StateTypeKeys[ $StateTypeIDIndex0015 ],
+    ValidID => 1,
+    UserID  => 1,
+);
+$Success = $Self->Is(
+    TestName   => 'Update first state to random type',
+    CheckValue => '1',
+    TestValue  => $Update0015,
+    StartTime  => $StartTime,
+);
+return 1 if ( !$Success );
+# EO TEST STEP
+
+# TEST STEP - Update first state to invalid
+delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0016'} );
+$StartTime = $Self->GetMilliTimeStamp();
+my $Update0016 = $StateObject->StateUpdate(
+    ID      => $StateID0004,
+    Name    => $StateNameUpdate1,
+    TypeID  => $StateTypeKeys[ $StateTypeIDIndex0015 ],
+    ValidID => 2,
+    UserID  => 1,
+);
+$Success = $Self->Is(
+    TestName   => 'Update first state to invalid',
+    CheckValue => '1',
+    TestValue  => $Update0016,
+    StartTime  => $StartTime,
+);
+return 1 if ( !$Success );
+# EO TEST STEP
+
+# TEST STEP - Get state list without parameter "Valid"
+delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0017'} );
+$StartTime = $Self->GetMilliTimeStamp();
+my %List0017 = $StateObject->StateList();
 $Success = $Self->IsNotDeeply(
     TestName   => 'Get state list without parameter "Valid"',
-    CheckValue => undef,
-    TestValue  => \%List0015,
+    CheckValue => {},
+    TestValue  => \%List0017,
     StartTime  => $StartTime,
 );
 return 1 if ( !$Success );
 # EO TEST STEP
 
 # TEST STEP - Get state list with parameter "Valid" value "0"
-delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0016'} );
+delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0018'} );
 $StartTime = $Self->GetMilliTimeStamp();
-my %List0016 = $StateObject->StateList(
+my %List0018 = $StateObject->StateList(
     Valid => 0,
 );
 $Success = $Self->IsNotDeeply(
     TestName   => 'Get state list with parameter "Valid" value "0"',
-    CheckValue => undef,
-    TestValue  => \%List0016,
+    CheckValue => {},
+    TestValue  => \%List0018,
     StartTime  => $StartTime,
 );
 return 1 if ( !$Success );
 # EO TEST STEP
 
 # TEST STEP - Get state list with parameter "Valid" value "1"
-delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0017'} );
+delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0019'} );
 $StartTime = $Self->GetMilliTimeStamp();
-my %List0017 = $StateObject->StateList(
+my %List0019 = $StateObject->StateList(
     Valid => 1,
 );
 $Success = $Self->IsNotDeeply(
     TestName   => 'Get state list with parameter "Valid" value "1"',
-    CheckValue => undef,
-    TestValue  => \%List0017,
+    CheckValue => {},
+    TestValue  => \%List0019,
     StartTime  => $StartTime,
 );
 return 1 if ( !$Success );
 # EO TEST STEP
 
 # TEST STEP - Check state list without parameter not equals list with parameter value "0"
-delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0018'} );
+delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0020'} );
 $StartTime = $Self->GetMilliTimeStamp();
 $Success = $Self->IsNotDeeply(
     TestName   => 'Check state list without parameter not equals list with parameter value "0"',
-    CheckValue => \%List0015,
-    TestValue  => \%List0016,
+    CheckValue => \%List0017,
+    TestValue  => \%List0018,
     StartTime  => $StartTime,
 );
 return 1 if ( !$Success );
 # EO TEST STEP
 
 # TEST STEP - Check state list without parameter equals list with parameter value "1"
-delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0019'} );
+delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0021'} );
 $StartTime = $Self->GetMilliTimeStamp();
 $Success = $Self->IsDeeply(
     TestName   => 'Check state list without parameter equals list with parameter value "1"',
-    CheckValue => \%List0015,
-    TestValue  => \%List0017,
+    CheckValue => \%List0017,
+    TestValue  => \%List0019,
     StartTime  => $StartTime,
 );
 return 1 if ( !$Success );
 # EO TEST STEP
 
 # TEST STEP - Get state list by type with parameter "Type" value "Viewable"
-delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0020'} );
+delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0022'} );
 $StartTime = $Self->GetMilliTimeStamp();
-my %List0020 = $StateObject->StateGetStatesByType(
+my %List0022 = $StateObject->StateGetStatesByType(
     Result => 'HASH',
     Type   => 'Viewable',
 );
 $Success = $Self->IsNotDeeply(
     TestName   => 'Get state list by type with parameter "Type" value "Viewable"',
-    CheckValue => undef,
-    TestValue  => \%List0020,
+    CheckValue => {},
+    TestValue  => \%List0022,
     StartTime  => $StartTime,
 );
 return 1 if ( !$Success );
 # EO TEST STEP
 
 # TEST STEP - Get state list by type with parameter "StateType" value matching content for SysConfig "Ticket::ViewableStateType"
-delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0021'} );
+delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0023'} );
 $StartTime = $Self->GetMilliTimeStamp();
-my %List0021 = $StateObject->StateGetStatesByType(
+my %List0023 = $StateObject->StateGetStatesByType(
     Result    => 'HASH',
     StateType => $ConfigObject->Get('Ticket::ViewableStateType'),
 );
 $Success = $Self->IsNotDeeply(
     TestName   => 'Get state list by type with parameter "StateType" value matching content for SysConfig "Ticket::ViewableStateType"',
-    CheckValue => undef,
-    TestValue  => \%List0021,
+    CheckValue => {},
+    TestValue  => \%List0023,
     StartTime  => $StartTime,
 );
 return 1 if ( !$Success );
 # EO TEST STEP
 
 # TEST STEP - Check state list parameter "Type" equals list with parameter "StateType"
-delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0022'} );
+delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0024'} );
 $StartTime = $Self->GetMilliTimeStamp();
 $Success = $Self->IsDeeply(
     TestName   => 'Check state list parameter "Type" equals list with parameter "StateType"',
-    CheckValue => \%List0020,
-    TestValue  => \%List0021,
+    CheckValue => \%List0022,
+    TestValue  => \%List0023,
     StartTime  => $StartTime,
 );
 return 1 if ( !$Success );
 # EO TEST STEP
 
 # TEST STEP - Get state id array by type with parameter "Type" value "Viewable"
-delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0023'} );
+delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0025'} );
 $StartTime = $Self->GetMilliTimeStamp();
-my @IDArray0023 = $StateObject->StateGetStatesByType(
+my @IDArray0025 = $StateObject->StateGetStatesByType(
     Result => 'ID',
     Type   => 'Viewable',
 );
 $Success = $Self->IsNotDeeply(
     TestName   => 'Get state id array by type with parameter "Type" value "Viewable"',
     CheckValue => undef,
-    TestValue  => \@IDArray0023,
+    TestValue  => \@IDArray0025,
     StartTime  => $StartTime,
 );
 return 1 if ( !$Success );
 # EO TEST STEP
 
 # TEST STEP - Get state id array by type with parameter "StateType" value matching content for SysConfig "Ticket::ViewableStateType"
-delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0024'} );
+delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0026'} );
 $StartTime = $Self->GetMilliTimeStamp();
-my @IDArray0024 = $StateObject->StateGetStatesByType(
+my @IDArray0026 = $StateObject->StateGetStatesByType(
     Result    => 'ID',
     StateType => $ConfigObject->Get('Ticket::ViewableStateType'),
 );
 $Success = $Self->IsNotDeeply(
     TestName   => 'Get state id array by type with parameter "StateType" value matching content for SysConfig "Ticket::ViewableStateType"',
     CheckValue => undef,
-    TestValue  => \@IDArray0024,
+    TestValue  => \@IDArray0026,
     StartTime  => $StartTime,
 );
 return 1 if ( !$Success );
 # EO TEST STEP
 
 # TEST STEP - Check state id array parameter "Type" equals list with parameter "StateType"
-delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0025'} );
+delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0027'} );
 $StartTime = $Self->GetMilliTimeStamp();
 $Success = $Self->IsDeeply(
     TestName   => 'Check state id array parameter "Type" equals list with parameter "StateType"',
-    CheckValue => \@IDArray0023,
-    TestValue  => \@IDArray0024,
+    CheckValue => \@IDArray0025,
+    TestValue  => \@IDArray0026,
     StartTime  => $StartTime,
 );
 return 1 if ( !$Success );
 # EO TEST STEP
 
 # TEST STEP - Get state name array by type with parameter "Type" value "Viewable"
-delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0026'} );
+delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0028'} );
 $StartTime = $Self->GetMilliTimeStamp();
-my @NameArray0026 = $StateObject->StateGetStatesByType(
+my @NameArray0028 = $StateObject->StateGetStatesByType(
     Result => 'Name',
     Type   => 'Viewable',
 );
 $Success = $Self->IsNotDeeply(
     TestName   => 'Get state name array by type with parameter "Type" value "Viewable"',
     CheckValue => undef,
-    TestValue  => \@NameArray0026,
+    TestValue  => \@NameArray0028,
     StartTime  => $StartTime,
 );
 return 1 if ( !$Success );
 # EO TEST STEP
 
 # TEST STEP - Get state name array by type with parameter "StateType" value matching content for SysConfig "Ticket::ViewableStateType"
-delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0027'} );
+delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0029'} );
 $StartTime = $Self->GetMilliTimeStamp();
-my @NameArray0027 = $StateObject->StateGetStatesByType(
+my @NameArray0029 = $StateObject->StateGetStatesByType(
     Result    => 'Name',
     StateType => $ConfigObject->Get('Ticket::ViewableStateType'),
 );
 $Success = $Self->IsNotDeeply(
     TestName   => 'Get state name array by type with parameter "StateType" value matching content for SysConfig "Ticket::ViewableStateType"',
     CheckValue => undef,
-    TestValue  => \@NameArray0027,
+    TestValue  => \@NameArray0029,
     StartTime  => $StartTime,
 );
 return 1 if ( !$Success );
 # EO TEST STEP
 
 # TEST STEP - Check state name array parameter "Type" equals list with parameter "StateType"
-delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0028'} );
+delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0030'} );
 $StartTime = $Self->GetMilliTimeStamp();
 $Success = $Self->IsDeeply(
     TestName   => 'Check state name array parameter "Type" equals list with parameter "StateType"',
-    CheckValue => \@NameArray0026,
-    TestValue  => \@NameArray0027,
+    CheckValue => \@NameArray0028,
+    TestValue  => \@NameArray0029,
     StartTime  => $StartTime,
 );
 return 1 if ( !$Success );
