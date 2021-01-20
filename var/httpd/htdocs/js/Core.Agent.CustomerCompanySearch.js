@@ -1,5 +1,5 @@
 // --
-// Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
+// Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
 // --
 // This software comes with ABSOLUTELY NO WARRANTY. For details, see
 // the enclosed file LICENSE for license information (AGPL). If you
@@ -202,6 +202,7 @@ Core.Agent.CustomerCompanySearch = (function (TargetNS) {
             var ID = $(this).attr('id');
 
             $(this).attr('id', ID + Suffix);
+            $(this).attr('name', ID);
             $(this).val(CustomerCompanyKey);
 
             // set customer key if present

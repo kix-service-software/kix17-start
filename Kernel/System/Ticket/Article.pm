@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2021 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -2793,6 +2793,17 @@ sub ArticleFlagDelete {
         }
     }
 
+    my $ZoomTabArticleConfig = $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Frontend::AgentTicketZoomTabArticle');
+    if (
+        ref($ZoomTabArticleConfig) eq 'HASH'
+        && $ZoomTabArticleConfig->{ArticleFlagsShared}
+        && ref($ZoomTabArticleConfig->{ArticleFlagsShared}) eq 'HASH'
+        && $ZoomTabArticleConfig->{ArticleFlagsShared}->{$Param{Key}}
+    ) {
+        $Param{AllUsers} = 1;
+        $Param{UserID}   = 0;
+    }
+
     if ( !$Param{AllUsers} && !$Param{UserID} ) {
         if ( !$Param{$_} ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
@@ -2888,6 +2899,32 @@ sub ArticleFlagGet {
         $Flag{ $Row[0] } = $Row[1];
     }
 
+    my $ZoomTabArticleConfig = $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Frontend::AgentTicketZoomTabArticle');
+    if (
+        ref($ZoomTabArticleConfig) eq 'HASH'
+        && $ZoomTabArticleConfig->{ArticleFlagsShared}
+        && ref($ZoomTabArticleConfig->{ArticleFlagsShared}) eq 'HASH'
+    ) {
+        FLAG:
+        for my $Flag ( keys( %{$ZoomTabArticleConfig->{ArticleFlagsShared}} ) ) {
+            next FLAG if (!$ZoomTabArticleConfig->{ArticleFlagsShared}->{$Flag});
+            next FLAG if ($Flag{$Flag});
+
+            # sql query
+            return %Flag if !$DBObject->Prepare(
+                SQL => 'SELECT article_key, article_value'
+                     . ' FROM article_flag'
+                     . ' WHERE article_id = ?'
+                     . '  AND article_key = ?',
+                Bind  => [ \$Param{ArticleID}, \$Flag ],
+                Limit => 1,
+            );
+
+            while ( my @Row = $DBObject->FetchrowArray() ) {
+                $Flag{ $Row[0] } = $Row[1];
+            }
+        }
+    }
     return %Flag;
 }
 

@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2021 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -1566,6 +1566,12 @@ sub Run {
                 $Error{'SLAInvalid'} = ' ServerError';
             }
 
+            if ( !$GetParam{NextStateID} ) {
+                $Error{'NextStateInvalid'} = 'ServerError';
+            }
+            if ( !$GetParam{PriorityID} ) {
+                $Error{'PriorityInvalid'} = 'ServerError';
+            }
             if ( $ConfigObject->Get('Ticket::Type') && !$GetParam{TypeID} ) {
                 $Error{'TypeInvalid'} = 'ServerError';
             }
@@ -3152,7 +3158,7 @@ sub _MaskEmailNew {
     $Param{NextStatesStrg} = $LayoutObject->BuildSelection(
         Data          => $Param{NextStates},
         Name          => 'NextStateID',
-        Class         => 'Modernize',
+        Class         => 'Validate_Required Modernize ' . ( $Param{Errors}->{NextStateInvalid} || ' ' ),
         Translation   => 1,
         SelectedValue => $Param{NextState} || $Config->{StateDefault},
     );
@@ -3517,7 +3523,7 @@ sub _MaskEmailNew {
         Data          => $Param{Priorities},
         Name          => 'PriorityID',
         SelectedID    => $Param{PriorityID},
-        Class         => 'Modernize',
+        Class         => 'Validate_Required Modernize ' . ( $Param{Errors}->{PriorityInvalid} || ' ' ),
         SelectedValue => $Param{Priority},
         Translation   => 1,
     );

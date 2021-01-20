@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2021 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -1258,6 +1258,10 @@ generates the HTML for the page begin in the Agent interface.
 sub Header {
     my ( $Self, %Param ) = @_;
 
+    # get needed objects
+    my $ConfigObject            = $Kernel::OM->Get('Kernel::Config');
+    my $TemplateGeneratorObject = $Kernel::OM->Get('Kernel::System::TemplateGenerator');
+
     my $Type = $Param{Type} || '';
 
     # check params
@@ -1268,8 +1272,6 @@ sub Header {
     if ( !defined $Param{ShowPrefLink} ) {
         $Param{ShowPrefLink} = 1;
     }
-
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
     # do not show preferences link if the preferences module is disabled
     my $Modules = $ConfigObject->Get('Frontend::Module');
@@ -1380,7 +1382,14 @@ sub Header {
         );
 
         if ($Access) {
-            $Param{TitleArea} = $Ticket{Title};
+            my $TitleTemplate = $ConfigObject->Get('Ticket::Frontend::AgentTicketZoom')->{BrowserTitle} || '<KIX_TICKET_Title>';
+            $Param{TitleArea} = $TemplateGeneratorObject->ReplacePlaceHolder(
+                Text     => $TitleTemplate,
+                Data     => {},
+                RichText => '0',
+                TicketID => $Self->{TicketID},
+                UserID   => $Self->{UserID},
+            );
         }
     }
 
@@ -1567,6 +1576,8 @@ sub Header {
             );
         }
     }
+
+    $Self->_BuildCustomHighlight();
 
     # create & return output
     $Output .= $Self->Output(
@@ -4148,9 +4159,11 @@ sub CustomerLogin {
 sub CustomerHeader {
     my ( $Self, %Param ) = @_;
 
-    my $Type = $Param{Type} || '';
+    # get needed objects
+    my $ConfigObject            = $Kernel::OM->Get('Kernel::Config');
+    my $TemplateGeneratorObject = $Kernel::OM->Get('Kernel::System::TemplateGenerator');
 
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+    my $Type = $Param{Type} || '';
 
     # add cookies if exists
     my $Output = '';
@@ -4248,7 +4261,20 @@ sub CustomerHeader {
             TicketID => $Self->{TicketID},
         );
 
-        $Param{TitleArea} = $Ticket{Title};
+        my $TitleTemplate;
+        if ( $Self->{Action} eq 'CustomerTicketZoom' ) {
+            $TitleTemplate = $ConfigObject->Get('Ticket::Frontend::CustomerTicketZoom')->{BrowserTitle} || '<KIX_TICKET_Title>';
+        }
+        else {
+            $TitleTemplate = $Param{Title} = $ConfigObject->Get('Ticket::Frontend::PublicTicketZoom')->{BrowserTitle} || '<KIX_TICKET_Title>';
+        }
+        $Param{TitleArea} = $TemplateGeneratorObject->ReplacePlaceHolder(
+            Text     => $TitleTemplate,
+            Data     => {},
+            RichText => '0',
+            TicketID => $Self->{TicketID},
+            UserID   => $Self->{UserID},
+        );
     }
 
     my $Frontend;
@@ -6273,6 +6299,52 @@ sub _BuildCustomFooter{
                     }
                 );
             }
+        }
+    }
+
+    return 1;
+}
+
+sub _BuildCustomHighlight{
+    my ($Self, %Param) = @_;
+
+    # get needed objects
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+
+    for my $View ( qw(Small Large) ) {
+
+        next if !$ConfigObject->Get('KIX4OTRSTicketOverview' . $View . 'HighlightMapping');
+
+        my $Config = $ConfigObject->Get('KIX4OTRSTicketOverview' . $View . 'HighlightMapping');
+
+        CONFIG:
+        for my $Key ( sort keys %{$Config} ) {
+            next CONFIG if $Config->{$Key} eq '';
+
+            my $Selector = $Key;
+
+            if ( $Key =~ /###/ ) {
+                my ($Prio, $Restrictions) = split(/###/, $Key);
+                $Selector = $Prio;
+            }
+
+            $Selector =~ s/\s+//mg;
+            $Selector =~ s/[:\.,\\\/]//;
+            $Selector =~ s/[+]/Plus/;
+            $Selector =~ s/[-]/Minus/;
+            $Selector = 'Highlight' . $View . $Selector;
+
+            if ( $View eq 'Large' ) {
+                $Selector = 'Flag span.' . $Selector;
+            }
+
+            $Self->Block(
+                Name => 'CustomTicketHighlight',
+                Data => {
+                    Selector    => $Selector,
+                    SelectorCSS => $Config->{$Key},
+                }
+            );
         }
     }
 

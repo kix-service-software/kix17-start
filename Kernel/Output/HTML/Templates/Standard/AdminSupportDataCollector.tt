@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2021 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -30,10 +30,8 @@
 [% RenderBlockStart("SupportDataGroup") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <div class="WidgetAction Toggle">
-                    <a href="#" title="[% Translate("Show or hide the content") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
-                </div>
-                <h2 class="WithToggle"><span>[% Translate(Data.Group) | html %]</span></h2>
+                <div class="WidgetAction Toggle" title="[% Translate("Show or hide the content") | html %]"></div>
+                <h2><span>[% Translate(Data.Group) | html %]</span></h2>
             </div>
             <div class="Content">
                 <ul class="CheckResults">

@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -35,27 +35,3 @@
     <td id="SaveGraphSubTypes"></td>
 </tr>
 [% RenderBlockEnd("SpecificSavedGraphs") %]
-[% RenderBlockStart("SpecificJavaScript") %]
-    var UserRights = {
-            Ro:      '[% Data.UserClassRoRights %]',
-            Service: '[% Data.UserServiceRoRight %]'
-    };
-
-    var $CIElements = {
-        Zoom:         $Elements.ContextNodeZoom,
-        Present:      $Elements.ContextPresentNode,
-        NotPresent:   $Elements.ContextNotPresentNode,
-        Service:      $Elements.Context.find('#Services'),
-        ServicePopup: $Elements.ServicePopup,
-        ChooseBox:    $Elements.ChooseBox
-    }
-    // bind for specific context menu option
-    $CIElements.Service.bind('click', function() {
-        if ( !$CIElements.Service.hasClass('ContextNoRights') ) {
-            HideContext();
-            Core.KIX4OTRS.AgentLinkGraphITSMConfigItem.ShowServices();
-        }
-    });
-
-    Core.KIX4OTRS.AgentLinkGraphITSMConfigItem.Init('[% Data.NodesString | html %]', UserRights, GraphConfig, $CIElements);
-[% RenderBlockEnd("SpecificJavaScript") %]

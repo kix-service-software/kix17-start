@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -191,9 +191,8 @@
                     <input type="hidden" name="FormID" value="[% Data.FormID | html %]"/>
 
                     <fieldset class="TableLike" id="DefaultDefinitionArea">
-                        <label class="Mandatory" for="Name">
-                            <span class="Marker">*</span> [% Translate("Name") | html %]:</label>
-                        <p class="Value">
+                        <label class="Mandatory" for="Name"><span class="Marker">*</span> [% Translate("Name") | html %]:</label>
+                        <div class="Field">
                             <input type="text" id="Name" name="Name" value="[% Data.Name | html %]" size="35" class="Validate_Required Validate_MaxLength Validate_Length_80 [% Data.NameInvalid | html %]" maxlength="80"/>
                             <div id="NameError" class="TooltipErrorMessage">
                                 <p>[% Translate("This field is required and its content can not be longer than %s characters.", "80") | html %]</p>
@@ -201,16 +200,16 @@
                             <div id="NameServerError" class="TooltipErrorMessage">
                                 <p>[% Translate("This field is required and its content can not be longer than %s characters.", "80") | html %]</p>
                             </div>
-                        </p>
+                        </div>
                         <div class="Clear"></div>
                         <label for="Frontend">[% Translate("Available in") | html %]:</label>
-                        <p class="Value">
+                        <div class="Field">
                             <input type="checkbox" id="AgentFrontend"    name="Agent" value="1" [% Data.Agent | html %]/>
-                            <label for="AgentFrontend">[% Translate("Agent Frontend") | html %]</label>
+                            [% Translate("Agent Frontend") | html %]
                             <br />
                             <input type="checkbox" id="CustomerFrontend" name="Customer" value="1" [% Data.Customer | html %]/>
-                            <label for="CustomerFrontend">[% Translate("Customer Frontend") | html %]</label>
-                        </p>
+                            [% Translate("Customer Frontend") | html %]
+                        </div>
                         <div class="Clear"></div>
                         <label id="CustomerPortalGroupIDLabel" class="Mandatory" for="CustomerPortalGroupID"><span class="Marker">*</span> [% Translate("Customer Portal Group") | html %]:</label>
                         <div class="Field">

@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2021 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -301,7 +301,7 @@ sub Run {
 
             if (
                 $Entry->[5] eq 'array'
-                && $Entry->[0] !~ /^UserCustomerIDs$/i
+                && $Entry->[0] =~ /^UserCustomerIDs$/i
             ) {
                 $GetParam{ $Entry->[0] } = join( ', ', $ParamObject->GetArray( Param => 'CustomerCompanyKey' ) );
             }
@@ -478,6 +478,16 @@ sub Run {
         ENTRY:
         for my $Entry ( @{ $ConfigObject->Get($Source)->{Map} } ) {
             $GetParam{ $Entry->[0] } = $ParamObject->GetParam( Param => $Entry->[0] ) || '';
+
+            if (
+                $Entry->[5] eq 'array'
+                && $Entry->[0] =~ /^UserCustomerIDs$/i
+            ) {
+                $GetParam{ $Entry->[0] } = join( ', ', $ParamObject->GetArray( Param => 'CustomerCompanyKey' ) );
+            }
+            elsif ( $Entry->[5] eq 'array' ) {
+                $GetParam{ $Entry->[0] } = join( ', ', $ParamObject->GetArray( Param => $Entry->[0] ) );
+            }
 
             # don't validate UserLogin if AutoLoginCreation is configured
             next ENTRY if ( $AutoLoginCreation && $Entry->[0] eq 'UserLogin' );
@@ -1098,6 +1108,14 @@ sub _Edit {
                 @{$Param{CustomerIDsArray}} = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerIDs(
                     User => $Param{ID},
                 );
+
+                # Removed duplicats
+                if ( scalar(@{$Param{CustomerIDsArray}}) ) {
+                    my %CustomerIDs = map { $_ => 1 } @{$Param{CustomerIDsArray}};
+
+                    @{$Param{CustomerIDsArray}} = keys %CustomerIDs;
+                }
+
                 $Param{CustomerIDCounter}    = scalar(@{$Param{CustomerIDsArray}});
                 $Param{HiddenClassContainer} = '';
             }

@@ -1,7 +1,7 @@
 // --
-// Modified version of the work: Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
+// Modified version of the work: Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
 // based on the original work of:
-// Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
+// Copyright (C) 2001-2021 OTRS AG, https://otrs.com/
 // --
 // This software comes with ABSOLUTELY NO WARRANTY. For details, see
 // the enclosed file LICENSE for license information (AGPL). If you
@@ -171,8 +171,8 @@ Core.Agent.Admin.GenericInterfaceDebugger = (function (TargetNS) {
                         $Header = $('<div class="Header"></div>'),
                         $Content = $('<div class="Content"></div>');
 
-                    $Header.append('<div class="WidgetAction Toggle"><a href="#" title="' + TargetNS.Localization.ToggleContentMsg + '"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a></div>');
-                    $Header.append('<h2 class="WithToggle DebugLevel_' + this.DebugLevel + '"><span>' + this.Summary + ' (' + this.Created + ', ' + this.DebugLevel + ')</span></h2>');
+                    $Header.append('<div class="WidgetAction Toggle" title="' + TargetNS.Localization.ToggleContentMsg + '"></div>');
+                    $Header.append('<h2 class="DebugLevel_' + this.DebugLevel + '"><span>' + this.Summary + ' (' + this.Created + ', ' + this.DebugLevel + ')</span></h2>');
                     $Container.append($Header);
 
                     if (this.Data && this.Data.length) {

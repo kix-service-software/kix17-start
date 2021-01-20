@@ -1,7 +1,7 @@
 // --
-// Modified version of the work: Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
+// Modified version of the work: Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
 // based on the original work of:
-// Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
+// Copyright (C) 2001-2021 OTRS AG, https://otrs.com/
 // --
 // This software comes with ABSOLUTELY NO WARRANTY. For details, see
 // the enclosed file LICENSE for license information (AGPL). If you
@@ -121,17 +121,21 @@ Core.KIX4OTRS.TicketZoomTabs = (function(TargetNS) {
      * @return nothing This function shows the article flag options dialog box (
      *         edit / delete )
      */
-    TargetNS.ShowArticleFlagOptionsDialog = function() {
-        $('.FlagIcon')
-            .unbind('click')
-            .bind('click', function() {
-                var FlagInformationArray = $(this).attr('id').split("_"),
-                    ArticleID = FlagInformationArray[1],
-                    ArticleFlagKey = FlagInformationArray[2],
-                    Position = $(this).offset();
+    TargetNS.ShowArticleFlagOptionsDialog = function(ArticleOptionsText) {
+        $('#ArticleTable .FlagIcon').each(function() {
+            var FlagInformationArray = $(this).attr('id').split("_"),
+                ArticleID = FlagInformationArray[1],
+                ArticleFlagKey = FlagInformationArray[2],
+                Position = $(this).offset();
 
-                Core.UI.Dialog.ShowContentDialog($('#ArticleFlagOptions_' + ArticleID + '_' + ArticleFlagKey), 'Article Flag Options', Position.top, parseInt(Position.left, 10) + 25);
+            $(this).unbind('click').bind('click', function(event) {
+                if ( $('#ArticleFlagOptions_' + ArticleID + '_' + ArticleFlagKey).length ) {
+                    Core.UI.Dialog.ShowContentDialog($('#ArticleFlagOptions_' + ArticleID + '_' + ArticleFlagKey), ArticleOptionsText, Position.top, parseInt(Position.left, 10) + 25);
+                }
+                event.preventDefault();
+                return false;
             });
+        });
     };
 
     /**
@@ -150,17 +154,43 @@ Core.KIX4OTRS.TicketZoomTabs = (function(TargetNS) {
         $DialogBox.find('input[name=ArticleID]').val(ArticleID);
 
         if (ArticleFlagKey != 0) {
-            Core.UI.Dialog
-                .ShowContentDialog($('#ArticleFlagDialog'), SetText + ' ' + ArticleFlagValue + ' for Article #' + ArticleID, '20px', 'Center', true, [ {
-                    Label : ApplyText,
-                    Function : function() {
-                        var $FormID = $('#ArticleFlagDialogForm'), Data = Core.AJAX.SerializeForm($FormID);
+            if (Core.Config.Get('ArticleFlagsWithoutEdit::' + ArticleFlagKey) === "1") {
+                var $FormID = $('#ArticleFlagDialogForm'), Data = Core.AJAX.SerializeForm($FormID);
 
-                        Core.AJAX.FunctionCall(Core.Config.Get('CGIHandle'), Data, function() {
-                            location.reload();
-                        }, 'text');
-                    }
-                } ]);
+                Core.AJAX.FunctionCall(Core.Config.Get('CGIHandle'), Data, function() {
+                    location.reload();
+                }, 'text');
+
+                // show overlay screen as reaction
+                $('<div id="Overlay" tabindex="-1">').appendTo('body');
+                $('body').css({
+                    'overflow': 'hidden'
+                });
+                $('#Overlay').height($(document).height()).css('top', 0).css('cursor', 'wait');
+                $('body').css('min-height', $(window).height());
+            }
+            else {
+
+                Core.UI.Dialog.ShowContentDialog(
+                    $('#ArticleFlagDialog'),
+                    SetText + ' ' + ArticleFlagValue + ' for Article #' + ArticleID,
+                    '20px',
+                    'Center',
+                    true,
+                    [
+                        {
+                            Label : ApplyText,
+                            Function : function() {
+                                var $FormID = $('#ArticleFlagDialogForm'), Data = Core.AJAX.SerializeForm($FormID);
+
+                                Core.AJAX.FunctionCall(Core.Config.Get('CGIHandle'), Data, function() {
+                                    location.reload();
+                                }, 'text');
+                            }
+                        }
+                    ]
+                );
+            }
         }
         return false;
     };
@@ -170,22 +200,38 @@ Core.KIX4OTRS.TicketZoomTabs = (function(TargetNS) {
      * @return nothing This function executes the article flag options like
      *         edit, show or delete
      */
-    TargetNS.ArticleFlagOptions = function(TicketID, ApplyText, SetText) {
+    TargetNS.ArticleFlagOptions = function(TicketID, ApplyText, SetText, ArticleText) {
 
         $(document.body).on('click', '.ArticleFlagOptionsDialog > a', function(event) {
 
-                var FlagString = $(this).attr('rel'),
-                    FlagInformationArray = FlagString.split("_"),
-                    ArticleFlagKey = FlagInformationArray[1],
-                    Title = $(this).attr('title'),
-                    TitleArray = Title.split(" "),
-                    ArticleFlagValue = TitleArray[4],
-                    Action = TitleArray[0],
-                    ArticleID = FlagInformationArray[0];
+            var FlagString = $(this).attr('rel'),
+                FlagInformationArray = FlagString.split("_"),
+                ArticleFlagKey = FlagInformationArray[1],
+                Title = $(this).attr('title'),
+                TitleArray = Title.split(" "),
+                ArticleFlagValue = TitleArray[4],
+                Action = $(this).attr('data-action'),
+                ArticleID = FlagInformationArray[0];
 
-                if (Action == 'show') {
-                    Core.UI.Dialog
-                        .ShowContentDialog($('#ArticleFlagDialog_' + FlagString), SetText + ' ' + ArticleFlagValue + ' for Article #' + ArticleID, '20px', 'Center', true, [
+            if (Action == 'show') {
+                if ( $('#ArticleFlagDialog_' + FlagString + ' input[readonly=readonly]').length ) {
+                    Core.UI.Dialog.ShowContentDialog(
+                        $('#ArticleFlagDialog_' + FlagString),
+                        SetText + ' ' + ArticleFlagValue + ' ' + ArticleText + ' #' + ArticleID,
+                        '20px',
+                        'Center',
+                        true,
+                        []
+                    );
+                }
+                else {
+                    Core.UI.Dialog.ShowContentDialog(
+                        $('#ArticleFlagDialog_' + FlagString),
+                        SetText + ' ' + ArticleFlagValue + ' for Article #' + ArticleID,
+                        '20px',
+                        'Center',
+                        true,
+                        [
                             {
                                 Label : ApplyText,
                                 Function : function() {
@@ -196,18 +242,21 @@ Core.KIX4OTRS.TicketZoomTabs = (function(TargetNS) {
                                         location.reload();
                                     }, 'text');
                                 }
-                            } ]);
-                    $('.Dialog').css({ "width" : "530px" });
-                } else {
-                    var URL = Core.Config.Get('CGIHandle') + '?Action=AgentTicketZoomTabArticle;Subaction=ArticleFlagDelete;TicketID=' + TicketID
-                        + ';ArticleID=' + ArticleID + ';ArticleFlagKey=' + ArticleFlagKey;
-
-                    Core.AJAX.ContentUpdate($('#ArticleFlag_' + FlagString), URL, function() {});
+                            }
+                        ]
+                    );
                 }
+                $('.Dialog').css({ "width" : "530px" });
+            } else {
+                var URL = Core.Config.Get('CGIHandle') + '?Action=AgentTicketZoomTabArticle;Subaction=ArticleFlagDelete;TicketID=' + TicketID
+                    + ';ArticleID=' + ArticleID + ';ArticleFlagKey=' + ArticleFlagKey;
 
-                $('.ArticleFlagOptionsDialog').closest('.Dialog').addClass('Hidden');
-                event.preventDefault();
-            });
+                Core.AJAX.ContentUpdate($('#ArticleFlag_' + FlagString), URL, function() {});
+            }
+
+            $('.ArticleFlagOptionsDialog').closest('.Dialog').addClass('Hidden');
+            event.preventDefault();
+        });
     };
 
     /**

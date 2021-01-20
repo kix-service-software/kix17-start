@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -30,20 +30,71 @@
 </div>
 <div class="WidgetSimple" id="Options">
     <div class="Content">
-        <button type="button" class="CallForAction" value="fitIn" id="FitIn" title='[% Translate("Fits the graph into the visible area") | html %]'><span>[% Translate("Fit in") | html %]</span></button>
-        <button type="button" class="CallForAction" value="-" id="ZoomNeg" title='[% Translate("Zoom out") | html %]'><span>-</span></button>
-        <button type="button" class="CallForAction" value="+" id="ZoomPlus" title='[% Translate("Zoom in") | html %]'><span>+</span></button>
-        <button type="button" class="CallForAction" value="Default" id="ZoomDefault" title='[% Translate("Zoom to 100%") | html %]'><span>[% Translate("Default size") | html %]</span></button>
-        <button type="button" class="CallForAction" value="MagnifierZoom" id="MagnifierZoom" title='[% Translate("Tool for defining a zoom-area") | html %]'>
-            <span><i class="fa fa-search"></i></span>
+        <input type="hidden" id="ObjectType" name="ObjectType" value="[% Data.ObjectType | html %]" />
+        <input type="hidden" id="ObjectID" name="ObjectID" value="[% Data.ObjectID | html %]" />
+        <input type="hidden" id="OpenWindow" name="OpenWindow" value="[% Data.OpenWindow | html %]" />
+        [% Data.TemplateString %]
+        <button type="button" class="CallForAction" value="TemplateEdit" id="TemplateEdit" title='[% Translate("Edit selected template") | html %]'>
+            <span>
+                <i class="fa fa-cog"></i>
+            </span>
+        </button>
+        <button type="button" class="CallForAction" value="ZoomFit" id="ZoomFit" title='[% Translate("Fits the graph into the visible area") | html %]'>
+            <span>
+                <i class="fa fa-arrows-alt"></i>
+            </span>
+        </button>
+        <button type="button" class="CallForAction" value="ZoomOut" id="ZoomOut" title='[% Translate("Zoom out") | html %]'>
+            <span>
+                <i class="fa fa-search-minus"></i>
+            </span>
+        </button>
+        <button type="button" class="CallForAction" value="ZoomIn" id="ZoomIn" title='[% Translate("Zoom in") | html %]'>
+            <span>
+                <i class="fa fa-search-plus"></i>
+            </span>
+        </button>
+        <button type="button" class="CallForAction" value="ZoomDefault" id="ZoomDefault" title='[% Translate("Zoom to 100%") | html %]'>
+            <span>
+                <i class="fa fa-search"></i>
+            </span>
+        </button>
+        <button type="button" class="CallForAction" value="ZoomSelection" id="ZoomSelection" title='[% Translate("Tool for defining a zoom-area") | html %]'>
+            <span>
+                <i class="fa fa-crosshairs"></i>
+            </span>
         </button>
         <span> [% Translate("Current zoom level") | html %]:
             <span id="ZoomValue">100%</span>
         </span>
         <span id="Right">
-            <button type="button" class="CallForAction" value="Adjust" id="Adjust" title='[% Translate("Adjust the graph") | html %]'><span>[% Translate("Adjust") | html %]</span></button>
-            <button type="button" class="CallForAction" value="Save" id="SaveGraph" title='[% Translate("Save the graph") | html %]'><span>[% Translate("Save") | html %]</span></button>
-            <button type="button" class="CallForAction" value="Print" id="PrintGraph" title='[% Translate("Print the graph") | html %]'><span>[% Translate("Print") | html %]</span></button>
+            <button type="button" class="CallForAction" value="GraphLoad" id="GraphLoad" title='[% Translate("Load a graph") | html %]'>
+                <span>
+                    <i class="fa fa-folder-open-o"></i>
+                </span>
+            </button>
+            <button type="button" class="CallForAction" value="GraphSave" id="GraphSave" title='[% Translate("Save the graph") | html %]'>
+                <span>
+                    <i class="fa fa-floppy-o"></i>
+                </span>
+            </button>
+            <button type="button" class="CallForAction" value="GraphAdjust" id="GraphAdjust" title='[% Translate("Adjust the graph") | html %]'>
+                <span>
+                    <i class="fa fa-refresh"></i>
+                </span>
+            </button>
+            <button type="button" class="CallForAction" value="GraphPrint" id="GraphPrint" title='[% Translate("Print the graph") | html %]'>
+                <span>
+                    <i class="fa fa-print"></i>
+                </span>
+            </button>
+[% RenderBlockStart("GraphWindow") %]
+            <button type="button" class="CallForAction" value="GraphWindow" id="GraphWindow" title='[% Translate("Opens the graph in a separate window.") | html %]'>
+                <span>
+                    <i class="fa fa-external-link"></i>
+                </span>
+            </button>
+[% RenderBlockEnd("GraphWindow") %]
         </span>
     </div>
 </div>
@@ -51,6 +102,51 @@
 <div id="Shield" tabindex="-1">
 </div>
 <div id="ZoomArea" class="Hidden">
+</div>
+<div class="Hidden">
+    <input type="hidden" id="LoadGraphTitle" value="[% Translate("Saved graphs for this object") | html %]" />
+    <div id="LoadGraphContent">
+        <div id="SavedGraphs" class="Hidden">
+            <p id="LoadGraphSelection">
+            </p>
+            <br />
+            <div>
+                <table class="DataTable">
+                    <tbody>
+                        <tr>
+                            <td>[% Translate("Max Link Depth") | html %]</td>
+                            <td id="LoadGraphDepth">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>[% Translate("Followed Link-Types") | html %]</td>
+                            <td id="LoadGraphLinkTypes">
+                            </td>
+                        </tr>
+                        [% Data.ObjectSpecificSavedGraphs %]
+                        <tr>
+                            <td>[% Translate("Adjusting Strength") | html %]</td>
+                            <td id="LoadGraphStrength">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>[% Translate("Last changed") | html %]</td>
+                            <td id="LoadGraphLastChangedTime">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>[% Translate("Last changed by") | html %]</td>
+                            <td id="LoadGraphLastChangedBy">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <p id="NoSavedGraphs" class="Hidden">[% Translate("There are no saved graphs!") | html %]</p>
+    </div>
+    <input type="hidden" id="LoadGraphSubmit" value='[% Translate("Load") | html %]' />
+    <input type="hidden" id="LoadGraphCancel" value='[% Translate("Cancel") | html %]' />
 </div>
 <div id="GraphBody">
 
@@ -128,22 +224,31 @@
              <h2><span>[% Translate("Save graph for") | html %] [% Data.StartName | html %]</span></h2>
         </div>
         <div class="Content">
-            <p>[% Translate("What should be done?") | html %]</p>
-            <p>
-                <label>
-                    <input type="radio" name="SaveMethod" id="NewWriteRadio" value="NewWrite" checked="checked" />[% Translate("Create new") | html %]
-                </label>
-                <label>
-                    <input type="radio" name="SaveMethod" id="OverwriteRadio" value="OverWrite" />[% Translate("Overwrite") | html %]
-                </label>
-                <span id="StillWorkingImage" class="AJAXLoader"></span>
-            </p>
-            <p id="NewWriteValue">
-                [% Translate("Name") | html %]:
-                <input type="text" id="NewWriteName" tabindex="1" />
-            </p>
-            <div id="OverwriteValue" class="Hidden" >
-                <p>[% Translate("Which one?") | html %]<span id="SaveGraphSelection"></span></p>
+            <fieldset class="TableLike" style="min-width:300px;">
+                <label>[% Translate("What should be done?") | html %]</label>
+                <div class="Field">
+                    <label>
+                        <input type="radio" name="SaveMethod" id="NewWriteRadio" value="NewWrite" checked="checked" />[% Translate("Create new") | html %]
+                    </label>
+                    <label>
+                        <input type="radio" name="SaveMethod" id="OverwriteRadio" value="OverWrite" />[% Translate("Overwrite") | html %]
+                    </label>
+                    <span id="StillWorkingImage" class="AJAXLoader"></span>
+                </div>
+                <div class="Clear"></div>
+            </fieldset>
+            <fieldset id="NewWriteValue" class="TableLike" >
+                <label>[% Translate("Name") | html %]:</label>
+                <div class="Field">
+                    <input type="text" id="NewWriteName" tabindex="1" />
+                </div>
+                <div class="Clear"></div>
+            </fieldset>
+            <fieldset id="OverwriteValue" class="TableLike Hidden" >
+                <label>[% Translate("Which one?") | html %]</label>
+                <div id="SaveGraphSelection" class="Field">
+                </div>
+                <div class="Clear"></div>
                 <table class="DataTable">
                     <thead></thead>
                     <tbody>
@@ -170,7 +275,7 @@
                         </tr>
                     </tbody>
                 </table>
-            </div>
+            </fieldset>
             <p id="NoSavedGraphs" class="Hidden">[% Translate("There are no saved graphs!") | html %]</p>
             <p class="Hidden Error" id="NoSaveName">[% Translate("No name is given!") | html %]</p>
             <p class="Hidden Error" id="NotUniqueName">[% Translate("There is already a saved graph with this name!") | html %]</p>
@@ -206,6 +311,24 @@
             </table>
         </div>
     </div>
+    <div class="Hidden" id="TemplateEditPopup">
+        <input type="hidden" id="TemplateEditTitle" value='[% Translate("Edit current template") | html %]'/>
+        <a>&nbsp;</a>
+        <fieldset class="TableLike" style="width:550px;">
+            <label for="TemplateMaxSearchDepth" style="width:210px;margin-right:10px;">[% Translate("Max Link Depth") | html %]: </label>
+            <div class="Field">[% Data.MaxSearchDepthString %]</div>
+            <div class="Clear"></div>
+            <label for="TemplateRelevantLinkTypes" style="width:210px;margin-right:10px;">[% Translate("Link-Types to follow") | html %]: </label>
+            <div class="Field">[% Data.RelevantLinkTypesString %]</div>
+            <div class="Clear"></div>
+            <label for="TemplateRelevantObjectSubTypes" style="width:210px;margin-right:10px;">[% Translate("CI-Classes to consider") | html %]: </label>
+            <div class="Field">[% Data.RelevantObjectSubTypesString %]</div>
+            <div class="Clear"></div>
+            <label for="TemplateAdjustingStrength" style="width:210px;margin-right:10px;">[% Translate("Adjusting Strength") | html %]: </label>
+            <div class="Field">[% Data.AdjustingStrengthString %]</div>
+            <div class="Clear"></div>
+        </fieldset>
+    </div>
 
     <div class="Hidden" id="ServicePopup"></div>
 
@@ -224,10 +347,7 @@
 
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-
-    function HideContext() {
-        $Elements.Context.addClass('Hidden');
-    }
+    $('#AppWrapper').css("margin-top", "0px");
 
     // check if there are too many nodes - just show notice
     if ( '[% Data.TooManyNodes | html %]' != 0 ) {
@@ -248,101 +368,138 @@
         });
     } else {
         var $Elements = {
-            Body:          $('body'),
-            GraphBody:     $('#GraphBody'),
-            Options:       $('#Options'),
-            Scale:         $('#Scale'),
-            PrintBox:      $('#PrintBox'),
-            PrintGraphBody:$('#PrintGraphBody'),
-            PrintScale:    $('#PrintScale'),
-            ZoomValue:     $('#ZoomValue'),
-            Context:       $('#Context'),
-            Shield:        $('#Shield'),
-            Dummy:         $('#ConnectionDummy'),
-            DummyShow:     $('#ConnectionDummyShow'),
-            ChooseBox:     $('#ChooseBox'),
-            SetTODL:       $('#SetTypeOrDeleteLink'),
-            ServicePopup:  $('#ServicePopup'),
-            ZoomArea:      $('#ZoomArea'),
-            MagnifierZoom: $('#MagnifierZoom'),
-            SOGraph:       $('#SaveOverwriteGraph'),
-            Notice:        $('#Notice'),
-            GraphLoaded:   $('#GraphLoadedPopup')
-        };
-
-        // GraphConfig
-        var GraphConfig = {
-            ObjectType:        '[% Data.ObjectType | html %]',
-            SubTypes:          '[% Data.RelevantObjectSubTypes | html %]',
-            LinkTypes:         '[% Data.RelevantLinkTypes | html %]',
-            SearchDepth:       '[% Data.MaxSearchDepth | html %]',
-            StartID:           '[% Data.StartID | html %]',
-            AdjustingStrength: '[% Data.UsedStrength | html %]'
-        };
+                Body:          $('body'),
+                GraphBody:     $('#GraphBody'),
+                Options:       $('#Options'),
+                Scale:         $('#Scale'),
+                PrintBox:      $('#PrintBox'),
+                PrintGraphBody:$('#PrintGraphBody'),
+                PrintScale:    $('#PrintScale'),
+                ZoomValue:     $('#ZoomValue'),
+                Context:       $('#Context'),
+                Shield:        $('#Shield'),
+                Dummy:         $('#ConnectionDummy'),
+                DummyShow:     $('#ConnectionDummyShow'),
+                ChooseBox:     $('#ChooseBox'),
+                SetTODL:       $('#SetTypeOrDeleteLink'),
+                ServicePopup:  $('#ServicePopup'),
+                ZoomArea:      $('#ZoomArea'),
+                MagnifierZoom: $('#ZoomSelection'),
+                SOGraph:       $('#SaveOverwriteGraph'),
+                Notice:        $('#Notice'),
+                GraphLoaded:   $('#GraphLoadedPopup')
+            },
+            GraphConfig = {
+                ObjectType:        '[% Data.ObjectType | html %]',
+                ObjectID:          '[% Data.ObjectID | html %]',
+                Template:          '[% Data.Template | html %]',
+                SubTypes:          '[% Data.RelevantObjectSubTypes | html %]',
+                LinkTypes:         '[% Data.RelevantLinkTypes | html %]',
+                SearchDepth:       '[% Data.MaxSearchDepth | html %]',
+                StartID:           '[% Data.StartID | html %]',
+                AdjustingStrength: '[% Data.AdjustingStrength | html %]',
+                OpenWindow:        '[% Data.OpenWindow | html %]'
+            },
+            UserRights = {
+                Ro:      '[% Data.UserClassRoRights %]',
+                Service: '[% Data.UserServiceRoRight %]'
+            };
 
         // general context elements
-        $Elements.ContextNodeZoom = $Elements.Context.find('#NodeZoom');
-        $Elements.ContextPresentNode = $Elements.Context.find('#PresentNode');
+        $Elements.ContextNodeZoom       = $Elements.Context.find('#NodeZoom');
+        $Elements.ContextPresentNode    = $Elements.Context.find('#PresentNode');
         $Elements.ContextNotPresentNode = $Elements.Context.find('#NotPresentNode');
+        $Elements.Service               = $Elements.Context.find('#Services');
+        $Elements.Zoom                  = $Elements.ContextNodeZoom;
+        $Elements.Present               = $Elements.ContextPresentNode;
+        $Elements.NotPresent            = $Elements.ContextNotPresentNode;
 
         // init graph
-        Core.KIX4OTRS.AgentLinkGraph.InitGraph('[% Data.NodesString | html %]', '[% Data.Links | html %]', '[% Data.LinkColors %]', '[% Data.LinkTypes %]', $Elements, '[% Data.Layout | html %]', GraphConfig);
+        ITSM.Agent.LinkGraph.InitGraph('[% Data.NodesString | html %]', '[% Data.Links | html %]', '[% Data.LinkColors %]', '[% Data.LinkTypes %]', $Elements, '[% Data.Layout | html %]', GraphConfig);
 
-        // options left
-        $('#FitIn').bind('click', function() {
-            Core.KIX4OTRS.AgentLinkGraph.FitIn();
+        // init functions
+        $('#Template').on('change', function() {
+            ITSM.Agent.LinkGraph.TemplateLoad();
         });
-        $('#ZoomNeg').bind('click', function() {
-            Core.KIX4OTRS.AgentLinkGraph.Zoom(1);
+        $('#TemplateEdit').on('click', function() {
+            ITSM.Agent.LinkGraph.TemplateEdit();
         });
-        $('#ZoomPlus').bind('click', function() {
-            Core.KIX4OTRS.AgentLinkGraph.Zoom(2);
+        $('#ZoomFit').on('click', function() {
+            ITSM.Agent.LinkGraph.FitIn();
         });
-        $('#ZoomDefault').bind('click', function() {
-            Core.KIX4OTRS.AgentLinkGraph.Zoom(3);
+        $('#ZoomOut').on('click', function() {
+            ITSM.Agent.LinkGraph.Zoom(1);
         });
-        // options right
-        $('#Adjust').bind('click', function() {
-            Core.KIX4OTRS.AgentLinkGraph.Adjust();
+        $('#ZoomIn').on('click', function() {
+            ITSM.Agent.LinkGraph.Zoom(2);
         });
-        $('#SaveGraph').bind('click', function() {
-            Core.KIX4OTRS.AgentLinkGraph.SaveGraph();
+        $('#ZoomDefault').on('click', function() {
+            ITSM.Agent.LinkGraph.Zoom(3);
         });
-        $('#PrintGraph').bind('click', function() {
-            Core.KIX4OTRS.AgentLinkGraph.PrintPre();
+        $('#GraphLoad').on('click', function() {
+            ITSM.Agent.LinkGraph.LoadGraph();
+        });
+        $('#GraphSave').on('click', function() {
+            ITSM.Agent.LinkGraph.SaveGraph();
+        });
+        $('#GraphAdjust').on('click', function() {
+            ITSM.Agent.LinkGraph.Adjust();
+        });
+        $('#GraphPrint').on('click', function() {
+            ITSM.Agent.LinkGraph.PrintPre();
+        });
+        $('#GraphWindow').on('click', function () {
+            var URL = 'Action=AgentITSMConfigItemLinkGraphWindow;ConfigItemID=[% Data.ObjectID | html %];Template=[% Data.Template | html %]';
+
+            if (!Core.Config.Get('SessionIDCookie')) {
+                URL += ';' + Core.Config.Get('SessionName') + '=' + Core.Config.Get('SessionID');
+            }
+
+            Core.UI.Popup.OpenPopup( Core.Config.Get('Baselink') + URL, 'Action');
+            return false;
         });
 
         // context menu options
-        $Elements.ContextNodeZoom.bind('mouseup', function(e) {
+        $Elements.ContextNodeZoom.on('mouseup', function(e) {
             if (!e) {
                 e = window.event;
             }
-            if ( e.which == 3 ) { return; }
+            if ( e.which == 3 ) {
+                return;
+            }
             if ( !$Elements.ContextNodeZoom.hasClass('ContextNoRights') ) {
                 HideContext();
-                Core.KIX4OTRS.AgentLinkGraph[% Data.ObjectType | html %].OpenObject();
+                ITSM.Agent.LinkGraph.OpenObject();
             }
         });
-        $Elements.ContextPresentNode.bind('click', function(e) {
+        $Elements.ContextPresentNode.on('click', function(e) {
             if ( !$Elements.ContextPresentNode.hasClass('ContextNoRights') ) {
                 HideContext();
-                Core.KIX4OTRS.AgentLinkGraph[% Data.ObjectType | html %].PresentNode();
+                ITSM.Agent.LinkGraph.PresentNode();
             }
         });
-        $Elements.ContextNotPresentNode.bind('click', function(e) {
+        $Elements.ContextNotPresentNode.on('click', function(e) {
             if ( !$Elements.ContextNotPresentNode.hasClass('ContextNoRights') ) {
                 if (!e) {
                     e = window.event;
                 }
                 HideContext();
-                Core.KIX4OTRS.AgentLinkGraph[% Data.ObjectType | html %].NotPresentNode(e);
+                ITSM.Agent.LinkGraph.NotPresentNode(e);
             }
         });
 
-        // object-specific
-        [% Data.ObjectSpecificJavaScript | html %]
+        function HideContext() {
+            $Elements.Context.addClass('Hidden');
+        }
+
+        $Elements.Service.on('click', function() {
+            if ( !$Elements.Service.hasClass('ContextNoRights') ) {
+                HideContext();
+                ITSM.Agent.LinkGraph.ShowServices();
+            }
+        });
+
+        ITSM.Agent.LinkGraph.Init('[% Data.NodesString | html %]', UserRights);
     }
-
-
 //]]></script>
 [% END %]

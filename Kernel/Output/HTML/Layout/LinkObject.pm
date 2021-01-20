@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2021 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -93,7 +93,9 @@ sub LinkObjectTableCreateComplex {
     my ( $Self, %Param ) = @_;
 
     # get log object
-    my $LogObject = $Kernel::OM->Get('Kernel::System::Log');
+    my $LogObject  = $Kernel::OM->Get('Kernel::System::Log');
+    my $UserObject = $Kernel::OM->Get('Kernel::System::User');
+    my $JSONObject = $Kernel::OM->Get('Kernel::System::JSON');
 
     # check needed stuff
     for my $Argument (qw(LinkListWithData ViewMode)) {
@@ -117,18 +119,23 @@ sub LinkObjectTableCreateComplex {
 
     return if !%{ $Param{LinkListWithData} };
 
+    if( $Param{Action} ) {
+        $Self->{Action} = $Param{Action};
+    }
+
     # convert the link list
     my %LinkList;
 
     # get user data
-    my %UserData
-        = $Kernel::OM->Get('Kernel::System::User')->GetUserData( UserID => $Self->{UserID} );
+    my %UserData = $UserObject->GetUserData( UserID => $Self->{UserID} );
     my @UserLinkObjectTablePosition = ();
     if ( $UserData{ 'UserLinkObjectTablePosition-' . $Self->{Action} } ) {
         @UserLinkObjectTablePosition
             = split( /;/, $UserData{ 'UserLinkObjectTablePosition-' . $Self->{Action} } );
     }
     my %DirectionTypeList;
+    my %LinkObjectList;
+    my @Classes;
 
     for my $Object ( sort keys %{ $Param{LinkListWithData} } ) {
 
@@ -146,11 +153,24 @@ sub LinkObjectTableCreateComplex {
                     $LinkList{$Object}->{$ObjectKey}->{$LinkType}          = $Direction;
                     $DirectionTypeList{$Object}->{$ObjectKey}->{Direction} = $Direction;
                     $DirectionTypeList{$Object}->{$ObjectKey}->{Type}      = $LinkType;
+
+                    %LinkObjectList = (
+                        SourceObject => $DirectionList->{$ObjectKey}->{SourceObject},
+                        SourceKey    => $DirectionList->{$ObjectKey}->{SourceKey},
+                    );
+
+                    if ( $Object eq 'ITSMConfigItem' ) {
+                        my $ClassID = $DirectionList->{$ObjectKey}->{ClassID} || '';
+                        if (!grep( { $ClassID eq $_ } @Classes ) ) {
+                            push( @Classes, $ClassID);
+                        }
+                    }
                 }
             }
         }
     }
 
+    my %Filters;
     my @OutputData;
     my %EnabledColumns;
     my @LinkObjects = ();
@@ -163,7 +183,7 @@ sub LinkObjectTableCreateComplex {
             if( $Item =~ /^UserFilterColumnsEnabled-$Self->{Action}-$Object(-?)(.*?)$/ ) {
                 my $FilterObject = $1;
                 my $FilterColumn = $2;
-                my $Enabled      = $Kernel::OM->Get('Kernel::System::JSON')->Decode(
+                my $Enabled      = $JSONObject->Decode(
                     Data => $UserData{
                         'UserFilterColumnsEnabled-'
                             . $Self->{Action} . '-'
@@ -183,12 +203,39 @@ sub LinkObjectTableCreateComplex {
 
         next OBJECT if !$BackendObject;
 
+        if ( $BackendObject->{Behaviors}->{IsFilterable} ) {
+            if ( $Self->{Action} ne 'AgentLinkObject' ) {
+                if ( $Object eq 'ITSMConfigItem' ) {
+                    if ( $Param{OnlyClassID} ) {
+                        @Classes = ();
+                        push(@Classes, $Param{OnlyClassID});
+                    }
+                    for my $ClassID ( @Classes ) {
+                        %{$Filters{$Object}->{$ClassID}} = $Self->_ColumnFilters(
+                            Source   => $LinkObjectList{SourceObject},
+                            Target   => $Object,
+                            ClassID  => $ClassID
+                        );
+                    }
+                } else {
+                    %{$Filters{$Object}} = $Self->_ColumnFilters(
+                        Source => $LinkObjectList{SourceObject},
+                        Target => $Object
+                    );
+                }
+            }
+        }
+
         # get block data
         my @BlockData = $BackendObject->TableCreateComplex(
             ObjectLinkListWithData => $Param{LinkListWithData}->{$Object},
             Action                 => $Self->{Action},
             ObjectID               => $Param{ObjectID},
             EnabledColumns         => \%EnabledColumns,
+            OnlyClassID            => $Param{OnlyClassID} || '',
+            SortBy                 => $Param{SortBy},
+            OrderBy                => $Param{OrderBy},
+            %{$Filters{$Object}},
         );
 
         next OBJECT if !@BlockData;
@@ -273,10 +320,37 @@ sub LinkObjectTableCreateComplex {
             )
             || $NoColumnsEnabled
         ) {
+            my %FilterData;
+            if ( $Block->{Behaviors}->{IsFilterable} ) {
+                my $Filterable = $Filters{$Block->{Object}}->{GetColumnFilterSelect}->{LinkType};
+                my $ClassID    = $Block->{ClassID} || '';
+                if ( $Block->{Object} eq 'ITSMConfigItem' ) {
+                    $Filterable = $Filters{$Block->{Object}}->{$ClassID}->{GetColumnFilterSelect}->{LinkType};
+                }
+
+                %FilterData = (
+                    Filterable       => $Self->{Action} ne 'AgentLinkObject' ? 1 : 0,
+                    FilterTitle      => $Filterable ? Translatable('filter active') : Translatable('filter not active'),
+                    OrderCSS         => $Filterable ? 'FilterActive' : '',
+                    ColumnFilterStrg => $LayoutObject->BuildSelection(
+                        Name        => $Block->{Object} . $ClassID . 'ColumnFilterLinkType',
+                        Data        => [
+                            {
+                                Key   => '',
+                                Value => uc $LayoutObject->{LanguageObject}->Translate('Linked as'),
+                            },
+                        ],
+                        Class       => 'ColumnFilter',
+                        Translation => 1,
+                        SelectedID  => '',
+                    )
+                );
+            }
 
             # define the headline column
             my $Column = {
                 Content => 'Linked as',
+                %FilterData
             };
 
             # add new column to the headline
@@ -357,14 +431,16 @@ sub LinkObjectTableCreateComplex {
 
                 # define check-box delete cell
                 my $CheckboxCell = {
-                    Type         => 'CheckboxDelete',
-                    Object       => $Block->{Object},
-                    Content      => '',
-                    Key          => $Item->[0]->{Key},
-                    LinkTypeList => $LinkList{ $Block->{Object} }->{ $Item->[0]->{Key} },
-                    Translate    => 1,
-                    SourceObject => $SourceObject,
-                    SourceKey    => $SourceKey
+                    HighlightClass => $Item->[0]->{HighlightClass},
+                    CustomCSSStyle => $Item->[0]->{CustomCSSStyle},
+                    Type           => 'CheckboxDelete',
+                    Object         => $Block->{Object},
+                    Content        => '',
+                    Key            => $Item->[0]->{Key},
+                    LinkTypeList   => $LinkList{ $Block->{Object} }->{ $Item->[0]->{Key} },
+                    Translate      => 1,
+                    SourceObject   => $SourceObject,
+                    SourceKey      => $SourceKey
                 };
 
                 if (
@@ -382,7 +458,7 @@ sub LinkObjectTableCreateComplex {
                 ) {
                     $CheckboxCell = {
                         Type => 'Text'
-                        }
+                    }
                 }
 
                 # add checkbox cell to item
@@ -397,23 +473,46 @@ sub LinkObjectTableCreateComplex {
     );
 
     # set block description
-    my $BlockDescription
-        = $Param{ViewMode} eq 'ComplexAdd' ? Translatable('Search Result') : Translatable('Linked');
-
-    my $BlockCounter = 0;
+    my $BlockDescription = $Param{ViewMode} eq 'ComplexAdd' ? Translatable('Search Result') : Translatable('Linked');
+    my $BlockCounter     = 0;
 
     BLOCK:
     for my $Block (@OutputData) {
 
         next BLOCK if !$Block->{ItemList};
         next BLOCK if ref $Block->{ItemList} ne 'ARRAY';
-        next BLOCK if !@{ $Block->{ItemList} };
+
+        my $UsedFilter = 0;
+        if (
+            (
+                (
+                    $Block->{Object} eq 'ITSMConfigItem'
+                    && IsHashRefWithData($Filters{$Block->{Object}}->{$Block->{ClassID}}->{GetColumnFilterSelect})
+                ) || (
+                    $Block->{Object} ne 'ITSMConfigItem'
+                    && IsHashRefWithData($Filters{$Block->{Object}}->{GetColumnFilterSelect})
+                )
+            )
+            && $Self->{Action} ne 'AgentLinkObject'
+        ) {
+            $UsedFilter = 1;
+        }
+
+        next BLOCK if !@{ $Block->{ItemList} } && !$UsedFilter;
 
         my ( $Placeholder1, $Placeholder2, $Class ) = ( '', '', '' );
         if ( $Block->{Object} eq 'ITSMConfigItem' ) {
             my ( $CIClass ) = $Block->{Blockname} =~ /^ConfigItem\s\((.*?)\)$/;
             ( $Placeholder1, $Placeholder2, $Class ) = ( '-', '_', $CIClass );
             $Class =~ s/[^A-Za-z0-9_-]/_/g;
+        }
+
+        my $UseFilter = 0;
+        if (
+            $Block->{Behaviors}->{IsFiltrable}
+            && $Self->{Action} ne 'AgentLinkObject'
+        ) {
+            $UseFilter = 1;
         }
 
         # output the block
@@ -427,45 +526,95 @@ sub LinkObjectTableCreateComplex {
                 AJAX             => $Param{AJAX},
                 LinkType         => $Block->{Object},
                 PreferencesID    => $Block->{Object} . $Placeholder2 . $Class,
+                Source           => $LinkObjectList{SourceObject},
+                Target           => $Block->{Object},
+                ClassID          => $Block->{ClassID} || '',
+                CallingAction    => $Self->{Action},
+                ItemID           => $LinkObjectList{SourceKey},
+                UseFilter        => $UseFilter
             },
         );
 
         # output table headline
         for my $HeadlineColumn ( @{ $Block->{Headline} } ) {
-
             # output a headline column block
             $LayoutObject->Block(
                 Name => 'TableComplexBlockColumn',
-                Data => $HeadlineColumn,
+                Data => {
+                    %{$HeadlineColumn},
+                    Sortable   => $Self->{Action} ne 'AgentLinkObject' ? $HeadlineColumn->{Sortable} : 0,
+                    Filterable => $Self->{Action} ne 'AgentLinkObject' ? $HeadlineColumn->{Filterable} : 0
+                }
             );
         }
 
-        # output item list
-        for my $Row ( @{ $Block->{ItemList} } ) {
+        my $HasRows = scalar(@{ $Block->{ItemList}}) || 0;
+        if ( @{ $Block->{ItemList} } ) {
 
+            # output item list
+            ROW:
+            for my $Row ( @{ $Block->{ItemList} } ) {
+                my $LinkFilter = $Filters{$Block->{Object}}->{GetColumnFilterSelect}->{LinkType};
+                if ( $Block->{Object} eq 'ITSMConfigItem' ) {
+                    $LinkFilter = $Filters{$Block->{Object}}->{$Block->{ClassID}}->{GetColumnFilterSelect}->{LinkType};
+                }
+
+                if (
+                    $UsedFilter
+                    && $LinkFilter
+                ) {
+                    my $TypeName = $Kernel::OM->Get('Kernel::System::LinkObject')->TypeLookup(
+                        TypeID => $LinkFilter,
+                        UserID => $Self->{UserID}
+                    );
+                    if (!$Row->[0]->{LinkTypeList}->{$TypeName}) {
+                        $HasRows--;
+                        next ROW;
+                    }
+                }
+
+                # output a table row block
+                $LayoutObject->Block(
+                    Name => 'TableComplexBlockRow',
+                    Data => {
+                        %{$Row->[0]}
+                    }
+                );
+
+                for my $Column ( @{$Row} ) {
+
+                    # create the content string
+                    my $Content = $Self->_LinkObjectContentStringCreate(
+                        Object       => $Block->{Object},
+                        ContentData  => $Column,
+                        LayoutObject => $LayoutObject2,
+                    );
+
+                    # output a table column block
+                    $LayoutObject->Block(
+                        Name => 'TableComplexBlockRowColumn',
+                        Data => {
+                            %{$Column},
+                            Content => $Content,
+                        },
+                    );
+                }
+            }
+        }
+
+        if ( !$HasRows ) {
             # output a table row block
             $LayoutObject->Block(
-                Name => 'TableComplexBlockRow',
+                Name => 'TableComplexBlockRow'
             );
 
-            for my $Column ( @{$Row} ) {
-
-                # create the content string
-                my $Content = $Self->_LinkObjectContentStringCreate(
-                    Object       => $Block->{Object},
-                    ContentData  => $Column,
-                    LayoutObject => $LayoutObject2,
-                );
-
-                # output a table column block
+            if ( $UseFilter ) {
+                # output a table row block
                 $LayoutObject->Block(
-                    Name => 'TableComplexBlockRowColumn',
-                    Data => {
-                        %{$Column},
-                        Content => $Content,
-                    },
+                    Name => 'TableComplexBlockRowColumnFilter',
                 );
             }
+            next BLOCK;
         }
 
         if ( $Param{ViewMode} eq 'ComplexAdd' ) {
@@ -525,7 +674,11 @@ sub LinkObjectTableCreateComplex {
     }
 
     return $LayoutObject->Output(
-        TemplateFile   => 'LinkObject',
+        TemplateFile   => $Param{Template} || 'LinkObject',
+        Data           => {
+            Action       => $Self->{Action},
+            UserLanguage => $LayoutObject->{UserLanguage} || 'en',
+        },
         KeepScriptTags => $Param{AJAX},
     );
 }
@@ -1045,9 +1198,10 @@ sub _PreferencesLinkObject {
     my ( $Self, %Param ) = @_;
 
     # get needed objects
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-    my $ParamObject  = $Kernel::OM->Get('Kernel::System::Web::Request');
-    my $JSONObject   = $Kernel::OM->Get('Kernel::System::JSON');
+    my $ConfigObject       = $Kernel::OM->Get('Kernel::Config');
+    my $ParamObject        = $Kernel::OM->Get('Kernel::System::Web::Request');
+    my $JSONObject         = $Kernel::OM->Get('Kernel::System::JSON');
+    my $DynamicFieldObject = $Kernel::OM->Get('Kernel::System::DynamicField');
 
     my @OutputData     = @{ $Param{OutputData} };
     my %EnabledColumns = %{ $Param{EnabledColumns} };
@@ -1079,6 +1233,23 @@ sub _PreferencesLinkObject {
 
             $ConfigHash = $ConfigObject->Get('DefaultOverviewColumns');
 
+            my $TicketConfig = $ConfigObject->Get('LinkObject::Ticket');
+            my @EnabledDynamicFields;
+            if ( $TicketConfig->{DynamicField} ) {
+                DYNAMICFIELD:
+                for ( sort keys %{$TicketConfig->{DynamicField}} ) {
+                    next DYNAMICFIELD if !$TicketConfig->{DynamicField}->{$_};
+                    my $Name = $_;
+                    if ( $Name !~ /^DynamicField_/ ) {
+                        $Name = 'DynamicField_' . $Name;
+                    }
+                    $ConfigHash->{$Name} = $TicketConfig->{DynamicField}->{$_};
+                    if ( $TicketConfig->{DynamicField}->{$_} eq '2' ) {
+                        push( @EnabledDynamicFields, $Name )
+                    }
+                }
+            }
+
             # check if user columns enabled
             if (
                 !defined $EnabledColumns{ $Block->{Object} }
@@ -1089,13 +1260,24 @@ sub _PreferencesLinkObject {
 
                 # add link type by default if no user enabled columns defined
                 push @{ $EnabledColumns{ $Block->{Object} } }, 'LinkType';
+
+                if ( @EnabledDynamicFields ) {
+                    push( @{ $EnabledColumns{ $Block->{Object} } }, @EnabledDynamicFields);
+                }
             }
 
             # get default available columns
             for my $Col ( %{$ConfigHash} ) {
                 next if !$ConfigHash->{$Col};
-                $DefaultColumnHash{$Col} = $TranslationHash{$Col}
-                    || $LayoutObject->{LanguageObject}->Translate($Col);
+                if ( $Col =~ m/^DynamicField_(.*?)$/ ) {
+                    my $DynamicField = $DynamicFieldObject->DynamicFieldGet(
+                        Name => $1
+                    );
+                    $DefaultColumnHash{$Col} = $LayoutObject->{LanguageObject}->Translate( $DynamicField->{Label} ) . ' (DF)';
+                }
+                else {
+                    $DefaultColumnHash{$Col} = $TranslationHash{$Col} || $LayoutObject->{LanguageObject}->Translate($Col);
+                }
             }
 
         }
@@ -1166,8 +1348,7 @@ sub _PreferencesLinkObject {
             );
 
             # get default config
-            $ConfigHash
-                = $ConfigObject->Get('ITSMConfigItem::Frontend::AgentITSMConfigItem');
+            $ConfigHash = $ConfigObject->Get('ITSMConfigItem::Frontend::AgentITSMConfigItem');
 
             # get class
             my ( $CIClass ) = $Block->{Blockname} =~ /^ConfigItem\s\((.*?)\)$/;
@@ -1192,18 +1373,15 @@ sub _PreferencesLinkObject {
             for my $Col ( %{ $ConfigHash->{ShowColumns} } ) {
                 next if !$ConfigHash->{ShowColumns}->{$Col};
                 if ( defined $TranslationHash{$Col} ) {
-                    $DefaultColumnHash{$Col} = $LayoutObject->{LanguageObject}
-                        ->Get( $TranslationHash{$Col} );
+                    $DefaultColumnHash{$Col} = $LayoutObject->{LanguageObject}->Get( $TranslationHash{$Col} );
                 }
                 else {
-                    $DefaultColumnHash{$Col}
-                        = $LayoutObject->{LanguageObject}->Translate($Col);
+                    $DefaultColumnHash{$Col} = $LayoutObject->{LanguageObject}->Translate($Col);
                 }
             }
 
             # get the column config
-            my $ColumnConfig
-                = $ConfigObject->Get('LinkObject::ITSMConfigItem::ShowColumnsByClass');
+            my $ColumnConfig = $ConfigObject->Get('LinkObject::ITSMConfigItem::ShowColumnsByClass');
 
             # get the configered columns and reorganize them by class name
             if ( $ColumnConfig && ref $ColumnConfig eq 'ARRAY' && @{$ColumnConfig} ) {
@@ -1369,9 +1547,9 @@ sub _PreferencesLinkObject {
                 ColumnsEnabled   => $JSONObject->Encode( Data => \@ColumnsEnabled ),
                 ColumnsAvailable => $JSONObject->Encode( Data => \@ColumnsAvailable ),
                 Desc             => 'Shown Columns',
-                Name          => $Self->{Action} . '-' . $Block->{Object} . $Placeholder1 . $Class,
-                GroupName     => 'LinkedObjectFilterSettings',
-                PreferencesID => $Block->{Object} . $Placeholder2 . $Class,
+                Name             => $Self->{Action} . '-' . $Block->{Object} . $Placeholder1 . $Class,
+                GroupName        => 'LinkedObjectFilterSettings',
+                PreferencesID    => $Block->{Object} . $Placeholder2 . $Class,
                 %Param,
             },
         );
@@ -1393,6 +1571,327 @@ sub _PreferencesLinkObject {
     return $LayoutObject->Output(
         TemplateFile => 'PreferencesLinkObject',
     );
+}
+
+sub _ColumnFilters {
+    my ( $Self, %Param ) = @_;
+
+    my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
+    my $UserObject  = $Kernel::OM->Get('Kernel::System::User');
+    my $JSONObject  = $Kernel::OM->Get('Kernel::System::JSON');
+
+    my $ClassID = $Param{ClassID} || $ParamObject->GetParam( Param => 'ClassID' ) || '';
+
+    my $PrefKeyPrefix                = 'User' . $Param{Source} . 'LinkObjectFilters';
+    my $PrefKeyColumnFilters         = $PrefKeyPrefix . $Param{Target} . $ClassID;
+    my $PrefKeyColumnFiltersRealKeys = $PrefKeyPrefix . 'RealKeys' . $Param{Target} . $ClassID;
+    my $PrefKeyColumnFiltersOrderBy  = $PrefKeyPrefix . $Param{Target} . $ClassID . '-OrderBy';
+    my $PrefKeyColumnFiltersSortBy   = $PrefKeyPrefix . $Param{Target} . $ClassID . '-SortBy';
+    my %Filters;
+
+    if ( !$Param{OnlyGetPreferences} ) {
+
+        # get sorting and filtering params
+        for my $Item (qw(SortBy OrderBy)) {
+            $Filters{$Item} = $ParamObject->GetParam( Param => $Item );
+        }
+
+        PARAM:
+        for my $Key (
+            $ParamObject->GetParamNames()
+        ) {
+            my $Pattern = $Param{Target} . $ClassID . 'ColumnFilter';
+            next PARAM if $Key !~ /^$Pattern/;
+
+            my $FilterValue  = $ParamObject->GetParam( Param => $Key ) || '';
+            my ($ColumnName) = $Key =~ /^$Pattern(.*)/;
+
+            next PARAM if $FilterValue eq '';
+
+            if ( $ColumnName eq 'CustomerID' ) {
+                push @{ $Filters{ColumnFilter}->{$ColumnName} }, $FilterValue;
+                push @{ $Filters{ColumnFilter}->{ $ColumnName . 'Raw' } }, $FilterValue;
+            }
+            elsif ( $ColumnName eq 'CustomerUserID' ) {
+                push @{ $Filters{ColumnFilter}->{CustomerUserLogin} },    $FilterValue;
+                push @{ $Filters{ColumnFilter}->{CustomerUserLoginRaw} }, $FilterValue;
+            }
+            else {
+                push @{ $Filters{ColumnFilter}->{ $ColumnName . 'IDs' } }, $FilterValue;
+            }
+
+            $Filters{GetColumnFilter}->{$ColumnName}       = $FilterValue;
+            $Filters{GetColumnFilterSelect}->{$ColumnName} = $FilterValue;
+        }
+        my $RemoveFilters = $ParamObject->GetParam( Param => 'RemoveFilters' ) || 0;
+
+        if ($RemoveFilters) {
+            $UserObject->SetPreferences(
+                UserID => $Self->{UserID},
+                Key    => $PrefKeyColumnFilters,
+                Value  => '',
+            );
+            $UserObject->SetPreferences(
+                UserID => $Self->{UserID},
+                Key    => $PrefKeyColumnFiltersRealKeys,
+                Value  => '',
+            );
+        }
+
+        # just in case new filter values arrive
+        elsif (
+            IsHashRefWithData( $Filters{GetColumnFilter} )
+            && IsHashRefWithData( $Filters{GetColumnFilterSelect} )
+            && IsHashRefWithData( $Filters{ColumnFilter} )
+        ) {
+
+            # check if the user has filter preferences for this widget
+            my %Preferences = $UserObject->GetPreferences(
+                UserID => $Self->{UserID},
+            );
+
+            my $ColumnPrefValues;
+            if ( $Preferences{ $PrefKeyColumnFilters } ) {
+                $ColumnPrefValues = $JSONObject->Decode(
+                    Data => $Preferences{ $PrefKeyColumnFilters },
+                );
+            }
+
+            PREFVALUES:
+            for my $Column ( sort keys %{ $Filters{GetColumnFilterSelect} } ) {
+                if ( $Filters{GetColumnFilterSelect}->{$Column} eq 'DeleteFilter' ) {
+                    delete $ColumnPrefValues->{$Column};
+                    next PREFVALUES;
+                }
+                $ColumnPrefValues->{$Column} = $Filters{GetColumnFilterSelect}->{$Column};
+            }
+
+            $UserObject->SetPreferences(
+                UserID => $Self->{UserID},
+                Key    => $PrefKeyColumnFilters,
+                Value  => $JSONObject->Encode( Data => $ColumnPrefValues ),
+            );
+
+            # save real key's name
+            my $ColumnPrefRealKeysValues;
+            if ( $Preferences{ $PrefKeyColumnFiltersRealKeys } ) {
+                $ColumnPrefRealKeysValues = $JSONObject->Decode(
+                    Data => $Preferences{ $PrefKeyColumnFiltersRealKeys },
+                );
+            }
+
+            REALKEYVALUES:
+            for my $Column ( sort keys %{ $Filters{ColumnFilter} } ) {
+                next REALKEYVALUES if !$Column;
+
+                my $DeleteFilter = 0;
+                if ( IsArrayRefWithData( $Filters{ColumnFilter}->{$Column} ) ) {
+                    if ( grep { $_ eq 'DeleteFilter' } @{ $Filters{ColumnFilter}->{$Column} } ) {
+                        $DeleteFilter = 1;
+                    }
+                }
+                elsif ( IsHashRefWithData( $Filters{ColumnFilter}->{$Column} ) ) {
+
+                    if (
+                        grep { $Filters{ColumnFilter}->{$Column}->{$_} eq 'DeleteFilter' }
+                        keys %{ $Filters{ColumnFilter}->{$Column} }
+                    ) {
+                        $DeleteFilter = 1;
+                    }
+                }
+
+                if ($DeleteFilter) {
+                    delete $ColumnPrefRealKeysValues->{$Column};
+                    delete $Filters{ColumnFilter}->{$Column};
+                    next REALKEYVALUES;
+                }
+                $ColumnPrefRealKeysValues->{$Column} = $Filters{ColumnFilter}->{$Column};
+            }
+
+            $UserObject->SetPreferences(
+                UserID => $Self->{UserID},
+                Key    => $PrefKeyColumnFiltersRealKeys,
+                Value  => $JSONObject->Encode( Data => $ColumnPrefRealKeysValues ),
+            );
+        }
+    }
+
+    # check if the user has filter preferences for this widget
+    my %Preferences = $UserObject->GetPreferences(
+        UserID => $Self->{UserID},
+    );
+
+    # get column names from Preferences
+    my $PreferencesColumnFilters;
+    if ( $Preferences{ $PrefKeyColumnFilters } ) {
+        $PreferencesColumnFilters = $JSONObject->Decode(
+            Data => $Preferences{ $PrefKeyColumnFilters },
+        );
+    }
+
+    if ($PreferencesColumnFilters) {
+        $Filters{GetColumnFilterSelect} = $PreferencesColumnFilters;
+        my @ColumnFilters = keys %{$PreferencesColumnFilters};
+        for my $Field (@ColumnFilters) {
+            $Filters{GetColumnFilter}->{ $Field } = $PreferencesColumnFilters->{$Field};
+        }
+    }
+
+    # get column real names from Preferences
+    my $PreferencesColumnFiltersRealKeys;
+    if ( $Preferences{ $PrefKeyColumnFiltersRealKeys } ) {
+        $PreferencesColumnFiltersRealKeys = $JSONObject->Decode(
+            Data => $Preferences{ $PrefKeyColumnFiltersRealKeys },
+        );
+    }
+
+    if ($PreferencesColumnFiltersRealKeys) {
+        my @ColumnFiltersReal = keys %{$PreferencesColumnFiltersRealKeys};
+        for my $Field (@ColumnFiltersReal) {
+            $Filters{ColumnFilter}->{$Field} = $PreferencesColumnFiltersRealKeys->{$Field};
+        }
+    }
+
+    # load and save SortBy and OrderBy
+    if ( !$Filters{OrderBy} ) {
+        $Filters{OrderBy} = $Preferences{ $PrefKeyColumnFiltersOrderBy } || "Down";
+    }
+    else {
+        $UserObject->SetPreferences(
+            UserID => $Self->{UserID},
+            Key    => $PrefKeyColumnFiltersOrderBy,
+            Value  => $Filters{OrderBy},
+        );
+    }
+
+    if ( !$Filters{SortBy} ) {
+        $Filters{SortBy}  = $Preferences{ $PrefKeyColumnFiltersSortBy } || '';
+    }
+    else {
+        $UserObject->SetPreferences(
+            UserID => $Self->{UserID},
+            Key    => $PrefKeyColumnFiltersSortBy,
+            Value  => $Filters{SortBy},
+        );
+    }
+
+    return %Filters;
+}
+
+sub LinkObjectFilterContent {
+    my ( $Self, %Param ) = @_;
+
+    my $LinkObject   = $Kernel::OM->Get('Kernel::System::LinkObject');
+    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+
+    my %FilterContent;
+
+    OBJECT:
+    for my $Object ( sort { lc $a cmp lc $b } keys %{ $Param{LinkListWithData} } ) {
+
+        # load backend
+        my $BackendObject = $Self->_LoadLinkObjectLayoutBackend(
+            Object => $Object,
+        );
+
+        next OBJECT if !$BackendObject;
+
+        my %Filters;
+        if ( $Object eq 'ITSMConfigItem' ) {
+            %Filters = $Self->_ColumnFilters(
+                Source             => $Param{Source},
+                ClassID            => $Param{OnlyClassID},
+                Target             => $Object,
+                OnlyGetPreferences => 1
+            );
+        }
+        else {
+            %Filters = $Self->_ColumnFilters(
+                Source             => $Param{Source},
+                Target             => $Object,
+                OnlyGetPreferences => 1
+            );
+        }
+
+        my %PossibleFilter;
+        my @ItemIDs;
+        for my $LinkType ( sort keys %{ $Param{LinkListWithData}->{$Object} } ) {
+
+            my $TypeID = $LinkObject->TypeLookup(
+                Name   => $LinkType,
+                UserID => $Self->{UserID},
+            );
+            if ( !$PossibleFilter{$TypeID} ) {
+                my %TypeData = $LinkObject->TypeGet(
+                    TypeID => $TypeID,
+                );
+                $PossibleFilter{$TypeID} = $LayoutObject->{LanguageObject}->Translate($TypeData{Name});
+            }
+
+            # extract link type List
+            my $LinkTypeList = $Param{LinkListWithData}->{$Object}->{$LinkType};
+            for my $Direction ( sort keys %{$LinkTypeList} ) {
+                # extract direction list
+                my $DirectionList = $Param{LinkListWithData}->{$Object}->{$LinkType}->{$Direction};
+
+                push(@ItemIDs, keys %{$DirectionList});
+            }
+        }
+
+        if ( $Param{FilterColumn} ne 'LinkType' ) {
+            # get block data
+            $FilterContent{$Object} = $BackendObject->FilterContent(
+                ItemIDs          => \@ItemIDs,
+                Action           => $Self->{Action},
+                Object           => $Object,
+                FilterColumn     => $Param{FilterColumn},
+                LinkListWithData => $Param{LinkListWithData}->{$Object},
+                ClassID          => $Param{OnlyClassID},
+                %Filters
+            );
+        } else {
+            my $Label         = $LayoutObject->{LanguageObject}->Translate('Linked as');
+            my $SelectedValue = defined $Filters{GetColumnFilter}->{ $Param{FilterColumn} } ? $Filters{GetColumnFilter}->{ $Param{FilterColumn} } : '';
+
+            # set fixed values
+            my $Data = [
+                {
+                    Key   => 'DeleteFilter',
+                    Value => uc $Label,
+                },
+                {
+                    Key      => '-',
+                    Value    => '-',
+                    Disabled => 1,
+                },
+            ];
+
+            # set possible values
+            for my $ValueKey ( sort { lc $PossibleFilter{$a} cmp lc $PossibleFilter{$b} } keys %PossibleFilter ) {
+                push @{$Data}, {
+                    Key   => $ValueKey,
+                    Value => $LayoutObject->{LanguageObject}->Translate($PossibleFilter{$ValueKey})
+                };
+            }
+
+            # build select HTML
+            $FilterContent{$Object} = $LayoutObject->BuildSelectionJSON(
+                [
+                    {
+                        Name         => $Object . $Param{OnlyClassID} . 'ColumnFilter' . $Param{FilterColumn},
+                        Data         => $Data,
+                        Class        => 'ColumnFilter',
+                        Sort         => 'AlphanumericKey',
+                        TreeView     => 1,
+                        SelectedID   => $SelectedValue,
+                        Translation  => 1,
+                        AutoComplete => 'off',
+                    },
+                ],
+            );
+        }
+    }
+    return $FilterContent{$Param{Object}};
 }
 
 =end Internal:

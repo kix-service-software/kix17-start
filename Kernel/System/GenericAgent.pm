@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2021 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -940,8 +940,9 @@ sub _JobRunTicket {
         }
     }
 
-    # get ticket object
-    my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
+    # get needed objects
+    my $TemplateGeneratorObject = $Kernel::OM->Get('Kernel::System::TemplateGenerator');
+    my $TicketObject            = $Kernel::OM->Get('Kernel::System::Ticket');
 
     my $Ticket = "($Param{TicketNumber}/$Param{TicketID})";
 
@@ -978,17 +979,41 @@ sub _JobRunTicket {
         if ( $Self->{NoticeSTDOUT} ) {
             print "  - Add note to Ticket $Ticket\n";
         }
+
+        # prepare subject for note
+        my $NewSubject = $Param{Config}->{New}->{Note}->{Subject} || $Param{Config}->{New}->{NoteSubject} || 'Note';
+        if ( $NewSubject ) {
+            $NewSubject = $TemplateGeneratorObject->ReplacePlaceHolder(
+                Text     => $NewSubject,
+                Data     => {},
+                RichText => '0',
+                TicketID => $Param{TicketID},
+                UserID   => 1,
+            );
+        }
+
+        # prepare body for note
+        my $NewBody = $Param{Config}->{New}->{Note}->{Body}    || $Param{Config}->{New}->{NoteBody};
+        if ( $NewBody ) {
+            $NewBody = $TemplateGeneratorObject->ReplacePlaceHolder(
+                Text     => $NewBody,
+                Data     => {},
+                RichText => '0',
+                TicketID => $Param{TicketID},
+                UserID   => 1,
+            );
+        }
+
+        # create article
         my $ArticleID = $TicketObject->ArticleCreate(
-            TicketID    => $Param{TicketID},
-            ArticleType => $Param{Config}->{New}->{Note}->{ArticleType} || 'note-internal',
-            SenderType  => 'agent',
-            From        => $Param{Config}->{New}->{Note}->{From}
+            TicketID       => $Param{TicketID},
+            ArticleType    => $Param{Config}->{New}->{Note}->{ArticleType} || 'note-internal',
+            SenderType     => 'agent',
+            From           => $Param{Config}->{New}->{Note}->{From}
                 || $Param{Config}->{New}->{NoteFrom}
                 || 'GenericAgent',
-            Subject => $Param{Config}->{New}->{Note}->{Subject}
-                || $Param{Config}->{New}->{NoteSubject}
-                || 'Note',
-            Body => $Param{Config}->{New}->{Note}->{Body} || $Param{Config}->{New}->{NoteBody},
+            Subject        => $NewSubject,
+            Body           => $NewBody,
             MimeType       => 'text/plain',
             Charset        => 'utf-8',
             UserID         => $Param{UserID},

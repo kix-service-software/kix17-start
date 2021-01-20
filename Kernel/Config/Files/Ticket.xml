@@ -5425,7 +5425,53 @@
             </Option>
         </Setting>
     </ConfigItem>
-
+    <ConfigItem Name="Ticket::Frontend::AgentTicketBulk###TicketWatch" Required="0" Valid="1">
+        <Description Translatable="1">Un-/subscribe ticket watch in the ticket bulk screen of the agent interface.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewBulk</SubGroup>
+        <Setting>
+            <Option SelectedID="1">
+                <Item Key="0" Translatable="1">No</Item>
+                <Item Key="1" Translatable="1">Yes</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>    
+    <ConfigItem Name="Frontend::KIXSidebarBackend###BulkTextModules" Required="0" Valid="1">
+        <Description Translatable="1">Parameters for the KIXSidebar backend BulkTextModules.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::KIXSidebarBackend</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::Output::HTML::KIXSidebar::BulkTextModules</Item>
+                <Item Key="Title">Text Modules</Item>
+                <Item Key="Description">Show or hide the text modules</Item>
+                <Item Key="Prio">0100</Item>
+                <Item Key="Actions">AgentTicketBulk</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Frontend::Module###BulkTextModuleAJAXHandler" Required="0" Valid="1">
+        <Description Translatable="1">Frontend module registration for the BulkTextModuleAJAXHandler object.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::ModuleRegistration</SubGroup>
+        <Setting>
+            <FrontendModuleReg>
+                <Description>Text Module AJAX handle</Description>
+                <Title>Text Module AJAX handler</Title>
+                <NavBarName>Ticket</NavBarName>
+            </FrontendModuleReg>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentTicketBulk###PlaceholderWhitelist" Required="1" Valid="1">
+        <Description Translatable="1">Defines a list of allowed placeholders that must be replaced with information. The placeholders entered must be specified without "&lt;KIX_" or "&lt;OTRS_" and "&gt;" (these are added automatically). It is also possible to use a regular expression as a placeholder (example: TICKET_.*). (Key: priority; value: placeholder)</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewBulk</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="000">.*</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::MoveType" Required="1" Valid="1">
         <Description Translatable="1">Determines if the list of possible queues to move to ticket into should be displayed in a dropdown list or in a new window in the agent interface. If "New Window" is set you can add a move note to the ticket.</Description>
         <Group>Ticket</Group>
@@ -8384,6 +8430,31 @@
             </Hash>
         </Setting>
     </ConfigItem>
+    <ConfigItem Name="PreferencesGroups###UserResponseFormat" Required="0" Valid="1">
+        <Description Translatable="1">Select the response format.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::Preferences</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::Output::HTML::Preferences::Generic</Item>
+                <Item Key="Column">User Profile</Item>
+                <Item Key="Label" Translatable="1">Select response format</Item>
+                <Item Key="Desc" Translatable="1">Which response format to use?</Item>
+                <Item Key="Key" Translatable="1">Response formats</Item>
+                <Item Key="Data">
+                    <Hash>
+                        <Item Key="SYSCONFIG">System configuration</Item>
+                        <Item Key="BEFORE">Quote before response template</Item>
+                        <Item Key="AFTER">Quote after response template</Item>
+                    </Hash>
+                </Item>
+                <Item Key="DataSelected">SYSCONFIG</Item>
+                <Item Key="PrefKey">UserResponseFormat</Item>
+                <Item Key="Prio">2001</Item>
+                <Item Key="Active">1</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
     <ConfigItem Name="CustomerCompanyPreferences###Comment2" Required="0" Valid="0">
         <Description Translatable="1">Parameters of the example queue attribute Comment2.</Description>
         <Group>Ticket</Group>
@@ -10138,9 +10209,6 @@
                 <Item>TicketUnsubscribe</Item>
                 <Item>TicketFlagSet</Item>
                 <Item>TicketFlagDelete</Item>
-                <Item>TicketSlaveLinkAdd</Item>
-                <Item>TicketSlaveLinkDelete</Item>
-                <Item>TicketMasterLinkDelete</Item>
                 <Item>EscalationResponseTimeNotifyBefore</Item>
                 <Item>EscalationUpdateTimeNotifyBefore</Item>
                 <Item>EscalationSolutionTimeNotifyBefore</Item>
@@ -10161,7 +10229,6 @@
                 <Item>NotificationEscalation</Item>
                 <Item>NotificationEscalationNotifyBefore</Item>
                 <Item>NotificationServiceUpdate</Item>
-
             </Array>
         </Setting>
     </ConfigItem>
@@ -11497,6 +11564,14 @@ Thanks for your help!
             </Hash>
         </Setting>
     </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentTicketZoom###BrowserTitle" Required="0" Valid="1">
+        <Description Translatable="1">Defines the browser title of the ticket zoom. It is possible to use KIX placeholder.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewZoom</SubGroup>
+        <Setting>
+            <String Regex="">&lt;KIX_TICKET_Title&gt;</String>
+        </Setting>
+    </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::CustomerTicketZoom###DynamicField" Required="0" Valid="1">
         <Description Translatable="1">Dynamic fields shown in the ticket zoom screen of the customer interface. Possible settings: 0 = Disabled, 1 = Enabled.</Description>
         <Group>Ticket</Group>
@@ -11515,6 +11590,14 @@ Thanks for your help!
         <Setting>
             <Hash>
             </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::CustomerTicketZoom###BrowserTitle" Required="0" Valid="1">
+        <Description Translatable="1">Defines the browser title of the ticket zoom. It is possible to use KIX placeholder.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Customer::Ticket::ViewZoom</SubGroup>
+        <Setting>
+            <String Regex="">&lt;KIX_TICKET_Title&gt;</String>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::AgentTicketPrint###DynamicField" Required="0" Valid="1">
@@ -12490,6 +12573,15 @@ Thanks for your help!
             </Hash>
         </Setting>
     </ConfigItem>
+    <ConfigItem Name="LinkObject::Ticket###DynamicField" Required="0" Valid="1">
+        <Description Translatable="1">Dynamic fields shown in the linked tickets screen of the agent interface. Possible settings: 0 = Disabled, 1 = Available, 2 = Enabled by default.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Core::LinkObject::Ticket</SubGroup>
+        <Setting>
+            <Hash>
+            </Hash>
+        </Setting>
+    </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::ZoomCollectMeta" Required="0" Valid="1">
         <Description Translatable="1">Whether or not to collect meta information from articles using filters configured in Ticket::Frontend::ZoomCollectMetaFilters.</Description>
         <Group>Ticket</Group>
@@ -12621,7 +12713,7 @@ Thanks for your help!
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::EscalationDisabled::RelevantStates" Required="0" Valid="1">
-        <Description Translatable="1">Defines state names for which the SLA time is disabled. Is a ticket set to on of these states, the SLA-destination times are set to hold. The time a ticket stays in this state is not SLA-relevant.</Description>
+        <Description Translatable="1">Defines state names for which the solution time is disabled. Is a ticket set to on of these states, the solution time is set to hold.</Description>
         <Group>Ticket</Group>
         <SubGroup>Core::Ticket</SubGroup>
         <Setting>
@@ -14655,6 +14747,28 @@ Thanks for your help!
             <Hash>
                 <Item Key="2"></Item>
                 <Item Key="Important">color: #C10505</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentTicketZoomTabArticle###ArticleFlagsShared" Required="0" Valid="1">
+        <Description Translatable="1">Defines if flag is shared with other agents.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewTicketZoomTabArticle</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="2">0</Item>
+                <Item Key="Important">0</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentTicketZoomTabArticle###ArticleFlagsWithoutEdit" Required="0" Valid="1">
+        <Description Translatable="1">Defines if flag has no edit function.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewTicketZoomTabArticle</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="2">0</Item>
+                <Item Key="Important">0</Item>
             </Hash>
         </Setting>
     </ConfigItem>
@@ -17659,4 +17773,14 @@ Here you may define a default text for the forward function. You find this confi
         </Setting>
     </ConfigItem>
     <!-- EO QUICK STATE -->
+    <ConfigItem Name="Loader::Agent::CommonJS###900-BulkTextModules" Required="1" Valid="1">
+        <Description Translatable="1">List of JS files to always be loaded for the agent interface.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Core::Web</SubGroup>
+        <Setting>
+            <Array>
+                <Item>Core.Agent.BulkTextModules.js</Item>
+            </Array>
+        </Setting>
+    </ConfigItem>
 </otrs_config>

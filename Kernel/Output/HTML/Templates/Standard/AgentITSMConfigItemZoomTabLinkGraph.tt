@@ -1,0 +1,44 @@
+# --
+# Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file LICENSE for license information (AGPL). If you
+# did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
+# --
+
+<div class="MainBox ARIARoleMain CITabLinkGraph">
+    <div class="ClearLeft">
+    </div>
+    <div class="LayoutFixedSidebar SidebarLast">
+        <div class="SidebarColumn">
+        </div>
+
+        <div class="ContentColumn">
+            <div class="WidgetSimple">
+                <div class="Content">
+                    <form action="" method="" enctype="" class="" name="IFrameParam" id="IFrameParam">
+                        <input type="hidden" id="ObjectType" name="ObjectType" value="[% Data.ObjectType | html %]"/>
+                        <input type="hidden" id="ObjectID" name="ObjectID" value="[% Data.ConfigItemID | html %]"/>
+                        <input type="hidden" id="Template" name="Template" value="[% Data.Template | html %]"/>
+                        <input type="hidden" id="OpenWindow" name="OpenWindow" value="1"/>
+                    </form>
+                    <iframe id="displayGraphIFrame" src="" width="[% Data.Width | html %]" height="[% Data.Height | html %]" name="[% Data.Title | html %]" marginheight="[% Data.Marginheight | html %]" marginwidth="[% Data.Marginwidth | html %]" frameborder="[% Data.Frameborder | html %]" align="[% Data.Align | html %]" scrolling="no">
+                    </iframe>
+                </div>
+            </div>
+            <div class="Clear">
+            </div>
+        </div>
+        <div class="Clear">
+        </div>
+    </div>
+</div>
+
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    Core.KIX4OTRS.ConfigItemZoomTabs.Init();
+
+    ITSM.Agent.LinkGraph.LoadIFrameContent();
+//]]>
+</script>
+[% END %]
