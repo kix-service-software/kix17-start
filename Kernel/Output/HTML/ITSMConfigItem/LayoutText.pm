@@ -219,7 +219,7 @@ sub InputCreate {
         # transform ascii to html
         $Value = $LayoutObject->Ascii2Html(
             Text           => $Value,
-            HTMLResultMode => 1,
+            HTMLResultMode => 0,
         );
     }
 
