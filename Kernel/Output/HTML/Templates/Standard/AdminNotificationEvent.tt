@@ -376,6 +376,21 @@ $('.NotificationDelete').bind('click', function (Event) {
                         </div>
                         <div class="Clear"></div>
 
+[% RenderBlockStart("ArticleDynamicField") %]
+                        <div class="SpacingTop"></div>
+                        <label><h4>[% Translate("Dynamic Fields") | html %]</h4></label>
+                        <div class="Clear"></div>
+                        <div class="SpacingTop"></div>
+[% RenderBlockStart("ArticleDynamicFieldElement") %]
+                        [% Data.Label %]
+                        <div class="Field">
+                            [% Data.Field %]
+                        </div>
+                        <div class="Clear"></div>
+[% RenderBlockEnd("ArticleDynamicFieldElement") %]
+                        <div class="SpacingTop"></div>
+[% RenderBlockEnd("ArticleDynamicField") %]
+
                     </fieldset>
                 </div>
             </div>
