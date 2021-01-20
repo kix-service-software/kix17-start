@@ -1,6 +1,86 @@
 # Change log of KIX
 * Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.14.0 (2021/01/20)
+ * (2021/01/20) - productive release
+
+# 17.14.0-RC9 (2021/01/16)
+ * (2020/12/09) - CR: KIX17-1468 (added REST documentation) (ddoerffel)
+
+# 17.14.0-RC8 (2021/01/12)
+ * (2021/01/12) - Bugfix: KIX17-551 (removed translation errors) (ddoerffel)
+ * (2021/01/11) - CR: KIX17-1738 (added subscribe that reacts to the focus of the editor) (fjacquemin)
+ * (2021/01/08) - Bugfix: KIX17-1463 (fixed missing css of selected current page) (fjacquemin)
+ * (2021/01/08) - Bugfix: KIX17-1463 (fixed incorrect coloring of warning message box) (fjacquemin)
+ * (2021/01/08) - Bugfix: KIX17-1463 (changed grab zone to widen / reduce the widget width) (fjacquemin)
+ * (2021/01/08) - Bugfix: KIX17-1463 (fixed missing color of incident state warning) (fjacquemin)
+ * (2021/01/08) - Bugfix: KIX17-1463 (fixed incorrect form field position in AdminQuickTicketConfigurator) (fjacquemin)
+ * (2021/01/08) - Bugfix: KIX17-1463 (fixed incorrect display of the ImportExport form of step 2 if screen width small 1400px) (fjacquemin)
+ * (2021/01/08) - Bugfix: KIX17-1463 (changed display of the ImportExport mapping selection by step 4) (fjacquemin)
+ * (2021/01/08) - Bugfix: KIX17-1463 (fixed incorrect display of layer in the process information tab) (fjacquemin)
+ * (2021/01/08) - Bugfix: KIX17-1770 (removed invalid events from sysconfig list) (millinger)
+ * (2021/01/08) - Bugfix: KIX17-1463 (Fixed overlapping widget toggles) (fjacquemin)
+ * (2021/01/08) - CR: KIX17-1694 (updated resizing of the column of the article table) (fjacquemin)
+
+# 17.14.0-RC7 (2021/01/07)
+ * (2021/01/06) - Bugfix: KIX17-1538 (only show smime certificates for crypt and sign with matching subject) (millinger)
+ * (2021/01/06) - Bugfix: KIX17-1761 (fixed incorrect display of the dialog box for loading graphs when the graph window is used in full screen) (fjacquemin)
+ * (2021/01/06) - Bugfix: KIX17-1530 (extended size for search profile values) (millinger)
+ * (2021/01/06) - Bugfix: KIX17-1761 (fixed missing display of saved graphs that can be loaded) (fjacquemin)
+ * (2021/01/06) - CR: KIX17-1721 (added endpoint for migration to KIX18) (millinger)
+ * (2021/01/06) - CR: KIX17-1762 (completion dark skin) (fjacquemin)
+ * (2021/01/05) - Bugfix: KIX17-1607 (fixed handling of multiple customer ids) (millinger)
+ * (2021/01/05) - CR: KIX17-1742 (updated copyright) (millinger)
+ * (2021/01/04) - Bugfix: KIX17-1713 (fixed month for Day of Repentance and Prayer) (millinger)
+ * (2021/01/04) - Bugfix: KIX17-1553 (added missing translations) (millinger)
+
+# 17.14.0-RC6 (2020/12/18)
+ * (2020/12/17) - CR: KIX17-1724 (configurable browser title for ticket zoom) (millinger)
+ * (2020/12/17) - Bugfix: KIX17-333 (show tree view icon) (ddoerffel)
+ * (2020/12/15) - CR: KIX17-1640 (added placeholder for generic agent subject and body) (ddoerffel)
+ * (2020/12/11) - CR: KIX17-1707 (dynamic field support for event DynamicFieldFromCustomerUser) (dbormann)
+ * (2020/12/11) - Bugfix: KIX17-1389 (mark state and priority as mandatory for ticket creation) (millinger)
+ * (2020/12/09) - Bugfix: KIX17-1316 (changed column size for notification text) (ddoerffel)
+ * (2020/12/09) - Bugfix: KIX17-1211 (changed solution time disabled text for states) (ddoerffel)
+ * (2020/12/09) - Bugfix: KIX17-1660 (added other warning for failed login) (ddoerffel)
+ * (2020/12/07) - CR: KIX17-1603 (added text modules for bulk action) (ddoerffel)
+ * (2020/12/07) - Bugfix: KIX17-1653 (fixed loading of customer user from template) (millinger)
+ * (2020/12/07) - Bugfix: KIX17-1016 (fixed initialisation of datepicker) (millinger)
+ * (2020/12/04) - CR: KIX17-1613 (add article flag all agents) (ddoerffel)
+ * (2020/12/04) - CR: KIX17-1604 (bulk action for ticket watcher) (ddoerffel)
+ * (2020/11/12) - CR: KIX17-1713 (additional holidays) (millinger)
+
+# 17.14.0-RC5 (2020/11/27)
+ * (2020/11/20) - Bugfix: KIX17-1518 (fixed required lock check for tab action common) (millinger)
+ * (2020/11/11) - CR: KIX17-1586 (added dynamic report ITSMConfigItemList) (millinger)
+
+# 17.14.0-RC4 (2020/11/13)
+ * (2020/11/13) - Bugfix: KIX17-1582 (Fixed incorrectly positioned variable in layout LinkObject) (fjacquemin)
+
+# 17.14.0-RC3 (2020/11/13)
+ * (2020/11/11) - Bugfix: KIX17-1607 (fixed incomplete storage of the selected CustomerIDs) (fjacquemin)
+ * (2020/11/10) - Bugfix: KIX17-1368 (fixed missing check the display of the Public FAQ RSS) (fjacquemin)
+ * (2020/11/09) - Bugfix: KIX17-1448 (fixed error handling after add attachment at AgentTicketZoomTabActionCommon) (fjacquemin)
+ * (2020/11/09) - Bugfix: KIX17-1542 (removed StopAfterMatch from ACL 500_RestrictTicketActionsOnMerged) (fjacquemin)
+ * (2020/11/05) - Bugfix: KIX17-1505 (applied fix for ticket stats dashboard) (millinger)
+ * (2020/11/05) - CR: KIX17-1582 (Changed the color highlighting of tickets in agent interface) (fjacquemin)
+ * (2020/11/04) - Bugfix: KIX17-1388 (removed input max length of dynamic fields of generic agents) (fjacquemin)
+ * (2020/10/14) - Bugfix: KIX17-1512 (extended config item search with general catalog attribute) (millinger)
+
+# 17.14.0-RC2 (2020/11/03)
+ * (2020/11/02) - CR: KIX17-1553 (updating display and function of the ITSMConfigItem LinkGraph) (fjacquemin)
+ * (2020/10/30) - Bugfix: KIX17-1505 (skip certain column header for D3 statistic format) (millinger)
+ * (2020/10/28) - CR: KIX17-1554 (added sortable and filterable columns of link objects) (fjacquemin)
+ * (2020/10/27) - Bugfix: KIX17-1521 (handle invalid class definition for dynamic field ITSMConfigItemReference) (millinger)
+ * (2020/10/27) - CR: KIX17-1543 (added generic interface operation 'LinkAdd') (millinger)
+ * (2020/10/26) - CR: KIX17-1490 (added user preferences "UserResponseFormat" and additional response formats) (fjacquemin)
+ * (2020/10/26) - Bugfix: KIX17-1042 (Fixed incorrect display of the title of the search result) (fjacquemin)
+ * (2020/10/23) - Bugfix: KIX17-1556 (fixed handling of dropdown dynamic fields at ticket template configurator) (millinger)
+ * (2020/10/22) - Bugfix: KIX17-1547 (pinned service with invalid parent service not available) (millinger)
+
+# 17.14.0-RC1 (2020/10/19)
+ * (2020/10/14) - CR: KIX17-1334 (Added resizing of the column of the article table) (fjacquemin)
+
 # 17.13.0 (2020/10/14)
  * (2020/10/14) - productive release
 
