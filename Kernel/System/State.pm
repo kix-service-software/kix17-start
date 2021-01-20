@@ -66,7 +66,7 @@ sub new {
 
 =item StateAdd()
 
-add new states
+add new ticket state
 
     my $ID = $StateObject->StateAdd(
         Name    => 'New State',
@@ -92,8 +92,18 @@ sub StateAdd {
         }
     }
 
-    # get database object
-    my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
+    # check if a state with this name already exists
+    if ( $Self->NameExistsCheck( Name => $Param{Name} ) ) {
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
+            Priority => 'error',
+            Message  => "A state with name '$Param{Name}' already exists!"
+        );
+        return;
+    }
+
+    # get needed objects
+    my $CacheObject = $Kernel::OM->Get('Kernel::System::Cache');
+    my $DBObject    = $Kernel::OM->Get('Kernel::System::DB');
 
     # store data
     return if !$DBObject->Do(
@@ -121,8 +131,8 @@ sub StateAdd {
 
     return if !$ID;
 
-    # delete cache
-    $Kernel::OM->Get('Kernel::System::Cache')->CleanUp(
+    # cleanup cache
+    $CacheObject->CleanUp(
         Type => $Self->{CacheType},
     );
 
@@ -149,9 +159,11 @@ returns
         TypeName   => "new",
         TypeID     => 1,
         ValidID    => 1,
-        CreateTime => "2010-11-29 11:04:04",
-        ChangeTime => "2010-11-29 11:04:04",
         Comment    => "New ticket created by customer.",
+        CreateTime => '2010-04-07 15:41:15',
+        CreateBy   => '321',
+        ChangeTime => '2010-04-07 15:59:45',
+        ChangeBy   => '223',
     );
 
 =cut
@@ -168,83 +180,82 @@ sub StateGet {
         return;
     }
 
+    # lookup the ID
+    if ( !$Param{ID} ) {
+        $Param{ID} = $Self->StateLookup(
+            State => $Param{Name},
+        );
+        if ( !$Param{ID} ) {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'error',
+                Message  => "ID for State '$Param{Name}' not found!",
+            );
+            return;
+        }
+    }
+
+    # get needed objects
+    my $CacheObject = $Kernel::OM->Get('Kernel::System::Cache');
+    my $DBObject    = $Kernel::OM->Get('Kernel::System::DB');
+
     # check cache
-    my $CacheKey;
-    if ( $Param{Name} ) {
-        $CacheKey = 'StateGet::Name::' . $Param{Name};
-    }
-    else {
-        $CacheKey = 'StateGet::ID::' . $Param{ID};
-    }
-    my $Cache = $Kernel::OM->Get('Kernel::System::Cache')->Get(
+    my $CacheKey = 'StateGet::ID::' . $Param{ID};
+    my $Cache    = $CacheObject->Get(
         Type => $Self->{CacheType},
         Key  => $CacheKey,
     );
     return %{$Cache} if $Cache;
 
-    # get database object
-    my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
-
-    # sql
-    my @Bind;
-    my $SQL = 'SELECT ts.id, ts.name, ts.valid_id, ts.comments, ts.type_id, tst.name,'
-        . ' ts.change_time, ts.create_time'
-        . ' FROM ticket_state ts, ticket_state_type tst WHERE ts.type_id = tst.id AND ';
-    if ( $Param{Name} ) {
-        $SQL .= ' ts.name = ?';
-        push @Bind, \$Param{Name};
-    }
-    else {
-        $SQL .= ' ts.id = ?';
-        push @Bind, \$Param{ID};
-    }
-
+    # ask the database
     return if !$DBObject->Prepare(
-        SQL   => $SQL,
-        Bind  => \@Bind,
-        Limit => 1,
+        SQL => 'SELECT ts.id, ts.name, ts.valid_id, ts.comments, ts.type_id, tst.name,'
+            . ' ts.create_time, ts.create_by, ts.change_time, ts.change_by'
+            . ' FROM ticket_state ts, ticket_state_type tst WHERE ts.type_id = tst.id AND ts.id = ?',
+        Bind => [ \$Param{ID} ],
     );
 
     # fetch the result
-    my %Data;
+    my %State;
     while ( my @Data = $DBObject->FetchrowArray() ) {
-        %Data = (
+        %State = (
             ID         => $Data[0],
             Name       => $Data[1],
-            Comment    => $Data[3],
             ValidID    => $Data[2],
+            Comment    => $Data[3],
             TypeID     => $Data[4],
             TypeName   => $Data[5],
-            ChangeTime => $Data[6],
-            CreateTime => $Data[7],
+            CreateTime => $Data[6],
+            CreateBy   => $Data[7],
+            ChangeTime => $Data[8],
+            ChangeBy   => $Data[9],
         );
     }
 
-    # set cache
-    $Kernel::OM->Get('Kernel::System::Cache')->Set(
-        Type  => $Self->{CacheType},
-        TTL   => $Self->{CacheTTL},
-        Key   => $CacheKey,
-        Value => \%Data,
-    );
-
-    # no data found...
-    if ( !%Data ) {
+    # no data found
+    if ( !%State ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
-            Message  => "State '$Param{Name}' not found!",
+            Message  => "State with ID '$Param{ID}' not found!",
         );
         return;
     }
 
-    return %Data;
+    # set cache
+    $CacheObject->Set(
+        Type  => $Self->{CacheType},
+        TTL   => $Self->{CacheTTL},
+        Key   => $CacheKey,
+        Value => \%State,
+    );
+
+    return %State;
 }
 
 =item StateUpdate()
 
 update state attributes
 
-    $StateObject->StateUpdate(
+    my $Success = $StateObject->StateUpdate(
         ID             => 123,
         Name           => 'New State',
         Comment        => 'some comment',
@@ -270,16 +281,34 @@ sub StateUpdate {
         }
     }
 
-    # check CheckSysConfig param
-    $Param{CheckSysConfig} //= 1;
+    # check if a state with this name already exists
+    if (
+        $Self->NameExistsCheck(
+            Name => $Param{Name},
+            ID   => $Param{ID}
+        )
+    ) {
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
+            Priority => 'error',
+            Message  => "A state with name '$Param{Name}' already exists!"
+        );
+        return;
+    }
 
-    # get database object
-    my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
+    # get needed objects
+    my $CacheObject     = $Kernel::OM->Get('Kernel::System::Cache');
+    my $DBObject        = $Kernel::OM->Get('Kernel::System::DB');
+    my $SysConfigObject = $Kernel::OM->Get('Kernel::System::SysConfig');
+
+    # check CheckSysConfig param
+    if ( !defined $Param{CheckSysConfig} ) {
+        $Param{CheckSysConfig} = 1;
+    }
 
     # sql
     return if !$DBObject->Do(
-        SQL => 'UPDATE ticket_state SET name = ?, comments = ?, type_id = ?, '
-            . ' valid_id = ?, change_time = current_timestamp, change_by = ? '
+        SQL => 'UPDATE ticket_state SET name = ?, comments = ?, type_id = ?,'
+            . ' valid_id = ?, change_time = current_timestamp, change_by = ?'
             . ' WHERE id = ?',
         Bind => [
             \$Param{Name}, \$Param{Comment}, \$Param{TypeID}, \$Param{ValidID},
@@ -287,16 +316,15 @@ sub StateUpdate {
         ],
     );
 
-    # delete cache
-    $Kernel::OM->Get('Kernel::System::Cache')->CleanUp(
+    # cleanup cache
+    $CacheObject->CleanUp(
         Type => $Self->{CacheType},
     );
 
-    # check all sysconfig options
-    return 1 if !$Param{CheckSysConfig};
-
     # check all sysconfig options and correct them automatically if neccessary
-    $Kernel::OM->Get('Kernel::System::SysConfig')->ConfigItemCheckAll();
+    if ( $Param{CheckSysConfig} ) {
+        $SysConfigObject->ConfigItemCheckAll();
+    }
 
     return 1;
 }
@@ -455,17 +483,17 @@ sub StateGetStatesByType {
 
 get state list as a hash of ID, Name pairs
 
-    my %List = $StateObject->StateList(
-        UserID => 123,
-    );
+    my %List = $StateObject->StateList();
+
+or
 
     my %List = $StateObject->StateList(
-        UserID => 123,
         Valid  => 1, # is default
     );
 
+or
+
     my %List = $StateObject->StateList(
-        UserID => 123,
         Valid  => 0,
     );
 
@@ -488,55 +516,56 @@ returns
 sub StateList {
     my ( $Self, %Param ) = @_;
 
-    # check needed stuff
-    if ( !$Param{UserID} ) {
-        $Kernel::OM->Get('Kernel::System::Log')->Log(
-            Priority => 'error',
-            Message  => 'UserID!'
-        );
-        return;
-    }
+    # get needed objects
+    my $CacheObject = $Kernel::OM->Get('Kernel::System::Cache');
+    my $DBObject    = $Kernel::OM->Get('Kernel::System::DB');
+    my $ValidObject = $Kernel::OM->Get('Kernel::System::Valid');
 
+    # check Valid param
     my $Valid = 1;
     if ( !$Param{Valid} && defined( $Param{Valid} ) ) {
         $Valid = 0;
     }
 
     # check cache
-    my $CacheKey = 'StateList::' . $Valid;
-    my $Cache    = $Kernel::OM->Get('Kernel::System::Cache')->Get(
+    my $CacheKey = 'StateList::Valid::' . $Valid;
+    my $Cache    = $CacheObject->Get(
         Type => $Self->{CacheType},
         Key  => $CacheKey,
     );
     return %{$Cache} if $Cache;
 
-    # sql
+    # build SQL
     my $SQL = 'SELECT id, name FROM ticket_state';
-    if ($Valid) {
-        $SQL
-            .= " WHERE valid_id IN ( ${\(join ', ', $Kernel::OM->Get('Kernel::System::Valid')->ValidIDsGet())} )";
+
+    # add WHERE statement
+    if ( $Valid ) {
+        # create the valid list
+        my $ValidIDs = join( ', ', $ValidObject->ValidIDsGet() );
+
+        $SQL .= ' WHERE valid_id IN (' . $ValidIDs . ')';
     }
 
-    # get database object
-    my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
-
-    return if !$DBObject->Prepare( SQL => $SQL );
+    # ask database
+    return if !$DBObject->Prepare(
+        SQL => $SQL,
+    );
 
     # fetch the result
-    my %Data;
+    my %StateList;
     while ( my @Row = $DBObject->FetchrowArray() ) {
-        $Data{ $Row[0] } = $Row[1];
+        $StateList{ $Row[0] } = $Row[1];
     }
 
     # set cache
-    $Kernel::OM->Get('Kernel::System::Cache')->Set(
+    $CacheObject->Set(
         Type  => $Self->{CacheType},
         TTL   => $Self->{CacheTTL},
         Key   => $CacheKey,
-        Value => \%Data,
+        Value => \%StateList,
     );
 
-    return %Data;
+    return %StateList;
 }
 
 =item StateLookup()
@@ -546,6 +575,8 @@ returns the id or the name of a state
     my $StateID = $StateObject->StateLookup(
         State => 'closed successful',
     );
+
+or
 
     my $State = $StateObject->StateLookup(
         StateID => 2,
@@ -568,7 +599,6 @@ sub StateLookup {
     # get (already cached) state list
     my %StateList = $Self->StateList(
         Valid  => 0,
-        UserID => 1,
     );
 
     my $Key;
@@ -723,6 +753,40 @@ sub StateTypeLookup {
     }
 
     return $ReturnData;
+}
+
+=item NameExistsCheck()
+
+    return 1 if another state with this name already exits
+
+        $Exist = $StateObject->NameExistsCheck(
+            Name => 'Some::Template',
+            ID => 1, # optional
+        );
+
+=cut
+
+sub NameExistsCheck {
+    my ( $Self, %Param ) = @_;
+
+    # get database object
+    my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
+    return if !$DBObject->Prepare(
+        SQL  => 'SELECT id FROM ticket_state WHERE name = ?',
+        Bind => [ \$Param{Name} ],
+    );
+
+    # fetch the result
+    my $Flag;
+    while ( my @Row = $DBObject->FetchrowArray() ) {
+        if ( !$Param{ID} || $Param{ID} ne $Row[0] ) {
+            $Flag = 1;
+        }
+    }
+    if ($Flag) {
+        return 1;
+    }
+    return 0;
 }
 
 1;
