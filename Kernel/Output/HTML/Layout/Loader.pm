@@ -432,7 +432,6 @@ sub _HandleCSSList {
 
     # push standard path
     push( @PackagesPaths, $Home );
-    my @ReversePaths = reverse @PackagesPaths;
 
     # get sysconfig option for pre-created loader caches
     my $PreCreatedCaches = $Kernel::OM->Get('Kernel::Config')->Get('Loader::PreCreatedCaches');
@@ -440,7 +439,9 @@ sub _HandleCSSList {
     # copy files
     if ( !$PreCreatedCaches ) {
         for my $Skin (@Skins) {
-            for my $Path (@ReversePaths) {
+            # remember already copied files
+            my %CopiedFiles;
+            for my $Path (@PackagesPaths) {
                 for my $Type (qw(img img/icons css)) {
 
                     # source directory
@@ -473,13 +474,15 @@ sub _HandleCSSList {
                     ) {
                         $Self->_HandleImageFiles(
                             Directory     => $DefaultDirectory,
-                            SkinDirectory => $SkinDirectory
+                            SkinDirectory => $SkinDirectory,
+                            CopiedFiles   => \%CopiedFiles
                         );
                     }
 
                     $Self->_HandleImageFiles(
                         Directory     => $Directory,
-                        SkinDirectory => $SkinDirectory
+                        SkinDirectory => $SkinDirectory,
+                        CopiedFiles   => \%CopiedFiles
                     );
                 }
 
@@ -589,6 +592,7 @@ sub _HandleImageFiles {
 
     my $Directory     = $Param{Directory};
     my $SkinDirectory = $Param{SkinDirectory};
+    my $CopiedFiles   = $Param{CopiedFiles};
 
     # if source directory exists, copy files
     if ( -e $Directory ) {
@@ -599,7 +603,9 @@ sub _HandleImageFiles {
         closedir(DIR);
 
         # check filelist for changes
+        FILE:
         for my $File (@Files) {
+            next FILE if ( $CopiedFiles->{ $File } );
 
             # check if new directory exists
             if ( !( -e $SkinDirectory ) ) {
@@ -615,6 +621,8 @@ sub _HandleImageFiles {
             # check if file does not exist
             if ( !-e ($SkinDirectory . $File) ) {
                 copy( $Directory . $File, $SkinDirectory . $File );
+
+                $CopiedFiles->{ $File } = 1;
             }
 
             # check if file has changed
@@ -626,6 +634,8 @@ sub _HandleImageFiles {
                 if ( $SourceFileSize && $TargetFileSize != $SourceFileSize ) {
                     my $ok = copy( $Directory . $File, $SkinDirectory . $File );
                 }
+
+                $CopiedFiles->{ $File } = 1;
             }
         }
     }
