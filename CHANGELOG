@@ -1,6 +1,9 @@
 # Change log of KIX
 * Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.14.0 (2021/01/20)
+ * (2021/01/20) - productive release
+
 # 17.14.0-RC9 (2021/01/16)
  * (2020/12/09) - CR: KIX17-1468 (added REST documentation) (ddoerffel)
 
