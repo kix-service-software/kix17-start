@@ -1,6 +1,23 @@
 # Change log of KIX
 * Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.15.0-RC1 (2021/01/20)
+ * (2021/01/20) - Bugfix: KIX17-1737 (changed layout of the WidgetPopup) (fjacquemin)
+ * (2021/01/18) - Bugfix: KIX17-566 (enable line folding after email crypt/sign with smime) (millinger)
+ * (2021/01/15) - Bugfix: KIX17-1255 (config item input 'Text' converts double spaces causing new version) (millinger)
+ * (2021/01/15) - Bugfix: KIX17-679 (fixed syntax error of incorrect regular expression in IE10/11 at show the system message in login screen) (fjacquemin)
+ * (2021/01/15) - Bugfix: KIX17-911 (fixed endless redirections by using multiple CustomerPanelPreApplicationModule) (fjacquemin)
+ * (2021/01/14) - Bugfix: KIX17-1706 (fixes for dashboard TicketQueueOverview) (millinger)
+ * (2021/01/14) - Bugfix: KIX17-1605 (fixed incorrect action used when deleting faq search profiles) (fjacquemin)
+ * (2021/01/14) - Bugfix: KIX17-1591 (fixed incorrect store of decimal degree values with a leading zero in the minute part) (fjacquemin)
+ * (2021/01/14) - Bugfix: KIX17-1777 (fixed sort order for import/export mappings) (fjacquemin)
+ * (2021/01/13) - Bugfix: KIX17-748 (TransitionAction TicketStateSet does not updated pending time without state update) (millinger)
+ * (2021/01/13) - Bugfix: KIX17-752 (filter webservice debugger entries with choosen time) (millinger)
+ * (2021/01/13) - Bugfix: KIX17-892 (added missing support of KIX_CURRENT for CustomFooter) (millinger)
+ * (2021/01/13) - CR: KIX17-1808 (use article DF as a filter for event based notifications) (millinger)
+ * (2021/01/13) - Bugfix: KIX17-1779 (fix unnecessary generation of CommonCSS file) (millinger)
+ * (2021/01/12) - Bugfix: KIX17-1231 (fix js error after uploading file causing error 413) (millinger)
+
 # 17.14.0 (2021/01/20)
  * (2021/01/20) - productive release
 
