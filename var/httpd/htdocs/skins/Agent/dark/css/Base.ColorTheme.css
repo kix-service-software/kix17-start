@@ -1796,10 +1796,12 @@
     * @subsection WidgetPopup
     */
     div.WidgetPopup {
-        border-color: #CCCCCC;
-        background-color: #EEEEEE;
-        background-image: url(../img/widget_bg_100.png);
-        background-repeat: repeat-x;
+        border-color: #373737;
+        background-color: #4E4D4D;
+    }
+    div.WidgetPopup > .Header {
+        border-bottom: 1px solid #373737;
+        background-color: #373737;
     }
 
 
