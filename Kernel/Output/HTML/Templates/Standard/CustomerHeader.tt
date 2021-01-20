@@ -23,10 +23,12 @@
         </h1>
     </div>
 
+[% IF !Data.NoSystemMessage %]
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
     Core.UI.SystemMessage.Init('Header', null, null);
 //]]></script>
+[% END %]
 [% END %]
 <!-- end CI layout -->
 <!-- end header -->
