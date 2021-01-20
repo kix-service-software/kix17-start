@@ -7433,13 +7433,6 @@
                 <Item Key="Filter"></Item>
                 <Item Key="Time"></Item>
                 <Item Key="Limit">10</Item>
-                <Item Key="States">
-                    <Hash>
-                        <Item Key="1">new</Item>
-                        <Item Key="4">open</Item>
-                        <Item Key="6">pending reminder</Item>
-                    </Hash>
-                </Item>
             </Hash>
         </Setting>
     </ConfigItem>

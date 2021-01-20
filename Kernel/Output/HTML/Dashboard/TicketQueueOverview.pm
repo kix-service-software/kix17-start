@@ -219,8 +219,8 @@ sub Preferences {
         Block       => 'Option',
         Multiple    => 1,
         Data        => \%StateList,
-        SelectedID  => $Self->{SelectedStateIDs},
-        Translation => 0,
+        SelectedID  => $Self->{StateIDs},
+        Translation => 1,
     );
     push( @Params, \%StateSelection );
 
@@ -268,7 +268,7 @@ sub Preferences {
             Multiple    => 1,
             Data        => \%ServiceList,
             SelectedID  => $Self->{ServiceIDs},
-            Translation => 0,
+            Translation => $ConfigObject->Get('Ticket::ServiceTranslation'),
         );
         push( @Params, \%ServiceSelection );
     }
@@ -286,7 +286,7 @@ sub Preferences {
             Multiple    => 1,
             Data        => \%TypeList,
             SelectedID  => $Self->{TypeIDs},
-            Translation => 0,
+            Translation => $ConfigObject->Get('Ticket::TypeTranslation'),
         );
         push( @Params, \%TypeSelection );
     }
@@ -319,6 +319,7 @@ sub Run {
     my ( $Self, %Param ) = @_;
 
     # get needed objects
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
 
@@ -416,6 +417,19 @@ sub Run {
     # display column headers...
     my @ColTotals = qw{};
     for my $CurrCol (@ColHeadline) {
+        if (
+            $ColAttribute ne 'QueueIDs'
+            && (
+                $ColAttribute ne 'ServiceIDs'
+                || $ConfigObject->Get('Ticket::ServiceTranslation')
+            )
+            && (
+                $ColAttribute ne 'TypeIDs'
+                || $ConfigObject->Get('Ticket::TypeTranslation')
+            )
+        ) {
+            $CurrCol = $LayoutObject->{LanguageObject}->Translate($CurrCol);
+        }
         $LayoutObject->Block(
             Name => 'ContentColumnLabel',
             Data => {
@@ -431,7 +445,7 @@ sub Run {
         $LayoutObject->Block(
             Name => 'ContentColumnLabel',
             Data => {
-                'ColumnLabel' => 'Total',
+                'ColumnLabel' => $LayoutObject->{LanguageObject}->Translate('Total'),
                 'cssClass'    => 'Sortable header',
             },
         );
@@ -452,11 +466,25 @@ sub Run {
             $ColCount++;
             if ( $ColCount < 2 ) {
                 $CurrColLabel = $CurrCol;
+                my $CurrRowLabel = $CurrCol;
+                if (
+                    $RowAttribute ne 'QueueIDs'
+                    && (
+                        $RowAttribute ne 'ServiceIDs'
+                        || $ConfigObject->Get('Ticket::ServiceTranslation')
+                    )
+                    && (
+                        $RowAttribute ne 'TypeIDs'
+                        || $ConfigObject->Get('Ticket::TypeTranslation')
+                    )
+                ) {
+                    $CurrRowLabel = $LayoutObject->{LanguageObject}->Translate($CurrCol);
+                }
                 $LayoutObject->Block(
                     Name => 'ContentRow',
                     Data => {
                         'cssClass'      => 'Sortable header',
-                        'Label'         => $CurrCol,
+                        'Label'         => $CurrRowLabel,
                         'SessionID'     => $LayoutObject->{'SessionID'},
                         'SearchPattern' => $RowAttribute . "="
                             . $Self->{RowValueListReverse}->{$CurrCol} . ";",
