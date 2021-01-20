@@ -18,7 +18,7 @@
 [% RenderBlockStart("ContentColumnLabel") %]
             <th class="[% Data.cssClass | html %]" title="[% Translate(Data.ColumnLabel) | html %]">
                 <a href="[% Env("Baselink") %]Action=AgentTicketSearch;Subaction=Search;[% Data.SearchPattern | html %]">
-                [% Translate(Data.ColumnLabel) | html %]
+                [% Data.ColumnLabel | html %]
                 </a>
             </th>
 [% RenderBlockEnd("ContentColumnLabel") %]
@@ -29,7 +29,7 @@
         <tr>
             <td class="[% Data.cssClass | html %]">
                 <a href="[% Env("Baselink") %]Action=AgentTicketSearch;Subaction=Search;[% Data.SearchPattern | html %]">
-                [% Translate(Data.Label) | html %]
+                [% Data.Label | html %]
                 </a>
             </td>
 [% RenderBlockStart("ContentColumn") %]
