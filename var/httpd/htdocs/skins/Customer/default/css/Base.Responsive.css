@@ -285,13 +285,17 @@
     .WidgetSimple .AllocationListContainer .FilterInputContainer {
         margin: 0 auto;
     }
+    .WidgetSimple div.Pagination,
     .WidgetSimple span.Pagination {
         display: none;
     }
+    .WidgetSimple div.Pagination.AsBlock,
     .WidgetSimple span.Pagination.AsBlock {
         display: block;
         margin: 10px 0;
     }
+    .WidgetSimple div.Pagination a,
+    .OverviewActions div.Pagination a,
     .WidgetSimple span.Pagination a,
     .OverviewActions span.Pagination a {
         display: inline-block;
@@ -300,7 +304,9 @@
         float: none;
     }
     .WidgetSimple span.Pagination a.Selected,
-    .OverviewActions span.Pagination a.Selected {
+    .OverviewActions span.Pagination a.Selected,
+    .WidgetSimple div.Pagination a.Selected,
+    .OverviewActions div.Pagination a.Selected {
         font-weight: normal;
     }
     .WidgetSimple > .Header  {
@@ -619,6 +625,7 @@
         overflow: hidden;
         text-align: center;
     }
+    .OverviewActions > div.Pagination,
     .OverviewActions > span.Pagination {
         height: 22px;
     }

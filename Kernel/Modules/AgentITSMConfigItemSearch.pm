@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2021 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -94,10 +94,10 @@ sub Run {
     }
 
     elsif ( $ClassID && $ClassID ne 'All' ) {
-        push @ClassIDArray, $ClassID;
+        push( @ClassIDArray, $ClassID );
     }
     else {
-        @ClassIDArray = keys %{$ClassList};
+        @ClassIDArray = sort( keys( %{$ClassList} ) );
     }
 
     # get single params
@@ -275,12 +275,21 @@ sub Run {
             }
 
             for my $Attribute (@XMLAttributes) {
-                if ( defined $AttributesHash{Key}->{ $Attribute->{Key} } ) {
-                    $AttributesHash{Key}->{ $Attribute->{Key} }++;
-                }
-                else {
+                if ( !defined( $AttributesHash{Key}->{ $Attribute->{Key} } ) ) {
                     $AttributesHash{Key}->{ $Attribute->{Key} }   = 1;
+                    $AttributesHash{Type}->{ $Attribute->{Key} }  = $Attribute->{Type};
                     $AttributesHash{Value}->{ $Attribute->{Key} } = $Attribute->{Value};
+                }
+                elsif( $AttributesHash{Key}->{ $Attribute->{Key} } ) {
+                    if (
+                        !$AttributesHash{Type}->{ $Attribute->{Key} }
+                        || $AttributesHash{Type}->{ $Attribute->{Key} } eq $Attribute->{Type}
+                    ) {
+                        $AttributesHash{Key}->{ $Attribute->{Key} } += 1;
+                    }
+                    else {
+                        $AttributesHash{Key}->{ $Attribute->{Key} } = 0;
+                    }
                 }
             }
         }
@@ -321,6 +330,7 @@ sub Run {
                         cmp $LayoutObject->{LanguageObject}->Translate($b)
                 } keys %{ $AttributesHash{Key} }
             ) {
+                next if ( !$AttributesHash{Key}->{ $Attribute } );
                 my %TmpHash = ();
                 $TmpHash{Key}   = $Attribute;
                 $TmpHash{Value} = $AttributesHash{Value}->{$Attribute};
@@ -430,48 +440,21 @@ sub Run {
         );
 
         # output xml search form
-        # default values
-        my @DefaultKeys = ( 'Number', 'Name', 'DeplStateIDs', 'InciStateIDs' );
-        my @UsedKeys;
+        my $XMLDefinition = [];
         for my $Class (@ClassIDArray) {
-
-            if ( $XMLDefinitionHash{$Class}->{Definition} ) {
-
-                if ( scalar @XMLAttributes ) {
-
-                    $Self->_XMLSearchFormOutput(
-                        XMLDefinition => $XMLDefinitionHash{$Class}->{DefinitionRef},
-                        XMLAttributes => \@XMLAttributes,
-                        GetParam      => \%GetParam,
-                    );
-
-                    # remove already used xml attributes
-                    my @TmpArray;
-                    for my $Hash (@XMLAttributes) {
-
-                        # get already used keys
-                        next if grep { $Hash->{Key} eq $_ } @DefaultKeys;
-                        next if grep { $Hash->{Key} eq $_ } @UsedKeys;
-
-                        # check if key is used by definition ref
-                        my $Found = 0;
-                        for my $XMLDefinition ( @{ $XMLDefinitionHash{$Class}->{DefinitionRef} } ) {
-                            next if $Hash->{Key} ne $XMLDefinition->{Key};
-                            push @UsedKeys, $Hash->{Key};
-                            $Found = 1;
-                            last;
-                        }
-
-                        # if not found add to new array
-                        if ( !$Found ) {
-                            my %TempHash = %{$Hash};
-                            push @TmpArray, \%TempHash;
-                        }
-                    }
-                    @XMLAttributes = @TmpArray;
-                }
+            if ( $XMLDefinitionHash{$Class}->{DefinitionRef} ) {
+                $Self->_XMLSearchFormDefinition(
+                    XMLDefinitionRef => $XMLDefinitionHash{$Class}->{DefinitionRef},
+                    XMLDefinition    => $XMLDefinition,
+                );
             }
         }
+
+        $Self->_XMLSearchFormOutput(
+            XMLDefinition => $XMLDefinition,
+            XMLAttributes => \@XMLAttributes,
+            GetParam      => \%GetParam,
+        );
 
         # show attributes
         my $AttributeIsUsed = 0;
@@ -650,7 +633,25 @@ sub Run {
             $XMLGetParamHash{$Class} = $XMLGetParam;
 
             if ( @{$XMLFormData} ) {
-                $GetParam{What} = $XMLFormData;
+                if ( ref( $GetParam{What} ) eq 'ARRAY' ) {
+                    for my $FormData ( @{ $XMLFormData } ) {
+                        for my $FormKey ( keys( %{ $FormData } ) ) {
+                            for my $WhatData ( @{ $GetParam{What} } ) {
+                                for my $WhatKey ( keys( %{ $WhatData } ) ) {
+                                    if (
+                                        $FormKey eq $WhatKey
+                                        && ref( $WhatData->{ $WhatKey } ) eq 'ARRAY'
+                                    ) {
+                                        push( @{ $WhatData->{ $WhatKey } }, @{ $FormData->{ $FormKey } } );
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                else {
+                    $GetParam{What} = $XMLFormData;
+                }
             }
         }
 
@@ -1087,12 +1088,9 @@ sub Run {
                 $ClassName = $ClassID;
             }
 
-            my $Title
-                = $LayoutObject->{LanguageObject}->Translate('Config Item Search Results')
-                . ' '
-                . $LayoutObject->{LanguageObject}->Translate('Class')
-                . ' '
-                . $LayoutObject->{LanguageObject}->Translate($ClassName);
+            my $Title = $LayoutObject->{LanguageObject}->Translate('Config Item Search Results')
+                . ': '
+                . $LayoutObject->{LanguageObject}->Translate('Class');
 
             $Output .= $LayoutObject->ITSMConfigItemListShow(
                 ConfigItemIDs => $SearchResultList,
@@ -1149,15 +1147,75 @@ sub Run {
     }
 }
 
-sub _XMLSearchFormOutput {
+sub _XMLSearchFormDefinition {
     my ( $Self, %Param ) = @_;
 
-    my %GetParam = %{ $Param{GetParam} };
+    # check needed stuff
+    return if ref $Param{XMLDefinition} ne 'ARRAY';
+    return if ref $Param{XMLDefinitionRef} ne 'ARRAY';
+
+    ITEM:
+    for my $Item ( @{ $Param{XMLDefinitionRef} } ) {
+        my $CurrDefItem;
+        if ( ref( $Param{XMLDefinition} ) eq 'ARRAY' ) {
+            DEFITEM:
+            for my $DefItem ( @{ $Param{XMLDefinition} } ) {
+                if (
+                    $Item->{Key} eq $DefItem->{Key}
+                    && $Item->{Input}->{Type} eq $DefItem->{Input}->{Type}
+                ) {
+                    $CurrDefItem = $DefItem;
+                    if ( $DefItem->{Input}->{Type} eq 'GeneralCatalog' ) {
+                        if ( ref( $DefItem->{Input}->{Class} ) eq 'ARRAY' ) {
+                            push( @{ $DefItem->{Input}->{Class} }, $Item->{Input}->{Class} );
+                        }
+                        else {
+                            $DefItem->{Input}->{Class} = [
+                                $DefItem->{Input}->{Class},
+                                $Item->{Input}->{Class}
+                            ];
+                        }
+                    }
+                    last DEFITEM;
+                }
+            }
+        }
+        if ( !defined( $CurrDefItem ) ) {
+            my %TempItem = %{ $Item };
+            delete( $TempItem{Sub} );
+            $CurrDefItem = \%TempItem;
+            push( @{ $Param{XMLDefinition} }, $CurrDefItem );
+        }
+
+        next ITEM if !$Item->{Sub};
+
+        if ( !defined( $CurrDefItem->{Sub} ) ) {
+            $CurrDefItem->{Sub} = [];
+        }
+
+        # start recursion, if "Sub" was found
+        $Self->_XMLSearchFormDefinition(
+            XMLDefinitionRef => $Item->{Sub},
+            XMLDefinition    => $CurrDefItem->{Sub},
+        );
+    }
+
+    return 1;
+}
+
+sub _XMLSearchFormOutput {
+    my ( $Self, %Param ) = @_;
 
     # check needed stuff
     return if !$Param{XMLDefinition};
     return if ref $Param{XMLDefinition} ne 'ARRAY';
     return if ref $Param{XMLAttributes} ne 'ARRAY';
+
+    # isolate params
+    my %GetParam = %{ $Param{GetParam} };
+
+    # prepare keys to ignore
+    my @DefaultKeys = ( 'Number', 'Name', 'DeplStateIDs', 'InciStateIDs' );
 
     $Param{Level} ||= 0;
     ITEM:
@@ -1170,6 +1228,8 @@ sub _XMLSearchFormOutput {
             $InputKey = $Param{Prefix} . '::' . $InputKey;
             $Name     = $Param{PrefixName} . '::' . $Name;
         }
+
+        next ITEM if grep { $InputKey eq $_ } @DefaultKeys;
 
         # check if attribute is in xml attribute array and remove it if found
         my $Found = 0;
@@ -1447,6 +1507,7 @@ sub _XMLSearchAttributesGet {
         # set prefix
         my $InputKey = $Item->{Key};
         my $Name     = $Item->{Name};
+        my $Type     = $Item->{Input}->{Type};
         if ( $Param{Prefix} ) {
             $InputKey = $Param{Prefix} . '::' . $InputKey;
             $Name     = $Param{PrefixName} . '::' . $Name;
@@ -1457,6 +1518,7 @@ sub _XMLSearchAttributesGet {
             push @{ $Param{XMLAttributes} }, {
                 Key   => $InputKey,
                 Value => $Name,
+                Type  => $Type,
             };
         }
 

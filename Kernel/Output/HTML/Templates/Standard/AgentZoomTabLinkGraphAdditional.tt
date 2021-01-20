@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -15,21 +15,33 @@
         <table class="DataTable">
             <thead>
                 <tr>
-                    <th>Service</th><th>[% Translate("Linked as") | html %]</th>
+                    <th>Service</th>
+                    <th>[% Translate("Linked as") | html %]</th>
                 </tr>
             </thead>
             <tbody>
-                [% Data.ServiceTable %]
+[% RenderBlockStart("Service") %]
+            <tr>
+                <td><a href='./index.pl?Action=AgentITSMServiceZoom;ServiceID=[% Data.ServiceID | html %]' target="_parent">[% Data.ServiceName | html %]</a></td>
+                <td>[% Data.LinkType | html %]</td>
+            </tr>
+[% RenderBlockEnd("Service") %]
+[% RenderBlockStart("NoService") %]
+            <tr>
+                <td>[% Translate("No linked Services") | html %]</td>
+                <td>&nbsp;</td>
+            </tr>
+[% RenderBlockEnd("NoService") %]
+[% RenderBlockStart("ServiceError") %]
+            <tr>
+                <td>[% Translate("Something went wrong! Please look into the error-log for more information.") | html %]</td>
+                    <td>&nbsp;</td>
+        </tr>
+[% RenderBlockEnd("ServiceError") %]
             </tbody>
         </table>
     </div>
 [% RenderBlockEnd("Services") %]
-[% RenderBlockStart("Service") %]
-    <tr>
-        <td><a href='./index.pl?Action=AgentITSMServiceZoom;ServiceID=[% Data.ServiceID | html %]' target="_parent">[% Data.ServiceName | html %]</a></td>
-        <td>[% Data.LinkType | html %]</td>
-    </tr>
-[% RenderBlockEnd("Service") %]
 
 [% RenderBlockStart("Printing") %]
 <div id="PrintWindow" ></div>
@@ -39,7 +51,7 @@
             window.setTimeout(Check, 200);
             return false;
         }
-        Core.KIX4OTRS.AgentLinkGraph.PrintPost();
+        ITSM.Agent.LinkGraph.PrintPost();
     }
     Check();
 //]]></script>

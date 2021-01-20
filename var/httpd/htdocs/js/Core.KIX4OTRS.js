@@ -1,5 +1,5 @@
 // --
-// Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
+// Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
 // --
 // This software comes with ABSOLUTELY NO WARRANTY. For details, see
 // the enclosed file LICENSE for license information (AGPL). If you
@@ -63,7 +63,7 @@ Core.KIX4OTRS = (function(TargetNS) {
 
         // bind delete button
         $CurrentTab.find('.Primary').bind('click', function() {
-            var $SelectedLinks = $(this).parent().parent().find(':checked');
+            var $SelectedLinks = $(this).parent().parent().find('input:checked');
 
             if ($SelectedLinks.length == 0) {
                 return;

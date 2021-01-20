@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2021 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -242,11 +242,15 @@ $(document.body).on('change', '.ArticleFlagSelection', function() {
 
 [% RenderBlockStart("ArticlePages") %]
             <div class="ArticlePages Icons">
-        [% FOREACH page IN [1 .. Data.Pages]; %]
+[% FOREACH page IN [1 .. Data.Pages]; %]
                 <a href="[% Env("Baselink") %]Action=AgentTicketZoom;TicketID=[% Data.TicketID | uri %];ArticlePage=[% page %]" title="[% Translate('Page') %] [% page %]" data-page="[% page %]" [% IF page == Data.CurrentPage %]class="Active"[% END %]>[% page %]</a>
-        [% END; %]
+[% END; %]
             </div>
 [% RenderBlockEnd("ArticlePages") %]
+            <div class="ResetColumnWidth Icons Hidden">
+                <span class="InvisibleText">[% Translate("Reset Columns Width") | html %]:</span>
+                <a id="ResetColumnWidth" href="#" title="[% Translate("Reset columns width") | html %]"><i class="fa fa-columns"></i><span>[% Translate("Reset columns width") | html %]</span></a>
+            </div>
             <div class="ArticleTicketMarkAsRead Icons">
                 <span class="InvisibleText">[% Translate("Mark") | html %]:</span>
                 <a id="TicketMarkAsRead" href="#" title="[% Translate("Mark this ticket as read") | html %]"><i class="fa fa-eye"></i><span>[% Translate("Mark this ticket as read") | html %]</span></a>
@@ -326,42 +330,51 @@ $(document.body).on('change', '.ArticleFlagSelection', function() {
 [% RenderBlockEnd("TreeItemNewArticle") %]
 [% RenderBlockStart("TreeItemArticleFlagSet") %]
 # show icon
-                            <span class="FlagIcon" id="ArticleFlag_[% Data.ArticleID | html %]_[% Data.ArticleFlagKey | html %]" style="[% Data.CSS | html %]">
-                                 <i class="fa fa-[% Data.ArticleFlagIcon | html %]"></i>
-                            </span>
+                                    <span class="FlagIcon" id="ArticleFlag_[% Data.ArticleID | html %]_[% Data.ArticleFlagKey | html %]" style="[% Data.CSS | html %]">
+                                         <i class="fa fa-[% Data.ArticleFlagIcon | html %]"></i>
+                                    </span>
+[% RenderBlockStart("TreeItemArticleFlagDialog") %]
 # show edit / delete dialog (hidden)
-                            <div class="Hidden" id="ArticleFlagOptions_[% Data.ArticleID | html %]_[% Data.ArticleFlagKey | html %]" value="2">
-                                <div class="ArticleFlagOptionsDialog">
-                                    <a href="" class="ArticleFlag" title="show details for flag [% Translate(Data.ArticleFlagValue) | html %]" rel="[% Data.ArticleID | html %]_[% Data.ArticleFlagKey | html %]">[% Translate("show details / edit") | html %]</a>
-                                    <a href="" class="ArticleFlag" title="remove flag [% Translate(Data.ArticleFlagValue) | html %]" rel="[% Data.ArticleID | html %]_[% Data.ArticleFlagKey | html %]">[% Translate("remove") | html %]</a>
-                                </div>
-                            </div>
+                                    <div class="Hidden" id="ArticleFlagOptions_[% Data.ArticleID | html %]_[% Data.ArticleFlagKey | html %]" value="2">
+                                        <div class="ArticleFlagOptionsDialog">
+[% RenderBlockStart("TreeItemArticleFlagOptionShow") %]
+                                            <a href="" class="ArticleFlag" title="[% Translate("show details for flag") | html %] [% Translate(Data.ArticleFlagValue) | html %]" rel="[% Data.ArticleID | html %]_[% Data.ArticleFlagKey | html %]" data-action="show">[% Translate("show details") | html %]</a>
+[% RenderBlockEnd("TreeItemArticleFlagOptionShow") %]
+[% RenderBlockStart("TreeItemArticleFlagOptionEdit") %]
+                                            <a href="" class="ArticleFlag" title="[% Translate("edit details for flag") | html %] [% Translate(Data.ArticleFlagValue) | html %]" rel="[% Data.ArticleID | html %]_[% Data.ArticleFlagKey | html %]" data-action="show">[% Translate("show details / edit") | html %]</a>
+[% RenderBlockEnd("TreeItemArticleFlagOptionEdit") %]
+[% RenderBlockStart("TreeItemArticleFlagOptionDelete") %]
+                                            <a href="" class="ArticleFlag" title="[% Translate("remove flag") | html %] [% Translate(Data.ArticleFlagValue) | html %]" rel="[% Data.ArticleID | html %]_[% Data.ArticleFlagKey | html %]" data-action="delete">[% Translate("remove") | html %]</a>
+[% RenderBlockEnd("TreeItemArticleFlagOptionDelete") %]
+                                        </div>
+                                    </div>
 # edit dialog box
-                            <div id="ArticleFlagDialog_[% Data.ArticleID | html %]_[% Data.ArticleFlagKey | html %]" class="Hidden">
-                                <form action="[% Env("CGIHandle") %]" method="post" id="ArticleFlagDialog_[% Data.ArticleID | html %]_[% Data.ArticleFlagKey | html %]_Form" name="ArticleFlagDialog_[% Data.ArticleFlagID | html %]_[% Data.ArticleFlagKey | html %]_Form">
-                                    <input type="hidden" value="AgentTicketZoomTabArticle" name="Action"/>
-                                    <input type="hidden" value="ArticleFlagUpdate" name="Subaction"/>
-                                    <input type="hidden" value="[% Data.ArticleFlagKey | html %]" name="ArticleFlagKey"/>
-                                    <input type="hidden" value="[% Data.TicketID | html %]" name="TicketID"/>
-                                    <input type="hidden" value="[% Data.ArticleID | html %]" name="ArticleID"/>
-                                    <fieldset class="TableLike">
-                                        <label for="ArticleFlagSubject">[% Translate("Subject") | html %]:</label>
-                                        <div class="Field">
-                                            <input type="text" id="ArticleFlagSubject" name="ArticleFlagSubject" value="[% Data.ArticleFlagSubject | html %]" />
-                                        </div>
-                                        <div class="Clear"></div>
-                                        <label for="ArticleFlagKeywords">[% Translate("Keywords") | html %]:</label>
-                                        <div class="Field">
-                                            <input type="text" id="ArticleFlagKeywords" name="ArticleFlagKeywords" value="[% Data.ArticleFlagKeywords | html %]" />
-                                        </div>
-                                        <div class="Clear"></div>
-                                        <label for="ArticleFlagNote">[% Translate("Notes") | html %]:</label>
-                                        <div class="Field">
-                                            <textarea cols="40" rows="20" id="ArticleFlagNote" name="ArticleFlagNote">[% Data.ArticleFlagNote | html %]</textarea>
-                                        </div>
-                                    </fieldset>
-                                </form>
-                            </div>
+                                    <div id="ArticleFlagDialog_[% Data.ArticleID | html %]_[% Data.ArticleFlagKey | html %]" class="Hidden">
+                                        <form action="[% Env("CGIHandle") %]" method="post" id="ArticleFlagDialog_[% Data.ArticleID | html %]_[% Data.ArticleFlagKey | html %]_Form" name="ArticleFlagDialog_[% Data.ArticleFlagID | html %]_[% Data.ArticleFlagKey | html %]_Form">
+                                            <input type="hidden" value="AgentTicketZoomTabArticle" name="Action"/>
+                                            <input type="hidden" value="ArticleFlagUpdate" name="Subaction"/>
+                                            <input type="hidden" value="[% Data.ArticleFlagKey | html %]" name="ArticleFlagKey"/>
+                                            <input type="hidden" value="[% Data.TicketID | html %]" name="TicketID"/>
+                                            <input type="hidden" value="[% Data.ArticleID | html %]" name="ArticleID"/>
+                                            <fieldset class="TableLike">
+                                                <label for="ArticleFlagSubject_[% Data.ArticleID | html %]_[% Data.ArticleFlagKey | html %]">[% Translate("Subject") | html %]:</label>
+                                                <div class="Field">
+                                                    <input type="text" id="ArticleFlagSubject_[% Data.ArticleID | html %]_[% Data.ArticleFlagKey | html %]" name="ArticleFlagSubject" value="[% Data.ArticleFlagSubject | html %]"[% IF(!Data.AllowFlagEdit) %] readonly="readonly"[% END %] />
+                                                </div>
+                                                <div class="Clear"></div>
+                                                <label for="ArticleFlagKeywords_[% Data.ArticleID | html %]_[% Data.ArticleFlagKey | html %]">[% Translate("Keywords") | html %]:</label>
+                                                <div class="Field">
+                                                    <input type="text" id="ArticleFlagKeywords_[% Data.ArticleID | html %]_[% Data.ArticleFlagKey | html %]" name="ArticleFlagKeywords" value="[% Data.ArticleFlagKeywords | html %]"[% IF(!Data.AllowFlagEdit) %] readonly="readonly"[% END %] />
+                                                </div>
+                                                <div class="Clear"></div>
+                                                <label for="ArticleFlagNote_[% Data.ArticleID | html %]_[% Data.ArticleFlagKey | html %]">[% Translate("Notes") | html %]:</label>
+                                                <div class="Field">
+                                                    <textarea cols="40" rows="20" id="ArticleFlagNote_[% Data.ArticleID | html %]_[% Data.ArticleFlagKey | html %]" name="ArticleFlagNote"[% IF(!Data.AllowFlagEdit) %] readonly="readonly"[% END %]>[% Data.ArticleFlagNote | html %]</textarea>
+                                                </div>
+                                            </fieldset>
+                                        </form>
+                                    </div>
+[% RenderBlockEnd("TreeItemArticleFlagDialog") %]
 
 [% RenderBlockEnd("TreeItemArticleFlagSet") %]
 [% RenderBlockStart("TreeItemNoNewArticle") %]
@@ -378,20 +391,20 @@ $(document.body).on('change', '.ArticleFlagSelection', function() {
                                     <div>[% Translate(Data.SenderType) | html %]</div>
                                     <input type="hidden" class="SortData" value="[% Translate(Data.SenderType) | html %] &ndash; [% Translate(Data.ArticleType) | html %]" />
                                 </td>
-                                <td class="Type">
-                                    <div class="Center"><img src="[% Data.ArticleTypeIcon | html %]" title="[% Translate(Data.ArticleType) | html %]" alt="[% Translate(Data.ArticleType) | html %]"></div>
+                                <td class="Type Center">
+                                    <img src="[% Data.ArticleTypeIcon | html %]" title="[% Translate(Data.ArticleType) | html %]" alt="[% Translate(Data.ArticleType) | html %]">
                                     <input type="hidden" class="SortData" value="[% Translate(Data.ArticleType) | html %]" />
                                 </td>
-                                <td class="Direction">
-                                    <div class="Center"><img src="[% Data.DirectionIcon | html %]" title="[% Translate(Data.Direction) | html %]" alt="[% Translate(Data.Direction) | html %]"></div>
+                                <td class="Direction Center">
+                                    <img src="[% Data.DirectionIcon | html %]" title="[% Translate(Data.Direction) | html %]" alt="[% Translate(Data.Direction) | html %]">
                                     <input type="hidden" class="SortData" value="[% Data.Direction | html %]" />
                                  </td>
                                  <td class="From">
-                                    <div title="[% Data.From | html %]"><a href="#">[% Data.FromRealname | truncate(34) | html %]</a></div>
+                                    <a href="#" title="[% Data.From | html %]">[% Data.FromRealname | html %]</a>
                                     <input type="hidden" class="SortData" value="[% Data.From | html %]" />
                                 </td>
                                 <td class="Subject">
-                                    <div title="[% Data.Subject | html %]"><a href="#">[% Data.Subject | truncate(64) | html %]</a></div>
+                                    <a title="[% Data.Subject | html %]" href="#">[% Data.Subject | html %]</a>
                                     <input type="hidden" class="SortData" value="[% Data.Subject | html %]" />
                                 </td>
                                 <td class="Created">
@@ -402,7 +415,7 @@ $(document.body).on('change', '.ArticleFlagSelection', function() {
                                 </td>
 [% RenderBlockStart("TreeItemDynamicField") %]
                                 <td class="[% Data.Name %]">
-                                    <div title="[% Data.Title | html %]"><a href="#">[% Data.Value | truncate(34) | html %]</a></div>
+                                    <a title="[% Data.Title | html %]" href="#">[% Data.Value | html %]</a>
                                     <input type="hidden" class="SortData" value="[% Data.Title | html %]" />
                                 </td>
 [% RenderBlockEnd("TreeItemDynamicField") %]
@@ -425,7 +438,6 @@ $(document.body).on('change', '.ArticleFlagSelection', function() {
             </div>
         </div>
 [% RenderBlockEnd("ArticleList") %]
-
     </div>
 </div>
 [% RenderBlockEnd("Tree") %]
@@ -444,11 +456,8 @@ $(document.body).on('change', '.ArticleFlagSelection', function() {
 [% RenderBlockEnd("ArticleCreatedBy") %]
             </div>
         </div>
-
         <div class="Content">
-
 [% PROCESS ArticleActionMenu.tt %]
-
             <div class="ArticleMailHeader">
                 <fieldset class="TableLike FixedLabelSmall">
                     <label class="AdditionalInformationResponsive">[% Translate("Created") | html %]:</label>
@@ -484,30 +493,6 @@ $(document.body).on('change', '.ArticleFlagSelection', function() {
                     <div class="Clear"></div>
 [% RenderBlockEnd("ArticleDynamicField") %]
 
-# example of how to use fixed dynamic field blocks for customizations
-# Note: Field1 and Field2 are the names of the fields and had to be replaced with the actual
-# field names
-#[% RenderBlockStart("ArticleDynamicFieldField1") %]
-#                        <label>[% Translate(Data.Label) | html %]:</label>
-#[% RenderBlockStart("ArticleDynamicFieldField1Link") %]
-#                    <p class="Value" title="[% Data.Title %]"><a href="[% Data.Link | Interpolate %]" target="_blank" class="DynamicFieldLink">[% Data.Value %]</a></p>
-#[% RenderBlockEnd("ArticleDynamicField1Link") %]
-#[% RenderBlockStart("ArticleDynamicFieldField1Plain") %]
-#                    <p class="Value" title="[% Data.Title %]">[% Data.Value %]</p>
-#[% RenderBlockEnd("ArticleDynamicFieldField1Plain") %]
-#                        <div class="Clear"></div>
-#[% RenderBlockEnd("ArticleDynamicFieldField1") %]
-#[% RenderBlockStart("ArticleDynamicFieldField2") %]
-#                        <label>[% Translate(Data.Label) | html %]:</label>
-#[% RenderBlockStart("ArticleDynamicFieldField2Link") %]
-#                    <p class="Value" title="[% Data.Title %]"><a href="[% Data.Link | Interpolate %]" target="_blank" class="DynamicFieldLink">[% Data.Value %]</a></p>
-#[% RenderBlockEnd("ArticleDynamicFieldField2Link") %]
-#[% RenderBlockStart("ArticleDynamicFieldField2Plain") %]
-#                    <p class="Value" title="[% Data.Title %]">[% Data.Value %]</p>
-#[% RenderBlockEnd("ArticleDynamicFieldField2Plain") %]
-#                        <div class="Clear"></div>
-#[% RenderBlockEnd("ArticleDynamicFieldField2") %]
-
 # show article options like signed, crypted, ...
 [% RenderBlockStart("ArticleOption") %]
                     <label>[% Translate(Data.Key) | html %]:</label>
@@ -515,7 +500,6 @@ $(document.body).on('change', '.ArticleFlagSelection', function() {
                     <div class="Clear"></div>
 [% RenderBlockEnd("ArticleOption") %]
 
-#                    <!-- Include the full subject so that it can be copied. The one in the title bar is shortened. -->
                     <label>[% Translate("Subject") | html %]:</label>
                     <p class="Value">[% Data.Subject | html %]</p>
                     <div class="Clear"></div>
@@ -524,7 +508,7 @@ $(document.body).on('change', '.ArticleFlagSelection', function() {
                     <p class="Value" title="[% Translate(Data.Note) | html %]">
                         <span class="FlagIcon" style="[% Data.CSS | html %]">
                             <i class="fa fa-[% Data.ArticleFlagIcon | html %]"></i>
-                        </span> [% Translate(Data.Value) | html %] - [% Translate("Subject") | html %]: [% Translate(Data.Subject) | html %]
+                        </span> [% Translate(Data.Value) | html %][% IF(Data.Subject) %] - [% Translate("Subject") | html %]: [% Translate(Data.Subject) | html %][% END %]
                     </p>
                     <div class="Clear"></div>
 [% RenderBlockEnd("ArticleFlagOption") %]
@@ -569,7 +553,7 @@ $(document.body).on('change', '.ArticleFlagSelection', function() {
 # to open the links in a new window without the security permissions given to the iframe
                     <div class="MessageBrowser">
                         <p>
-        [% Translate("To open links in the following article, you might need to press Ctrl or Cmd or Shift key while clicking the link (depending on your browser and OS).") | html %]
+                            [% Translate("To open links in the following article, you might need to press Ctrl or Cmd or Shift key while clicking the link (depending on your browser and OS).") | html %]
                         </p>
                         <a class="Close" title="[% Translate("Close this message") | html %]" href="#"><i class="fa fa-times"></i></a>
                     </div>
@@ -636,9 +620,13 @@ function CheckIFrameHeight(IFrameID) {
 
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
+    Core.Config.Set('UserArticleTableColumnResizing', '[% Data.ColumnResizing %]');
     Core.KIX4OTRS.TicketZoomTabs.SetArticleFlagColumnWidth();
-    Core.KIX4OTRS.TicketZoomTabs.ShowArticleFlagOptionsDialog();
-    Core.KIX4OTRS.TicketZoomTabs.ArticleFlagOptions([% Data.TicketID | html %],'[% Translate("Apply") | html %]','[% Translate("Set article flag") | html %]');
+[% RenderBlockStart("ArticleFlagsWithoutEdit") %]
+    Core.Config.Set('ArticleFlagsWithoutEdit::[% Data.FlagKey | html %]', '1');
+[% RenderBlockEnd("ArticleFlagsWithoutEdit") %]
+    Core.KIX4OTRS.TicketZoomTabs.ShowArticleFlagOptionsDialog('[% Translate("Article Flag Options") | html %]');
+    Core.KIX4OTRS.TicketZoomTabs.ArticleFlagOptions([% Data.TicketID | html %],'[% Translate("Apply") | html %]','[% Translate("Set article flag") | html %]','[% Translate("for Article") | html %]');
     Core.KIX4OTRS.TicketZoomTabs.PopUpInit();
     Core.Agent.TicketZoom.Init({ ArticleTableHeight: parseInt('[% Env("UserTicketZoomArticleTableHeight") %]',10)},'AgentTicketZoomTabArticle');
     Core.Config.Set('Ticket::Frontend::HTMLArticleHeightDefault', parseInt("[% Config("Ticket::Frontend::HTMLArticleHeightDefault") %]" || 0, 10));

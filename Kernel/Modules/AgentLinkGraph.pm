@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -36,10 +36,7 @@ sub FinishGraph {
     my $LogObject    = $Kernel::OM->Get('Kernel::System::Log');
     my $GroupObject  = $Kernel::OM->Get('Kernel::System::Group');
 
-    my $Output = $LayoutObject->Header(
-        Type         => 'Small',
-        WrapperClass => 'NonMarginTop'
-    );
+    my $Output = $LayoutObject->Header( Type => 'Small' );
 
     if ( scalar keys %{$Param{Nodes}} > 100 ) {
         $Param{TooManyNodes} = (scalar keys %{$Param{Nodes}}) ;
@@ -142,10 +139,6 @@ sub FinishGraph {
             $LayoutObject->GetConfigItemSpecificLayoutContentForGraph( \%Param );
         }
 
-        #    if ( $Param{ObjectType} eq 'Ticket' ) {
-        #        $LayoutObject->GetTicketSpecificLayoutContentForGraph(\%Param);
-        #    }
-
         # give divs,links and dropboxes to dtl
         $LayoutObject->Block(
             Name => 'Graph',
@@ -154,11 +147,16 @@ sub FinishGraph {
                     Data        => $Param{PossibleLinkTypesList},
                     Name        => 'LinkTypes',
                     Translation => 0,
-                    # Class       => 'Modernize' # bugfix: T#2017062990000842
                 ),
                 RelLinkTypes => $RelLinkTypesString,
                 %Param,
             },
+        );
+    }
+
+    if ( $Param{OpenWindow} ) {
+        $LayoutObject->Block(
+            Name => 'GraphWindow',
         );
     }
 
@@ -190,9 +188,9 @@ sub DoPreparations {
 
     # define required params...
     for my $CurrKey (
-        qw( ObjectID RelevantLinkTypes
-        RelevantObjectTypes RelevantObjectSubTypes MaxSearchDepth
-        SavedGraphID GraphLayout GraphConfig UsedStrength)
+        qw(
+            SavedGraphID GraphLayout GraphConfig
+        )
     ) {
         $Param{$CurrKey} = $ParamObject->GetParam( Param => $CurrKey ) || '';
     }
@@ -208,11 +206,11 @@ sub DoPreparations {
             );
         }
         else {
-            $Param{Layout} = $Param{GraphLayout};
-            my @GraphConfig = split( ':::', $Param{GraphConfig} );
+            my @GraphConfig                = split( ':::', $Param{GraphConfig} );
+            $Param{Layout}                 = $Param{GraphLayout};
             $Param{MaxSearchDepth}         = $GraphConfig[0] || $Param{MaxSearchDepth};
             $Param{RelevantLinkTypes}      = $GraphConfig[1] || $Param{RelevantLinkTypes};
-            $Param{UsedStrength}           = $GraphConfig[2] || $Param{UsedStrength};
+            $Param{AdjustingStrength}      = $GraphConfig[2] || $Param{AdjustingStrength};
             $Param{RelevantObjectSubTypes} = $GraphConfig[3] || $Param{RelevantObjectSubTypes};
         }
     }
@@ -221,24 +219,14 @@ sub DoPreparations {
     if ( !$Param{RelevantObjectTypeNames} ) {
         my @RelevantObjectTypeNameArray;
 
-        #        my %ObjectTypeList = $LinkObject->PossibleObjectsList(
-        #            Object => $Param{ObjectType},
-        #            UserID => 1,
-        #        );
-        #        for my $ObjectType ( keys %ObjectTypeList ) {
-        #            push(@RelevantObjectTypeNameArray, $ObjectType);
-        #        }
-
-        #-- for now just itself --#
         push( @RelevantObjectTypeNameArray, $Param{ObjectType} );
 
         $Param{RelevantObjectTypeNames} = \@RelevantObjectTypeNameArray;
     }
 
-    $Param{MaxSearchDepth} = $Param{MaxSearchDepth} || 1;
-
-    $Param{RelSubTypeArray}  = [ split( ',', $Param{RelevantObjectSubTypes} ) ];
-    $Param{RelLinkTypeArray} = [ split( ',', $Param{RelevantLinkTypes} ) ];
+    $Param{MaxSearchDepth}   = $Param{MaxSearchDepth} || 1;
+    $Param{RelSubTypeArray}  = [ split( ',', $Param{RelevantObjectSubTypes} || '' ) ];
+    $Param{RelLinkTypeArray} = [ split( ',', $Param{RelevantLinkTypes}      || '' ) ];
 
     # prepare link type limit...
     for my $CurrKey ( @{ $Param{RelLinkTypeArray} } ) {
@@ -298,16 +286,10 @@ sub LookForNeighbours {
                             );
                             if (
                                 $ObjectAdded
-                                &&
-                                !$Param{DiscoveredEdges}
-                                ->{ $FullSourceID . '==' . $LinkType . '==' . $FullTargetID }
-                                &&
-                                !$Param{DiscoveredEdges}
-                                ->{ $FullTargetID . '==' . $LinkType . '==' . $FullSourceID }
+                                && !$Param{DiscoveredEdges}->{ $FullSourceID . '==' . $LinkType . '==' . $FullTargetID }
+                                && !$Param{DiscoveredEdges}->{ $FullTargetID . '==' . $LinkType . '==' . $FullSourceID }
                             ) {
-                                $Param{DiscoveredEdges}
-                                    ->{ $FullSourceID . '==' . $LinkType . '==' . $FullTargetID } =
-                                    1;
+                                $Param{DiscoveredEdges}->{ $FullSourceID . '==' . $LinkType . '==' . $FullTargetID } = 1;
                             }
                         }
                     }
@@ -333,16 +315,10 @@ sub LookForNeighbours {
                             );
                             if (
                                 $ObjectAdded
-                                &&
-                                !$Param{DiscoveredEdges}
-                                ->{ $FullSourceID . '==' . $LinkType . '==' . $FullTargetID }
-                                &&
-                                !$Param{DiscoveredEdges}
-                                ->{ $FullTargetID . '==' . $LinkType . '==' . $FullSourceID }
+                                && !$Param{DiscoveredEdges}->{ $FullSourceID . '==' . $LinkType . '==' . $FullTargetID }
+                                && !$Param{DiscoveredEdges}->{ $FullTargetID . '==' . $LinkType . '==' . $FullSourceID }
                             ) {
-                                $Param{DiscoveredEdges}
-                                    ->{ $FullSourceID . '==' . $LinkType . '==' . $FullTargetID }
-                                    = 1;
+                                $Param{DiscoveredEdges}->{ $FullSourceID . '==' . $LinkType . '==' . $FullTargetID } = 1;
                             }
                         }
                     }
@@ -354,31 +330,30 @@ sub LookForNeighbours {
 }
 
 sub GetSavedGraphs {
-    my ( $Self, $Param ) = @_;
+    my ( $Self, %Param ) = @_;
 
     # get needed objects
-    my $ParamObject  = $Kernel::OM->Get('Kernel::System::Web::Request');
-    my $LogObject    = $Kernel::OM->Get('Kernel::System::Log');
-    my $UserObject   = $Kernel::OM->Get('Kernel::System::User');
-    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $LogObject       = $Kernel::OM->Get('Kernel::System::Log');
+    my $UserObject      = $Kernel::OM->Get('Kernel::System::User');
+    my $LayoutObject    = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $LinkGraphObject = $Kernel::OM->Get('Kernel::System::LinkGraph');
 
-    my $CurObjectID = $ParamObject->GetParam( Param => 'CurID' );
-
-    # check required params...
-    if ( !$CurObjectID || !$Param->{ObjectType} ) {
-        $LogObject->Log(
-            Priority => 'error',
-            Message =>
-                "Kernel::Modules::AgentLinkGraph::_GetSavedGraphs - param CurObjectID or ObjectType required but not given!",
-        );
-        return;
+    # check needed stuff
+    for ( qw(ObjectType ObjectID) ) {
+        if ( !$Param{$_} ) {
+            $LogObject->Log(
+                Priority => 'error',
+                Message  => '_GetSavedGraphs - Missing Param ' . $_ . '!',
+            );
+            return;
+        }
     }
 
     # get saved graph for this object
-    my %SavedGraphs = $Kernel::OM->Get('Kernel::System::LinkGraph')->GetSavedGraphs(
-        CurID      => $CurObjectID,
+    my %SavedGraphs = $LinkGraphObject->GetSavedGraphs(
+        CurID      => $Param{ObjectID},
+        ObjectType => $Param{ObjectType},
         UserID     => $Self->{UserID},
-        ObjectType => $Param->{ObjectType},
     );
 
     my %SavedGraphSelection;
@@ -415,9 +390,6 @@ sub GetSavedGraphs {
                 . ")";
         }
     }
-    else {
-        $SavedGraphs{NoSavedGraphs} = 1;
-    }
     $SavedGraphs{KnownNames} = $KnownNames;
 
     # build selection
@@ -430,44 +402,48 @@ sub GetSavedGraphs {
         Sort         => 'AlphanumericValue',
         Class        => 'Modernize'
     );
-    $Param->{SavedGraphs} = \%SavedGraphs;
 
-    return 1;
+    return %SavedGraphs;
 }
 
 sub ShowServices {
-    my ( $Self, $Param ) = @_;
+    my ( $Self, %Param ) = @_;
 
     # get needed objects
-    my $ParamObject  = $Kernel::OM->Get('Kernel::System::Web::Request');
-    my $UserObject   = $Kernel::OM->Get('Kernel::System::User');
-    my $LinkObject   = $Kernel::OM->Get('Kernel::System::LinkObject');
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $LinkObject   = $Kernel::OM->Get('Kernel::System::LinkObject');
+    my $ParamObject  = $Kernel::OM->Get('Kernel::System::Web::Request');
+
+    $LayoutObject->Block(
+        Name => 'Services',
+        Data => {
+            Name => $ParamObject->GetParam( Param => 'ObjectName' ),
+        },
+    );
 
     my $LinkList = $LinkObject->LinkListWithData(
-        Object  => $Param->{ObjectType},
-        Key     => $ParamObject->GetParam( Param => 'ObjectID' ),
+        Object  => $Param{ObjectType},
+        Key     => $Param{ObjectID},
         Object2 => 'Service',
         State   => 'Valid',
         UserID  => $Self->{UserID},
     );
 
-    my $ServicesString;
     if ( ref($LinkList) eq 'HASH' ) {
-        my %PossibleLinkTypesList
-            = $LinkObject->PossibleTypesList(
-            Object1 => $Param->{ObjectType},
+        my %PossibleLinkTypesList = $LinkObject->PossibleTypesList(
+            Object1 => $Param{ObjectType},
             Object2 => 'Service',
             UserID  => $Self->{UserID},
-            );
+        );
 
         # lookup real name for this type (translatable)
         for my $LinkType ( keys %PossibleLinkTypesList ) {
+            my $TypeID = $LinkObject->TypeLookup(
+                Name   => $LinkType,
+                UserID => $Self->{UserID},
+            );
             my %Type = $LinkObject->TypeGet(
-                TypeID => $LinkObject->TypeLookup(
-                    Name   => $LinkType,
-                    UserID => $Self->{UserID},
-                ),
+                TypeID => $TypeID,
                 UserID => $Self->{UserID},
             );
             $PossibleLinkTypesList{ $LinkType . '::Source' } = $Type{SourceName};
@@ -479,63 +455,47 @@ sub ShowServices {
             for my $LinkType ( keys %{ $LinkList->{Service} } ) {
                 for my $Position ( keys %{ $LinkList->{Service}->{$LinkType} } ) {
                     for my $DestID ( keys %{ $LinkList->{Service}->{$LinkType}->{$Position} } ) {
-                        my $Type =
-                            $LayoutObject->{LanguageObject}
-                            ->Get( $PossibleLinkTypesList{ $LinkType . '::' . $Position } );
-                        $Services{
-                            $DestID . '_-_'
-                                . $LinkList->{Service}->{$LinkType}->{$Position}->{$DestID}
-                                ->{Name}
-                            } .= $Type . "<br>";
+                        my $Type = $LayoutObject->{LanguageObject}->Translate( $PossibleLinkTypesList{ $LinkType . '::' . $Position } );
+                        $Services{ $DestID . '_-_' . $LinkList->{Service}->{$LinkType}->{$Position}->{$DestID}->{Name} } .= $Type . "<br>";
                     }
                 }
             }
         }
 
-        for my $Service ( sort keys %Services ) {
-            my @Service = split( '_-_', $Service );
-            $Services{$Service} =~ s/(.*)<br>/$1/;
+        if ( scalar( keys( %Services ) ) > 0 ) {
+            for my $Service ( sort( keys( %Services ) ) ) {
+                my @Service = split( '_-_', $Service );
+                $Services{$Service} =~ s/(.*)<br>/$1/;
+                $LayoutObject->Block(
+                    Name => 'Service',
+                    Data => {
+                        ServiceName => $Service[1],
+                        ServiceID   => $Service[0],
+                        LinkType    => $Services{$Service},
+                    },
+                );
+            }
+        }
+        else {
             $LayoutObject->Block(
-                Name => 'Service',
-                Data => {
-                    ServiceName => $Service[1],
-                    ServiceID   => $Service[0],
-                    LinkType    => $Services{$Service},
-                },
-            );
-            $ServicesString .= $LayoutObject->Output(
-                TemplateFile => 'AgentZoomTabLinkGraphAdditional',
-                Data         => $Param,
+                Name => 'NoService',
             );
         }
     }
     else {
-        $ServicesString =
-            '<tr><td>'
-            . $LayoutObject->{LanguageObject}->Translate(
-            "Something went wrong! Please look into the error-log for more information."
-            )
-            . '</td><td> </td></tr>';
+        $LayoutObject->Block(
+            Name => 'ServiceError',
+        );
     }
 
-    $LayoutObject->Block(
-        Name => 'Services',
-        Data => {
-            Name => $ParamObject->GetParam( Param => 'ObjectName' ),
-            ServiceTable => $ServicesString
-                || '<tr><td>'
-                . $LayoutObject->{LanguageObject}->Translate("No linked Services")
-                . '</td><td> </td></tr>',
-        },
-    );
     return $LayoutObject->Output(
         TemplateFile => 'AgentZoomTabLinkGraphAdditional',
-        Data         => $Param,
+        Data         => \%Param,
     );
 }
 
 sub CreatePrintOutput {
-    my ( $Self, $Param ) = @_;
+    my ( $Self, %Param ) = @_;
 
     # get needed objects
     my $ParamObject  = $Kernel::OM->Get('Kernel::System::Web::Request');
@@ -551,7 +511,6 @@ sub CreatePrintOutput {
     );
     $Output .= $LayoutObject->Output(
         TemplateFile => 'AgentZoomTabLinkGraphAdditional',
-        Data         => $Param,
     );
 
     $Output .= $LayoutObject->Footer( Type => 'Small' );
@@ -577,7 +536,7 @@ sub CreatePrintOutput {
 }
 
 sub SaveGraph {
-    my ( $Self, $Param ) = @_;
+    my ( $Self, %Param ) = @_;
 
     # get needed objects
     my $ParamObject     = $Kernel::OM->Get('Kernel::System::Web::Request');
@@ -586,14 +545,15 @@ sub SaveGraph {
 
     my $LayoutString      = $ParamObject->GetParam( Param => 'Layout' )      || '';
     my $GraphConfigString = $ParamObject->GetParam( Param => 'GraphConfig' ) || '';
-    my $CurObjectID       = $ParamObject->GetParam( Param => 'CurID' )       || '';
     my $GraphName         = $ParamObject->GetParam( Param => 'GraphName' )   || '';
     my $GraphID           = $ParamObject->GetParam( Param => 'GraphID' )     || '';
 
     $LayoutString =~ s/(.*)_-_$/$1/i;
 
+    my %Result = ();
+
     if ($GraphID) {
-        $Param->{Result} = $LinkGraphObject->UpdateGraph(
+        $Result{Result} = $LinkGraphObject->UpdateGraph(
             LayoutString => $LayoutString,
             GraphID      => $GraphID,
             UserID       => $Self->{UserID},
@@ -603,78 +563,78 @@ sub SaveGraph {
 
     # save graph
     if ($GraphName) {
-        $Param->{Result} = $LinkGraphObject->SaveGraph(
+        $Result{Result} = $LinkGraphObject->SaveGraph(
             LayoutString => $LayoutString,
-            CurID        => $CurObjectID,
+            CurID        => $Param{ObjectID},
             GraphName    => $GraphName,
             UserID       => $Self->{UserID},
             GraphConfig  => $GraphConfigString,
-            ObjectType   => $Param->{ObjectType},
+            ObjectType   => $Param{ObjectType},
         );
     }
 
     # get readable config (separated and translated)
-    $Param->{GraphConfig}->{ConfigString} = $GraphConfigString;
+    $Result{GraphConfig}->{ConfigString} = $GraphConfigString;
     $Self->_SeperateGraphConfig(
-        GraphConfig => $Param->{GraphConfig},
+        GraphConfig => $Result{GraphConfig},
     );
 
     # get right format for changetime
-    if ( $Param->{Result}->{LastChangedTime} ) {
-        $Param->{LastChangedTime} = $LayoutObject->Output(
-            Template => '$TimeLong{"' . $Param->{Result}->{LastChangedTime} . '"}'
+    if ( $Result{Result}->{LastChangedTime} ) {
+        $Result{LastChangedTime} = $LayoutObject->Output(
+            Template => '[% "'
+                . $Result{Result}->{LastChangedTime}
+                . '" | Localize(TimeLong) %]'
         );
     }
 
-    $Param->{LastChangedBy} = substr( $Self->{UserLogin}, 0, 15 )
-        . " (" . substr( $Self->{UserFirstname} . " " . $Self->{UserLastname}, 0, 15 ) . ")";
+    $Result{LastChangedBy} = substr( $Self->{UserLogin}, 0, 15 )
+        . " ("
+        . substr( $Self->{UserFirstname} . " " . $Self->{UserLastname}, 0, 15 )
+        . ")";
 
-    return 1;
+    return %Result;
 }
 
 sub SaveCon {
-    my ( $Self, $Param ) = @_;
+    my ( $Self, %Param ) = @_;
 
     # get needed objects
     my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
     my $LinkObject  = $Kernel::OM->Get('Kernel::System::LinkObject');
 
-    ( $Param->{SourceType}, $Param->{SourceID} ) =
-        split( '-', $ParamObject->GetParam( Param => 'Source' ) );
-    ( $Param->{TargetType}, $Param->{TargetID} ) =
-        split( '-', $ParamObject->GetParam( Param => 'Target' ) );
-    $Param->{LinkType} = $ParamObject->GetParam( Param => 'LinkType' );
+    ( $Param{SourceType}, $Param{SourceID} ) = split( '-', $ParamObject->GetParam( Param => 'Source' ) );
+    ( $Param{TargetType}, $Param{TargetID} ) = split( '-', $ParamObject->GetParam( Param => 'Target' ) );
+    $Param{LinkType}                         = $ParamObject->GetParam( Param => 'LinkType' );
 
     return $LinkObject->LinkAdd(
-        SourceObject => $Param->{SourceType},
-        SourceKey    => $Param->{SourceID},
-        TargetObject => $Param->{TargetType},
-        TargetKey    => $Param->{TargetID},
-        Type         => $Param->{LinkType},
+        SourceObject => $Param{SourceType},
+        SourceKey    => $Param{SourceID},
+        TargetObject => $Param{TargetType},
+        TargetKey    => $Param{TargetID},
+        Type         => $Param{LinkType},
         State        => 'Valid',
         UserID       => $Self->{UserID},
     );
 }
 
 sub DelCon {
-    my ( $Self, $Param ) = @_;
+    my ( $Self, %Param ) = @_;
 
     # get needed objects
     my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
     my $LinkObject  = $Kernel::OM->Get('Kernel::System::LinkObject');
 
-    ( $Param->{SourceType}, $Param->{SourceID} ) =
-        split( '-', $ParamObject->GetParam( Param => 'Source' ) );
-    ( $Param->{TargetType}, $Param->{TargetID} ) =
-        split( '-', $ParamObject->GetParam( Param => 'Target' ) );
-    $Param->{LinkType} = $ParamObject->GetParam( Param => 'LinkType' );
+    ( $Param{SourceType}, $Param{SourceID} ) = split( '-', $ParamObject->GetParam( Param => 'Source' ) );
+    ( $Param{TargetType}, $Param{TargetID} ) = split( '-', $ParamObject->GetParam( Param => 'Target' ) );
+    $Param{LinkType}                         = $ParamObject->GetParam( Param => 'LinkType' );
 
     return $LinkObject->LinkDelete(
-        Object1 => $Param->{SourceType},
-        Key1    => $Param->{SourceID},
-        Object2 => $Param->{TargetType},
-        Key2    => $Param->{TargetID},
-        Type    => $Param->{LinkType},
+        Object1 => $Param{SourceType},
+        Key1    => $Param{SourceID},
+        Object2 => $Param{TargetType},
+        Key2    => $Param{TargetID},
+        Type    => $Param{LinkType},
         UserID  => $Self->{UserID},
     );
 }
@@ -683,7 +643,6 @@ sub _SeperateGraphConfig {
     my ( $Self, %Param ) = @_;
 
     # get needed objects
-    my $ParamObject  = $Kernel::OM->Get('Kernel::System::Web::Request');
     my $LinkObject   = $Kernel::OM->Get('Kernel::System::LinkObject');
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
@@ -693,6 +652,7 @@ sub _SeperateGraphConfig {
     # get real link-names
     my $LinkTypesString = '';
     for my $LinkType (@GraphLinkTypes) {
+        next if !$LinkType;
         my %Type = $LinkObject->TypeGet(
             TypeID => $LinkObject->TypeLookup(
                 Name   => $LinkType,
@@ -700,8 +660,7 @@ sub _SeperateGraphConfig {
             ),
             UserID => $Self->{UserID},
         );
-        $LinkTypesString .=
-            $LayoutObject->{LanguageObject}->Translate( $Type{SourceName} ) . ', ';
+        $LinkTypesString .= $LayoutObject->{LanguageObject}->Translate( $Type{SourceName} ) . ', ';
     }
     $LinkTypesString =~ s/(.*), $/$1/i;
 
@@ -710,8 +669,7 @@ sub _SeperateGraphConfig {
         2 => 'Medium',
         3 => 'Weak',
     );
-    my $Strength =
-        $LayoutObject->{LanguageObject}->Translate( $AdjustingStrengthValues{ $GraphConfig[2] } );
+    my $Strength = $LayoutObject->{LanguageObject}->Translate( $AdjustingStrengthValues{ $GraphConfig[2] } );
 
     $Param{GraphConfig}->{LinkTypes} = $LinkTypesString;
     $Param{GraphConfig}->{SubTypes}  = $GraphConfig[3];

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<database Name="kix">
+    <TableAlter Name="generic_agent_jobs">
+        <ColumnChange NameOld="job_value" NameNew="job_value" Type="VARCHAR" Size="65535" Required="false"/>
+    </TableAlter>
+    <TableAlter Name="notification_event_message">
+        <ColumnChange NameOld="text" NameNew="text" Type="VARCHAR" Size="10000" Required="true"/>
+    </TableAlter>
+    <TableAlter Name="search_profile">
+        <ColumnChange NameOld="profile_value" NameNew="profile_value" Type="VARCHAR" Size="10000" Required="false"/>
+    </TableAlter>
+</database>

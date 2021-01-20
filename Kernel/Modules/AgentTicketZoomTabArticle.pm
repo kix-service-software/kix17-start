@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2021 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -85,6 +85,13 @@ sub new {
         else {
             $Self->{DoNotShowBrowserLinkMessage} = 0;
         }
+    }
+
+    if ( $UserPreferences{UserArticleTableColumnResizing} ) {
+        $Self->{ColumnResizing} = $UserPreferences{UserArticleTableColumnResizing};
+    }
+    else {
+        $Self->{ColumnResizing} = '';
     }
 
     if ( !defined $Self->{ZoomExpandSort} ) {
@@ -1482,9 +1489,26 @@ sub MaskAgentZoom {
         Name => 'TicketZoomInit',
         Data => {
             %Param,
-            TicketID => $Self->{TicketID},
+            TicketID       => $Self->{TicketID},
+            ColumnResizing => $Self->{ColumnResizing}
         },
     );
+
+    if (
+        defined $Self->{Config}->{ArticleFlagsWithoutEdit}
+        && ref $Self->{Config}->{ArticleFlagsWithoutEdit} eq 'HASH'
+    ) {
+        my %SkipList = %{ $Self->{Config}->{ArticleFlagsWithoutEdit} };
+        for my $FlagKey ( keys( %SkipList ) ) {
+            next if ( !$SkipList{ $FlagKey } );
+            $LayoutObject->Block(
+                Name => 'ArticleFlagsWithoutEdit',
+                Data => {
+                    FlagKey => $FlagKey
+                },
+            );
+        }
+    }
 
     # return output
     return $LayoutObject->Output(
@@ -1769,8 +1793,40 @@ sub _ArticleTree {
         # reset $Article{FromRealname}
         $Article{FromRealname} = $Article{FromRealnameTmp};
 
+        # prepare lists
+        my %SkipList  = ();
+        my %ShareList = ();
+        if (
+            defined $Self->{Config}->{ArticleFlagsWithoutEdit}
+            && ref $Self->{Config}->{ArticleFlagsWithoutEdit} eq 'HASH'
+        ) {
+            %SkipList = %{ $Self->{Config}->{ArticleFlagsWithoutEdit} };
+        }
+        if (
+            defined $Self->{Config}->{ArticleFlagsShared}
+            && ref $Self->{Config}->{ArticleFlagsShared} eq 'HASH'
+        ) {
+            %ShareList = %{ $Self->{Config}->{ArticleFlagsShared} };
+        }
+
+        # check if flag edit is allowed
+        my $AllowFlagEdit = 0;
+        if (
+            !$Self->{Config}->{ArticleFlagsOnlyOwnerAndResponsible} ||
+            (
+                $Self->{Config}->{ArticleFlagsOnlyOwnerAndResponsible}
+                && $Self->{UserID} == $Ticket{OwnerID}
+                || (
+                    $ConfigObject->Get('Ticket::Responsible')
+                    && $Self->{UserID} == $Ticket{ResponsibleID}
+                )
+            )
+        ) {
+            $AllowFlagEdit = 1;
+        }
+
         # show article flags
-        for my $Flag ( keys %ArticleFlag ) {
+        for my $Flag ( sort( keys( %ArticleFlag ) ) ) {
             next if $Flag eq 'Seen';
             next if !defined $Self->{Config}->{ArticleFlags};
             next if !defined $Self->{Config}->{ArticleFlags}->{$Flag};
@@ -1798,8 +1854,85 @@ sub _ArticleTree {
                     ArticleFlagKeywords => $ArticleFlagData{Keywords},
                     ArticleFlagNote     => $ArticleFlagData{Note},
                     CSS                 => $CSS,
+                    AllowFlagEdit       => $AllowFlagEdit,
                 },
             );
+
+            if (
+                $AllowFlagEdit
+                || (
+                    $ShareList{ $Flag }
+                    && !$SkipList{ $Flag }
+                )
+            ) {
+                $LayoutObject->Block(
+                    Name => 'TreeItemArticleFlagDialog',
+                    Data => {
+                        ArticleFlagIcon     => $Self->{Config}->{ArticleFlagIcons}->{$Flag},
+                        ArticleFlagKey      => $Flag,
+                        ArticleFlagValue    => $Self->{Config}->{ArticleFlags}->{$Flag},
+                        TicketID            => $Self->{TicketID},
+                        ArticleID           => $Article{ArticleID},
+                        ArticleFlagSubject  => $ArticleFlagData{Subject},
+                        ArticleFlagKeywords => $ArticleFlagData{Keywords},
+                        ArticleFlagNote     => $ArticleFlagData{Note},
+                        CSS                 => $CSS,
+                        AllowFlagEdit       => $AllowFlagEdit,
+                    },
+                );
+
+                if ($AllowFlagEdit) {
+                    if ( !$SkipList{ $Flag } ) {
+                        $LayoutObject->Block(
+                            Name => 'TreeItemArticleFlagOptionEdit',
+                            Data => {
+                                ArticleFlagIcon     => $Self->{Config}->{ArticleFlagIcons}->{$Flag},
+                                ArticleFlagKey      => $Flag,
+                                ArticleFlagValue    => $Self->{Config}->{ArticleFlags}->{$Flag},
+                                TicketID            => $Self->{TicketID},
+                                ArticleID           => $Article{ArticleID},
+                                ArticleFlagSubject  => $ArticleFlagData{Subject},
+                                ArticleFlagKeywords => $ArticleFlagData{Keywords},
+                                ArticleFlagNote     => $ArticleFlagData{Note},
+                                CSS                 => $CSS,
+                                AllowFlagEdit       => $AllowFlagEdit,
+                            },
+                        );
+                    }
+                    $LayoutObject->Block(
+                        Name => 'TreeItemArticleFlagOptionDelete',
+                        Data => {
+                            ArticleFlagIcon     => $Self->{Config}->{ArticleFlagIcons}->{$Flag},
+                            ArticleFlagKey      => $Flag,
+                            ArticleFlagValue    => $Self->{Config}->{ArticleFlags}->{$Flag},
+                            TicketID            => $Self->{TicketID},
+                            ArticleID           => $Article{ArticleID},
+                            ArticleFlagSubject  => $ArticleFlagData{Subject},
+                            ArticleFlagKeywords => $ArticleFlagData{Keywords},
+                            ArticleFlagNote     => $ArticleFlagData{Note},
+                            CSS                 => $CSS,
+                            AllowFlagEdit       => $AllowFlagEdit,
+                        },
+                    );
+                }
+                else {
+                    $LayoutObject->Block(
+                        Name => 'TreeItemArticleFlagOptionShow',
+                        Data => {
+                            ArticleFlagIcon     => $Self->{Config}->{ArticleFlagIcons}->{$Flag},
+                            ArticleFlagKey      => $Flag,
+                            ArticleFlagValue    => $Self->{Config}->{ArticleFlags}->{$Flag},
+                            TicketID            => $Self->{TicketID},
+                            ArticleID           => $Article{ArticleID},
+                            ArticleFlagSubject  => $ArticleFlagData{Subject},
+                            ArticleFlagKeywords => $ArticleFlagData{Keywords},
+                            ArticleFlagNote     => $ArticleFlagData{Note},
+                            CSS                 => $CSS,
+                            AllowFlagEdit       => $AllowFlagEdit,
+                        },
+                    );
+                }
+            }
         }
 
         # always show archived tickets as seen
@@ -2286,7 +2419,7 @@ sub _ArticleItem {
     );
 
     my $Count = 0;
-    for my $Flag ( keys %ArticleFlag ) {
+    for my $Flag ( sort( keys( %ArticleFlag ) ) ) {
 
         my $Key = '';
         if ( !$Count ) {

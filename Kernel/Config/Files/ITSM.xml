@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <otrs_config version="1.0" init="KIXFramework">
 
+    <ConfigItem Name="Loader::Agent::CommonJS###910-ITSMLinkGraph" Required="1" Valid="1">
+        <Description Translatable="1">List of JS files to always be loaded for the agent interface.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Web</SubGroup>
+        <Setting>
+            <Array>
+                <Item>ITSM.Agent.LinkGraph.js</Item>
+            </Array>
+        </Setting>
+    </ConfigItem>
     <ConfigItem Name="ITSMConfigItem::CustomModules###000-PreEventHandler" Required="0" Valid="1">
         <Description Translatable="1">Overloads (redefines) existing functions in Kernel::System::ITSMConfigItem. Used to easily add customizations.</Description>
         <Group>ITSM</Group>
@@ -370,7 +380,7 @@
                 <Item Key="Module">Kernel::Output::HTML::GeneralCatalogPreferences::Generic</Item>
                 <Item Key="Class">ITSM::Core::IncidentState</Item>
                 <Item Key="Label" Translatable="1">Incident State Type</Item>
-                <Item Key="Desc" Translatable="1">Incident State Type.</Item>
+                <Item Key="Desc" Translatable="1">Incident State Type</Item>
                 <Item Key="Data">
                     <Hash>
                         <Item Key="warning" Translatable="1">Warning</Item>
@@ -710,9 +720,6 @@
             <FrontendModuleReg>
                 <Description>Lookup of tickets, used for autocompletion</Description>
                 <Title>ITSMCITicketSearch</Title>
-<!--
-                <NavBarName>Config Item</NavBarName>
--->
             </FrontendModuleReg>
         </Setting>
     </ConfigItem>
@@ -724,9 +731,6 @@
             <FrontendModuleReg>
                 <Description>Lookup of queues, used for autocompletion</Description>
                 <Title>QueueSearch</Title>
-<!--
-                <NavBarName>Config Item</NavBarName>
--->
             </FrontendModuleReg>
         </Setting>
     </ConfigItem>
@@ -738,9 +742,6 @@
             <FrontendModuleReg>
                 <Description>Lookup of services, used for autocompletion</Description>
                 <Title>ServiceSearch</Title>
-<!--
-                <NavBarName>Config Item</NavBarName>
--->
             </FrontendModuleReg>
         </Setting>
     </ConfigItem>
@@ -763,9 +764,6 @@
             <FrontendModuleReg>
                 <Description>Lookup of customer companies, used for autocompletion</Description>
                 <Title>CIACCustomerCompanySearch</Title>
-<!--
-                <NavBarName>Config Item</NavBarName>
--->
             </FrontendModuleReg>
         </Setting>
     </ConfigItem>
@@ -777,9 +775,6 @@
             <FrontendModuleReg>
                 <Description>Lookup of customer companies, used for autocompletion</Description>
                 <Title>CustomerUserCompanySearch</Title>
-<!--
-                <NavBarName>Config Item</NavBarName>
--->
             </FrontendModuleReg>
         </Setting>
     </ConfigItem>
@@ -791,9 +786,6 @@
             <FrontendModuleReg>
                 <Description>Lookup of CI classes, used for autocompletion</Description>
                 <Title>CIClassSearch</Title>
-<!--
-                <NavBarName>Config Item</NavBarName>
--->
             </FrontendModuleReg>
         </Setting>
     </ConfigItem>
@@ -911,7 +903,6 @@
                 <Loader>
                     <JavaScript>thirdparty/jquery-tablesorter-2.0.5/jquery.tablesorter.js</JavaScript>
                     <JavaScript>thirdparty/jquery-ui-tabs-1.10.3/jquery.ui.tabs.js</JavaScript>
-                    <JavaScript>Core.KIX4OTRS.AgentZoomTabLinkGraph.js</JavaScript>
                     <JavaScript>Core.KIX4OTRS.TicketZoomTabs.js</JavaScript>
                     <JavaScript>Core.KIX4OTRS.ConfigItemZoomTabs.js</JavaScript>
                     <JavaScript>Core.UI.AllocationList.js</JavaScript>
@@ -1948,8 +1939,22 @@
                 <NavBarName></NavBarName>
                 <Loader>
                     <JavaScript>thirdparty/jsplumb-1.6.4/jsplumb.js</JavaScript>
-                    <JavaScript>Core.KIX4OTRS.AgentLinkGraphITSMConfigItem.js</JavaScript>
-                    <JavaScript>Core.KIX4OTRS.AgentLinkGraph.js</JavaScript>
+                </Loader>
+            </FrontendModuleReg>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Frontend::Module###AgentITSMConfigItemLinkGraphWindow" Required="0" Valid="1">
+        <Description Translatable="1">Frontend module registration for the agent interface.</Description>
+        <Group>ITSM</Group>
+        <SubGroup>Frontend::Agent::ModuleRegistration</SubGroup>
+        <Setting>
+            <FrontendModuleReg>
+                <GroupRo>itsm-configitem</GroupRo>
+                <Description>Shows objects linked with this config item</Description>
+                <Title>Zoom</Title>
+                <NavBarName>Config Item</NavBarName>
+                <Loader>
+                    <JavaScript>thirdparty/jquery-ui-tabs-1.10.3/jquery.ui.tabs.js</JavaScript>
                 </Loader>
             </FrontendModuleReg>
         </Setting>
@@ -2086,6 +2091,66 @@
                 <Item Key="Retired">color: darkgrey;</Item>
                 <Item Key="Review">color: blue;</Item>
                 <Item Key="Test/QA">color: chocolate;</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="CIGraphConfigTemplate###Name" Required="1" Valid="1">
+        <Description Translatable="1">Defines the display name for an link graph template. The key is used with the same notation in all following preferences.</Description>
+        <Group>ITSM</Group>
+        <SubGroup>ITSMConfigItem::LinkGraph::Templates</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Template01">Testtemplate</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="CIGraphConfigTemplate###Permission" Required="1" Valid="1">
+        <Description Translatable="1">Defines the needed permission for an link graph template. Key has to be the same defined in CIGraphConfigTemplate###Name.</Description>
+        <Group>ITSM</Group>
+        <SubGroup>ITSMConfigItem::LinkGraph::Templates</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Template01">ro</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="CIGraphConfigTemplate###MaxSearchDepth" Required="1" Valid="1">
+        <Description Translatable="1">Defines the maximum link depth for an link graph template. Key has to be the same defined in CIGraphConfigTemplate###Name.</Description>
+        <Group>ITSM</Group>
+        <SubGroup>ITSMConfigItem::LinkGraph::Templates</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Template01">3</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="CIGraphConfigTemplate###RelevantLinkTypes" Required="1" Valid="1">
+        <Description Translatable="1">Defines the relevant link types for an object graph template.  Key has to be the same defined in CIGraphConfigTemplate###Name.</Description>
+        <Group>ITSM</Group>
+        <SubGroup>ITSMConfigItem::LinkGraph::Templates</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Template01">AlternativeTo,ConnectedTo,Includes,,RelevantTo,DependsOn</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="CIGraphConfigTemplate###RelevantObjectSubTypes" Required="1" Valid="1">
+        <Description Translatable="1">Defines the relevant object sub types for an link graph template.  Key has to be the same defined in CIGraphConfigTemplate###Name.</Description>
+        <Group>ITSM</Group>
+        <SubGroup>ITSMConfigItem::LinkGraph::Templates</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Template01">Computer,Hardware,Location,Network,Software</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="CIGraphConfigTemplate###AdjustingStrength" Required="1" Valid="1">
+        <Description Translatable="1">Defines adjusting strength for an link graph template. Key has to be the same defined in CIGraphConfigTemplate###Name.</Description>
+        <Group>ITSM</Group>
+        <SubGroup>ITSMConfigItem::LinkGraph::Templates</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Template01">2</Item>
             </Hash>
         </Setting>
     </ConfigItem>

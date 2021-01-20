@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2021 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -14,6 +14,9 @@ use strict;
 use warnings;
 
 use Kernel::Output::HTML::Layout;
+
+use Kernel::System::VariableCheck qw(:all);
+use Kernel::Language qw(Translatable);
 
 our @ObjectDependencies = (
     'Kernel::Config',
@@ -68,6 +71,16 @@ sub new {
         Object     => 'ITSMConfigItem',
         Realname   => 'ConfigItem',
         ObjectName => 'SourceObjectID',
+    };
+
+    # set field behaviors
+    $Self->{Behaviors} = {
+        'IsSortable'  => 1,
+    };
+
+    # define sortable columns
+    $Self->{ValidSortableColumns} = {
+        'Number'        => 1,
     };
 
     return $Self;
@@ -231,8 +244,10 @@ sub TableCreateComplex {
         }
     }
 
-    # convert the list
+    my %ClassIDList;
     my %LinkList;
+
+    # convert the list
     for my $LinkType ( sort keys %{ $Param{ObjectLinkListWithData} } ) {
 
         # extract link type List
@@ -250,6 +265,12 @@ sub TableCreateComplex {
                 my $Class = $DirectionList->{$ConfigItemID}->{Class} || '';
 
                 next CONFIGITEMID if !$Class;
+
+                my $ClassID = $DirectionList->{$ConfigItemID}->{ClassID};
+
+                $ClassIDList{$Class} = $ClassID;
+
+                next CONFIGITEMID if $Param{OnlyClassID} && $ClassID ne $Param{OnlyClassID};
 
                 $LinkList{$Class}->{$ConfigItemID}->{Data} = $DirectionList->{$ConfigItemID};
             }
@@ -287,10 +308,24 @@ sub TableCreateComplex {
             @Columns = @{ $Param{EnabledColumns}->{ 'ITSMConfigItem-' . $Class } };
         }
 
+        my @SortedList;
+        my $ClassID               = $ClassIDList{$Class} || '';
+        my $SortBy                = $Param{SortBy}  || 'Number';
+        my $OrderBy               = $Param{OrderBy} || 'Down';
+        my $ColumnFilter          = $Param{$ClassID}->{ColumnFilter}          || {};
+        my $GetColumnFilterSelect = $Param{$ClassID}->{GetColumnFilterSelect} || {};
+
+        if ( $OrderBy eq 'Down' ) {
+            @SortedList = sort { lc $ConfigItemList->{$a}->{Data}->{$SortBy} cmp lc $ConfigItemList->{$b}->{Data}->{$SortBy} } keys %{$ConfigItemList};
+        } else {
+            @SortedList = sort { lc $ConfigItemList->{$b}->{Data}->{$SortBy} cmp lc $ConfigItemList->{$a}->{Data}->{$SortBy} } keys %{$ConfigItemList};
+        }
+
+        CONFIGITEM:
         for my $ConfigItemID (
-            sort { $ConfigItemList->{$a}->{Data}->{Name} cmp $ConfigItemList->{$b}->{Data}->{Name} }
-            keys %{$ConfigItemList}
+            @SortedList
         ) {
+
             my $ConfigItemData = $ConfigItemObject->ConfigItemGet(
                 ConfigItemID => $ConfigItemID,
             );
@@ -361,6 +396,47 @@ sub TableCreateComplex {
 
                     COLUMN:
                     for my $Column ( @{ $ColumnByClass{$Class} } ) {
+                        my %TmpHash;
+                        if (
+                            $Self->{Behaviors}->{IsSortable}
+                            && $Self->{ValidSortableColumns}->{$Column}
+                        ) {
+                            $TmpHash{Sortable} = $Column;
+                            if ( $SortBy eq $Column ) {
+                                $TmpHash{OrderCSS}  = $OrderBy eq 'Down' ? 'SortDescendingLarge' : 'SortAscendingLarge';
+                                $TmpHash{SortTitle} = $OrderBy eq 'Down' ? Translatable('sorted descending') : Translatable('sorted ascending');
+                            }
+                        }
+
+                        if (
+                            $Self->{Behaviors}->{IsSortable}
+                            && $Self->{Behaviors}->{IsFilterable}
+                            && $Self->{ValidSortableColumns}->{$Column}
+                            && $Self->{ValidFilterableColumns}->{$Column}
+                        ) {
+
+                            $TmpHash{FilterTitle} = Translatable('filter not active');
+                            if (
+                                $GetColumnFilterSelect
+                                 && $GetColumnFilterSelect->{$Column}
+                            ) {
+                                $TmpHash{OrderCSS} .= ' FilterActive';
+                                $TmpHash{FilterTitle} = Translatable('filter active');
+                            }
+
+                            # variable to save the filter's HTML code
+                            $TmpHash{ColumnFilterStrg} = $Self->_InitialColumnFilter(
+                                ColumnName => $Column,
+                                ClassID    => $ClassID
+                            );
+                        }
+
+                        if (
+                            $Self->{Behaviors}->{IsFilterable}
+                            && $Self->{ValidFilterableColumns}->{$Column}
+                        ) {
+                            $TmpHash{Filterable} = 1;
+                        }
 
                         # process some non-xml attributes
                         if ( $Version->{$Column} ) {
@@ -378,6 +454,7 @@ sub TableCreateComplex {
                                 # add the headline
                                 push @ShowColumnsHeadlines, {
                                     Content => 'Name',
+                                    %TmpHash
                                 };
                             }
 
@@ -394,6 +471,7 @@ sub TableCreateComplex {
                                 # add the headline
                                 push @ShowColumnsHeadlines, {
                                     Content => 'Deployment State',
+                                    %TmpHash
                                 };
                             }
 
@@ -410,6 +488,7 @@ sub TableCreateComplex {
                                 # add the headline
                                 push @ShowColumnsHeadlines, {
                                     Content => 'Incident State',
+                                    %TmpHash
                                 };
                             }
 
@@ -426,6 +505,7 @@ sub TableCreateComplex {
                                 # add the headline
                                 push @ShowColumnsHeadlines, {
                                     Content => 'Class',
+                                    %TmpHash
                                 };
                             }
 
@@ -441,6 +521,7 @@ sub TableCreateComplex {
                                 # add the headline
                                 push @ShowColumnsHeadlines, {
                                     Content => 'Created',
+                                    %TmpHash
                                 };
                             }
 
@@ -464,6 +545,7 @@ sub TableCreateComplex {
                         # add the headline
                         push @ShowColumnsHeadlines, {
                             Content => $ExtendedVersionData->{$Column}->{Name} || '',
+                            %TmpHash
                         };
                     }
                 }
@@ -476,19 +558,65 @@ sub TableCreateComplex {
                     push @ItemColumns, @AdditionalDefaultItemColumns;
 
                     # add the default column headlines
-                    @ShowColumnsHeadlines = (
-                        {
-                            Content => 'Name',
-                        },
-                        {
-                            Content => 'Deployment State',
-                            Width   => 130,
-                        },
-                        {
-                            Content => 'Created',
-                            Width   => 130,
-                        },
-                    );
+                    for my $Column ( qw(Name CurDeplState Created) ) {
+                        my %TmpHash;
+                        if (
+                            $Self->{Behaviors}->{IsSortable}
+                            && $Self->{ValidSortableColumns}->{$Column}
+                        ) {
+                            $TmpHash{Sortable} = $Column;
+                            if ( $SortBy eq $Column ) {
+                                $TmpHash{OrderCSS}  = $OrderBy eq 'Down' ? 'SortDescendingLarge' : 'SortAscendingLarge';
+                                $TmpHash{SortTitle} = $OrderBy eq 'Down' ? Translatable('sorted descending') : Translatable('sorted ascending');
+                            }
+                        }
+
+                        if (
+                            $Self->{Behaviors}->{IsSortable}
+                            && $Self->{Behaviors}->{IsFilterable}
+                            && $Self->{ValidSortableColumns}->{$Column}
+                            && $Self->{ValidFilterableColumns}->{$Column}
+                        ) {
+
+                            $TmpHash{FilterTitle} = Translatable('filter not active');
+                            if (
+                                $GetColumnFilterSelect
+                                 && $GetColumnFilterSelect->{$Column}
+                            ) {
+                                $TmpHash{OrderCSS} .= ' FilterActive';
+                                $TmpHash{FilterTitle} = Translatable('filter active');
+                            }
+
+                            # variable to save the filter's HTML code
+                            $TmpHash{ColumnFilterStrg} = $Self->_InitialColumnFilter(
+                                ColumnName => $Column,
+                                ClassID    => $ClassID
+                            );
+                        }
+
+                        if (
+                            $Self->{Behaviors}->{IsFilterable}
+                            && $Self->{ValidFilterableColumns}->{$Column}
+                        ) {
+                            $TmpHash{Filterable} = 1;
+                        }
+
+                        if ( $Column ne 'Name' ) {
+                            push(@ShowColumnsHeadlines, {
+                                    Content => $Column ne 'Created' ? 'Deployment State' : $Column,
+                                    Width   => 130,
+                                    %TmpHash
+                                }
+                            );
+                        }
+                        else {
+                            push(@ShowColumnsHeadlines, {
+                                    Content => 'Name',
+                                    %TmpHash
+                                }
+                            );
+                        }
+                    }
                 }
             }
             else {
@@ -548,15 +676,68 @@ sub TableCreateComplex {
                     $TmpHashHeadline{Content} = $TranslationHash{$Col} || $Col;
                     $TmpHashHeadline{Width}   = 130;
 
+                    if (
+                        $Self->{Behaviors}->{IsSortable}
+                        && $Self->{ValidSortableColumns}->{$Col}
+                    ) {
+                        $TmpHashHeadline{Sortable} = $Col;
+                        if ( $SortBy eq $Col ) {
+                            $TmpHashHeadline{OrderCSS}  = $OrderBy eq 'Down' ? 'SortDescendingLarge' : 'SortAscendingLarge';
+                            $TmpHashHeadline{SortTitle} = $OrderBy eq 'Down' ? Translatable('sorted descending') : Translatable('sorted ascending');
+                        }
+                    }
+
+                    if (
+                        $Self->{Behaviors}->{IsSortable}
+                        && $Self->{Behaviors}->{IsFilterable}
+                        && $Self->{ValidSortableColumns}->{$Col}
+                        && $Self->{ValidFilterableColumns}->{$Col}
+                    ) {
+
+                        $TmpHashHeadline{FilterTitle} = Translatable('filter not active');
+                        if (
+                            $GetColumnFilterSelect
+                             && $GetColumnFilterSelect->{$Col}
+                        ) {
+                            $TmpHashHeadline{OrderCSS} .= ' FilterActive';
+                            $TmpHashHeadline{FilterTitle} = Translatable('filter active');
+                        }
+
+                        # variable to save the filter's HTML code
+                        $TmpHashHeadline{ColumnFilterStrg} = $Self->_InitialColumnFilter(
+                            ColumnName => $Col,
+                            ClassID    => $ClassID
+                        );
+                    }
+
+                    if (
+                        $Self->{Behaviors}->{IsFilterable}
+                        && $Self->{ValidFilterableColumns}->{$Col}
+                    ) {
+                        $TmpHashHeadline{Filterable} = 1;
+                    }
+
                     push @ShowColumnsHeadlines, \%TmpHashHeadline;
                     push @ItemColumns,          \%TmpHashContent;
                 }
             }
 
+            if (
+                $Self->{Behaviors}->{IsFilterable}
+                && $ColumnFilter
+            ) {
+                FILTER:
+                for my $Key ( sort keys %{$ColumnFilter} ) {
+                    my $FilterColumn = $Key;
+                    $FilterColumn =~ s/IDs$/ID/i;
+
+                    next FILTER if $FilterColumn eq 'LinkTypeID';
+                    next CONFIGITEM if !grep( {$_ eq $Version->{$FilterColumn} } @{$ColumnFilter->{$Key}} );
+                }
+            }
+
             push @ItemList, \@ItemColumns;
         }
-
-        return if !@ItemList;
 
         # define the block data
         my %Block = (
@@ -564,6 +745,18 @@ sub TableCreateComplex {
             Blockname => $Self->{ObjectData}->{Realname} . ' (' . $Class . ')',
             ItemList  => \@ItemList,
         );
+
+        my %TmpHash;
+        if (
+            $Self->{Behaviors}->{IsSortable}
+            && $Self->{ValidSortableColumns}->{Number}
+        ) {
+            $TmpHash{Sortable} = 'Number';
+            if ( $SortBy eq 'Number' ) {
+                $TmpHash{OrderCSS}  = $OrderBy eq 'Down' ? 'SortDescendingLarge' : 'SortAscendingLarge';
+                $TmpHash{SortTitle} = $OrderBy eq 'Down' ? Translatable('sorted descending') : Translatable('sorted ascending');
+            }
+        }
 
         my @Headlines = (
             {
@@ -577,6 +770,7 @@ sub TableCreateComplex {
             {
                 Content => 'ConfigItem#',
                 Width   => 100,
+                %TmpHash
             },
         );
 
@@ -596,7 +790,10 @@ sub TableCreateComplex {
             ) || 0;
             push @TempArray, $Item if $HasAccess;
         }
+
+        $Block{ClassID}  = $ClassID;
         $Block{ItemList} = \@TempArray;
+
         push @{ $Block{Headline} }, @ShowColumnsHeadlines;
         push @BlockData, \%Block;
     }
@@ -1255,6 +1452,163 @@ sub _XMLData2Hash {
     }
 
     return $Data;
+}
+
+sub _InitialColumnFilter {
+    my ( $Self, %Param ) = @_;
+
+    return if !$Param{ColumnName};
+
+    # get layout object
+    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+
+    my %TranslationHash = (
+        'CurDeplState'     => 'Deployment State',
+        'CurDeplStateType' => 'Deployment State Type',
+        'CurInciStateType' => 'Incident State Type',
+        'CurInciState'     => 'Incident State',
+        'LastChanged'      => 'Last changed',
+        'CurInciSignal'    => 'Current Incident Signal'
+    );
+
+    my $Label = $Param{Label} || $Param{ColumnName};
+    $Label = $LayoutObject->{LanguageObject}->Translate($TranslationHash{$Label});
+
+    # set fixed values
+    my $Data = [
+        {
+            Key   => '',
+            Value => uc $Label,
+        },
+    ];
+
+    my $Class = 'ColumnFilter';
+    if ( $Param{Css} ) {
+        $Class .= ' ' . $Param{Css};
+    }
+
+    # build select HTML
+    my $ColumnFilterHTML = $LayoutObject->BuildSelection(
+        Name        => 'ITSMConfigItem' . $Param{ClassID} . 'ColumnFilter' . $Param{ColumnName},
+        Data        => $Data,
+        Class       => $Class,
+        Translation => 1,
+        SelectedID  => '',
+    );
+    return $ColumnFilterHTML;
+}
+
+sub FilterContent {
+    my ( $Self, %Param ) = @_;
+
+    return if !$Param{FilterColumn};
+
+    my $GeneralCatalogObject = $Kernel::OM->Get('Kernel::System::GeneralCatalog');
+
+    # get and remember the Deployment state colors
+    my $DeploymentStatesList = $GeneralCatalogObject->ItemList(
+        Class => 'ITSM::ConfigItem::DeploymentState',
+    );
+    my $IncidentStatesList = $GeneralCatalogObject->ItemList(
+        Class => 'ITSM::Core::IncidentState',
+    );
+
+    my %ColumnValues;
+
+    for my $LinkType ( sort keys %{$Param{LinkListWithData}} ) {
+        for my $Direction ( sort keys %{$Param{LinkListWithData}->{$LinkType}} ) {
+            for my $ConfigItemID ( sort keys %{$Param{LinkListWithData}->{$LinkType}->{$Direction}} ) {
+                next if ($Param{LinkListWithData}->{$LinkType}->{$Direction}->{$ConfigItemID}->{ClassID} ne $Param{ClassID} );
+                my $Attr   = $Param{LinkListWithData}->{$LinkType}->{$Direction}->{$ConfigItemID}->{$Param{FilterColumn}};
+                my $AttrID = $Param{LinkListWithData}->{$LinkType}->{$Direction}->{$ConfigItemID}->{$Param{FilterColumn} . 'ID'};
+
+                if ( $AttrID && $Attr ) {
+                    $ColumnValues{$AttrID} = $Attr;
+                }
+            }
+        }
+    }
+    # make sure that even a value of 0 is passed as a Selected value, e.g. Unchecked value of a
+    my $SelectedValue = defined $Param{GetColumnFilter}->{ $Param{FilterColumn} } ? $Param{GetColumnFilter}->{ $Param{FilterColumn} } : '';
+
+    my $LabelColumn = $Param{FilterColumn};
+
+    # variable to save the filter's HTML code
+    my $ColumnFilterJSON = $Self->_ColumnFilterJSON(
+        ColumnName    => $Param{FilterColumn},
+        Label         => $LabelColumn,
+        ColumnValues  => \%ColumnValues,
+        SelectedValue => $SelectedValue,
+        ClassID       => $Param{ClassID}
+    );
+    return $ColumnFilterJSON;
+}
+
+sub _ColumnFilterJSON {
+    my ( $Self, %Param ) = @_;
+
+    return if !$Param{ColumnName};
+    return if !$Self->{ValidFilterableColumns}->{ $Param{ColumnName} };
+
+    # get layout object
+    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+
+    my %TranslationHash = (
+        'CurDeplState'     => 'Deployment State',
+        'CurDeplStateType' => 'Deployment State Type',
+        'CurInciStateType' => 'Incident State Type',
+        'CurInciState'     => 'Incident State',
+        'LastChanged'      => 'Last changed',
+        'CurInciSignal'    => 'Current Incident Signal'
+    );
+
+
+    my $Label = $Param{Label};
+    $Label = $LayoutObject->{LanguageObject}->Translate($TranslationHash{$Label});
+
+    # set fixed values
+    my $Data = [
+        {
+            Key   => 'DeleteFilter',
+            Value => uc $Label,
+        },
+        {
+            Key      => '-',
+            Value    => '-',
+            Disabled => 1,
+        },
+    ];
+
+    if ( $Param{ColumnValues} && ref $Param{ColumnValues} eq 'HASH' ) {
+
+        my %Values = %{ $Param{ColumnValues} };
+
+        # set possible values
+        for my $ValueKey ( sort { lc $Values{$a} cmp lc $Values{$b} } keys %Values ) {
+            push @{$Data}, {
+                Key   => $ValueKey,
+                Value => $Values{$ValueKey}
+            };
+        }
+    }
+
+    # build select HTML
+    my $JSON = $LayoutObject->BuildSelectionJSON(
+        [
+            {
+                Name         => 'ITSMConfigItem' . $Param{ClassID} . 'ColumnFilter' . $Param{ColumnName},
+                Data         => $Data,
+                Class        => 'ColumnFilter',
+                Sort         => 'AlphanumericKey',
+                TreeView     => 1,
+                SelectedID   => $Param{SelectedValue},
+                Translation  => 1,
+                AutoComplete => 'off',
+            },
+        ],
+    );
+
+    return $JSON;
 }
 
 1;

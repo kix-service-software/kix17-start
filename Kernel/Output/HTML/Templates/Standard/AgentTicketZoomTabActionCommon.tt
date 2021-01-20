@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2021 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -419,6 +419,23 @@ $('#StandardTemplateID').bind('change', function (Event) {
                                 <label for="FileUpload">[% Translate("Attachment") | html %]:</label>
                                 <div class="Field FileUpload">
                                     <ul>
+[% RenderBlockStart("Attachment") %]
+                                        <li>
+                                            [% Data.Filename | html %] ([% Data.Filesize | html %])
+                                            <button type="button" id="AttachmentDeleteButton[% Data.FileID | html %]" name="AttachmentDeleteButton[% Data.FileID | html %]" value="[% Translate("Delete") | html %]" class="SpacingLeft">[% Translate("Delete") | html %]</button>
+                                            <input type="hidden" id="AttachmentDelete[% Data.FileID | html %]" name="AttachmentDelete[% Data.FileID | html %]" />
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+$('#AttachmentDeleteButton[% Data.FileID | html %]').bind('click', function () {
+    var $Form = $('#AttachmentDeleteButton[% Data.FileID | html %]').closest('form');
+    $('#AttachmentDelete[% Data.FileID | html %]').val(1);
+    Core.Form.Validate.DisableValidation($Form);
+    $Form.trigger('submit');
+});
+//]]></script>
+[% END %]
+                                        </li>
+[% RenderBlockEnd("Attachment") %]
                                         <li>
                                             <input name="FileUpload" id="FileUpload" type="file" multiple="multiple" size="30" />
                                             <input type="hidden" id="AttachmentUpload" name="AttachmentUpload" value="0" />
@@ -477,6 +494,8 @@ $('#FileUpload').bind('change', function (Event) {
     if($.browser.msie || $.browser.webkit) {
         SubmittingFileForm.find('#FileUpload').after(SubmittingFileForm.find('#FileUpload').clone(true)).remove();
     }
+    // re-enable form validation
+    Core.Form.Validate.EnableValidation(SubmittingFileForm);
 });
 
 $('#UploadFinish').bind('change', function (Event) {

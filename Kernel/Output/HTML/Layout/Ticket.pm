@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2021 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -1335,6 +1335,178 @@ sub TicketMetaItems {
     }
 
     return @Result;
+}
+
+sub GetTicketHighlight {
+    my ( $Self, %Param ) = @_;
+
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+    my $LogObject    = $Kernel::OM->Get('Kernel::System::Log');
+
+    for my $Needed ( qw(Ticket View) ) {
+        if ( !$Param{$Needed} ) {
+            $LogObject->Log(
+                Priority => 'error',
+                Message  => 'GetTicketHighlight: Needed $Needed!'
+            );
+            return '';
+        }
+    }
+
+    my $Selector = '';
+    my %Ticket   = %{$Param{Ticket}};
+    my $View     = $Param{View};
+
+    my $Config = $ConfigObject->Get('KIX4OTRSTicketOverview' . $View . 'HighlightMapping');
+
+    return '' if !$Config;
+
+    RULE:
+    for my $Key ( sort keys %{$Config} ) {
+        next RULE if $Key !~ /###/;
+
+        my ($Prio, $Restrictions) = split( /###/, $Key);
+
+        next RULE if !$Restrictions;
+
+        # check data match
+        my @MatchRules = split( '\|\|\|', $Restrictions );
+        my $MatchCount = 0;
+
+        MATCHRULE:
+        for my $MatchRule (@MatchRules) {
+
+            my @Restriction = split( ':::', $MatchRule );
+
+            next MATCHRULE if ( !$Restriction[0] || !$Restriction[1] );
+
+            my @RestrictionValues = split( ';', $Restriction[1] );
+            my $ConditionElement  = "";
+
+            # type
+            if (
+                $Restriction[0] eq 'Type'
+                && $Ticket{Type}
+            ) {
+                $ConditionElement = $Ticket{Type} || '';
+            }
+
+            # queue
+            elsif (
+                $Restriction[0] eq 'Queue'
+                && $Ticket{Queue}
+            ) {
+                $ConditionElement = $Ticket{Queue} || '';
+            }
+
+            # service
+            elsif (
+                $Restriction[0] eq 'Service'
+                && $Ticket{Service}
+            ) {
+                $ConditionElement = $Ticket{Service} || '';
+            }
+
+            # SLA
+            elsif (
+                $Restriction[0] eq 'SLA'
+                && $Ticket{Service}
+            ) {
+                $ConditionElement = $Ticket{Service} || '';
+            }
+
+            # state
+            elsif (
+                $Restriction[0] eq 'State'
+                && $Ticket{State}
+            ) {
+                $ConditionElement = $Ticket{State} || '';
+            }
+
+            # priority
+            elsif (
+                $Restriction[0] eq 'Priority'
+                && $Ticket{Priority}
+            ) {
+                $ConditionElement = $Ticket{Priority} || '';
+            }
+
+            # user skin
+            elsif (
+                $Restriction[0] eq 'UserSkin'
+                && $Self->{UserSkin}
+            ) {
+                $ConditionElement = $Self->{UserSkin} || '';
+            }
+
+            my $Match = 0;
+
+            RESTRICTEDVALUE:
+            for my $RestrictionValue (@RestrictionValues) {
+
+                my $RegExpPatternCondition = "";
+                if ( $RestrictionValue =~ /^\[regexp\](.*)$/ ) {
+                    $RegExpPatternCondition = $1;
+                }
+
+                # if condition is satisfied
+                if (
+                    (
+                        !$RegExpPatternCondition
+                        && $RestrictionValue eq $ConditionElement
+                    )
+                    || (
+                        !$RegExpPatternCondition
+                        && $RestrictionValue eq 'EMPTY'
+                        && !$ConditionElement
+                    )
+                    || (
+                        $RegExpPatternCondition
+                        && $ConditionElement =~ /$RegExpPatternCondition/
+                    )
+                ) {
+                    $Match = 1;
+                    $MatchCount++;
+
+                    last RESTRICTEDVALUE;
+                }
+            }
+
+            # check match of restriction
+            if ( !$Match ) {
+                next RULE;
+            }
+        }
+
+        if ( $MatchCount == scalar(@MatchRules) ) {
+            $Selector = $Prio;
+            $Selector =~ s/\s+//gm;
+            $Selector =~ s/[:\.,\\\/]//;
+            $Selector =~ s/[+]/Plus/;
+            $Selector =~ s/[-]/Minus/;
+            $Selector = 'Highlight' . $View . $Selector;
+        }
+    }
+
+    if ( !$Selector ) {
+        RULE:
+        for my $Key ( sort keys %{$Config} ) {
+
+            next RULE if $Key =~ /###/;
+
+            if ( $Ticket{State} eq $Key ) {
+                $Selector = $Key;
+                $Selector =~ s/\s+//gm;
+                $Selector =~ s/[:\.,\\\/]//;
+                $Selector =~ s/[+]/Plus/;
+                $Selector =~ s/[-]/Minus/;
+                $Selector = 'Highlight' . $View . $Selector;
+                last RULE;
+            }
+        }
+    }
+
+    return $Selector;
 }
 
 1;

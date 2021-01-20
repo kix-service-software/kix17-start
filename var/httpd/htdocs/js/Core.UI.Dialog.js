@@ -1,7 +1,7 @@
 // --
-// Modified version of the work: Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
+// Modified version of the work: Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
 // based on the original work of:
-// Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
+// Copyright (C) 2001-2021 OTRS AG, https://otrs.com/
 // --
 // This software comes with ABSOLUTELY NO WARRANTY. For details, see
 // the enclosed file LICENSE for license information (AGPL). If you
@@ -56,19 +56,21 @@ Core.UI.Dialog = (function (TargetNS) {
             DialogTopMargin = $('.Dialog:visible').offset().top,
             DialogHeight = $('.Dialog:visible').height();
 
-        // if dialog height is more than 300px recalculate width of InnerContent to make it scrollable
-        // if dialog is smaller than 300px this is not necessary
+        // if dialog height is more than 200px recalculate width of InnerContent to make it scrollable
+        // if dialog is smaller than 200px this is not necessary
         // if AllowAutoGrow is set, auto-resizing should be possible
         // if in a mobile environment and a small screen, use as much window height as possible
         if ($('.Dialog:visible').hasClass('Fullsize')) {
             ContentScrollHeight = WindowHeight - 80;
         }
-        // KIX4OTRS-capeIT
-        // else if (AllowAutoGrow || DialogHeight > 300) {
+
         else if (AllowAutoGrow || DialogHeight > 200) {
-            // EO KIX4OTRS-capeIT
             ContentScrollHeight = WindowHeight - ((DialogTopMargin - WindowScrollTop) * 2) - 100;
+            if ( ContentScrollHeight < 200 ) {
+                ContentScrollHeight = 200;
+            }
         }
+
         else {
             ContentScrollHeight = 200;
         }
@@ -527,17 +529,7 @@ Core.UI.Dialog = (function (TargetNS) {
 
         // Add CloseOnClickOutside functionality
         if (Params.CloseOnClickOutside) {
-            $(document).unbind('click.Dialog').bind('click.Dialog', function (event) {
-                // If target element is removed before this event triggers, the enclosing div.Dialog can't be found anymore
-                // We check, if we can find a parent HTML element to be sure, that the element is not removed
-            // KIX4OTRS-capeIT
-            // if ($(event.target).parents('html').length &&
-            // $(event.target).closest('div.Dialog').length === 0) {
-            // HandleClosingAction();
-            // }
-            // EO KIX4OTRS-capeIT
-
-            });
+            $(document).unbind('click.Dialog').bind('click.Dialog', function () {});
         }
 
         // Add resize event handler for calculating the scroll height

@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -794,7 +794,7 @@ sub ArticleFlagDataSet {
                 . 'WHERE article_id = ? AND article_key = ? AND create_by = ? ',
             Bind => [
                 \$Param{Note},      \$Param{Subject}, \$Param{Keywords},
-                \$Param{ArticleID}, \$Param{Key},     \$Param{UserID}
+                \$Param{ArticleID}, \$Param{Key},     \$ArticleFlagData{CreateBy}
             ],
         );
     }
@@ -843,6 +843,18 @@ sub ArticleFlagDataDelete {
             return;
         }
     }
+
+    my $ZoomTabArticleConfig = $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Frontend::AgentTicketZoomTabArticle');
+    if (
+        ref($ZoomTabArticleConfig) eq 'HASH'
+        && $ZoomTabArticleConfig->{ArticleFlagsShared}
+        && ref($ZoomTabArticleConfig->{ArticleFlagsShared}) eq 'HASH'
+        && $ZoomTabArticleConfig->{ArticleFlagsShared}->{$Param{Key}}
+    ) {
+        $Param{AllUsers} = 1;
+        $Param{UserID}   = 0;
+    }
+
     if ( !defined $Param{UserID} && !defined $Param{AllUsers} ) {
         $Kernel::OM->Get('Kernel::System::Log')
             ->Log(
@@ -900,14 +912,33 @@ sub ArticleFlagDataGet {
         }
     }
 
-    # fetch the result
-    return if !$Kernel::OM->Get('Kernel::System::DB')->Prepare(
-        SQL => 'SELECT article_id, article_key, subject, keywords, note, create_by'
-            . ' FROM kix_article_flag'
-            . ' WHERE article_id = ? AND article_key = ? AND create_by = ?',
-        Bind => [ \$Param{ArticleID}, \$Param{ArticleFlagKey}, \$Param{UserID} ],
-        Limit => 1,
-    );
+    my $ZoomTabArticleConfig = $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Frontend::AgentTicketZoomTabArticle');
+    if (
+        ref($ZoomTabArticleConfig) eq 'HASH'
+        && $ZoomTabArticleConfig->{ArticleFlagsShared}
+        && ref($ZoomTabArticleConfig->{ArticleFlagsShared}) eq 'HASH'
+        && $ZoomTabArticleConfig->{ArticleFlagsShared}->{$Param{ArticleFlagKey}}
+    ) {
+        # fetch the result
+        return if !$Kernel::OM->Get('Kernel::System::DB')->Prepare(
+            SQL => 'SELECT article_id, article_key, subject, keywords, note, create_by'
+                . ' FROM kix_article_flag'
+                . ' WHERE article_id = ? AND article_key = ?',
+            Bind => [ \$Param{ArticleID}, \$Param{ArticleFlagKey} ],
+            Limit => 1,
+        );
+    }
+    else {
+
+	    # fetch the result
+	    return if !$Kernel::OM->Get('Kernel::System::DB')->Prepare(
+	        SQL => 'SELECT article_id, article_key, subject, keywords, note, create_by'
+	            . ' FROM kix_article_flag'
+	            . ' WHERE article_id = ? AND article_key = ? AND create_by = ?',
+	        Bind => [ \$Param{ArticleID}, \$Param{ArticleFlagKey}, \$Param{UserID} ],
+	        Limit => 1,
+	    );
+    }
 
     my %ArticleFlagData;
     while ( my @Row = $Kernel::OM->Get('Kernel::System::DB')->FetchrowArray() ) {

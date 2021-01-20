@@ -1,0 +1,54 @@
+---
+Debugger:
+  DebugThreshold: notice
+  TestMode: '0'
+Description: ITSM Configuration Management Connector
+FrameworkVersion: 17.14.0-0
+Provider:
+  Operation:
+    ConfigItemCreate:
+      Description: Creates new Configuration Items
+      MappingInbound: {}
+      MappingOutbound: {}
+      Type: ConfigItem::ConfigItemCreate
+    ConfigItemGet:
+      Description: Get the details for Configuration Items
+      MappingInbound: {}
+      MappingOutbound: {}
+      Type: ConfigItem::ConfigItemGet
+    ConfigItemSearch:
+      Description: Search Configuration Items
+      MappingInbound: {}
+      MappingOutbound: {}
+      Type: ConfigItem::ConfigItemSearch
+    ConfigItemUpdate:
+      Description: Updates Configuration Items
+      MappingInbound: {}
+      MappingOutbound: {}
+      Type: ConfigItem::ConfigItemUpdate
+  Transport:
+    Config:
+      KeepAlive: ''
+      MaxLength: '100000000'
+      RouteOperationMapping:
+        ConfigItemCreate:
+          RequestMethod:
+          - PUT
+          Route: /ConfigItem
+        ConfigItemGet:
+          RequestMethod:
+          - GET
+          Route: /ConfigItem/:ConfigItemID
+        ConfigItemSearch:
+          RequestMethod:
+          - POST
+          Route: /ConfigItem
+        ConfigItemUpdate:
+          RequestMethod:
+          - PATCH
+          Route: /ConfigItem/:ConfigItemID
+    Type: HTTP::REST
+RemoteSystem: ''
+Requester:
+  Transport:
+    Type: ''

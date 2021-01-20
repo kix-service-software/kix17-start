@@ -1,6 +1,6 @@
 /**
  * This software is part of the KIX project, https://www.kixdesk.com/
- * Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
+ * Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
  * --
  * @project KIX (https://www.kixdesk.com) <https://www.kixdesk.com> - Agent Frontend
  * @copyright c.a.p.e. IT GmbH
@@ -42,6 +42,7 @@
     #TreeContainer #TreeSearch input {
         width: 100%;
         box-sizing: border-box;
+        height: initial;
     }
     #TreeContainer input.CallForAction {
         padding: 3px 10px;
@@ -166,7 +167,7 @@
     }
 
     .Dialog .Field.LayoutGrid .Tablelike {
-        width: 98%;
+        width: 100%;
     }
 
     .Dialog .Field .FocusField {
@@ -476,4 +477,37 @@
         display: block;
         margin: 5px 0px 5px 0px;
     }
+
+    /**
+    *   @subsection text modules bulk
+    */
+
+    #BulkTextModulesSelectionContainer > .Loader::after {
+        font-size: 4em;
+        line-height: 5em;
+    }
+    #BulkTextModulesSelectionContainer {
+        height: 250px;
+        background-color: #FFFFFF;
+        border: 1px solid #CCCCCC;
+        overflow: auto;
+        padding: 0px 10px 10px 10px;
+    }
+    .BulkTextModulesFocus {
+        padding: 5px 0;
+        display: block;
+        height: 14px;
+    }
+    .BulkTextModulesFocus * {
+        float:left;
+    }
+    .BulkTextModulesFocus > div {
+        font-weight: bold;
+        margin-left: 10px;
+    }
+
+    .BulkNotify, .WINotify {
+        box-sizing: border-box;
+    }
+
 }

@@ -1600,7 +1600,7 @@
 <Table Name="generic_agent_jobs">
     <Column Name="job_name" Required="true" Size="200" Type="VARCHAR"/>
     <Column Name="job_key" Required="true" Size="200" Type="VARCHAR"/>
-    <Column Name="job_value" Required="false" Size="200" Type="VARCHAR"/>
+    <Column Name="job_value" Required="false" Size="65535" Type="VARCHAR"/>
     <Index Name="generic_agent_jobs_job_name">
         <IndexColumn Name="job_name"/>
     </Index>
@@ -1612,7 +1612,7 @@
     <Column Name="profile_name" Required="true" Size="200" Type="VARCHAR"/>
     <Column Name="profile_type" Required="true" Size="30" Type="VARCHAR"/>
     <Column Name="profile_key" Required="true" Size="200" Type="VARCHAR"/>
-    <Column Name="profile_value" Required="false" Size="200" Type="VARCHAR"/>
+    <Column Name="profile_value" Required="false" Size="10000" Type="VARCHAR"/>
     <Index Name="search_profile_login">
         <IndexColumn Name="login"/>
     </Index>
@@ -1669,7 +1669,7 @@
     <Column Name="id" Required="true" PrimaryKey="true" AutoIncrement="true" Type="INTEGER"/>
     <Column Name="notification_id" Required="true" Type="INTEGER"/>
     <Column Name="subject" Required="true" Size="200" Type="VARCHAR"/>
-    <Column Name="text" Required="true" Size="4000" Type="VARCHAR"/>
+    <Column Name="text" Required="true" Size="10000" Type="VARCHAR"/>
     <Column Name="content_type" Required="true" Size="250" Type="VARCHAR"/>
     <Column Name="language" Required="true" Size="60" Type="VARCHAR"/>
     <ForeignKey ForeignTable="notification_event">

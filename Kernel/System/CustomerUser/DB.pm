@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2021 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -326,13 +326,25 @@ sub CustomerSearch {
 
             # if mapping exists
             if ( defined $CustomerIDsMap[5] && $CustomerIDsMap[5] ) {
-                my $MultipleCustomerID = '%'.$CustomerID.'%';
-                push @Bind, \$MultipleCustomerID;
+                my $MultipleCustomerID1 = $CustomerID;
+                my $MultipleCustomerID2 = $CustomerID . ',%';
+                my $MultipleCustomerID3 = '%,' . $CustomerID;
+                my $MultipleCustomerID4 = '%,' . $CustomerID . ',%';
+                push( @Bind, \$MultipleCustomerID1 );
+                push( @Bind, \$MultipleCustomerID2 );
+                push( @Bind, \$MultipleCustomerID3 );
+                push( @Bind, \$MultipleCustomerID4 );
                 if ( $Self->{CaseSensitive} ) {
-                    $SQL .= " OR $CustomerIDsMap[2] LIKE ? $LikeEscapeString";
+                    $SQL .= " OR $CustomerIDsMap[2] LIKE ? $LikeEscapeString"
+                          . " OR $CustomerIDsMap[2] LIKE ? $LikeEscapeString"
+                          . " OR $CustomerIDsMap[2] LIKE ? $LikeEscapeString"
+                          . " OR $CustomerIDsMap[2] LIKE ? $LikeEscapeString";
                 }
                 else {
                     $SQL .= " OR LOWER($CustomerIDsMap[2]) LIKE LOWER(?) $LikeEscapeString"
+                          . " OR LOWER($CustomerIDsMap[2]) LIKE LOWER(?) $LikeEscapeString"
+                          . " OR LOWER($CustomerIDsMap[2]) LIKE LOWER(?) $LikeEscapeString"
+                          . " OR LOWER($CustomerIDsMap[2]) LIKE LOWER(?) $LikeEscapeString";
                 }
             }
         }

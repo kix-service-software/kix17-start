@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2021 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -431,16 +431,19 @@ sub Data {
         'There was a problem uninstalling %s.' => 'Es gab ein Problem beim De-Installieren der %s.',
 
         # Template: AAACalendar
-        'New Year\'s Day'             => 'Neujahr',
-        'International Workers\' Day' => 'Tag der Arbeit',
-        'Christmas Eve'               => 'Heiligabend',
-        'First Christmas Day'         => '1. Weihnachtstag',
-        'Second Christmas Day'        => '2. Weihnachtstag',
-        'New Year\'s Eve'             => 'Silvester',
-        'Good Friday'                 => 'Karfreitag',
-        'Easter Monday'               => 'Ostermontag',
-        'Ascension Day'               => 'Christi Himmelfahrt',
-        'Whit Monday'                 => 'Pfingstmontag',
+        'New Year\'s Day'              => 'Neujahr',
+        'International Workers\' Day'  => 'Tag der Arbeit',
+        'Christmas Eve'                => 'Heiligabend',
+        'First Christmas Day'          => '1. Weihnachtstag',
+        'Second Christmas Day'         => '2. Weihnachtstag',
+        'New Year\'s Eve'              => 'Silvester',
+        'Maundy Thursday'              => 'Gründonnerstag',
+        'Good Friday'                  => 'Karfreitag',
+        'Easter Monday'                => 'Ostermontag',
+        'Ascension Day'                => 'Christi Himmelfahrt',
+        'Whit Monday'                  => 'Pfingstmontag',
+        'Feast of Corpus Christi'      => 'Fronleichnam',
+        'Day of Repentance and Prayer' => 'Buß- und Bettag',
 
         # Template: AAAGenericInterface
         'KIX as requester' => 'KIX als Requester',
@@ -2691,6 +2694,8 @@ sub Data {
         'Reset Filter' => 'Filter zurücksetzen',
         'Show one article' => 'Einen Beitrag anzeigen',
         'Show all articles' => 'Alle Beiträge anzeigen',
+        'Reset Columns Width' => 'Spaltenbreite zurücksetzen',
+        'Reset columns width' => 'Spaltenbreite zurücksetzen',
         'Unread articles' => 'Ungelesene Beiträge',
         'No.' => 'Nr.',
         'Important' => 'Wichtig',
@@ -3793,7 +3798,7 @@ sub Data {
 
         # Perl Module: Kernel/System/ProcessManagement/DB/Process/State.pm
         'Inactive' => 'Inaktiv',
-        'FadeAway' => 'Ausblendend',
+        'FadeAway' => 'Auslaufend',
 
         # Perl Module: Kernel/System/Registration.pm
         'Can\'t get Token from sever' => 'Kann Token nicht vom Server ermitteln!',
@@ -4132,8 +4137,8 @@ sub Data {
         'Send unencrypted notification' => 'Unverschlüsselte Benachrichtigung senden',
 
         # Perl Module: Kernel/System/Web/InterfaceAgent.pm
-        'Panic, user authenticated but no user data can be found in KIX DB!! Perhaps the user is invalid.' =>
-            'Achtung, der Benutzer wurde authentifiziert, aber es konnten keine Benutzerdaten in der Datenbank gefunden worden. Möglicherweise ist der Benutzer ungültig.',
+        'You could not be logged in to the system. Please check that your username and password have been entered correctly.' =>
+            'Sie konnten nicht angemeldet werden. Bitte prüfen Sie, ob Nutzername und Passwort korrekt eingegeben wurden.',
         'Can`t remove SessionID' => 'Kann SessionID nicht enfernen',
         'Logout successful.' => 'Abmeldung erfolgreich.',
         'Panic! Invalid Session!!!' => 'Fehler: Ungültige Sitzung.',
@@ -4606,7 +4611,7 @@ Ihr Helpdesk-Team
         'Define a filter for html output to add links behind a defined string. The element Image allows two input kinds. At once the name of an image (e.g. faq.png). In this case the KIX image path will be used. The second possiblity is to insert the link to the image.' =>
             'Definiert einen Filter für die HTML-Ausgabe um Links hinter einer bestimmten Zeichenfolge hinzufügen. Dieses Element erlaubt zwei Eingabearten. Zum einem den Namen eines Bildes (Beispielsweise faq.png). In diesem Fall wird der KIX-Bildpfad verwendet. Die zweite Möglichkeit ist, den Link zu dem Bild einzufügen.',
         'Define a mapping between variables of the contact data (keys) and dynamic fields of a ticket (values). The purpose is to store contact data in ticket dynamic fields. The dynamic fields must be present in the system and should be enabled for AgentTicketFreeText, so that they can be set/updated manually by the agent. They mustn\'t be enabled for AgentTicketPhone, AgentTicketEmail and AgentTicketCustomer. If they were, they would have precedence over the automatically set values. To use this mapping, you have to also activate the next setting below.' =>
-            'Definiert eine Zuordnung zwischen Variablen der Ansprechpartner-Daten (Schlüssel) und dynamischen Feldern eines Ticket (Werte). Somit können Sie Ansprechpartner-Daten eines Tickets in dynamische Felder speichern. Die dynamischen Felder müssen im System vorhanden sein und sollten für AgentTicketFreeText aktiviert werden, damit sie eingestellt / manuell durch den Agenten aktualisiert werden können. Sie dürfen nicht für AgentTicketPhone, AgentTicketEmail und AgentTicketCustomer aktiviert werden. Wenn sie in diesen Masken aktiviert werden, werden später automatisch gesetzte Werte überschrieben werden. Um dieses Mapping zu verwenden, müssen Sie auch Sie die nächste Einstellung aktivieren.',
+            'Definiert eine Zuordnung zwischen Variablen der Ansprechpartner-Daten (Schlüssel) und dynamischen Feldern eines Ticket (Werte). Somit können Sie Ansprechpartner-Daten eines Tickets in dynamische Felder speichern. Die dynamischen Felder müssen im System vorhanden sein und sollten für AgentTicketFreeText aktiviert werden, damit sie eingestellt / manuell durch den Agenten aktualisiert werden können. Sie dürfen nicht für AgentTicketPhone, AgentTicketEmail und AgentTicketCustomer aktiviert werden. Wenn sie in diesen Masken aktiviert werden, werden später automatisch gesetzte Werte überschrieben werden. Um dieses Mapping zu verwenden, müssen Sie auch die nächste Einstellung aktivieren.',
         'Define dynamic field name for end time. This field has to be manually added to the system as Ticket: "Date / Time" and must be activated in ticket creation screens and/or in any other ticket action screens.' =>
             'Definiert dynamische Feldnamen für die Endzeit. Dieses Feld muss manuell im System als Ticket: "Datum / Uhrzeit" hinzugefügt werden und muss in Ticketerstellungsoberflächen und / oder in anderen Ticket-Aktionsoberflächen aktiviert werden.',
         'Define dynamic field name for start time. This field has to be manually added to the system as Ticket: "Date / Time" and must be activated in ticket creation screens and/or in any other ticket action screens.' =>
@@ -4786,6 +4791,8 @@ Ihr Helpdesk-Team
         'Defines the default history type in the customer interface.' => 'Definiert den Standard-Historientyp im Kunden-Interface.',
         'Defines the default maximum number of X-axis attributes for the time scale.' =>
             'Definiert die standardmäßig eingestellte maximale Anzahl von Attributen für die x-Achse für die Zeitachse.',
+        'Defines column header to be skipped for D3 graphs.' =>
+            'Definiert Spaltenköpfe die bei D3-Graphen ausgelassen werden.',
         'Defines the default maximum number of statistics per page on the overview screen.' =>
             'Steuert die maximale Anzahl angezeigter Statistiken pro Seite in der Übersicht.',
         'Defines the default next state for a ticket after customer follow-up in the customer interface.' =>
@@ -5394,7 +5401,7 @@ Ihr Helpdesk-Team
             'Schaltet das Caching von Templates an oder aus. Warnung: Schalten Sie auf Produktivsystemen das Template-Caching nicht ab, da hierdurch massive Performance-Beeinträchtigungen auftreten werden. Diese Einstellung sollte nur zur Fehlerbehebung abgeschaltet werden.',
         'Enables or disables the debug mode over frontend interface.' => 'Aktiviert oder deaktiviert den Debug-Modus für das Frontend.',
         'Enables or disables the ticket watcher feature, to keep track of tickets without being the owner nor the responsible.' =>
-            'Aktiviert oder deaktiviert das Ticket beobachten-Feature, das das beobachten von Tickets erlaubt, ohne der Bearbeiter oder Verantwortliche zu sein.',
+            'Aktiviert oder deaktiviert das Ticket-Beobachten-Feature, das das beobachten von Tickets erlaubt, ohne der Bearbeiter oder Verantwortliche zu sein.',
         'Enables performance log (to log the page response time). It will affect the system performance. Frontend::Module###AdminPerformanceLog must be enabled.' =>
             'Aktiviert den Performance-Log zum erfassen der Seiten-Antwortzeiten. Diese Einstellung beeinflusst die Gesamtperformance des Systems. Frontend::Module###AdminPerformanceLog muss aktiviert sein.',
         'Enables spell checker support.' => 'Aktiviert die Unterstützung für die Rechtschreibprüfung.',
@@ -5406,7 +5413,7 @@ Ihr Helpdesk-Team
             'Aktiviert das Stapelverarbeitungs-Feature nur für die eingetragenen Gruppen.',
         'Enables ticket responsible feature, to keep track of a specific ticket.' =>
             'Aktiviert das Verantwortlicher-Feature, das das Verfolgen von Tickets erlaubt.',
-        'Enables ticket watcher feature only for the listed groups.' => 'Aktiviert das Ticket beobachten-Feature nur für die eingetragenen Gruppen.',
+        'Enables ticket watcher feature only for the listed groups.' => 'Aktiviert das Ticket-Beobachten-Feature nur für die eingetragenen Gruppen.',
         'English (Canada)' => 'Englisch (Kanada)',
         'English (United Kingdom)' => 'Englisch (Vereinigtes Königreich)',
         'English (United States)' => 'Englisch (Vereinigte Staaten)',

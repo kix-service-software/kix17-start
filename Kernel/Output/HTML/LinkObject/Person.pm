@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -12,6 +12,9 @@ use strict;
 use warnings;
 
 use Kernel::Output::HTML::Layout;
+
+use Kernel::System::VariableCheck qw(:all);
+use Kernel::Language qw(Translatable);
 
 our @ObjectDependencies = (
     'Kernel::Config',
@@ -65,6 +68,16 @@ sub new {
     $Self->{ObjectData} = {
         Object   => 'Person',
         Realname => 'Person',
+    };
+
+    # set field behaviors
+    $Self->{Behaviors} = {
+        'IsSortable'  => 1,
+    };
+
+    # define sortable columns
+    $Self->{ValidSortableColumns} = {
+        'UserLastname'  => 1,
     };
 
     return $Self;
@@ -206,6 +219,9 @@ sub TableCreateComplex {
         }
     }
 
+    my $SortBy  = $Param{SortBy}  || 'UserLastname';
+    my $OrderBy = $Param{OrderBy} || 'Down';
+
     # create the headline list
     my @HeadLine = ();
     for my $Key ( @EnabledColumns ) {
@@ -216,21 +232,88 @@ sub TableCreateComplex {
         if ( defined $ComplexConfigReverse{$Key} ) {
             $Header = $ComplexConfigHeaders{ $ComplexConfigReverse{$Key} };
         }
+
+        my %TmpHash;
+        if (
+            $Self->{Behaviors}->{IsSortable}
+            && $Self->{ValidSortableColumns}->{$Key}
+        ) {
+            $TmpHash{Sortable} = $Key;
+            if ( $SortBy eq $Key ) {
+                $TmpHash{OrderCSS}  = $OrderBy eq 'Down' ? 'SortDescendingLarge' : 'SortAscendingLarge';
+                $TmpHash{SortTitle} = $OrderBy eq 'Down' ? Translatable('sorted descending') : Translatable('sorted ascending');
+            }
+        }
+
+        if (
+            $Self->{Behaviors}->{IsSortable}
+            && $Self->{Behaviors}->{IsFilterable}
+            && $Self->{ValidSortableColumns}->{$Key}
+            && $Self->{ValidFilterableColumns}->{$Key}
+        ) {
+
+            $TmpHash{FilterTitle} = Translatable('filter not active');
+            if (
+                $Param{GetColumnFilterSelect}
+                 && $Param{GetColumnFilterSelect}->{$Key}
+            ) {
+                $TmpHash{OrderCSS} .= ' FilterActive';
+                $TmpHash{FilterTitle} = Translatable('filter active');
+            }
+
+            # variable to save the filter's HTML code
+            $TmpHash{ColumnFilterStrg} = $Self->_InitialColumnFilter(
+                ColumnName => $Key,
+            );
+        }
+
+        if (
+            $Self->{Behaviors}->{IsFilterable}
+            && $Self->{ValidFilterableColumns}->{$Key}
+        ) {
+            $TmpHash{Filterable} = 1;
+        }
+
         push @HeadLine, {
             Content => $Header,
+            %TmpHash
         };
     }
 
     # create the item list
     my @ItemList;
 
+    my @SortedList;
+
+    if ( $OrderBy eq 'Down' ) {
+        @SortedList = sort { lc $LinkList{$a}{Data}->{$SortBy} cmp lc $LinkList{$b}{Data}->{$SortBy} } keys %LinkList;
+    } else {
+        @SortedList = sort { lc $LinkList{$b}{Data}->{$SortBy} cmp lc $LinkList{$a}{Data}->{$SortBy} } keys %LinkList;
+    }
+
+    PERSON:
     for my $PersonID (
-        sort { $LinkList{$a}{Data}->{UserLastname} cmp $LinkList{$b}{Data}->{UserLastname} }
-        keys %LinkList
+        @SortedList
     ) {
 
         # extract persons data
         my %Person = %{ $LinkList{$PersonID}{Data} };
+
+        if (
+            $Self->{Behaviors}->{IsFilterable}
+            && $Param{ColumnFilter}
+        ) {
+            FILTER:
+            for my $Key ( sort keys %{$Param{ColumnFilter}} ) {
+                my $FilterColumn = $Key;
+                $FilterColumn =~ s/^TypeIDs$/Type/i;
+                $FilterColumn =~ s/IDs$/ID/i;
+
+                next FILTER if $FilterColumn eq 'LinkTypeID';
+                next PERSON if !grep( {$_ eq $Person{$FilterColumn} } @{$Param{ColumnFilter}->{$Key}} );
+            }
+        }
+
         $Person{Type} = $Self->{LayoutObject}->{LanguageObject}->Translate($Person{Type});
 
         # set css
@@ -257,8 +340,6 @@ sub TableCreateComplex {
 
         push @ItemList, \@ItemColumns;
     }
-
-    return if !@ItemList;
 
     # define the block data
     my %Block = (
@@ -477,17 +558,6 @@ sub SearchOptionList {
 
     # search option list
     my @SearchOptionList = (
-
-        #{
-        #    Key  => 'PersonSource',
-        #    Name => 'Source',
-        #    Type => 'List',
-        #},
-        #{
-        #    Key  => 'PersonLogin',
-        #    Name => 'Persons login',
-        #    Type => 'Text',
-        #},
         {
             Key        => 'PersonAttributes',
             Name       => 'Persons attributes',
@@ -590,6 +660,145 @@ sub SearchOptionList {
     }
 
     return @SearchOptionList;
+}
+
+sub _InitialColumnFilter {
+    my ( $Self, %Param ) = @_;
+
+    return if !$Param{ColumnName};
+
+    # get layout object
+    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+
+    my $Label = $Param{Label} || $Param{ColumnName};
+    $Label = $LayoutObject->{LanguageObject}->Translate($Label);
+
+    # set fixed values
+    my $Data = [
+        {
+            Key   => '',
+            Value => uc $Label,
+        },
+    ];
+
+    # define if column filter values should be translatable
+    my $TranslationOption = 0;
+
+    if (
+        $Param{ColumnName} eq 'Type'
+    ) {
+        $TranslationOption = 1;
+    }
+
+    my $Class = 'ColumnFilter';
+    if ( $Param{Css} ) {
+        $Class .= ' ' . $Param{Css};
+    }
+
+    # build select HTML
+    my $ColumnFilterHTML = $LayoutObject->BuildSelection(
+        Name        => 'PersonColumnFilter' . $Param{ColumnName},
+        Data        => $Data,
+        Class       => $Class,
+        Translation => $TranslationOption,
+        SelectedID  => '',
+    );
+    return $ColumnFilterHTML;
+}
+
+sub FilterContent {
+    my ( $Self, %Param ) = @_;
+
+    return if !$Param{FilterColumn};
+
+    my %ColumnValues;
+    for my $LinkType ( sort keys %{$Param{LinkListWithData}} ) {
+        for my $Direction ( sort keys %{$Param{LinkListWithData}->{$LinkType}} ) {
+            for my $PersonID ( sort keys %{$Param{LinkListWithData}->{$LinkType}->{$Direction}} ) {
+                my $Type = $Param{LinkListWithData}->{$LinkType}->{$Direction}->{$PersonID}->{Type};
+                $ColumnValues{$Type} = $Type;
+            }
+        }
+    }
+    # make sure that even a value of 0 is passed as a Selected value, e.g. Unchecked value of a
+    my $SelectedValue = defined $Param{GetColumnFilter}->{ $Param{FilterColumn} } ? $Param{GetColumnFilter}->{ $Param{FilterColumn} } : '';
+
+    my $LabelColumn = $Param{FilterColumn};
+
+    # variable to save the filter's HTML code
+    my $ColumnFilterJSON = $Self->_ColumnFilterJSON(
+        ColumnName    => $Param{FilterColumn},
+        Label         => $LabelColumn,
+        ColumnValues  => \%ColumnValues,
+        SelectedValue => $SelectedValue,
+    );
+    return $ColumnFilterJSON;
+}
+
+sub _ColumnFilterJSON {
+    my ( $Self, %Param ) = @_;
+
+    return if !$Param{ColumnName};
+    return if !$Self->{ValidFilterableColumns}->{ $Param{ColumnName} };
+
+    # get layout object
+    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+
+    my $Label = $Param{Label};
+    $Label = $LayoutObject->{LanguageObject}->Translate($Label);
+
+    # set fixed values
+    my $Data = [
+        {
+            Key   => 'DeleteFilter',
+            Value => uc $Label,
+        },
+        {
+            Key      => '-',
+            Value    => '-',
+            Disabled => 1,
+        },
+    ];
+
+    if ( $Param{ColumnValues} && ref $Param{ColumnValues} eq 'HASH' ) {
+
+        my %Values = %{ $Param{ColumnValues} };
+
+        # set possible values
+        for my $ValueKey ( sort { lc $Values{$a} cmp lc $Values{$b} } keys %Values ) {
+            push @{$Data}, {
+                Key   => $ValueKey,
+                Value => $Values{$ValueKey}
+            };
+        }
+    }
+
+    # define if column filter values should be translatable
+    my $TranslationOption = 0;
+
+    if (
+        $Param{ColumnName} eq 'Type'
+    ) {
+        $TranslationOption = 1;
+    }
+
+    # build select HTML
+    my $JSON = $LayoutObject->BuildSelectionJSON(
+        [
+            {
+                Name         => 'PersonColumnFilter' . $Param{ColumnName},
+                Data         => $Data,
+                Class        => 'ColumnFilter',
+                Sort         => 'AlphanumericKey',
+                TreeView     => 1,
+                SelectedID   => $Param{SelectedValue},
+                Translation  => $TranslationOption,
+                AutoComplete => 'off',
+            },
+        ],
+    );
+
+    return $JSON;
 }
 
 1;

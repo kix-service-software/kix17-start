@@ -1,6 +1,6 @@
 /**
  * This software is part of the KIX project, https://www.kixdesk.com/
- * Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
+ * Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
  * --
  * @project KIX (https://www.kixdesk.com) <https://www.kixdesk.com> - Agent Frontend
  * @copyright c.a.p.e. IT GmbH
@@ -303,9 +303,11 @@
     .PageLink {
         cursor: pointer;
     }
+    div.Pagination a.Selected,
     span.Pagination a.Selected {
         font-weight: bold;
     }
+    div.Pagination form,
     span.Pagination form {
         display: inline;
     }

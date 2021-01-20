@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2021 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -669,9 +669,11 @@ $('#FileUpload').bind('change', function () {
                     </div>
                     <div class="Clear"></div>
 
-                    <label for="NextStateID">[% Translate("Next ticket state") | html %]:</label>
+                    <label class="Mandatory" for="NextStateID"><span class="Marker">*</span> [% Translate("Next ticket state") | html %]:</label>
                     <div class="Field">
                         [% Data.NextStatesStrg %]
+                        <div id="NextStateIDError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
+                        <div id="NextStateIDServerError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
     $('#NextStateID').bind('change', function (Event) {
@@ -705,9 +707,11 @@ $('#FileUpload').bind('change', function () {
                     </div>
 [% RenderBlockEnd("DynamicField_ITSMImpact") %]
 # ---
-                    <label for="PriorityID">[% Translate("Priority") | html %]:</label>
+                    <label class="Mandatory" for="PriorityID"><span class="Marker">*</span> [% Translate("Priority") | html %]:</label>
                     <div class="Field">
                         [% Data.PriorityStrg %]
+                        <div id="PriorityIDError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
+                        <div id="PriorityIDServerError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
     $('#PriorityID').bind('change', function (Event) {

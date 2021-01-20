@@ -1,7 +1,7 @@
 // --
-// Modified version of the work: Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
+// Modified version of the work: Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
 // based on the original work of:
-// Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
+// Copyright (C) 2001-2021 OTRS AG, https://otrs.com/
 // --
 // This software comes with ABSOLUTELY NO WARRANTY. For details, see
 // the enclosed file LICENSE for license information (AGPL). If you
@@ -104,24 +104,7 @@ Core.Agent.TicketZoom = (function (TargetNS) {
             // Offset of scroller element (relative)
                 ScrollerOffset = $('div.Scroller').get(0).scrollTop;
 
-            // KIX4OTRS-capeIT
             Core.KIX4OTRS.TicketZoomTabs.PopUpInit();
-
-            // $('#ArticleItems a.AsPopup').bind('click', function () {
-            //     var Matches,
-            //         PopupType = 'TicketAction';
-
-            //     Matches = $(this).attr('class').match(/PopupType_(\w+)/);
-            //     if (Matches) {
-            //         PopupType = Matches[1];
-            //     }
-            //     Core.UI.Popup.OpenPopup($(this).attr('href'), PopupType);
-            //     return false;
-            // });
-
-            // Add event bindings to new widget
-            // Core.UI.InitWidgetActionToggle();
-            // EO KIX4OTRS-capeIT
 
             // Add hash to the URL to provide direct URLs and history back/forward functionality
             // If new ArticleID is again the InitialArticleID than remove hash from URL
@@ -153,7 +136,6 @@ Core.Agent.TicketZoom = (function (TargetNS) {
             else if (ScrollerBottomY < ActiveArticleBottomY) {
                 $('div.Scroller').get(0).scrollTop = ScrollerOffset + (ActiveArticleBottomY - ScrollerBottomY) + 5;
             }
-
 
             // Initiate URL hash check again
             TargetNS.CheckURLHash();
@@ -253,18 +235,15 @@ Core.Agent.TicketZoom = (function (TargetNS) {
      * @description
      *      This function initializes the special module functions.
      */
-    // KIX4OTRS-capeIT
-    // TargetNS.Init = function (Options) {
     TargetNS.Init = function (Options, File) {
-        // EO KIX4OTRS-capeIT
         var ZoomExpand = false,
             URLHash,
             $ArticleElement,
-            // KIX4OTRS-capeIT
-            // ResizeTimeoutScroller;
             ResizeTimeoutScroller,
-            ResizeTimeoutWindow;
-            // EO KIX4OTRS-capeIT
+            ResizeTimeoutWindow,
+            $THead,
+            $TBody,
+            customResizing;
 
         // Check, if ZoomExpand is active or not
         // Only active on tickets with less than 400 articles (see bug#8424)
@@ -272,31 +251,42 @@ Core.Agent.TicketZoom = (function (TargetNS) {
             ZoomExpand = !$('div.ArticleView a.OneArticle').hasClass('Active');
         }
 
-        // KIX4OTRS-capeIT
-        if (typeof File !== 'undefined' && File == 'AgentTicketZoomTabArticle') {
-            // EO KIX4OTRS-capeIT
-
+        if (
+            typeof File !== 'undefined'
+            && File == 'AgentTicketZoomTabArticle'
+        ) {
             Core.UI.Resizable.Init($('#ArticleTableBody'), Options.ArticleTableHeight, function (Event, UI, Height) {
                 // remember new height for next reload
                 window.clearTimeout(ResizeTimeoutScroller);
                 ResizeTimeoutScroller = window.setTimeout(function () {
                     Core.Agent.PreferencesUpdate('UserTicketZoomArticleTableHeight', Height);
+
+                    if ( !Core.Config.Get('UserArticleTableColumnResizing') ) {
+                        Core.UI.Table.InitColumnResize($('#ArticleTable'), 'ArticleTable', File, Core.Config.Get('UserArticleTableColumnResizing') );
+                    }
                 }, 1000);
             });
+            $THead = $('#ArticleTable thead');
+            $TBody = $('#ArticleTable tbody');
 
-            // KIX4OTRS-capeIT
-            var $THead = $('#ArticleTable thead'), $TBody = $('#ArticleTable tbody');
+            if ( !Core.Config.Get('UserArticleTableColumnResizing') ) {
+                // initial adjustion of the tablehead elements
+                Core.Agent.TicketZoom.AdjustTableHead($THead, $TBody, 0);
+            }
 
-            // initial adjustion of the tablehead elements
-            Core.Agent.TicketZoom.AdjustTableHead($THead, $TBody, 0);
+            // initial custom column resizing
+            // Table element, Identifiere, Action
+            Core.UI.Table.InitColumnResize($('#ArticleTable'), 'ArticleTable', File, Core.Config.Get('UserArticleTableColumnResizing') );
 
             $(window).bind('resize', function () {
                 window.clearTimeout(ResizeTimeoutWindow);
                 ResizeTimeoutWindow = window.setTimeout(function () {
-                    Core.Agent.TicketZoom.AdjustTableHead($THead, $TBody, 0);
+                    if ( !Core.Config.Get('UserArticleTableColumnResizing') ) {
+                        Core.Agent.TicketZoom.AdjustTableHead($THead, $TBody, 0);
+                    }
+                    Core.UI.Table.InitColumnResize($('#ArticleTable'), 'ArticleTable', File, Core.Config.Get('UserArticleTableColumnResizing') );
                 }, 50);
             });
-            // EO KIX4OTRS-capeIT
 
             $('.DataTable tbody td a.Attachment').bind('click', function (Event) {
                 var Position;
@@ -362,19 +352,14 @@ Core.Agent.TicketZoom = (function (TargetNS) {
 
                 return false;
             });
-
-            // KIX4OTRS-capeIT
         }
-        // EO KIX4OTRS-capeIT
 
         // init control function to check the location hash, if the user used the history back or forward buttons
         if (!ZoomExpand) {
             TargetNS.CheckURLHash();
         }
 
-        // KIX4OTRS-capeIT
         if (typeof File === 'undefined' || File != 'AgentTicketZoomTabArticle') {
-            // EO KIX4OTRS-capeIT
             $('a.AsPopup').bind('click', function () {
                 var Matches,
                     PopupType = 'TicketAction';
@@ -387,20 +372,14 @@ Core.Agent.TicketZoom = (function (TargetNS) {
                 Core.UI.Popup.OpenPopup($(this).attr('href'), PopupType);
                 return false;
             });
-            // KIX4OTRS-capeIT
         }
-        // EO KIX4OTRS-capeIT
 
         // Scroll to active article
-        // KIX4OTRS-capeIT
         if (typeof File !== 'undefined' && File == 'AgentTicketZoomTabArticle') {
-            // EO KIX4OTRS-capeIT
             if ( !ZoomExpand && $('#ArticleTable tbody tr.Active').length ) {
                 $('div.Scroller').get(0).scrollTop = parseInt($('#ArticleTable tbody tr.Active').position().top, 10) - 30;
             }
-            // KIX4OTRS-capeIT
         }
-        // EO KIX4OTRS-capeIT
 
         // init browser link message close button
         if ($('.MessageBrowser').length) {
@@ -417,7 +396,6 @@ Core.Agent.TicketZoom = (function (TargetNS) {
         });
     };
 
-    // KIX4OTRS-capeIT
     /**
      * @function
      * @private
@@ -429,11 +407,11 @@ Core.Agent.TicketZoom = (function (TargetNS) {
      */
     TargetNS.AdjustTableHead = function($THead, $TBody, LoopProtectionCounter) {
         var $THeadElements = $THead.find('tr th'),
-            THeadElementWidth,
             $TBodyElements = $TBody.find('tr:first td'),
+            THeadElementWidth,
             TBodyWidths,
-            TableSize = $THeadElements.size(),
-            Adjusted = true,
+            TableSize   = $THeadElements.size(),
+            Adjusted    = true,
             Adjustments = [],
             I;
 
@@ -480,18 +458,13 @@ Core.Agent.TicketZoom = (function (TargetNS) {
         }
 
         // Second round: Adjust the body columns as calculated before
-        if (!Adjusted) {
-            for (I = 0; I < TableSize; I++) {
-                if (Adjustments[I]) {
-                    $TBodyElements.eq(I).width(Adjustments[I] + 'px');
-                }
-            }
-            if (LoopProtectionCounter < 5) {
-                TargetNS.AdjustTableHead($THead, $TBody, LoopProtectionCounter + 1);
-            }
+        if (
+            !Adjusted
+            && LoopProtectionCounter < 5
+        ) {
+            TargetNS.AdjustTableHead($THead, $TBody, LoopProtectionCounter + 1);
         }
     };
-    // EO KIX4OTRS-capeIT
 
     return TargetNS;
 }(Core.Agent.TicketZoom || {}));
