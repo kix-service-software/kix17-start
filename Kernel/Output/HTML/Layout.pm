@@ -6249,6 +6249,13 @@ sub _BuildCustomFooter{
     my $CustomFooter = $ConfigObject->Get('CustomFooter');
     my $IsNotShow    = 1;
     my $Frontend     = $Param{Frontend} =~ /^(?:Customer|Public)$/ ? '3' : '2';
+    my $UserID       = 1;
+    if (
+        $Frontend eq '2'
+        && $Self->{UserID}
+    ) {
+        $UserID = $Self->{UserID};
+    }
 
     if (
         defined $CustomFooter->{Title}
@@ -6276,11 +6283,15 @@ sub _BuildCustomFooter{
             }
 
             if ( $CustomFooter->{URL}->{$Title} ) {
-                my $URL = $TemplateGeneratorObject->ReplacePlaceHolder(
-                    Text     => $CustomFooter->{URL}->{$Title},
+                my $URL = $CustomFooter->{URL}->{$Title};
+                if ( $Frontend eq '3' ) {
+                    $URL =~ s/<(?:KIX|OTRS)_CURRENT_.+?>/-/gi;
+                }
+                $URL = $TemplateGeneratorObject->ReplacePlaceHolder(
+                    Text     => $URL,
                     Data     => {},
                     RichText => 0,
-                    UserID   => 1
+                    UserID   => $UserID
                 );
 
                 if ( $IsNotShow ) {
