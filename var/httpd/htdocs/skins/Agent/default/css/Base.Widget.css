@@ -802,6 +802,14 @@
         cursor: pointer;
         background: none;
     }
+    button.ArrowUp::before {
+        content: "\f077";
+        font: normal normal normal 14px/1 FontAwesome;
+    }
+    button.ArrowDown::before {
+        content: "\f078";
+        font: normal normal normal 14px/1 FontAwesome;
+    }
 
 
     /**
