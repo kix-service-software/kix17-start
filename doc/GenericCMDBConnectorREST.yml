@@ -1,31 +1,36 @@
 ---
 Debugger:
-  DebugThreshold: notice
+  DebugThreshold: error
   TestMode: '0'
-Description: ITSM Configuration Management Connector
+Description: ITSM Configuration Management Connector REST Sample
 FrameworkVersion: 17.14.0-0
 Provider:
   Operation:
     ConfigItemCreate:
-      Description: Creates new Configuration Items
+      Description: Creates new Configuration Item
       MappingInbound: {}
       MappingOutbound: {}
       Type: ConfigItem::ConfigItemCreate
     ConfigItemGet:
-      Description: Get the details for Configuration Items
+      Description: Get details of Configuration Items
       MappingInbound: {}
       MappingOutbound: {}
       Type: ConfigItem::ConfigItemGet
     ConfigItemSearch:
-      Description: Search Configuration Items
+      Description: Search for Configuration Items
       MappingInbound: {}
       MappingOutbound: {}
       Type: ConfigItem::ConfigItemSearch
     ConfigItemUpdate:
-      Description: Updates Configuration Items
+      Description: Updates existing Configuration Item
       MappingInbound: {}
       MappingOutbound: {}
       Type: ConfigItem::ConfigItemUpdate
+    SessionCreate:
+      Description: Creates new Session
+      MappingInbound: {}
+      MappingOutbound: {}
+      Type: Session::SessionCreate
   Transport:
     Config:
       KeepAlive: ''
@@ -33,7 +38,7 @@ Provider:
       RouteOperationMapping:
         ConfigItemCreate:
           RequestMethod:
-          - PUT
+          - POST
           Route: /ConfigItem
         ConfigItemGet:
           RequestMethod:
@@ -42,11 +47,15 @@ Provider:
         ConfigItemSearch:
           RequestMethod:
           - POST
-          Route: /ConfigItem
+          Route: /ConfigItem/Search
         ConfigItemUpdate:
           RequestMethod:
-          - PATCH
+          - PUT
           Route: /ConfigItem/:ConfigItemID
+        SessionCreate:
+          RequestMethod:
+          - POST
+          Route: /Session
     Type: HTTP::REST
 RemoteSystem: ''
 Requester:
