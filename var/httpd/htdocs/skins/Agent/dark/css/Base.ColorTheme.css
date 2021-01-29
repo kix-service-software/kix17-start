@@ -2004,11 +2004,19 @@
     #ResponsiveTicketMenuHandle,
     .ResponsiveMenuHandle {
         color: #777777;
-        background-color: #DDD;
+        background-color: #DDDDDD;
     }
+    .ResponsiveTabHandle {
+        background-color: #676766;
+    }
+    .ResponsiveTabHandle:hover {
+        color: #0A7CB3;
+    }
+    div.ui-tabs > div.ResponsiveSidebarContainer,
     .ResponsiveSidebarContainer {
         background-color: rgba(22,22,22,0.7);
     }
+    .ResponsiveSidebarContainer > ul.ui-tabs-nav,
     .ResponsiveSidebarContainer > #NavigationContainer {
         background-color: #434242;
     }
@@ -2035,19 +2043,19 @@
         background-color: #676767;
     }
     body:not(.Visible-ScreenXL) .WidgetSimple div.Pagination a,
-    body:not(.Visible-ScreenXL) .OverviewActions div.Pagination a
+    body:not(.Visible-ScreenXL) .OverviewActions div.Pagination a,
     body:not(.Visible-ScreenXL) .WidgetSimple span.Pagination a,
     body:not(.Visible-ScreenXL) .OverviewActions span.Pagination a {
         background-color: #AAAAAA;
         color: #FFFFFF;
     }
     body:not(.Visible-ScreenXL) .WidgetSimple div.Pagination a.Selected,
-    body:not(.Visible-ScreenXL) .OverviewActions div.Pagination a.Selected
+    body:not(.Visible-ScreenXL) .OverviewActions div.Pagination a.Selected,
     body:not(.Visible-ScreenXL) .WidgetSimple span.Pagination a.Selected,
     body:not(.Visible-ScreenXL) .OverviewActions span.Pagination a.Selected {
         background-color: #555555;
     }
     .PreferencesScreen .Size1of3 > .WidgetSimple > .Header {
-        background: #E8E8E8;
+        background: #373737;
     }
 }

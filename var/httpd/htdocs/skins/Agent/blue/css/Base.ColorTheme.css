@@ -1832,9 +1832,18 @@
         color: #777777;
         background-color: #DDDDDD;
     }
+    .ResponsiveTabHandle {
+        background-color: #E3E3E3;
+    }
+    .ResponsiveTabHandle:hover {
+        background-color: #0A7CB3;
+        color: #FFFFFF;
+    }
+    div.ui-tabs > div.ResponsiveSidebarContainer,
     .ResponsiveSidebarContainer {
         background-color: rgba(22,22,22,0.7);
     }
+    .ResponsiveSidebarContainer > ul.ui-tabs-nav,
     .ResponsiveSidebarContainer > #NavigationContainer {
         background-color: #FFFFFF;
     }
