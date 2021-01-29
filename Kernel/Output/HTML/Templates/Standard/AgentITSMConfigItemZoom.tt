@@ -73,7 +73,7 @@
                 </ul>
             </div>
             <div id="ContentItemTabs">
-                <ul>
+                <ul id="ContentItemNavTabs">
 [% RenderBlockStart("DataTabDataLink") %]
                     <li><a href="[% Env("Baselink") %][% Data.Link %]" title="[% Data.Description | html %]">[% Translate(Data.Label) | html %] [% Data.LabelCount | html %]</a></li>
 [% RenderBlockEnd("DataTabDataLink") %]
