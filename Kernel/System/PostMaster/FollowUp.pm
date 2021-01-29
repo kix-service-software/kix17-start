@@ -413,8 +413,12 @@ sub Run {
         }
     }
 
-    # check if from is known customer AND has the same customerID as in Ticket
-    if ( $ConfigObject->Get('TicketStateWorkflow::PostmasterFollowUpCheckCustomerIDFrom') ) {
+    # check if from is known customer AND has the same customerID as in Ticket, if article type is not already set
+    if (
+        $ConfigObject->Get('TicketStateWorkflow::PostmasterFollowUpCheckCustomerIDFrom')
+        && !$GetParam{'X-KIX-FollowUp-ArticleType'}
+        && !$GetParam{'X-OTRS-FollowUp-ArticleType'}
+    ) {
         $GetParam{'X-KIX-FollowUp-ArticleType'} = 'email-internal';
         for my $FromAddress (@SplitFrom) {
             my $CustomerUserObject = $Kernel::OM->Get('Kernel::System::CustomerUser');
@@ -450,7 +454,7 @@ sub Run {
     # do db insert
     my $ArticleID = $TicketObject->ArticleCreate(
         TicketID         => $Param{TicketID},
-        ArticleType      => $GetParam{'X-KIX-FollowUp-ArticleType'} || $GetParam{'X-OTRS-FollowUp-ArticleType'},
+        ArticleType      => $GetParam{'X-KIX-FollowUp-ArticleType'} || $GetParam{'X-OTRS-FollowUp-ArticleType'} || 'email-external',
         SenderType       => $GetParam{'X-KIX-FollowUp-SenderType'} || $GetParam{'X-OTRS-FollowUp-SenderType'},
         From             => $GetParam{From},
         ReplyTo          => $GetParam{ReplyTo},
