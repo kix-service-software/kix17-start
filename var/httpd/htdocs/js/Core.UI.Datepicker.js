@@ -239,6 +239,11 @@ Core.UI.Datepicker = (function (TargetNS) {
                 }
                 // EO KIX4OTRS-capeIT
             }
+
+            // Check Used Element if available
+            if ( typeof Element.Used !== 'undefined' ) {
+                Element.Used.prop('checked', true);
+            }
         };
         // KIX4OTRS-capeIT
         // Options.beforeShow = function (Input) {
@@ -343,6 +348,12 @@ Core.UI.Datepicker = (function (TargetNS) {
                 var times = $(this).val().split(':');
                 Element.Hour.val(times[0]);
                 Element.Minute.val(times[1]);
+
+                // Check Used Element if available
+                if ( typeof Element.Used !== 'undefined' ) {
+                    Element.Used.prop('checked', true);
+                }
+
                 return false;
             });
         }
