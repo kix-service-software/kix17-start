@@ -1,6 +1,16 @@
 # Change log of KIX
 * Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.15.0-RC2 (2021/02/09)
+ * (2021/02/06) - CR: KIX17-1882 (set values for inactive out-of-office time to current date) (millinger)
+ * (2021/02/06) - CR: KIX17-1883 (mark selected debugger list entries) (millinger)
+ * (2021/02/06) - CR: KIX17-1884 (auto select checkbox on change for dynamic fields of type date or datetime) (millinger)
+ * (2021/02/05) - Bugfix: KIX17-1863 (dropdown dynamic fields show keys instead of values in AgentQuickTicketConfigurator) (millinger)
+ * (2021/02/04) - CR: KIX17-1685 (add ticket history for substitute notification) (millinger)
+ * (2021/01/25) - Bugfix: KIX17-1536 (fixed handling of system monitoring) (millinger)
+ * (2021/01/22) - CR: KIX17-1768 (wadl and wsdl for example webservices) (millinger)
+ * (2021/01/22) - CR: KIX17-434 (changed layout of tab navigation in responsive mode) (fjacquemin)
+
 # 17.15.0-RC1 (2021/01/20)
  * (2021/01/20) - Bugfix: KIX17-1737 (changed layout of the WidgetPopup) (fjacquemin)
  * (2021/01/18) - Bugfix: KIX17-566 (enable line folding after email crypt/sign with smime) (millinger)
