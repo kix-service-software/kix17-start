@@ -221,7 +221,9 @@ sub Run {
                     );
                     if ($ACL) {
                         my %Filter = $TicketObject->TicketAclData();
-                        $PossibleValuesFilter = \%Filter;
+
+                        # convert Filer key => key back to key => value using map
+                        %{$PossibleValues} = map { $_ => $PossibleValues->{$_} } keys %Filter;
                     }
                 }
             }
