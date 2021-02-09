@@ -106,20 +106,36 @@ sub Run {
     my $ParamObject   = $Kernel::OM->Get('Kernel::System::Web::Request');
     my $TimeObject    = $Kernel::OM->Get('Kernel::System::Time');
 
-    for my $Key (
-        qw(OutOfOffice OutOfOfficeStartYear OutOfOfficeStartMonth OutOfOfficeStartDay OutOfOfficeEndYear OutOfOfficeEndMonth OutOfOfficeEndDay)
-    ) {
-        $Param{$Key} = $ParamObject->GetParam( Param => $Key );
+    $Param{OutOfOffice} = $ParamObject->GetParam( Param => 'OutOfOffice' );
+
+    my $OutOfOfficeStartTime;
+    my $OutOfOfficeEndTime;
+    if ( $Param{OutOfOffice} ) {
+        for my $Key (
+            qw(OutOfOfficeStartYear OutOfOfficeStartMonth OutOfOfficeStartDay OutOfOfficeEndYear OutOfOfficeEndMonth OutOfOfficeEndDay)
+        ) {
+            $Param{$Key} = $ParamObject->GetParam( Param => $Key );
+        }
+
+        $OutOfOfficeStartTime = $TimeObject->TimeStamp2SystemTime(
+            String => "$Param{OutOfOfficeStartYear}-$Param{OutOfOfficeStartMonth}-$Param{OutOfOfficeStartDay} 00:00:00",
+        );
+        $OutOfOfficeEndTime = $TimeObject->TimeStamp2SystemTime(
+            String => "$Param{OutOfOfficeEndYear}-$Param{OutOfOfficeEndMonth}-$Param{OutOfOfficeEndDay} 00:00:00",
+        );
+    }
+    else {
+        for my $Key (
+            qw(OutOfOfficeStartYear OutOfOfficeStartMonth OutOfOfficeStartDay OutOfOfficeEndYear OutOfOfficeEndMonth OutOfOfficeEndDay)
+        ) {
+            $Param{$Key} = '';
+        }
     }
 
-    my $OutOfOfficeStartTime = $TimeObject->TimeStamp2SystemTime(
-        String => "$Param{OutOfOfficeStartYear}-$Param{OutOfOfficeStartMonth}-$Param{OutOfOfficeStartDay} 00:00:00",
-    );
-    my $OutOfOfficeEndTime = $TimeObject->TimeStamp2SystemTime(
-        String => "$Param{OutOfOfficeEndYear}-$Param{OutOfOfficeEndMonth}-$Param{OutOfOfficeEndDay} 00:00:00",
-    );
-
-    if ( $OutOfOfficeStartTime <= $OutOfOfficeEndTime ) {
+    if (
+        !$Param{OutOfOffice}
+        || $OutOfOfficeStartTime <= $OutOfOfficeEndTime
+    ) {
         for my $Key (
             qw(OutOfOffice OutOfOfficeStartYear OutOfOfficeStartMonth OutOfOfficeStartDay OutOfOfficeEndYear OutOfOfficeEndMonth OutOfOfficeEndDay)
         ) {

@@ -3884,6 +3884,7 @@ sub BuildDateSelection {
     # Add Datepicker JS to output.
     my $DatepickerJS = <<"END";
     Core.UI.Datepicker.Init({
+        Used: \$("#" + Core.App.EscapeSelector("$Prefix") + "Used"),
         Date: \$("#" + Core.App.EscapeSelector("$Prefix") + "Date"),
         Time: \$("#" + Core.App.EscapeSelector("$Prefix") + "Time"),
         Format: "$DateFormat",

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application xmlns="http://wadl.dev.java.net/2009/02">
+    <doc title="GenericCMDBConnectorREST" xml:lang="en">ITSM Configuration Management Connector REST Sample</doc>
+    <resources base="http://localhost/kix/nph-genericinterface.pl/Webservice/GenericCMDBConnectorREST">
+        <resource id="Session" path="/Session">
+            <doc title="Session" xml:lang="en">Retrieve a new session id value</doc>
+            <method id="POST_SessionCreate" name="POST">
+                <doc title="POST_SessionCreate" xml:lang="en"/>
+                <request>
+                    <doc title="Session" xml:lang="en">UserLogin or CustomerUserLogin is required. Password is required. For CMDB operations, session of agent is required</doc>
+                    <representation mediaType="application/json; charset=UTF-8">
+                        <param default="" name="UserLogin" required="false" style="query" type="xs:string" xmlns:xs="http://www.w3.org/2001/XMLSchema"/>
+                        <param default="" name="CustomerUserLogin" required="false" style="query" type="xs:string" xmlns:xs="http://www.w3.org/2001/XMLSchema"/>
+                        <param default="" name="Password" required="true" style="query" type="xs:string" xmlns:xs="http://www.w3.org/2001/XMLSchema"/>
+                    </representation>
+                </request>
+
+                <response status="500">
+                    <representation mediaType="text/plain; charset=UTF-8"/>
+                </response>
+                <response status="200">
+                    <representation mediaType="application/json; charset=UTF-8"/>
+                </response>
+            </method>
+        </resource>
+        <resource id="ConfigItem" path="/ConfigItem">
+            <doc title="ConfigItem" xml:lang="en">UserLogin or SessionID is required. If UserLogin is sent then Password is required. If SessionID is sent, it has to be user session.</doc>
+            <param default="" name="UserLogin" required="false" style="query" type="xs:string" xmlns:xs="http://www.w3.org/2001/XMLSchema"/>
+            <param default="" name="Password" required="false" style="query" type="xs:string" xmlns:xs="http://www.w3.org/2001/XMLSchema"/>
+            <param default="" name="SessionID" required="false" style="query" type="xs:string" xmlns:xs="http://www.w3.org/2001/XMLSchema"/>
+
+            <method id="POST_ConfigItemCreate" name="POST">
+                <doc title="POST_ConfigItemCreate" xml:lang="en">Perform ConfigItemCreate Operation. This will return the created ConfigItem ID and number. ConfigItem data, CIXMLData and Attachment parameters must be specified in request body in JSON format</doc>
+                <request>
+                    <representation mediaType="application/json; charset=UTF-8"/>
+                </request>
+
+                <response status="500">
+                    <representation mediaType="text/plain; charset=UTF-8"/>
+                </response>
+                <response status="200">
+                    <representation mediaType="application/json; charset=UTF-8"/>
+                </response>
+            </method>
+
+            <resource id="ConfigItemSearch" path="/Search">
+                <method id="POST_ConfigItemSearch" name="POST">
+                    <doc title="POST_ConfigItemSearch" xml:lang="en">Perform ConfigItemSearch Operation. This will return a ConfigItem ID list</doc>
+                    <request>
+                        <representation mediaType="application/json; charset=UTF-8"/>
+                    </request>
+    
+                    <response status="500">
+                        <representation mediaType="text/plain; charset=UTF-8"/>
+                    </response>
+                    <response status="200">
+                        <representation mediaType="application/json; charset=UTF-8"/>
+                    </response>
+                </method>
+            </resource>
+
+            <resource id="ConfigItemID" path="/{ConfigItemID}">
+                <method id="GET_ConfigItemGet" name="GET">
+                    <doc title="GET_ConfigItemGet" xml:lang="en">Perform ConfigItemGet Operation. This function is able to return one or more config item entries in one call</doc>
+                    <request>
+                        <param default="" name="ConfigItemID" required="true" style="template" type="xs:string" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+                            <doc title="ConfigItemID" xml:lang="en">Required, could be comma separated IDs</doc>
+                        </param>
+
+                        <param default="1" name="Attachments" required="false" style="query">
+                            <doc title="Attachments" xml:lang="en">Optional, 1 as default. If it's set with the value 1, attachments will be included on config item data</doc>
+
+                            <option value="0"/>
+                            <option value="1"/>
+                        </param>
+                    </request>
+
+                    <response status="500">
+                        <representation mediaType="text/plain; charset=UTF-8"/>
+                    </response>
+                    <response status="200">
+                        <representation mediaType="application/json; charset=UTF-8"/>
+                    </response>
+                </method>
+
+                <method id="PUT_ConfigItemUpdate" name="PUT">
+                    <doc title="PUT_ConfigItemUpdate" xml:lang="en">Perform ConfigItemUpdate Operation. This will return the updated ConfigItemID and number. ConfigItem data, CIXMLData and Attachment parameters must be specified in request body in JSON format</doc>
+                    <request>
+                        <param default="" name="ConfigItemID" required="true" style="template" type="xs:string" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+                            <doc title="ConfigItemID" xml:lang="en">Required</doc>
+                        </param>
+
+                        <representation mediaType="application/json; charset=UTF-8"/>
+                    </request>
+
+                    <response status="500">
+                        <representation mediaType="text/plain; charset=UTF-8"/>
+                    </response>
+                    <response status="200">
+                        <representation mediaType="application/json; charset=UTF-8"/>
+                    </response>
+                </method>
+            </resource>
+        </resource>
+    </resources>
+</application>

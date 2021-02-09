@@ -466,7 +466,6 @@
 
 
     /* Ticket creation screens */
-
     .ShowTreeSelection {
         display: none;
     }
@@ -642,7 +641,6 @@
 
 
     /* Widget Actions */
-
     .OverviewActions, .DashboardActions {
         position: relative;
     }
@@ -667,7 +665,6 @@
 
 
     /* Tables */
-
     .DataTable tr td,
     .TableSmall tr td {
         font-size: 14px;
@@ -877,7 +874,6 @@
 
 
     /* Errors */
-
     .MainBox.ErrorScreen {
         margin-top: 15px;
     }
@@ -888,7 +884,6 @@
 
 
     /* Preferences */
-
     .PreferencesScreen .LayoutGrid > .Size1of3 {
         width: auto;
         float: none;
@@ -964,7 +959,6 @@
 
 
     /* Admin Screen */
-
     .Admin > h1 {
         display: none;
     }
@@ -1081,7 +1075,6 @@
     }
 
 
-
     /*
      * @subsection Ticket Overview Medium
      */
@@ -1124,8 +1117,49 @@
     }
 
 
-    /* Popups */
+    /*
+     *   @subsection tab navigation
+     */
+    #ContentItemTabs {
+        position: relative;
+        padding-top: 40px;
+    }
+    .ResponsiveTabHandle {
+        position: absolute;
+        border-radius: 5px 5px 0 0;
+        top: 10px;
+        height: 20px;
+        width: 20px;
+        font-size: 20px;
+        left: 5px;
+        z-index: 1;
+    }
+    ul#ContentItemNavTabs {
+        left: -280px;
+        height: 100%;
+        position: static;
+        width: 280px;
+        overflow: auto;
+        padding-top: 80px;
+    }
+    .ui-tabs > .ResponsiveSidebarContainer > ul.ui-tabs-nav > li {
+        float: left;
+        display: block;
+        width: 100%;
+    }
+    .ui-tabs > .ResponsiveSidebarContainer > ul.ui-tabs-nav > li > a,
+    .ui-tabs > .ResponsiveSidebarContainer > ul.ui-tabs-nav > li > a:visited,
+    .ui-tabs > .ResponsiveSidebarContainer > ul.ui-tabs-nav > li > a:link {
+        display: block;
+        width: 100%;
+        border-radius: 0;
+        box-sizing: border-box;
+        margin: 0;
+        padding: 8px 15px;
+    }
 
+
+    /* Popups */
     .LayoutPopup fieldset.TableLike.FixedLabel > label,
     .LayoutPopup fieldset.TableLike.FixedLabel > .Row > label {
         width: auto;
@@ -1147,7 +1181,6 @@
 
 
     /* Statistics */
-
     .WidgetSimple .PreviewContainer .CallForAction {
         position: static;
         margin-top: 0px;
@@ -1169,7 +1202,6 @@
 
 
     /* Process dialogs */
-
     #ActivityDialogContent .LayoutPopup > .Content {
         padding: 0;
         border-top: 1px solid #ccc;
@@ -1302,7 +1334,6 @@
 
 
     /* Breadcrumb */
-
     .BreadCrumb {
         overflow-x: scroll;
         padding: 7px 0;

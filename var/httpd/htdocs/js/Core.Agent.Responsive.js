@@ -98,9 +98,14 @@ Core.Agent.Responsive = (function (TargetNS) {
         if ($('.SidebarColumn').children().length && !$('.SidebarColumn').closest('.ResponsiveSidebarContainer').length) {
             $('.SidebarColumn').wrap('<div class="ResponsiveSidebarContainer" />');
         }
+        // wrap navigation modules with an additional container
         if (!$('#NavigationContainer').closest('.ResponsiveSidebarContainer').length) {
             $('#NavigationContainer').wrap('<div class="ResponsiveSidebarContainer" />');
             $('#NavigationContainer').css('height', '100%');
+        }
+        // wrap nav tabs with an additional container
+        if (!$('#ContentItemNavTabs').closest('.ResponsiveSidebarContainer').length) {
+            $('#ContentItemNavTabs').wrap('<span class="ResponsiveSidebarContainer" />')
         }
         // wrap sidebar modules with an additional container
         if ($('.ContentColumn > .ActionRow').children().length && !$('.ContentColumn > .ActionRow').closest('.ResponsiveSidebarContainer').length) {
@@ -134,6 +139,9 @@ Core.Agent.Responsive = (function (TargetNS) {
         }
         if (!$('#ResponsiveNavigationHandle').length) {
             $('#NavigationContainer').closest('.ResponsiveSidebarContainer').before('<span class="ResponsiveHandle" id="ResponsiveNavigationHandle"><i class="fa fa-navicon"></i></span>');
+        }
+        if (!$('#ResponsiveTabHandle').length) {
+            $('#ContentItemNavTabs').closest('.ResponsiveSidebarContainer').before('<span class="ResponsiveHandle ResponsiveTabHandle" id="ResponsiveTabHandle"><i class="fa fa-navicon"></i></span>');
         }
         if (!$('#ResponsiveTicketMenuHandle').length) {
             $('.ContentColumn .ActionRow').closest('.ResponsiveSidebarContainer').before('<span class="ResponsiveHandle ResponsiveMenuHandle" id="ResponsiveTicketMenuHandle"><i class="fa fa-ellipsis-v"></i></span>');
@@ -244,6 +252,46 @@ Core.Agent.Responsive = (function (TargetNS) {
             return false;
         });
 
+        // add tab navigation expansion handling
+        $('.ResponsiveTabHandle').off().on('click', function() {
+            var $Element = $(this).next('.ResponsiveSidebarContainer').children('ul');
+            if (parseInt($Element.css('left'), 10) < 0) {
+                $('#ResponsiveNavigationHandle').animate({
+                    'left': '-45px'
+                });
+                $('#ResponsiveSidebarHandle').animate({
+                    'right': '-45px'
+                });
+                $Element.closest('.ResponsiveSidebarContainer').fadeIn();
+                $('html').addClass('NoScroll');
+                $Element.animate({
+                    'left': '0px'
+                });
+
+            }
+            else {
+                $('#ResponsiveNavigationHandle').animate({
+                    'left': '15px'
+                });
+                $('#ResponsiveSidebarHandle').animate({
+                    'right': '15px'
+                });
+                $Element.closest('.ResponsiveSidebarContainer').fadeOut();
+                $('html').removeClass('NoScroll');
+                $Element.animate({
+                    'left': '-280px'
+                });
+            }
+            return false;
+        });
+        if ( $('.ResponsiveTabHandle').length ) {
+            $( "#ContentItemTabs" ).on( "tabsbeforeload", function( event, ui ) {
+                if ( $('.ResponsiveTabHandle').length ) {
+                    $('.ResponsiveTabHandle').trigger('click');
+                }
+            } );
+        }
+
         // check if there are any changes in the sidebar that we should notify the user about
         Core.App.Subscribe('Event.Agent.CustomerSearch.GetCustomerInfo.Callback', function() {
             $('#ResponsiveSidebarHandle').after('<span class="ResponsiveHandle" id="ResponsiveSidebarNotification"><i class="fa fa-exclamation"></i></span>');
@@ -330,6 +378,7 @@ Core.Agent.Responsive = (function (TargetNS) {
 
         // remove the additional container again
         $('.ResponsiveSidebarContainer').children('#NavigationContainer').unwrap();
+        $('.ResponsiveSidebarContainer').children('#ContentItemNavTabs').unwrap();
         $.each($('.ResponsiveSidebarContainer').children('.SidebarColumn, .ActionRow, .LightRow'), function() {
             if ( $(this).css('left') === '-300px' ) {
                 $(this).css('left', '0px');
