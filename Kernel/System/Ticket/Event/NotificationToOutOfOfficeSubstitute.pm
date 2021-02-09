@@ -18,6 +18,7 @@ our @ObjectDependencies = (
     'Kernel::System::HTMLUtils',
     'Kernel::System::Log',
     'Kernel::System::Email',
+    'Kernel::System::Ticket',
     'Kernel::System::Time',
     'Kernel::System::User',
 );
@@ -40,6 +41,7 @@ sub new {
     $Self->{HTMLUtilsObject} = $Kernel::OM->Get('Kernel::System::HTMLUtils');
     $Self->{LogObject}       = $Kernel::OM->Get('Kernel::System::Log');
     $Self->{SendmailObject}  = $Kernel::OM->Get('Kernel::System::Email');
+    $Self->{TicketObject}    = $Kernel::OM->Get('Kernel::System::Ticket');
     $Self->{TimeObject}      = $Kernel::OM->Get('Kernel::System::Time');
     $Self->{UserObject}      = $Kernel::OM->Get('Kernel::System::User');
 
@@ -139,7 +141,7 @@ sub Run {
     );
 
     # send notification to substitute
-    $Self->{SendmailObject}->Send(
+    my $Success = $Self->{SendmailObject}->Send(
         From => $Self->{ConfigObject}->Get('NotificationSenderName') . ' <'
             . $Self->{ConfigObject}->Get('NotificationSenderEmail') . '>',
         To         => $SubstituteUser{UserEmail},
@@ -148,8 +150,18 @@ sub Run {
         Charset    => 'utf-8',
         Body       => $Notification{Body},
         Loop       => 1,
-        Attachment => $Param{Data}->{Attachments} || [],
+        Attachment => $Param{Data}->{Attachment} || [],
     );
+
+    if ( $Success ) {
+        # write history
+        $Self->{TicketObject}->HistoryAdd(
+            TicketID     => $Param{Data}->{TicketID},
+            HistoryType  => 'SendAgentNotification',
+            Name         => "\%\%$Notification{Name}\%\%$SubstituteUser{UserLogin} as Substitute\%\%Email",
+            CreateUserID => $Param{UserID},
+        );
+    }
 
     return 1;
 }
