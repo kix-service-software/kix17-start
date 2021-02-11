@@ -46,7 +46,7 @@
                         <label class="Mandatory" for="MainTicketNumber"><span class="Marker">*</span>[% Translate("Merge to") | html %] [% Config("Ticket::Hook") %]:</label>
                         <div class="Field">
                             <input id="MainTicketNumber" type="hidden" name="MainTicketNumber" value="" class="Validate_Required [% Data.MainTicketNumberInvalid %] W33pc"/>
-                            <input id="MainTicketNumberAutoComplete" type="text" name="MainTicketNumberAutoComplete" value="" class="AutocompleteOff Validate_Required"/>
+                            <input id="MainTicketNumberAutoComplete" type="text" name="MainTicketNumberAutoComplete" value="" class="AutocompleteOff W75pc Validate_Required"/>
                             <span alt="[% Translate("Loading") | html %]" class="Loader Hidden" id="QuickLinkLoading"></span>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
