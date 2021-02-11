@@ -20,10 +20,6 @@ Core.KIXBase = Core.KIXBase || {};
 Core.KIXBase.Customer = (function(TargetNS) {
 
     TargetNS.Init = function() {
-        // move UserInfo and NavigationContainer to Header
-        $('#UserInfo').detach().appendTo('#Header');
-        $('#NavigationContainer').detach().appendTo('#Header');
-
         // handle switch button
         $('#SwitchButtonDummyContainer > li.Last').remove();
         $('#SwitchButtonDummyContainer > li > a').html('<i class="fa fa-exchange"></i>');

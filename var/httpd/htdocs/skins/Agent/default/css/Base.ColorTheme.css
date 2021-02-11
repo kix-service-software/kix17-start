@@ -1815,6 +1815,9 @@
 *   Colors for responsive
 **/
 @media only screen and (min-width: 0px) and (max-width: 1024px) {
+    #UserInfo {
+        background-color: #FFFFFF;
+    }
     #ToolBar li a span.Counter {
         color: #AAAAAA;
     }
