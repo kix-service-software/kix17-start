@@ -10,29 +10,29 @@
 
 
 [% IF !Config("Secure::DisableBanner") %]
-<div id="Footer" class="ARIARoleContentinfo">
+        <div id="Footer" class="ARIARoleContentinfo">
 [% RenderBlockStart("CustomFooter") %]
-    <div class="CustomFooter">
-        <ul>
+            <div class="CustomFooter">
+                <ul>
 [% RenderBlockStart("CustomFooterEntry") %]
-            <li>
-                <a href="[% Data.URL %]"[% IF Data.Target %] target="[% Data.Target | html %]"[% END %] title="[% Data.Title %]">
-                    [% Data.Title %]
-                </a>
-            </li>
+                    <li>
+                        <a href="[% Data.URL %]"[% IF Data.Target %] target="[% Data.Target | html %]"[% END %] title="[% Data.Title %]">
+                            [% Data.Title %]
+                        </a>
+                    </li>
 [% RenderBlockEnd("CustomFooterEntry") %]
-        </ul>
-    </div>
+                </ul>
+            </div>
 [% RenderBlockEnd("CustomFooter") %]
-    <div class="TopOfPage">
-        <a href="#Top">[% Translate("Top of page") | html %]<i class="fa fa-arrow-circle-o-up"></i></a>
-    </div>
-    <div class="Clear">
-    </div>
-</div>
+            <div class="TopOfPage">
+                <a href="#Top">[% Translate("Top of page") | html %]<i class="fa fa-arrow-circle-o-up"></i></a>
+            </div>
+            <div class="Clear">
+            </div>
+        </div>
 [% END %]
 
 [% InsertTemplate("CustomerFooterJS.tt") %]
-
+    </div>
 </body>
 </html>
