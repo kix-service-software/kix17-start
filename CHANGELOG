@@ -1,6 +1,13 @@
 # Change log of KIX
 * Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.15.0-RC3 (2021/02/16)
+ * (2021/02/16) - Bugfix: KIX17-1848 (configuration to process untrusted email data) (millinger)
+ * (2021/02/11) - Bugfix: KIX17-1698 (keep backslash in query condition) (millinger)
+ * (2021/02/11) - Bugfix: KIX17-1330 (removed permission check for config item reference attribute) (millinger)
+ * (2021/02/10) - CR: KIX17-1888 (Entry field for the summary of AgentTicketMerge widened) (fjacquemin)
+ * (2021/02/10) - Bugfix: KIX17-1873 (fixed missing logout button in customer interface responsive mode) (fjacquemin)
+
 # 17.15.0-RC2 (2021/02/09)
  * (2021/02/06) - CR: KIX17-1882 (set values for inactive out-of-office time to current date) (millinger)
  * (2021/02/06) - CR: KIX17-1883 (mark selected debugger list entries) (millinger)
