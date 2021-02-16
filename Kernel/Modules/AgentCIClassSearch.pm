@@ -49,18 +49,6 @@ sub Run {
         Class => 'ITSM::ConfigItem::Class',
     );
 
-    # check for access rights on the classes
-    for my $ClassID ( sort keys %{$ClassList} ) {
-        my $HasAccess = $Self->{ConfigItemObject}->Permission(
-            Type    => 'ro',
-            Scope   => 'Class',
-            ClassID => $ClassID,
-            UserID  => $Self->{UserID} || 1,
-        );
-
-        delete $ClassList->{$ClassID} if !$HasAccess;
-    }
-
     my @ClassIDArray = ();
     if ($ClassID eq 'All') {
         @ClassIDArray = keys %{$ClassList};
