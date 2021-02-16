@@ -5668,6 +5668,8 @@ Ihr Helpdesk-Team
             'Wenn gesetzt, wird diese Adresse als Envelope-Sender-Header in ausgehenden Nachrichten (nicht Benachrichtigungen, siehe unten) genutzt. Ist keine Adresse angegeben, entspricht der Envelope-Sender der an der Queue hinterlegten E-Mail-Adresse.',
         'If this option is enabled, then the decrypted data will be stored in the database if they are displayed in AgentTicketZoom.' =>
             'Wenn diese Option aktiviert ist, werden die entschlüsselten Daten in der Datenbank gespeichert, wenn Sie beim ersten Aufruf des Artikels in AgentTicketZoom angezeigt werden.',
+        'If this option is enabled, then data of non verified signatures will be processed from email if they are displayed in AgentTicketZoom.' =>
+            'Wenn diese Option aktiviert ist, werden die Daten nicht vertrauenswürdiger Signaturen verarbeitet, wenn Sie beim ersten Aufruf des Artikels in AgentTicketZoom angezeigt werden.',
         'If this option is set to \'Yes\', tickets created via the web interface, via Customers or Agents, will receive an autoresponse if configured. If this option is set to \'No\', no autoresponses will be sent.' =>
             'Wenn für diese Einstellungen "Ja" gesetzt ist, werden für Tickets, die von Agenten oder Kunden über die Web-Oberfläche erstellt werden, automatische Antworten versandt (wenn vorhanden).',
         'If this regex matches, no message will be send by the autoresponder.' =>

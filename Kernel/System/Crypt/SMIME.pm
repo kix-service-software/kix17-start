@@ -475,13 +475,22 @@ sub Verify {
 
     # path to the cert, when self signed certs
     # specially for openssl 1.0
-    my $CertificateOption = '';
+    my @CertificateOption = ();
     if ( $Param{CACert} ) {
-        $CertificateOption = "-CAfile $Param{CACert}";
+        push( @CertificateOption, '-CAfile' );
+        push( @CertificateOption, $Param{CACert} );
+    }
+    if ( $Param{NoVerify} ) {
+        push( @CertificateOption, '-noverify' );
     }
 
-    my $Options = "smime -verify -in $SignedFile -out $VerifiedFile -signer $SignerFile "
-        . "-CApath $Self->{CertPath} $CertificateOption $SignedFile";
+    my $Options = 'smime -verify'
+                . ' -in ' . $SignedFile
+                . ' -out ' . $VerifiedFile
+                . ' -signer ' . $SignerFile
+                . ' -CApath ' . $Self->{CertPath}
+                . ' ' . join( ' ' , @CertificateOption )
+                . ' ' . $SignedFile;
 
     my @LogLines = qx{$Self->{Cmd} $Options 2>&1};
 

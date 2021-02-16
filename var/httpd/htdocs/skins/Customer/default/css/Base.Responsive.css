@@ -1,3 +1,17 @@
+/**
+ * This software is part of the KIX project, https://www.kixdesk.com/
+ * Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
+ * --
+ * @project KIX (https://www.kixdesk.com) <https://www.kixdesk.com> - Customer Frontend
+ * @copyright c.a.p.e. IT GmbH
+ * @license AGPL (https://www.gnu.org/licenses/agpl.txt) <https://www.gnu.org/licenses/agpl.txt>
+ * --
+ * This software comes with ABSOLUTELY NO WARRANTY. For details, see
+ * the enclosed file LICENSE for license information (AGPL). If you
+ * did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
+ *
+ */
+
 @media only screen {
     #ResponsiveCssLoaded {
         display: none;
@@ -120,7 +134,7 @@
     .TicketZoom,
     .Preferences,
     .Search {
-        padding: 110px 15px 5px;
+        padding: 20px 15px 5px;
         display: block;
     }
     #UserInfo {
@@ -128,6 +142,9 @@
         right: 10px;
         z-index: 9;
         text-align: right;
+        position: fixed;
+        width: 100%;
+        height: 20px;
     }
     .ResponsiveSidebarContainer {
         height: 100%;
@@ -526,7 +543,6 @@
 
 
     /* Widget Actions */
-
     .OverviewActions, .DashboardActions {
         position: relative;
     }
@@ -558,7 +574,6 @@
 
 
     /* Tables */
-
     .DataTable tr td,
     .TableSmall tr td {
         font-size: 14px;
@@ -712,7 +727,6 @@
     fieldset.TableLike > p.AdditionalInformationResponsive {
         display: block;
     }
-
     .Scroller {
         overflow-y:auto;
     }
@@ -767,10 +781,12 @@
         width: auto;
         float: none;
     }
+    #Messages {
+        z-index: 1;
+    }
 
 
     /* Errors */
-
     .MainBox.ErrorScreen {
         margin-top: 15px;
     }
@@ -789,7 +805,6 @@
 
 
     /* Popups */
-
     .LayoutPopup fieldset.TableLike.FixedLabel > label,
     .LayoutPopup fieldset.TableLike.FixedLabel > .Row > label {
         width: auto;
@@ -811,7 +826,6 @@
 
 
     /* Process dialogs */
-
     #ActivityDialogContent .LayoutPopup > .Content {
         padding: 0;
         border-top: 1px solid #ccc;
@@ -944,7 +958,6 @@
 
 
     /* Breadcrumb */
-
     .BreadCrumb {
         overflow-x: scroll;
         padding: 7px 0;
