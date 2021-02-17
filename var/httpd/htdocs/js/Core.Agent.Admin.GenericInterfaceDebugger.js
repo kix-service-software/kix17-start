@@ -122,7 +122,7 @@ Core.Agent.Admin.GenericInterfaceDebugger = (function (TargetNS) {
             $('#RequestList tbody').html(HTML);
 
             $('#RequestList a').bind('click', function() {
-                $('#RequestList').removeClass('Active');
+                $('#RequestList').find('tr').removeClass('Active');
                 var CommunicationID = $(this).blur().parents('tr').addClass('Active').find('input.CommunicationID').val();
 
                 TargetNS.LoadCommunicationDetails(CommunicationID);
