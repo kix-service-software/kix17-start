@@ -679,7 +679,7 @@ sub LogSearch {
         push @Bind, \$Param{CreatedAtOrBefore};
     }
 
-    $SQLExt .= ' ORDER BY create_time ASC';
+    $SQLExt .= ' ORDER BY create_time, communication_id ASC';
 
     # get database object
     my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
