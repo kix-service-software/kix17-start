@@ -787,6 +787,7 @@
         margin-right: 15px;
         padding-left: 2px;
     }
+    button.ArrowDown[disabled="disabled"],
     button.ArrowUp[disabled="disabled"] {
         cursor: default;
     }
