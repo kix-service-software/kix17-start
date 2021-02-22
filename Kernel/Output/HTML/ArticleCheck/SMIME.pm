@@ -331,8 +331,6 @@ sub Check {
                         );
                     }
                 }
-
-                return @Return;
             }
             else {
                 push(
@@ -346,7 +344,7 @@ sub Check {
             }
         }
 
-        if (
+        elsif (
             $ContentType
             && $ContentType =~ /application\/(x-pkcs7|pkcs7)/i
             && $ContentType =~ /signed/i
