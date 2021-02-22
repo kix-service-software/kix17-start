@@ -444,6 +444,7 @@ sub EditFieldRender {
     my $ContainerFieldName    = $FieldName . "_Container";
     my $DisplayFieldName      = $FieldName . "_Display";
     my $IDCounterName         = $FieldName . "_IDCount";
+    my $LoaderFieldName       = $FieldName . "_Loader";
     my $ValidateFieldName     = $FieldName . "_Validate";
     my $ValueFieldName        = $FieldName . "_";
 
@@ -488,6 +489,7 @@ sub EditFieldRender {
     <input id="$FieldName" type="text" style="display:none;" />
     <div class="InputField_Container W50pc">
         <input id="$AutoCompleteFieldName" type="text" style="margin-bottom:2px;" />
+        <span id="$LoaderFieldName" class="AJAXLoader" style="display:none;"></span>
         <div class="Clear"></div>
         <div id="$ContainerFieldName" class="InputField_InputContainer" style="display:block;">
 END
@@ -746,6 +748,7 @@ sub SearchFieldRender {
     my $AutoCompleteFieldName = $FieldName . "_AutoComplete";
     my $ContainerFieldName    = $FieldName . "_Container";
     my $DisplayFieldName      = $FieldName . "_Display";
+    my $LoaderFieldName       = $FieldName . "_Loader";
     my $IDCounterName         = $FieldName . "_IDCount";
     my $ValueFieldName        = $FieldName . "_";
 
@@ -756,6 +759,7 @@ sub SearchFieldRender {
     my $HTMLString = <<"END";
     <div class="InputField_Container W50pc">
         <input id="$AutoCompleteFieldName" type="text" style="margin-bottom:2px;" />
+        <span id="$LoaderFieldName" class="AJAXLoader" style="display:none;"></span>
         <div class="Clear"></div>
         <div id="$ContainerFieldName" class="InputField_InputContainer" style="display:block;">
 END
