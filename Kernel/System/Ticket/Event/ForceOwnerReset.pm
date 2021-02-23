@@ -54,6 +54,19 @@ sub Run {
     # get ticket object
     my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
 
+    # reset protection: check if owner was just set, dont reset directly
+    my $CacheKey = '_ForceOwnerReset::OwnerUpdate';
+    return 1 if ( $TicketObject->{$CacheKey}->{ $Param{Data}->{TicketID} } );
+
+    if ( $Param{Event} eq 'TicketOwnerUpdate' ) {
+
+        # Remember that owner was just set
+        #   Store the information on the ticketobject
+        $TicketObject->{$CacheKey}->{ $Param{Data}->{TicketID} } = 1;
+
+        return 1;
+    }
+
     # reset owner
     $TicketObject->TicketOwnerSet(
         TicketID           => $Param{Data}->{TicketID},
