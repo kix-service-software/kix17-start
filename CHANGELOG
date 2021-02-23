@@ -1,6 +1,17 @@
 # Change log of KIX
 * Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.15.0-RC4 (2021/02/23)
+ * (2021/02/19) - Bugfix: KIX17-1722 (implemented lookup for specific attributes in filter preparation) (millinger)
+ * (2021/02/19) - Bugfix: KIX17-1449 (fixed column filter for virtual queues in queue view) (millinger)
+ * (2021/02/19) - Bugfix: KIX17-1851 (removed direct usage of document.location in customer login) (millinger)
+ * (2021/02/18) - CR: KIX17-1923 (added loading spinner for autocomplete fields) (millinger)
+ * (2021/02/18) - Bugfix: KIX17-1922 (check if owner is set on queue move at ForceOwnerResetOnMove) (millinger)
+ * (2021/02/18) - Bugfix: KIX17-1737 (removed css class CanDrag from BulkTextModules sidebar) (fjacquemin)
+ * (2021/02/18) - Bugfix: KIX17-1777 (fixed missing css of disabled arrow down in ImportExport) (fjacquemin)
+ * (2021/02/17) - CR: KIX17-1921 (webservice debugger sort order corrected) (millinger)
+ * (2021/02/17) - Bugfix: KIX17-1848 (decrypting smime returned before adding message about signature) (millinger)
+
 # 17.15.0-RC3 (2021/02/16)
  * (2021/02/16) - Bugfix: KIX17-1848 (configuration to process untrusted email data) (millinger)
  * (2021/02/11) - Bugfix: KIX17-1698 (keep backslash in query condition) (millinger)
