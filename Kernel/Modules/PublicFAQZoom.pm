@@ -167,6 +167,13 @@ sub Run {
             String => $FieldContent,
         );
 
+        # set target="_blank" attribute to all HTML <a> tags
+        # the LinkQuote function needs to be called again
+        $FieldContent = $HTMLUtilsObject->LinkQuote(
+            String    => $FieldContent,
+            TargetAdd => 1,
+        );
+
         # add needed HTML headers
         $FieldContent = $HTMLUtilsObject->DocumentComplete(
             String  => $FieldContent,
@@ -366,6 +373,13 @@ sub Run {
                 },
             );
         }
+    }
+
+    # show message about links in iframes, if user didn't close it already, or sandbox is disabled
+    if ( !$ConfigObject->Get('FAQ::Frontend::PublicDisableSandbox') ) {
+        $LayoutObject->Block(
+            Name => 'BrowserLinkMessage',
+        );
     }
 
     # show FAQ Content

@@ -3620,6 +3620,15 @@ sub Data {
         =
         'Setzt die maximale Höhe (in Pixeln) von Inline-HTML-Felder in CustomerFAQZoom (und PublicFAQZoom).';
     $Self->{Translation}
+        ->{'Disable sandbox-attribute for the FAQ content (AgentFAQZoom and AgentFAQZoomSmall). Disabling this attribute can be a security issue!'}
+        =
+        'Deaktiviert das sandbox-Attribut für den FAQ-Inhalt (AgentFAQZoom und AgentFAQZoomSmall). Die Deaktivierung kann ein Sicherheitsthema sein!';
+    $Lang->{
+        'Disable sandbox-attribute for the FAQ content (CustomerFAQZoom and PublicFAQZoom). Disabling this attribute can be a security issue!'
+        }
+        =
+        'Deaktiviert das sandbox-Attribut für den FAQ-Inhalt (CustomerFAQZoom und PublicFAQZoom). Die Deaktivierung kann ein Sicherheitsthema sein!';
+    $Self->{Translation}
         ->{'Show "Insert FAQ Link" Button in AgentFAQZoomSmall for public FAQ Articles.'}
         =
         'Zeigt die Schaltfläche "FAQ-Link einfügen" in AgentFAQZoomSmall für öffentliche FAQ-Artikel an.';
