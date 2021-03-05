@@ -1289,12 +1289,12 @@ sub Data {
         = 'Mehr als 100 Knoten sind nicht möglich (aktuelle Anzahl: %s)!';
     $Lang->{'Opens the graph in a separate window.'}
         = 'Öffnet den Graphen in einem separaten Fenster.';
-    $Lang->{'Defines the display name for an link graph template. The key is used with the same notation in all following preferences.'} = 'Legt den Anzeigename einer Vorlage für den Verknüpfungsgraph fest. Der Schlüssel wird in den folgenden Einstellungen in der gleichen Schreibweise verwendet.';    
-    $Lang->{'Defines the needed permission for an link graph template. Key has to be the same defined in CIGraphConfigTemplate###Name.'} = 'Legt die Berechtigungen einer Vorlage für den Verknüpfungsgraph fest. Der Schlüssel muss der gleiche sein, wie unter CIGraphConfigTemplate###Name festgelegt.';    
-    $Lang->{'Defines the maximum link depth for an link graph template. Key has to be the same defined in CIGraphConfigTemplate###Name.'} = 'Legt die Verknüpfungstiefe einer Vorlage für den Verknüpfungsgraph fest. Der Schlüssel muss der gleiche sein, wie unter CIGraphConfigTemplate###Name festgelegt.';    
-    $Lang->{'Defines the relevant link types for an object graph template.  Key has to be the same defined in CIGraphConfigTemplate###Name.'} = 'Legt die relevanten Linktypen einer Vorlage für den Verknüpfungsgraph fest. Der Schlüssel muss der gleiche sein, wie unter CIGraphConfigTemplate###Name festgelegt.';    
-    $Lang->{'Defines the relevant object sub types for an link graph template.  Key has to be the same defined in CIGraphConfigTemplate###Name.'} = 'Legt die relevanten Sub-Typen (Klassen) einer Vorlage für den Verknüpfungsgraph fest. Der Schlüssel muss der gleiche sein, wie unter CIGraphConfigTemplate###Name festgelegt.';    
-    $Lang->{'Defines adjusting strength for an link graph template. Key has to be the same defined in CIGraphConfigTemplate###Name.'} = 'Legt die Ausrichtungsstärke einer Vorlage für den Verknüpfungsgraph fest. Der Schlüssel muss der gleiche sein, wie unter CIGraphConfigTemplate###Name festgelegt.';    
+    $Lang->{'Defines the display name for an link graph template. The key is used with the same notation in all following preferences.'} = 'Legt den Anzeigename einer Vorlage für den Verknüpfungsgraph fest. Der Schlüssel wird in den folgenden Einstellungen in der gleichen Schreibweise verwendet.';
+    $Lang->{'Defines the needed permission for an link graph template. Key has to be the same defined in CIGraphConfigTemplate###Name.'} = 'Legt die Berechtigungen einer Vorlage für den Verknüpfungsgraph fest. Der Schlüssel muss der gleiche sein, wie unter CIGraphConfigTemplate###Name festgelegt.';
+    $Lang->{'Defines the maximum link depth for an link graph template. Key has to be the same defined in CIGraphConfigTemplate###Name.'} = 'Legt die Verknüpfungstiefe einer Vorlage für den Verknüpfungsgraph fest. Der Schlüssel muss der gleiche sein, wie unter CIGraphConfigTemplate###Name festgelegt.';
+    $Lang->{'Defines the relevant link types for an object graph template.  Key has to be the same defined in CIGraphConfigTemplate###Name.'} = 'Legt die relevanten Linktypen einer Vorlage für den Verknüpfungsgraph fest. Der Schlüssel muss der gleiche sein, wie unter CIGraphConfigTemplate###Name festgelegt.';
+    $Lang->{'Defines the relevant object sub types for an link graph template.  Key has to be the same defined in CIGraphConfigTemplate###Name.'} = 'Legt die relevanten Sub-Typen (Klassen) einer Vorlage für den Verknüpfungsgraph fest. Der Schlüssel muss der gleiche sein, wie unter CIGraphConfigTemplate###Name festgelegt.';
+    $Lang->{'Defines adjusting strength for an link graph template. Key has to be the same defined in CIGraphConfigTemplate###Name.'} = 'Legt die Ausrichtungsstärke einer Vorlage für den Verknüpfungsgraph fest. Der Schlüssel muss der gleiche sein, wie unter CIGraphConfigTemplate###Name festgelegt.';
 
     # ITSMConfigItemEvents
     $Lang->{
@@ -3620,6 +3620,15 @@ sub Data {
         =
         'Setzt die maximale Höhe (in Pixeln) von Inline-HTML-Felder in CustomerFAQZoom (und PublicFAQZoom).';
     $Self->{Translation}
+        ->{'Disable sandbox-attribute for the FAQ content (AgentFAQZoom and AgentFAQZoomSmall). Disabling this attribute can be a security issue!'}
+        =
+        'Deaktiviert das sandbox-Attribut für den FAQ-Inhalt (AgentFAQZoom und AgentFAQZoomSmall). Die Deaktivierung kann ein Sicherheitsthema sein!';
+    $Lang->{
+        'Disable sandbox-attribute for the FAQ content (CustomerFAQZoom and PublicFAQZoom). Disabling this attribute can be a security issue!'
+        }
+        =
+        'Deaktiviert das sandbox-Attribut für den FAQ-Inhalt (CustomerFAQZoom und PublicFAQZoom). Die Deaktivierung kann ein Sicherheitsthema sein!';
+    $Self->{Translation}
         ->{'Show "Insert FAQ Link" Button in AgentFAQZoomSmall for public FAQ Articles.'}
         =
         'Zeigt die Schaltfläche "FAQ-Link einfügen" in AgentFAQZoomSmall für öffentliche FAQ-Artikel an.';
@@ -4594,6 +4603,10 @@ sub Data {
     # TicketZoom Browsertitle
     $Lang->{'Defines the browser title of the ticket zoom. It is possible to use KIX placeholder.'}
         = 'Definiert den Browsertitel der Ticketansicht. Es ist möglich KIX-Platzhalter zu verwenden.';
+
+    # PreSort/PreOrder
+    $Lang->{'Pre-Sort by'}              = 'Vorsortieren nach';
+    $Lang->{'Direction of pre-sorting'} = 'Sortierrichtung der Vorsortierung';
 
     return 0;
 }

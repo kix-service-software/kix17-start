@@ -6349,6 +6349,11 @@ sub _BuildCustomHighlight{
             if ( $View eq 'Large' ) {
                 $Selector = 'Flag span.' . $Selector;
             }
+            else {
+                $Selector .= ', .'
+                    . $Selector
+                    . ' a';
+            }
 
             $Self->Block(
                 Name => 'CustomTicketHighlight',

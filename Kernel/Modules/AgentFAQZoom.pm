@@ -595,7 +595,10 @@ sub Run {
     }
 
     # show message about links in iframes, if user didn't close it already
-    if ( !$Self->{DoNotShowBrowserLinkMessage} ) {
+    if (
+        !$ConfigObject->Get('FAQ::Frontend::AgentDisableSandbox')
+        && !$Self->{DoNotShowBrowserLinkMessage}
+    ) {
         $LayoutObject->Block(
             Name => 'BrowserLinkMessage',
         );

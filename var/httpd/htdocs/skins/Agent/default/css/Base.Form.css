@@ -64,15 +64,12 @@
         width: 30%;
         text-align: right;
         min-height: 17px;
-        padding-top: 8px;
+        padding-top: 13px;
         padding-bottom: 1px;
         font-weight: bold;
         position: relative;
         text-overflow: ellipsis;
         overflow: hidden;
-    }
-    fieldset.TableLike > .Row > label {
-        padding-top: 3px;
     }
     fieldset.TableLike > label.SubElement {
         width: 40%;
@@ -87,17 +84,13 @@
     fieldset.TableLike > .Field,
     fieldset.TableLike > .Row > .Field {
         line-height: 1.0em;
-        margin: 5px 0 0 30%;
-        padding: 3px 0 3px 5px;
+        margin: 0 0 0 30%;
+        padding: 8px 0 0px 5px;
         min-height: 20px;
     }
     fieldset.TableLike > .EndOfForm,
     fieldset.TableLike > .Row > .EndOfForm {
         margin-top: 20px;
-    }
-    fieldset.TableLike > .Field > :first-child,
-    fieldset.TableLike > .Row > .Field > :first-child {
-        margin-top: -5px;
     }
     fieldset.TableLike > .Field > .Size1of2,
     fieldset.TableLike > .Row > .Field > .Size1of2 {
@@ -116,14 +109,18 @@
     fieldset.TableLike > .Field.SubElement input.W50pc {
         width: 33%;
     }
-    fieldset.TableLike > .Field.Options {
-        padding-top: 8px;
-    }
     fieldset.TableLike > .Field.Options a {
         border-width: 1px;
         border-style: solid;
         padding: 3px 8px;
         margin-right: 5px;
+        display: inline-block;
+    }
+    fieldset.TableLike > .Field > input[id$='Used'],
+    fieldset.TableLike > .Row > .Field > input[id$='Used'] {
+        margin-top: 0;
+        position: relative;
+        top: 3px;
     }
     fieldset.TableLike > .Field > input[id$='Date'],
     fieldset.TableLike > .Row > .Field > input[id$='Date'] {
@@ -359,6 +356,14 @@
         display: inline-block;
         vertical-align: middle;
     }
+    .ValueRow {
+        margin-bottom: 2px;
+    }
+    #AddValue.AddButton,
+    #AddRegEx.AddButton {
+        position: relative;
+        top: 4px;
+    }
     .AddButton,
     .RemoveButton {
         font-size: 14px;
@@ -424,12 +429,11 @@
     */
     .DatepickerIcon {
         font-size: 14px;
-        padding-top: 1px;
         margin: 1px 0 0 4px;
         height: 16px;
         width: 16px;
         display: inline-block;
-        vertical-align: top;
+        vertical-align: middle;
     }
 
 
