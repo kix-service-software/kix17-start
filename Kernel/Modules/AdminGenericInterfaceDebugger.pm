@@ -87,6 +87,7 @@ sub _ShowScreen {
 
     # get layout object
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $TimeObject   = $Kernel::OM->Get('Kernel::System::Time');
 
     my $Output = $LayoutObject->Header();
     $Output .= $LayoutObject->NavigationBar();
@@ -115,13 +116,29 @@ sub _ShowScreen {
         Class        => 'Modernize',
     );
 
+    # get current data of current time
+    my ($Sec, $Min, $Hour, $Day, $Month, $Year, $WeekDay) = $TimeObject->SystemTime2Date(
+        SystemTime => $TimeObject->SystemTime(),
+    );
+
     my $FilterFromStrg = $LayoutObject->BuildDateSelection(
-        Prefix   => 'FilterFrom',
-        DiffTime => -60 * 60 * 24 * 356,
+        Prefix           => 'FilterFrom',
+        FilterFromYear   => $Year,
+        FilterFromMonth  => $Month,
+        FilterFromDay    => $Day,
+        FilterFromHour   => 0,
+        FilterFromMinute => 0,
+        FilterFromSecond => 0,
     );
 
     my $FilterToStrg = $LayoutObject->BuildDateSelection(
-        Prefix => 'FilterTo',
+        Prefix         => 'FilterTo',
+        FilterToYear   => $Year,
+        FilterToMonth  => $Month,
+        FilterToDay    => $Day,
+        FilterToHour   => 23,
+        FilterToMinute => 59,
+        FilterToSecond => 59,
     );
 
     $Output .= $LayoutObject->Output(
