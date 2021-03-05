@@ -213,9 +213,11 @@ sub new {
         $Self->{Filter} = $Self->{$PreferencesKey} || $Self->{Config}->{Filter} || 'All';
     }
 
-    $Self->{PrefKeyShown}   = 'UserDashboardPref' . $Self->{Name} . '-Shown';
-    $Self->{PrefKeyColumns} = 'UserDashboardPref' . $Self->{Name} . '-Columns';
-    $Self->{PageShown}      = $Kernel::OM->Get('Kernel::Output::HTML::Layout')->{ $Self->{PrefKeyShown} }
+    $Self->{PrefKeyPreSort}  = 'UserDashboardPref' . $Self->{Name} . '-PreSort';
+    $Self->{PrefKeyPreOrder} = 'UserDashboardPref' . $Self->{Name} . '-PreOrder';
+    $Self->{PrefKeyShown}    = 'UserDashboardPref' . $Self->{Name} . '-Shown';
+    $Self->{PrefKeyColumns}  = 'UserDashboardPref' . $Self->{Name} . '-Columns';
+    $Self->{PageShown}       = $Kernel::OM->Get('Kernel::Output::HTML::Layout')->{ $Self->{PrefKeyShown} }
         || $Self->{Config}->{Limit};
     $Self->{StartHit} = int( $ParamObject->GetParam( Param => 'StartHit' ) || 1 );
 
@@ -267,6 +269,23 @@ sub new {
         'EscalationUpdateTime'   => 1,
         'EscalationResponseTime' => 1,
         'EscalationSolutionTime' => 1,
+    };
+
+    # hash with all valid pre sortable columns (taken from TicketSearch)
+    # SortBy  => 'Priority',   # Owner|Responsible|CustomerID|State|Queue
+    # |Priority|Type|Lock|Service|SLA
+    $Self->{PreSortableColumns} = {
+        ''            => '-',
+        'Owner'       => 'Owner',
+        'Responsible' => 'Responsible',
+        'CustomerID'  => 'CustomerID',
+        'State'       => 'State',
+        'Queue'       => 'Queue',
+        'Priority'    => 'Priority',
+        'Type'        => 'Type',
+        'Lock'        => 'Lock',
+        'Service'     => 'Service',
+        'SLA'         => 'SLA',
     };
 
     # remove CustomerID if Customer Information Center
@@ -328,6 +347,38 @@ sub new {
             UserID => $Self->{UserID},
             Key    => 'UserDashboardPref' . $Self->{Name} . '-SortBy',
             Value  => $Self->{SortBy},
+        );
+    }
+
+    if ( !$Self->{PreSort} ) {
+        my %SearchParams = $Self->_SearchParamsGet(%Param);
+        my $PreSort      = $Self->{PreSortableColumns}->{$Self->{Config}->{PreSortDefault}} ? $Self->{Config}->{PreSortDefault} : '';
+
+        $Self->{PreSort} = $SearchParams{TicketSearch}->{PreSort}
+            || $Preferences{ $Self->{PrefKeyPreSort} }
+            || $PreSort
+            || '';
+    }
+    else {
+        $UserObject->SetPreferences(
+            UserID => $Self->{UserID},
+            Key    => $Self->{PrefKeyPreSort},
+            Value  => $Self->{PreSort},
+        );
+    }
+
+    if ( !$Self->{PreOrder} ) {
+        my %SearchParams  = $Self->_SearchParamsGet(%Param);
+        $Self->{PreOrder} = $SearchParams{TicketSearch}->{PreOrder}
+            || $Preferences{ $Self->{PrefKeyPreOrder} }
+            || $Self->{Config}->{PreOrderDefault}
+            || 'Down';
+    }
+    else {
+        $UserObject->SetPreferences(
+            UserID => $Self->{UserID},
+            Key    => $Self->{PrefKeyPreOrder},
+            Value  => $Self->{PreOrder},
         );
     }
 
@@ -562,6 +613,25 @@ sub Preferences {
             Translation => 0,
         },
         {
+            Desc  => Translatable('Pre-Sort by'),
+            Name  => $Self->{PrefKeyPreSort},
+            Block => 'Option',
+            Data  => $Self->{PreSortableColumns},
+            SelectedID   => $Self->{PreSort} || '',
+            Translation  => 1,
+        },
+        {
+            Desc  => Translatable('Direction of pre-sorting'),
+            Name  => $Self->{PrefKeyPreOrder},
+            Block => 'Option',
+            Data  => {
+                'Down' => 'Down',
+                'Up' => 'Up'
+            },
+            SelectedID  => $Self->{PreOrder},
+            Translation => 1,
+        },
+        {
             Desc             => Translatable('Shown Columns'),
             Name             => $Self->{PrefKeyColumns},
             Block            => 'AllocationList',
@@ -604,6 +674,10 @@ sub FilterContent {
 
     return if !$Param{FilterColumn};
 
+    # get needed objects
+    my $TicketObject       = $Kernel::OM->Get('Kernel::System::Ticket');
+    my $DynamicFieldObject = $Kernel::OM->Get('Kernel::System::DynamicField');
+
     my $TicketIDs;
     my $HeaderColumn = $Param{FilterColumn};
     my @OriginalViewableTickets;
@@ -628,9 +702,20 @@ sub FilterContent {
             !$Self->{Config}->{IsProcessWidget}
             || IsArrayRefWithData( $Self->{ProcessList} )
         ) {
-            @OriginalViewableTickets = $Kernel::OM->Get('Kernel::System::Ticket')->TicketSearch(
-                %TicketSearch,
-                %{ $TicketSearchSummary{ $Self->{Filter} } },
+
+            my $PreparedFilter = $TicketObject->FilterPrepare(
+                FilterArray   => [
+                    \%TicketSearch,
+                    $TicketSearchSummary{ $Self->{Filter} },
+                ]
+            );
+
+            $Self->_PreSortSet(
+                Filter => $PreparedFilter
+            );
+
+            @OriginalViewableTickets = $TicketObject->TicketSearch(
+                %{$PreparedFilter},
                 Result => 'ARRAY',
             );
         }
@@ -639,7 +724,7 @@ sub FilterContent {
     if ( $HeaderColumn =~ m/^DynamicField_/ && !defined $Self->{DynamicField} ) {
 
         # get the dynamic fields for this screen
-        $Self->{DynamicField} = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
+        $Self->{DynamicField} = $DynamicFieldObject->DynamicFieldListGet(
             Valid      => 0,
             ObjectType => ['Ticket','Article'],
         );
@@ -1358,6 +1443,8 @@ sub Run {
 
     $CacheKey .= '-' . $Self->{SortBy}  if defined $Self->{SortBy};
     $CacheKey .= '-' . $Self->{OrderBy} if defined $Self->{OrderBy};
+    $CacheKey .= '-' . $Self->{PreSort} if defined $Self->{PreSort} && $Self->{PreSort};
+    $CacheKey .= '-' . $Self->{PreOrder} if defined $Self->{PreOrder} && $Self->{PreSort};
 
     # CustomerInformationCenter shows data per CustomerID
     if ( $Param{CustomerID} ) {
@@ -1433,6 +1520,10 @@ sub Run {
                 ]
             );
 
+            $Self->_PreSortSet(
+                Filter => $PreparedFilter
+            );
+
             if ( $PreparedFilter ) {
                 @TicketIDsArray = $TicketObject->TicketSearch(
                     Result => 'ARRAY',
@@ -1479,8 +1570,11 @@ sub Run {
                     ]
                 );
 
-                if ( $PreparedFilter ) {
+                $Self->_PreSortSet(
+                    Filter => $PreparedFilter
+                );
 
+                if ( $PreparedFilter ) {
                     $Summary->{$Type} = $TicketObject->TicketSearch(
                         Result => 'COUNT',
                         %{$PreparedFilter}
@@ -1607,6 +1701,8 @@ sub Run {
         . ';Filter=' . $Self->{Filter}
         . ';SortBy=' .  ( $Self->{SortBy}  || '' )
         . ';OrderBy=' . ( $Self->{OrderBy} || '' )
+        . ';PreSort=' . ( $Self->{PreSort} || '' )
+        . ';PreOrder=' . ( $Self->{PreOrder} || '' )
         . $ColumnFilterLink
         . ';';
 
@@ -3218,6 +3314,32 @@ sub _DefaultColumnSort {
 
     # otherwise do a numerical comparison with the ticket attributes
     return $DefaultColumns{$a} <=> $DefaultColumns{$b};
+}
+
+sub _PreSortSet{
+    my ($Self, %Param) = @_;
+
+    my $Filter = $Param{Filter};
+
+    if (
+        defined $Self->{PreSort}
+        && $Self->{PreSort}
+    ) {
+        my @SortBy  = ( $Self->{PreSort} );
+        my @OrderBy = ( $Self->{PreOrder} );
+
+        if (
+            defined $Filter->{SortBy}
+            && $Filter->{SortBy}
+        ) {
+            push( @SortBy, $Filter->{SortBy} );
+            push( @OrderBy, $Filter->{OrderBy} );
+        }
+        $Filter->{SortBy}  = \@SortBy;
+        $Filter->{OrderBy} = \@OrderBy;
+    }
+
+    return 1;
 }
 
 1;

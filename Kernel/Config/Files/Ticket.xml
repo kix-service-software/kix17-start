@@ -5435,7 +5435,7 @@
                 <Item Key="1" Translatable="1">Yes</Item>
             </Option>
         </Setting>
-    </ConfigItem>    
+    </ConfigItem>
     <ConfigItem Name="Frontend::KIXSidebarBackend###BulkTextModules" Required="0" Valid="1">
         <Description Translatable="1">Parameters for the KIXSidebar backend BulkTextModules.</Description>
         <Group>Ticket</Group>
@@ -7186,7 +7186,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="DashboardBackend###0100-TicketPendingReminder" Required="0" Valid="1">
-        <Description Translatable="1">Parameters for the dashboard backend of the ticket pending reminder overview of the agent interface . "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin. Note: Only Ticket attributes and Dynamic Fields (DynamicField_NameX) are allowed for DefaultColumns. Possible settings: 0 = Disabled, 1 = Available, 2 = Enabled by default.</Description>
+        <Description Translatable="1">Parameters for the dashboard backend of the ticket pending reminder overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin. Note: Only Ticket attributes and Dynamic Fields (DynamicField_NameX) are allowed for DefaultColumns. Possible settings: 0 = Disabled, 1 = Available, 2 = Enabled by default. "PreSortDefault" defines the presorting of the list. (Permitted attributes: State, Type, Owner, Responsible, CustomerID, Lock, Service, SLA) "PreOrderDefault" defines the sorting direction of the presorting. (Permitted direction: Down, Up)</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::Dashboard</SubGroup>
         <Setting>
@@ -7203,6 +7203,8 @@
                 <Item Key="Group"></Item>
                 <Item Key="Default">1</Item>
                 <Item Key="CacheTTLLocal">0.5</Item>
+                <Item Key="PreSortDefault"></Item>
+                <Item Key="PreOrderDefault"></Item>
                 <Item Key="DefaultColumns">
                     <Hash>
                         <Item Key="Age">2</Item>
@@ -7234,7 +7236,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="DashboardBackend###0110-TicketEscalation" Required="0" Valid="1">
-        <Description Translatable="1">Parameters for the dashboard backend of the ticket escalation overview of the agent interface . "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin. Note: Only Ticket attributes and Dynamic Fields (DynamicField_NameX) are allowed for DefaultColumns. Possible settings: 0 = Disabled, 1 = Available, 2 = Enabled by default.</Description>
+        <Description Translatable="1">Parameters for the dashboard backend of the ticket escalation overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin. Note: Only Ticket attributes and Dynamic Fields (DynamicField_NameX) are allowed for DefaultColumns. Possible settings: 0 = Disabled, 1 = Available, 2 = Enabled by default. "PreSortDefault" defines the presorting of the list. (Permitted attributes: State, Type, Owner, Responsible, CustomerID, Lock, Service, SLA) "PreOrderDefault" defines the sorting direction of the presorting. (Permitted direction: Down, Up)</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::Dashboard</SubGroup>
         <Setting>
@@ -7251,6 +7253,8 @@
                 <Item Key="Group"></Item>
                 <Item Key="Default">1</Item>
                 <Item Key="CacheTTLLocal">0.5</Item>
+                <Item Key="PreSortDefault"></Item>
+                <Item Key="PreOrderDefault"></Item>
                 <Item Key="DefaultColumns">
                     <Hash>
                         <Item Key="Age">2</Item>
@@ -7282,7 +7286,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="DashboardBackend###0120-TicketNew" Required="0" Valid="1">
-        <Description Translatable="1">Parameters for the dashboard backend of the new tickets overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin. Note: Only Ticket attributes and Dynamic Fields (DynamicField_NameX) are allowed for DefaultColumns. Possible settings: 0 = Disabled, 1 = Available, 2 = Enabled by default.</Description>
+        <Description Translatable="1">Parameters for the dashboard backend of the new tickets overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin. Note: Only Ticket attributes and Dynamic Fields (DynamicField_NameX) are allowed for DefaultColumns. Possible settings: 0 = Disabled, 1 = Available, 2 = Enabled by default. "PreSortDefault" defines the presorting of the list. (Permitted attributes: State, Type, Owner, Responsible, CustomerID, Lock, Service, SLA) "PreOrderDefault" defines the sorting direction of the presorting. (Permitted direction: Down, Up)</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::Dashboard</SubGroup>
         <Setting>
@@ -7299,6 +7303,8 @@
                 <Item Key="Group"></Item>
                 <Item Key="Default">1</Item>
                 <Item Key="CacheTTLLocal">0.5</Item>
+                <Item Key="PreSortDefault"></Item>
+                <Item Key="PreOrderDefault"></Item>
                 <Item Key="DefaultColumns">
                     <Hash>
                         <Item Key="Age">2</Item>
@@ -7330,7 +7336,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="DashboardBackend###0130-TicketOpen" Required="0" Valid="1">
-        <Description Translatable="1">Parameters for the dashboard backend of the open tickets overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin. Note: Only Ticket attributes and Dynamic Fields (DynamicField_NameX) are allowed for DefaultColumns. Possible settings: 0 = Disabled, 1 = Available, 2 = Enabled by default.</Description>
+        <Description Translatable="1">Parameters for the dashboard backend of the open tickets overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin. Note: Only Ticket attributes and Dynamic Fields (DynamicField_NameX) are allowed for DefaultColumns. Possible settings: 0 = Disabled, 1 = Available, 2 = Enabled by default. "PreSortDefault" defines the presorting of the list. (Permitted attributes: State, Type, Owner, Responsible, CustomerID, Lock, Service, SLA) "PreOrderDefault" defines the sorting direction of the presorting. (Permitted direction: Down, Up)</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::Dashboard</SubGroup>
         <Setting>
@@ -7347,6 +7353,8 @@
                 <Item Key="Group"></Item>
                 <Item Key="Default">1</Item>
                 <Item Key="CacheTTLLocal">0.5</Item>
+                <Item Key="PreSortDefault"></Item>
+                <Item Key="PreOrderDefault"></Item>
                 <Item Key="DefaultColumns">
                     <Hash>
                         <Item Key="Age">2</Item>
@@ -7437,7 +7445,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="DashboardBackend###0901-SearchTemplate01" Required="0" Valid="1">
-        <Description Translatable="1">Parameters for the dashboard backend of the search template tickets overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin.</Description>
+        <Description Translatable="1">Parameters for the dashboard backend of the search template tickets overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin. "PreSortDefault" defines the presorting of the list. (Permitted attributes: State, Type, Owner, Responsible, CustomerID, Lock, Service, SLA) "PreOrderDefault" defines the sorting direction of the presorting. (Permitted direction: Down, Up)</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::Dashboard</SubGroup>
         <Setting>
@@ -7454,6 +7462,8 @@
                 <Item Key="Group"></Item>
                 <Item Key="Default">0</Item>
                 <Item Key="CacheTTLLocal">0.5</Item>
+                <Item Key="PreSortDefault"></Item>
+                <Item Key="PreOrderDefault"></Item>
                 <Item Key="DefaultColumns">
                     <Hash>
                         <Item Key="Age">2</Item>
@@ -7485,7 +7495,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="DashboardBackend###0901-SearchTemplate02" Required="0" Valid="1">
-        <Description Translatable="1">Parameters for the dashboard backend of the search template tickets overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin.</Description>
+        <Description Translatable="1">Parameters for the dashboard backend of the search template tickets overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin. "PreSortDefault" defines the presorting of the list. (Permitted attributes: State, Type, Owner, Responsible, CustomerID, Lock, Service, SLA) "PreOrderDefault" defines the sorting direction of the presorting. (Permitted direction: Down, Up)</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::Dashboard</SubGroup>
         <Setting>
@@ -7502,6 +7512,8 @@
                 <Item Key="Group"></Item>
                 <Item Key="Default">0</Item>
                 <Item Key="CacheTTLLocal">0.5</Item>
+                <Item Key="PreSortDefault"></Item>
+                <Item Key="PreOrderDefault"></Item>
                 <Item Key="DefaultColumns">
                     <Hash>
                         <Item Key="Age">2</Item>
@@ -7533,7 +7545,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="DashboardBackend###0901-SearchTemplate03" Required="0" Valid="1">
-        <Description Translatable="1">Parameters for the dashboard backend of the search template tickets overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin.</Description>
+        <Description Translatable="1">Parameters for the dashboard backend of the search template tickets overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin. "PreSortDefault" defines the presorting of the list. (Permitted attributes: State, Type, Owner, Responsible, CustomerID, Lock, Service, SLA) "PreOrderDefault" defines the sorting direction of the presorting. (Permitted direction: Down, Up)</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::Dashboard</SubGroup>
         <Setting>
@@ -7550,6 +7562,8 @@
                 <Item Key="Group"></Item>
                 <Item Key="Default">0</Item>
                 <Item Key="CacheTTLLocal">0.5</Item>
+                <Item Key="PreSortDefault"></Item>
+                <Item Key="PreOrderDefault"></Item>
                 <Item Key="DefaultColumns">
                     <Hash>
                         <Item Key="Age">2</Item>
@@ -7581,7 +7595,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="DashboardBackend###0901-SearchTemplate04" Required="0" Valid="1">
-        <Description Translatable="1">Parameters for the dashboard backend of the search template tickets overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin.</Description>
+        <Description Translatable="1">Parameters for the dashboard backend of the search template tickets overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin. "PreSortDefault" defines the presorting of the list. (Permitted attributes: State, Type, Owner, Responsible, CustomerID, Lock, Service, SLA) "PreOrderDefault" defines the sorting direction of the presorting. (Permitted direction: Down, Up)</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::Dashboard</SubGroup>
         <Setting>
@@ -7598,6 +7612,8 @@
                 <Item Key="Group"></Item>
                 <Item Key="Default">0</Item>
                 <Item Key="CacheTTLLocal">0.5</Item>
+                <Item Key="PreSortDefault"></Item>
+                <Item Key="PreOrderDefault"></Item>
                 <Item Key="DefaultColumns">
                     <Hash>
                         <Item Key="Age">2</Item>
@@ -7629,7 +7645,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="DashboardBackend###0901-SearchTemplate05" Required="0" Valid="1">
-        <Description Translatable="1">Parameters for the dashboard backend of the search template tickets overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin.</Description>
+        <Description Translatable="1">Parameters for the dashboard backend of the search template tickets overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin. "PreSortDefault" defines the presorting of the list. (Permitted attributes: State, Type, Owner, Responsible, CustomerID, Lock, Service, SLA) "PreOrderDefault" defines the sorting direction of the presorting. (Permitted direction: Down, Up)</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::Dashboard</SubGroup>
         <Setting>
@@ -7646,6 +7662,8 @@
                 <Item Key="Group"></Item>
                 <Item Key="Default">0</Item>
                 <Item Key="CacheTTLLocal">0.5</Item>
+                <Item Key="PreSortDefault"></Item>
+                <Item Key="PreOrderDefault"></Item>
                 <Item Key="DefaultColumns">
                     <Hash>
                         <Item Key="Age">2</Item>
@@ -7677,7 +7695,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="DashboardBackend###0901-SearchTemplate06" Required="0" Valid="0">
-        <Description Translatable="1">Parameters for the dashboard backend of the search template tickets overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin.</Description>
+        <Description Translatable="1">Parameters for the dashboard backend of the search template tickets overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin. "PreSortDefault" defines the presorting of the list. (Permitted attributes: State, Type, Owner, Responsible, CustomerID, Lock, Service, SLA) "PreOrderDefault" defines the sorting direction of the presorting. (Permitted direction: Down, Up)</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::Dashboard</SubGroup>
         <Setting>
@@ -7694,6 +7712,8 @@
                 <Item Key="Group"></Item>
                 <Item Key="Default">0</Item>
                 <Item Key="CacheTTLLocal">0.5</Item>
+                <Item Key="PreSortDefault"></Item>
+                <Item Key="PreOrderDefault"></Item>
                 <Item Key="DefaultColumns">
                     <Hash>
                         <Item Key="Age">2</Item>
@@ -7725,7 +7745,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="DashboardBackend###0901-SearchTemplate07" Required="0" Valid="0">
-        <Description Translatable="1">Parameters for the dashboard backend of the search template tickets overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin.</Description>
+        <Description Translatable="1">Parameters for the dashboard backend of the search template tickets overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin. "PreSortDefault" defines the presorting of the list. (Permitted attributes: State, Type, Owner, Responsible, CustomerID, Lock, Service, SLA) "PreOrderDefault" defines the sorting direction of the presorting. (Permitted direction: Down, Up)</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::Dashboard</SubGroup>
         <Setting>
@@ -7742,6 +7762,8 @@
                 <Item Key="Group"></Item>
                 <Item Key="Default">0</Item>
                 <Item Key="CacheTTLLocal">0.5</Item>
+                <Item Key="PreSortDefault"></Item>
+                <Item Key="PreOrderDefault"></Item>
                 <Item Key="DefaultColumns">
                     <Hash>
                         <Item Key="Age">2</Item>
@@ -7773,7 +7795,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="DashboardBackend###0901-SearchTemplate08" Required="0" Valid="0">
-        <Description Translatable="1">Parameters for the dashboard backend of the search template tickets overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin.</Description>
+        <Description Translatable="1">Parameters for the dashboard backend of the search template tickets overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin. "PreSortDefault" defines the presorting of the list. (Permitted attributes: State, Type, Owner, Responsible, CustomerID, Lock, Service, SLA) "PreOrderDefault" defines the sorting direction of the presorting. (Permitted direction: Down, Up)</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::Dashboard</SubGroup>
         <Setting>
@@ -7790,6 +7812,8 @@
                 <Item Key="Group"></Item>
                 <Item Key="Default">0</Item>
                 <Item Key="CacheTTLLocal">0.5</Item>
+                <Item Key="PreSortDefault"></Item>
+                <Item Key="PreOrderDefault"></Item>
                 <Item Key="DefaultColumns">
                     <Hash>
                         <Item Key="Age">2</Item>
@@ -7821,7 +7845,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="DashboardBackend###0901-SearchTemplate09" Required="0" Valid="0">
-        <Description Translatable="1">Parameters for the dashboard backend of the search template tickets overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin.</Description>
+        <Description Translatable="1">Parameters for the dashboard backend of the search template tickets overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin. "PreSortDefault" defines the presorting of the list. (Permitted attributes: State, Type, Owner, Responsible, CustomerID, Lock, Service, SLA) "PreOrderDefault" defines the sorting direction of the presorting. (Permitted direction: Down, Up)</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::Dashboard</SubGroup>
         <Setting>
@@ -7838,6 +7862,8 @@
                 <Item Key="Group"></Item>
                 <Item Key="Default">0</Item>
                 <Item Key="CacheTTLLocal">0.5</Item>
+                <Item Key="PreSortDefault"></Item>
+                <Item Key="PreOrderDefault"></Item>
                 <Item Key="DefaultColumns">
                     <Hash>
                         <Item Key="Age">2</Item>
@@ -7869,7 +7895,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="DashboardBackend###0901-SearchTemplate10" Required="0" Valid="0">
-        <Description Translatable="1">Parameters for the dashboard backend of the search template tickets overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin.</Description>
+        <Description Translatable="1">Parameters for the dashboard backend of the search template tickets overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin. "PreSortDefault" defines the presorting of the list. (Permitted attributes: State, Type, Owner, Responsible, CustomerID, Lock, Service, SLA) "PreOrderDefault" defines the sorting direction of the presorting. (Permitted direction: Down, Up)</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::Dashboard</SubGroup>
         <Setting>
@@ -7886,6 +7912,8 @@
                 <Item Key="Group"></Item>
                 <Item Key="Default">0</Item>
                 <Item Key="CacheTTLLocal">0.5</Item>
+                <Item Key="PreSortDefault"></Item>
+                <Item Key="PreOrderDefault"></Item>
                 <Item Key="DefaultColumns">
                     <Hash>
                         <Item Key="Age">2</Item>
@@ -8006,7 +8034,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="AgentCustomerInformationCenter::Backend###0100-CIC-TicketPendingReminder" Required="0" Valid="1">
-        <Description Translatable="1">Parameters for the dashboard backend of the ticket pending reminder overview of the agent interface . "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin. Note: Only Ticket attributes and Dynamic Fields (DynamicField_NameX) are allowed for DefaultColumns. Possible settings: 0 = Disabled, 1 = Available, 2 = Enabled by default.</Description>
+        <Description Translatable="1">Parameters for the dashboard backend of the ticket pending reminder overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin. Note: Only Ticket attributes and Dynamic Fields (DynamicField_NameX) are allowed for DefaultColumns. Possible settings: 0 = Disabled, 1 = Available, 2 = Enabled by default.</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::Dashboard</SubGroup>
         <Setting>
@@ -8023,6 +8051,8 @@
                 <Item Key="Group"></Item>
                 <Item Key="Default">1</Item>
                 <Item Key="CacheTTLLocal">0.5</Item>
+                <Item Key="PreSortDefault"></Item>
+                <Item Key="PreOrderDefault"></Item>
                 <Item Key="DefaultColumns">
                     <Hash>
                         <Item Key="Age">2</Item>
@@ -8054,7 +8084,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="AgentCustomerInformationCenter::Backend###0110-CIC-TicketEscalation" Required="0" Valid="1">
-        <Description Translatable="1">Parameters for the dashboard backend of the ticket escalation overview of the agent interface . "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin. Note: Only Ticket attributes and Dynamic Fields (DynamicField_NameX) are allowed for DefaultColumns. Possible settings: 0 = Disabled, 1 = Available, 2 = Enabled by default.</Description>
+        <Description Translatable="1">Parameters for the dashboard backend of the ticket escalation overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin. Note: Only Ticket attributes and Dynamic Fields (DynamicField_NameX) are allowed for DefaultColumns. Possible settings: 0 = Disabled, 1 = Available, 2 = Enabled by default. "PreSortDefault" defines the presorting of the list. (Permitted attributes: State, Type, Owner, Responsible, CustomerID, Lock, Service, SLA) "PreOrderDefault" defines the sorting direction of the presorting. (Permitted direction: Down, Up)</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::Dashboard</SubGroup>
         <Setting>
@@ -8071,6 +8101,8 @@
                 <Item Key="Group"></Item>
                 <Item Key="Default">1</Item>
                 <Item Key="CacheTTLLocal">0.5</Item>
+                <Item Key="PreSortDefault"></Item>
+                <Item Key="PreOrderDefault"></Item>
                 <Item Key="DefaultColumns">
                     <Hash>
                         <Item Key="Age">2</Item>
@@ -8102,7 +8134,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="AgentCustomerInformationCenter::Backend###0120-CIC-TicketNew" Required="0" Valid="1">
-        <Description Translatable="1">Parameters for the dashboard backend of the new tickets overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin. Note: Only Ticket attributes and Dynamic Fields (DynamicField_NameX) are allowed for DefaultColumns. Possible settings: 0 = Disabled, 1 = Available, 2 = Enabled by default.</Description>
+        <Description Translatable="1">Parameters for the dashboard backend of the new tickets overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin. Note: Only Ticket attributes and Dynamic Fields (DynamicField_NameX) are allowed for DefaultColumns. Possible settings: 0 = Disabled, 1 = Available, 2 = Enabled by default. "PreSortDefault" defines the presorting of the list. (Permitted attributes: State, Type, Owner, Responsible, CustomerID, Lock, Service, SLA) "PreOrderDefault" defines the sorting direction of the presorting. (Permitted direction: Down, Up)</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::Dashboard</SubGroup>
         <Setting>
@@ -8119,6 +8151,8 @@
                 <Item Key="Group"></Item>
                 <Item Key="Default">1</Item>
                 <Item Key="CacheTTLLocal">0.5</Item>
+                <Item Key="PreSortDefault"></Item>
+                <Item Key="PreOrderDefault"></Item>
                 <Item Key="DefaultColumns">
                     <Hash>
                         <Item Key="Age">2</Item>
@@ -8150,7 +8184,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="AgentCustomerInformationCenter::Backend###0130-CIC-TicketOpen" Required="0" Valid="1">
-        <Description Translatable="1">Parameters for the dashboard backend of the open tickets overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin. Note: Only Ticket attributes and Dynamic Fields (DynamicField_NameX) are allowed for DefaultColumns. Possible settings: 0 = Disabled, 1 = Available, 2 = Enabled by default.</Description>
+        <Description Translatable="1">Parameters for the dashboard backend of the open tickets overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin. Note: Only Ticket attributes and Dynamic Fields (DynamicField_NameX) are allowed for DefaultColumns. Possible settings: 0 = Disabled, 1 = Available, 2 = Enabled by default. "PreSortDefault" defines the presorting of the list. (Permitted attributes: State, Type, Owner, Responsible, CustomerID, Lock, Service, SLA) "PreOrderDefault" defines the sorting direction of the presorting. (Permitted direction: Down, Up)</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::Dashboard</SubGroup>
         <Setting>
@@ -8167,6 +8201,8 @@
                 <Item Key="Group"></Item>
                 <Item Key="Default">1</Item>
                 <Item Key="CacheTTLLocal">0.5</Item>
+                <Item Key="PreSortDefault"></Item>
+                <Item Key="PreOrderDefault"></Item>
                 <Item Key="DefaultColumns">
                     <Hash>
                         <Item Key="Age">2</Item>
