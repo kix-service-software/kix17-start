@@ -17,7 +17,7 @@
 
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    Core.Agent.Dashboard.Init();
+    Core.Agent.Dashboard.Init('[% Env("AgentDashboardSidebarWidth") %]');
 //]]></script>
 [% END %]
 

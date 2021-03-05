@@ -117,6 +117,7 @@
                             <div id="[% Data.ItemID | html %]ServerError" class="TooltipErrorMessage"><p>[% Translate(Data.RegExErrorMessage) | html %]</p></div>
 [% RenderBlockEnd("XMLRowValueRegExError") %]
                         </div>
+                        <div class="Clear"></div>
 [% RenderBlockEnd("XMLRowValue") %]
 
 [% RenderBlockStart("XMLRowAddContent") %]
@@ -126,6 +127,7 @@
                                 <span><i class="fa fa-plus-square-o"></i></span>
                             </button>
                         </div>
+                        <div class="Clear"></div>
 [% RenderBlockEnd("XMLRowAddContent") %]
 
 [% RenderBlockStart("XMLRowFieldsetEnd") %]

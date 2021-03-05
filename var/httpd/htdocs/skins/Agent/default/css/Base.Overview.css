@@ -38,6 +38,9 @@
     .LayoutFixedSidebar > .SidebarColumn {
         overflow-x: hidden;
     }
+    .LayoutFixedSidebar.Dashboard > .SidebarColumn {
+        overflow-x: visible;
+    }
     .LayoutFixedSidebar.SidebarFirst > .SidebarColumn {
         width: 270px;
         float: left;
