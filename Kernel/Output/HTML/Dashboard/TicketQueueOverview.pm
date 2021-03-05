@@ -323,8 +323,17 @@ sub Run {
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
 
+    my $ColAttribute = $LayoutObject->{ $Self->{PrefKey} . '-Column' };
+    my $RowAttribute = $LayoutObject->{ $Self->{PrefKey} . '-Row' };
+    my $ColValues    = $Self->{$ColAttribute};
+    my $RowValues    = $Self->{$RowAttribute};
+
     my $LimitGroup = $Self->{Config}->{QueuePermissionGroup} || 0;
-    my $CacheKey = 'User' . '-' . $Self->{UserID} . '-' . $LimitGroup;
+    my $CacheKey = 'User' . '-' . $Self->{UserID} . '-' . $LimitGroup
+                 . '-' . $ColAttribute . '='  . join( ',', @{ $ColValues } )
+                 . '-' . $RowAttribute . '='  . join( ',', @{ $RowValues } )
+                 . '-' . ( $LayoutObject->{ $Self->{PrefKey} . '-ColumnTotal' } || '0' )
+                 . '-' . ( $LayoutObject->{ $Self->{PrefKey} . '-RowTotal' } || '0' );
 
     # get cache object
     my $CacheObject = $Kernel::OM->Get('Kernel::System::Cache');
@@ -374,11 +383,6 @@ sub Run {
         }
     }
 
-    my $ColAttribute = $LayoutObject->{ $Self->{PrefKey} . '-Column' };
-    my $RowAttribute = $LayoutObject->{ $Self->{PrefKey} . '-Row' };
-    my $ColValues    = $Self->{$ColAttribute};
-    my $RowValues    = $Self->{$RowAttribute};
-
     # check cache
     my $Summary = $CacheObject->Get(
         Type => 'Dashboard',
@@ -417,6 +421,7 @@ sub Run {
     # display column headers...
     my @ColTotals = qw{};
     for my $CurrCol (@ColHeadline) {
+        my $CurrColLabel = $CurrCol;
         if (
             $ColAttribute ne 'QueueIDs'
             && (
@@ -428,12 +433,12 @@ sub Run {
                 || $ConfigObject->Get('Ticket::TypeTranslation')
             )
         ) {
-            $CurrCol = $LayoutObject->{LanguageObject}->Translate($CurrCol);
+            $CurrColLabel = $LayoutObject->{LanguageObject}->Translate($CurrColLabel);
         }
         $LayoutObject->Block(
             Name => 'ContentColumnLabel',
             Data => {
-                'ColumnLabel'   => $CurrCol,
+                'ColumnLabel'   => $CurrColLabel,
                 'cssClass'      => 'Sortable header',
                 'SessionID'     => $LayoutObject->{'SessionID'},
                 'SearchPattern' => $ColAttribute . "=$Self->{ColValueListReverse}->{$CurrCol};",
@@ -457,7 +462,7 @@ sub Run {
 
         my @CurrRowArr   = @{$CurrRow};
         my $ColCount     = 0;
-        my $CurrColLabel = "";
+        my $CurrRowValue = "";
         my $RowTotal     = 0;
         for my $CurrCol (@CurrRowArr) {
 
@@ -465,7 +470,7 @@ sub Run {
 
             $ColCount++;
             if ( $ColCount < 2 ) {
-                $CurrColLabel = $CurrCol;
+                $CurrRowValue = $CurrCol;
                 my $CurrRowLabel = $CurrCol;
                 if (
                     $RowAttribute ne 'QueueIDs'
@@ -487,7 +492,7 @@ sub Run {
                         'Label'         => $CurrRowLabel,
                         'SessionID'     => $LayoutObject->{'SessionID'},
                         'SearchPattern' => $RowAttribute . "="
-                            . $Self->{RowValueListReverse}->{$CurrCol} . ";",
+                            . $Self->{RowValueListReverse}->{$CurrRowValue} . ";",
                     },
                 );
             }
@@ -501,7 +506,7 @@ sub Run {
                         'Number'        => $CurrCol,
                         'SearchPattern' => $RowAttribute
                             . "="
-                            . $Self->{RowValueListReverse}->{$CurrColLabel}
+                            . $Self->{RowValueListReverse}->{$CurrRowValue}
                             . ";"
                             . $ColAttribute
                             . "="
@@ -520,7 +525,7 @@ sub Run {
                     'Number'   => $RowTotal,
                     'SearchPattern' => $RowAttribute
                         . "="
-                        . $Self->{RowValueListReverse}->{$CurrColLabel}
+                        . $Self->{RowValueListReverse}->{$CurrRowValue}
                         . ";",
                 },
             );
@@ -538,7 +543,12 @@ sub Run {
             $LayoutObject->Block(
                 Name => 'FootColumn',
                 Data => {
-                    'Number' => $ColTotal{$ColCount} || '0',
+                    'cssClass'      => 'Sortable header',
+                    'Number'        => $ColTotal{$ColCount} || '0',
+                    'SearchPattern' => $ColAttribute
+                        . "="
+                        . $Self->{ColValueListReverse}->{ $ColHeadline[ $ColCount - 2 ] }
+                        . ";",
                 },
             );
         }
