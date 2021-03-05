@@ -1,6 +1,15 @@
 # Change log of KIX
 * Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.15.0-RC5 (2021/03/05)
+ * (2021/03/05) - Bugfix: KIX17-1838 (fixed missing handling of links if overview highlight used) (fjacquemin)
+ * (2021/03/05) - Bugfix: KIX17-473 (fixed field alignment in forms) (fjacquemin)
+ * (2021/03/03) - Bugfix: KIX17-1954 (fixed stats graph output for preview and dashboard) (millinger)
+ * (2021/03/03) - CR: KIX17-752 (changed initial date selection for webservice debugger filter) (millinger)
+ * (2021/02/24) - Bugfix: KIX17-1706 (set cache depending on preferences for dashboard TicketQueueOverview) (millinger)
+ * (2021/02/24) - CR: KIX17-1918 (added pre-sort of dashboard widgets from type TicketGeneric) (fjacquemin)
+ * (2021/02/24) - Bugfix: KIX17-1651 (fixed link behavior in customer faq zoom) (millinger)
+
 # 17.15.0-RC4 (2021/02/23)
  * (2021/02/19) - Bugfix: KIX17-1722 (implemented lookup for specific attributes in filter preparation) (millinger)
  * (2021/02/19) - Bugfix: KIX17-1449 (fixed column filter for virtual queues in queue view) (millinger)
