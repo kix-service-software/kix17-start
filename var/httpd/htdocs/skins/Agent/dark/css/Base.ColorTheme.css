@@ -1407,6 +1407,9 @@
     /**
     *   @subsection process tab
     */
+    h2.HorizontalLine {
+        border-bottom-color: #0A7CB3;
+    }
     .ProcessInfo > .Bottom > .Actions li a {
         background-color: #EEEEEE;
         border: 1px solid #9E9E9E;

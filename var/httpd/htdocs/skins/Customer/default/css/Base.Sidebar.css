@@ -19,20 +19,34 @@
         min-width: 80px;
     }
 
+
+    /**
+    *   @subsection Process
+    */
+    .PopupType_TicketAction {
+        border-width: 1px;
+        border-style: solid;
+        padding: 3px 8px;
+        margin-right: 5px;
+        display: inline-block;
+    }
+
+
     /**
     * @subsection TextModules
     */
     #TextModulesSelectionContainer {
         height: 250px;
-        background-color: #FFFFFF;
-        border: 1px solid #ccc;
+        border-width: 1px;
+        border-style: solid;
         overflow: auto;
         padding: 0px 10px 10px 10px;
     }
-
-    #ServiceIncidentStateContainer .Flag, .SidebarColumn fieldset.TableLike div.Value .Flag {
+    #ServiceIncidentStateContainer .Flag,
+    .SidebarColumn fieldset.TableLike div.Value .Flag {
         margin-top: 2px;
     }
+
 
     /**
     * @subsection CustomerDetails
@@ -61,12 +75,14 @@
         display: none;
     }
 
-       /**
+
+    /**
     *   @subsection CISearch
     */
     #CIClassSelection.Content {
         border-bottom: none;
     }
+
 
     /***
     *   @subsection PadNotes
@@ -74,6 +90,8 @@
     #ScratchPadNotes {
         width: 96%;
     }
+
+
     /***
     *   @subsection FAQ
     */
@@ -81,6 +99,7 @@
         display: block;
         font-size: 10px;
     }
+
 
     /**
     *   @subsection DisableSibebars
