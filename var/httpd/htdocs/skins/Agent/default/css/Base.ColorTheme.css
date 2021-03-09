@@ -820,6 +820,14 @@
 
 
     /**
+    *   subaction pre application agent info
+    */
+    .AcceptContent {
+        border-color: #78BE5A;
+    }
+
+
+    /**
     *   @subsection sortable
     */
     .SortableList {
