@@ -295,6 +295,9 @@
         top: 0;
         text-align: center;
     }
+    .TableSmall thead th.OverviewHeader .ColumnSettingsTrigger{
+        top: 4px;
+    }
     .DataTable thead th.DashboardHeader .ColumnSettingsTrigger i,
     .TableSmall thead th.OverviewHeader .ColumnSettingsTrigger i {
         vertical-align: middle;

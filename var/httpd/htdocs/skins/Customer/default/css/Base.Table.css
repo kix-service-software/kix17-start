@@ -104,10 +104,10 @@
         text-indent: -9999px;
         cursor: pointer;
     }
-
     table tr.MasterAction {
         cursor: pointer;
     }
+
 
     /**
     * @subsection TableSmall
@@ -155,6 +155,7 @@
     .TableSmall td:first-child {
         padding-top: 1px;
     }
+
 
     /**
     * @subsection DataTable
@@ -263,6 +264,9 @@
         top: 0;
         text-align: center;
     }
+    .TableSmall thead th.OverviewHeader .ColumnSettingsTrigger{
+        top: 4px;
+    }
     .DataTable thead th.DashboardHeader .ColumnSettingsTrigger i,
     .TableSmall thead th.OverviewHeader .ColumnSettingsTrigger i {
         vertical-align: middle;
@@ -310,7 +314,6 @@
     .TableSmall thead th.OverviewHeader .ColumnSettingsContainer {
         position: relative;
     }
-
     .DataTable thead th.DashboardHeader .ColumnSettingsBox,
     .TableSmall thead th.OverviewHeader .ColumnSettingsBox {
         -moz-border-radius: 3px;
@@ -364,7 +367,6 @@
         position: relative;
         z-index: 99;
     }
-
     .DataTableNoHighlight tbody tr td input,
     .DataTableNoHighlight tbody tr td select {
         width: 85%;
@@ -386,7 +388,6 @@
     .WidgetSimple .Field.LayoutGrid .Tablelike {
         width: 98%;
     }
-
     ul.Tablelike:first-child {
         margin-right: 8px;
     }
@@ -413,7 +414,6 @@
     .WidgetSimple .Field.LayoutGrid .Tablelike {
         width: 98%;
     }
-
     ul.AllocationList {
         min-height: 25px;
         max-height: 300px;
@@ -450,10 +450,10 @@
         max-height: 155px;
     }
 
+
     /**
     * @subsection ticket list
     */
-
     .TicketList table {
         border-collapse: separate;
         position: relative;
@@ -463,18 +463,16 @@
         line-height: 18px;
     }
 
+
     /**
     *   @subsection ticket view
     */
-
     .TicketView > .Content {
         border-top: none;
     }
-
     .Content table.OverviewTable {
         line-height: 15px;
     }
-
     table.OverviewTable {
         width: 100%;
         clear: both;
@@ -546,5 +544,4 @@
     .Sortable .OverviewTable thead {
         display: table-header-group;
     }
-
 }
