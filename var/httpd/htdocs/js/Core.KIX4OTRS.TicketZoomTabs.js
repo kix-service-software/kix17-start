@@ -128,9 +128,18 @@ Core.KIX4OTRS.TicketZoomTabs = (function(TargetNS) {
                 ArticleFlagKey = FlagInformationArray[2],
                 Position = $(this).offset();
 
-            $(this).unbind('click').bind('click', function(event) {
+            $(this).off('click').on('click', function(event) {
                 if ( $('#ArticleFlagOptions_' + ArticleID + '_' + ArticleFlagKey).length ) {
-                    Core.UI.Dialog.ShowContentDialog($('#ArticleFlagOptions_' + ArticleID + '_' + ArticleFlagKey), ArticleOptionsText, Position.top, parseInt(Position.left, 10) + 25);
+                    Core.UI.Dialog.ShowContentDialog(
+                        $('#ArticleFlagOptions_' + ArticleID + '_' + ArticleFlagKey),
+                        ArticleOptionsText,
+                        Position.top,
+                        parseInt(Position.left, 10) + 25,
+                        false,
+                        false,
+                        false,
+                        true
+                    );
                 }
                 event.preventDefault();
                 return false;
@@ -269,7 +278,6 @@ Core.KIX4OTRS.TicketZoomTabs = (function(TargetNS) {
         var Action = Core.Config.Get('Action');
 
         // for tab init we must not run InitNavigation again
-        // InitNavigation();
         Core.Exception.Init();
 
         // init widget toggle
@@ -296,8 +304,7 @@ Core.KIX4OTRS.TicketZoomTabs = (function(TargetNS) {
      *         relevant ticket actions
      */
     TargetNS.PopUpInit = function() {
-        // $('a.TabAsPopup').removeAttr('onClick');
-        $('a.TabAsPopup').bind('click', function(Event) {
+        $('a.TabAsPopup').on('click', function() {
             var Matches, PopupType = 'TicketAction';
 
             Matches = $(this).attr('class').match(/PopupType_(\w+)/);
@@ -306,7 +313,7 @@ Core.KIX4OTRS.TicketZoomTabs = (function(TargetNS) {
             }
             $(this).addClass('PopupCalled');
             $('a.TabAsPopup.PopupCalled').removeAttr('onClick');
-            $('a.TabAsPopup.PopupCalled').bind('click', function(Event) {
+            $('a.TabAsPopup.PopupCalled').on('click', function() {
                 $(this).removeClass('PopupCalled');
                 return false;
             });
@@ -321,9 +328,7 @@ Core.KIX4OTRS.TicketZoomTabs = (function(TargetNS) {
      * @description This namespace contains the special module functions for
      *              TicketZoomTabAttachments.
      */
-    TargetNS.AttachmentsInit = function(Options) {
-        var $THead = $('#AttachmentTable thead'), $TBody = $('#AttachmentTable tbody');
-
+    TargetNS.AttachmentsInit = function() {
         // Table sorting
         Core.UI.Table.Sort.Init($('#AttachmentTable'), function() {
             $(this).find('tr').removeClass('Even').filter(':even').addClass('Even').end().removeClass('Last').filter(':last').addClass('Last');
