@@ -1002,4 +1002,22 @@
         margin-bottom: 1px;
         display: block;
     }
+
+
+    /**
+    *   subaction pre application agent info
+    */
+    .AcceptBox > .Content {
+        width: 70%;
+        margin: auto;
+    }
+    .AcceptContent {
+        padding: 10px;
+        border-style: solid;
+        border-width: 1px;
+    }
+    .AcceptFooter {
+        text-align: center;
+        margin: 20px 0;
+    }
 }

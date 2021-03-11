@@ -701,6 +701,14 @@
 
 
     /**
+    *   subaction pre application customer accept
+    */
+    .AcceptContent {
+        border-color: #0A7CB3;
+    }
+
+
+    /**
     *   @subsection  OverviewTable
     */
     .Placeholder > .Button {
