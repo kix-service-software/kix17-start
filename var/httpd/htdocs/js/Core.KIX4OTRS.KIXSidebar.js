@@ -139,7 +139,11 @@ Core.KIX4OTRS.KIXSidebar = (function(TargetNS) {
                     Width = MinWidth;
                     $('.SidebarColumn' + Tab).css({ "width" : Width + "px" });
                 }
-                Core.Agent.PreferencesUpdate(Action + 'SidebarWidth', Width);
+                if (Action.match(/^Customer/)) {
+                    Core.Customer.PreferencesUpdate(Action + 'SidebarWidth', Width);
+                } else {
+                    Core.Agent.PreferencesUpdate(Action + 'SidebarWidth', Width);
+                }
 
             },
             handles : "w"

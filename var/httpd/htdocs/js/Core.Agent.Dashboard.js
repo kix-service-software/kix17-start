@@ -201,10 +201,33 @@ Core.Agent.Dashboard = (function (TargetNS) {
      * @description
      *      Initialize the dashboard module.
      */
-    TargetNS.Init = function () {
+    TargetNS.Init = function (SidebarWidth) {
         // Disable drag and drop of dashboard widgets on mobile / touch devices
         // to prevent accidentally moved widgets while tabbing/swiping
         if (!Core.App.Responsive.IsTouchDevice()) {
+            $('.SidebarColumn').css({
+                "width" : SidebarWidth
+            })
+            .resizable({
+                resize : function(e, ui) {
+                    ui.position.left = '0px';
+                    $('.SidebarColumn').css({
+                        "left" : "0px"
+                    });
+                },
+                stop : function(e, ui) {
+                    var Width = ui.size.width, MinWidth = 150;
+
+                    // Set minimal width
+                    if (Width < MinWidth) {
+                        Width = MinWidth;
+                        $('.SidebarColumn').css({ "width" : Width + "px" });
+                    }
+                    Core.Agent.PreferencesUpdate('AgentDashboardSidebarWidth', Width);
+                },
+                handles : "w"
+            });
+
             Core.UI.DnD.Sortable(
                 $('.SidebarColumn'),
                 {

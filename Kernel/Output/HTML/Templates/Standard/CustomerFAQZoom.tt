@@ -241,6 +241,7 @@ function CheckIFrameHeight(IFrameID) {
 <script type="text/javascript">
 /*global FAQ: true */
 FAQ.Customer.FAQZoom.Init();
+    Core.KIX4OTRS.KIXSidebar.Init('[% Env("CustomerFAQZoomSidebarWidth") %]','[% Env("Action") %]','ItemID=[% Data.ItemID | uri %];');
 
 $('a.AsPopup').bind('click', function (Event) {
     Core.UI.Popup.OpenPopup($(this).attr('href'), 'TicketAction');
