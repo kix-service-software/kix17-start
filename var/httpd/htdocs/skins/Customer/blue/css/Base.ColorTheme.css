@@ -250,6 +250,7 @@
         border-bottom: 1px solid #9E9E9E;
     }
 
+
     /*
     *   @subsection sidebar column widget
     */
@@ -303,7 +304,6 @@
     #NoArticles {
         border-color: #E9E9E9;
     }
-
 
 
     /*
@@ -664,6 +664,10 @@
         color: #777777;
         background-color: #DDDDDD;
     }
+    .JSTreeSelectionContainer {
+        background-color: #FFFFFF;
+        border-color: #C0C0C0;
+    }
 
 
     /**
@@ -693,6 +697,14 @@
     }
     .Gray {
         color: #444444;
+    }
+
+
+    /**
+    *   subaction pre application customer accept
+    */
+    .AcceptContent {
+        border-color: #0A7CB3;
     }
 
 
@@ -1092,32 +1104,19 @@
 
 
     /**
-    *   @subsection process tab
+    *   @subsection process
     */
-    .ProcessInfo > .Bottom > .Actions li a {
-        background-color: #EEEEEE;
-        border: 1px solid #9E9E9E;
+    h2.HorizontalLine {
+        border-bottom-color: #0A7CB3;
     }
-    .ProcessInfo > .Bottom > .Actions li a:hover {
+    .PopupType_TicketAction {
+        border-color: #9E9E9E;
+        background-color: #F0F0F0;
+    }
+    .PopupType_TicketAction:hover {
+        border-color: #0A7CB3;
+        color: #FFF;
         background-color: #0A7CB3;
-        border: 1px solid #0A7CB3;
-        color: #FFFFFF;
-    }
-    .WidgetSimple > .Content.ProcessInfo fieldset .FieldContainer {
-        background-color: #EEEEEE;
-        border: 1px solid #CCCCCC;
-    }
-    .WidgetSimple > .Content.ProcessInfo fieldset .FieldContainer p  {
-        background-color: #FFFFFF;
-    }
-    .WidgetSimple > .Content.ProcessInfo fieldset .FieldContainer label {
-        border-bottom: 1px solid #CCCCCC;
-    }
-    .FieldSeparator {
-        border-top: 1px dotted #CCCCCC;
-    }
-    .FieldSetSeparator {
-        border-bottom: 1px solid #CCCCCC;
     }
 
 
@@ -1221,6 +1220,15 @@
     }
     .ActionList p {
         color: #888888;
+    }
+
+
+    /**
+    * @subsection TextModules
+    */
+    #TextModulesSelectionContainer {
+        background-color: #FFFFFF;
+        border-color: #CCCCCC;
     }
 
 

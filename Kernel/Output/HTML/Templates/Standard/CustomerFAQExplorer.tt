@@ -221,6 +221,8 @@
 
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">
+Core.KIX4OTRS.KIXSidebar.Init('[% Env("CustomerFAQExplorerSidebarWidth") %]','[% Env("Action") %]','CategoryID=[% Data.CategoryID | uri %];');
+
 // make whole FAQ Item row clickable, but not the headers, can't use Core.Customer.ClickableRow()
 // since it uses "table tr" as selector, see bug#9329
 $("tbody tr").click(function(){

@@ -357,7 +357,6 @@ Core.Agent = (function (TargetNS) {
         });
     }
 
-
     /**
      * @private
      * @name NavigationBarShowSlideButton
@@ -494,12 +493,24 @@ Core.Agent = (function (TargetNS) {
         // (2) 'top' of #NavigationContainer is smaller than the height of the #ToolBar
         //      which would typically mean there is not enough space on top of #NavigationContainer
         //      to display the ToolBar.
-        if ((!$('body').hasClass('RTL') &&
-            (parseInt($('#ToolBar').css('left'), 10) > parseInt($('#ToolBar').css('right'), 10) || isNaN(parseInt($('#ToolBar').css('left'), 10))) &&
-            parseInt($('#NavigationContainer').css('top'), 10) < parseInt($('#ToolBar').height(), 10)) ||
-            ($('body').hasClass('RTL') &&
-            (parseInt($('#ToolBar').css('left'), 10) < parseInt($('#ToolBar').css('right'), 10) || isNaN(parseInt($('#ToolBar').css('right'), 10))) &&
-            parseInt($('#NavigationContainer').css('top'), 10) < parseInt($('#ToolBar').height(), 10))) {
+        if (
+            (
+                !$('body').hasClass('RTL')
+                && (
+                    parseInt($('#ToolBar').css('left'), 10) > parseInt($('#ToolBar').css('right'), 10)
+                    || isNaN(parseInt($('#ToolBar').css('left'), 10))
+                )
+                && parseInt($('#NavigationContainer').css('top'), 10) < parseInt($('#ToolBar').height(), 10)
+            )
+            || (
+                $('body').hasClass('RTL')
+                && (
+                    parseInt($('#ToolBar').css('left'), 10) < parseInt($('#ToolBar').css('right'), 10)
+                    || isNaN(parseInt($('#ToolBar').css('right'), 10))
+                )
+                && parseInt($('#NavigationContainer').css('top'), 10) < parseInt($('#ToolBar').height(), 10)
+            )
+        ) {
             return true;
         }
         return false;
@@ -521,7 +532,10 @@ Core.Agent = (function (TargetNS) {
             NewContainerWidth;
 
         // navigation resizing only possible in ScreenXL mode
-        if (RealResizeEvent && !$('body').hasClass('Visible-ScreenXL')) {
+        if (
+            RealResizeEvent
+            && !$('body').hasClass('Visible-ScreenXL')
+        ) {
             return;
         }
         else if (!$('body').hasClass('Visible-ScreenXL')) {
@@ -539,7 +553,13 @@ Core.Agent = (function (TargetNS) {
         $('.NavigationBarNavigateLeft').remove();
 
         // when we have the toolbar being displayed next to the navigation, we need to leave some space for it
-        if (ToolBarIsAside() && (!$('#NavigationContainer').hasClass('IsResized') || RealResizeEvent)) {
+        if (
+            ToolBarIsAside()
+            && (
+                !$('#NavigationContainer').hasClass('IsResized')
+                || RealResizeEvent
+            )
+        ) {
 
             // reset back to original width to avoid making it smaller and smaller
             $('#NavigationContainer').css('width', $('#NavigationContainer').attr('data-original-width'));
@@ -605,10 +625,8 @@ Core.Agent = (function (TargetNS) {
      *      This function initializes the application and executes the needed functions.
      */
     TargetNS.Init = function () {
-        // KIX4OTRS-capeIT
         var Action = Core.Config.Get('Action');
         if (!Action) Action = '';
-        // EO KIX4OTRS-capeIT
 
         TargetNS.SupportedBrowser = Core.App.BrowserCheck('Agent');
         TargetNS.IECompatibilityMode = Core.App.BrowserCheckIECompatibilityMode();
@@ -626,17 +644,17 @@ Core.Agent = (function (TargetNS) {
 
         InitNavigation();
         Core.Exception.Init();
-        // KIX4OTRS-capeIT
+
         if ( !Action.match(/^AgentTicketZoom(.+)/)
             && !Action.match(/AgentITSMChangeZoom/)
             && !Action.match(/AgentITSMWorkOrderZoom/)
             && !Action.match(/AgentITSMConfigItemZoom/) ) {
             Core.UI.InitWidgetActionToggle();
         }
-        // EO KIX4OTRS-capeIT
+
         Core.UI.InitMessageBoxClose();
         Core.Form.Validate.Init();
-        // KIX4OTRS-capeIT
+
         if ( !Action.match(/AgentTicketZoom/)
             && !Action.match(/AgentITSMChangeZoom/)
             && !Action.match(/AgentITSMWorkOrderZoom/)
@@ -644,17 +662,16 @@ Core.Agent = (function (TargetNS) {
             Core.UI.Popup.Init();
         }
         Core.UI.InputFields.Init();
-        // EO KIX4OTRS-capeIT
         Core.UI.TreeSelection.InitTreeSelection();
         Core.UI.TreeSelection.InitDynamicFieldTreeViewRestore();
 
-        if (
-            typeof Core.Agent.Chat !== 'undefined'
-            && typeof Core.Agent.Chat.Toolbar !== 'undefined'
-            && typeof Core.Agent.Chat.Toolbar.InitChatButtons !== 'undefined'
-            )
-        {
-            Core.Agent.Chat.Toolbar.InitChatButtons();
+        // added class FieldPlain on field container if not empty but has no subelements
+        if ( $('div.Field').length ) {
+            $.each($('div.Field:not(:has(*))'), function() {
+                if ( !$(this).is(':empty') ) {
+                $(this).addClass('FieldPlain');
+                }
+            });
         }
 
         // late execution of accessibility code

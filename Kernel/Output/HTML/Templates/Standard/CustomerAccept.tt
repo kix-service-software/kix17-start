@@ -10,16 +10,28 @@
 
 
 <!-- start form -->
-<div id="MainBox" class="Login">
+<div id="MainBox" class="MainBox AcceptBox ARIARoleMain">
     <div class="Content">
-         <h2><span>[% Translate("Info") | html %]</span></h2>
-        <p>
-            Dear Customer,<br/>
-            thank you for using our services.
-        </p>
-        <p>
-            <a href="[% Env("Baselink") %]Action=[% Env("Action") %];Accept=1">Yes, I accepted your license.</a>
-        </p>
+        <form action="[% Env("CGIHandle") %]" method="post">
+            <input type="hidden" name="Action" value="[% Env("Action") %]"/>
+            <input type="hidden" name="Accept" value="1"/>
+            <h1 class="AcceptHeader">
+                <span>[% Translate("Info") | html %]</span>
+            </h1>
+            <div class="Clear"></div>
+            <div class="AcceptContent">
+                <p>
+                    Dear Customer,<br/>
+                    thank you for using our services.
+                </p>
+            </div>
+            <div class="Clear"></div>
+            <div class="AcceptFooter">
+                <button type="submit" class="Primary CallForAction">
+                    <span>Yes, I accepted your license.</span>
+                </button>
+            </div>
+        </form>
     </div>
 </div>
 <!-- end form -->

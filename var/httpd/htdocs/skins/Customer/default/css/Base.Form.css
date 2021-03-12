@@ -88,6 +88,14 @@
         padding: 8px 0 0px 5px;
         min-height: 20px;
     }
+    fieldset.TableLike > .Field.FieldPlain,
+    fieldset.TableLike > .Row > .Field.FieldPlain {
+        padding-top: 13px;
+    }
+    fieldset.TableLike > .Field > button,
+    fieldset.TableLike > .Row > .Field > button {
+        margin-top: 0;
+    }
     fieldset.TableLike > .EndOfForm,
     fieldset.TableLike > .Row > .EndOfForm {
         margin-top: 20px;
@@ -397,6 +405,7 @@
         padding: 0;
     }
 
+
     /**
     *   @subsection ShowTreeSelection
     */
@@ -415,6 +424,7 @@
     .WidgetSettingsForm .ShowTreeSelection {
         display: inline-block;
     }
+
 
     /**
     *   @subsection Datepicker
@@ -490,7 +500,8 @@
     *   @subsection process mask
     */
     h2.HorizontalLine {
-        border-bottom: 1px solid #82C826;
+        border-bottom-style: solid;
+        border-bottom-width: 1px;
         font-size: 14px;
         font-weight: bold;
         padding: 5px 8px 4px;

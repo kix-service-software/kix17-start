@@ -85,7 +85,9 @@ Core.Agent.Responsive = (function (TargetNS) {
         // Add trigger icon for pagination
         $('span.Pagination a:first-child').parent().closest('.WidgetSimple').each(function() {
             if (!$(this).find('.ShowPagination').length) {
-                $(this).find('.WidgetAction.Close').after('<div class="WidgetAction ShowPagination"><a title="Close" href=""><i class="fa fa-angle-double-right"></i></a></div>');
+                $(this)
+                    .find('.WidgetAction.Close')
+                    .after('<div class="WidgetAction ShowPagination"><a title="Close" href=""><i class="fa fa-angle-double-right"></i></a></div>');
             }
         });
 
@@ -95,202 +97,130 @@ Core.Agent.Responsive = (function (TargetNS) {
         });
 
         // wrap sidebar modules with an additional container
-        if ($('.SidebarColumn').children().length && !$('.SidebarColumn').closest('.ResponsiveSidebarContainer').length) {
-            $('.SidebarColumn').wrap('<div class="ResponsiveSidebarContainer" />');
-        }
-        // wrap navigation modules with an additional container
-        if (!$('#NavigationContainer').closest('.ResponsiveSidebarContainer').length) {
-            $('#NavigationContainer').wrap('<div class="ResponsiveSidebarContainer" />');
-            $('#NavigationContainer').css('height', '100%');
-        }
-        // wrap nav tabs with an additional container
-        if (!$('#ContentItemNavTabs').closest('.ResponsiveSidebarContainer').length) {
-            $('#ContentItemNavTabs').wrap('<span class="ResponsiveSidebarContainer" />')
-        }
-        // wrap sidebar modules with an additional container
-        if ($('.ContentColumn > .ActionRow').children().length && !$('.ContentColumn > .ActionRow').closest('.ResponsiveSidebarContainer').length) {
-            $('.ContentColumn > .ActionRow').wrap('<div class="ResponsiveSidebarContainer" />');
-        }
-        // wrap sidebar modules with an additional container
-        if ($('#ArticleItems .LightRow').length) {
-            var ResponsiveCount = 0;
-            $.each($('#ArticleItems .LightRow'), function () {
-                if ( $(this).children().length && !$(this).closest('.ResponsiveSidebarContainer').length) {
-                    $(this).wrap('<div id="ResponsiveMenu_' + ResponsiveCount + '" class="ResponsiveSidebarContainer ResponsiveArticleMenu" />');
-                    ResponsiveCount++;
+        $.each($('.SidebarColumn, #NavigationContainer, #ContentItemNavTabs, .ContentColumn > .ActionRow, #ArticleItems .LightRow'), function() {
+            var container   = $('<span />', {class: 'ResponsiveSidebarContainer'}),
+                closeHandle = $('<button />', {class: 'ResponsiveCloseHandle', type: 'button'}),
+                closeIcon   = $('<i />', {class:'fa fa-times fa-3x'}),
+                openHandle  = $('<span />', {class: 'ResponsiveHandle'}),
+                openIcon    = $('<i />', {class:'fa'}),
+                wrapper     = $('<span />', {class: 'ResponsiveWrapperContainer'}),
+                isWrapped   = 0,
+                direction   = 'right',
+                $Element    = $(this);
+
+            if ( $Element.hasClass('SidebarColumn') ) {
+                if ( $Element.closest('.ContentColumn').length ) {
+                    openHandle.addClass('ResponsiveSubHandle')
                 }
-            });
-        }
-        // make sure the relevant sidebar is being collapsed on clicking
-        // on the background
-        $('.ResponsiveSidebarContainer').off().on('click', function(Event) {
-
-            // only react on a direct click on the background
-            if (Event.target !== this) {
-                return;
+                openIcon.addClass('fa-caret-square-o-left');
             }
-
-            $(this).prev('.ResponsiveHandle').trigger('click');
-        });
-
-        // add handles for navigation and sidebar
-        if (!$('#ResponsiveSidebarHandle').length) {
-            $('.SidebarColumn').closest('.ResponsiveSidebarContainer').before('<span class="ResponsiveHandle" id="ResponsiveSidebarHandle"><i class="fa fa-caret-square-o-left"></i></span>');
-        }
-        if (!$('#ResponsiveNavigationHandle').length) {
-            $('#NavigationContainer').closest('.ResponsiveSidebarContainer').before('<span class="ResponsiveHandle" id="ResponsiveNavigationHandle"><i class="fa fa-navicon"></i></span>');
-        }
-        if (!$('#ResponsiveTabHandle').length) {
-            $('#ContentItemNavTabs').closest('.ResponsiveSidebarContainer').before('<span class="ResponsiveHandle ResponsiveTabHandle" id="ResponsiveTabHandle"><i class="fa fa-navicon"></i></span>');
-        }
-        if (!$('#ResponsiveTicketMenuHandle').length) {
-            $('.ContentColumn .ActionRow').closest('.ResponsiveSidebarContainer').before('<span class="ResponsiveHandle ResponsiveMenuHandle" id="ResponsiveTicketMenuHandle"><i class="fa fa-ellipsis-v"></i></span>');
-        }
-        if (!$('.ResponsibleMenuHandle').length) {
-            $.each($('div[id^=ResponsiveMenu_'), function () {
-                $(this).before('<span class="ResponsiveHandle ResponsiveMenuHandle"><i class="fa fa-ellipsis-v"></i></span>');
-            });
-        }
-
-        // add navigation sidebar expansion handling
-        $('#ResponsiveNavigationHandle').off().on('click', function() {
-            if (
-                parseInt($('#NavigationContainer').css('left'), 10) < 0
-                || parseInt($('#NavigationContainer').css('left'), 10) === 10
+            else if ( $Element.attr('id') == 'NavigationContainer' ) {
+                openHandle.addClass('ResponsiveNavHandle');
+                openIcon.addClass('fa-navicon');
+                direction = 'left';
+            }
+            else if ( $Element.attr('id') == 'ContentItemNavTabs' ) {
+                openHandle.addClass('ResponsiveTabHandle');
+                openIcon.addClass('fa-navicon');
+                direction = 'left';
+            }
+            else if (
+                $Element.hasClass('ActionRow')
+                || $Element.hasClass('LightRow')
             ) {
-                $('#ResponsiveSidebarHandle').animate({
-                    'right': '-45px'
-                });
-                $('#NavigationContainer').closest('.ResponsiveSidebarContainer').fadeIn();
-                $('html').addClass('NoScroll');
-                $('#NavigationContainer').animate({
-                    'left': '0px'
-                });
+                openHandle.addClass('ResponsiveMenuHandle');
+                openIcon.addClass('fa-ellipsis-v');
+            }
 
-                $('.ResponsiveSidebarContainer > div > ul > li > a').css(
-                    {
-                        "border":"0px",
-                        "float":"none"
-                    }
-                );
-            }
-            else {
-                $('#ResponsiveSidebarHandle').animate({
-                    'right': '15px'
-                });
-                $('#NavigationContainer').closest('.ResponsiveSidebarContainer').fadeOut();
-                $('html').removeClass('NoScroll');
-                $('#NavigationContainer').animate({
-                    'left': '-280px'
-                });
-            }
-            return false;
-        });
-
-        // add sidebar column expansion handling
-        $('#ResponsiveSidebarHandle').off().on('click', function() {
-            if (parseInt($('.SidebarColumn').css('right'), 10) < 0) {
-                $('#ResponsiveNavigationHandle').animate({
-                    'left': '-45px'
-                });
-                $('.SidebarColumn').closest('.ResponsiveSidebarContainer').fadeIn();
-                $('html').addClass('NoScroll');
-                $('.ResponsiveSidebarContainer .SidebarColumn').animate({
-                    'right': '0px'
-                });
-            }
-            else {
-                $('#ResponsiveNavigationHandle').animate({
-                    'left': '15px'
-                });
-                $('.SidebarColumn').closest('.ResponsiveSidebarContainer').fadeOut();
-                $('html').removeClass('NoScroll');
-                $('.ResponsiveSidebarContainer .SidebarColumn').animate({
-                    'right': '-300px'
-                });
-            }
-            return false;
-        });
-
-        // add sidebar column expansion handling
-        $('.ResponsiveMenuHandle').off().on('click', function() {
-            var $Element = $(this).next('.ResponsiveSidebarContainer').children('div');
-            if (parseInt($Element.css('right'), 10) < 0) {
-                $('#ResponsiveNavigationHandle').animate({
-                    'left': '-45px'
-                });
-                $('#ResponsiveSidebarHandle').animate({
-                    'right': '-45px'
-                });
-                $Element.closest('.ResponsiveSidebarContainer').fadeIn();
-                $('html').addClass('NoScroll');
-                $Element.animate({
-                    'right': '0px'
-                });
-                $Element.find('.MenuClusterIcon, .ClusterLink').off().on('click', function(){
-                    if ($(this).closest('li').hasClass('ClusterSelect') ) {
-                        $(this).closest('li').removeClass('ClusterSelect');
-                    } else {
-                        $('.ResponsiveSidebarContainer .ActionRow li').removeClass('ClusterSelect');
-                        $(this).closest('li').addClass('ClusterSelect');
-                    }
-                });
-            }
-            else {
-                $('#ResponsiveNavigationHandle').animate({
-                    'left': '15px'
-                });
-                $('#ResponsiveSidebarHandle').animate({
-                    'right': '15px'
-                });
-                $Element.closest('.ResponsiveSidebarContainer').fadeOut();
-                $('html').removeClass('NoScroll');
-                $Element.animate({
-                    'right': '-300px'
-                });
-            }
-            return false;
-        });
-
-        // add tab navigation expansion handling
-        $('.ResponsiveTabHandle').off().on('click', function() {
-            var $Element = $(this).next('.ResponsiveSidebarContainer').children('ul');
-            if (parseInt($Element.css('left'), 10) < 0) {
-                $('#ResponsiveNavigationHandle').animate({
-                    'left': '-45px'
-                });
-                $('#ResponsiveSidebarHandle').animate({
-                    'right': '-45px'
-                });
-                $Element.closest('.ResponsiveSidebarContainer').fadeIn();
-                $('html').addClass('NoScroll');
-                $Element.animate({
-                    'left': '0px'
-                });
-
-            }
-            else {
-                $('#ResponsiveNavigationHandle').animate({
-                    'left': '15px'
-                });
-                $('#ResponsiveSidebarHandle').animate({
-                    'right': '15px'
-                });
-                $Element.closest('.ResponsiveSidebarContainer').fadeOut();
-                $('html').removeClass('NoScroll');
-                $Element.animate({
-                    'left': '-280px'
-                });
-            }
-            return false;
-        });
-        if ( $('.ResponsiveTabHandle').length ) {
-            $( "#ContentItemTabs" ).on( "tabsbeforeload", function( event, ui ) {
-                if ( $('.ResponsiveTabHandle').length ) {
-                    $('.ResponsiveTabHandle').trigger('click');
+            container.on('click', function(Event) {
+                // only react on a direct click on the background
+                if (Event.target !== this) {
+                    return;
                 }
-            } );
-        }
+
+                closeHandle.trigger('click');
+            });
+
+            if (
+                $Element.children().length
+                && !$Element.closest('.ResponsiveSidebarContainer').length
+            ) {
+                container.addClass('ResponsiveSidebar-' + direction);
+                container.append(wrapper);
+                $Element.wrap(container);
+                isWrapped = 1;
+            }
+
+            if ( isWrapped ) {
+
+                openHandle.append(openIcon);
+
+                closeHandle.append(closeIcon);
+                closeHandle.prependTo($Element.closest('.ResponsiveSidebarContainer'));
+                $Element.closest('.ResponsiveSidebarContainer').before(openHandle);
+
+                // add hide handling
+                closeHandle.on('click', function() {
+                    $Element.closest('.ResponsiveSidebarContainer').hide();
+                    $('html').removeClass('NoScroll');
+
+                    if ( direction == 'left' ) {
+                        $Element.closest('.ResponsiveSidebarContainer').children().animate({
+                            'left': '-300px'
+                        });
+                    }
+                    else {
+                        $Element.closest('.ResponsiveSidebarContainer').children().animate({
+                            'right': '-300px'
+                        });
+                    }
+
+                    return false;
+                });
+
+                // add expansion handling
+                openHandle.on('click', function() {
+                    $Element.closest('.ResponsiveSidebarContainer').show();
+                    $('html').addClass('NoScroll');
+
+                    if ( direction == 'left' ) {
+                        $Element.closest('.ResponsiveSidebarContainer').children().animate({
+                            'left': '0px'
+                        });
+                    }
+                    else {
+                        $Element.closest('.ResponsiveSidebarContainer').children().animate({
+                            'right': '0px'
+                        });
+                    }
+
+                    if ( $Element.attr('id') == 'NavigationContainer' ) {
+                        $Element.find('ul > li > a').css(
+                            {
+                                "border":"0px",
+                                "float":"none"
+                            }
+                        );
+                    }
+
+                    $Element.find('.MenuClusterIcon, .ClusterLink').off().on('click', function(){
+                        if ($(this).closest('li').hasClass('ClusterSelect') ) {
+                            $(this).closest('li').removeClass('ClusterSelect');
+                        } else {
+                            $(this).closest('.ActionRow').find('li').removeClass('ClusterSelect');
+                            $(this).closest('li').addClass('ClusterSelect');
+                        }
+                    });
+                    return false;
+                });
+
+                if ( $Element.attr('id') == 'ContentItemNavTabs' ) {
+                    $( "#ContentItemTabs" ).off("tabsbeforeload").on( "tabsbeforeload", function() {
+                        closeHandle.trigger('click');
+                    });
+                }
+            }
+        });
 
         // check if there are any changes in the sidebar that we should notify the user about
         Core.App.Subscribe('Event.Agent.CustomerSearch.GetCustomerInfo.Callback', function() {
@@ -302,9 +232,6 @@ Core.Agent.Responsive = (function (TargetNS) {
 
         // hide options on ticket creations
         $('#OptionCustomer').closest('.Field').hide().prev('label').hide();
-
-        // initially hide navigation container
-        $('#NavigationContainer').css('left', '-280px');
 
         // move toolbar to navigation container
         $('#ToolBar').detach().prependTo('#AppWrapper');
@@ -377,15 +304,18 @@ Core.Agent.Responsive = (function (TargetNS) {
         $('.D3GraphMessage, .D3GraphCanvas').closest('.WidgetSimple').show();
 
         // remove the additional container again
-        $('.ResponsiveSidebarContainer').children('#NavigationContainer').unwrap();
-        $('.ResponsiveSidebarContainer').children('#ContentItemNavTabs').unwrap();
-        $.each($('.ResponsiveSidebarContainer').children('.SidebarColumn, .ActionRow, .LightRow'), function() {
-            if ( $(this).css('left') === '-300px' ) {
-                $(this).css('left', '0px');
-            } else if ( $(this).css('right') === '-300px' ) {
-                $(this).css('right', '0px');
+        $.each($('.ResponsiveSidebarContainer'), function() {
+            var $Element = $(this).find('#NavigationContainer, #ContentItemNavTabs, .SidebarColumn, .ActionRow, .LightRow');
+            if ( $Element.hasClass('.SidebarColumn, .ActionRow, .LightRow') ) {
+                if ( $Element.css('left') === '-300px' ) {
+                    $Element.css('left', '0px');
+                } else if ( $(this).css('right') === '-300px' ) {
+                    $Element.css('right', '0px');
+                }
             }
-            $(this).unwrap();
+            $(this).prev('.ResponsiveHandle').remove();
+            $(this).children('button').remove();
+            $Element.unwrap().unwrap();
         });
 
         $('#OptionCustomer').closest('.Field').show().prev('label').show();

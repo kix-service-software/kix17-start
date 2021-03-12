@@ -820,6 +820,14 @@
 
 
     /**
+    *   subaction pre application agent info
+    */
+    .AcceptContent {
+        border-color: #78BE5A;
+    }
+
+
+    /**
     *   @subsection sortable
     */
     .SortableList {
@@ -1332,6 +1340,9 @@
     /**
     *   @subsection process tab
     */
+    h2.HorizontalLine {
+        border-bottom-color: #78BE5A;
+    }
     .ProcessInfo > .Bottom > .Actions li a {
         background-color: #EEEEEE;
         border: 1px solid #9E9E9E;
@@ -1720,6 +1731,11 @@
     .ActionList p {
         color: #888888;
     }
+
+
+    /**
+    * @subsection TextModules
+    */
     #TextModulesSelectionContainer {
         background-color: #FFFFFF;
         border-color: #CCCCCC;
@@ -1812,8 +1828,8 @@
 
 
 /**
-*   Colors for responsive
-**/
+*   @subsection Responsive
+*/
 @media only screen and (min-width: 0px) and (max-width: 1024px) {
     #UserInfo {
         background-color: #FFFFFF;
@@ -1824,10 +1840,7 @@
     #ResponsiveSidebarNotification {
         color: #CCCCCC;
     }
-    .LayoutFixedSidebar.SidebarLast .ResponsiveSidebarContainer > .SidebarColumn,
-    .LayoutFixedSidebar.SidebarFirst .ResponsiveSidebarContainer > .SidebarColumn,
-    .LayoutFixedSidebar .ContentColumn .ResponsiveSidebarContainer > .ActionRow,
-    .LayoutFixedSidebar .ContentColumn .ResponsiveSidebarContainer > .LightRow  {
+    .ResponsiveWrapperContainer {
         background-color: #FFFFFF;
     }
     #ResponsiveTicketMenuHandle,

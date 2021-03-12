@@ -287,6 +287,16 @@ sub Send {
         #   which could lead to the mail being treated as SPAM.
         $Header{'X-Mailer'} = undef;
     }
+    # get X-Mailer from SysConfig
+    elsif ( $ConfigObject->Get('SendmailMailer') ) {
+        $Header{'X-Mailer'}     = $ConfigObject->Get('SendmailMailer');
+        $Header{'X-Powered-By'} = 'KIX (https://www.kixdesk.com/)';
+
+        # add version of product to X-Mailer
+        if ( $ConfigObject->Get('SendmailMailer::ProductVersion') ) {
+            $Header{'X-Mailer'} .= ' (' . $Version . ')';
+        }
+    }
     else {
         $Header{'X-Mailer'}     = "$Product Mail Service ($Version)";
         $Header{'X-Powered-By'} = 'KIX (https://www.kixdesk.com/)';

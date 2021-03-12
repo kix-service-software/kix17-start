@@ -316,6 +316,8 @@ function CheckIFrameHeight(IFrameID) {
 
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
+    Core.KIX4OTRS.KIXSidebar.Init('[% Env("AgentFAQZoomSidebarWidth") %]','[% Env("Action") %]','ItemID=[% Data.ItemID | uri %];');
+
     $('ul.Actions a.AsPopup').bind('click', function (Event) {
         Core.UI.Popup.OpenPopup ($(this).attr('href'), 'Action');
         return false;
