@@ -1334,10 +1334,7 @@
     #ResponsiveSidebarNotification {
         color: #CCCCCC;
     }
-    .LayoutFixedSidebar.SidebarLast .ResponsiveSidebarContainer > .SidebarColumn,
-    .LayoutFixedSidebar.SidebarFirst .ResponsiveSidebarContainer > .SidebarColumn,
-    .LayoutFixedSidebar .ContentColumn .ResponsiveSidebarContainer > .ActionRow,
-    .LayoutFixedSidebar .ContentColumn .ResponsiveSidebarContainer > .LightRow  {
+    .ResponsiveWrapperContainer {
         background-color: #FFFFFF;
     }
     #ResponsiveTicketMenuHandle,
