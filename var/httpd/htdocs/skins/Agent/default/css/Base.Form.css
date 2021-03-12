@@ -88,6 +88,14 @@
         padding: 8px 0 0px 5px;
         min-height: 20px;
     }
+    fieldset.TableLike > .Field.FieldPlain,
+    fieldset.TableLike > .Row > .Field.FieldPlain {
+        padding-top: 13px;
+    }
+    fieldset.TableLike > .Field > button,
+    fieldset.TableLike > .Row > .Field > button {
+        margin-top: 0;
+    }
     fieldset.TableLike > .EndOfForm,
     fieldset.TableLike > .Row > .EndOfForm {
         margin-top: 20px;

@@ -52,8 +52,7 @@ Core.Customer = (function (TargetNS) {
             NavigationDuration = 500,
             NavigationHoverTimer = {},
             NavigationHoverDuration = 350,
-            InitialNavigationContainerHeight = $('#NavigationContainer').css('height'),
-            NavigationResizeTimeout;
+            InitialNavigationContainerHeight = $('#NavigationContainer').css('height');
 
         /**
          * @private
@@ -344,6 +343,15 @@ Core.Customer = (function (TargetNS) {
         $('.TriggerFullErrorDetails').on('click', function() {
             $('.Content.ErrorDetails').toggle();
         });
+
+        // added class FieldPlain on field container if not empty but has no subelements
+        if ( $('div.Field').length ) {
+            $.each($('div.Field:not(:has(*))'), function() {
+                if ( !$(this).is(':empty') ) {
+                $(this).addClass('FieldPlain');
+                }
+            });
+        }
     };
 
     /**
