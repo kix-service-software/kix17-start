@@ -1,6 +1,17 @@
 # Change log of KIX
 * Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.15.0-RC6 (2021/03/12)
+ * (2021/03/12) - Bugfix: KIX17-1979 (fixed incorrect display of .Field with button or no subelements) (fjacquemin)
+ * (2021/03/12) - CR: KIX17-280 (simplified dynamic loading of Perl packages) (millinger)
+ * (2021/03/11) - Bugfix: KIX17-1771 (fixed responsive sidebar handling) (fjacquemin)
+ * (2021/03/10) - Bugfix: KIX17-1771 (fixed position of the ColumnSettingTrigger in the Overviews) (fjacquemin)
+ * (2021/03/10) - Bugfix: KIX17-1771 (fixed missing css of the pre applications AgentInfo and CustomerAccept) (fjacquemin)
+ * (2021/03/08) - Bugfix: KIX17-1771 (fixed missing css of the process ticket actions of customer process tickets) (fjacquemin)
+ * (2021/03/08) - Bugfix: KIX17-1771 (fixed missing configurable of CloseOnClickOutside for dialogs) (fjacquemin)
+ * (2021/03/05) - Bugfix: KIX17-1771 (fixed missing handling of resizing sidebars in customer interface) (fjacquemin)
+ * (2021/03/05) - Bugfix: KIX17-1771 (fixed selection display in responsive mode by open menu slider) (fjacquemin)
+
 # 17.15.0-RC5 (2021/03/05)
  * (2021/03/05) - Bugfix: KIX17-1838 (fixed missing handling of links if overview highlight used) (fjacquemin)
  * (2021/03/05) - Bugfix: KIX17-473 (fixed field alignment in forms) (fjacquemin)
