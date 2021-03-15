@@ -611,6 +611,10 @@ sub Data {
         = 'Erstellt neues Telefonticket von der Vorlage "default user support"';
     $Lang->{'Defines whether the ticket type should be translated in the selection box.'}
         = 'Definiert, ob der Tickettyp in der Auswahlbox übersetzt wird.';
+    $Lang->{'Do you really want to delete this template?'}
+        = 'Wollen Sie diese Vorlage wirklich löschen?';
+    $Lang->{'Delete this template'}
+        = 'Diese Vorlage löschen';
 
     # PersonTicket
     $Lang->{'This setting defines the link type \'Person\'.'} = 'Definiert den Linktyp \'Person\'.';
@@ -2094,6 +2098,10 @@ sub Data {
     $Lang->{'successful loaded.'}      = 'erfolgreich hochgeladen.';
     $Lang->{'Import failed - No file uploaded/received.'}
         = 'Import fehlgeschlagen - Keine Datei hochgeladen/erhalten.';
+    $Lang->{'Do you really want to delete this text module?'}
+        = 'Wollen Sie diesen Textbaustein wirklich löschen?';
+    $Lang->{'Delete this text module'}
+        = 'Diese Textbaustein löschen';
 
     # TextModules
     $Lang->{'Frontend module registration for the AdmintTextModules object in the admin interface.'}
