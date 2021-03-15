@@ -127,6 +127,7 @@ Core.UI.RichTextEditor = (function (TargetNS) {
                     + Core.Config.Get('RichText.PictureUploadAction', 'PictureUpload')
                     + '&FormID='
                     + CheckFormID($EditorArea).val()
+                    + '&responseType=json'
                     + '&' + Core.Config.Get('SessionName')
                     + '=' + Core.Config.Get('SessionID');
         }
