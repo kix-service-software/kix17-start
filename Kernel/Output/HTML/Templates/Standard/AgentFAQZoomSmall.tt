@@ -19,7 +19,7 @@
 
     <ul class="BreadCrumb">
 [% RenderBlockStart("FAQPathCategoryElement") %]
-        <li>
+        <li title="[% Data.Name | html %]">
             <a href="[% Env("Baselink") %]Action=AgentFAQExplorer;CategoryID=[% Data.CategoryID | uri %];Nav=[% Data.Nav | uri %]">
                 [% Data.Name | html %]
             </a>

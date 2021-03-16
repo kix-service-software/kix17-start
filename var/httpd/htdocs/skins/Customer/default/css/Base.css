@@ -567,7 +567,6 @@
     .BreadCrumb {
         list-style-type: none;
         margin: 0px 0px 15px 0px;
-        padding: 10px;
         position: relative;
         padding-left: 0px;
         padding-right: 15px;
@@ -579,9 +578,14 @@
         margin: 0px 2px 0px 2px;
         padding-left: 35px;
         position: relative;
-        max-width: 200px;
-        white-space: normal;
         vertical-align: middle;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        line-height: 2.7em;
+    }
+    .BreadCrumb li:not(:last-child) {
+        max-width: 300px;
     }
     .BreadCrumb li:first-child {
         padding-left: 20px;

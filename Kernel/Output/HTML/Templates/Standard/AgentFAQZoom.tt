@@ -19,14 +19,16 @@
 
     <ul class="BreadCrumb">
 [% RenderBlockStart("FAQPathCategoryElement") %]
-        <li>
+        <li title="[% Data.Name | html %]">
             <a href="[% Env("Baselink") %]Action=AgentFAQExplorer;CategoryID=[% Data.CategoryID | uri %];Nav=[% Data.Nav | uri %]">
                 [% Data.Name | html %]
             </a>
         </li>
 [% RenderBlockEnd("FAQPathCategoryElement") %]
 [% RenderBlockStart("FAQPathItemElement") %]
-        <li>[% Data.Title | html %]</li>
+        <li title="[% Data.Title | html %]">
+            [% Data.Title | html %]
+        </li>
 [% RenderBlockEnd("FAQPathItemElement") %]
     </ul>
 
