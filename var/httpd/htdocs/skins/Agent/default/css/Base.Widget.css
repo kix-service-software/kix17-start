@@ -865,4 +865,7 @@
     .WidgetSimple > .Content.ProcessInfo fieldset .FieldContainer p.ValueLong {
         display: none;
     }
+    .WidgetSimple > .Content.ProcessInfo > .Bottom > .Actions li a {
+        padding-left: 2px;
+    }
 }
