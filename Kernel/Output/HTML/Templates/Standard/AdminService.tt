@@ -121,9 +121,7 @@
                             [% Data.ParentOptionStrg %]
                         </div>
                         <div class="Clear"></div>
-# ---
-# GeneralCatalog
-# ---
+
                         <label for="TypeID">[% Translate("Type") | html %]: </label>
                         <div class="Field">
                             [% Data.TypeOptionStrg %]
@@ -135,7 +133,6 @@
                             [% Data.CriticalityOptionStrg %]
                         </div>
                         <div class="Clear"></div>
-# ---
 
                         <label for="ValidID">[% Translate("Validity") | html %]: </label>
                         <div class="Field">
@@ -153,14 +150,14 @@
 [% RenderBlockStart("InputKey") %]
                         <label for="[% Data.Name | html %]">[% Translate(Data.Label) | html %] [% Translate(Data.Key) | html %]: </label>
                         <div class="Field">
-                            <input type="text" name="[% Data.Name | html %]" id="[% Data.Name | html %]" value="[% Data.SelectedID | html %]" class="W25pc"/>
+                            <input type="text" name="[% Data.Name | html %]" id="[% Data.Name | html %]" value="[% Data.SelectedID | html %]" class="W50pc"/>
                         </div>
                         <div class="Clear"></div>
 [% RenderBlockEnd("InputKey") %]
 [% RenderBlockStart("Input") %]
                         <label for="[% Data.Name | html %]">[% Translate(Data.Label) | html %]: </label>
                         <div class="Field">
-                            <input type="text" name="[% Data.Name | html %]" id="[% Data.Name | html %]" value="[% Data.SelectedID | html %]" class="W25pc"/>
+                            <input type="text" name="[% Data.Name | html %]" id="[% Data.Name | html %]" value="[% Data.SelectedID | html %]" class="W50pc"/>
                             <p class="FieldExplanation">[% Translate(Data.Desc) | html %]</p>
                         </div>
                         <div class="Clear"></div>
@@ -192,7 +189,7 @@
 [% RenderBlockStart("Password") %]
                         <label for="[% Data.Name | html %]">[% Translate(Data.Label) | html %] [% Translate(Data.Key) | html %]: </label>
                         <div class="Field">
-                            <input type="password" class="W25pc" name="[% Data.Name | html %]" id="[% Data.Name | html %]" value="" />
+                            <input type="password" class="W50pc" name="[% Data.Name | html %]" id="[% Data.Name | html %]" value="" />
                         </div>
                         <div class="Clear"></div>
 [% RenderBlockEnd("Password") %]
@@ -204,7 +201,6 @@
                         </div>
                         <div class="Clear"></div>
                     </fieldset>
-
                 </form>
             </div>
 [% RenderBlockEnd("ServiceEdit") %]
