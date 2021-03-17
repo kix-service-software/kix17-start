@@ -178,11 +178,22 @@ Core.KIX4OTRS = (function(TargetNS) {
      * @description Load a draft
      */
 
-    TargetNS.LoadDraft = function(Action, TicketID, Question) {
+    TargetNS.LoadDraft = function(Action, TicketID, FormID, Question) {
         // if not given, determine Action
 
         if ( !Action )
             Action = $('#SaveAsDraft').closest('form').children('input[name=Action]').val();
+
+        // if not given, determine FormID
+        if ( !FormID ) {
+            var ID = $('#SaveAsDraft').closest('form').children('input[name=FormID]').val();
+            if ( ID && ID != '' ) {
+                FormID = $('#SaveAsDraft').closest('form').children('input[name=FormID]').val();
+            }
+            else {
+                FormID = 0;
+            }
+        }
 
         // if not given, determine TicketID
         if ( !TicketID ) {
@@ -205,6 +216,7 @@ Core.KIX4OTRS = (function(TargetNS) {
             Action : 'SaveAsDraftAJAXHandler',
             Subaction : 'GetFormContent',
             CallingAction : Action,
+            FormID : FormID,
             TicketID : TicketID
             },
             ContentExists = false,
@@ -305,6 +317,7 @@ Core.KIX4OTRS = (function(TargetNS) {
             ActiveInterval,
             Attributes = Core.Config.Get('Attributes').split(","),
             AttributeString = '',
+            FormID = $Form.find('input[name="FormID"]').val() || '';
             TicketID = $Form.find('input[name="TicketID"]').val() || '';
 
         // on submit stop timer
@@ -347,11 +360,11 @@ Core.KIX4OTRS = (function(TargetNS) {
         if ( InitialLoadDraft !== 'false' ) {
             // show dialog on load if saved form is available
             $(window).load(function() {
-                TargetNS.LoadDraft(Action, TicketID, Question);
+                TargetNS.LoadDraft(Action, TicketID, FormID, Question);
             });
 
             // initial call to check for loadable content (necessary for Ticket Tabs)
-            TargetNS.LoadDraft(Action, TicketID, Question);
+            TargetNS.LoadDraft(Action, TicketID, FormID, Question);
         }
     }
 
