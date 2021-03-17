@@ -427,6 +427,9 @@
     .DataTable tbody tr.Invalid {
        color: #AAAAAA;
     }
+    .table-resizable.resizing th.moved {
+        border-right-color: #0A7CB3;
+    }
 
 
     /*
@@ -626,11 +629,13 @@
     ul.Tablelike li:nth-child(2n) {
         background-color: #F5F5F5;
     }
-
     ul.Tablelike li:hover,
     ul.Tablelike li:hover a {
         color: #FFFFFF;
         background-color: #0A7CB3;
+    }
+    ul.Tablelike.AllocationList {
+        background: repeating-linear-gradient(-45deg,transparent 0 10px,#CCCCCC90 10px 17px);
     }
 
 
@@ -1334,10 +1339,7 @@
     #ResponsiveSidebarNotification {
         color: #CCCCCC;
     }
-    .LayoutFixedSidebar.SidebarLast .ResponsiveSidebarContainer > .SidebarColumn,
-    .LayoutFixedSidebar.SidebarFirst .ResponsiveSidebarContainer > .SidebarColumn,
-    .LayoutFixedSidebar .ContentColumn .ResponsiveSidebarContainer > .ActionRow,
-    .LayoutFixedSidebar .ContentColumn .ResponsiveSidebarContainer > .LightRow  {
+    .ResponsiveWrapperContainer {
         background-color: #FFFFFF;
     }
     #ResponsiveTicketMenuHandle,
