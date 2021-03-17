@@ -685,7 +685,7 @@ perform some sanity checks on HTML content.
     it's not used as <p><div> (margin:0cm; margin-bottom:.0001pt;).
 
  -  Replace <blockquote> by using
-    "<div style="border:none;border-left:solid blue 1.5pt;padding:0cm 0cm 0cm 4.0pt" type="cite">"
+    "<div style="border-style:solid;border-color:blue;border-width:0 0 0 1.5pt;padding:0cm 0cm 0cm 4.0pt" type="cite">"
     because of cross mail client and browser compatibility.
 
  -  If there is no HTML doctype present, inject the HTML5 doctype, because it is compatible with HTML4
@@ -734,9 +734,9 @@ sub DocumentCleanup {
     }segxmi;
 
     # replace <blockquote> by using
-    # "<div style="border:none;border-left:solid blue 1.5pt;padding:0cm 0cm 0cm 4.0pt" type="cite">"
+    # "<div style="border-style:solid;border-color:blue;border-width:0 0 0 1.5pt;padding:0cm 0cm 0cm 4.0pt" type="cite">"
     # because of cross mail client and browser compatability
-    my $Style = "border:none;border-left:solid blue 1.5pt;padding:0cm 0cm 0cm 4.0pt";
+    my $Style = "border-style:solid;border-color:blue;border-width:0 0 0 1.5pt;padding:0cm 0cm 0cm 4.0pt";
     for ( 1 .. 10 ) {
         $Param{String} =~ s{
             <blockquote(.*?)>(.+?)</blockquote>
