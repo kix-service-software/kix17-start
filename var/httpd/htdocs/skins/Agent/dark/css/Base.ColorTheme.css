@@ -1854,6 +1854,14 @@
     #TextModulesSelectionContainer {
         background-color: #676767;
     }
+    #TextModulesSelectionContainer > .TextModule:nth-child(2n+1) {
+        background-color: #5B5B5B;
+    }
+    #TextModulesSelectionContainer > .TextModule:hover,
+    #TextModulesSelectionContainer > .TextModule.Selected {
+        background-color: #0A7CB3;
+        color: #FFFFFF;
+    }
 
 
     /**
