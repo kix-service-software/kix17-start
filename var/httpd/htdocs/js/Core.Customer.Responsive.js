@@ -54,14 +54,15 @@ Core.Customer.Responsive = (function (TargetNS) {
         });
 
         // Add switch for Desktopmode
-        if (!$('#ViewModeSwitch').length) {
+        // This function is deactivated with KIX17.15.
+        /*if (!$('#ViewModeSwitch').length) {
             $('#Footer').append('<div id="ViewModeSwitch"><a href="#">' + Core.Config.Get('ViewModeSwitchDesktop') + '</a></div>');
             $('#ViewModeSwitch a').on('click.Responsive', function() {
                 localStorage.setItem("DesktopMode", 1);
                 location.reload(true);
                 return false;
             });
-        }
+        }*/
 
         // wrap sidebar modules with an additional container
         $.each($('.SidebarColumn, #NavigationContainer'), function() {
