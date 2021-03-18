@@ -427,6 +427,9 @@
     .DataTable tbody tr.Invalid {
        color: #AAAAAA;
     }
+    .table-resizable.resizing th.moved {
+        border-right-color: #78BE5A;
+    }
 
 
     /*
@@ -1342,15 +1345,32 @@
         color: #777777;
         background-color: #DDDDDD;
     }
+    .ResponsiveTabHandle {
+        background-color: #E3E3E3;
+    }
+    .ResponsiveTabHandle:hover {
+        background-color: #78BE5A;
+        color: #FFFFFF;
+    }
+    div.ui-tabs > div.ResponsiveSidebarContainer,
     .ResponsiveSidebarContainer {
         background-color: rgba(22,22,22,0.7);
     }
+    .ResponsiveSidebarContainer > ul.ui-tabs-nav,
     .ResponsiveSidebarContainer > #NavigationContainer {
         background-color: #FFFFFF;
     }
     .ResponsiveSidebarContainer #Navigation > li,
     .ResponsiveSidebarContainer .Actions > li {
         border-color: #444444;
+    }
+    .ResponsiveSidebarContainer #Navigation > li:hover > a{
+        background-color: #78BE5A;
+        color: #FFFFFF;
+    }
+    .ResponsiveSidebarContainer #Navigation > li.Selected[aria-controls^="nav-"]::after,
+    .ResponsiveSidebarContainer #Navigation > li[aria-controls^="nav-"]:hover::after {
+        color: #FFFFFF;
     }
     .ResponsiveSidebarContainer .WidgetSimple {
         background-color: #FFFFFF;
@@ -1360,10 +1380,11 @@
         color: #FFFFFF;
         background-color: #78BE5A;
     }
-    .ResponsiveSidebarContainer .Cluster ul ul li {
-        border-bottom: 1px solid #78BE5A;
-    }
     .ResponsiveSidebarContainer .Cluster > ul > li:hover > span {
+        background-color: #78BE5A;
+        color: #FFFFFF;
+    }
+    .ResponsiveSidebarContainer .ui-tabs-nav li.ui-state-hover a {
         background-color: #78BE5A;
         color: #FFFFFF;
     }
