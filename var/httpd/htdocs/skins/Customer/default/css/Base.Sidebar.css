@@ -42,6 +42,20 @@
         overflow: auto;
         padding: 0px 10px 10px 10px;
     }
+    #TextModulesSelectionContainer:not(.jstree) {
+        padding: 0;
+    }
+    #TextModulesSelectionContainer > .TextModule {
+        line-height: 17px;
+        height: 15px;
+        padding: 2px 10px;
+        cursor: pointer;
+    }
+
+
+    /**
+    *   @subsection Flags for sidebar
+    */
     #ServiceIncidentStateContainer .Flag,
     .SidebarColumn fieldset.TableLike div.Value .Flag {
         margin-top: 2px;
@@ -55,6 +69,11 @@
     .ResponsibleDetailsMagnifier {
         cursor: pointer;
     }
+
+
+    /**
+    * @subsection CustomerDetails
+    */
     .CustomerDetailsMagnifier {
         cursor: pointer;
         position: absolute;
