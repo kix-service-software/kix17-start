@@ -12,15 +12,18 @@
 [% RenderBlockStart("Main") %]
 <div class="MainBox ARIARoleMain LayoutFixedSidebar SidebarFirst">
     <h1>[% Translate("GenericInterface Web Service Management") | html %] - [% Translate(Data.Action) | html %]</h1>
+
     <ul class="BreadCrumb">
-        <li>[% Translate("You are here") | html %]:</li>
+        <li title="[% Translate("You are here") | html %]">
+            [% Translate("You are here") | html %]:
+        </li>
 [% RenderBlockStart("WebservicePathElement") %]
-        <li>
+        <li title="[% Data.Name | html %]">
             <a href="[% Env("Baselink") %][% Data.Link %];Nav=[% Data.Nav | uri %]">[% Data.Name | html %]</a>
         </li>
 [% RenderBlockEnd("WebservicePathElement") %]
 [% RenderBlockStart("WebservicePathElementNoLink") %]
-        <li>
+        <li title="[% Data.Name | html %]">
             [% Data.Name | html %]
         </li>
 [% RenderBlockEnd("WebservicePathElementNoLink") %]
