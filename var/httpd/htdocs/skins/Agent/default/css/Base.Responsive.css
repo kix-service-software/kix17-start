@@ -351,6 +351,16 @@
         border-style: solid;
         margin: 0;
     }
+    #Navigation > li[aria-controls^="nav-"]::after {
+        content: "\f0d7";
+        position: absolute;
+        top: 0;
+        right: 0;
+        display: inline;
+        z-index: 3;
+        font: normal normal normal 14px/1 FontAwesome;
+        padding: 10px;
+    }
     .ResponsiveWrapperContainer .Actions > li {
         display: block;
     }
@@ -363,6 +373,9 @@
         margin-top: 0;
         display: block;
     }
+    #Navigation > .Active > ul > li {
+        padding: 0 0 0 15px;
+    }
     .ResponsiveWrapperContainer .Actions > li > a {
         padding: 8px 15px;
         display: block;
@@ -371,6 +384,9 @@
     .ResponsiveWrapperContainer .Actions > li > span {
         margin: 0;
         background: none;
+        border: none;
+    }
+    .ResponsiveWrapperContainer .Actions li.ClusterSelect > ul {
         border: none;
     }
     .ResponsiveWrapperContainer .Actions li span.ClusterLink {
@@ -409,10 +425,12 @@
     }
     #Navigation > .Active > ul > li,
     .ResponsiveWrapperContainer .Actions > .Active > ul > li {
-        padding: 3px 0 3px 15px;
         font-weight: normal;
         border-left: none;
         border-right: none;
+    }
+    .ResponsiveWrapperContainer .Actions > .Active > ul > li {
+        padding: 3px 0 3px 15px;
     }
     #Navigation > .Active > ul > li:last-child,
     .ResponsiveWrapperContainer .Actions > .Active > ul > li:last-child {
@@ -839,6 +857,9 @@
     }
     #ArticleItems .WidgetSimple .Content {
         position: relative;
+    }
+    #ArticleItems .WidgetSimple .LightRow.Bottom {
+        border: none;
     }
     fieldset.TableLike > label.AdditionalInformationResponsive,
     fieldset.TableLike > p.AdditionalInformationResponsive {

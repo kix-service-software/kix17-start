@@ -1840,10 +1840,7 @@
     #ResponsiveSidebarNotification {
         color: #CCCCCC;
     }
-    .LayoutFixedSidebar.SidebarLast .ResponsiveSidebarContainer > .SidebarColumn,
-    .LayoutFixedSidebar.SidebarFirst .ResponsiveSidebarContainer > .SidebarColumn,
-    .LayoutFixedSidebar .ContentColumn .ResponsiveSidebarContainer > .ActionRow,
-    .LayoutFixedSidebar .ContentColumn .ResponsiveSidebarContainer > .LightRow  {
+    .ResponsiveWrapperContainer {
         background-color: #FFFFFF;
     }
     #ResponsiveTicketMenuHandle,
@@ -1870,6 +1867,14 @@
     .ResponsiveSidebarContainer .Actions > li {
         border-color: #444444;
     }
+    .ResponsiveSidebarContainer #Navigation > li:hover > a{
+        background-color: #0A7CB3;
+        color: #FFFFFF;
+    }
+    .ResponsiveSidebarContainer #Navigation > li.Selected[aria-controls^="nav-"]::after,
+    .ResponsiveSidebarContainer #Navigation > li[aria-controls^="nav-"]:hover::after {
+        color: #FFFFFF;
+    }
     .ResponsiveSidebarContainer .WidgetSimple {
         background-color: #FFFFFF;
     }
@@ -1878,10 +1883,11 @@
         color: #FFFFFF;
         background-color: #0A7CB3;
     }
-    .ResponsiveSidebarContainer .Cluster ul ul li {
-        border-bottom: 1px solid #0A7CB3;
-    }
     .ResponsiveSidebarContainer .Cluster > ul > li:hover > span {
+        background-color: #0A7CB3;
+        color: #FFFFFF;
+    }
+    .ResponsiveSidebarContainer .ui-tabs-nav li.ui-state-hover a {
         background-color: #0A7CB3;
         color: #FFFFFF;
     }

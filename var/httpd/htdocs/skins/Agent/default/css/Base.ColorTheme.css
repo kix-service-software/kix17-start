@@ -1867,6 +1867,14 @@
     .ResponsiveSidebarContainer .Actions > li {
         border-color: #444444;
     }
+    .ResponsiveSidebarContainer #Navigation > li:hover > a{
+        background-color: #78BE5A;
+        color: #FFFFFF;
+    }
+    .ResponsiveSidebarContainer #Navigation > li.Selected[aria-controls^="nav-"]::after,
+    .ResponsiveSidebarContainer #Navigation > li[aria-controls^="nav-"]:hover::after {
+        color: #FFFFFF;
+    }
     .ResponsiveSidebarContainer .WidgetSimple {
         background-color: #FFFFFF;
     }
@@ -1875,10 +1883,11 @@
         color: #FFFFFF;
         background-color: #78BE5A;
     }
-    .ResponsiveSidebarContainer .Cluster ul ul li {
-        border-bottom: 1px solid #78BE5A;
-    }
     .ResponsiveSidebarContainer .Cluster > ul > li:hover > span {
+        background-color: #78BE5A;
+        color: #FFFFFF;
+    }
+    .ResponsiveSidebarContainer .ui-tabs-nav li.ui-state-hover a {
         background-color: #78BE5A;
         color: #FFFFFF;
     }
