@@ -245,6 +245,14 @@ Core.Agent.Responsive = (function (TargetNS) {
 
         // Collapse widgets in preferences screen for better overview
         $('.PreferencesScreen .Size1of3 > .WidgetSimple').removeClass('Expanded').addClass('Collapsed');
+
+        // reset dialog container position
+        if ( $('.Dialog.Fullsize').length ) {
+            $('.Dialog.Fullsize').css({
+                top: 0,
+                left: 0
+            });
+        }
     });
 
     Core.App.Subscribe('Event.App.Responsive.ScreenXL', function () {
@@ -340,6 +348,14 @@ Core.Agent.Responsive = (function (TargetNS) {
 
         // re-expand widgets in preferences screen
         $('.PreferencesScreen .WidgetSimple').removeClass('Collapsed').addClass('Expanded');
+
+        // reset dialog container position
+        if ( $('.Dialog.Fullsize').length ) {
+            $('.Dialog').removeClass('Fullsize').css({
+                top: '10%',
+                left: '30%'
+            });
+        }
     });
 
     return TargetNS;

@@ -162,6 +162,14 @@ Core.Customer.Responsive = (function (TargetNS) {
                 });
             }
         });
+
+        // reset dialog container position
+        if ( $('.Dialog.Fullsize').length ) {
+            $('.Dialog.Fullsize').css({
+                top: 0,
+                left: 0
+            });
+        }
     });
 
     Core.App.Subscribe('Event.App.Responsive.ScreenXL', function () {
@@ -226,6 +234,14 @@ Core.Customer.Responsive = (function (TargetNS) {
             $(this).children('button').remove();
             $Element.unwrap().unwrap();
         });
+
+        // reset dialog container position
+        if ( $('.Dialog.Fullsize').length ) {
+            $('.Dialog').removeClass('Fullsize').css({
+                top: '10%',
+                left: '30%'
+            });
+        }
     });
 
     return TargetNS;
