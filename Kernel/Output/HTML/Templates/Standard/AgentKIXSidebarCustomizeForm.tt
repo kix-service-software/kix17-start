@@ -15,200 +15,218 @@
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
 
-/* -----------------------------------------------------
-        Global parameters
-   ----------------------------------------------------- */
+    /**
+    *  Global parameters
+    */
+    var Action = $('#Action').val();
 
-var Action              = $('#Action').val();
-
-/* -----------------------------------------------------
-        Sort Form Fields
-   ----------------------------------------------------- */
-
-var FieldOrderString    = $('#FieldOrderString').val(),
-    DefaultPriority     = new Array(),
-    FieldOrderArray     = new Array();
+    /**
+    *  Sort Form Fields
+    */
+    var FieldOrderString    = $('#FieldOrderString').val(),
+        DefaultPriority     = new Array(),
+        FieldOrderArray     = new Array();
 
     // add starting default priority
     DefaultPriority.push(1000);
 
-if ( typeof FieldOrderString != 'undefined' && FieldOrderString != '' ) {
+    if ( typeof FieldOrderString != 'undefined' && FieldOrderString != '' ) {
 
-    var FieldOrder       = FieldOrderString.split(","),
-        EndOfForm        = $('.EndOfForm').not(':last');
+        var FieldOrder = FieldOrderString.split(","),
+            EndOfForm  = $('.EndOfForm').not(':last');
 
-    if (EndOfForm.length) {
-        EndOfForm.remove();
-    }
-
-    // enable create article
-    $('#CreateArticle').prop('checked',true);
-
-    $('.ContentColumn').find('fieldset').children('div').each( function() {
-
-        // check if this is some entry within a form, if not it might be something like TicketDetails etc
-        if ($(this).closest('form').length == 0)
-            return;
-
-        var ChildClass = $(this).attr("class"),
-            DynamicFieldRegexp = /^Row+/i,
-            FieldRegexp        = /Field$/i,
-            FileRegexp         = /(?:FileUpload|Attachment)$/i,
-            ChildID;
-
-        // attachements
-        if ( FileRegexp.test(ChildClass) ) {
-
-            $(this).find('input[type=file]').each(
-                function(){
-                    GetSortOrder( $(this),FieldOrderArray,DefaultPriority );
-                }
-            );
+        if (EndOfForm.length) {
+            EndOfForm.remove();
         }
-        // input (text), textarea, select, div
-        else if ( FieldRegexp.test(ChildClass) ) {
-            $(this).children('input[type=text],input[type=hidden],textarea,select,div').first().each(
-                function(){
 
-                    // some special handling for modernized form fields
-                    if ( $(this).is('div') && $(this).next().is('select') ) {
-                        GetSortOrder( $(this).next(),FieldOrderArray,DefaultPriority );
-                    }
-                    // next if element has no ID
-                    else if ( $(this).attr('id') === undefined && !($(this).prop('tagName') == 'DIV' && $(this).hasClass('Value')) ) {
-                        return true;
-                    }
-                    // some special handling necessary for display of service incident state
-                    else if ( $(this).prop('tagName') == 'DIV' && $(this).hasClass('Value') ) {
-                        GetSortOrder( $(this).parent(),FieldOrderArray,DefaultPriority );
-                    }
-                    else {
+        // enable create article
+        $('#CreateArticle').prop('checked',true);
+
+        $('.ContentColumn').find('fieldset').children('div').each( function() {
+
+            // check if this is some entry within a form, if not it might be something like TicketDetails etc
+            if ($(this).closest('form').length == 0)
+                return;
+
+            var ChildClass = $(this).attr("class"),
+                DynamicFieldRegexp = /^Row+/i,
+                FieldRegexp        = /Field$/i,
+                FileRegexp         = /(?:FileUpload|Attachment)$/i,
+                ChildID;
+
+            // attachements
+            if ( FileRegexp.test(ChildClass) ) {
+
+                $(this).find('input[type=file]').each(
+                    function(){
                         GetSortOrder( $(this),FieldOrderArray,DefaultPriority );
                     }
-                }
-            );
-        }
-        // dynamic fields
-        else if ( DynamicFieldRegexp.test(ChildClass) ) {
-            var DFRegExp = /.*Row_(DynamicField_[^\s]+).*/,
-                Matches  = DFRegExp.exec($(this).attr('class'));
-            if ( Matches !== null ) {
-                var DynamicFieldID = Matches[1];
-                if ( $('#' + DynamicFieldID).length != 0 ) {
-                    GetSortOrder( $('#' + DynamicFieldID),FieldOrderArray,DefaultPriority );
-                }
-                else if ( $('#' + DynamicFieldID + 'Used' ).length != 0 ) {
-                    GetSortOrder( $('#' + DynamicFieldID + 'Used'),FieldOrderArray,DefaultPriority );
+                );
+            }
+            // input (text), textarea, select, div
+            else if ( FieldRegexp.test(ChildClass) ) {
+                $(this).children('input[type=text],input[type=hidden],textarea,select,div').first().each(
+                    function(){
+
+                        // some special handling for modernized form fields
+                        if (
+                            $(this).is('div')
+                            && $(this).next().is('select')
+                        ) {
+                            GetSortOrder( $(this).next(),FieldOrderArray,DefaultPriority );
+                        }
+
+                        // next if element has no ID
+                        else if (
+                            $(this).attr('id') === undefined
+                            && !($(this).prop('tagName') == 'DIV'
+                            && $(this).hasClass('Value'))
+                        ) {
+                            return true;
+                        }
+
+                        // some special handling necessary for display of service incident state
+                        else if (
+                            $(this).prop('tagName') == 'DIV'
+                            && $(this).hasClass('Value')
+                        ) {
+                            GetSortOrder( $(this).parent(),FieldOrderArray,DefaultPriority );
+                        }
+
+                        else {
+                            GetSortOrder( $(this),FieldOrderArray,DefaultPriority );
+                        }
+                    }
+                );
+            }
+            // dynamic fields
+            else if ( DynamicFieldRegexp.test(ChildClass) ) {
+                var DFRegExp = /.*Row_(DynamicField_[^\s]+).*/,
+                    Matches  = DFRegExp.exec($(this).attr('class'));
+
+                if ( Matches !== null ) {
+                    var DynamicFieldID = Matches[1];
+
+                    if ( $('#' + DynamicFieldID).length != 0 ) {
+                        GetSortOrder( $('#' + DynamicFieldID),FieldOrderArray,DefaultPriority );
+                    }
+
+                    else if ( $('#' + DynamicFieldID + 'Used' ).length != 0 ) {
+                        GetSortOrder( $('#' + DynamicFieldID + 'Used'),FieldOrderArray,DefaultPriority );
+                    }
                 }
             }
+            // remove all clear (will be inserted again later)
+            else if ( ChildClass == 'Clear' ) {
+                $(this).remove();
+            }
+
+        });
+
+        FieldOrderArray.sort();
+
+        // change sort order
+        $.each(FieldOrderArray, function(Index, Value) {
+            var ValueArray             = Value.toString().split("::"),
+                DynamicFieldRegexpPre  = /^DynamicField_+/i,
+                CustomerRegexp         = /Customer$/i,
+                FormID                 = ValueArray[2],
+                FieldID                = ValueArray[1];
+
+            // insert some content before the selected item (CustomerTo,CustomerBcc,CustomerCc,Richtext-Options)
+            if (FieldID == 'RichText') {
+                $('#'+FormID).find("label[for=Options]").insertBefore('div.EndOfForm');
+                $('#'+FormID).find("div.Options.Field").insertBefore('div.EndOfForm');
+            }
+
+            // insert the selected item
+            if (FieldID == 'Day') {
+                $('#'+FormID).find("label[for=Date]").insertBefore('div.EndOfForm');
+                $('#'+FormID).find('#'+FieldID).closest('.Field,.RichTextField').insertBefore('div.EndOfForm');
+            }
+
+            else if ( DynamicFieldRegexpPre.test(FieldID) ) {
+                $('#'+FormID).find('#'+FieldID).closest('.Row').insertBefore('div.EndOfForm');
+            }
+
+            else {
+                $('#'+FormID).find("label[for="+FieldID+"]").insertBefore('div.EndOfForm');
+                $('#'+FormID).find('#'+FieldID).closest('.Field,.RichTextField').insertBefore('div.EndOfForm');
+            }
+
+            // insert some content behind the selected item (Richtext-Signature)
+            if (FieldID == 'RichText') {
+                $('#'+FormID).find("label[for=Signature]").insertBefore('div.EndOfForm');
+                $('#'+FormID).find("div.RichTextField").find('input[name=Signature]').parent().insertBefore('div.EndOfForm');
+            }
+
+            else if ( CustomerRegexp.test(FieldID) ) {
+                $('#'+FormID).find('#CustomerTicketCounter'+FieldID).parent().insertBefore('div.EndOfForm');
+            }
+        });
+
+        // remove empty blocks - in note tab and note popup e.g.
+        $('.ContentColumn').find('fieldset').each( function() {
+            if ( $(this).html().trim() == "" ) {
+                $(this).parent().parent().remove();
+            }
+
+            // add clear container after sort
+            $(this).find('div.Field, div.RichTextField').after('<div class="Clear"></div>');
+        });
+    }
+
+    function GetSortOrder( $Child,FieldOrderArray,DefaultPriority ) {
+        var ChildID = $Child.attr("id"),
+            ChildIDSearch,
+            ChildIDParts,
+            DynamicFieldRegexpPre  = /^DynamicField+/i,
+            DynamicFieldRegexpPost = /Used$/i;
+
+        ChildIDParts = ChildID.split("_");
+
+        // handle modernized form fields
+        if ( ChildIDParts[ChildIDParts.length-1] == 'Search' ) {
+            ChildID = ChildIDParts.slice(0,ChildIDParts.length-1).join("_");
         }
-        // remove all clear (will be inserted again later)
-        else if ( ChildClass == 'Clear' ) {
-            $(this).remove();
+
+        // handle date and date/time fields
+        ChildIDSearch = ChildID;
+        if (
+            DynamicFieldRegexpPre.test(ChildID)
+            && DynamicFieldRegexpPost.test(ChildID)
+        ) {
+            ChildIDSearch = ChildID.substring(0,ChildID.length-4);
         }
 
-    });
+        var Search = $.grep(
+                FieldOrder,
+                function(Element,Index){
+                    var Reg = new RegExp( '::' + ChildIDSearch + '$', 'i');
+                    return Element.match(Reg) == null;
+                },
+                true
+            ),
+            Priority,
+            FormElement = $Child.closest('form').attr('id');
 
-    FieldOrderArray.sort();
+        if ( Search != '' ) {
+            var SearchArray = Search.toString().split("::");
 
-    // change sort order
-    $.each(FieldOrderArray, function(Index, Value) {
-        var ValueArray             = Value.toString().split("::"),
-            DynamicFieldRegexpPre  = /^DynamicField_+/i,
-            CustomerRegexp         = /Customer$/i,
-            FormID                 = ValueArray[2],
-            FieldID                = ValueArray[1];
-
-        // insert some content before the selected item (CustomerTo,CustomerBcc,CustomerCc,Richtext-Options)
-        if (FieldID == 'RichText') {
-            $('#'+FormID).find("label[for=Options]").insertBefore('div.EndOfForm');
-            $('#'+FormID).find("div.Options.Field").insertBefore('div.EndOfForm');
-            $('#'+FormID).find('div.EndOfForm').before('<div class="Clear"></div>');
-        }
-
-        // insert the selected item
-        if (FieldID == 'Day') {
-            $('#'+FormID).find("label[for=Date]").insertBefore('div.EndOfForm');
-            $('#'+FormID).find('#'+FieldID).closest('.Field,.RichTextField').insertBefore('div.EndOfForm');
-            $('#'+FormID).find('div.EndOfForm').before('<div class="Clear"></div>');
-        }
-        else if ( DynamicFieldRegexpPre.test(FieldID) ) {
-            $('#'+FormID).find('#'+FieldID).closest('.Row').insertBefore('div.EndOfForm');
+            // add left-hand zeros for all priorities less than 1000
+            while( SearchArray[0].length < 4 ) {
+                SearchArray[0] = '0'+SearchArray[0];
+            }
+            FieldOrderArray.push(SearchArray[0]+'::'+ChildID+'::'+FormElement);
         }
         else {
-            $('#'+FormID).find("label[for="+FieldID+"]").insertBefore('div.EndOfForm');
-            $('#'+FormID).find('#'+FieldID).closest('.Field,.RichTextField').insertBefore('div.EndOfForm');
-            $('#'+FormID).find('div.EndOfForm').before('<div class="Clear"></div>');
+            // increase priority
+            Priority = DefaultPriority.pop()+1;
+            FieldOrderArray.push(Priority+'::'+ChildID+'::'+FormElement);
+            // save used default priorities
+            DefaultPriority.push(Priority);
         }
-
-        // insert some content behind the selected item (Richtext-Signature)
-        if (FieldID == 'RichText') {
-            $('#'+FormID).find("label[for=Signature]").insertBefore('div.EndOfForm');
-            $('#'+FormID).find("div.RichTextField").find('input[name=Signature]').parent().insertBefore('div.EndOfForm');
-            $('#'+FormID).find('div.EndOfForm').before('<div class="Clear"></div>');
-        }
-        else if ( CustomerRegexp.test(FieldID) ) {
-            $('#'+FormID).find('#CustomerTicketCounter'+FieldID).parent().insertBefore('div.EndOfForm');
-            $('#'+FormID).find('div.EndOfForm').before('<div class="Clear"></div>');
-        }
-    });
-
-    // remove empty blocks - in note tab and note popup e.g.
-    $('.ContentColumn').find('fieldset').each( function() {
-        if ( $(this).html().trim() == "" ) {
-            $(this).parent().parent().remove();
-        }
-    })
-}
-
-function GetSortOrder( $Child,FieldOrderArray,DefaultPriority ) {
-    var ChildID = $Child.attr("id"),
-        ChildIDSearch,
-        ChildIDParts,
-        DynamicFieldRegexpPre  = /^DynamicField+/i,
-        DynamicFieldRegexpPost = /Used$/i;
-
-    ChildIDParts = ChildID.split("_");
-
-    // handle modernized form fields
-    if ( ChildIDParts[ChildIDParts.length-1] == 'Search' ) {
-        ChildID = ChildIDParts.slice(0,ChildIDParts.length-1).join("_");
     }
-
-    // handle date and date/time fields
-    ChildIDSearch = ChildID;
-    if ( DynamicFieldRegexpPre.test(ChildID) && DynamicFieldRegexpPost.test(ChildID) ) {
-        ChildIDSearch = ChildID.substring(0,ChildID.length-4);
-    }
-
-    var Search = $.grep(
-            FieldOrder,
-            function(Element,Index){
-                var Reg = new RegExp( '::' + ChildIDSearch + '$', 'i');
-                return Element.match(Reg) == null;
-            },
-            true
-        ),
-        Priority;
-
-    var FormElement = $Child.closest('form').attr('id');
-    if ( Search != '' ) {
-        var SearchArray = Search.toString().split("::");
-
-        // add left-hand zeros for all priorities less than 1000
-        while( SearchArray[0].length < 4 ) {
-            SearchArray[0] = '0'+SearchArray[0];
-        }
-        FieldOrderArray.push(SearchArray[0]+'::'+ChildID+'::'+FormElement);
-    }
-    else {
-        // increase priority
-        Priority = DefaultPriority.pop()+1;
-        FieldOrderArray.push(Priority+'::'+ChildID+'::'+FormElement);
-        // save used default priorities
-        DefaultPriority.push(Priority);
-    }
-}
 
 //]]>
 </script>

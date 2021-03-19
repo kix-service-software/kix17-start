@@ -619,11 +619,13 @@
     ul.Tablelike li:nth-child(2n) {
         background-color: #F5F5F5;
     }
-
     ul.Tablelike li:hover,
     ul.Tablelike li:hover a {
         color: #FFFFFF;
         background-color: #78BE5A;
+    }
+    ul.Tablelike.AllocationList {
+        background: repeating-linear-gradient(-45deg,transparent 0 10px,#CCCCCC90 10px 17px);
     }
 
 
@@ -1060,7 +1062,6 @@
     .IconNotReady {
         color: #E31E24;
     }
-
     .IconReady::before {
         color: #00FF00;
     }

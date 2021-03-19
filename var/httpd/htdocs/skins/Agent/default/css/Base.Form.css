@@ -124,11 +124,10 @@
         margin-right: 5px;
         display: inline-block;
     }
-    fieldset.TableLike > .Field > input[id$='Used'],
-    fieldset.TableLike > .Row > .Field > input[id$='Used'] {
+    fieldset.TableLike > .Field > input[type=checkbox],
+    fieldset.TableLike > .Row > .Field > input[type=checkbox] {
         margin-top: 0;
-        position: relative;
-        top: 3px;
+        vertical-align: middle;
     }
     fieldset.TableLike > .Field > input[id$='Date'],
     fieldset.TableLike > .Row > .Field > input[id$='Date'] {
@@ -210,6 +209,11 @@
         margin-left: 100px;
         margin-right: 0;
         word-wrap: break-word;
+        padding-top: 5px;
+    }
+    fieldset.TableLike.FixedLabelSmall > .Field.FieldPlain,
+    fieldset.TableLike.FixedLabelSmall > .Row > .Field.FieldPlain {
+        padding-top: 5px;
     }
     fieldset.TableLike.FixedLabelLarge > label,
     fieldset.TableLike.FixedLabelLarge > .Row > label {
@@ -226,7 +230,7 @@
     }
     fieldset.TableLike.FixedLabelLarge > .Field,
     fieldset.TableLike.FixedLabelLarge > .Row > .Field {
-        margin-top: 2px;
+        padding-top: 5px;
     }
     .CallForAction,
     body .cke_dialog_footer_buttons a.cke_dialog_ui_button {
