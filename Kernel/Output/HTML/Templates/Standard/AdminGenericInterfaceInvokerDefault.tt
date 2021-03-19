@@ -16,24 +16,27 @@
 [% RenderBlockStart("TitleChange") %]
     <h1>[% Translate("Change Invoker %s of Web Service %s", Data.Invoker, Data.WebserviceName) | html %]</h1>
 [% RenderBlockEnd("TitleChange") %]
-<!-- breadcrumb -->
 
     <ul class="BreadCrumb">
-        <li>[% Translate("You are here") | html %]:</li>
-        <li>
+        <li title="[% Translate("You are here") | html %]">
+            [% Translate("You are here") | html %]:
+        </li>
+        <li title="[% Translate("Web Services") | html %]">
             <a href="[% Env("Baselink") %]Action=AdminGenericInterfaceWebservice">[% Translate("Web Services") | html %]</a>
         </li>
-        <li>
+        <li title="[% Data.WebserviceName | html %]">
             <a href="[% Env("Baselink") %]Action=AdminGenericInterfaceWebservice;Subaction=Change;WebserviceID=[% Data.WebserviceID | uri %]">[% Data.WebserviceName | html %]</a>
         </li>
-        <li>
 [% RenderBlockStart("NavigationAdd") %]
+        <li title="[% Translate("Add new invoker") | html %]">
             [% Translate("Add new invoker") | html %]
+        </li>
 [% RenderBlockEnd("NavigationAdd") %]
 [% RenderBlockStart("NavigationChange") %]
+        <li title="[% Translate("Change invoker %s", Data.Invoker) | html %]">
             [% Translate("Change invoker %s", Data.Invoker) | html %]
-[% RenderBlockEnd("NavigationChange") %]
         </li>
+[% RenderBlockEnd("NavigationChange") %]
     </ul>
 
     <div class="SidebarColumn">

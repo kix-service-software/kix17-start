@@ -453,9 +453,6 @@
     .LayoutGrid > div, .LayoutGrid > li {
         float: left;
     }
-    .WidgetSimple .Field.LayoutGrid .Tablelike {
-        width: 98%;
-    }
     ul.Tablelike:first-child {
         margin-right: 8px;
     }
@@ -479,9 +476,6 @@
     .LayoutGrid > li > div {
         overflow: hidden;
     }
-    .WidgetSimple .Field.LayoutGrid .Tablelike {
-        width: 100%;
-    }
     ul.AllocationList {
         min-height: 25px;
         max-height: 300px;
@@ -502,11 +496,12 @@
         top: 2px;
         min-width: 40px;
     }
+    .WidgetSimple .Field.LayoutGrid .Tablelike {
+        width: 100%;
+        box-sizing: border-box;
+    }
     ul.Tablelike + ul.Tablelike.AllocationList {
         border-top: 0px;
-    }
-    .WidgetSimple .Field.LayoutGrid .Tablelike {
-        width: 98%;
     }
     .WidgetSimple .Field.LayoutGrid .AllocationList {
         max-height: 192px;

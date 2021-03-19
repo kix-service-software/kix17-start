@@ -619,11 +619,13 @@
     ul.Tablelike li:nth-child(2n) {
         background-color: #F5F5F5;
     }
-
     ul.Tablelike li:hover,
     ul.Tablelike li:hover a {
         color: #FFFFFF;
         background-color: #0A7CB3;
+    }
+    ul.Tablelike.AllocationList {
+        background: repeating-linear-gradient(-45deg,transparent 0 10px,#CCCCCC90 10px 17px);
     }
 
 
@@ -1060,7 +1062,6 @@
     .IconNotReady {
         color: #E31E24;
     }
-
     .IconReady::before {
         color: #00FF00;
     }
@@ -1361,6 +1362,9 @@
     }
     .WidgetSimple > .Content.ProcessInfo fieldset .FieldContainer label {
         border-bottom: 1px solid #CCCCCC;
+    }
+    .WidgetSimple > .Content.ProcessInfo fieldset .FieldContainer label .ShowFieldInfoOverlay:hover {
+        color: #0A7CB3;
     }
     .FieldSeparator {
         border-top: 1px dotted #CCCCCC;
@@ -1740,6 +1744,14 @@
         background-color: #FFFFFF;
         border-color: #CCCCCC;
     }
+    #TextModulesSelectionContainer > .TextModule:nth-child(2n+1) {
+        background-color: #F5F5F5;
+    }
+    #TextModulesSelectionContainer > .TextModule:hover,
+    #TextModulesSelectionContainer > .TextModule.Selected {
+        background-color: #0A7CB3;
+        color: #FFFFFF;
+    }
 
 
     /**
@@ -1840,10 +1852,7 @@
     #ResponsiveSidebarNotification {
         color: #CCCCCC;
     }
-    .LayoutFixedSidebar.SidebarLast .ResponsiveSidebarContainer > .SidebarColumn,
-    .LayoutFixedSidebar.SidebarFirst .ResponsiveSidebarContainer > .SidebarColumn,
-    .LayoutFixedSidebar .ContentColumn .ResponsiveSidebarContainer > .ActionRow,
-    .LayoutFixedSidebar .ContentColumn .ResponsiveSidebarContainer > .LightRow  {
+    .ResponsiveWrapperContainer {
         background-color: #FFFFFF;
     }
     #ResponsiveTicketMenuHandle,
@@ -1870,6 +1879,14 @@
     .ResponsiveSidebarContainer .Actions > li {
         border-color: #444444;
     }
+    .ResponsiveSidebarContainer #Navigation > li:hover > a{
+        background-color: #0A7CB3;
+        color: #FFFFFF;
+    }
+    .ResponsiveSidebarContainer #Navigation > li.Selected[aria-controls^="nav-"]::after,
+    .ResponsiveSidebarContainer #Navigation > li[aria-controls^="nav-"]:hover::after {
+        color: #FFFFFF;
+    }
     .ResponsiveSidebarContainer .WidgetSimple {
         background-color: #FFFFFF;
     }
@@ -1878,10 +1895,11 @@
         color: #FFFFFF;
         background-color: #0A7CB3;
     }
-    .ResponsiveSidebarContainer .Cluster ul ul li {
-        border-bottom: 1px solid #0A7CB3;
-    }
     .ResponsiveSidebarContainer .Cluster > ul > li:hover > span {
+        background-color: #0A7CB3;
+        color: #FFFFFF;
+    }
+    .ResponsiveSidebarContainer .ui-tabs-nav li.ui-state-hover a {
         background-color: #0A7CB3;
         color: #FFFFFF;
     }

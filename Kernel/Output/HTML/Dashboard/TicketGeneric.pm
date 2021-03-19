@@ -352,7 +352,15 @@ sub new {
 
     if ( !$Self->{PreSort} ) {
         my %SearchParams = $Self->_SearchParamsGet(%Param);
-        my $PreSort      = $Self->{PreSortableColumns}->{$Self->{Config}->{PreSortDefault}} ? $Self->{Config}->{PreSortDefault} : '';
+        my $PreSort      = '';
+
+        if (
+            defined $Self->{Config}->{PreSortDefault}
+            && $Self->{Config}->{PreSortDefault}
+            && $Self->{PreSortableColumns}->{$Self->{Config}->{PreSortDefault}}
+        ) {
+            $PreSort = $Self->{Config}->{PreSortDefault};
+        }
 
         $Self->{PreSort} = $SearchParams{TicketSearch}->{PreSort}
             || $Preferences{ $Self->{PrefKeyPreSort} }

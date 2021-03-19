@@ -42,7 +42,8 @@ sub Run {
         $GetParam{$Key} = $ParamObject->GetParam( Param => $Key );
     }
 
-    my $TicketID = $ParamObject->GetParam( Param => 'TicketID' ) || 0;
+    my $NewFormID = $ParamObject->GetParam( Param => 'FormID' ) || 0;
+    my $TicketID  = $ParamObject->GetParam( Param => 'TicketID' ) || 0;
 
     # the hardcoded unix timestamp 2147483646 is necessary for UploadCache FS backend
     my $FormID
@@ -85,6 +86,48 @@ sub Run {
                 From => 'utf-8',
                 To   => 'iso-8859-1',
             );
+
+            # check if we have a new FormID for inline images of the draft
+            if ( $NewFormID ) {
+                while( $Item->{Content} =~ m/Action=PictureUpload;FormID=(\d+\.\d+\.\d+);ContentID=(inline\d+\.\d+\.\d+\.\d+\.\d+@[0-9a-z]+\.)/ ) {
+                    # get data of inline image
+                    my $OldFormID = $1;
+                    my $ContentID = $2;
+
+                    # get data from upload cache
+                    my @Data = $UploadCacheObject->FormIDGetAllFilesData(
+                        FormID => $OldFormID,
+                    );
+
+                    # process files
+                    FILE:
+                    for my $FileEntry ( @Data ) {
+                        # check for matching ContentID
+                        if (
+                            $FileEntry->{ContentID}
+                            && $FileEntry->{ContentID} eq $ContentID
+                        ) {
+                            # add file to new FormID
+                            $UploadCacheObject->FormIDAddFile(
+                                %{ $FileEntry },
+                                FormID => $NewFormID,
+                            );
+
+                            # mark occurrences
+                            $Item->{Content} =~ s/(Action=PictureUpload;FormID=)\d+\.\d+\.\d+(;ContentID=$ContentID)/$1NEW$2/g;
+
+                            # stop processing
+                            last FILE;
+                        }
+                    }
+                }
+
+                # replace occurences with new FormID
+                if ( $Item->{Content} =~ m/Action=PictureUpload;FormID=NEW;ContentID=inline\d+\.\d+\.\d+\.\d+\.\d+@[0-9a-z]+\./ ) {
+                    $Item->{Content} =~ s/(Action=PictureUpload;FormID=)NEW(;ContentID=inline\d+\.\d+\.\d+\.\d+\.\d+@[0-9a-z]+\.)/$1$NewFormID$2/g
+                }
+            }
+
             push @Result, { Label => $Item->{Filename}, Value => $Item->{Content} };
         }
 

@@ -666,11 +666,20 @@ Core.Agent = (function (TargetNS) {
         Core.UI.TreeSelection.InitDynamicFieldTreeViewRestore();
 
         // added class FieldPlain on field container if not empty but has no subelements
-        if ( $('div.Field').length ) {
-            $.each($('div.Field:not(:has(*))'), function() {
+        if ( $('.Field').length ) {
+            $.each($('.Field:not(:has(*))'), function() {
                 if ( !$(this).is(':empty') ) {
-                $(this).addClass('FieldPlain');
+                    $(this).addClass('FieldPlain');
                 }
+            });
+            $.each($('.Field:has(*)'), function() {
+                if (
+                    $(this).find(':visible').length
+                    || $(this).hasClass('Hidden')
+                ) {
+                    return;
+                }
+                $(this).addClass('FieldTest');
             });
         }
 
