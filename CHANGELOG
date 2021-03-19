@@ -1,6 +1,26 @@
 # Change log of KIX
 * Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.15.0-RC7 (2021/03/19)
+ * (2021/03/18) - Bugfix: KIX17-1951 (clear customer id when customer user is changed) (millinger)
+ * (2021/03/18) - Bugfix: KIX17-2008 (The "ForceNoBulk" parameter has been added to disable the bulk action) (fjacquemin)
+ * (2021/03/18) - Bugfix: KIX17-1771 (deactivated the switch function "ViewSwitchMode" in responsive mode) (fjacquemin)
+ * (2021/03/18) - Bugfix: KIX17-1771 (fixed display of the navigation handling of the responsive sidebars) (fjacquemin)
+ * (2021/03/18) - Bugfix: KIX17-860 (fixed switch display of dialog between responsive and desktop mode) (fjacquemin)
+ * (2021/03/18) - Bugfix: KIX17-703 (fixed missing css of TextModule-List if not ShowCategories used) (fjacquemin)
+ * (2021/03/17) - Bugfix: KIX17-1935 (added MasterAction for linked ticket table) (millinger)
+ * (2021/03/17) - Bugfix: KIX17-1858 (cleanup cache of ticket search if ticket changed) (millinger)
+ * (2021/03/17) - Bugfix: KIX17-2002 (fixed loading of changed language files) (millinger)
+ * (2021/03/17) - Bugfix: KIX17-1903 (fixed incorrect order of the quote style after ckeditor editing) (fjacquemin)
+ * (2021/03/17) - Bugfix: KIX17-1740 (handle inline images of drafts) (millinger)
+ * (2021/03/17) - Bugfix: KIX17-1771 (fixed inconsistent field form display) (fjacquemin)
+ * (2021/03/16) - Bugfix: KIX17-1771 (fixed missing css of the process information in the process tab by using dark mode) (fjacquemin)
+ * (2021/03/16) - Bugfix: KIX17-1771 (fixed inconsistent width of the input fields in AdminService and AdminSLA) (fjacquemin)
+ * (2021/03/16) - Bugfix: KIX17-1771 (fixed limited display of the bread crumb elements) (fjacquemin)
+ * (2021/03/15) - Bugfix: KIX17-685 (add confirmation for deleting ticket template and text module) (millinger)
+ * (2021/03/15) - Bugfix: KIX17-1918 (fixed missing handling of undefined value of the pre sort) (fjacquemin)
+ * (2021/03/15) - Bugfix: KIX17-1903 (fixed unnecessary browser warnings of the ckeditor) (fjacquemin)
+
 # 17.15.0-RC6 (2021/03/12)
  * (2021/03/12) - Bugfix: KIX17-1979 (fixed incorrect display of .Field with button or no subelements) (fjacquemin)
  * (2021/03/12) - CR: KIX17-280 (simplified dynamic loading of Perl packages) (millinger)
