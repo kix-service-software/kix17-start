@@ -1419,6 +1419,7 @@
     .ProcessInfo > .Bottom > .Actions li a {
         background-color: #EEEEEE;
         border: 1px solid #9E9E9E;
+        color: #111111;
     }
     .ProcessInfo > .Bottom > .Actions li a:hover {
         background-color: #0A7CB3;
@@ -1426,14 +1427,18 @@
         color: #FFFFFF;
     }
     .WidgetSimple > .Content.ProcessInfo fieldset .FieldContainer {
-        background-color: #EEEEEE;
-        border: 1px solid #CCCCCC;
+        background-color: #373737;
+        border: 1px solid #373737;
     }
     .WidgetSimple > .Content.ProcessInfo fieldset .FieldContainer p  {
-        background-color: #FFFFFF;
+        background-color: #F0F0F0;
+        color: #111111;
     }
     .WidgetSimple > .Content.ProcessInfo fieldset .FieldContainer label {
-        border-bottom: 1px solid #CCCCCC;
+        border-bottom: 1px solid #373737;
+    }
+    .WidgetSimple > .Content.ProcessInfo fieldset .FieldContainer label .ShowFieldInfoOverlay:hover {
+        color: #0A7CB3;
     }
     .FieldSeparator {
         border-top: 1px dotted #CCCCCC;

@@ -1363,6 +1363,9 @@
     .WidgetSimple > .Content.ProcessInfo fieldset .FieldContainer label {
         border-bottom: 1px solid #CCCCCC;
     }
+    .WidgetSimple > .Content.ProcessInfo fieldset .FieldContainer label .ShowFieldInfoOverlay:hover {
+        color: #78BE5A;
+    }
     .FieldSeparator {
         border-top: 1px dotted #CCCCCC;
     }
