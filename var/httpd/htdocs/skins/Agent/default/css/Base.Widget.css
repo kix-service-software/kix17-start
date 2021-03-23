@@ -162,8 +162,10 @@
     }
     #TransitionForm .WidgetSimple .WidgetSimple,
     .NotificationLanguage > .WidgetSimple {
-        padding: 5px;
         margin: 15px 10px;
+    }
+    #TransitionForm .WidgetSimple .WidgetSimple {
+        padding: 5px;
     }
     #WebserviceHistoryDetails.WidgetSimple > .LightRow.Bottom {
         border-width: 0 0 1px 0;
@@ -489,10 +491,6 @@
     .PreferencesScreen .FieldExplanation {
         font-size: 11px;
         line-height: 140%;
-    }
-    .PreferencesScreen .Content form .Field {
-        margin-left: 30%;
-        padding: 4px 0px 3px 5px;
     }
     .PreferencesScreen .Content form .Field.NoMargin {
         margin: 0px;
