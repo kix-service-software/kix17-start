@@ -180,6 +180,7 @@ $('.NotificationDelete').bind('click', function (Event) {
                         <div class="Field">
                             <input type="text" name="Comment" id="Comment" value="[% Data.Comment | html %]" class="W50pc" maxlength="250"/>
                         </div>
+                        <div class="Clear"></div>
 
                         <label for="VisibleForAgent">[% Translate("Show in agent preferences") | html %]: </label>
                         <div class="Field">
