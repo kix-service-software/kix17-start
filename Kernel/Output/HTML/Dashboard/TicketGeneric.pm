@@ -350,7 +350,10 @@ sub new {
         );
     }
 
-    if ( !$Self->{PreSort} ) {
+    if (
+        !$Self->{PreSort}
+        && $Self->{Config}->{UserPreSortActive}
+    ) {
         my %SearchParams = $Self->_SearchParamsGet(%Param);
         my $PreSort      = '';
 
@@ -367,6 +370,15 @@ sub new {
             || $PreSort
             || '';
     }
+    elsif ( !$Self->{Config}->{UserPreSortActive} ) {
+        if (
+            defined $Self->{Config}->{PreSortDefault}
+            && $Self->{Config}->{PreSortDefault}
+            && $Self->{PreSortableColumns}->{$Self->{Config}->{PreSortDefault}}
+        ) {
+            $Self->{PreSort} = $Self->{Config}->{PreSortDefault};
+        }
+    }
     else {
         $UserObject->SetPreferences(
             UserID => $Self->{UserID},
@@ -375,12 +387,34 @@ sub new {
         );
     }
 
-    if ( !$Self->{PreOrder} ) {
-        my %SearchParams  = $Self->_SearchParamsGet(%Param);
+    if (
+        !$Self->{PreOrder}
+        && $Self->{Config}->{UserPreSortActive}
+    ) {
+        my %SearchParams = $Self->_SearchParamsGet(%Param);
+        my $PreOrder     = '';
+
+        if (
+            defined $Self->{Config}->{PreOrderDefault}
+            && $Self->{Config}->{PreOrderDefault}
+            && $Self->{Config}->{PreOrderDefault} =~ /Down|Up/
+        ) {
+            $PreOrder = $Self->{Config}->{PreOrderDefault};
+        }
+
         $Self->{PreOrder} = $SearchParams{TicketSearch}->{PreOrder}
             || $Preferences{ $Self->{PrefKeyPreOrder} }
-            || $Self->{Config}->{PreOrderDefault}
-            || 'Down';
+            || $PreOrder
+            || '';
+    }
+    elsif ( !$Self->{Config}->{UserPreSortActive} ) {
+        if (
+            defined $Self->{Config}->{PreOrderDefault}
+            && $Self->{Config}->{PreOrderDefault}
+            && $Self->{Config}->{PreOrderDefault} =~ /Down|Up/
+        ) {
+            $Self->{PreOrder} = $Self->{Config}->{PreOrderDefault};
+        }
     }
     else {
         $UserObject->SetPreferences(
@@ -619,35 +653,50 @@ sub Preferences {
             },
             SelectedID  => $Self->{PageShown},
             Translation => 0,
-        },
-        {
-            Desc  => Translatable('Pre-Sort by'),
-            Name  => $Self->{PrefKeyPreSort},
-            Block => 'Option',
-            Data  => $Self->{PreSortableColumns},
-            SelectedID   => $Self->{PreSort} || '',
-            Translation  => 1,
-        },
-        {
-            Desc  => Translatable('Direction of pre-sorting'),
-            Name  => $Self->{PrefKeyPreOrder},
-            Block => 'Option',
-            Data  => {
-                'Down' => 'Down',
-                'Up' => 'Up'
-            },
-            SelectedID  => $Self->{PreOrder},
-            Translation => 1,
-        },
-        {
-            Desc             => Translatable('Shown Columns'),
-            Name             => $Self->{PrefKeyColumns},
-            Block            => 'AllocationList',
-            Columns          => $JSONObject->Encode( Data => \%Columns ),
-            ColumnsEnabled   => $JSONObject->Encode( Data => \@ColumnsEnabled ),
-            ColumnsAvailable => $JSONObject->Encode( Data => \@ColumnsAvailableNotEnabled ),
-            Translation      => 1,
-        },
+        }
+    );
+
+    if ( $Self->{Config}->{UserPreSortActive} ) {
+        push(
+            @Params,
+            (
+                {
+                    Desc  => Translatable('Pre-Sort by'),
+                    Name  => $Self->{PrefKeyPreSort},
+                    Block => 'Option',
+                    Data  => $Self->{PreSortableColumns},
+                    SelectedID   => $Self->{PreSort} || '',
+                    Translation  => 1,
+                },
+                {
+                    Desc  => Translatable('Direction of pre-sorting'),
+                    Name  => $Self->{PrefKeyPreOrder},
+                    Block => 'Option',
+                    Data  => {
+                        ''     => '-',
+                        'Down' => 'Down',
+                        'Up'   => 'Up'
+                    },
+                    SelectedID  => $Self->{PreOrder} || '',
+                    Translation => 1,
+                }
+            )
+        );
+    }
+
+    push(
+        @Params,
+        (
+            {
+                Desc             => Translatable('Shown Columns'),
+                Name             => $Self->{PrefKeyColumns},
+                Block            => 'AllocationList',
+                Columns          => $JSONObject->Encode( Data => \%Columns ),
+                ColumnsEnabled   => $JSONObject->Encode( Data => \@ColumnsEnabled ),
+                ColumnsAvailable => $JSONObject->Encode( Data => \@ColumnsAvailableNotEnabled ),
+                Translation      => 1,
+            }
+        )
     );
 
     if ( $Self->{Name} =~ /SearchTemplate/ ) {
