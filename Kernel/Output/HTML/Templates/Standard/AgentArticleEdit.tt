@@ -190,7 +190,7 @@
                         </label>
                         <div class="Value">
                             <input id="NewTicketNumber[% Data.WidgetClass | html %]" type="hidden" name="NewTicketNumber" value=""/>
-                            <input id="NewTicketNumber[% Data.WidgetClass | html %]AutoComplete" type="text" name="NewTicketNumberAutoComplete" value="" class="AutocompleteOff"/>
+                            <input id="NewTicketNumber[% Data.WidgetClass | html %]AutoComplete" type="text" name="NewTicketNumberAutoComplete" value="" class="W75pc AutocompleteOff"/>
                             <div id="NewTicketNumber[% Data.WidgetClass | html %]Error" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
                             <div id="NewTicketNumber[% Data.WidgetClass | html %]ServerError" class="TooltipErrorMessage"><p>[% Translate("Invalid ticket number!") | html %]</p></div>
                             <span alt="[% Translate("Loading") | html %]" class="Loader Hidden" id="QuickLinkLoading"></span>
