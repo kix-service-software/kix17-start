@@ -1,6 +1,11 @@
 # Change log of KIX
 * Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.15.0-RC8 (2021/03/26)
+ * (2021/03/26) - Bugfix: KIX17-1771 (fixed different field widths of the input fields when moving/copying articles) (fjacquemin)
+ * (2021/03/26) - CR: KIX17-1918 (Added configuration to activate user specific settings of pre sort/order) (fjacquemin)
+ * (2021/03/23) - Bugfix: KIX17-2028 (fixed incorrect indentation in form fields) (fjacquemin)
+
 # 17.15.0-RC7 (2021/03/19)
  * (2021/03/18) - Bugfix: KIX17-1951 (clear customer id when customer user is changed) (millinger)
  * (2021/03/18) - Bugfix: KIX17-2008 (The "ForceNoBulk" parameter has been added to disable the bulk action) (fjacquemin)
