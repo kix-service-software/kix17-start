@@ -66,14 +66,14 @@
 [% RenderBlockEnd("InputSingleBlock") %]
 [% RenderBlockEnd("Input") %]
 [% RenderBlockStart("InputField") %]
-                            <label for="[% Data.Name | html %]">[% Translate(Data.Key) | html %]:</label>
-                            <div class="Field">
-                                <textarea name="[% Data.Name | html %]" id="[% Data.Name | html %]" rows="4" cols="30">[% Data.SelectedID | html %]</textarea>
+                                    <label for="[% Data.Name | html %]">[% Translate(Data.Key) | html %]:</label>
+                                    <div class="Field">
+                                        <textarea name="[% Data.Name | html %]" id="[% Data.Name | html %]" rows="4" cols="30">[% Data.SelectedID | html %]</textarea>
 [% RenderBlockStart("InputFieldSingleBlock") %]
-                                <button type="submit" id="[% Data.Name | html %]Update" value="[% Translate("Update") | html %]">[% Translate("Update") | html %]</button>
+                                        <button type="submit" id="[% Data.Name | html %]Update" value="[% Translate("Update") | html %]">[% Translate("Update") | html %]</button>
 [% RenderBlockEnd("InputFieldSingleBlock") %]
-                            </div>
-                            <div class="Clear"></div>
+                                    </div>
+                                    <div class="Clear"></div>
 [% RenderBlockEnd("InputField") %]
 [% RenderBlockStart("Option") %]
                                 [% IF Data.Key %]
@@ -87,6 +87,7 @@
                                     <div class="Field ButtonOnly">
                                         <button type="submit" id="[% Data.Name | html %]Update" value="[% Translate("Update") | html %]" class="CallForAction"><span>[% Translate("Update") | html %]</span></button>
                                     </div>
+                                    <div class="Clear"></div>
 [% RenderBlockEnd("OptionSingleBlock") %]
 [% RenderBlockEnd("Option") %]
 [% RenderBlockStart("Upload") %]
@@ -101,6 +102,7 @@
                                     <div class="Field ButtonOnly">
                                         <button type="submit" id="[% Data.Name | html %]Update" value="[% Translate("Update") | html %]" class="CallForAction"><span>[% Translate("Update") | html %]</span></button>
                                     </div>
+                                    <div class="Clear"></div>
 [% RenderBlockEnd("UploadSingleBlock") %]
 [% RenderBlockEnd("Upload") %]
 [% RenderBlockStart("Password") %]
@@ -113,6 +115,7 @@
                                     <div class="Field ButtonOnly">
                                         <button type="submit" id="[% Data.Name | html %]Update" value="[% Translate("Update") | html %]" class="CallForAction"><span>[% Translate("Update") | html %]</span></button>
                                     </div>
+                                    <div class="Clear"></div>
 [% RenderBlockEnd("PasswordSingleBlock") %]
 [% RenderBlockEnd("Password") %]
 [% RenderBlockStart("OutOfOffice") %]
@@ -141,6 +144,7 @@
                                     <div class="Field ButtonOnly">
                                         <button type="submit" id="[% Data.Name | html %]Update" value="[% Translate("Update") | html %]" class="CallForAction"><span>[% Translate("Update") | html %]</span></button>
                                     </div>
+                                    <div class="Clear"></div>
 [% RenderBlockEnd("OutOfOfficeSingleBlock") %]
 [% RenderBlockEnd("OutOfOffice") %]
 [% RenderBlockStart("RawHTML") %]
@@ -152,51 +156,56 @@
                                     <div class="Field ButtonOnly">
                                         <button type="submit" id="[% Data.Name | html %]Update" value="[% Translate("Update") | html %]" class="CallForAction"><span>[% Translate("Update") | html %]</span></button>
                                     </div>
+                                    <div class="Clear"></div>
 [% RenderBlockEnd("RawHTMLSingleBlock") %]
 [% RenderBlockEnd("RawHTML") %]
 [% RenderBlockStart("OutOfOfficeSubstitute") %]
-                            <label for="OutOfOfficeSubstitute">[% Translate("Substitute") | html %]:</label>
-                            <div class="Field">
-                                [% Data.OptionSubstitute %]
-                            </div>
-                            <div class="Clear"></div>
-                            <label for="OutOfOfficeSubstituteNote">[% Translate("Substitute note") | html %]:</label>
-                            <div class="Field">
-                                <textarea name="OutOfOfficeSubstituteNote" id="OutOfOfficeSubstituteNote" rows="5" cols="35">[% Data.OptionSubstituteNote %]</textarea>
-                            </div>
-                            <div class="Clear"></div>
+                                    <label for="OutOfOfficeSubstitute">[% Translate("Substitute") | html %]:</label>
+                                    <div class="Field">
+                                        [% Data.OptionSubstitute %]
+                                    </div>
+                                    <div class="Clear"></div>
+                                    <label for="OutOfOfficeSubstituteNote">[% Translate("Substitute note") | html %]:</label>
+                                    <div class="Field">
+                                        <textarea name="OutOfOfficeSubstituteNote" id="OutOfOfficeSubstituteNote" rows="5" cols="35">[% Data.OptionSubstituteNote %]</textarea>
+                                    </div>
+                                    <div class="Clear"></div>
 [% RenderBlockStart("OutOfOfficeSubstituteSingleBlock") %]
-                            <div class="Field ButtonOnly">
-                                <button type="submit" value="[% Translate("Update") | html %]" class="CallForAction"><span>[% Translate("Update") | html %]</span></button>
-                            </div>
+                                    <div class="Field ButtonOnly">
+                                        <button type="submit" value="[% Translate("Update") | html %]" class="CallForAction"><span>[% Translate("Update") | html %]</span></button>
+                                    </div>
+                                    <div class="Clear"></div>
 [% RenderBlockEnd("OutOfOfficeSubstituteSingleBlock") %]
 [% RenderBlockEnd("OutOfOfficeSubstitute") %]
 [% RenderBlockStart("SearchProfile") %]
-                            <label for="[% Data.Key | html %]">[% Data.Name | html %]:</label>
-                            <div class="Field">
-                                <span id="[% Data.Key | html %]_UpdateElement">[% Data.OptionStrg %]</span>
-                            </div>
+                                    <label for="[% Data.Key | html %]">[% Data.Name | html %]:</label>
+                                    <div class="Field">
+                                        <span id="[% Data.Key | html %]_UpdateElement">[% Data.OptionStrg %]</span>
+                                    </div>
+                                    <div class="Clear"></div>
 [% RenderBlockEnd("SearchProfile") %]
 [% RenderBlockStart("SearchProfileSubmit") %]
-                            <div class="Field">
-                                <button type="submit" id="Subscribe" value="[% Translate("Subscribe") | html %]" class="CallForAction"><span>[% Translate("Subscribe") | html %]</span></button>
-                                <button type="submit" id="Copy" value="[% Translate("Copy") | html %]" class="CallForAction"><span>[% Translate("Copy") | html %]</span></button>
-                                <span id="SearchProfileSelectionSaved" class="Hidden">
-                                    <img src="[% Config("Frontend::ImagePath") %]OK.png" border="2" alt="[% Translate("OK") | html %]" />
-                                </span>
-                            </div>
-                            <div class="Hidden" id="RenameCopiedSearchProfile">
-                                <div class="">
-                                    [% Translate("Search profiles with same name already exists. Type new search profile name into the textfield to rename copied profile.") | html %]<br /><br />
-                                    <form action="[% Env("CGIHandle") %]" method="post" id="RenameCopiedSearchProfileForm" name="RenameCopiedSearchProfileForm">
-                                        <input type="hidden" value="SearchprofilePreferencesAJAXHandler" name="Action"/>
-                                        <input type="hidden" value="CopyOverwrite" name="Subaction"/>
-                                        <input type="hidden" value="" name="PrefSearchProfileCategory" id="PrefSearchProfileCategoryOverwrite" />
-                                        <fieldset class="TableLike" id="RenameCopiedSearchProfileFieldSet">
-                                        </fieldset>
-                                    </form>
-                                </div>
-                            </div>
+                                    <div class="Field">
+                                        <button type="submit" id="Subscribe" value="[% Translate("Subscribe") | html %]" class="CallForAction"><span>[% Translate("Subscribe") | html %]</span></button>
+                                        <button type="submit" id="Copy" value="[% Translate("Copy") | html %]" class="CallForAction"><span>[% Translate("Copy") | html %]</span></button>
+                                        <span id="SearchProfileSelectionSaved" class="Hidden">
+                                            <img src="[% Config("Frontend::ImagePath") %]OK.png" border="2" alt="[% Translate("OK") | html %]" />
+                                        </span>
+                                    </div>
+                                    <div class="Clear"></div>
+                                    <div class="Hidden" id="RenameCopiedSearchProfile">
+                                        <div class="">
+                                            [% Translate("Search profiles with same name already exists. Type new search profile name into the textfield to rename copied profile.") | html %]<br /><br />
+                                            <form action="[% Env("CGIHandle") %]" method="post" id="RenameCopiedSearchProfileForm" name="RenameCopiedSearchProfileForm">
+                                                <input type="hidden" value="SearchprofilePreferencesAJAXHandler" name="Action"/>
+                                                <input type="hidden" value="CopyOverwrite" name="Subaction"/>
+                                                <input type="hidden" value="" name="PrefSearchProfileCategory" id="PrefSearchProfileCategoryOverwrite" />
+                                                <fieldset class="TableLike" id="RenameCopiedSearchProfileFieldSet">
+                                                </fieldset>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="Clear"></div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
 
@@ -286,16 +295,18 @@
 [% END %]
 [% RenderBlockEnd("SearchProfileSubmit") %]
 [% RenderBlockStart("RemoveArticleFlags") %]
-                            <label for="[% Data.Key | html %]">[% Data.Name | html %]:</label>
-                            <div class="Field">
-                                <span id="[% Data.Key | html %]_UpdateElement">[% Data.OptionStrg %]</span>
-                            </div>
+                                    <label for="[% Data.Key | html %]">[% Data.Name | html %]:</label>
+                                    <div class="Field">
+                                        <span id="[% Data.Key | html %]_UpdateElement">[% Data.OptionStrg %]</span>
+                                    </div>
+                                    <div class="Clear"></div>
 [% RenderBlockEnd("RemoveArticleFlags") %]
 [% RenderBlockStart("SearchProfileAutoSubscribe") %]
-                            <label for="[% Data.Key | html %]">[% Data.Name | html %]:</label>
-                            <div class="Field">
-                                <span id="[% Data.Key | html %]_UpdateElement">[% Data.OptionStrg %]</span>
-                            </div>
+                                    <label for="[% Data.Key | html %]">[% Data.Name | html %]:</label>
+                                    <div class="Field">
+                                        <span id="[% Data.Key | html %]_UpdateElement">[% Data.OptionStrg %]</span>
+                                    </div>
+                                    <div class="Clear"></div>
 [% RenderBlockEnd("SearchProfileAutoSubscribe") %]
 [% RenderBlockEnd("Block") %]
 [% RenderBlockStart("MultipleBlocks") %]
