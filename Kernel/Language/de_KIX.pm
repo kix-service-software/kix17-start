@@ -4616,6 +4616,16 @@ sub Data {
     $Lang->{'Pre-Sort by'}              = 'Vorsortieren nach';
     $Lang->{'Direction of pre-sorting'} = 'Sortierrichtung der Vorsortierung';
 
+    # Admin validity fitler
+    $Lang->{'Defines the standard filter for the validity, which initially restricts the AdminUser table.'}
+        = 'Legt den Standardfilter für die Gültigkeit fest, der die Tabelle von AdminUser initial einschränkt.';
+    $Lang->{'Defines the standard filter for the validity, which initially restricts the AdminQueue table.'}
+        = 'Legt den Standardfilter für die Gültigkeit fest, der die Tabelle von AdminQueue initial einschränkt.';
+    $Lang->{'Defines the standard filter for the validity, which initially restricts the AdminRole table.'}
+        = 'Legt den Standardfilter für die Gültigkeit fest, der die Tabelle von AdminRole initial einschränkt.';
+    $Lang->{'Defines the standard filter for the validity, which initially restricts the AdminGroup table.'}
+        = 'Legt den Standardfilter für die Gültigkeit fest, der die Tabelle von AdminGroup initial einschränkt.';
+
     return 0;
 }
 

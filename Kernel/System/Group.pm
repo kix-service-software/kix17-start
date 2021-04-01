@@ -351,7 +351,7 @@ sub GroupList {
     my ( $Self, %Param ) = @_;
 
     # set default value
-    my $Valid = $Param{Valid} ? 1 : 0;
+    my $Valid = $Param{Valid} // 1;
 
     # get cache object
     my $CacheObject = $Kernel::OM->Get('Kernel::System::Cache');
@@ -366,55 +366,29 @@ sub GroupList {
     );
     return %{$Cache} if $Cache;
 
-    # get valid ids
-    my @ValidIDs = $Kernel::OM->Get('Kernel::System::Valid')->ValidIDsGet();
-
     # get group data list
     my %GroupDataList = $Self->GroupDataList();
 
-    my %GroupListValid;
-    my %GroupListAll;
+    my %GroupList;
     KEY:
     for my $Key ( sort keys %GroupDataList ) {
 
         next KEY if !$Key;
 
-        # add group to the list of all groups
-        $GroupListAll{$Key} = $GroupDataList{$Key}->{Name};
+        next KEY if $Valid && $Valid ne $GroupDataList{$Key}->{ValidID};
 
-        my $Match;
-        VALIDID:
-        for my $ValidID (@ValidIDs) {
-
-            next VALIDID if $ValidID ne $GroupDataList{$Key}->{ValidID};
-
-            $Match = 1;
-
-            last VALIDID;
-        }
-
-        next KEY if !$Match;
-
-        # add group to the list of valid groups
-        $GroupListValid{$Key} = $GroupDataList{$Key}->{Name};
+        $GroupList{$Key} = $GroupDataList{$Key}->{Name};
     }
 
     # set cache
     $CacheObject->Set(
         Type  => 'Group',
-        Key   => 'GroupList::0',
+        Key   => "GroupList::$Valid",
         TTL   => 60 * 60 * 24 * 20,
-        Value => \%GroupListAll,
-    );
-    $CacheObject->Set(
-        Type  => 'Group',
-        Key   => 'GroupList::1',
-        TTL   => 60 * 60 * 24 * 20,
-        Value => \%GroupListValid,
+        Value => \%GroupList,
     );
 
-    return %GroupListValid if $Valid;
-    return %GroupListAll;
+    return %GroupList;
 }
 
 =item GroupDataList()
@@ -785,7 +759,7 @@ sub RoleList {
     my ( $Self, %Param ) = @_;
 
     # set default value
-    my $Valid = $Param{Valid} ? 1 : 0;
+    my $Valid = $Param{Valid} // 1;
 
     # get cache object
     my $CacheObject = $Kernel::OM->Get('Kernel::System::Cache');
@@ -800,55 +774,29 @@ sub RoleList {
     );
     return %{$Cache} if $Cache;
 
-    # get valid ids
-    my @ValidIDs = $Kernel::OM->Get('Kernel::System::Valid')->ValidIDsGet();
-
     # get role data list
     my %RoleDataList = $Self->RoleDataList();
 
-    my %RoleListValid;
-    my %RoleListAll;
+    my %RoleList;
     KEY:
     for my $Key ( sort keys %RoleDataList ) {
 
         next KEY if !$Key;
 
-        # add role to the list of all roles
-        $RoleListAll{$Key} = $RoleDataList{$Key}->{Name};
+        next KEY if $Valid && $Valid ne $RoleDataList{$Key}->{ValidID};
 
-        my $Match;
-        VALIDID:
-        for my $ValidID (@ValidIDs) {
-
-            next VALIDID if $ValidID ne $RoleDataList{$Key}->{ValidID};
-
-            $Match = 1;
-
-            last VALIDID;
-        }
-
-        next KEY if !$Match;
-
-        # add role to the list of valid roles
-        $RoleListValid{$Key} = $RoleDataList{$Key}->{Name};
+        $RoleList{$Key} = $RoleDataList{$Key}->{Name};
     }
 
     # set cache
     $CacheObject->Set(
         Type  => 'Group',
-        Key   => 'RoleList::0',
+        Key   => "RoleList::$Valid",
         TTL   => 60 * 60 * 24 * 20,
-        Value => \%RoleListAll,
-    );
-    $CacheObject->Set(
-        Type  => 'Group',
-        Key   => 'RoleList::1',
-        TTL   => 60 * 60 * 24 * 20,
-        Value => \%RoleListValid,
+        Value => \%RoleList,
     );
 
-    return %RoleListValid if $Valid;
-    return %RoleListAll;
+    return %RoleList;
 }
 
 =item RoleDataList()

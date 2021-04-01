@@ -24,13 +24,21 @@ sub new {
     my $Self = {%Param};
     bless( $Self, $Type );
 
+    $Self->{Config} = $Kernel::OM->Get('Kernel::Config')->{'Admin::Frontend::AdminQueue'};
+
     return $Self;
 }
 
 sub Run {
     my ( $Self, %Param ) = @_;
 
-    my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
+    # get needed objects
+    my $QueueObject  = $Kernel::OM->Get('Kernel::System::Queue');
+    my $ParamObject  = $Kernel::OM->Get('Kernel::System::Web::Request');
+    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+    my $MainObject   = $Kernel::OM->Get('Kernel::System::Main');
+
     my $QueueID = $ParamObject->GetParam( Param => 'QueueID' ) || '';
 
     my @Params = (
@@ -47,8 +55,6 @@ sub Run {
     # get possible sign keys
     my %KeyList;
     my %QueueData;
-
-    my $QueueObject = $Kernel::OM->Get('Kernel::System::Queue');
 
     if ($QueueID) {
 
@@ -78,10 +84,6 @@ sub Run {
             }
         }
     }
-
-    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-    my $MainObject   = $Kernel::OM->Get('Kernel::System::Main');
 
     # ------------------------------------------------------------ #
     # change
@@ -252,7 +254,6 @@ sub Run {
         $Output .= $LayoutObject->Footer();
 
         return $Output;
-
     }
 
     # ------------------------------------------------------------ #
@@ -451,17 +452,30 @@ sub Run {
 sub _Edit {
     my ( $Self, %Param ) = @_;
 
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $ParamObject  = $Kernel::OM->Get('Kernel::System::Web::Request');
+    my $ValidObject  = $Kernel::OM->Get('Kernel::System::Valid');
+    my $DBObject     = $Kernel::OM->Get('Kernel::System::DB');
+    my $QueueObject  = $Kernel::OM->Get('Kernel::System::Queue');
+
+    # get validiy filter
+    $Param{ValidityFilter} = $ParamObject->GetParam( Param => 'ValidityFilter' ) // $Self->{Config}->{ValidityFilter};
 
     $LayoutObject->Block(
         Name => 'Overview',
         Data => \%Param,
     );
     $LayoutObject->Block( Name => 'ActionList' );
-    $LayoutObject->Block( Name => 'ActionOverview' );
+    $LayoutObject->Block(
+        Name => 'ActionOverview',
+        Data => {
+            ValidityFilter => $Param{ValidityFilter}
+        }
+    );
 
     # get valid list
-    my %ValidList        = $Kernel::OM->Get('Kernel::System::Valid')->ValidList();
+    my %ValidList        = $ValidObject->ValidList();
     my %ValidListReverse = reverse %ValidList;
 
     $Param{ValidOption} = $LayoutObject->BuildSelection(
@@ -470,8 +484,6 @@ sub _Edit {
         SelectedID => $Param{ValidID} || $ValidListReverse{valid},
         Class      => 'Modernize Validate_Required ' . ( $Param{Errors}->{'ValidIDInvalid'} || '' ),
     );
-
-    my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
 
     $Param{GroupOption} = $LayoutObject->BuildSelection(
         Data => {
@@ -499,7 +511,6 @@ sub _Edit {
         $Param{Name} = $Queue[-1];
     }
 
-    my $QueueObject = $Kernel::OM->Get('Kernel::System::Queue');
     my %Data = $QueueObject->QueueList( Valid => 0 );
 
     my $QueueName = '';
@@ -517,8 +528,6 @@ sub _Edit {
             delete $CleanHash{$Key};
         }
     }
-
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
     # get list type
     my $ListType = $ConfigObject->Get('Ticket::Frontend::ListType');
@@ -787,6 +796,24 @@ sub _Overview {
     my ( $Self, %Param ) = @_;
 
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $ValidObject  = $Kernel::OM->Get('Kernel::System::Valid');
+    my $ParamObject  = $Kernel::OM->Get('Kernel::System::Web::Request');
+    my $QueueObject  = $Kernel::OM->Get('Kernel::System::Queue');
+    my $GroupObject  = $Kernel::OM->Get('Kernel::System::Group');
+
+    # get valid list
+    my %ValidList          = $ValidObject->ValidList();
+    $Param{ValidityFilter} = $ParamObject->GetParam( Param => 'ValidityFilter' ) // $Self->{Config}->{ValidityFilter};
+
+    $Param{ValidOption} = $LayoutObject->BuildSelection(
+        Data       => {
+            %ValidList,
+            0 => 'all'
+        },
+        Name       => 'ValidityFilter',
+        SelectedID => $Param{ValidityFilter},
+        Class      => 'Modernize Fullsize',
+    );
 
     $LayoutObject->Block(
         Name => 'Overview',
@@ -795,16 +822,22 @@ sub _Overview {
 
     $LayoutObject->Block( Name => 'ActionList' );
     $LayoutObject->Block( Name => 'ActionAdd' );
+    $LayoutObject->Block(
+        Name => 'ActionFilter',
+        Data => {
+            %Param
+        }
+    );
 
     $LayoutObject->Block(
         Name => 'OverviewResult',
         Data => \%Param,
     );
 
-    my $QueueObject = $Kernel::OM->Get('Kernel::System::Queue');
-
     # get queue list
-    my %List = $QueueObject->QueueList( Valid => 0 );
+    my %List = $QueueObject->QueueList(
+        Valid => $Param{ValidityFilter},
+    );
 
     # error handling
     if ( !%List ) {
@@ -816,9 +849,6 @@ sub _Overview {
         return 1;
     }
 
-    # get valid list
-    my %ValidList = $Kernel::OM->Get('Kernel::System::Valid')->ValidList();
-
     for my $QueueID ( sort { $List{$a} cmp $List{$b} } keys %List ) {
 
         # get queue data
@@ -827,14 +857,15 @@ sub _Overview {
         );
 
         # group lookup
-        $Data{GroupName} = $Kernel::OM->Get('Kernel::System::Group')->GroupLookup(
+        $Data{GroupName} = $GroupObject->GroupLookup(
             GroupID => $Data{GroupID},
         );
 
         $LayoutObject->Block(
             Name => 'OverviewResultRow',
             Data => {
-                Valid => $ValidList{ $Data{ValidID} },
+                Valid          => $ValidList{ $Data{ValidID} },
+                ValidityFilter => $Param{ValidityFilter},
                 %Data,
             },
         );
