@@ -73,7 +73,7 @@
                                 <p class="FieldExplanation">
                                     [% Translate("URI to indicate a specific location for accessing a service.") | html %]
                                     <br/>
-                                    [% Translate("e.g. http://local.otrs.com:8000/Webservice/Example") | html %]
+                                    [% Translate("e.g. http://local.kixdesk.com:8000/Webservice/Example") | html %]
                                 </p>
                             </div>
                             <div class="Clear"></div>
