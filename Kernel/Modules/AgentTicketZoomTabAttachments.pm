@@ -311,7 +311,7 @@ sub _ArticleDeleteChangedAttachment {
             );
             for my $File (@List) {
                 next if ( $File =~ /(?:\/|\\)plain.txt$/ );
-                next if ( $File !~ /(?:\/|\\)$Filename$/ );
+                next if ( $File !~ /(?:\/|\\)\Q$Filename\E$/ );
 
                 if ( !unlink $File ) {
                     $LogObject->Log(
@@ -319,13 +319,37 @@ sub _ArticleDeleteChangedAttachment {
                         Message  => "Can't remove: $File: $!!",
                     );
                 }
-                if ( !unlink $File . '.content_type' ) {
+                if (
+                    -f ( $File . '.content_type' )
+                    && !unlink( $File . '.content_type' )
+                ) {
                     $LogObject->Log(
                         Priority => 'error',
                         Message  => "Can't remove: $File.content_type: $!!",
                     );
                 }
-                if ( !unlink $File . '.disposition' ) {
+                if (
+                    -f ( $File . '.content_id' )
+                    && !unlink( $File . '.content_id' )
+                ) {
+                    $LogObject->Log(
+                        Priority => 'error',
+                        Message  => "Can't remove: $File.content_id: $!!",
+                    );
+                }
+                if (
+                    -f ( $File . '.content_alternative' )
+                    && !unlink( $File . '.content_alternative' )
+                ) {
+                    $LogObject->Log(
+                        Priority => 'error',
+                        Message  => "Can't remove: $File.content_alternative: $!!",
+                    );
+                }
+                if (
+                    -f ( $File . '.disposition' )
+                    && !unlink( $File . '.disposition' )
+                ) {
                     $LogObject->Log(
                         Priority => 'error',
                         Message  => "Can't remove: $File.disposition: $!!",
