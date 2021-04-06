@@ -14748,7 +14748,7 @@ Thanks for your help!
     <ConfigItem Name="Ticket::Frontend::AgentTicketZoomTabArticle###ArticleEmailActions" Required="1" Valid="1">
         <Description Translatable="1">Defines email-actions allowed for article types.</Description>
         <Group>Ticket</Group>
-        <SubGroup>Frontend::Agent::AgentTicketZoom</SubGroup>
+        <SubGroup>Frontend::Agent::Ticket::ViewTicketZoomTabArticle</SubGroup>
         <Setting>
             <Hash>
                 <Item Key="AgentTicketCompose">email-internal,email-external,phone,note-external,webrequest</Item>
