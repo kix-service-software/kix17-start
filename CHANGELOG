@@ -1,6 +1,12 @@
 # Change log of KIX
 * Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.15.0-RC9 (2021/04/06)
+ * (2021/04/06) - Bugfix: KIX17-2032 (changed sysconfig group for some keys) (ddoerffel)
+ * (2021/04/06) - Bugfix: KIX17-1776 (added missing translations) (ddoerffel)
+ * (2021/04/01) - CR: KIX17-2046 (added validity filtering of the result list of admin modules Queue, Role, Group and User) (fjacquemin)
+ * (2021/03/29) - Bugfix: KIX17-970 (changed config item attribute date/datetime value validate check) (fjacquemin)
+
 # 17.15.0-RC8 (2021/03/26)
  * (2021/03/26) - Bugfix: KIX17-1771 (fixed different field widths of the input fields when moving/copying articles) (fjacquemin)
  * (2021/03/26) - CR: KIX17-1918 (Added configuration to activate user specific settings of pre sort/order) (fjacquemin)
