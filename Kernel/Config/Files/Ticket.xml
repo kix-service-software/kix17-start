@@ -9846,6 +9846,19 @@
             </FrontendModuleReg>
         </Setting>
     </ConfigItem>
+    <ConfigItem Name="Admin::Frontend::AdminQueue###ValidityFilter" Required="1" Valid="1">
+        <Description Translatable="1">Defines the standard filter for the validity, which initially restricts the AdminQueue table.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Admin::ViewQueue</SubGroup>
+        <Setting>
+            <Option SelectedID="0">
+                <Item Key="0" Translatable="1">all</Item>
+                <Item Key="1" Translatable="1">valid</Item>
+                <Item Key="2" Translatable="1">invalid</Item>
+                <Item Key="3" Translatable="1">invalid-temporarily</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
     <ConfigItem Name="Frontend::Module###AdminTemplate" Required="0" Valid="1">
         <Description Translatable="1">Frontend module registration for the agent interface.</Description>
         <Group>Ticket</Group>
@@ -14735,7 +14748,7 @@ Thanks for your help!
     <ConfigItem Name="Ticket::Frontend::AgentTicketZoomTabArticle###ArticleEmailActions" Required="1" Valid="1">
         <Description Translatable="1">Defines email-actions allowed for article types.</Description>
         <Group>Ticket</Group>
-        <SubGroup>Frontend::Agent::AgentTicketZoom</SubGroup>
+        <SubGroup>Frontend::Agent::Ticket::ViewTicketZoomTabArticle</SubGroup>
         <Setting>
             <Hash>
                 <Item Key="AgentTicketCompose">email-internal,email-external,phone,note-external,webrequest</Item>
@@ -14776,7 +14789,7 @@ Thanks for your help!
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::AgentTicketZoomTabArticle###ArticleFlagIcons" Required="0" Valid="1">
-        <Description Translatable="1">Defines icons from awesome fonts lib for article icons.</Description>
+        <Description Translatable="1">Defines icons from awesome fonts lib for article flag icons.</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewTicketZoomTabArticle</SubGroup>
         <Setting>
@@ -14787,7 +14800,7 @@ Thanks for your help!
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::AgentTicketZoomTabArticle###ArticleFlagCSS" Required="0" Valid="1">
-        <Description Translatable="1">Defines additional css styles for article icons. This value could be empty.</Description>
+        <Description Translatable="1">Defines additional css styles for article flag icons. This value could be empty.</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewTicketZoomTabArticle</SubGroup>
         <Setting>
@@ -14820,7 +14833,7 @@ Thanks for your help!
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::AgentTicketZoomTabArticle###ArticleFlagsRemoveOnTicketClose" Required="0" Valid="1">
-        <Description Translatable="1">Defines whether article flags should be removed if ticket closed. This value could be empty. Use 'UserPref' if user could choose this preference by itself and system if not.</Description>
+        <Description Translatable="1">Defines whether article flags should be removed on ticket close. This value could be empty. Use "UserPref" if user could choose this preference by itself and 0 or 1 if not.</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewTicketZoomTabArticle</SubGroup>
         <Setting>

@@ -103,23 +103,46 @@ sub FormDataGet {
 
     my %FormData;
 
-    # get param object
+    # get needed objects
     my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
+    my $TimeObject  = $Kernel::OM->Get('Kernel::System::Time');
 
     # get form data
     my $Day    = $ParamObject->GetParam( Param => $Param{Key} . '::Day' );
     my $Month  = $ParamObject->GetParam( Param => $Param{Key} . '::Month' );
     my $Year   = $ParamObject->GetParam( Param => $Param{Key} . '::Year' );
-    my $Hour   = $ParamObject->GetParam( Param => $Param{Key} . '::Hour' ) || 0;
+    my $Hour   = $ParamObject->GetParam( Param => $Param{Key} . '::Hour' )   || 0;
     my $Minute = $ParamObject->GetParam( Param => $Param{Key} . '::Minute' ) || 0;
 
-    if ( $Day && $Month && $Year ) {
-        $FormData{Value} = sprintf '%02d-%02d-%02d %02d:%02d', $Year, $Month, $Day, $Hour, $Minute;
+    if (
+        $Day
+        && $Month
+        && $Year
+    ) {
+        my $SystemTime = $TimeObject->Date2SystemTime(
+            Year   => $Year,
+            Month  => $Month,
+            Day    => $Day,
+            Hour   => $Hour,
+            Minute => $Minute,
+            Second => 0,
+        );
+
+        if ( $SystemTime ) {
+            $FormData{Value} = sprintf '%02d-%02d-%02d %02d:%02d', $Year, $Month, $Day, $Hour, $Minute;
+        }
+        else {
+            $FormData{Invalid}                               = 1;
+            $Param{Item}->{Form}->{ $Param{Key} }->{Invalid} = 1;
+        }
     }
 
     # set invalid param
-    if ( $Param{Item}->{Input}->{Required} && !$FormData{Value} ) {
-        $FormData{Invalid} = 1;
+    if (
+        $Param{Item}->{Input}->{Required}
+        && !$FormData{Value}
+    ) {
+        $FormData{Invalid}                               = 1;
         $Param{Item}->{Form}->{ $Param{Key} }->{Invalid} = 1;
     }
 

@@ -1084,12 +1084,23 @@ sub Data {
         = 'Legt fest, ob die Auswahlfelder in der Aktionsleiste als "Modernize" dargestellt werden sollen.';
     $Lang->{'Defines if flag is shared with other agents.'} = 'Legt fest, ob ein Flag mit anderen Agenten geteilt wird.';
     $Lang->{'Defines if flag has no edit function.'} = 'Legt fest, ob das Flag keine Bearbeiten-Funktion hat.';
+    $Lang->{'DynamicFields that can be filtered in the article table of the agent interface. Possible settings: 0 = Disabled, 1 = Available.'}
+    	= 'Dynamische Felder, welche in der Artikeltabelle der Agentenoberfläche gefiltert werden können. Mögliche Einstellungen: 0 = deaktiviert, 1 = aktiviert';
+    $Lang->{'Defines icons from awesome fonts lib for article flag icons.'} = 'Legt Incos aus der Font Awesome Bibliothek für Artikel-Flag-Icons fest.';
+    $Lang->{'Defines additional css styles for article flag icons. This value could be empty.'} = 'Legt zusätzliches CSS für Artikel-Flag-Icons fest. Dieser Wert kann leer sein.';
+    $Lang->{'Defines whether article flags should be removed on ticket close. This value could be empty. Use "UserPref" if user could choose this preference by itself and 0 or 1 if not.'} = 'Legt fest, ob Artikel-Falgs beim Schließen eines Tickets entfernt werden sollen. Nutzen Sie "UserPref", wenn der Agent das selbst entscheiden kann oder 0 oder 1, wenn nicht.';
+    $Lang->{'Defines whether article flags can be set by every agent or just by owner and responsible.'} = 'Legt fest, ob ein Artikel-Flag von jedem Agenten gesetzt werden kann oder nur von Bearbeiter und Verantwortlichem.';
     $Lang->{'show details for flag'} = 'Zeige Details für Flag';
     $Lang->{'edit details for flag'} = 'Bearbeite Details von Flag';
     $Lang->{'remove flag'}           = 'Entferne Flag';
     $Lang->{'Article Flag Options'}  = 'Artikel-Flag Optionen';
     $Lang->{'show details'}          = 'Details anzeigen';
     $Lang->{'for Article'}           = 'für Artikel';
+    $Lang->{'Defines parameters for the AgentTicketZoomTab "Attachments".'} = 'Legt Parameter für das AgentTicketZoomTab "Anlagen" fest.';
+    $Lang->{'Dynamic fields shown in the dynamic field tab of the agent interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.'} = 'Dynamische Felder, welche Tab "Dynamische Felder" der Agentenoberfläche angezeigt werden können. Mögliche Einstellungen: 0 = deaktiviert, 1 = aktiviert, 2 = aktiviert und Pflicht.';
+    $Lang->{'Defines the next state of a ticket after editing a dynamic field, in the ticket dynamic field tab screen of the agent interface.'} = 'Legt den Folgestatus eines Tickets fest nach dem Editieren eines Dynamischen Feldes im Tab "Dynamische Felder" der Agentenoberfläche.';
+    $Lang->{'Dynamic fields shown in the process tab of the agent interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.'} = 'Dynamische Felder, welche Tab "Prozess-Informationen" der Agentenoberfläche angezeigt werden können. Mögliche Einstellungen: 0 = deaktiviert, 1 = aktiviert, 2 = aktiviert und Pflicht.';
+    $Lang->{'Required permissions to use the RemoteDB view screen in the agent interface.'} = 'Benötigte Berechtigungen, um die Remote-DB-Ansicht in der Agentenoberfläche nutzen zu können.';
 
     # AgentArticleEdit
     $Lang->{'History type for this action.'} = 'Historientyp für diese Aktion.';
@@ -4615,6 +4626,27 @@ sub Data {
     # PreSort/PreOrder
     $Lang->{'Pre-Sort by'}              = 'Vorsortieren nach';
     $Lang->{'Direction of pre-sorting'} = 'Sortierrichtung der Vorsortierung';
+
+    # Date / Time
+    $Lang->{'Adds module to calculate date of maundy thursday.'} = 'Fügt Modul hinzu, um Gründonnerstag zu berechnen.';
+    $Lang->{'Adds module to calculate date of good friday.'} = 'Fügt Modul hinzu, um Karfreitagg zu berechnen.';
+    $Lang->{'Adds module to calculate date of easter monday.'} = 'Fügt Modul hinzu, um Ostermontag zu berechnen.';
+    $Lang->{'Adds module to calculate date of ascension day.'} = 'Fügt Modul hinzu, um Christi Himmelfahrt zu berechnen.';
+    $Lang->{'Adds module to calculate date of whit monday.'} = 'Fügt Modul hinzu, um Gründonnerstag zu berechnen.';
+    $Lang->{'Adds module to calculate date of corpus christi.'} = 'Fügt Modul hinzu, um Fronleichnam zu berechnen.';
+    $Lang->{'Adds module to calculate date of epentance and prayer.'} = 'Fügt Modul hinzu, um Buß- und Bettag zu berechnen.';
+    $Lang->{'Adds module to calculate date of feast of corpus christi for the indicated calendar.'} = 'Fügt Modul hinzu, um Fronleichnam zu berechnen für den gewählten Kalender.';
+    $Lang->{'Adds module to calculate date of day of repentance and prayer for the indicated calendar.'} = 'Fügt Modul hinzu, um den Buß- und Bettag zu berechnen für den gewählten Kalender.';
+
+    # Admin validity fitler
+    $Lang->{'Defines the standard filter for the validity, which initially restricts the AdminUser table.'}
+        = 'Legt den Standardfilter für die Gültigkeit fest, der die Tabelle von AdminUser initial einschränkt.';
+    $Lang->{'Defines the standard filter for the validity, which initially restricts the AdminQueue table.'}
+        = 'Legt den Standardfilter für die Gültigkeit fest, der die Tabelle von AdminQueue initial einschränkt.';
+    $Lang->{'Defines the standard filter for the validity, which initially restricts the AdminRole table.'}
+        = 'Legt den Standardfilter für die Gültigkeit fest, der die Tabelle von AdminRole initial einschränkt.';
+    $Lang->{'Defines the standard filter for the validity, which initially restricts the AdminGroup table.'}
+        = 'Legt den Standardfilter für die Gültigkeit fest, der die Tabelle von AdminGroup initial einschränkt.';
 
     return 0;
 }

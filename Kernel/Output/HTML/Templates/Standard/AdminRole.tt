@@ -23,7 +23,7 @@
                 <ul class="ActionList">
 [% RenderBlockStart("ActionOverview") %]
                     <li>
-                        <a href="[% Env("Baselink") %]Action=[% Env("Action") %]" class="CallForAction Fullsize Center"><span><i class="fa fa-caret-left"></i>[% Translate("Go to overview") | html %]</span></a>
+                        <a href="[% Env("Baselink") %]Action=[% Env("Action") %];ValidityFilter=[% Data.ValidityFilter %]" class="CallForAction Fullsize Center"><span><i class="fa fa-caret-left"></i>[% Translate("Go to overview") | html %]</span></a>
                     </li>
 [% RenderBlockEnd("ActionOverview") %]
 [% RenderBlockStart("ActionAdd") %]
@@ -35,6 +35,29 @@
             </div>
         </div>
 [% RenderBlockEnd("ActionList") %]
+[% RenderBlockStart("ActionFilter") %]
+        <div class="WidgetSimple">
+            <div class="Header">
+                 <h2><span>[% Translate("Filters") | html %]</span></h2>
+            </div>
+            <div class="Content">
+                <ul class="ActionList">
+                    <li>
+                        <form action="[% Env("CGIHandle") %]" method="post">
+                            <input type="hidden" name="Action" value="[% Env("Action") %]"/>
+                            <input type="hidden" name="Nav" value="[% Data.Nav | html %]"/>
+                            <input type="hidden" name="UserID" value="[% Data.UserID | html %]"/>
+                            <h4>[% Translate("Validity") %]:</h4>
+                            [% Data.ValidOption %]
+                            <button class="CallForAction Fullsize" type="submit">
+                                <span>[% Translate("Update") | html %]</span>
+                            </button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </div>
+[% RenderBlockEnd("ActionFilter") %]
         <div class="WidgetSimple">
             <div class="Header">
                  <h2><span>[% Translate("Hint") | html %]</span></h2>
@@ -73,7 +96,7 @@
                     <tbody>
 [% RenderBlockStart("OverviewResultRow") %]
                         <tr [% IF Data.ValidID != 1 %]class="Invalid"[% END %]>
-                            <td><a class="AsBlock" href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=Change;ID=[% Data.ID | uri %]">[% Data.Name | html %]</a></td>
+                            <td><a class="AsBlock" href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=Change;ID=[% Data.ID | uri %];ValidityFilter=[% Data.ValidityFilter | uri %]">[% Data.Name | html %]</a></td>
                             <td title="[% Data.Comment | html %]">[% Data.Comment | truncate(26) | html %]</td>
                             <td>[% Translate(Data.Valid) | html %]</td>
                             <td>[% Data.ChangeTime | Localize("TimeShort") %]</td>
@@ -99,6 +122,7 @@
                     <input type="hidden" name="Action" value="[% Env("Action") %]"/>
                     <input type="hidden" name="Subaction" value="[% Data.Action | uri %]Action"/>
                     <input type="hidden" name="ID" value="[% Data.ID | html %]"/>
+                    <input type="hidden" name="ValidityFilter" value="[% Data.ValidityFilter | html %]"/>
                     <fieldset class="TableLike">
 
                         <label class="Mandatory" for="Name"><span class="Marker">*</span> [% Translate("Name") | html %]:</label>
