@@ -733,8 +733,8 @@ sub UserSearch {
 
     # add valid option
     if ($Valid) {
-        $SQL .= "AND valid_id IN ("
-            . join( ', ', $Kernel::OM->Get('Kernel::System::Valid')->ValidIDsGet() ) . ")";
+        $SQL .= "AND valid_id = ?";
+        push( @Bind, \$Valid );
     }
 
     # get data

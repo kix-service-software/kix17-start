@@ -1297,13 +1297,7 @@ sub QueueList {
     my ( $Self, %Param ) = @_;
 
     # set valid option
-    my $Valid = $Param{Valid};
-    if ( !defined $Valid || $Valid ) {
-        $Valid = 1;
-    }
-    else {
-        $Valid = 0;
-    }
+    my $Valid = $Param{Valid} // 1;
 
     # check cache
     my $CacheKey = 'QueueList::' . $Valid;
@@ -1319,8 +1313,8 @@ sub QueueList {
     # sql query
     if ($Valid) {
         return if !$DBObject->Prepare(
-            SQL => "SELECT id, name FROM queue WHERE valid_id IN "
-                . "( ${\(join ', ', $Kernel::OM->Get('Kernel::System::Valid')->ValidIDsGet())} )",
+            SQL  => "SELECT id, name FROM queue WHERE valid_id = ?",
+            Bind => [ \$Valid ]
         );
     }
     else {

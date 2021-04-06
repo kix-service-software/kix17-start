@@ -4627,17 +4627,27 @@ sub Data {
     $Lang->{'Pre-Sort by'}              = 'Vorsortieren nach';
     $Lang->{'Direction of pre-sorting'} = 'Sortierrichtung der Vorsortierung';
 
-	# Date / Time
-	$Lang->{'Adds module to calculate date of maundy thursday.'} = 'Fügt Modul hinzu, um Gründonnerstag zu berechnen.';
-	$Lang->{'Adds module to calculate date of good friday.'} = 'Fügt Modul hinzu, um Karfreitagg zu berechnen.';
-	$Lang->{'Adds module to calculate date of easter monday.'} = 'Fügt Modul hinzu, um Ostermontag zu berechnen.';
-	$Lang->{'Adds module to calculate date of ascension day.'} = 'Fügt Modul hinzu, um Christi Himmelfahrt zu berechnen.';
-	$Lang->{'Adds module to calculate date of whit monday.'} = 'Fügt Modul hinzu, um Gründonnerstag zu berechnen.';
-	$Lang->{'Adds module to calculate date of corpus christi.'} = 'Fügt Modul hinzu, um Fronleichnam zu berechnen.';
-	$Lang->{'Adds module to calculate date of epentance and prayer.'} = 'Fügt Modul hinzu, um Buß- und Bettag zu berechnen.';
-	$Lang->{'Adds module to calculate date of feast of corpus christi for the indicated calendar.'} = 'Fügt Modul hinzu, um Fronleichnam zu berechnen für den gewählten Kalender.';
-	$Lang->{'Adds module to calculate date of day of repentance and prayer for the indicated calendar.'} = 'Fügt Modul hinzu, um den Buß- und Bettag zu berechnen für den gewählten Kalender.';
-	
+    # Date / Time
+    $Lang->{'Adds module to calculate date of maundy thursday.'} = 'Fügt Modul hinzu, um Gründonnerstag zu berechnen.';
+    $Lang->{'Adds module to calculate date of good friday.'} = 'Fügt Modul hinzu, um Karfreitagg zu berechnen.';
+    $Lang->{'Adds module to calculate date of easter monday.'} = 'Fügt Modul hinzu, um Ostermontag zu berechnen.';
+    $Lang->{'Adds module to calculate date of ascension day.'} = 'Fügt Modul hinzu, um Christi Himmelfahrt zu berechnen.';
+    $Lang->{'Adds module to calculate date of whit monday.'} = 'Fügt Modul hinzu, um Gründonnerstag zu berechnen.';
+    $Lang->{'Adds module to calculate date of corpus christi.'} = 'Fügt Modul hinzu, um Fronleichnam zu berechnen.';
+    $Lang->{'Adds module to calculate date of epentance and prayer.'} = 'Fügt Modul hinzu, um Buß- und Bettag zu berechnen.';
+    $Lang->{'Adds module to calculate date of feast of corpus christi for the indicated calendar.'} = 'Fügt Modul hinzu, um Fronleichnam zu berechnen für den gewählten Kalender.';
+    $Lang->{'Adds module to calculate date of day of repentance and prayer for the indicated calendar.'} = 'Fügt Modul hinzu, um den Buß- und Bettag zu berechnen für den gewählten Kalender.';
+
+    # Admin validity fitler
+    $Lang->{'Defines the standard filter for the validity, which initially restricts the AdminUser table.'}
+        = 'Legt den Standardfilter für die Gültigkeit fest, der die Tabelle von AdminUser initial einschränkt.';
+    $Lang->{'Defines the standard filter for the validity, which initially restricts the AdminQueue table.'}
+        = 'Legt den Standardfilter für die Gültigkeit fest, der die Tabelle von AdminQueue initial einschränkt.';
+    $Lang->{'Defines the standard filter for the validity, which initially restricts the AdminRole table.'}
+        = 'Legt den Standardfilter für die Gültigkeit fest, der die Tabelle von AdminRole initial einschränkt.';
+    $Lang->{'Defines the standard filter for the validity, which initially restricts the AdminGroup table.'}
+        = 'Legt den Standardfilter für die Gültigkeit fest, der die Tabelle von AdminGroup initial einschränkt.';
+
     return 0;
 }
 
