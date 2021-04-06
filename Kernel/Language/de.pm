@@ -1335,7 +1335,7 @@ sub Data {
         'Endpoint' => 'Endpunkt',
         'URI to indicate a specific location for accessing a service.' =>
             'URI für den Zugriff auf einen Webservice.',
-        'e.g. http://local.otrs.com:8000/Webservice/Example' => 'z. B. http://local.otrs.com:8000/Webservice/Example',
+        'e.g. http://local.kixdesk.com:8000/Webservice/Example' => 'z. B. http://local.kixdesk.com:8000/Webservice/Example',
         'Namespace' => 'Namespace',
         'URI to give SOAP methods a context, reducing ambiguities.' => 'URI, die SOAP-Methoden einen Kontext gibt und damit Mehrdeutigkeiten auflöst.',
         'Request name scheme' => 'Anfragen-Namensschema',
@@ -5038,7 +5038,7 @@ Ihr Helpdesk-Team
             'Definiert den Verlaufstyp für diese Operation, der für den Ticket-Verlauf in der Agenten-Schnittstelle verwendet wird.',
         'Defines the hours and week days of the indicated calendar, to count the working time.' =>
             'Definiert die Stunden und Wochentage des angegebenen Kalenders um die Arbeitszeit zu messen.',
-        'Defines the hours and week days to count the working time.' => 'Definiert den Zeitraum und die Wochentage welche als Arbeitszeit zählen.',
+        'Defines the hours and week days to count the working time.' => 'Definiert den Zeitraum und die Wochentage welche als Arbeitszeit zählen.',        
         'Defines the key to be checked with Kernel::Modules::AgentInfo module. If this user preferences key is true, the message is accepted by the system.' =>
             'Definiert den Schlüssel, der mit dem Modul Kernel::Modules::AgentInfo geprüft wird. Wenn dieser Nutzer-Einstellungs-Schlüssel "wahr" ist, wird die Nachricht vom System akzeptiert.',
         'Defines the key to check with CustomerAccept. If this user preferences key is true, then the message is accepted by the system.' =>
@@ -6449,7 +6449,7 @@ Ihr Helpdesk-Team
         'Shows the title fields in the ticket responsible screen of the agent interface.' =>
             '',
         'Shows time in long format (days, hours, minutes), if set to "Yes"; or in short format (days, hours), if set to "No".' =>
-            '',
+            'Zeigt die Zeit im Langformat an (Tage, Stunden, Minuten), wenn "Ja" gesetzt ist. Oder im Kurzformat (Tage, Stunden), wenn "Nein" ausgewählt wurde.',
         'Shows time use complete description (days, hours, minutes), if set to "Yes"; or just first letter (d, h, m), if set to "No".' =>
             '',
         'Simple' => 'Einfach',
