@@ -6686,6 +6686,8 @@ Ihr Helpdesk-Team
             'Wird verwendet, wenn \'Ticket::Frontend::CustomerTicketZoom###DisplayNoteFrom\' auf \'QueueMapping\' gesetzt ist. Verwendet \'Ticket::Frontend::CustomerTicketZoom###DisplayNoteFromStatic\' wenn es kein passendes Mapping zur aktuellen Ticketqueue gibt.',
         'Used if \'Ticket::Frontend::CustomerTicketZoom###DisplayNoteFrom\' is set to \'Static\'.' =>
             'Wird verwendet, wenn \'Ticket::Frontend::CustomerTicketZoom###DisplayNoteFrom\' auf \'Static\' gesetzt ist.',
+        'Defines if Bcc recipients of articles are shown in the customer interface.' =>
+            'Legt fest, ob Bcc-Empfänger von Artikeln im Kundenfrontend angezeigt werden.',
         'UserFirstname' => 'Benutzervorname',
         'UserLastname' => 'Benutzernachname',
         'Uses Cc recipients in reply Cc list on compose an email answer in the ticket compose screen of the agent interface.' =>
