@@ -54,7 +54,8 @@ sub Run {
         Translation   => 0,
         Multiple      => 1,
         Size          => 10,
-        Class         => 'DynamicFieldAvailableInFrontend'
+        Class         => 'DynamicFieldAvailableInFrontend',
+        Sort          => 'AlphanumericValue'
     );
 
     # create mandatory dynamic field multiselect field
@@ -66,7 +67,8 @@ sub Run {
         Translation   => 0,
         Multiple      => 1,
         Size          => 10,
-        Class         => 'DynamicFieldAvailableInFrontend'
+        Class         => 'DynamicFieldAvailableInFrontend',
+        Sort          => 'AlphanumericValue'
     );
 
     # create HMTL
