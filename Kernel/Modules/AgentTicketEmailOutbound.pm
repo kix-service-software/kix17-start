@@ -334,9 +334,9 @@ sub Run {
         my $JSON = $LayoutObject->BuildSelectionJSON(
             [
                 {
-                    Name         => 'NewStateID',
+                    Name         => 'ComposeStateID',
                     Data         => $NextStates,
-                    SelectedID   => $GetParam{NewStateID},
+                    SelectedID   => $GetParam{ComposeStateID},
                     Translation  => 1,
                     PossibleNone => $Config->{StateDefault} ? 0 : 1,
                     Max          => 100,
@@ -379,9 +379,6 @@ sub Form {
 
     # get param object
     my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
-
-    # ACL compatibility translation
-    $ACLCompatGetParam{NextStateID} = $ParamObject->GetParam( Param => 'NextStateID' );
 
     # get layout object
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
@@ -429,6 +426,9 @@ sub Form {
     my @MultipleCustomer    = @{ $GetParamExtended{MultipleCustomer} };
     my @MultipleCustomerCc  = @{ $GetParamExtended{MultipleCustomerCc} };
     my @MultipleCustomerBcc = @{ $GetParamExtended{MultipleCustomerBcc} };
+
+    # ACL compatibility translation
+    $ACLCompatGetParam{StateID} = $GetParam{'ComposeStateID'};
 
     # get lock state
     my $Output = '';
@@ -783,15 +783,15 @@ sub SendEmail {
     # get param object
     my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
 
-    # ACL compatibility translation
-    $ACLCompatGetParam{NextStateID} = $ParamObject->GetParam( Param => 'NextStateID' );
-
     my %GetParamExtended = $Self->_GetExtendedParams();
 
     my %GetParam            = %{ $GetParamExtended{GetParam} };
     my @MultipleCustomer    = @{ $GetParamExtended{MultipleCustomer} };
     my @MultipleCustomerCc  = @{ $GetParamExtended{MultipleCustomerCc} };
     my @MultipleCustomerBcc = @{ $GetParamExtended{MultipleCustomerBcc} };
+
+    # ACL compatibility translation
+    $ACLCompatGetParam{StateID} = $GetParam{'ComposeStateID'};
 
     my %DynamicFieldValues;
 
@@ -1338,15 +1338,15 @@ sub AjaxUpdate {
     # get param object
     my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
 
-    # ACL compatibility translation
-    $ACLCompatGetParam{NextStateID} = $ParamObject->GetParam( Param => 'NextStateID' );
-
     my %GetParamExtended = $Self->_GetExtendedParams();
 
     my %GetParam            = %{ $GetParamExtended{GetParam} };
     my @MultipleCustomer    = @{ $GetParamExtended{MultipleCustomer} };
     my @MultipleCustomerCc  = @{ $GetParamExtended{MultipleCustomerCc} };
     my @MultipleCustomerBcc = @{ $GetParamExtended{MultipleCustomerBcc} };
+
+    # ACL compatibility translation
+    $ACLCompatGetParam{StateID} = $GetParam{'ComposeStateID'};
 
     my @ExtendedData;
 
