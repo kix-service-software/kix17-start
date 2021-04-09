@@ -47,11 +47,6 @@ sub new {
     my $Self = {};
     bless( $Self, $Type );
 
-    $Self->{GeneralCatalogObject} = $Kernel::OM->Get('Kernel::System::GeneralCatalog');
-    $Self->{CIACUtilsObject}      = $Kernel::OM->Get('Kernel::System::ITSMCIAttributCollectionUtils');
-    $Self->{ConfigItemObject}     = $Kernel::OM->Get('Kernel::System::ITSMConfigItem');
-    $Self->{LogObject}            = $Kernel::OM->Get('Kernel::System::Log');
-
     return $Self;
 }
 
@@ -70,7 +65,7 @@ sub ValueLookup {
 
     return '' if !$Param{Value};
 
-    my $CIVersionDataRef = $Self->{ConfigItemObject}->VersionGet(
+    my $CIVersionDataRef = $Kernel::OM->Get('Kernel::System::ITSMConfigItem')->VersionGet(
         ConfigItemID => $Param{Value},
         XMLDataGet   => 0,
     );
@@ -108,7 +103,7 @@ sub StatsAttributeCreate {
     # check needed stuff
     for my $Argument (qw(Key Name Item)) {
         if ( !$Param{$Argument} ) {
-            $Self->{LogObject}->Log(
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => "Need $Argument!"
             );
@@ -151,7 +146,7 @@ sub ExportSearchValuePrepare {
     return '' if !$Param{Value};
 
     # lookup CI number for given CI ID
-    my $CIRef = $Self->{ConfigItemObject}->ConfigItemGet(
+    my $CIRef = $Kernel::OM->Get('Kernel::System::ITSMConfigItem')->ConfigItemGet(
         ConfigItemID => $Param{Value},
     );
     if ( $CIRef && ref $CIRef eq 'HASH' && $CIRef->{Number} ) {
@@ -184,7 +179,7 @@ sub ExportValuePrepare {
 
     if ($SearchAttr) {
 
-        my $VersionData = $Self->{ConfigItemObject}->VersionGet(
+        my $VersionData = $Kernel::OM->Get('Kernel::System::ITSMConfigItem')->VersionGet(
             ConfigItemID => $Param{Value},
             XMLDataGet   => 1,
         );
@@ -192,9 +187,9 @@ sub ExportValuePrepare {
         if ( $VersionData && ref $VersionData eq 'HASH' ) {
             return $VersionData->{Name} if $SearchAttr eq 'Name';
 
-            my $XMLDefinition = $Self->{ConfigItemObject}->DefinitionGet( DefinitionID => $VersionData->{DefinitionID}, );
+            my $XMLDefinition = $Kernel::OM->Get('Kernel::System::ITSMConfigItem')->DefinitionGet( DefinitionID => $VersionData->{DefinitionID}, );
 
-            my $ArrRef = $Self->{CIACUtilsObject}->GetAttributeValuesByKey(
+            my $ArrRef = $Kernel::OM->Get('Kernel::System::ITSMCIAttributCollectionUtils')->GetAttributeValuesByKey(
                 KeyName       => $SearchAttr,
                 XMLData       => $VersionData->{XMLData}->[1]->{Version}->[1],
                 XMLDefinition => $XMLDefinition->{DefinitionRef},
@@ -207,7 +202,7 @@ sub ExportValuePrepare {
     }
     else {
         # lookup CI number for given CI ID
-        my $CIRef = $Self->{ConfigItemObject}->ConfigItemGet(
+        my $CIRef = $Kernel::OM->Get('Kernel::System::ITSMConfigItem')->ConfigItemGet(
             ConfigItemID => $Param{Value},
         );
         if ( $CIRef && ref $CIRef eq 'HASH' && $CIRef->{Number} ) {
@@ -238,14 +233,14 @@ sub ImportSearchValuePrepare {
     return '' if !$Param{Value};
 
     # check if CI number was given
-    my $CIID = $Self->{ConfigItemObject}->ConfigItemLookup(
+    my $CIID = $Kernel::OM->Get('Kernel::System::ITSMConfigItem')->ConfigItemLookup(
         ConfigItemNumber => $Param{Value},
     );
     return $CIID if $CIID;
 
     # check if given value is a valid CI ID
     if ( $Param{Value} !~ /\D/ ) {
-        my $CINumber = $Self->{ConfigItemObject}->ConfigItemLookup(
+        my $CINumber = $Kernel::OM->Get('Kernel::System::ITSMConfigItem')->ConfigItemLookup(
             ConfigItemID => $Param{Value},
         );
         return $Param{Value} if $CINumber;
@@ -276,13 +271,13 @@ sub ImportValuePrepare {
     my $SearchAttr = $Param{Item}->{Input}->{ReferencedCIClassReferenceAttributeKey} || '';
 
     # get class list
-    my $ClassList = $Self->{GeneralCatalogObject}->ItemList(
+    my $ClassList = $Kernel::OM->Get('Kernel::System::GeneralCatalog')->ItemList(
         Class => 'ITSM::ConfigItem::Class',
     );
 
     # check for access rights on the classes
     for my $ClassID ( sort keys %{$ClassList} ) {
-        my $HasAccess = $Self->{ConfigItemObject}->Permission(
+        my $HasAccess = $Kernel::OM->Get('Kernel::System::ITSMConfigItem')->Permission(
             Type    => 'ro',
             Scope   => 'Class',
             ClassID => $ClassID,
@@ -319,7 +314,7 @@ sub ImportValuePrepare {
                     last CLASSNAME;
                 }
 
-                my $ItemDataRef = $Self->{GeneralCatalogObject}->ItemGet(
+                my $ItemDataRef = $Kernel::OM->Get('Kernel::System::GeneralCatalog')->ItemGet(
                     Class => 'ITSM::ConfigItem::Class',
                     Name  => $ClassName,
                 );
@@ -345,7 +340,7 @@ sub ImportValuePrepare {
     # make CI-ID out of given value
     if ($SearchAttr) {
         if ( $SearchAttr eq 'Name' ) {
-            my $ConfigItemIDs = $Self->{ConfigItemObject}->ConfigItemSearchExtended(
+            my $ConfigItemIDs = $Kernel::OM->Get('Kernel::System::ITSMConfigItem')->ConfigItemSearchExtended(
                 Name     => $Param{Value},
                 ClassIDs => \@ClassIDArray,
             );
@@ -366,7 +361,7 @@ sub ImportValuePrepare {
             CLASSID:
             for my $ClassID ( @ClassIDArray ) {
                 next CLASSID if ( !$ClassID );
-                my $XMLDefinition = $Self->{ConfigItemObject}->DefinitionGet( ClassID => $ClassID, );
+                my $XMLDefinition = $Kernel::OM->Get('Kernel::System::ITSMConfigItem')->DefinitionGet( ClassID => $ClassID, );
 
                 my @SearchParamsWhat;
                 $Self->_XMLSearchDataPrepare(
@@ -381,7 +376,7 @@ sub ImportValuePrepare {
                 }
 
                 # search the config items
-                my $ConfigItemIDs = $Self->{ConfigItemObject}->ConfigItemSearchExtended(
+                my $ConfigItemIDs = $Kernel::OM->Get('Kernel::System::ITSMConfigItem')->ConfigItemSearchExtended(
                     %SearchParams,
                     ClassIDs              => [$ClassID],
                     PreviousVersionSearch => 0,
@@ -398,7 +393,7 @@ sub ImportValuePrepare {
     }
     else {
         # check if CI number was given
-        my $CIID = $Self->{ConfigItemObject}->ConfigItemLookup(
+        my $CIID = $Kernel::OM->Get('Kernel::System::ITSMConfigItem')->ConfigItemLookup(
             ConfigItemNumber => $Param{Value},
         );
         return $CIID if $CIID;
@@ -406,7 +401,7 @@ sub ImportValuePrepare {
 
     # check if given value is a valid CI ID
     if ( $Param{Value} !~ /\D/ ) {
-        my $CINumber = $Self->{ConfigItemObject}->ConfigItemLookup(
+        my $CINumber = $Kernel::OM->Get('Kernel::System::ITSMConfigItem')->ConfigItemLookup(
             ConfigItemID => $Param{Value},
         );
         return $Param{Value} if $CINumber;
