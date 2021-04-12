@@ -338,8 +338,13 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
 
                     $Element.val(CustomerValue);
 
-                    // reset selected customer id
-                    $('#CustomerID').val('');
+                    if (
+                        Core.Config.Get('Action') !== 'AgentTicketEmail'
+                        && Core.Config.Get('Action') !== 'AgentTicketPhone'
+                    ) {
+                        // reset selected customer id
+                        $('#CustomerID').val('');
+                    }
 
                     if (
                         Core.Config.Get('Action') === 'AgentTicketEmail'
