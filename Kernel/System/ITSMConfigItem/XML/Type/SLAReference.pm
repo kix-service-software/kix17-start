@@ -45,9 +45,6 @@ sub new {
     my $Self = {};
     bless( $Self, $Type );
 
-    $Self->{LogObject} = $Kernel::OM->Get('Kernel::System::Log');
-    $Self->{SLAObject} = $Kernel::OM->Get('Kernel::System::SLA');
-
     return $Self;
 }
 
@@ -66,7 +63,7 @@ sub ValueLookup {
 
     return '' if !$Param{Value};
 
-    my %SLAData = $Self->{SLAObject}->SLAGet(
+    my %SLAData = $Kernel::OM->Get('Kernel::System::SLA')->SLAGet(
         SLAID  => $Param{Value},
         UserID => 1,
     );
@@ -98,7 +95,7 @@ sub StatsAttributeCreate {
     # check needed stuff
     for my $Argument (qw(Key Name Item)) {
         if ( !$Param{$Argument} ) {
-            $Self->{LogObject}->Log(
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => "Need $Argument!"
             );
@@ -141,7 +138,7 @@ sub ExportSearchValuePrepare {
     return '' if !$Param{Value};
 
     # lookup name for given service ID
-    my %SLAData = $Self->{SLAObject}->SLAGet(
+    my %SLAData = $Kernel::OM->Get('Kernel::System::SLA')->SLAGet(
         SLAID  => $Param{Value},
         UserID => 1,
     );
@@ -172,7 +169,7 @@ sub ExportValuePrepare {
     return '' if !$Param{Value};
 
     # lookup name for given service ID
-    my %SLAData = $Self->{SLAObject}->SLAGet(
+    my %SLAData = $Kernel::OM->Get('Kernel::System::SLA')->SLAGet(
         SLAID  => $Param{Value},
         UserID => 1,
     );
@@ -203,14 +200,14 @@ sub ImportSearchValuePrepare {
     return '' if !$Param{Value};
 
     # check if SLA name was given
-    my $SLAID = $Self->{SLAObject}->SLALookup(
+    my $SLAID = $Kernel::OM->Get('Kernel::System::SLA')->SLALookup(
         Name => $Param{Value},
     );
     return $SLAID if $SLAID;
 
     # check if given value is a valid SLA ID
     if ( $Param{Value} !~ /\D/ ) {
-        my $SLAName = $Self->{SLAObject}->SLALookup(
+        my $SLAName = $Kernel::OM->Get('Kernel::System::SLA')->SLALookup(
             SLAID => $Param{Value},
         );
         return $Param{Value} if $SLAName;
@@ -239,14 +236,14 @@ sub ImportValuePrepare {
     return '' if !$Param{Value};
 
     # check if SLA name was given
-    my $SLAID = $Self->{SLAObject}->SLALookup(
+    my $SLAID = $Kernel::OM->Get('Kernel::System::SLA')->SLALookup(
         Name => $Param{Value},
     );
     return $SLAID if $SLAID;
 
     # check if given value is a valid SLA ID
     if ( $Param{Value} !~ /\D/ ) {
-        my $SLAName = $Self->{SLAObject}->SLALookup(
+        my $SLAName = $Kernel::OM->Get('Kernel::System::SLA')->SLALookup(
             SLAID => $Param{Value},
         );
         return $Param{Value} if $SLAName;

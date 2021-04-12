@@ -45,9 +45,6 @@ sub new {
     my $Self = {};
     bless( $Self, $Type );
 
-    $Self->{LogObject}    = $Kernel::OM->Get('Kernel::System::Log');
-    $Self->{TicketObject} = $Kernel::OM->Get('Kernel::System::Ticket');
-
     return $Self;
 }
 
@@ -66,7 +63,7 @@ sub ValueLookup {
 
     return '' if !$Param{Value};
 
-    my $TicketNumber = $Self->{TicketObject}->TicketNumberLookup(
+    my $TicketNumber = $Kernel::OM->Get('Kernel::System::Ticket')->TicketNumberLookup(
         TicketID => $Param{Value},
     );
 
@@ -95,7 +92,7 @@ sub StatsAttributeCreate {
     # check needed stuff
     for my $Argument (qw(Key Name Item)) {
         if ( !$Param{$Argument} ) {
-            $Self->{LogObject}->Log(
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => "Need $Argument!"
             );
@@ -138,7 +135,7 @@ sub ExportSearchValuePrepare {
     return '' if !$Param{Value};
 
     # lookup number for given Ticket ID
-    my $TicketNumber = $Self->{TicketObject}->TicketNumberLookup(
+    my $TicketNumber = $Kernel::OM->Get('Kernel::System::Ticket')->TicketNumberLookup(
         TicketID => $Param{Value},
     );
     if ( $TicketNumber ) {
@@ -168,7 +165,7 @@ sub ExportValuePrepare {
     return '' if !$Param{Value};
 
     # lookup number for given Ticket ID
-    my $TicketNumber = $Self->{TicketObject}->TicketNumberLookup(
+    my $TicketNumber = $Kernel::OM->Get('Kernel::System::Ticket')->TicketNumberLookup(
         TicketID => $Param{Value},
     );
     if ( $TicketNumber ) {
@@ -198,14 +195,14 @@ sub ImportSearchValuePrepare {
     return '' if !$Param{Value};
 
     # check if Ticket number was given
-    my $TicketID = $Self->{TicketObject}->TicketIDLookup(
+    my $TicketID = $Kernel::OM->Get('Kernel::System::Ticket')->TicketIDLookup(
         TicketNumber => $Param{Value},
     );
     return $TicketID if $TicketID;
 
     # check if given value is a valid Ticket ID
     if ( $Param{Value} !~ /\D/ ) {
-        my $TicketNumber = $Self->{TicketObject}->TicketNumberLookup(
+        my $TicketNumber = $Kernel::OM->Get('Kernel::System::Ticket')->TicketNumberLookup(
             TicketID => $Param{Value},
         );
         return $Param{Value} if $TicketNumber;
@@ -234,14 +231,14 @@ sub ImportValuePrepare {
     return '' if !$Param{Value};
 
     # check if Ticket number was given
-    my $TicketID = $Self->{TicketObject}->TicketIDLookup(
+    my $TicketID = $Kernel::OM->Get('Kernel::System::Ticket')->TicketIDLookup(
         TicketNumber => $Param{Value},
     );
     return $TicketID if $TicketID;
 
     # check if given value is a valid Ticket ID
     if ( $Param{Value} !~ /\D/ ) {
-        my $TicketNumber = $Self->{TicketObject}->TicketNumberLookup(
+        my $TicketNumber = $Kernel::OM->Get('Kernel::System::Ticket')->TicketNumberLookup(
             TicketID => $Param{Value},
         );
         return $Param{Value} if $TicketNumber;
