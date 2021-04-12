@@ -4274,7 +4274,7 @@ sub CustomerHeader {
             Data     => {},
             RichText => '0',
             TicketID => $Self->{TicketID},
-            UserID   => $Self->{UserID},
+            UserID   => $ConfigObject->Get('CustomerPanelUserID'),
         );
     }
 
