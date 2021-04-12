@@ -1,6 +1,14 @@
 # Change log of KIX
 * Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.15.0-RC10 (2021/04/12)
+ * (2021/04/09) - CR: KIX17-1995 (added bcc for article zoom) (millinger)
+ * (2021/04/09) - Bugfix: KIX17-2075 (replaced binding of objects to self) (millinger)
+ * (2021/04/08) - Bugfix: KIX17-2033 (added sorting for dynamic fields sysconfig settings) (ddoerffel)
+ * (2021/04/07) - Bugfix: KIX17-1987 (trigger formupdate when date based dynamic field is de-/activated) (millinger)
+ * (2021/04/07) - Bugfix: KIX17-1983 (fixed placeholder replacement in customer ticket zoom) (millinger)
+ * (2021/04/07) - Bugfix: KIX17-1982 (fixed usage of widget preferences with deactivated quick link) (millinger)
+
 # 17.15.0-RC9 (2021/04/06)
  * (2021/04/06) - Bugfix: KIX17-2032 (changed sysconfig group for some keys) (ddoerffel)
  * (2021/04/06) - Bugfix: KIX17-1776 (added missing translations) (ddoerffel)
