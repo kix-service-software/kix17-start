@@ -293,6 +293,15 @@
                     </div>
                     <div class="Clear"></div>
 
+[% RenderBlockStart("PreFilledBcc") %]
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+[% RenderBlockStart("PreFilledBccRow") %]
+    Core.Agent.CustomerSearch.AddTicketCustomer( 'BccCustomer', [% Data.Email | JSON %] );
+[% RenderBlockEnd("PreFilledBccRow") %]
+//]]></script>
+[% END %]
+[% RenderBlockEnd("PreFilledBcc") %]
 
                     <label class="Mandatory" for="Subject"><span class="Marker">*</span>[% Translate("Subject") | html %]:</label>
                     <div class="Field">

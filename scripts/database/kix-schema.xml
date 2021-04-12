@@ -1035,6 +1035,7 @@
     <Column Name="a_reply_to" Required="false" Size="500" Type="VARCHAR"/>
     <Column Name="a_to" Required="false" Size="1800000" Type="VARCHAR"/>
     <Column Name="a_cc" Required="false" Size="1800000" Type="VARCHAR"/>
+    <Column Name="a_bcc" Required="false" Size="1800000" Type="VARCHAR"/>
     <Column Name="a_subject" Required="false" Size="3800" Type="VARCHAR"/>
     <Column Name="a_message_id" Required="false" Size="3800" Type="VARCHAR"/>
     <Column Name="a_message_id_md5" Required="false" Size="32" Type="VARCHAR"/>
