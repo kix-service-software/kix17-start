@@ -243,7 +243,7 @@ sub ArticleCreate {
     }
 
     # strip not wanted stuff
-    for my $Attribute (qw(From To Cc Subject MessageID InReplyTo References ReplyTo)) {
+    for my $Attribute (qw(From To Cc Bcc Subject MessageID InReplyTo References ReplyTo)) {
         if ( defined $Param{$Attribute} ) {
             $Param{$Attribute} =~ s/\n|\r//g;
         }
@@ -290,14 +290,14 @@ sub ArticleCreate {
     return if !$DBObject->Do(
         SQL => 'INSERT INTO article '
             . '(ticket_id, article_type_id, article_sender_type_id, a_from, a_reply_to, a_to, '
-            . 'a_cc, a_subject, a_message_id, a_message_id_md5, a_in_reply_to, a_references, a_body, a_content_type, '
+            . 'a_cc, a_bcc, a_subject, a_message_id, a_message_id_md5, a_in_reply_to, a_references, a_body, a_content_type, '
             . 'content_path, valid_id, incoming_time, create_time, create_by, change_time, change_by) '
             . 'VALUES '
-            . '(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, current_timestamp, ?, current_timestamp, ?)',
+            . '(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, current_timestamp, ?, current_timestamp, ?)',
         Bind => [
             \$Param{TicketID}, \$Param{ArticleTypeID}, \$Param{SenderTypeID},
             \$Param{From},     \$Param{ReplyTo},       \$Param{To},
-            \$Param{Cc},       \$Param{Subject},
+            \$Param{Cc},       \$Param{Bcc},           \$Param{Subject},
             \$ArticleInsertFingerprint,    # just for next search; will be updated with correct MessageID
             \$Param{MD5},
             \$Param{InReplyTo}, \$Param{References}, \$Param{Body},
@@ -1461,7 +1461,7 @@ sub ArticleGet {
     # sql query
     my @Content;
     my @Bind;
-    my $SQL = 'SELECT sa.ticket_id, sa.a_from, sa.a_to, sa.a_cc, sa.a_subject,'
+    my $SQL = 'SELECT sa.ticket_id, sa.a_from, sa.a_to, sa.a_cc, sa.a_bcc, sa.a_subject,'
             . '  sa.a_reply_to, sa.a_message_id, sa.a_in_reply_to, sa.a_references, sa.a_body,'
             . '  st.create_time_unix, st.ticket_state_id, st.queue_id, sa.create_time,'
             . '  sa.a_content_type, sa.create_by, st.tn, article_sender_type_id, st.customer_id,'
@@ -1532,65 +1532,66 @@ sub ArticleGet {
         $Data{From}       = $Row[1];
         $Data{To}         = $Row[2];
         $Data{Cc}         = $Row[3];
-        $Data{Subject}    = $Row[4];
+        $Data{Bcc}        = $Row[4];
+        $Data{Subject}    = $Row[5];
 
-        $Data{ReplyTo}    = $Row[5];
-        $Data{MessageID}  = $Row[6];
-        $Data{InReplyTo}  = $Row[7];
-        $Data{References} = $Row[8];
-        $Data{Body}       = $Row[9];
+        $Data{ReplyTo}    = $Row[6];
+        $Data{MessageID}  = $Row[7];
+        $Data{InReplyTo}  = $Row[8];
+        $Data{References} = $Row[9];
+        $Data{Body}       = $Row[10];
 
-        $Ticket{CreateTimeUnix} = $Row[10];
-        $Data{StateID}          = $Row[11];
-        $Ticket{StateID}        = $Row[11];
-        $Data{QueueID}          = $Row[12];
-        $Ticket{QueueID}        = $Row[12];
+        $Ticket{CreateTimeUnix} = $Row[11];
+        $Data{StateID}          = $Row[12];
+        $Ticket{StateID}        = $Row[12];
+        $Data{QueueID}          = $Row[13];
+        $Ticket{QueueID}        = $Row[13];
         $Ticket{AgeTimeUnix}    = $TimeObject->SystemTime()
-            - $TimeObject->TimeStamp2SystemTime( String => $Row[13] );
+            - $TimeObject->TimeStamp2SystemTime( String => $Row[14] );
         $Ticket{Created} = $TimeObject->SystemTime2TimeStamp( SystemTime => $Ticket{CreateTimeUnix} );
-        $Data{ContentType} = $Row[14];
+        $Data{ContentType} = $Row[15];
 
-        $Data{CreatedBy}           = $Row[15];
-        $Data{TicketNumber}        = $Row[16];
-        $Data{SenderTypeID}        = $Row[17];
-        $Data{CustomerID}          = $Row[18];
-        $Ticket{CustomerID}        = $Row[18];
-        $Data{RealTillTimeNotUsed} = $Row[19];
+        $Data{CreatedBy}           = $Row[16];
+        $Data{TicketNumber}        = $Row[17];
+        $Data{SenderTypeID}        = $Row[18];
+        $Data{CustomerID}          = $Row[19];
+        $Ticket{CustomerID}        = $Row[19];
+        $Data{RealTillTimeNotUsed} = $Row[20];
 
-        $Data{PriorityID}       = $Row[20];
-        $Ticket{PriorityID}     = $Row[20];
-        $Data{CustomerUserID}   = $Row[21];
-        $Ticket{CustomerUserID} = $Row[21];
-        $Data{OwnerID}          = $Row[22];
-        $Ticket{OwnerID}        = $Row[22];
-        $Data{ResponsibleID}    = $Row[23] || 1;
-        $Ticket{ResponsibleID}  = $Row[23] || 1;
-        $Data{ArticleTypeID}    = $Row[24];
+        $Data{PriorityID}       = $Row[21];
+        $Ticket{PriorityID}     = $Row[21];
+        $Data{CustomerUserID}   = $Row[22];
+        $Ticket{CustomerUserID} = $Row[22];
+        $Data{OwnerID}          = $Row[23];
+        $Ticket{OwnerID}        = $Row[23];
+        $Data{ResponsibleID}    = $Row[24] || 1;
+        $Ticket{ResponsibleID}  = $Row[24] || 1;
+        $Data{ArticleTypeID}    = $Row[25];
 
-        $Data{IncomingTime} = $Row[25];
+        $Data{IncomingTime} = $Row[26];
         $Data{Created}      = $TimeObject->SystemTime2TimeStamp(
-            SystemTime => $Row[25],
+            SystemTime => $Row[26],
         );
-        $Data{ArticleID}              = $Row[26];
-        $Ticket{LockID}               = $Row[27];
-        $Data{Title}                  = $Row[28];
+        $Data{ArticleID}              = $Row[27];
+        $Ticket{LockID}               = $Row[28];
+        $Data{Title}                  = $Row[29];
         $Ticket{Title}                = $Data{Title};
-        $Data{EscalationUpdateTime}   = $Row[29];
+        $Data{EscalationUpdateTime}   = $Row[30];
         $Ticket{EscalationUpdateTime} = $Data{EscalationUpdateTime};
 
-        $Data{TypeID}                   = $Row[30];
-        $Ticket{TypeID}                 = $Row[30];
-        $Data{ServiceID}                = $Row[31];
-        $Ticket{ServiceID}              = $Row[31];
-        $Data{SLAID}                    = $Row[32];
-        $Ticket{SLAID}                  = $Row[32];
-        $Data{EscalationResponseTime}   = $Row[33];
+        $Data{TypeID}                   = $Row[31];
+        $Ticket{TypeID}                 = $Row[31];
+        $Data{ServiceID}                = $Row[32];
+        $Ticket{ServiceID}              = $Row[32];
+        $Data{SLAID}                    = $Row[33];
+        $Ticket{SLAID}                  = $Row[33];
+        $Data{EscalationResponseTime}   = $Row[34];
         $Ticket{EscalationResponseTime} = $Data{EscalationResponseTime};
-        $Data{EscalationSolutionTime}   = $Row[34];
+        $Data{EscalationSolutionTime}   = $Row[35];
         $Ticket{EscalationSolutionTime} = $Data{EscalationSolutionTime};
-        $Data{EscalationTime}           = $Row[35];
+        $Data{EscalationTime}           = $Row[36];
         $Ticket{EscalationTime}         = $Data{EscalationTime};
-        $Ticket{Changed}                = $Row[36];
+        $Ticket{Changed}                = $Row[37];
 
         if ( $Data{ContentType} && $Data{ContentType} =~ /charset=/i ) {
             $Data{Charset} = $Data{ContentType};
@@ -1865,7 +1866,7 @@ sub ArticleGet {
 
         # add real name lines
         RECIPIENT:
-        for my $Key (qw( From To Cc)) {
+        for my $Key (qw( From To Cc Bcc)) {
             next RECIPIENT if !$Part->{$Key};
 
             # check if it's a queue
@@ -2149,6 +2150,7 @@ sub ArticleUpdate {
         ReplyTo       => 'a_reply_to',
         To            => 'a_to',
         Cc            => 'a_cc',
+        Bcc           => 'a_bcc',
         ArticleTypeID => 'article_type_id',
         SenderTypeID  => 'article_sender_type_id',
     );

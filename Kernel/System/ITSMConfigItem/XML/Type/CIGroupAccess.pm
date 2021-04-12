@@ -45,10 +45,6 @@ sub new {
     my $Self = {};
     bless( $Self, $Type );
 
-    # create needed objects
-    $Self->{LogObject}   = $Kernel::OM->Get('Kernel::System::Log');
-    $Self->{GroupObject} = $Kernel::OM->Get('Kernel::System::Group');
-
     return $Self;
 }
 
@@ -68,7 +64,7 @@ sub ValueLookup {
 
     # check needed stuff
     if ( !$Param{Item} ) {
-        $Self->{LogObject}->Log(
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => 'Need Item!',
         );
@@ -81,7 +77,7 @@ sub ValueLookup {
     my @GetValueArray = split( /,/, $Param{Value} );
 
     # get item list
-    my %Groups = $Self->{GroupObject}->GroupList( Valid => 1 );
+    my %Groups = $Kernel::OM->Get('Kernel::System::Group')->GroupList( Valid => 1 );
 
     my @ValueArray = ();
     for my $Group ( keys %Groups ) {
@@ -111,7 +107,7 @@ sub StatsAttributeCreate {
     # check needed stuff
     for my $Argument (qw(Key Name Item)) {
         if ( !$Param{$Argument} ) {
-            $Self->{LogObject}->Log(
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => "Need $Argument!",
             );
@@ -120,7 +116,7 @@ sub StatsAttributeCreate {
     }
 
     # get item list
-    my %Groups = $Self->{GroupObject}->GroupList( Valid => 1 );
+    my %Groups = $Kernel::OM->Get('Kernel::System::Group')->GroupList( Valid => 1 );
 
     # create arrtibute
     my $Attribute = [
@@ -178,7 +174,7 @@ sub ExportValuePrepare {
     my @Groups = split( /,/ , $Param{Value} );
 
     # get all possible groups
-    my %AllGroups = $Self->{GroupObject}->GroupList( Valid => 1 );
+    my %AllGroups = $Kernel::OM->Get('Kernel::System::Group')->GroupList( Valid => 1 );
 
     # map group names to GroupIDs
     my @GroupNames = map { $AllGroups{$_} } @Groups;
@@ -230,7 +226,7 @@ sub ImportValuePrepare {
     my @Groups = split( /,/ , $Param{Value} );
 
     # get all possible groups
-    my %AllGroups = $Self->{GroupObject}->GroupList( Valid => 1 );
+    my %AllGroups = $Kernel::OM->Get('Kernel::System::Group')->GroupList( Valid => 1 );
 
     # reverse the list
     my %Name2ID = reverse %AllGroups;

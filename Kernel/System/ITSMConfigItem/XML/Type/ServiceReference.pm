@@ -45,9 +45,6 @@ sub new {
     my $Self = {};
     bless( $Self, $Type );
 
-    $Self->{LogObject}     = $Kernel::OM->Get('Kernel::System::Log');
-    $Self->{ServiceObject} = $Kernel::OM->Get('Kernel::System::Service');
-
     return $Self;
 }
 
@@ -66,7 +63,7 @@ sub ValueLookup {
 
     return '' if !$Param{Value};
 
-    my %ServiceData = $Self->{ServiceObject}->ServiceGet(
+    my %ServiceData = $Kernel::OM->Get('Kernel::System::Service')->ServiceGet(
         ServiceID => $Param{Value},
         UserID    => 1,
     );
@@ -98,7 +95,7 @@ sub StatsAttributeCreate {
     # check needed stuff
     for my $Argument (qw(Key Name Item)) {
         if ( !$Param{$Argument} ) {
-            $Self->{LogObject}->Log(
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => "Need $Argument!"
             );
@@ -141,7 +138,7 @@ sub ExportSearchValuePrepare {
     return '' if !$Param{Value};
 
     # lookup name for given service ID
-    my %ServiceData = $Self->{ServiceObject}->ServiceGet(
+    my %ServiceData = $Kernel::OM->Get('Kernel::System::Service')->ServiceGet(
         ServiceID => $Param{Value},
         UserID    => 1,
     );
@@ -172,7 +169,7 @@ sub ExportValuePrepare {
     return '' if !$Param{Value};
 
     # lookup name for given service ID
-    my %ServiceData = $Self->{ServiceObject}->ServiceGet(
+    my %ServiceData = $Kernel::OM->Get('Kernel::System::Service')->ServiceGet(
         ServiceID => $Param{Value},
         UserID    => 1,
     );
@@ -203,14 +200,14 @@ sub ImportSearchValuePrepare {
     return '' if !$Param{Value};
 
     # check if Service name was given
-    my $ServiceID = $Self->{ServiceObject}->ServiceLookup(
+    my $ServiceID = $Kernel::OM->Get('Kernel::System::Service')->ServiceLookup(
         Name => $Param{Value},
     );
     return $ServiceID if $ServiceID;
 
     # check if given value is a valid Service ID
     if ( $Param{Value} !~ /\D/ ) {
-        my $ServiceName = $Self->{ServiceObject}->ServiceLookup(
+        my $ServiceName = $Kernel::OM->Get('Kernel::System::Service')->ServiceLookup(
             ServiceID => $Param{Value},
         );
         return $Param{Value} if $ServiceName;
@@ -239,14 +236,14 @@ sub ImportValuePrepare {
     return '' if !$Param{Value};
 
     # check if Service name was given
-    my $ServiceID = $Self->{ServiceObject}->ServiceLookup(
+    my $ServiceID = $Kernel::OM->Get('Kernel::System::Service')->ServiceLookup(
         Name => $Param{Value},
     );
     return $ServiceID if $ServiceID;
 
     # check if given value is a valid Service ID
     if ( $Param{Value} !~ /\D/ ) {
-        my $ServiceName = $Self->{ServiceObject}->ServiceLookup(
+        my $ServiceName = $Kernel::OM->Get('Kernel::System::Service')->ServiceLookup(
             ServiceID => $Param{Value},
         );
         return $Param{Value} if $ServiceName;

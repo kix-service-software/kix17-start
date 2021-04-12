@@ -272,12 +272,9 @@ sub new {
     };
 
     # hash with all valid pre sortable columns (taken from TicketSearch)
-    # SortBy  => 'Priority',   # Owner|Responsible|CustomerID|State|Queue
-    # |Priority|Type|Lock|Service|SLA
+    # SortBy  => 'Priority',   # CustomerID|State|Queue|Priority|Type|Lock|Service|SLA
     $Self->{PreSortableColumns} = {
         ''            => '-',
-        'Owner'       => 'Owner',
-        'Responsible' => 'Responsible',
         'CustomerID'  => 'CustomerID',
         'State'       => 'State',
         'Queue'       => 'Queue',
@@ -3381,6 +3378,7 @@ sub _PreSortSet{
     if (
         defined $Self->{PreSort}
         && $Self->{PreSort}
+        && $Filter->{SortBy} ne $Self->{PreSort}
     ) {
         my @SortBy  = ( $Self->{PreSort} );
         my @OrderBy = ( $Self->{PreOrder} );

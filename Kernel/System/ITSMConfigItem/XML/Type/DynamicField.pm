@@ -45,9 +45,6 @@ sub new {
     my $Self = {};
     bless( $Self, $Type );
 
-    $Self->{DynamicFieldObject} = $Kernel::OM->Get('Kernel::System::DynamicField');
-    $Self->{LogObject}          = $Kernel::OM->Get('Kernel::System::Log');
-
     return $Self;
 }
 
@@ -67,7 +64,7 @@ sub ValueLookup {
 
     # check needed stuff
     if ( !$Param{Item} ) {
-        $Self->{LogObject}->Log(
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => 'Need Item!',
         );
@@ -77,7 +74,7 @@ sub ValueLookup {
     return if !$Param{Value};
 
     # get item list
-    my $ItemList = $Self->{DynamicFieldObject}->DynamicFieldGet(
+    my $ItemList = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldGet(
         Name => $Param{Item}->{Input}->{Name} || '',
     );
 
@@ -107,7 +104,7 @@ sub StatsAttributeCreate {
     # check needed stuff
     for my $Argument (qw(Key Name Item)) {
         if ( !$Param{$Argument} ) {
-            $Self->{LogObject}->Log(
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => "Need $Argument!",
             );
@@ -116,7 +113,7 @@ sub StatsAttributeCreate {
     }
 
     # get item list
-    my $ItemList = $Self->{DynamicFieldObject}->DynamicFieldGet(
+    my $ItemList = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldGet(
         Name => $Param{Item}->{Input}->{Name} || '',
     );
 
@@ -173,7 +170,7 @@ sub ExportValuePrepare {
     return if !defined $Param{Value};
 
     # get item list
-    my $ItemList = $Self->{DynamicFieldObject}->DynamicFieldGet(
+    my $ItemList = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldGet(
         Name => $Param{Item}->{Input}->{Name} || '',
     );
 
@@ -217,7 +214,7 @@ sub ImportValuePrepare {
     return if !defined $Param{Value};
 
     # get item list
-    my $ItemList = $Self->{DynamicFieldObject}->DynamicFieldGet(
+    my $ItemList = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldGet(
         Name => $Param{Item}->{Input}->{Name} || '',
     );
 
@@ -227,7 +224,7 @@ sub ImportValuePrepare {
     my $DynamicFieldID = $Name2ID{$Param{Value}};
 
     if ( !$DynamicFieldID ) {
-        $Self->{LogObject}->Log(
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => "DynamicField lookup of'$Param{Value}' failed!",
         );

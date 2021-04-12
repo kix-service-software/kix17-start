@@ -2056,7 +2056,7 @@ sub _Mask {
     $LayoutObject->Block(
         Name => 'BccMultipleCustomerCounter',
         Data => {
-            CustomerCounter => $CustomerCounterBcc++,
+            CustomerCounter => $CustomerCounterBcc,
         },
     );
 
@@ -2115,6 +2115,24 @@ sub _Mask {
             );
         }
         $Param{Cc} = '';
+    }
+
+    # set preselected values for Bcc field
+    if ( $Param{Bcc} && $Param{Bcc} ne '' && !$CustomerCounterBcc ) {
+        $LayoutObject->Block(
+            Name => 'PreFilledBcc',
+        );
+
+        # split To values
+        for my $Email ( Mail::Address->parse( $Param{Bcc} ) ) {
+            $LayoutObject->Block(
+                Name => 'PreFilledBccRow',
+                Data => {
+                    Email => $Email->address(),
+                },
+            );
+        }
+        $Param{Bcc} = '';
     }
 
     # set preselected values for To field
