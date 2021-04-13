@@ -1549,6 +1549,15 @@ sub _PreferencesLinkObject {
                 . $ParamObject->GetParam( Param => 'SourceKey' )
                 . ';SEARCH::TicketNumber=***;'
         }
+        elsif ( $Self->{Action} eq 'AgentTicketZoomTabLinkedObjects' ) {
+            $Param{RequestedURL}
+                = 'Action=AgentTicketZoom'
+                . ';CallingAction='
+                . $Self->{Action}
+                . ';TicketID='
+                . $ParamObject->GetParam( Param => 'TicketID' )
+                . ';SelectedTab=2;';
+        }
 
         $LayoutObject->Block(
             Name => 'FilterColumnSettings',
