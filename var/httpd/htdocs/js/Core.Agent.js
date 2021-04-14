@@ -679,7 +679,7 @@ Core.Agent = (function (TargetNS) {
                 ) {
                     return;
                 }
-                $(this).addClass('FieldTest');
+                $(this).addClass('FieldPlain');
             });
         }
 
