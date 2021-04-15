@@ -141,7 +141,7 @@ Adds a new portal group
 
     my $Result = $CustomerPortalGroupObject->PortalGroupAdd(
         Name  => 'some name',
-        Icon  => { 
+        Icon  => {
             Filename    => 'abc.txt',
             ContentType => 'text/plain',
             Content     => 'Some text',
@@ -189,7 +189,7 @@ sub PortalGroupAdd {
 
         return 0 if !$Self->{DBObject}->Prepare(
             SQL  => 'SELECT max(id) FROM customer_portal_group WHERE name = ?',
-            Bind => [ 
+            Bind => [
                 \$Param{Name}
             ],
         );
@@ -304,8 +304,8 @@ sub PortalGroupDelete {
 
     # check required params...
     if ( !$Param{PortalGroupIDs} ) {
-        $Self->{LogObject}->Log( 
-            Priority => 'error', 
+        $Self->{LogObject}->Log(
+            Priority => 'error',
             Message  => 'PortalGroupDelete: Need PortalGroupIDs!' );
         return;
     }
@@ -357,9 +357,9 @@ sub PortalGroupList {
 
     my $SQL = "SELECT id, name FROM customer_portal_group WHERE 1=1".$WHEREClauseExt;
 
-    return if !$Self->{DBObject}->Prepare( 
+    return if !$Self->{DBObject}->Prepare(
         SQL   => $SQL . $WHEREClauseExt . " ORDER by name",
-        Limit => $Param{Limit}, 
+        Limit => $Param{Limit},
     );
 
     my $Count = 0;
