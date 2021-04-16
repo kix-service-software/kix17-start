@@ -1,6 +1,10 @@
 # Change log of KIX
 * Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.15.0-RC11 (2021/04/16)
+ * (2021/04/15) - Bugfix: KIX17-2104 (changed sysconfig group for menu module) (ddoerffel)
+ * (2021/04/14) - Bugfix: KIX17-1771 (fixed customize form for service incident state) (millinger)
+
 # 17.15.0-RC10 (2021/04/12)
  * (2021/04/09) - CR: KIX17-1995 (added bcc for article zoom) (millinger)
  * (2021/04/09) - Bugfix: KIX17-2075 (replaced binding of objects to self) (millinger)
