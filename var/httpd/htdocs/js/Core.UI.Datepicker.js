@@ -242,7 +242,7 @@ Core.UI.Datepicker = (function (TargetNS) {
 
             // Check Used Element if available
             if ( typeof Element.Used !== 'undefined' ) {
-                Element.Used.prop('checked', true);
+                Element.Used.prop('checked', true).trigger('change');
             }
         };
         // KIX4OTRS-capeIT
@@ -338,6 +338,12 @@ Core.UI.Datepicker = (function (TargetNS) {
                           if (Element.Month.val().indexOf("0") == 0)
                               Element.Month.val(Element.Month.val().substring(1));
                       }
+
+                      // Check Used Element if available
+                      if ( typeof Element.Used !== 'undefined' ) {
+                          Element.Used.prop('checked', true).trigger('change');
+                      }
+
                       return false;
                   });
         }
@@ -351,7 +357,7 @@ Core.UI.Datepicker = (function (TargetNS) {
 
                 // Check Used Element if available
                 if ( typeof Element.Used !== 'undefined' ) {
-                    Element.Used.prop('checked', true);
+                    Element.Used.prop('checked', true).trigger('change');
                 }
 
                 return false;
