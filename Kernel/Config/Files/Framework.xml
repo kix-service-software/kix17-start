@@ -1244,7 +1244,7 @@
     </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::MenuModule###210-PrintForwardFax" Required="0" Valid="1">
         <Description Translatable="1">Module to show print forward fax link in menu.</Description>
-        <Group>Framework</Group>
+        <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::Ticket::MenuModule</SubGroup>
         <Setting>
             <Hash>

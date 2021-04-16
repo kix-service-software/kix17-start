@@ -23,13 +23,13 @@ sub new {
     bless( $Self, $Type );
 
     # create needed objects
-    $Self->{ConfigObject} = $Kernel::OM->Get('Kernel::Config');
-    $Self->{LayoutObject} = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-    $Self->{LogObject}    = $Kernel::OM->Get('Kernel::System::Log');
+    $Self->{ConfigObject}              = $Kernel::OM->Get('Kernel::Config');
+    $Self->{LayoutObject}              = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    $Self->{LogObject}                 = $Kernel::OM->Get('Kernel::System::Log');
     $Self->{CustomerPortalGroupObject} = $Kernel::OM->Get('Kernel::System::CustomerPortalGroup');
-    $Self->{MainObject}   = $Kernel::OM->Get('Kernel::System::Main');
-    $Self->{TicketObject} = $Kernel::OM->Get('Kernel::System::Ticket');
-    $Self->{ParamObject}  = $Kernel::OM->Get('Kernel::System::Web::Request');
+    $Self->{MainObject}                = $Kernel::OM->Get('Kernel::System::Main');
+    $Self->{TicketObject}              = $Kernel::OM->Get('Kernel::System::Ticket');
+    $Self->{ParamObject}               = $Kernel::OM->Get('Kernel::System::Web::Request');
 
     $Self->{Config} = $Self->{ConfigObject}->Get('Ticket::Frontend::CustomerTicketTemplates');
 

@@ -358,7 +358,7 @@ Core.Customer = (function (TargetNS) {
                 ) {
                     return;
                 }
-                $(this).addClass('FieldTest');
+                $(this).addClass('FieldPlain');
             });
         }
     };

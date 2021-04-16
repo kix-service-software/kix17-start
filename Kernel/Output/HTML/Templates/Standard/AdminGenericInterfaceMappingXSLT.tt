@@ -25,7 +25,7 @@
         <li title="[% Data.ActionType | html %] [% Data.Action | html %]" >
             <a href="[% Env("Baselink") %]Action=[% Data.ActionFrontendModule | uri %];Subaction=Change;[% Data.ActionType | uri %]=[% Data.Action | uri %];WebserviceID=[% Data.WebserviceID | uri %]">[% Data.ActionType | html %] [% Data.Action | html %]</a>
         </li>
-        <li title="[% Data.MappingDirection | html %]" >
+        <li title="[% Translate(Data.MappingDirection) | html %]" >
             [% Translate(Data.MappingDirection) | html %]
         </li>
     </ul>

@@ -50,7 +50,7 @@
 
             var ChildClass = $(this).attr("class"),
                 DynamicFieldRegexp = /^Row+/i,
-                FieldRegexp        = /Field$/i,
+                FieldRegexp        = /(?:Field|FieldPlain)$/i,
                 FileRegexp         = /(?:FileUpload|Attachment)$/i,
                 ChildID;
 
