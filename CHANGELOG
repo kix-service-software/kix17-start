@@ -1,6 +1,11 @@
 # Change log of KIX
 * Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.15.0 (2021/04/20)
+ * (2021/04/20) - productive release
+ * (2021/04/13) - CR: KIX17-2092 (changed depend files) (fjacquemin)
+ * (2021/04/13) - Bugfix: KIX17-2034 (fixed redirect of link object preferences after using quick link) (millinger)
+
 # 17.15.0-RC12 (2021/04/19)
  * (2021/04/15) - Bugfix: KIX17-1975 (changed check for SMIME cert from subject to email) (millinger)
 
