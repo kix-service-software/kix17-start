@@ -131,7 +131,13 @@ END
 
     # check if bulk feature is enabled
     my $BulkFeature = 0;
-    if ( $ConfigObject->Get('ITSMConfigItem::Frontend::BulkFeature') ) {
+    if (
+        $ConfigObject->Get('ITSMConfigItem::Frontend::BulkFeature')
+        && (
+            !defined $Param{ForceNoBulk}
+            || !$Param{ForceNoBulk}
+        )
+    ) {
         my @Groups;
         if ( $ConfigObject->Get('ITSMConfigItem::Frontend::BulkFeatureGroup') ) {
             @Groups = @{ $ConfigObject->Get('ITSMConfigItem::Frontend::BulkFeatureGroup') };
@@ -386,7 +392,8 @@ END
                             },
                         );
 
-                        if ( !$BulkActivate
+                        if (
+                            !$BulkActivate
                             && $ItemChecked
                         ) {
                             $BulkActivate = 1;

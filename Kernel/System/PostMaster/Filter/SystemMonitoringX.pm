@@ -172,7 +172,6 @@ sub Run {
 
     # OK, found ticket to deal with
     if ($TicketID) {
-
         $Self->_TicketUpdate(
             TicketID => $TicketID,
             Param    => \%Param,
@@ -256,27 +255,31 @@ sub GetDynamicFieldsDefinition {
     my @DynamicFieldContentArticle = split( ',', $Config->{'DynamicFieldContent::Article'} );
 
     for my $DFN (@DynamicFieldContentTicket) {
-        push @{ $Param{NewFields} },
+        push(
+            @{ $Param{NewFields} },
             $Self->_GetDynamicFieldDefinition(
-            Config     => $Config,
-            Key        => "DynamicField" . $DFN,
-            Default    => 1,
-            Base       => $DynamicFieldTicketTextPrefix,
-            Name       => $DFN . "Name",
-            ObjectType => "Ticket"
-            );
+                Config     => $Config,
+                Key        => "DynamicField" . $DFN,
+                Default    => 1,
+                Base       => $DynamicFieldTicketTextPrefix,
+                Name       => $DFN . "Name",
+                ObjectType => "Ticket"
+            )
+        );
     }
 
     for my $DFN (@DynamicFieldContentArticle) {
-        push @{ $Param{NewFields} },
+        push(
+            @{ $Param{NewFields} },
             $Self->_GetDynamicFieldDefinition(
-            Config     => $Config,
-            Key        => "DynamicField" . $DFN,
-            Default    => 1,
-            Base       => $DynamicFieldArticleTextPrefix,
-            Name       => $DFN . "Name",
-            ObjectType => "Article"
-            );
+                Config     => $Config,
+                Key        => "DynamicField" . $DFN,
+                Default    => 1,
+                Base       => $DynamicFieldArticleTextPrefix,
+                Name       => $DFN . "Name",
+                ObjectType => "Article"
+            )
+        );
     }
 
     return 1;
@@ -320,19 +323,16 @@ sub _MailParse {
         return;
     }
 
-    my @DynamicFieldContentTicket = split( ',', $Self->{Config}->{'DynamicFieldContent::Ticket'} );
-    my @DynamicFieldContentArticle
-        = split( ',', $Self->{Config}->{'DynamicFieldContent::Article'} );
-    my @DynamicFieldContent = ( @DynamicFieldContentTicket, @DynamicFieldContentArticle );
+    my @DynamicFieldContentTicket  = split( ',', $Self->{Config}->{'DynamicFieldContent::Ticket'} );
+    my @DynamicFieldContentArticle = split( ',', $Self->{Config}->{'DynamicFieldContent::Article'} );
+    my @DynamicFieldContent        = ( @DynamicFieldContentTicket, @DynamicFieldContentArticle );
 
     my $Subject = $Param{GetParam}->{Subject};
 
     # Try to get State, Host and Service from email SUBJECT
-    my @SubjectLines = split /\n/, $Subject;
+    my @SubjectLines = split( /\n/, $Subject );
     for my $Line (@SubjectLines) {
-
         for my $Item (@DynamicFieldContent) {
-
             if (
                 $Self->{Config}->{ $Item . 'RegExp' }
                 && $Line =~ /$Self->{Config}->{ $Item . 'RegExp' }/
@@ -343,8 +343,7 @@ sub _MailParse {
     }
 
     # split the body into separate lines
-    my $Body = $Param{GetParam}->{Body} || die "Message has no Body";
-
+    my $Body      = $Param{GetParam}->{Body} || die "Message has no Body";
     my @BodyLines = split /\n/, $Body;
 
     # to remember if an element was found before
@@ -352,13 +351,10 @@ sub _MailParse {
 
     LINE:
     for my $Line (@BodyLines) {
-
         # Try to get State, Host and Service from email BODY
         ELEMENT:
-
         for my $Element (@DynamicFieldContent) {
             next ELEMENT if !$Self->{Config}->{ $Element . 'RegExp' };
-
             next ELEMENT if $AlreadyMatched{$Element};
 
             my $Regex = $Self->{Config}->{ $Element . 'RegExp' };
@@ -400,10 +396,8 @@ sub _LogMessage {
     my $LogMessage = $MessageText . " - "
         . "Host: $Self->{Host}, "
         . "State: $Self->{State}, "
-
         . "Address: $Self->{Address}"
         . "Alias: $Self->{Alias}"
-
         . "Service: $Self->{Service}";
 
     $Kernel::OM->Get('Kernel::System::Log')->Log(
@@ -530,22 +524,21 @@ sub _TicketUpdate {
     $Param->{GetParam}->{'X-KIX-StrictFollowUpIgnore'} = 1;
 
     # set sender type and article type
-    $Param->{GetParam}->{'X-KIX-FollowUp-SenderType'}  = $Self->{Config}->{OTRSCreateSenderType};
-    $Param->{GetParam}->{'X-KIX-FollowUp-ArticleType'} = $Self->{Config}->{OTRSCreateArticleType};
+    $Param->{GetParam}->{'X-KIX-FollowUp-SenderType'}  = $Self->{Config}->{KIXCreateSenderType}
+        || $Self->{Config}->{OTRSCreateSenderType};
+    $Param->{GetParam}->{'X-KIX-FollowUp-ArticleType'} = $Self->{Config}->{KIXCreateArticleType}
+        || $Self->{Config}->{OTRSCreateArticleType};
 
     # Set Article Free Field for State
     my $ArticleDFNumber = $Self->{Config}->{'DynamicFieldState'};
 
     # ArticleDFNumber is a number
     if ( $ArticleDFNumber =~ /^\d+$/ ) {
-
-        $Param->{GetParam}->{ 'X-KIX-FollowUp-ArticleKey' . $ArticleDFNumber } = 'State';
-        $Param->{GetParam}->{ 'X-KIX-FollowUp-ArticleValue' . $ArticleDFNumber }
-            = $Self->{State};
+        $Param->{GetParam}->{ 'X-KIX-FollowUp-ArticleKey' . $ArticleDFNumber }   = 'State';
+        $Param->{GetParam}->{ 'X-KIX-FollowUp-ArticleValue' . $ArticleDFNumber } = $Self->{State};
     }
     else {
-        $Param->{GetParam}->{ 'X-KIX-FollowUp-DynamicField-' . $ArticleDFNumber }
-            = $Self->{State};
+        $Param->{GetParam}->{ 'X-KIX-FollowUp-DynamicField-' . $ArticleDFNumber } = $Self->{State};
     }
 
     if ( $Self->{State} =~ /$Self->{Config}->{CloseTicketRegExp}/ ) {
@@ -602,23 +595,19 @@ sub _TicketCreate {
     my ( $Self, $Param ) = @_;
 
     # get Dynamic Field list
-    my $DynamicFieldsTickets
-        = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldList(
+    my $DynamicFieldsTickets = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldList(
         Valid      => 1,
         ObjectType => 'Ticket',
         ResultType => 'HASH',
-        );
+    );
 
-    my @DynamicFieldContentTicket
-        = split( ',', $Self->{Config}->{'DynamicFieldContent::Ticket'} );
-    my @DynamicFieldContentArticle
-        = split( ',', $Self->{Config}->{'DynamicFieldContent::Article'} );
-    my @DynamicFieldContent = ( @DynamicFieldContentTicket, @DynamicFieldContentArticle );
+    my @DynamicFieldContentTicket  = split( ',', $Self->{Config}->{'DynamicFieldContent::Ticket'} );
+    my @DynamicFieldContentArticle = split( ',', $Self->{Config}->{'DynamicFieldContent::Article'} );
+    my @DynamicFieldContent        = ( @DynamicFieldContentTicket, @DynamicFieldContentArticle );
 
     for my $ConfiguredDynamicField (@DynamicFieldContentTicket) {
 
-        my $TicketDFNumber
-            = $Self->{Config}->{ 'DynamicField' . $ConfiguredDynamicField };
+        my $TicketDFNumber = $Self->{Config}->{ 'DynamicField' . $ConfiguredDynamicField };
 
         # identifier is a number
         if ( $TicketDFNumber =~ /^\d+$/ ) {
@@ -634,8 +623,7 @@ sub _TicketCreate {
                     . " does not exists or missnamed.",
             );
         }
-        $Param->{GetParam}->{ 'X-KIX-DynamicField-' . $TicketDFNumber }
-            = $Self->{$ConfiguredDynamicField};
+        $Param->{GetParam}->{ 'X-KIX-DynamicField-' . $TicketDFNumber } = $Self->{ $ConfiguredDynamicField };
     }
 
     # Set Article Dynamic Field for State
@@ -647,40 +635,43 @@ sub _TicketCreate {
         $Param->{GetParam}->{ 'X-KIX-ArticleValue' . $ArticleDFNumber } = $Self->{State};
     }
     else {
-        $Param->{GetParam}->{ 'X-KIX-FollowUp-DynamicField-' . $ArticleDFNumber }
-            = $Self->{State};
+        $Param->{GetParam}->{ 'X-KIX-DynamicField-' . $ArticleDFNumber } = $Self->{State};
     }
 
     # set sender type and article type
-    $Param->{GetParam}->{'X-KIX-SenderType'} = $Self->{Config}->{OTRSCreateSenderType}
+    $Param->{GetParam}->{'X-KIX-SenderType'} = $Self->{Config}->{KIXCreateSenderType}
+        || $Self->{Config}->{OTRSCreateSenderType}
         || $Param->{GetParam}->{'X-KIX-SenderType'};
-    $Param->{GetParam}->{'X-KIX-ArticleType'} = $Self->{Config}->{OTRSCreateArticleType}
+    $Param->{GetParam}->{'X-KIX-ArticleType'} = $Self->{Config}->{KIXCreateArticleType}
+        || $Self->{Config}->{OTRSCreateArticleType}
         || $Param->{GetParam}->{'X-KIX-ArticleType'};
 
-    $Param->{GetParam}->{'X-KIX-Queue'} = $Self->{Config}->{OTRSCreateTicketQueue}
+    $Param->{GetParam}->{'X-KIX-Queue'} = $Self->{Config}->{KIXCreateTicketQueue}
+        || $Self->{Config}->{OTRSCreateTicketQueue}
         || $Param->{GetParam}->{'X-KIX-Queue'};
-    $Param->{GetParam}->{'X-KIX-State'} = $Self->{Config}->{OTRSCreateTicketState}
+    $Param->{GetParam}->{'X-KIX-State'} = $Self->{Config}->{KIXCreateTicketState}
+        || $Self->{Config}->{OTRSCreateTicketState}
         || $Param->{GetParam}->{'X-KIX-State'};
     $Param->{GetParam}->{'X-KIX-Type'} = $Self->{Config}->{OTRSCreateTicketType}
+        || $Self->{Config}->{KIXCreateTicketType}
         || $Param->{GetParam}->{'X-KIX-Type'};
-    $Param->{GetParam}->{'X-KIX-Service'} = $Self->{Config}->{OTRSCreateTicketService}
+    $Param->{GetParam}->{'X-KIX-Service'} = $Self->{Config}->{KIXCreateTicketService}
+        || $Self->{Config}->{OTRSCreateTicketService}
         || $Param->{GetParam}->{'X-KIX-Service'};
-    $Param->{GetParam}->{'X-KIX-SLA'} = $Self->{Config}->{OTRSCreateTicketSLA}
+    $Param->{GetParam}->{'X-KIX-SLA'} = $Self->{Config}->{KIXCreateTicketSLA}
+        || $Self->{Config}->{OTRSCreateTicketSLA}
         || $Param->{GetParam}->{'X-KIX-SLA'};
 
     # AcknowledgeNameField
     if ( $Self->{Config}->{AcknowledgeName} ) {
-        my $AcknowledgeNameField
-            = $Kernel::OM->Get('Kernel::Config')
-            ->Get('Tool::Acknowledge::RegistrationAllocation');
+        my $AcknowledgeNameField = $Kernel::OM->Get('Kernel::Config')->Get('Tool::Acknowledge::RegistrationAllocation');
         if ($AcknowledgeNameField) {
             if ( $AcknowledgeNameField =~ /^\d+$/ ) {
                 $AcknowledgeNameField = $DynamicFieldTicketTextPrefix . $AcknowledgeNameField
             }
-            my $DynamicField
-                = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldGet(
+            my $DynamicField = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldGet(
                 'Name' => $AcknowledgeNameField,
-                );
+            );
             if ( !IsHashRefWithData($DynamicField) ) {
                 $Kernel::OM->Get('Kernel::System::Log')->Log(
                     Priority => 'error',
@@ -689,8 +680,7 @@ sub _TicketCreate {
                 );
             }
             else {
-                $Param->{GetParam}->{ 'X-KIX-DynamicField-' . $AcknowledgeNameField }
-                    = $Self->{Config}->{AcknowledgeName} || 'Nagios';
+                $Param->{GetParam}->{ 'X-KIX-DynamicField-' . $AcknowledgeNameField } = $Self->{Config}->{AcknowledgeName} || 'Nagios';
             }
         }
     }

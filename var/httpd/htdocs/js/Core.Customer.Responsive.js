@@ -54,124 +54,123 @@ Core.Customer.Responsive = (function (TargetNS) {
         });
 
         // Add switch for Desktopmode
-        if (!$('#ViewModeSwitch').length) {
+        // This function is deactivated with KIX17.15.
+        /*if (!$('#ViewModeSwitch').length) {
             $('#Footer').append('<div id="ViewModeSwitch"><a href="#">' + Core.Config.Get('ViewModeSwitchDesktop') + '</a></div>');
             $('#ViewModeSwitch a').on('click.Responsive', function() {
                 localStorage.setItem("DesktopMode", 1);
                 location.reload(true);
                 return false;
             });
-        }
+        }*/
 
         // wrap sidebar modules with an additional container
-        if (!$('#NavigationContainer').closest('.ResponsiveSidebarContainer').length) {
-            $('#NavigationContainer').wrap('<div class="ResponsiveSidebarContainer" />');
-        }
-        // wrap sidebar modules with an additional container
-        if (!$('.SidebarColumn').closest('.ResponsiveSidebarContainer').length) {
-            $('.SidebarColumn').wrap('<div class="ResponsiveSidebarContainer" />');
-        }
-        // make sure the relevant sidebar is being collapsed on clicking
-        // on the background
-        $('.ResponsiveSidebarContainer').off().on('click', function(Event) {
+        $.each($('.SidebarColumn, #NavigationContainer'), function() {
+            var container   = $('<span />', {class: 'ResponsiveSidebarContainer'}),
+                closeHandle = $('<button />', {class: 'ResponsiveCloseHandle', type: 'button'}),
+                closeIcon   = $('<i />', {class:'fa fa-times fa-3x'}),
+                openHandle  = $('<span />', {class: 'ResponsiveHandle'}),
+                openIcon    = $('<i />', {class:'fa'}),
+                wrapper     = $('<span />', {class: 'ResponsiveWrapperContainer'}),
+                isWrapped   = 0,
+                direction   = 'right',
+                $Element    = $(this);
 
-            // only react on a direct click on the background
-            if (Event.target !== this) {
-                return;
+            if ( $Element.hasClass('SidebarColumn') ) {
+                if ( $Element.closest('.ContentColumn').length ) {
+                    openHandle.addClass('ResponsiveSubHandle')
+                }
+                openIcon.addClass('fa-caret-square-o-left');
+            }
+            else if ( $Element.attr('id') == 'NavigationContainer' ) {
+                openHandle.addClass('ResponsiveNavHandle');
+                openIcon.addClass('fa-navicon');
+                direction = 'left';
             }
 
-            $(this).prev('.ResponsiveHandle').trigger('click');
+            container.on('click', function(Event) {
+                // only react on a direct click on the background
+                if (Event.target !== this) {
+                    return;
+                }
+
+                closeHandle.trigger('click');
+            });
+
+            if (
+                $Element.children().length
+                && !$Element.closest('.ResponsiveSidebarContainer').length
+            ) {
+                container.addClass('ResponsiveSidebar-' + direction);
+                container.append(wrapper);
+                $Element.wrap(container);
+                isWrapped = 1;
+            }
+
+            if ( isWrapped ) {
+
+                openHandle.append(openIcon);
+
+                closeHandle.append(closeIcon);
+                closeHandle.prependTo($Element.closest('.ResponsiveSidebarContainer'));
+                $Element.closest('.ResponsiveSidebarContainer').before(openHandle);
+
+                // add hide handling
+                closeHandle.on('click', function() {
+                    $Element.closest('.ResponsiveSidebarContainer').hide();
+                    $('html').removeClass('NoScroll');
+
+                    if ( direction == 'left' ) {
+                        $Element.closest('.ResponsiveSidebarContainer').children().animate({
+                            'left': '-300px'
+                        });
+                    }
+                    else {
+                        $Element.closest('.ResponsiveSidebarContainer').children().animate({
+                            'right': '-300px'
+                        });
+                    }
+
+                    return false;
+                });
+
+                // add expansion handling
+                openHandle.on('click', function() {
+                    $Element.closest('.ResponsiveSidebarContainer').show();
+                    $('html').addClass('NoScroll');
+
+                    if ( direction == 'left' ) {
+                        $Element.closest('.ResponsiveSidebarContainer').children().animate({
+                            'left': '0px'
+                        });
+                    }
+                    else {
+                        $Element.closest('.ResponsiveSidebarContainer').children().animate({
+                            'right': '0px'
+                        });
+                    }
+
+                    if ( $Element.attr('id') == 'NavigationContainer' ) {
+                        $Element.find('ul > li > a').css(
+                            {
+                                "border":"0px",
+                                "float":"none"
+                            }
+                        );
+                    }
+
+                    return false;
+                });
+            }
         });
 
-        // add handles for navigation and sidebar
-        if (!$('#ResponsiveNavigationHandle').length) {
-            $('#NavigationContainer').closest('.ResponsiveSidebarContainer').before('<span class="ResponsiveHandle" id="ResponsiveNavigationHandle"><i class="fa fa-navicon"></i></span>');
-        }
-        if (!$('[id^="ResponsiveSidebarHandle"]').length) {
-            var ResponsiveCount = 0;
-            $.each($('.SidebarColumn'), function () {
-                var ID =  'ResponsiveSidebarHandle_' + ResponsiveCount;
-
-                if ( !ResponsiveCount ) {
-                    ID = 'ResponsiveSidebarHandle';
-                }
-                if ( $(this).children().length ) {
-                    $(this).closest('.ResponsiveSidebarContainer').before('<span id="' + ID + '" class="ResponsiveHandle"><i class="fa fa-caret-square-o-left"></i></span>');
-                }
-                ResponsiveCount++;
+        // reset dialog container position
+        if ( $('.Dialog.Fullsize').length ) {
+            $('.Dialog.Fullsize').css({
+                top: 0,
+                left: 0
             });
         }
-
-        // add navigation sidebar expansion handling
-        $('#ResponsiveNavigationHandle').off().on('click', function() {
-            if (
-                parseInt($('#NavigationContainer').css('left'), 10) < 0
-                || parseInt($('#NavigationContainer').css('left'), 10) === 10
-            ) {
-                $('#ResponsiveSidebarHandle').animate({
-                    'right': '-45px'
-                });
-                $('#NavigationContainer').closest('.ResponsiveSidebarContainer').fadeIn();
-                $('html').addClass('NoScroll');
-                $('#NavigationContainer').animate({
-                    'left': '0px'
-                });
-
-                $('.ResponsiveSidebarContainer > div > ul > li > a').css(
-                    {
-                        "border":"0px",
-                        "float":"none"
-                    }
-                );
-            }
-            else {
-                $('#ResponsiveSidebarHandle').animate({
-                    'right': '15px'
-                });
-                $('#NavigationContainer').closest('.ResponsiveSidebarContainer').fadeOut();
-                $('html').removeClass('NoScroll');
-                $('#NavigationContainer').animate({
-                    'left': '-280px'
-                });
-            }
-            return false;
-        });
-
-        // add sidebar column expansion handling
-        $('[id^="ResponsiveSidebarHandle"]').off().on('click', function() {
-            var $Element = $(this).next('.ResponsiveSidebarContainer').children('div');
-            if (parseInt($Element.css('right'), 10) < 0) {
-                $('#ResponsiveNavigationHandle').animate({
-                    'left': '-45px'
-                });
-                if ( $(this).attr('id') !== 'ResponsiveSidebarHandle' ) {
-                    $('#ResponsiveSidebarHandle').animate({
-                        'right': '-45px'
-                    });
-                }
-                $Element.closest('.ResponsiveSidebarContainer').fadeIn();
-                $('html').addClass('NoScroll');
-                $Element.animate({
-                    'right': '0px'
-                });
-            }
-            else {
-                $('#ResponsiveNavigationHandle').animate({
-                    'left': '15px'
-                });
-                if ( $(this).attr('id') !== 'ResponsiveSidebarHandle' ) {
-                    $('#ResponsiveSidebarHandle').animate({
-                        'right': '15px'
-                    });
-                }
-                $Element.closest('.ResponsiveSidebarContainer').fadeOut();
-                $('html').removeClass('NoScroll');
-                $Element.animate({
-                    'right': '-300px'
-                });
-            }
-            return false;
-        });
     });
 
     Core.App.Subscribe('Event.App.Responsive.ScreenXL', function () {
@@ -222,18 +221,28 @@ Core.Customer.Responsive = (function (TargetNS) {
         // remove view mode switch
         $('#ViewModeSwitch').remove();
 
-        $('#ResponsiveSidebarHandle').remove();
-
-        // unwrap sidebar
-        $('.ResponsiveSidebarContainer').children('#Navigation').unwrap();
-        $.each($('.ResponsiveSidebarContainer > .SidebarColumn'), function() {
-            if ( $(this).css('left') === '-300px' ) {
-                $(this).css('left', '0px');
-            } else if ( $(this).css('right') === '-300px' ) {
-                $(this).css('right', '0px');
+        // remove the additional container again
+        $.each($('.ResponsiveSidebarContainer'), function() {
+            var $Element = $(this).find('#NavigationContainer, .SidebarColumn');
+            if ( $Element.hasClass('.SidebarColumn') ) {
+                if ( $Element.css('left') === '-300px' ) {
+                    $Element.css('left', '0px');
+                } else if ( $(this).css('right') === '-300px' ) {
+                    $Element.css('right', '0px');
+                }
             }
-            $(this).unwrap();
+            $(this).prev('.ResponsiveHandle').remove();
+            $(this).children('button').remove();
+            $Element.unwrap().unwrap();
         });
+
+        // reset dialog container position
+        if ( $('.Dialog.Fullsize').length ) {
+            $('.Dialog').removeClass('Fullsize').css({
+                top: '10%',
+                left: '30%'
+            });
+        }
     });
 
     return TargetNS;

@@ -113,7 +113,7 @@
                 </form>
 [% RenderBlockStart("UploadResult") %]
                 <br /><br />
-                 <h2><span>[% Translate("Result of the upload") | html %]:</span></h2>
+                <h2><span>[% Translate("Result of the upload") | html %]:</span></h2>
                 <div>[% Data.UploadMessage %]</div>
                 <fieldset class="TableLike FixedLabel">
                     <label>[% Translate("entries uploaded") | html %]:</label>
@@ -243,14 +243,14 @@ $('.Collaps').bind('click',function(event){
             </div>
             <div class="Content">
                 <form name="form1" action="[% Env("CGIHandle") %]" method="post" class="PreventMultipleSubmits Validate">
-                    <input type="hidden" name="Action" value="[% Env("Action") %]"/>
+                    <input type="hidden" name="Action" value="[% Env("Action") %]" />
                     <input type="hidden" name="Subaction" value="Save" />
                     <input type="hidden" name="ID" value="[% Data.ID | html %]"/>
                     <fieldset class="TableLike">
                         <label class="Mandatory" for="Name">
                             <span class="Marker">*</span> [% Translate("Name") | html %]:
                         </label>
-                        <p class="Value">
+                        <div class="Field">
                             <input type="text" id="Name" name="Name" value="[% Data.Name | html %]" size="35" class="Validate_Required Validate_MaxLength Validate_Length_80 [% Data.NameInvalid | html %]" maxlength="80"/>
                             <div id="NameError" class="TooltipErrorMessage">
                                 <p>[% Translate("This field is required and its content can not be longer than %s characters.", "80") | html %]</p>
@@ -258,14 +258,15 @@ $('.Collaps').bind('click',function(event){
                             <div id="NameServerError" class="TooltipErrorMessage">
                                 <p>[% Translate("This field is required and its content can not be longer than %s characters.", "80") | html %]</p>
                             </div>
-                        </p>
-                        <label class="" for="ParentCategory">[% Translate("Parent Category") | html %]:</label>
-                        <p class="Value">
+                        </div>
+                        <div class="Clear"></div>
+                        <label for="ParentCategory">[% Translate("Parent Category") | html %]:</label>
+                        <div class="Field">
                             [% Data.ParentCategoryStrg %]
-                        </p>
+                        </div>
                         <div class="Clear"></div>
                         <div class="Field SpacingTop">
-                            <button class="Primary CallForAction" type="submit" value="[% Translate("Submit") | html %]"/>
+                            <button class="Primary CallForAction" type="submit" value="[% Translate("Submit") | html %]" >
                                 <span>[% Translate("Submit") | html %]</span>
                             </button>
                         </div>

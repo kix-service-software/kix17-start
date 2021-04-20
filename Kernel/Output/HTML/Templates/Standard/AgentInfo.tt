@@ -10,23 +10,28 @@
 
 
 <!-- start form -->
-<div class="MainBox ARIARoleMain">
-
-    <div class="W33pc CenterBox SpacingTopLarge SpacingBottomLarge">
-        <div class="WidgetSimple">
-            <div class="Header">
-                 <h2><span>[% Translate("Info") | html %]</span></h2>
-            </div>
-            <div class="Content">
-                <h4>
-                    [% Translate("To accept some news, a license or some changes.") | html %]
-                </h4>
+<div id="MainBox" class="MainBox AcceptBox ARIARoleMain">
+    <div class="Content">
+        <form action="[% Env("CGIHandle") %]" method="post">
+            <input type="hidden" name="Action" value="[% Env("Action") %]"/>
+            <input type="hidden" name="Accept" value="1"/>
+            <h1 class="AcceptHeader">
+                <span>[% Translate("Info") | html %]</span>
+            </h1>
+            <div class="Clear"></div>
+            <div class="AcceptContent">
                 <p>
-                    <a href="[% Env("Baselink") %]Action=[% Env("Action") %];Accept=1">Yes, accepted.</a>
+                    [% Translate("To accept some news, a license or some changes.") | html %]
                 </p>
             </div>
-        </div>
+            <div class="Clear"></div>
+            <div class="AcceptFooter">
+                <button type="submit" class="Primary CallForAction">
+                    <span>Yes, accepted.</span>
+                </button>
+            </div>
+        </form>
     </div>
-
 </div>
 <!-- end form -->
+

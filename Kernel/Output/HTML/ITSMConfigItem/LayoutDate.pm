@@ -104,21 +104,44 @@ sub FormDataGet {
 
     my %FormData;
 
-    # get param object
+    # get needed objects
     my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
+    my $TimeObject  = $Kernel::OM->Get('Kernel::System::Time');
 
     # get form data
     my $Day   = $ParamObject->GetParam( Param => $Param{Key} . '::Day' );
     my $Month = $ParamObject->GetParam( Param => $Param{Key} . '::Month' );
     my $Year  = $ParamObject->GetParam( Param => $Param{Key} . '::Year' );
 
-    if ( $Day && $Month && $Year ) {
-        $FormData{Value} = sprintf '%02d-%02d-%02d', $Year, $Month, $Day;
+    if (
+        $Day
+        && $Month
+        && $Year
+    ) {
+        my $SystemTime = $TimeObject->Date2SystemTime(
+            Year   => $Year,
+            Month  => $Month,
+            Day    => $Day,
+            Hour   => 0,
+            Minute => 0,
+            Second => 0,
+        );
+
+        if ( $SystemTime ) {
+            $FormData{Value} = sprintf '%02d-%02d-%02d', $Year, $Month, $Day;
+        }
+        else {
+            $FormData{Invalid}                               = 1;
+            $Param{Item}->{Form}->{ $Param{Key} }->{Invalid} = 1;
+        }
     }
 
     # set invalid param
-    if ( $Param{Item}->{Input}->{Required} && !$FormData{Value} ) {
-        $FormData{Invalid} = 1;
+    if (
+        $Param{Item}->{Input}->{Required}
+        && !$FormData{Value}
+    ) {
+        $FormData{Invalid}                               = 1;
         $Param{Item}->{Form}->{ $Param{Key} }->{Invalid} = 1;
     }
 

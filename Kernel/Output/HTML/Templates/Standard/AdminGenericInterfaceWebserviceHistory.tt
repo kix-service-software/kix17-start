@@ -11,16 +11,18 @@
 
 <div class="MainBox ARIARoleMain LayoutFixedSidebar SidebarFirst AdminGenericInterfaceWebserviceHistory">
     <h1>[% Translate("GenericInterface Configuration History for Web Service %s", Data.WebserviceName) | html %]</h1>
-<!-- breadcrumb -->
+
     <ul class="BreadCrumb">
-        <li>[% Translate("You are here") | html %]:</li>
-        <li>
+        <li title="[% Translate("You are here") | html %]">
+            [% Translate("You are here") | html %]:
+        </li>
+        <li title="[% Translate("Web Services") | html %]">
             <a href="[% Env("Baselink") %]Action=AdminGenericInterfaceWebservice">[% Translate("Web Services") | html %]</a>
         </li>
-        <li>
+        <li title="[% Data.WebserviceName | html %]">
             <a href="[% Env("Baselink") %]Action=AdminGenericInterfaceWebservice;Subaction=Change;WebserviceID=[% Data.WebserviceID | uri %]">[% Data.WebserviceName | html %]</a>
         </li>
-        <li>
+        <li title="[% Translate("History") | html %]">
             [% Translate("History") | html %]
         </li>
     </ul>

@@ -244,7 +244,16 @@ sub LinkObjectTableCreateComplex {
     }
 
     # create new instance of the layout object
-    my $LayoutObject  = Kernel::Output::HTML::Layout->new( %{$Self} );
+    my $LayoutObject;
+    if (
+        defined( $Param{QuickLink} )
+        && !$Param{QuickLink}
+    ) {
+        $LayoutObject = $Self;
+    }
+    else {
+        $LayoutObject = Kernel::Output::HTML::Layout->new( %{$Self} );
+    }
     my $LayoutObject2 = Kernel::Output::HTML::Layout->new( %{$Self} );
 
     # get preferences string
@@ -1539,6 +1548,15 @@ sub _PreferencesLinkObject {
                 . ';SourceKey='
                 . $ParamObject->GetParam( Param => 'SourceKey' )
                 . ';SEARCH::TicketNumber=***;'
+        }
+        elsif ( $Self->{Action} eq 'AgentTicketZoomTabLinkedObjects' ) {
+            $Param{RequestedURL}
+                = 'Action=AgentTicketZoom'
+                . ';CallingAction='
+                . $Self->{Action}
+                . ';TicketID='
+                . $ParamObject->GetParam( Param => 'TicketID' )
+                . ';SelectedTab=2;';
         }
 
         $LayoutObject->Block(

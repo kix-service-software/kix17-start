@@ -35,11 +35,13 @@ var DynamicFieldRemoteDB = (function (TargetNS) {
         Identifiers[Identifier] = new Object();
         Identifiers[Identifier]['AutoCompleteField']   = Identifier + '_AutoComplete';
         Identifiers[Identifier]['ContainerField']      = Identifier + '_Container';
+        Identifiers[Identifier]['LoaderField']         = Identifier + '_Loader';
         Identifiers[Identifier]['ValidateField']       = Identifier + '_Validate';
         Identifiers[Identifier]['ValueField']          = Identifier + '_';
         Identifiers[Identifier]['FieldID']             = '#' + Identifier;
         Identifiers[Identifier]['AutoCompleteFieldID'] = '#' + Identifiers[Identifier]['AutoCompleteField'];
         Identifiers[Identifier]['ContainerFieldID']    = '#' + Identifiers[Identifier]['ContainerField'];
+        Identifiers[Identifier]['LoaderFieldID']       = '#' + Identifiers[Identifier]['LoaderField'];
         Identifiers[Identifier]['ValidateFieldID']     = '#' + Identifiers[Identifier]['ValidateField'];
         Identifiers[Identifier]['ValueFieldID']        = '#' + Identifiers[Identifier]['ValueField'];
         Identifiers[Identifier]['IDCounter']           = IDCounter;
@@ -72,6 +74,9 @@ var DynamicFieldRemoteDB = (function (TargetNS) {
                     QueryString += ';' + encodeURIComponent(Key) + '=' + encodeURIComponent(Value);
                 });
 
+                // show loader
+                $(Identifiers[Identifier]['LoaderFieldID']).show();
+
                 if ($(Identifiers[Identifier]['AutoCompleteFieldID']).data('AutoCompleteXHR')) {
                     $(Identifiers[Identifier]['AutoCompleteFieldID']).data('AutoCompleteXHR').abort();
                     $(Identifiers[Identifier]['AutoCompleteFieldID']).removeData('AutoCompleteXHR');
@@ -91,6 +96,10 @@ var DynamicFieldRemoteDB = (function (TargetNS) {
                 }).fail(function() {
                     Response($(Identifiers[Identifier]['AutoCompleteFieldID']).data('AutoCompleteData'));
                 }));
+            },
+            response: function() {
+                // hide loader again
+                $(Identifiers[Identifier]['LoaderFieldID']).hide();
             },
             select: function (Event, UI) {
                 Identifiers[Identifier]['IDCounter']++;

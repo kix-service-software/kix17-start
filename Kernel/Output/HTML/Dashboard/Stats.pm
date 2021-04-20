@@ -183,6 +183,10 @@ sub Run {
             UserGetParam => $StatsSettings,
             UserID       => $Self->{UserID},
         );
+
+        # get column header that should be skipped for D3 output
+        my $SkipHeaderRef = $Kernel::OM->Get('Kernel::Config')->Get('Stats::D3::SkipHeader') || {};
+        splice( @{ $CachedData }, 2, 0, $SkipHeaderRef );
     }
 
     my $Format = $StatsSettings->{Format};

@@ -22,7 +22,7 @@
 [% RenderBlockEnd("TextTranslate") %]
 
 [% RenderBlockStart("Link") %]
-<a class="AsBlock LinkObjectLink" href="[% Data.Link %]" title="[% Data.Title | html %]" [% Data.CssStyle %] >[% Data.Content | truncate(Data.MaxLength) | html %]</a>
+<a class="AsBlock LinkObjectLink [% Data.Class | html %]" href="[% Data.Link %]" title="[% Data.Title | html %]" [% Data.CssStyle %] >[% Data.Content | truncate(Data.MaxLength) | html %]</a>
 [% RenderBlockEnd("Link") %]
 
 [% WRAPPER JSOnDocumentComplete %]
@@ -209,6 +209,27 @@ if (Core.UI.Popup.CurrentIsPopupWindow()) {
 
                 Event.preventDefault();
             });
+    });
+
+    $('.LinkedObjects > input[type=checkbox]').bind('click', function (Event) {
+        Event.stopPropagation();
+    });
+    $('.MasterAction').bind('click', function (Event) {
+        var $MasterActionLink = $(this).find('.MasterActionLink');
+        // prevent MasterAction on Dynamic Fields links
+        if ($(Event.target).hasClass('DynamicFieldLink')) {
+            return true;
+        }
+        // only act if the link was not clicked directly
+        if (Event.target !== $MasterActionLink.get(0)) {
+            if (Event.ctrlKey || Event.metaKey) {
+                window.open($MasterActionLink.attr('href'));
+            }
+            else {
+                window.location = $MasterActionLink.attr('href');
+            }
+            return false;
+        }
     });
 //]]></script>
 [% END %]

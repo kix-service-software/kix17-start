@@ -73,7 +73,7 @@
                 </ul>
             </div>
             <div id="ContentItemTabs">
-                <ul>
+                <ul id="ContentItemNavTabs">
 [% RenderBlockStart("DataTabDataLink") %]
                     <li><a href="[% Env("Baselink") %][% Data.Link %]" title="[% Data.Description | html %]">[% Translate(Data.Label) | html %] [% Data.LabelCount | html %]</a></li>
 [% RenderBlockEnd("DataTabDataLink") %]
@@ -95,6 +95,8 @@
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
 /*global ITSM: true */
+
+    Core.KIX4OTRS.KIXSidebar.Init('[% Env("AgentITSMConfigItemZoomSidebarWidth") %]','[% Env("Action") %]','ConfigItemID=[% Data.ConfigItemID | uri %];');
 
     $('ul.Actions a.AsPopup').bind('click', function (Event) {
         if ( $(this).attr('href').match(/AgentTicket(Phone|Email)/) ) {

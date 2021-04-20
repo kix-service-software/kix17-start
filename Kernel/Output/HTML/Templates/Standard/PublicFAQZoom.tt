@@ -99,14 +99,16 @@
 
             <ul class="BreadCrumb">
 [% RenderBlockStart("FAQPathCategoryElement") %]
-                <li>
+                <li title="[% Data.Name | html %]" >
                     <a href="[% Env("Baselink") %]Action=PublicFAQExplorer;CategoryID=[% Data.CategoryID | uri %]">
                         [% Data.Name | html %]
                     </a>
                 </li>
 [% RenderBlockEnd("FAQPathCategoryElement") %]
 [% RenderBlockStart("FAQPathItemElement") %]
-            <li>[% Data.Title | html %]</li>
+                <li title="[% Data.Title | html %]" >
+                    [% Data.Title | html %]
+                </li>
 [% RenderBlockEnd("FAQPathItemElement") %]
             </ul>
             <div class="Clear"></div>
@@ -135,6 +137,7 @@
                 </li>
 [% RenderBlockEnd("AttachmentHeader") %]
 
+[% RenderBlockStart("BrowserLinkMessage") %]
 # Show info, that links within the iframe must be clicked with strg/cmd/shift (depending on the used browser and os)
 # to open the links in a new window without the security permissions given to the iframe
                 <li>
@@ -144,6 +147,7 @@
                         </p>
                     </div>
                 </li>
+[% RenderBlockEnd("BrowserLinkMessage") %]
 
 [% RenderBlockStart("FAQContent") %]
                 <li class="Customer Visible">
@@ -171,7 +175,7 @@ function CheckIFrameHeight(IFrameID) {
 # Use the HTML5 sandbox attribute to prevent plugins and scripts from being executed in the browser.
 # Append session info to URL because IE will not send cookies.
 # Set 'allow-popups' to allow IE10+ to open links. ref: http://www.w3.org/html/wg/wiki/ChangeProposals/sandbox_allow_popups
-                        <iframe sandbox="allow-same-origin allow-popups ms-allow-popups allow-popups-to-escape-sandbox" class="FAQField" id="IframeFAQ[% Data.Field | html %]" onload="window.setTimeout( function (){ CheckIFrameHeight('IframeFAQ[% Data.Field | html %]'); }, 500);" src="[% Env("Baselink") %]Action=PublicFAQZoom;Subaction=HTMLView;ItemID=[% Data.ItemID | html %];Field=[% Data.Field | html %]"></iframe>
+                        <iframe [% IF !Config("FAQ::Frontend::CustomerDisableSandbox") %]sandbox="allow-same-origin allow-popups ms-allow-popups allow-popups-to-escape-sandbox" [% END %]class="FAQField" id="IframeFAQ[% Data.Field | html %]" onload="window.setTimeout( function (){ CheckIFrameHeight('IframeFAQ[% Data.Field | html %]'); }, 500);" src="[% Env("Baselink") %]Action=PublicFAQZoom;Subaction=HTMLView;ItemID=[% Data.ItemID | html %];Field=[% Data.Field | html %]"></iframe>
                     </div>
 [% RenderBlockEnd("FAQContentHTML") %]
 [% WRAPPER JSOnDocumentComplete %]

@@ -35,9 +35,46 @@ sub Run {
     my $UserObject   = $Kernel::OM->Get('Kernel::System::CustomerUser');
 
     # ------------------------------------------------------------ #
+    # update preferences via AJAX
+    # ------------------------------------------------------------ #
+    if ( $Self->{Subaction} eq 'UpdateAJAX' ) {
+
+        # challenge token check for write action
+        $LayoutObject->ChallengeTokenCheck();
+
+        my $Key   = $ParamObject->GetParam( Param => 'Key' );
+        my $Value = $ParamObject->GetParam( Param => 'Value' );
+
+        # update preferences
+        my $Success = $UserObject->SetPreferences(
+            UserID => $Self->{UserID},
+            Key    => $Key,
+            Value  => $Value,
+        );
+
+        # update session
+        if ($Success) {
+            $Kernel::OM->Get('Kernel::System::AuthSession')->UpdateSessionID(
+                SessionID => $Self->{SessionID},
+                Key       => $Key,
+                Value     => $Value,
+            );
+        }
+        my $JSON = $LayoutObject->JSONEncode(
+            Data => $Success,
+        );
+        return $LayoutObject->Attachment(
+            ContentType => 'application/json; charset=' . $LayoutObject->{Charset},
+            Content     => $JSON,
+            Type        => 'inline',
+            NoCache     => 1,
+        );
+    }
+
+    # ------------------------------------------------------------ #
     # update preferences
     # ------------------------------------------------------------ #
-    if ( $Self->{Subaction} eq 'Update' ) {
+    elsif ( $Self->{Subaction} eq 'Update' ) {
 
         # challenge token check for write action
         $LayoutObject->ChallengeTokenCheck( Type => 'Customer' );

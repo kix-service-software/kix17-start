@@ -764,4 +764,22 @@
         margin-top: 10px;
         margin-left: 1px;
     }
+
+
+    /**
+    *   subaction pre application customer accept
+    */
+    .AcceptBox > .Content {
+        width: 70%;
+        margin: auto;
+    }
+    .AcceptContent {
+        padding: 10px;
+        border-style: solid;
+        border-width: 1px;
+    }
+    .AcceptFooter {
+        text-align: center;
+        margin: 20px 0;
+    }
 }

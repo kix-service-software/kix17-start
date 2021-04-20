@@ -46,10 +46,6 @@ sub new {
     my $Self = {};
     bless( $Self, $Type );
 
-    $Self->{ConfigObject}          = $Kernel::OM->Get('Kernel::Config');
-    $Self->{CustomerCompanyObject} = $Kernel::OM->Get('Kernel::System::CustomerCompany');
-    $Self->{LogObject}             = $Kernel::OM->Get('Kernel::System::Log');
-
     return $Self;
 }
 
@@ -68,13 +64,13 @@ sub ValueLookup {
 
     return '' if !$Param{Value};
 
-    my %CustomerCompanySearchList = $Self->{CustomerCompanyObject}->CustomerCompanyGet(
+    my %CustomerCompanySearchList = $Kernel::OM->Get('Kernel::System::CustomerCompany')->CustomerCompanyGet(
         CustomerID => $Param{Value},
     );
 
     my $CustomerCompanyDataStr = '';
     my $CustCompanyMapRef =
-        $Self->{ConfigObject}->Get('ITSMCIAttributeCollection::CompanyBackendMapping');
+        $Kernel::OM->Get('Kernel::Config')->Get('ITSMCIAttributeCollection::CompanyBackendMapping');
 
     if ( $CustCompanyMapRef && ref($CustCompanyMapRef) eq 'HASH' ) {
 
@@ -111,7 +107,7 @@ sub StatsAttributeCreate {
     # check needed stuff
     for my $Argument (qw(Key Name Item)) {
         if ( !$Param{$Argument} ) {
-            $Self->{LogObject}->Log(
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => "Need $Argument!"
             );
@@ -166,12 +162,12 @@ sub ExportValuePrepare {
 
     # check what should be exported: CustomerID or CustomerCompanyName
     my $CustCompanyContent =
-        $Self->{ConfigObject}->Get('ITSMCIAttributeCollection::CustomerCompany::Content');
+        $Kernel::OM->Get('Kernel::Config')->Get('ITSMCIAttributeCollection::CustomerCompany::Content');
 
     return $Param{Value} if ( !$CustCompanyContent || ( $CustCompanyContent eq 'CustomerID' ) );
 
     # get CustomerCompany data
-    my %CustomerCompanySearchList = $Self->{CustomerCompanyObject}->CustomerCompanyGet(
+    my %CustomerCompanySearchList = $Kernel::OM->Get('Kernel::System::CustomerCompany')->CustomerCompanyGet(
         CustomerID => $Param{Value},
     );
 
@@ -201,7 +197,7 @@ sub ImportSearchValuePrepare {
     return if !defined $Param{Value};
 
     # search for name....
-    my %CustomerCompanyList = $Self->{CustomerCompanyObject}->CustomerCompanyList(
+    my %CustomerCompanyList = $Kernel::OM->Get('Kernel::System::CustomerCompany')->CustomerCompanyList(
         Search => '*' . $Param{Value} . '*',
     );
 
@@ -233,7 +229,7 @@ sub ImportValuePrepare {
 
     # check if content is CustomerID or CustomerCompanyName
     my $CustCompanyContent =
-        $Self->{ConfigObject}->Get('ITSMCIAttributeCollection::CustomerCompany::Content');
+        $Kernel::OM->Get('Kernel::Config')->Get('ITSMCIAttributeCollection::CustomerCompany::Content');
 
     return $Param{Value} if ( !$CustCompanyContent );
 
@@ -241,7 +237,7 @@ sub ImportValuePrepare {
 
     if ( $CustCompanyContent eq 'CustomerID' && $Param{Value} ne '' ) {
         # check if it is a valid CustomerID
-        my %CustomerCompanySearchList = $Self->{CustomerCompanyObject}->CustomerCompanyGet(
+        my %CustomerCompanySearchList = $Kernel::OM->Get('Kernel::System::CustomerCompany')->CustomerCompanyGet(
             CustomerID => $Param{Value},
         );
 
@@ -252,7 +248,7 @@ sub ImportValuePrepare {
     elsif ( $CustCompanyContent eq 'CustomerCompanyName' && $Param{Value} ne '') {
 
         # search for CustomerCompany data
-        my %CustomerCompanySearchList = $Self->{CustomerCompanyObject}->CustomerCompanyList(
+        my %CustomerCompanySearchList = $Kernel::OM->Get('Kernel::System::CustomerCompany')->CustomerCompanyList(
             Search => $Param{Value},
             Limit  => 500,
         );
@@ -261,7 +257,7 @@ sub ImportValuePrepare {
         if (%CustomerCompanySearchList) {
             foreach my $CustomerID ( keys(%CustomerCompanySearchList) ) {
 
-                my %CustomerCompanyData = $Self->{CustomerCompanyObject}->CustomerCompanyGet(
+                my %CustomerCompanyData = $Kernel::OM->Get('Kernel::System::CustomerCompany')->CustomerCompanyGet(
                     CustomerID => $CustomerID,
                 );
 
@@ -276,7 +272,7 @@ sub ImportValuePrepare {
 
     # warning if no dada found for the given CustomerID or CustomerCompanyName
     if ( !$CustomerCompanyDataStr ) {
-        $Self->{LogObject}->Log(
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'warning',
             Message =>
                 "Could not import CustomerUserCompany: no CustomerID found for CustomerCompanyName $Param{Value}!"

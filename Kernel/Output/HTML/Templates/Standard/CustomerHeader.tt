@@ -14,19 +14,19 @@
 [% InsertTemplate("Copyright.tt") %]
 [% InsertTemplate("CustomerHTMLHead.tt") %]
 <body class="NoJavaScript [% Data.BodyClass | html %]">
-<!-- start CI layout -->
-    <div id="Header">
-        <div id="Logo"></div>
-        <div id="ResponsiveLogo"></div>
-        <h1 class="CompanyName">
-            <a href="#">[% Config("CustomerHeadline") %]</a>
-        </h1>
-    </div>
+    <div id="AppWrapper">
+        <div id="Header">
+            <div id="Logo"></div>
+            <div id="ResponsiveLogo"></div>
+            <h1 class="CompanyName">
+                <a href="#">[% Config("CustomerHeadline") %]</a>
+            </h1>
+        </div>
 
+[% IF !Data.NoSystemMessage %]
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
     Core.UI.SystemMessage.Init('Header', null, null);
 //]]></script>
 [% END %]
-<!-- end CI layout -->
-<!-- end header -->
+[% END %]

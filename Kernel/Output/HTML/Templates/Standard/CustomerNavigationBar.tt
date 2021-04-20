@@ -30,22 +30,24 @@
         </li>
 [% RenderBlockEnd("Item") %]
     </ul>
-    <div id="UserInfo">
-        <span>[% Translate("You are logged in as") | html %] [% Translate("%s %s", Env("UserFirstname"), Env("UserLastname")) | html %]</span>
-[% RenderBlockStart("Preferences") %]
-        <a class="[% Data.Class | html %]" href="[% Env("Baselink") %]Action=CustomerPreferences" title="[% Translate("Edit personal preferences") | html %]">
-            <i class="fa fa-cog"></i>
-        </a>
-[% RenderBlockEnd("Preferences") %]
-# dummy for SwitchButton output filter
-        <span id="SwitchButtonDummyContainer" class="Hidden">
-            <li class="Last"><a href="Action=Logout"></a></li>
-        </span>
-[% RenderBlockStart("Logout") %]
-        <a id="LogoutButton" href="[% Env("Baselink") %]Action=Logout" title="[% Translate("Logout %s %s", Env("UserFirstname"), Env("UserLastname")) | html %]">
-            <i class="fa fa-sign-out"></i>
-        </a>
-[% RenderBlockEnd("Logout") %]
-    </div>
 </div>
 <!-- end NavigationBar -->
+<!-- UserInfo -->
+<div id="UserInfo">
+    <span>[% Translate("You are logged in as") | html %] [% Translate("%s %s", Env("UserFirstname"), Env("UserLastname")) | html %]</span>
+[% RenderBlockStart("Preferences") %]
+    <a class="[% Data.Class | html %]" href="[% Env("Baselink") %]Action=CustomerPreferences" title="[% Translate("Edit personal preferences") | html %]">
+        <i class="fa fa-cog"></i>
+    </a>
+[% RenderBlockEnd("Preferences") %]
+# dummy for SwitchButton output filter
+    <span id="SwitchButtonDummyContainer" class="Hidden">
+        <li class="Last"><a href="Action=Logout"></a></li>
+    </span>
+[% RenderBlockStart("Logout") %]
+    <a id="LogoutButton" href="[% Env("Baselink") %]Action=Logout" title="[% Translate("Logout %s %s", Env("UserFirstname"), Env("UserLastname")) | html %]">
+        <i class="fa fa-sign-out"></i>
+    </a>
+[% RenderBlockEnd("Logout") %]
+</div>
+<!-- end UserInfo -->

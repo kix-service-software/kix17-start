@@ -126,13 +126,13 @@ Core.UI.Dialog = (function (TargetNS) {
          * to prevent the default action for the special keys.
          * See http://www.quirksmode.org/dom/events/keys.html for details
          */
-        $(document).unbind('keypress.Dialog').bind('keypress.Dialog', function (Event) {
+        $(document).off('keypress.Dialog').on('keypress.Dialog', function (Event) {
             if ($.browser.opera && (Event.keyCode === 9 || (Event.keyCode === 27 && CloseOnEscape))) {
                 Event.preventDefault();
                 Event.stopPropagation();
                 return false;
             }
-        }).unbind('keydown.Dialog').bind('keydown.Dialog', function (Event) {
+        }).off('keydown.Dialog').on('keydown.Dialog', function (Event) {
             var $Tabbables, $First, $Last;
 
             // Tab pressed
@@ -529,11 +529,19 @@ Core.UI.Dialog = (function (TargetNS) {
 
         // Add CloseOnClickOutside functionality
         if (Params.CloseOnClickOutside) {
-            $(document).unbind('click.Dialog').bind('click.Dialog', function () {});
+            $(document).off('click.Dialog').on('click.Dialog', function (event) {
+                var $target = $(event.target);
+
+                if ( !$target.closest('div.Dialog').length ) {
+                    HandleClosingAction();
+                    return false;
+                }
+            });
+
         }
 
         // Add resize event handler for calculating the scroll height
-        $(window).unbind('resize.Dialog').bind('resize.Dialog', function () {
+        $(window).off('resize.Dialog').on('resize.Dialog', function () {
             AdjustScrollableHeight(Params.AllowAutoGrow);
         });
 
@@ -566,15 +574,16 @@ Core.UI.Dialog = (function (TargetNS) {
      * @param {Boolean} Modal - If defined and set to true, an overlay is shown for a modal dialog.
      * @param {Array} Buttons - The button array.
      * @param {Boolean} AllowAutoGrow - If true, the InnerContent of the dialog can resize until the max window height is reached, if false (default), InnerContent of small dialogs does not resize over 200px.
+     * @param {Boolean} CloseOnClickOutside - If true, clicking outside the dialog closes the dialog (default: false).
      * @description
      *      Shows a default dialog.
      */
-    TargetNS.ShowContentDialog = function (HTML, Title, PositionTop, PositionLeft, Modal, Buttons, AllowAutoGrow) {
+    TargetNS.ShowContentDialog = function (HTML, Title, PositionTop, PositionLeft, Modal, Buttons, AllowAutoGrow, CloseOnClickOutside) {
         TargetNS.ShowDialog({
             HTML: HTML,
             Title: Title,
             Modal: Modal,
-            CloseOnClickOutside: true,
+            CloseOnClickOutside: CloseOnClickOutside,
             CloseOnEscape: true,
             PositionTop: PositionTop,
             PositionLeft: PositionLeft,
@@ -627,8 +636,8 @@ Core.UI.Dialog = (function (TargetNS) {
         $('body').css({
             'overflow': 'auto'
         });
-        $(document).unbind('keydown.Dialog').unbind('keypress.Dialog').unbind('click.Dialog');
-        $(window).unbind('resize.Dialog');
+        $(document).off('keydown.Dialog').off('keypress.Dialog').off('click.Dialog');
+        $(window).off('resize.Dialog');
         $('body').css('min-height', 'auto');
 
         // Revert orignal html

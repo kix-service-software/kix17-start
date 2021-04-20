@@ -517,7 +517,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="AgentCustomerInformationCenter::Backend###0901-CIC-SearchTemplate01" Required="0" Valid="1">
-        <Description Translatable="1">Parameters for the dashboard backend of the search template tickets overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin.</Description>
+        <Description Translatable="1">Parameters for the dashboard backend of the search template tickets overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin. "PreSortDefault" defines the presorting of the list. (Permitted attributes: State, Type, Owner, Responsible, CustomerID, Lock, Service, SLA) "PreOrderDefault" defines the sorting direction of the presorting. (Permitted direction: Down, Up) "UserPreSortActive" activates specific setting options of the PreSort/PreOrder on the dashboard for the user.</Description>
         <Group>Framework</Group>
         <SubGroup>Frontend::Agent::CustomerDashboard</SubGroup>
         <Setting>
@@ -534,6 +534,9 @@
                 <Item Key="Group"></Item>
                 <Item Key="Default">0</Item>
                 <Item Key="CacheTTLLocal">0.5</Item>
+                <Item Key="UserPreSortActive">1</Item>
+                <Item Key="PreSortDefault"></Item>
+                <Item Key="PreOrderDefault"></Item>
                 <Item Key="DefaultColumns">
                     <Hash>
                         <Item Key="Age">2</Item>
@@ -563,7 +566,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="AgentCustomerInformationCenter::Backend###0902-CIC-SearchTemplate02" Required="0" Valid="2">
-        <Description Translatable="1">Parameters for the dashboard backend of the search template tickets overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin.</Description>
+        <Description Translatable="1">Parameters for the dashboard backend of the search template tickets overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin. "PreSortDefault" defines the presorting of the list. (Permitted attributes: State, Type, Owner, Responsible, CustomerID, Lock, Service, SLA) "PreOrderDefault" defines the sorting direction of the presorting. (Permitted direction: Down, Up) "UserPreSortActive" activates specific setting options of the PreSort/PreOrder on the dashboard for the user.</Description>
         <Group>Framework</Group>
         <SubGroup>Frontend::Agent::CustomerDashboard</SubGroup>
         <Setting>
@@ -580,6 +583,9 @@
                 <Item Key="Group"></Item>
                 <Item Key="Default">0</Item>
                 <Item Key="CacheTTLLocal">0.5</Item>
+                <Item Key="UserPreSortActive">1</Item>
+                <Item Key="PreSortDefault"></Item>
+                <Item Key="PreOrderDefault"></Item>
                 <Item Key="DefaultColumns">
                     <Hash>
                         <Item Key="Age">2</Item>
@@ -609,7 +615,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="AgentCustomerInformationCenter::Backend###0903-CIC-SearchTemplate03" Required="0" Valid="3">
-        <Description Translatable="1">Parameters for the dashboard backend of the search template tickets overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin.</Description>
+        <Description Translatable="1">Parameters for the dashboard backend of the search template tickets overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin. "PreSortDefault" defines the presorting of the list. (Permitted attributes: State, Type, Owner, Responsible, CustomerID, Lock, Service, SLA) "PreOrderDefault" defines the sorting direction of the presorting. (Permitted direction: Down, Up) "UserPreSortActive" activates specific setting options of the PreSort/PreOrder on the dashboard for the user.</Description>
         <Group>Framework</Group>
         <SubGroup>Frontend::Agent::CustomerDashboard</SubGroup>
         <Setting>
@@ -626,6 +632,9 @@
                 <Item Key="Group"></Item>
                 <Item Key="Default">0</Item>
                 <Item Key="CacheTTLLocal">0.5</Item>
+                <Item Key="UserPreSortActive">1</Item>
+                <Item Key="PreSortDefault"></Item>
+                <Item Key="PreOrderDefault"></Item>
                 <Item Key="DefaultColumns">
                     <Hash>
                         <Item Key="Age">2</Item>
@@ -655,7 +664,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="AgentCustomerInformationCenter::Backend###0904-CIC-SearchTemplate04" Required="0" Valid="4">
-        <Description Translatable="1">Parameters for the dashboard backend of the search template tickets overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin.</Description>
+        <Description Translatable="1">Parameters for the dashboard backend of the search template tickets overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin. "PreSortDefault" defines the presorting of the list. (Permitted attributes: State, Type, Owner, Responsible, CustomerID, Lock, Service, SLA) "PreOrderDefault" defines the sorting direction of the presorting. (Permitted direction: Down, Up) "UserPreSortActive" activates specific setting options of the PreSort/PreOrder on the dashboard for the user.</Description>
         <Group>Framework</Group>
         <SubGroup>Frontend::Agent::CustomerDashboard</SubGroup>
         <Setting>
@@ -672,6 +681,9 @@
                 <Item Key="Group"></Item>
                 <Item Key="Default">0</Item>
                 <Item Key="CacheTTLLocal">0.5</Item>
+                <Item Key="UserPreSortActive">1</Item>
+                <Item Key="PreSortDefault"></Item>
+                <Item Key="PreOrderDefault"></Item>
                 <Item Key="DefaultColumns">
                     <Hash>
                         <Item Key="Age">2</Item>
@@ -701,7 +713,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="AgentCustomerInformationCenter::Backend###0905-CIC-SearchTemplate05" Required="0" Valid="5">
-        <Description Translatable="1">Parameters for the dashboard backend of the search template tickets overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin.</Description>
+        <Description Translatable="1">Parameters for the dashboard backend of the search template tickets overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin. "PreSortDefault" defines the presorting of the list. (Permitted attributes: State, Type, Owner, Responsible, CustomerID, Lock, Service, SLA) "PreOrderDefault" defines the sorting direction of the presorting. (Permitted direction: Down, Up) "UserPreSortActive" activates specific setting options of the PreSort/PreOrder on the dashboard for the user.</Description>
         <Group>Framework</Group>
         <SubGroup>Frontend::Agent::CustomerDashboard</SubGroup>
         <Setting>
@@ -718,6 +730,9 @@
                 <Item Key="Group"></Item>
                 <Item Key="Default">0</Item>
                 <Item Key="CacheTTLLocal">0.5</Item>
+                <Item Key="UserPreSortActive">1</Item>
+                <Item Key="PreSortDefault"></Item>
+                <Item Key="PreOrderDefault"></Item>
                 <Item Key="DefaultColumns">
                     <Hash>
                         <Item Key="Age">2</Item>
@@ -747,7 +762,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="AgentCustomerInformationCenter::Backend###0906-CIC-SearchTemplate06" Required="0" Valid="0">
-        <Description Translatable="1">Parameters for the dashboard backend of the search template tickets overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin.</Description>
+        <Description Translatable="1">Parameters for the dashboard backend of the search template tickets overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin. "PreSortDefault" defines the presorting of the list. (Permitted attributes: State, Type, Owner, Responsible, CustomerID, Lock, Service, SLA) "PreOrderDefault" defines the sorting direction of the presorting. (Permitted direction: Down, Up) "UserPreSortActive" activates specific setting options of the PreSort/PreOrder on the dashboard for the user.</Description>
         <Group>Framework</Group>
         <SubGroup>Frontend::Agent::CustomerDashboard</SubGroup>
         <Setting>
@@ -764,6 +779,9 @@
                 <Item Key="Group"></Item>
                 <Item Key="Default">0</Item>
                 <Item Key="CacheTTLLocal">0.5</Item>
+                <Item Key="UserPreSortActive">1</Item>
+                <Item Key="PreSortDefault"></Item>
+                <Item Key="PreOrderDefault"></Item>
                 <Item Key="DefaultColumns">
                     <Hash>
                         <Item Key="Age">2</Item>
@@ -793,7 +811,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="AgentCustomerInformationCenter::Backend###0907-CIC-SearchTemplate07" Required="0" Valid="0">
-        <Description Translatable="1">Parameters for the dashboard backend of the search template tickets overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin.</Description>
+        <Description Translatable="1">Parameters for the dashboard backend of the search template tickets overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin. "PreSortDefault" defines the presorting of the list. (Permitted attributes: State, Type, Owner, Responsible, CustomerID, Lock, Service, SLA) "PreOrderDefault" defines the sorting direction of the presorting. (Permitted direction: Down, Up) "UserPreSortActive" activates specific setting options of the PreSort/PreOrder on the dashboard for the user.</Description>
         <Group>Framework</Group>
         <SubGroup>Frontend::Agent::CustomerDashboard</SubGroup>
         <Setting>
@@ -810,6 +828,9 @@
                 <Item Key="Group"></Item>
                 <Item Key="Default">0</Item>
                 <Item Key="CacheTTLLocal">0.5</Item>
+                <Item Key="UserPreSortActive">1</Item>
+                <Item Key="PreSortDefault"></Item>
+                <Item Key="PreOrderDefault"></Item>
                 <Item Key="DefaultColumns">
                     <Hash>
                         <Item Key="Age">2</Item>
@@ -839,7 +860,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="AgentCustomerInformationCenter::Backend###0908-CIC-SearchTemplate08" Required="0" Valid="0">
-        <Description Translatable="1">Parameters for the dashboard backend of the search template tickets overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin.</Description>
+        <Description Translatable="1">Parameters for the dashboard backend of the search template tickets overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin. "PreSortDefault" defines the presorting of the list. (Permitted attributes: State, Type, Owner, Responsible, CustomerID, Lock, Service, SLA) "PreOrderDefault" defines the sorting direction of the presorting. (Permitted direction: Down, Up) "UserPreSortActive" activates specific setting options of the PreSort/PreOrder on the dashboard for the user.</Description>
         <Group>Framework</Group>
         <SubGroup>Frontend::Agent::CustomerDashboard</SubGroup>
         <Setting>
@@ -856,6 +877,9 @@
                 <Item Key="Group"></Item>
                 <Item Key="Default">0</Item>
                 <Item Key="CacheTTLLocal">0.5</Item>
+                <Item Key="UserPreSortActive">1</Item>
+                <Item Key="PreSortDefault"></Item>
+                <Item Key="PreOrderDefault"></Item>
                 <Item Key="DefaultColumns">
                     <Hash>
                         <Item Key="Age">2</Item>
@@ -885,7 +909,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="AgentCustomerInformationCenter::Backend###0909-CIC-SearchTemplate09" Required="0" Valid="0">
-        <Description Translatable="1">Parameters for the dashboard backend of the search template tickets overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin.</Description>
+        <Description Translatable="1">Parameters for the dashboard backend of the search template tickets overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin. "PreSortDefault" defines the presorting of the list. (Permitted attributes: State, Type, Owner, Responsible, CustomerID, Lock, Service, SLA) "PreOrderDefault" defines the sorting direction of the presorting. (Permitted direction: Down, Up) "UserPreSortActive" activates specific setting options of the PreSort/PreOrder on the dashboard for the user.</Description>
         <Group>Framework</Group>
         <SubGroup>Frontend::Agent::CustomerDashboard</SubGroup>
         <Setting>
@@ -902,6 +926,9 @@
                 <Item Key="Group"></Item>
                 <Item Key="Default">0</Item>
                 <Item Key="CacheTTLLocal">0.5</Item>
+                <Item Key="UserPreSortActive">1</Item>
+                <Item Key="PreSortDefault"></Item>
+                <Item Key="PreOrderDefault"></Item>
                 <Item Key="DefaultColumns">
                     <Hash>
                         <Item Key="Age">2</Item>
@@ -931,7 +958,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="AgentCustomerInformationCenter::Backend###0910-CIC-SearchTemplate10" Required="0" Valid="0">
-        <Description Translatable="1">Parameters for the dashboard backend of the search template tickets overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin.</Description>
+        <Description Translatable="1">Parameters for the dashboard backend of the search template tickets overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin. "PreSortDefault" defines the presorting of the list. (Permitted attributes: State, Type, Owner, Responsible, CustomerID, Lock, Service, SLA) "PreOrderDefault" defines the sorting direction of the presorting. (Permitted direction: Down, Up) "UserPreSortActive" activates specific setting options of the PreSort/PreOrder on the dashboard for the user.</Description>
         <Group>Framework</Group>
         <SubGroup>Frontend::Agent::CustomerDashboard</SubGroup>
         <Setting>
@@ -948,6 +975,9 @@
                 <Item Key="Group"></Item>
                 <Item Key="Default">0</Item>
                 <Item Key="CacheTTLLocal">0.5</Item>
+                <Item Key="UserPreSortActive">1</Item>
+                <Item Key="PreSortDefault"></Item>
+                <Item Key="PreOrderDefault"></Item>
                 <Item Key="DefaultColumns">
                     <Hash>
                         <Item Key="Age">2</Item>
@@ -1214,7 +1244,7 @@
     </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::MenuModule###210-PrintForwardFax" Required="0" Valid="1">
         <Description Translatable="1">Module to show print forward fax link in menu.</Description>
-        <Group>Framework</Group>
+        <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::Ticket::MenuModule</SubGroup>
         <Setting>
             <Hash>
@@ -5270,7 +5300,7 @@
         <Group>Framework</Group>
         <SubGroup>Core::Web</SubGroup>
         <Setting>
-            <String Regex="">&lt;KIX_CONFIG_Frontend::WebPath&gt;js/thirdparty/ckeditor-4.5.6/</String>
+            <String Regex="">&lt;KIX_CONFIG_Frontend::WebPath&gt;js/thirdparty/ckeditor-4.16.0/</String>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Frontend::RichTextWidth" Required="1" Valid="1">
@@ -9007,6 +9037,17 @@
             </Option>
         </Setting>
     </ConfigItem>
+    <ConfigItem Name="SMIME::ProcessUntrustedData" Required="1" Valid="1">
+        <Description Translatable="1">If this option is enabled, then data of non verified signatures will be processed from email if they are displayed in AgentTicketZoom.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Crypt::SMIME</SubGroup>
+        <Setting>
+            <Option SelectedID="0">
+                <Item Key="0" Translatable="1">No</Item>
+                <Item Key="1" Translatable="1">Yes</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
     <ConfigItem Name="SMIME::FetchFromCustomer" Required="1" Valid="1">
         <Description Translatable="1">Enables fetch S/MIME from CustomerUser backend support.</Description>
         <Group>Framework</Group>
@@ -10489,6 +10530,19 @@ via the Preferences button after logging in.
             </FrontendModuleReg>
         </Setting>
     </ConfigItem>
+    <ConfigItem Name="Admin::Frontend::AdminUser###ValidityFilter" Required="1" Valid="1">
+        <Description Translatable="1">Defines the standard filter for the validity, which initially restricts the AdminUser table.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Frontend::Admin::ViewUser</SubGroup>
+        <Setting>
+            <Option SelectedID="0">
+                <Item Key="0" Translatable="1">all</Item>
+                <Item Key="1" Translatable="1">valid</Item>
+                <Item Key="2" Translatable="1">invalid</Item>
+                <Item Key="3" Translatable="1">invalid-temporarily</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
     <ConfigItem Name="Frontend::Module###AdminGroup" Required="0" Valid="1">
         <Description Translatable="1">Frontend module registration for the agent interface.</Description>
         <Group>Framework</Group>
@@ -10507,6 +10561,19 @@ via the Preferences button after logging in.
                     <Prio>150</Prio>
                 </NavBarModule>
             </FrontendModuleReg>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Admin::Frontend::AdminGroup###ValidityFilter" Required="1" Valid="1">
+        <Description Translatable="1">Defines the standard filter for the validity, which initially restricts the AdminGroup table.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Frontend::Admin::ViewGroup</SubGroup>
+        <Setting>
+            <Option SelectedID="0">
+                <Item Key="0" Translatable="1">all</Item>
+                <Item Key="1" Translatable="1">valid</Item>
+                <Item Key="2" Translatable="1">invalid</Item>
+                <Item Key="3" Translatable="1">invalid-temporarily</Item>
+            </Option>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Frontend::Module###AdminUserGroup" Required="0" Valid="1">
@@ -10709,6 +10776,19 @@ via the Preferences button after logging in.
                     <Prio>600</Prio>
                 </NavBarModule>
             </FrontendModuleReg>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Admin::Frontend::AdminRole###ValidityFilter" Required="1" Valid="1">
+        <Description Translatable="1">Defines the standard filter for the validity, which initially restricts the AdminRole table.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Frontend::Admin::ViewRole</SubGroup>
+        <Setting>
+            <Option SelectedID="0">
+                <Item Key="0" Translatable="1">all</Item>
+                <Item Key="1" Translatable="1">valid</Item>
+                <Item Key="2" Translatable="1">invalid</Item>
+                <Item Key="3" Translatable="1">invalid-temporarily</Item>
+            </Option>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Frontend::Module###AdminRoleUser" Required="0" Valid="1">

@@ -661,7 +661,6 @@
     ul.Tablelike li:nth-child(2n) {
         background-color: #676766;
     }
-
     ul.Tablelike li:hover,
     ul.Tablelike li:hover a {
         color: #FFFFFF;
@@ -671,7 +670,7 @@
         background-color: #4E4D4D;
     }
     ul.Tablelike.AllocationList {
-        background: repeating-linear-gradient(-45deg, transparent 0 10px, #CCCCCC40 10px 17px);
+        background: repeating-linear-gradient(-45deg,transparent 0 10px, #CCCCCC40 10px 17px);
     }
 
 
@@ -872,6 +871,14 @@
         color: #FFFFFF;
         border-color: #0A7CB3;
         background-color: #0A7CB3;
+    }
+
+
+    /**
+    *   subaction pre application agent info
+    */
+    .AcceptContent {
+        border-color: #0A7CB3;
     }
 
 
@@ -1123,7 +1130,6 @@
     .IconNotReady {
         color: #C5383C;
     }
-
     .IconReady::before {
         color: #00FF00;
     }
@@ -1407,9 +1413,13 @@
     /**
     *   @subsection process tab
     */
+    h2.HorizontalLine {
+        border-bottom-color: #0A7CB3;
+    }
     .ProcessInfo > .Bottom > .Actions li a {
         background-color: #EEEEEE;
         border: 1px solid #9E9E9E;
+        color: #111111;
     }
     .ProcessInfo > .Bottom > .Actions li a:hover {
         background-color: #0A7CB3;
@@ -1417,14 +1427,18 @@
         color: #FFFFFF;
     }
     .WidgetSimple > .Content.ProcessInfo fieldset .FieldContainer {
-        background-color: #EEEEEE;
-        border: 1px solid #CCCCCC;
+        background-color: #373737;
+        border: 1px solid #373737;
     }
     .WidgetSimple > .Content.ProcessInfo fieldset .FieldContainer p  {
-        background-color: #FFFFFF;
+        background-color: #F0F0F0;
+        color: #111111;
     }
     .WidgetSimple > .Content.ProcessInfo fieldset .FieldContainer label {
-        border-bottom: 1px solid #CCCCCC;
+        border-bottom: 1px solid #373737;
+    }
+    .WidgetSimple > .Content.ProcessInfo fieldset .FieldContainer label .ShowFieldInfoOverlay:hover {
+        color: #0A7CB3;
     }
     .FieldSeparator {
         border-top: 1px dotted #CCCCCC;
@@ -1796,10 +1810,12 @@
     * @subsection WidgetPopup
     */
     div.WidgetPopup {
-        border-color: #CCCCCC;
-        background-color: #EEEEEE;
-        background-image: url(../img/widget_bg_100.png);
-        background-repeat: repeat-x;
+        border-color: #373737;
+        background-color: #4E4D4D;
+    }
+    div.WidgetPopup > .Header {
+        border-bottom: 1px solid #373737;
+        background-color: #373737;
     }
 
 
@@ -1840,6 +1856,14 @@
     */
     #TextModulesSelectionContainer {
         background-color: #676767;
+    }
+    #TextModulesSelectionContainer > .TextModule:nth-child(2n+1) {
+        background-color: #5B5B5B;
+    }
+    #TextModulesSelectionContainer > .TextModule:hover,
+    #TextModulesSelectionContainer > .TextModule.Selected {
+        background-color: #0A7CB3;
+        color: #FFFFFF;
     }
 
 
@@ -1987,32 +2011,48 @@
 *   Colors for responsive
 **/
 @media only screen and (min-width: 0px) and (max-width: 1024px) {
+    #UserInfo {
+        background-color: #4F4F4E;
+    }
     #ToolBar li a span.Counter {
         color: #AAAAAA;
     }
     #ResponsiveSidebarNotification {
         color: #CCCCCC;
     }
-    .LayoutFixedSidebar.SidebarLast .ResponsiveSidebarContainer > .SidebarColumn,
-    .LayoutFixedSidebar.SidebarFirst .ResponsiveSidebarContainer > .SidebarColumn,
-    .LayoutFixedSidebar .ContentColumn .ResponsiveSidebarContainer > .ActionRow,
-    .LayoutFixedSidebar .ContentColumn .ResponsiveSidebarContainer > .LightRow  {
+    .ResponsiveWrapperContainer {
         background-color: #434242;
     }
     #ResponsiveTicketMenuHandle,
     .ResponsiveMenuHandle {
         color: #777777;
-        background-color: #DDD;
+        background-color: #DDDDDD;
     }
+    .ResponsiveTabHandle {
+        background-color: #676766;
+    }
+    .ResponsiveTabHandle:hover {
+        color: #0A7CB3;
+    }
+    div.ui-tabs > div.ResponsiveSidebarContainer,
     .ResponsiveSidebarContainer {
         background-color: rgba(22,22,22,0.7);
     }
+    .ResponsiveSidebarContainer > ul.ui-tabs-nav,
     .ResponsiveSidebarContainer > #NavigationContainer {
         background-color: #434242;
     }
     .ResponsiveSidebarContainer #Navigation > li,
     .ResponsiveSidebarContainer .Actions > li {
         border-color: #444444;
+    }
+    .ResponsiveSidebarContainer #Navigation > li:hover > a{
+        background-color: #0A7CB3;
+        color: #FFFFFF;
+    }
+    .ResponsiveSidebarContainer #Navigation > li.Selected[aria-controls^="nav-"]::after,
+    .ResponsiveSidebarContainer #Navigation > li[aria-controls^="nav-"]:hover::after {
+        color: #FFFFFF;
     }
     .ResponsiveSidebarContainer .WidgetSimple {
         background-color: #434242;
@@ -2022,10 +2062,11 @@
         color: #FFFFFF;
         background-color: #0A7CB3;
     }
-    .ResponsiveSidebarContainer .Cluster ul ul li {
-        border-bottom: 1px solid #0A7CB3;
-    }
     .ResponsiveSidebarContainer .Cluster > ul > li:hover > span {
+        background-color: #0A7CB3;
+        color: #FFFFFF;
+    }
+    .ResponsiveSidebarContainer .ui-tabs-nav li.ui-state-hover a {
         background-color: #0A7CB3;
         color: #FFFFFF;
     }
@@ -2033,19 +2074,19 @@
         background-color: #676767;
     }
     body:not(.Visible-ScreenXL) .WidgetSimple div.Pagination a,
-    body:not(.Visible-ScreenXL) .OverviewActions div.Pagination a
+    body:not(.Visible-ScreenXL) .OverviewActions div.Pagination a,
     body:not(.Visible-ScreenXL) .WidgetSimple span.Pagination a,
     body:not(.Visible-ScreenXL) .OverviewActions span.Pagination a {
         background-color: #AAAAAA;
         color: #FFFFFF;
     }
     body:not(.Visible-ScreenXL) .WidgetSimple div.Pagination a.Selected,
-    body:not(.Visible-ScreenXL) .OverviewActions div.Pagination a.Selected
+    body:not(.Visible-ScreenXL) .OverviewActions div.Pagination a.Selected,
     body:not(.Visible-ScreenXL) .WidgetSimple span.Pagination a.Selected,
     body:not(.Visible-ScreenXL) .OverviewActions span.Pagination a.Selected {
         background-color: #555555;
     }
     .PreferencesScreen .Size1of3 > .WidgetSimple > .Header {
-        background: #E8E8E8;
+        background: #373737;
     }
 }

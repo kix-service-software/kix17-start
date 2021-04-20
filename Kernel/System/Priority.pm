@@ -60,139 +60,12 @@ sub new {
     return $Self;
 }
 
-=item PriorityList()
-
-return a priority list as hash
-
-    my %List = $PriorityObject->PriorityList(
-        Valid => 0,
-    );
-
-=cut
-
-sub PriorityList {
-    my ( $Self, %Param ) = @_;
-
-    # check valid param
-    if ( !defined $Param{Valid} ) {
-        $Param{Valid} = 1;
-    }
-
-    # create cachekey
-    my $CacheKey;
-    if ( $Param{Valid} ) {
-        $CacheKey = 'PriorityList::Valid';
-    }
-    else {
-        $CacheKey = 'PriorityList::All';
-    }
-
-    # check cache
-    my $Cache = $Kernel::OM->Get('Kernel::System::Cache')->Get(
-        Type => $Self->{CacheType},
-        Key  => $CacheKey,
-    );
-    return %{$Cache} if $Cache;
-
-    my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
-
-    # create sql
-    my $SQL = 'SELECT id, name FROM ticket_priority ';
-    if ( $Param{Valid} ) {
-        $SQL
-            .= "WHERE valid_id IN ( ${\(join ', ', $Kernel::OM->Get('Kernel::System::Valid')->ValidIDsGet())} )";
-    }
-
-    return if !$DBObject->Prepare( SQL => $SQL );
-
-    # fetch the result
-    my %Data;
-    while ( my @Row = $DBObject->FetchrowArray() ) {
-        $Data{ $Row[0] } = $Row[1];
-    }
-
-    # set cache
-    $Kernel::OM->Get('Kernel::System::Cache')->Set(
-        Type  => $Self->{CacheType},
-        TTL   => $Self->{CacheTTL},
-        Key   => $CacheKey,
-        Value => \%Data,
-    );
-
-    return %Data;
-}
-
-=item PriorityGet()
-
-get a priority
-
-    my %List = $PriorityObject->PriorityGet(
-        PriorityID => 123,
-        UserID     => 1,
-    );
-
-=cut
-
-sub PriorityGet {
-    my ( $Self, %Param ) = @_;
-
-    # check needed stuff
-    for (qw(PriorityID UserID)) {
-        if ( !$Param{$_} ) {
-            $Kernel::OM->Get('Kernel::System::Log')->Log(
-                Priority => 'error',
-                Message  => "Need $_!"
-            );
-            return;
-        }
-    }
-
-    # check cache
-    my $Cache = $Kernel::OM->Get('Kernel::System::Cache')->Get(
-        Type => $Self->{CacheType},
-        Key  => 'PriorityGet' . $Param{PriorityID},
-    );
-    return %{$Cache} if $Cache;
-
-    my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
-
-    # ask database
-    return if !$DBObject->Prepare(
-        SQL => 'SELECT id, name, valid_id, create_time, create_by, change_time, change_by '
-            . 'FROM ticket_priority WHERE id = ?',
-        Bind  => [ \$Param{PriorityID} ],
-        Limit => 1,
-    );
-
-    # fetch the result
-    my %Data;
-    while ( my @Row = $DBObject->FetchrowArray() ) {
-        $Data{ID}         = $Row[0];
-        $Data{Name}       = $Row[1];
-        $Data{ValidID}    = $Row[2];
-        $Data{CreateTime} = $Row[3];
-        $Data{CreateBy}   = $Row[4];
-        $Data{ChangeTime} = $Row[5];
-        $Data{ChangeBy}   = $Row[6];
-    }
-
-    # set cache
-    $Kernel::OM->Get('Kernel::System::Cache')->Set(
-        Type  => $Self->{CacheType},
-        TTL   => $Self->{CacheTTL},
-        Key   => 'PriorityGet' . $Param{PriorityID},
-        Value => \%Data,
-    );
-
-    return %Data;
-}
-
 =item PriorityAdd()
 
-add a ticket priority
+add a new ticket priority
 
-    my $True = $PriorityObject->PriorityAdd(
-        Name    => 'Prio',
+    my $ID = $PriorityObject->PriorityAdd(
+        Name    => 'New Prio',
         ValidID => 1,
         UserID  => 1,
     );
@@ -213,12 +86,24 @@ sub PriorityAdd {
         }
     }
 
-    my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
+    # check if a type with this name already exists
+    if ( $Self->NameExistsCheck( Name => $Param{Name} ) ) {
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
+            Priority => 'error',
+            Message  => "A type with name '$Param{Name}' already exists!"
+        );
+        return;
+    }
 
+    # get needed objects
+    my $CacheObject = $Kernel::OM->Get('Kernel::System::Cache');
+    my $DBObject    = $Kernel::OM->Get('Kernel::System::DB');
+
+    # store data
     return if !$DBObject->Do(
-        SQL => 'INSERT INTO ticket_priority (name, valid_id, create_time, create_by, '
-            . 'change_time, change_by) VALUES '
-            . '(?, ?, current_timestamp, ?, current_timestamp, ?)',
+        SQL => 'INSERT INTO ticket_priority (name, valid_id, '
+            . ' create_time, create_by, change_time, change_by)'
+            . ' VALUES (?, ?, current_timestamp, ?, current_timestamp, ?)',
         Bind => [
             \$Param{Name}, \$Param{ValidID}, \$Param{UserID}, \$Param{UserID},
         ],
@@ -239,20 +124,134 @@ sub PriorityAdd {
 
     return if !$ID;
 
-    # delete cache
-    $Kernel::OM->Get('Kernel::System::Cache')->CleanUp(
+    # cleanup cache
+    $CacheObject->CleanUp(
         Type => $Self->{CacheType},
     );
 
     return $ID;
 }
 
+=item PriorityGet()
+
+get priority attributes
+
+    my %Priority = $PriorityObject->PriorityGet(
+        ID => 123,
+    );
+
+    my %Priority = $PriorityObject->PriorityGet(
+        Name => 'default',
+    );
+
+Returns:
+
+    my %Priority = (
+        ID                  => '123',
+        Name                => 'Service Request',
+        ValidID             => '1',
+        CreateTime          => '2010-04-07 15:41:15',
+        CreateBy            => '321',
+        ChangeTime          => '2010-04-07 15:59:45',
+        ChangeBy            => '223',
+    );
+
+=cut
+
+sub PriorityGet {
+    my ( $Self, %Param ) = @_;
+
+    # COMPAT
+    if (
+        $Param{PriorityID}
+        && !$Param{ID}
+    ) {
+        $Param{ID} = $Param{PriorityID};
+    }
+
+    # check needed stuff
+    if ( !$Param{ID} && !$Param{Name} ) {
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
+            Priority => 'error',
+            Message  => 'Need ID or Name!',
+        );
+        return;
+    }
+
+    # lookup the ID
+    if ( !$Param{ID} ) {
+        $Param{ID} = $Self->PriorityLookup(
+            Priority => $Param{Name},
+        );
+        if ( !$Param{ID} ) {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'error',
+                Message  => "ID for Priority '$Param{Name}' not found!",
+            );
+            return;
+        }
+    }
+
+    # get needed objects
+    my $CacheObject = $Kernel::OM->Get('Kernel::System::Cache');
+    my $DBObject    = $Kernel::OM->Get('Kernel::System::DB');
+
+    # check cache
+    my $CacheKey = 'PriorityGet::ID::' . $Param{ID};
+    my $Cache    = $CacheObject->Get(
+        Type => $Self->{CacheType},
+        Key  => $CacheKey,
+    );
+    return %{$Cache} if $Cache;
+
+    # ask the database
+    return if !$DBObject->Prepare(
+        SQL => 'SELECT id, name, valid_id, '
+            . 'create_time, create_by, change_time, change_by '
+            . 'FROM ticket_priority WHERE id = ?',
+        Bind => [ \$Param{ID} ],
+    );
+
+    # fetch the result
+    my %Priority;
+    while ( my @Data = $DBObject->FetchrowArray() ) {
+        %Priority = (
+            ID         => $Data[0],
+            Name       => $Data[1],
+            ValidID    => $Data[2],
+            CreateTime => $Data[3],
+            CreateBy   => $Data[4],
+            ChangeTime => $Data[5],
+            ChangeBy   => $Data[6],
+        );
+    }
+
+    # no data found
+    if ( !%Priority ) {
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
+            Priority => 'error',
+            Message  => "Priority with ID '$Param{ID}' not found!",
+        );
+        return;
+    }
+
+    # set cache
+    $CacheObject->Set(
+        Type  => $Self->{CacheType},
+        TTL   => $Self->{CacheTTL},
+        Key   => $CacheKey,
+        Value => \%Priority,
+    );
+
+    return %Priority;
+}
+
 =item PriorityUpdate()
 
-update a existing ticket priority
+update priority attributes
 
-    my $True = $PriorityObject->PriorityUpdate(
-        PriorityID     => 123,
+    my $Success = $PriorityObject->PriorityUpdate(
+        ID             => 123,
         Name           => 'New Prio',
         ValidID        => 1,
         CheckSysConfig => 0,   # (optional) default 1
@@ -264,8 +263,16 @@ update a existing ticket priority
 sub PriorityUpdate {
     my ( $Self, %Param ) = @_;
 
+    # COMPAT
+    if (
+        $Param{PriorityID}
+        && !$Param{ID}
+    ) {
+        $Param{ID} = $Param{PriorityID};
+    }
+
     # check needed stuff
-    for (qw(PriorityID Name ValidID UserID)) {
+    for (qw(ID Name ValidID UserID)) {
         if ( !$Param{$_} ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
@@ -275,33 +282,136 @@ sub PriorityUpdate {
         }
     }
 
+    # check if a priority with this name already exists
+    if (
+        $Self->NameExistsCheck(
+            Name => $Param{Name},
+            ID   => $Param{ID}
+        )
+    ) {
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
+            Priority => 'error',
+            Message  => "A priority with name '$Param{Name}' already exists!"
+        );
+        return;
+    }
+
+    # get needed objects
+    my $CacheObject     = $Kernel::OM->Get('Kernel::System::Cache');
+    my $DBObject        = $Kernel::OM->Get('Kernel::System::DB');
+    my $SysConfigObject = $Kernel::OM->Get('Kernel::System::SysConfig');
+
     # check CheckSysConfig param
     if ( !defined $Param{CheckSysConfig} ) {
         $Param{CheckSysConfig} = 1;
     }
 
-    my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
-
+    # sql
     return if !$DBObject->Do(
-        SQL => 'UPDATE ticket_priority SET name = ?, valid_id = ?, '
-            . 'change_time = current_timestamp, change_by = ? WHERE id = ?',
+        SQL => 'UPDATE ticket_priority SET name = ?, valid_id = ?,'
+            . ' change_time = current_timestamp, change_by = ?'
+            . ' WHERE id = ?',
         Bind => [
-            \$Param{Name}, \$Param{ValidID}, \$Param{UserID}, \$Param{PriorityID},
+            \$Param{Name}, \$Param{ValidID}, \$Param{UserID}, \$Param{ID},
         ],
     );
 
-    # delete cache
-    $Kernel::OM->Get('Kernel::System::Cache')->CleanUp(
+    # cleanup cache
+    $CacheObject->CleanUp(
         Type => $Self->{CacheType},
     );
 
-    # check all sysconfig options
-    return 1 if !$Param{CheckSysConfig};
-
     # check all sysconfig options and correct them automatically if neccessary
-    $Kernel::OM->Get('Kernel::System::SysConfig')->ConfigItemCheckAll();
+    if ( $Param{CheckSysConfig} ) {
+        $SysConfigObject->ConfigItemCheckAll();
+    }
 
     return 1;
+}
+
+=item PriorityList()
+
+return a priority list as hash
+
+    my %List = $PriorityObject->PriorityList();
+
+or
+
+    my %List = $PriorityObject->PriorityList(
+        Valid => 1, # is default
+    );
+
+or
+
+    my %List = $PriorityObject->PriorityList(
+        Valid => 0,
+    );
+
+returns
+
+    my %List = (
+        1 => "1 very low",
+        2 => "2 low",
+        3 => "3 normal",
+        4 => "4 high",
+        5 => "5 very high",
+    );
+
+=cut
+
+sub PriorityList {
+    my ( $Self, %Param ) = @_;
+
+    # get needed objects
+    my $CacheObject = $Kernel::OM->Get('Kernel::System::Cache');
+    my $DBObject    = $Kernel::OM->Get('Kernel::System::DB');
+    my $ValidObject = $Kernel::OM->Get('Kernel::System::Valid');
+
+    # check Valid param
+    my $Valid = 1;
+    if ( !$Param{Valid} && defined $Param{Valid} ) {
+        $Valid = 0;
+    }
+
+    # check cache
+    my $CacheKey = 'PriorityList::Valid::' . $Valid;
+    my $Cache    = $CacheObject->Get(
+        Type => $Self->{CacheType},
+        Key  => $CacheKey,
+    );
+    return %{$Cache} if $Cache;
+
+    # build SQL
+    my $SQL = 'SELECT id, name FROM ticket_priority ';
+
+    # add WHERE statement
+    if ( $Valid ) {
+        # create the valid list
+        my $ValidIDs = join( ', ', $ValidObject->ValidIDsGet() );
+
+        $SQL .= ' WHERE valid_id IN (' . $ValidIDs . ')';
+    }
+
+    # ask database
+    return if !$DBObject->Prepare(
+        SQL => $SQL
+    );
+
+    # fetch the result
+    my %PriorityList;
+    while ( my @Row = $DBObject->FetchrowArray() ) {
+        $PriorityList{ $Row[0] } = $Row[1];
+    }
+
+    # set cache
+    $CacheObject->Set(
+        Type  => $Self->{CacheType},
+        TTL   => $Self->{CacheTTL},
+        Key   => $CacheKey,
+        Value => \%PriorityList,
+    );
+
+    return %PriorityList;
 }
 
 =item PriorityLookup()
@@ -311,6 +421,8 @@ returns the id or the name of a priority
     my $PriorityID = $PriorityObject->PriorityLookup(
         Priority => '3 normal',
     );
+
+or
 
     my $Priority = $PriorityObject->PriorityLookup(
         PriorityID => 1,
@@ -360,6 +472,40 @@ sub PriorityLookup {
     }
 
     return $ReturnData;
+}
+
+=item NameExistsCheck()
+
+    return 1 if another priority with this name already exits
+
+        $Exist = $PriorityObject->NameExistsCheck(
+            Name => 'Some::Template',
+            ID => 1, # optional
+        );
+
+=cut
+
+sub NameExistsCheck {
+    my ( $Self, %Param ) = @_;
+
+    # get database object
+    my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
+    return if !$DBObject->Prepare(
+        SQL  => 'SELECT id FROM ticket_priority WHERE name = ?',
+        Bind => [ \$Param{Name} ],
+    );
+
+    # fetch the result
+    my $Flag;
+    while ( my @Row = $DBObject->FetchrowArray() ) {
+        if ( !$Param{ID} || $Param{ID} ne $Row[0] ) {
+            $Flag = 1;
+        }
+    }
+    if ($Flag) {
+        return 1;
+    }
+    return 0;
 }
 
 1;

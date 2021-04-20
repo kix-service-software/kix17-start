@@ -2128,7 +2128,7 @@ sub _ArticleItem {
     my $RecipientDisplayType = $ConfigObject->Get('Ticket::Frontend::DefaultRecipientDisplayType') || 'Realname';
     my $SenderDisplayType    = $ConfigObject->Get('Ticket::Frontend::DefaultSenderDisplayType')    || 'Realname';
     KEY:
-    for my $Key (qw(From To Cc)) {
+    for my $Key (qw(From To Cc Bcc)) {
         next KEY if !$Article{$Key};
 
         # use realname only or use realname and email address
@@ -2643,7 +2643,7 @@ sub _ArticleMenu {
             # check if reply all is needed
             my $Recipients = '';
             KEY:
-            for my $Key (qw(From To Cc)) {
+            for my $Key (qw(From To Cc Bcc)) {
                 next KEY if !$Article{$Key};
                 if ($Recipients) {
                     $Recipients .= ', ';

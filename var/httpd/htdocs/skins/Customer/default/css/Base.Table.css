@@ -104,10 +104,10 @@
         text-indent: -9999px;
         cursor: pointer;
     }
-
     table tr.MasterAction {
         cursor: pointer;
     }
+
 
     /**
     * @subsection TableSmall
@@ -155,6 +155,7 @@
     .TableSmall td:first-child {
         padding-top: 1px;
     }
+
 
     /**
     * @subsection DataTable
@@ -235,7 +236,6 @@
         content: "\25BC";
         position: absolute;
         left: -6px;
-        text-shadow: 1px 1px 0px #fff;
         z-index: 1;
     }
     .DataTable thead .SortAscendingLarge > a::after,
@@ -243,7 +243,6 @@
         content: "\25B2";
         position: absolute;
         left: -6px;
-        text-shadow: 1px 1px 0px #fff;
         z-index: 1;
     }
     .DataTable thead th.DashboardHeader.SortDescendingLarge,
@@ -262,6 +261,9 @@
         right: 0;
         top: 0;
         text-align: center;
+    }
+    .TableSmall thead th.OverviewHeader .ColumnSettingsTrigger{
+        top: 4px;
     }
     .DataTable thead th.DashboardHeader .ColumnSettingsTrigger i,
     .TableSmall thead th.OverviewHeader .ColumnSettingsTrigger i {
@@ -288,8 +290,13 @@
     .Sortable.DataTable th.SortDescending a {
         padding-left: 15px;
     }
+    .DataTable th.headerSortUp a,
+    .DataTable th.headerSortDown a {
+        padding-left: 8px;
+    }
     .DataTable thead .SortAscending > a::after,
-    .TableSmall thead .SortAscending > a::after {
+    .TableSmall thead .SortAscending > a::after,
+    .DataTable th.headerSortUp > a::after {
         content: "\25B2";
         display: block;
         position: absolute;
@@ -297,7 +304,8 @@
         top: 3px;
     }
     .DataTable thead .SortDescending > a::after,
-    .TableSmall thead .SortDescending > a::after {
+    .TableSmall thead .SortDescending > a::after,
+    .DataTable th.headerSortDown > a::after {
         content: "\25BC";
         display: block;
         position: absolute;
@@ -310,7 +318,6 @@
     .TableSmall thead th.OverviewHeader .ColumnSettingsContainer {
         position: relative;
     }
-
     .DataTable thead th.DashboardHeader .ColumnSettingsBox,
     .TableSmall thead th.OverviewHeader .ColumnSettingsBox {
         -moz-border-radius: 3px;
@@ -364,7 +371,6 @@
         position: relative;
         z-index: 99;
     }
-
     .DataTableNoHighlight tbody tr td input,
     .DataTableNoHighlight tbody tr td select {
         width: 85%;
@@ -383,10 +389,6 @@
     .LayoutGrid > div, .LayoutGrid > li {
         float: left;
     }
-    .WidgetSimple .Field.LayoutGrid .Tablelike {
-        width: 98%;
-    }
-
     ul.Tablelike:first-child {
         margin-right: 8px;
     }
@@ -410,10 +412,6 @@
     .LayoutGrid > li > div {
         overflow: hidden;
     }
-    .WidgetSimple .Field.LayoutGrid .Tablelike {
-        width: 98%;
-    }
-
     ul.AllocationList {
         min-height: 25px;
         max-height: 300px;
@@ -434,11 +432,12 @@
         top: 2px;
         min-width: 40px;
     }
+    .WidgetSimple .Field.LayoutGrid .Tablelike {
+        width: 100%;
+        box-sizing: border-box;
+    }
     ul.Tablelike + ul.Tablelike.AllocationList {
         border-top: 0px;
-    }
-    .WidgetSimple .Field.LayoutGrid .Tablelike {
-        width: 98%;
     }
     .WidgetSimple .Field.LayoutGrid .AllocationList {
         max-height: 192px;
@@ -450,10 +449,10 @@
         max-height: 155px;
     }
 
+
     /**
     * @subsection ticket list
     */
-
     .TicketList table {
         border-collapse: separate;
         position: relative;
@@ -463,18 +462,16 @@
         line-height: 18px;
     }
 
+
     /**
     *   @subsection ticket view
     */
-
     .TicketView > .Content {
         border-top: none;
     }
-
     .Content table.OverviewTable {
         line-height: 15px;
     }
-
     table.OverviewTable {
         width: 100%;
         clear: both;
@@ -546,5 +543,4 @@
     .Sortable .OverviewTable thead {
         display: table-header-group;
     }
-
 }

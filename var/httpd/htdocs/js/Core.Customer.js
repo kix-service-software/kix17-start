@@ -52,8 +52,7 @@ Core.Customer = (function (TargetNS) {
             NavigationDuration = 500,
             NavigationHoverTimer = {},
             NavigationHoverDuration = 350,
-            InitialNavigationContainerHeight = $('#NavigationContainer').css('height'),
-            NavigationResizeTimeout;
+            InitialNavigationContainerHeight = $('#NavigationContainer').css('height');
 
         /**
          * @private
@@ -344,6 +343,47 @@ Core.Customer = (function (TargetNS) {
         $('.TriggerFullErrorDetails').on('click', function() {
             $('.Content.ErrorDetails').toggle();
         });
+
+        // added class FieldPlain on field container if not empty but has no subelements
+        if ( $('.Field').length ) {
+            $.each($('.Field:not(:has(*))'), function() {
+                if ( !$(this).is(':empty') ) {
+                    $(this).addClass('FieldPlain');
+                }
+            });
+            $.each($('.Field:has(*)'), function() {
+                if (
+                    $(this).find(':visible').length
+                    || $(this).hasClass('Hidden')
+                ) {
+                    return;
+                }
+                $(this).addClass('FieldPlain');
+            });
+        }
+    };
+
+    /**
+     * @name PreferencesUpdate
+     * @memberof Core.Customer
+     * @function
+     * @returns {Boolean} returns true.
+     * @param {jQueryObject} Key - The name of the setting.
+     * @param {jQueryObject} Value - The value of the setting.
+     * @description
+     *      This function sets session and preferences setting at runtime.
+     */
+    TargetNS.PreferencesUpdate = function (Key, Value) {
+        var URL = Core.Config.Get('Baselink'),
+            Data = {
+                Action: 'CustomerPreferences',
+                Subaction: 'UpdateAJAX',
+                Key: Key,
+                Value: Value
+            };
+        // We need no callback here, but the called function needs one, so we send an "empty" function
+        Core.AJAX.FunctionCall(URL, Data, $.noop);
+        return true;
     };
 
     /**

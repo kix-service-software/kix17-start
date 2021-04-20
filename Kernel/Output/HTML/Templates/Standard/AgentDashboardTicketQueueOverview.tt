@@ -17,9 +17,13 @@
             </th>
 [% RenderBlockStart("ContentColumnLabel") %]
             <th class="[% Data.cssClass | html %]" title="[% Translate(Data.ColumnLabel) | html %]">
+[% IF Data.SearchPattern %]
                 <a href="[% Env("Baselink") %]Action=AgentTicketSearch;Subaction=Search;[% Data.SearchPattern | html %]">
-                [% Translate(Data.ColumnLabel) | html %]
+                [% Data.ColumnLabel | html %]
                 </a>
+[% ELSE %]
+                [% Data.ColumnLabel | html %]
+[% END %]
             </th>
 [% RenderBlockEnd("ContentColumnLabel") %]
         </tr>
@@ -29,7 +33,7 @@
         <tr>
             <td class="[% Data.cssClass | html %]">
                 <a href="[% Env("Baselink") %]Action=AgentTicketSearch;Subaction=Search;[% Data.SearchPattern | html %]">
-                [% Translate(Data.Label) | html %]
+                [% Data.Label | html %]
                 </a>
             </td>
 [% RenderBlockStart("ContentColumn") %]
@@ -47,7 +51,15 @@
         <tr>
             <td>[% Translate(Data.Label) | html %]</td>
 [% RenderBlockStart("FootColumn") %]
-            <td>[% Data.Number | html %]</td>
+            <td class="[% Data.cssClass | html %]">
+[% IF Data.SearchPattern %]
+                <a href="[% Env("Baselink") %]Action=AgentTicketSearch;Subaction=Search;[% Data.SearchPattern | html %]">
+                [% Data.Number | html %]
+                </a>
+[% ELSE %]
+                [% Data.Number | html %]
+[% END %]
+            </td>
 [% RenderBlockEnd("FootColumn") %]
         </tr>
     </tfoot>

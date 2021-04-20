@@ -362,6 +362,8 @@ sub TableCreateComplex {
                     $TmpHash{Link} = $LayoutObject->{Baselink}
                     . 'Action=AgentTicketZoom;TicketID='
                     . $TicketID;
+                    $TmpHash{Class} = 'MasterActionLink';
+                    $TmpHash{HighlightClass} .= ' MasterAction';
                 }
                 elsif ( $Column =~ /(Created|Changed|Time)/ ) {
                     $TmpHash{Type} = 'TimeLong';

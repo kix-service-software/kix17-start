@@ -45,9 +45,6 @@ sub new {
     my $Self = {};
     bless( $Self, $Type );
 
-    $Self->{AttachmentStorageObject} = $Kernel::OM->Get('Kernel::System::CIAttachmentStorage::AttachmentStorage');
-    $Self->{LogObject}               = $Kernel::OM->Get('Kernel::System::Log');
-
     return $Self;
 }
 
@@ -69,7 +66,7 @@ sub ValueLookup {
     # check needed stuff
     foreach (qw(Item)) {
         if ( !$Param{$_} ) {
-            $Self->{LogObject}->Log(
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => "$Param{Item}->{Input}->{Type} :: Need $_!"
             );
@@ -104,7 +101,7 @@ sub StatsAttributeCreate {
     # check needed stuff
     for my $Argument (qw(Key Name Item)) {
         if ( !$Param{$Argument} ) {
-            $Self->{LogObject}->Log(
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => "Need $Argument!"
             );
@@ -167,7 +164,7 @@ sub ExportValuePrepare {
     my $RealMD5Sum   = "";
 
     # get saved properties (attachment directory info)
-    %AttDirData = $Self->{AttachmentStorageObject}->AttachmentStorageGetDirectory(
+    %AttDirData = $Kernel::OM->Get('Kernel::System::CIAttachmentStorage::AttachmentStorage')->AttachmentStorageGetDirectory(
         ID => $Param{Value},
     );
 
@@ -177,7 +174,7 @@ sub ExportValuePrepare {
     ) {
 
         my %RealProperties =
-            $Self->{AttachmentStorageObject}->AttachmentStorageGetRealProperties(
+            $Kernel::OM->Get('Kernel::System::CIAttachmentStorage::AttachmentStorage')->AttachmentStorageGetRealProperties(
             %AttDirData,
             );
 

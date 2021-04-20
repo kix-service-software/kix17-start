@@ -138,7 +138,6 @@
                             <th>[% Translate("Frontend") | html %]</th>
                             <th>[% Translate("Customer Portal Group") | html %]</th>
                             <th>[% Translate("Delete") | html %]</th>
-                            <th>[% Translate("Edit") | html %]</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -149,11 +148,10 @@
                             </td>
                             <td title="[% Translate("A: agent frontend; C: customer frontend") | html %]">[% Data.FrontendInfoStrg | html %]</td>
                             <td>[% Translate(Data.CustomerPortalGroup) | html %]</td>
-                            <td>
-                                <a href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=Delete;ID=[% Data.ID | html %]">[% Translate("delete") | html %]</a>
-                            </td>
-                            <td>
-                                <a href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=Change;ID=[% Data.ID | html %]">[% Translate("edit") | html %]</a>
+                            <td class="Center">
+                                <a class="TicketTemplateDelete" href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=Delete;ID=[% Data.ID | html %]" title="[% Translate("Delete this template") | html %]">
+                                    <i class="fa fa-trash-o"></i>
+                                </a>
                             </td>
                         </tr>
 [% RenderBlockEnd("OverviewListRow") %]
@@ -168,6 +166,21 @@
                 </table>
             </div>
         </div>
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+$('.TicketTemplateDelete').bind('click', function (Event) {
+
+    if (window.confirm([% Translate("Do you really want to delete this template?") | JSON %])) {
+        window.location = $(this).attr('href');
+    }
+
+    // don't interfere with MasterAction
+    Event.stopPropagation();
+    Event.preventDefault();
+    return false;
+});
+//]]></script>
+[% END %]
 [% RenderBlockEnd("OverviewList") %]
 
 [% RenderBlockStart("Edit") %]

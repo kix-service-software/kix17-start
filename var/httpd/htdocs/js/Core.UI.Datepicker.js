@@ -239,6 +239,11 @@ Core.UI.Datepicker = (function (TargetNS) {
                 }
                 // EO KIX4OTRS-capeIT
             }
+
+            // Check Used Element if available
+            if ( typeof Element.Used !== 'undefined' ) {
+                Element.Used.prop('checked', true).trigger('change');
+            }
         };
         // KIX4OTRS-capeIT
         // Options.beforeShow = function (Input) {
@@ -333,6 +338,12 @@ Core.UI.Datepicker = (function (TargetNS) {
                           if (Element.Month.val().indexOf("0") == 0)
                               Element.Month.val(Element.Month.val().substring(1));
                       }
+
+                      // Check Used Element if available
+                      if ( typeof Element.Used !== 'undefined' ) {
+                          Element.Used.prop('checked', true).trigger('change');
+                      }
+
                       return false;
                   });
         }
@@ -343,6 +354,12 @@ Core.UI.Datepicker = (function (TargetNS) {
                 var times = $(this).val().split(':');
                 Element.Hour.val(times[0]);
                 Element.Minute.val(times[1]);
+
+                // Check Used Element if available
+                if ( typeof Element.Used !== 'undefined' ) {
+                    Element.Used.prop('checked', true).trigger('change');
+                }
+
                 return false;
             });
         }

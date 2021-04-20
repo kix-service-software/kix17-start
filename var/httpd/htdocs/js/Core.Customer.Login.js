@@ -64,12 +64,9 @@ Core.Customer.Login = (function (TargetNS) {
      */
     TargetNS.Init = function (Options) {
         var $Inputs = $('input:not(:checked, :hidden, :radio)'),
-            $LocalInputs,
-            Location,
             Now = new Date(),
             Diff = Now.getTimezoneOffset(),
-            $Label,
-            $SliderNavigationLinks = $('#Slider a');
+            $Label;
 
         // Browser is too old
         if (!Core.Customer.SupportedBrowser) {
@@ -134,51 +131,6 @@ Core.Customer.Login = (function (TargetNS) {
             if ($(this).val()) {
                 // clear the username-value and hide the field's label
                 $('#ResetUser').val($(this).val()).prev('label').hide();
-            }
-        });
-
-        // detect the location ("SignUp", "Reset" or "Login"):
-        // default location is "Login"
-        Location = '#Login';
-
-        // check if the url contains an anchor
-        if (document.location.toString().match('#')) {
-
-            // cut out the anchor
-            Location = '#' + document.location.toString().split('#')[1];
-        }
-
-        // get the input fields of the current location
-        $LocalInputs = $(Location).find('input:not(:checked, :hidden, :radio)');
-
-        // focus the first one
-        $LocalInputs.first().focus();
-
-        // add all tab-able inputs
-        $LocalInputs.add($(Location + ' a, button'));
-
-        // collect all global tab-able inputs
-        // give the input fields of all other slides a negative 'tabindex' to prevent
-        // the user from accidentally jumping to a hidden input field via the tab key
-        $Inputs.add('a, button').not($LocalInputs).attr('tabindex', -1);
-
-        // Change the 'tabindex' according to the navigation of the user
-        $SliderNavigationLinks.click(function () {
-            var I = 0,
-                TargetID,
-                $TargetInputs;
-
-            TargetID = $(this).attr('href');
-
-            // get the target id out of the href attribute of the anchor
-            $TargetInputs = $(TargetID + ' input:not(:checked, :hidden, :radio), ' + TargetID + ' a, ' + TargetID + ' button');
-
-            // give the inputs on the slide the user just leaves all a 'tabindex' of '-1'
-            $(this).parentsUntil('#SlideArea').last().find('input:not(:checked, :hidden, :radio), a, button').attr('tabindex', -1);
-
-            // give all inputs on the new shown slide an increasing 'tabindex'
-            for (I; I < $TargetInputs.length; I++) {
-                $TargetInputs.eq(I).attr('tabindex', I + 1);
             }
         });
 

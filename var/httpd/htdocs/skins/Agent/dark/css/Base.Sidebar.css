@@ -18,7 +18,6 @@
     .SidebarColumn .WidgetSimple .InputField_Autocomplete {
         min-width: 80px;
     }
-
     .DashboardUserOnline .UserRow p {
         display: inline;
         padding-bottom: 3px;
@@ -28,6 +27,7 @@
         padding-top: 3px;
         clear: both;
     }
+
 
     /**
     * @subsection TextModules
@@ -39,10 +39,25 @@
         overflow: auto;
         padding: 0px 10px 10px 10px;
     }
+    #TextModulesSelectionContainer:not(.jstree) {
+        padding: 0;
+    }
+    #TextModulesSelectionContainer > .TextModule {
+        line-height: 17px;
+        height: 15px;
+        padding: 2px 10px;
+        cursor: pointer;
+    }
 
-    #ServiceIncidentStateContainer .Flag, .SidebarColumn fieldset.TableLike div.Value .Flag {
+
+    /**
+    *   @subsection Flags for sidebar
+    */
+    #ServiceIncidentStateContainer .Flag,
+    .SidebarColumn fieldset.TableLike div.Value .Flag {
         margin-top: 2px;
     }
+
 
     /**
     * @subsection CustomerDetails
@@ -51,6 +66,7 @@
     .ResponsibleDetailsMagnifier {
         cursor: pointer;
     }
+
 
     /**
     * @subsection CustomerDetails
@@ -74,6 +90,7 @@
     .SidebarColumn .WidgetSimple.Collapsed .KIXSidebarCustomerEmailSelection {
         display: none;
     }
+
 
     /**
     *   @subsection Checklist
@@ -109,12 +126,14 @@
         display: block;
     }
 
+
     /**
     *   @subsection CISearch
     */
     #CIClassSelection.Content {
         border-bottom: none;
     }
+
 
     /***
     *   @subsection PadNotes
@@ -123,12 +142,14 @@
         width: 96%;
     }
 
+
     /***
     *   @subsection CustomerDashboardFurtherInformationNotes
     */
     #CustomerDashboardFurtherInformationNotes {
         width: 97%;
     }
+
 
     /**
     *   @subsection DisableSibebars

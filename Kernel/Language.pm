@@ -13,8 +13,6 @@ package Kernel::Language;
 use strict;
 use warnings;
 
-use vars qw(@ISA);
-
 use Exporter qw(import);
 our @EXPORT_OK = qw(Translatable);
 
@@ -27,8 +25,6 @@ our @ObjectDependencies = (
 
 my @DAYS = qw/Sun Mon Tue Wed Thu Fri Sat/;
 my @MONS = qw/Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec/;
-
-## no critic qw(ClassHierarchies::ProhibitExplicitISA)
 
 =head1 NAME
 
@@ -94,37 +90,52 @@ sub new {
     # Debug
     if ( $Self->{Debug} > 0 ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
-            Priority => 'Debug',
+            Priority => 'debug',
             Message  => "UserLanguage = $Self->{UserLanguage}",
         );
     }
 
+    my $Home = $ConfigObject->Get('Home') . '/';
+
+    my $LanguageFile = "Kernel::Language::$Self->{UserLanguage}";
+
     # load text catalog ...
-    if ( !$MainObject->Require("Kernel::Language::$Self->{UserLanguage}") ) {
+    if ( !$MainObject->Require($LanguageFile) ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
-            Priority => 'Error',
-            Message  => "Sorry, can't locate or load Kernel::Language::$Self->{UserLanguage} "
+            Priority => 'error',
+            Message  => "Sorry, can't locate or load $LanguageFile "
                 . "translation! Check the Kernel/Language/$Self->{UserLanguage}.pm (perl -cw)!",
         );
     }
+    else {
+        push @{ $Self->{LanguageFiles} }, "$Home/Kernel/Language/$Self->{UserLanguage}.pm";
+    }
 
-    # add module to ISA
-    @ISA = ("Kernel::Language::$Self->{UserLanguage}");
+    my $LanguageFileDataMethod = $LanguageFile->can('Data');
 
-    # execute translation map
-    if ( eval { $Self->Data() } ) {
+    # Execute translation map by calling language file data method via reference.
+    if ($LanguageFileDataMethod) {
+        if ( $LanguageFileDataMethod->($Self) ) {
 
-        # debug info
-        if ( $Self->{Debug} > 0 ) {
-            $Kernel::OM->Get('Kernel::System::Log')->Log(
-                Priority => 'Debug',
-                Message  => "Kernel::Language::$Self->{UserLanguage} load ... done.",
-            );
+            # Debug info.
+            if ( $Self->{Debug} > 0 ) {
+                $Kernel::OM->Get('Kernel::System::Log')->Log(
+                    Priority => 'debug',
+                    Message  => "Kernel::Language::$Self->{UserLanguage} load ... done.",
+                );
+            }
         }
+    }
+    else {
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
+            Priority => 'error',
+            Message  => "Sorry, can't load $LanguageFile! Check if it provides Data method",
+        );
     }
 
     # load action text catalog ...
     my $CustomTranslationModule = '';
+    my $CustomTranslationFile   = '';
 
     # do not include addition translation files, a new translation file gets created
     if ( !$Param{TranslationFile} ) {
@@ -150,38 +161,51 @@ sub new {
             # get module name based on file name
             $ File =~ s/.*(Kernel\/Language\/.*)\.pm$/$1/g;
 
-            $File =~ s/\/\//\//g;
-            $File =~ s/\//::/g;
+            # get module name based on file name
+            my $Module = $File =~ s/^$Home(.*)\.pm$/$1/rg;
+            $Module =~ s/\/\//\//g;
+            $Module =~ s/\//::/g;
 
             # ignore language translation files like (en_GB, en_CA, ...)
-            next FILE if $File =~ /.._..$/;
+            next FILE if $Module =~ /.._..$/;
 
-            # remember custom files to load at least
-            if ( $File =~ /_Custom$/ ) {
-                $CustomTranslationModule = $File;
+            # Remember custom files to load at the end.
+            if ( $Module =~ /_Custom$/ ) {
+                $CustomTranslationModule = $Module;
+                $CustomTranslationFile   = $File;
                 next FILE;
             }
 
             # load translation module
-            if ( !$MainObject->Require($File) ) {
+            if ( !$MainObject->Require($Module) ) {
                 $Kernel::OM->Get('Kernel::System::Log')->Log(
-                    Priority => 'Error',
-                    Message  => "Sorry, can't load $File! " . "Check the $File (perl -cw)!",
+                    Priority => 'error',
+                    Message  => "Sorry, can't load $Module! Check the $File (perl -cw)!",
+                );
+                next FILE;
+            }
+            else {
+                push @{ $Self->{LanguageFiles} }, $File;
+            }
+
+            my $ModuleDataMethod = $Module->can('Data');
+
+            if ( !$ModuleDataMethod ) {
+                $Kernel::OM->Get('Kernel::System::Log')->Log(
+                    Priority => 'error',
+                    Message  => "Sorry, can't load $Module! Check if it provides Data method.",
                 );
                 next FILE;
             }
 
-            # add module to ISA
-            @ISA = ($File);
-
-            # execute translation map
-            if ( eval { $Self->Data() } ) {
+            # Execute translation map by calling module data method via reference.
+            if ( eval { $ModuleDataMethod->($Self) } ) {
 
                 # debug info
                 if ( $Self->{Debug} > 0 ) {
                     $Kernel::OM->Get('Kernel::System::Log')->Log(
-                        Priority => 'Debug',
-                        Message  => "$File load ... done.",
+                        Priority => 'debug',
+                        Message  => "$Module load ... done.",
                     );
                 }
             }
@@ -190,19 +214,28 @@ sub new {
         # load custom text catalog ...
         if ( $CustomTranslationModule && $MainObject->Require($CustomTranslationModule) ) {
 
-            # add module to ISA
-            @ISA = ($CustomTranslationModule);
+            push @{ $Self->{LanguageFiles} }, $CustomTranslationFile;
 
-            # execute translation map
-            if ( eval { $Self->Data() } ) {
+            my $CustomTranslationDataMethod = $CustomTranslationModule->can('Data');
 
-                # debug info
-                if ( $Self->{Debug} > 0 ) {
-                    $Kernel::OM->Get('Kernel::System::Log')->Log(
-                        Priority => 'Debug',
-                        Message  => "Kernel::Language::$Self->{UserLanguage}_Custom load ... done.",
-                    );
+            # Execute translation map by calling custom module data method via reference.
+            if ($CustomTranslationDataMethod) {
+                if ( eval { $CustomTranslationDataMethod->($Self) } ) {
+
+                    # Debug info.
+                    if ( $Self->{Debug} > 0 ) {
+                        $Kernel::OM->Get('Kernel::System::Log')->Log(
+                            Priority => 'debug',
+                            Message  => "$CustomTranslationModule load ... done.",
+                        );
+                    }
                 }
+            }
+            else {
+                $Kernel::OM->Get('Kernel::System::Log')->Log(
+                    Priority => 'error',
+                    Message  => "Sorry, can't load $CustomTranslationModule! Check if it provides Data method.",
+                );
             }
         }
     }
@@ -293,7 +326,7 @@ sub Get {
         # Debug
         if ( $Self->{Debug} > 3 ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
-                Priority => 'Debug',
+                Priority => 'debug',
                 Message  => "->Get('$What') = ('$Self->{Translation}->{$What}').",
             );
         }

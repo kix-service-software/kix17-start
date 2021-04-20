@@ -7,7 +7,7 @@
 # the enclosed file LICENSE for license information (AGPL). If you
 # did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
 # --
-<div id="MainBox" class="TicketZoom ARIARoleMain">
+<div id="MainBox" class="[% Data.MainBoxClass | html %] ARIARoleMain">
     <div class="ContentColumn">
         <form action="[% Env("CGIHandle") %]" method="post" enctype="multipart/form-data" name="[% Data.FormName %]" id="[% Data.FormID %]" class="Validate PreventMultipleSubmits">
             <input type="hidden" name="Action" value="[% Env("Action") %]"/>

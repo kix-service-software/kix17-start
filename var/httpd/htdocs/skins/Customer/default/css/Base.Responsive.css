@@ -1,3 +1,17 @@
+/**
+ * This software is part of the KIX project, https://www.kixdesk.com/
+ * Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
+ * --
+ * @project KIX (https://www.kixdesk.com) <https://www.kixdesk.com> - Customer Frontend
+ * @copyright c.a.p.e. IT GmbH
+ * @license AGPL (https://www.gnu.org/licenses/agpl.txt) <https://www.gnu.org/licenses/agpl.txt>
+ * --
+ * This software comes with ABSOLUTELY NO WARRANTY. For details, see
+ * the enclosed file LICENSE for license information (AGPL). If you
+ * did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
+ *
+ */
+
 @media only screen {
     #ResponsiveCssLoaded {
         display: none;
@@ -44,7 +58,8 @@
     #ResponsiveFooter .Visible-ScreenXS {
         display: none;
     }
-    .ResponsiveHandle {
+    .ResponsiveHandle,
+    .ResponsiveCloseHandle {
         display: none;
     }
 }
@@ -120,7 +135,7 @@
     .TicketZoom,
     .Preferences,
     .Search {
-        padding: 110px 15px 5px;
+        padding: 20px 15px 5px;
         display: block;
     }
     #UserInfo {
@@ -128,6 +143,9 @@
         right: 10px;
         z-index: 9;
         text-align: right;
+        position: fixed;
+        width: 100%;
+        height: 20px;
     }
     .ResponsiveSidebarContainer {
         height: 100%;
@@ -144,31 +162,54 @@
         display: block;
         position: fixed;
         top: 10px;
+        right: 15px;
         width: 25px;
         height: 30px;
         padding: 5px 10px;
         text-align: center;
-        z-index: 999;
+        z-index: 100;
         visibility: visible;
     }
-    #FollowUp:not(.Visible) #Messenger .ResponsiveHandle  {
+    .ResponsiveSubHandle {
+        position: absolute;
+        top: 5px;
+        right: 0;
+        font-size: 25px;
+        height: 25px;
+        z-index: 1;
+    }
+    #FollowUp:not(.Visible) #Messenger .ResponsiveSubHandle  {
         display: none;
     }
-    #FollowUp.Visible #Messenger .ResponsiveHandle {
-        position: absolute;
+    #FollowUp.Visible #Messenger .ResponsiveSubHandle {
         top: 0;
         right: 1px;
         font-size: 20px;
         width: 16px;
         height: 20px;
         padding: 3px 10px;
-        z-index: 1;
     }
-    #ResponsiveNavigationHandle {
+    .ResponsiveCloseHandle {
+        position: fixed;
+        top: 0;
+        width: 280px;
+        box-sizing: border-box;
+        z-index: 1000;
+        margin: 0;
+        height: 60px;
+        border-width: 0 0 1px 0;
+    }
+    .ResponsiveSidebar-right > .ResponsiveCloseHandle {
+        right: -300px;
+    }
+    .ResponsiveSidebar-left > .ResponsiveCloseHandle {
+        left: -300px;
+    }
+    .ResponsiveNavHandle {
         left: 15px;
     }
-    #ResponsiveSidebarHandle {
-        right: 15px;
+    #NavigationContainer {
+        position: static;
     }
     #ResponsiveSidebarNotification {
         top: 60px;
@@ -176,20 +217,8 @@
         display: none;
         cursor: default;
     }
-    #NavigationContainer {
-        left: -280px;
-        right: auto;
-        top: 0;
-        height: 100%;
-        position: fixed;
-        width: 280px;
-        overflow: auto;
-    }
-    #NavigationContainer #Navigation,
-    .ResponsiveSidebarContainer .Actions {
-        position: static;
-        width: auto;
-        margin-top: 80px;
+    #NavigationContainer #Navigation {
+        width: 100%;
     }
     #NavigationContainer > a,
     #NavigationContainer > a.NavigationBarNavigateRight,
@@ -197,18 +226,28 @@
         display: none;
     }
     #Navigation > li,
-    .ResponsiveSidebarContainer .Actions > li {
+    .ResponsiveWrapperContainer .Actions > li {
         background: none;
         float: none;
         border: 1px 0 0 0;
         border-style: solid;
         margin: 0;
     }
-    .ResponsiveSidebarContainer .Actions > li {
+    #Navigation > li[aria-controls^="nav-"]::after {
+        content: "\f0d7";
+        position: absolute;
+        top: 0;
+        right: 0;
+        display: inline;
+        z-index: 3;
+        font: normal normal normal 14px/1 FontAwesome;
+        padding: 10px;
+    }
+    .ResponsiveWrapperContainer .Actions > li {
         display: block;
     }
     #Navigation > li > a,
-    .ResponsiveSidebarContainer .Actions > li > a {
+    .ResponsiveWrapperContainer .Actions > li > a {
         font-size: 14px;
         font-weight: normal;
         padding: 5px 15px;
@@ -216,59 +255,67 @@
         margin-top: 0;
         display: block;
     }
-    .ResponsiveSidebarContainer .Actions > li > a {
+    #Navigation > .Active > ul > li {
+        padding: 0 0 0 15px;
+    }
+    .ResponsiveWrapperContainer .Actions > li > a {
         padding: 8px 15px;
         display: block;
     }
-    .ResponsiveSidebarContainer .Actions > li > a,
-    .ResponsiveSidebarContainer .Actions > li > span {
+    .ResponsiveWrapperContainer .Actions > li > a,
+    .ResponsiveWrapperContainer .Actions > li > span {
         margin: 0;
         background: none;
         border: none;
     }
-    .ResponsiveSidebarContainer .Actions li span.ClusterLink {
+    .ResponsiveWrapperContainer .Actions li.ClusterSelect > ul {
+        border: none;
+    }
+    .ResponsiveWrapperContainer .Actions li span.ClusterLink {
         width: 80%;
         padding: 8px 15px;
     }
-    .ResponsiveSidebarContainer .Actions li span.MenuClusterIcon {
+    .ResponsiveWrapperContainer .Actions li span.MenuClusterIcon {
         padding: 8px 8px;
         background: none;
         width: 3%;
     }
     #Navigation > .Active > ul > li > a,
-    .ResponsiveSidebarContainer .Actions > .Active > ul > li > a {
+    .ResponsiveWrapperContainer .Actions > .Active > ul > li > a {
         font-size: 14px;
         margin-left: 5px;
     }
     #Navigation > li.Selected > a,
-    .ResponsiveSidebarContainer .Actions > li.Selected > a {
+    .ResponsiveWrapperContainer .Actions > li.Selected > a {
         border-radius: 0;
     }
     #Navigation > li:first-child,
-    .ResponsiveSidebarContainer .Actions > li:first-child {
+    .ResponsiveWrapperContainer .Actions > li:first-child {
         border-top: 0;
     }
     #Navigation > .Active > ul,
-    .ResponsiveSidebarContainer .Actions > .Active > ul {
+    .ResponsiveWrapperContainer .Actions > .Active > ul {
         position: static;
         min-width: 0;
         background: none;
         border: none;
     }
     #Navigation > .Active > ul li a,
-    .ResponsiveSidebarContainer .Actions > .Active > ul li a {
+    .ResponsiveWrapperContainer .Actions > .Active > ul li a {
         padding: 7px 10px;
         border: 0;
     }
     #Navigation > .Active > ul > li,
-    .ResponsiveSidebarContainer .Actions > .Active > ul > li {
-        padding: 3px 0 3px 15px;
+    .ResponsiveWrapperContainer .Actions > .Active > ul > li {
         font-weight: normal;
         border-left: none;
         border-right: none;
     }
+    .ResponsiveWrapperContainer .Actions > .Active > ul > li {
+        padding: 3px 0 3px 15px;
+    }
     #Navigation > .Active > ul > li:last-child,
-    .ResponsiveSidebarContainer .Actions > .Active > ul > li:last-child {
+    .ResponsiveWrapperContainer .Actions > .Active > ul > li:last-child {
         border-bottom: none;
     }
     #Navigation .Search {
@@ -350,7 +397,6 @@
 
 
     /* Ticket creation screens */
-
     .ShowTreeSelection {
         display: none;
     }
@@ -484,7 +530,7 @@
     .LayoutPopup .BccCustomerContainer {
         margin-left: 30px;
     }
-    .LayoutPopup #ResponsiveSidebarHandle {
+    .LayoutPopup .ResponsiveHandle {
         position: absolute;
     }
     .ui-overlay-autocomplete li.ui-menu-item {
@@ -526,7 +572,6 @@
 
 
     /* Widget Actions */
-
     .OverviewActions, .DashboardActions {
         position: relative;
     }
@@ -558,7 +603,6 @@
 
 
     /* Tables */
-
     .DataTable tr td,
     .TableSmall tr td {
         font-size: 14px;
@@ -589,29 +633,34 @@
     .ResponsiveSidebarContainer .SettingsWidget label {
         font-size: 14px;
     }
-    .LayoutFixedSidebar.SidebarLast .ResponsiveSidebarContainer > .SidebarColumn,
-    .LayoutFixedSidebar.SidebarFirst .ResponsiveSidebarContainer > .SidebarColumn,
-    .LayoutFixedSidebar .ContentColumn .ResponsiveSidebarContainer > .ActionRow,
-    .LayoutFixedSidebar .ContentColumn .ResponsiveSidebarContainer > .LightRow  {
+    .ResponsiveWrapperContainer {
         position: fixed;
         height: 100%;
         top: 0;
         z-index: 999;
         width: 280px;
-        right: -300px;
         overflow: auto;
-        padding: 0 10px;
+        padding: 60px 0 0;
+        box-sizing: border-box;
     }
-    .LayoutFixedSidebar .ContentColumn .ResponsiveSidebarContainer > .ActionRow,
-    .LayoutFixedSidebar .ContentColumn .ResponsiveSidebarContainer > .LightRow {
-        padding: 0;
+    .LayoutFixedSidebar.SidebarLast .ResponsiveSidebar-right > .ResponsiveWrapperContainer,
+    .LayoutFixedSidebar.SidebarFirst .ResponsiveSidebar-right > .ResponsiveWrapperContainer,
+    .LayoutFixedSidebar .ContentColumn .ResponsiveSidebar-right > .ResponsiveWrapperContainer,
+    .LayoutFixedSidebar .ContentColumn .ResponsiveSidebar-right > .ResponsiveWrapperContainer {
+        right: -300px;
     }
-    .LayoutFixedSidebar .ContentColumn .ResponsiveSidebarContainer .ModernizeFieldIcon {
+    .LayoutFixedSidebar.SidebarLast .ResponsiveSidebar-left > .ResponsiveWrapperContainer,
+    .LayoutFixedSidebar.SidebarFirst .ResponsiveSidebar-left > .ResponsiveWrapperContainer,
+    .LayoutFixedSidebar .ContentColumn .ResponsiveSidebar-left > .ResponsiveWrapperContainer,
+    .LayoutFixedSidebar .ContentColumn .ResponsiveSidebar-left > .ResponsiveWrapperContainer {
+        left: -300px;
+    }
+    .LayoutFixedSidebar.SidebarLast .ResponsiveWrapperContainer > .SidebarColumn,
+    .LayoutFixedSidebar.SidebarFirst .ResponsiveWrapperContainer > .SidebarColumn {
+        padding: 5px 10px 0;
+    }
+    .LayoutFixedSidebar .ContentColumn .ResponsiveWrapperContainer .ModernizeFieldIcon {
         padding: 4px 1px 3px 1px;
-    }
-    .LayoutFixedSidebar.SidebarLast .ResponsiveSidebarContainer > .SidebarColumn > :first-child,
-    .LayoutFixedSidebar.SidebarFirst .ResponsiveSidebarContainer > .SidebarColumn > :first-child {
-        margin-top: 60px;
     }
     #ContextSettingsDialog,
     #ContextSettingsDialogOverviewSmall {
@@ -637,6 +686,9 @@
     }
     .OverviewZoom a:hover {
         padding-bottom: 5px;
+    }
+    .OverviewBox > h1 {
+        padding-top: 20px;
     }
 
 
@@ -708,11 +760,13 @@
     #ArticleItems .WidgetSimple .Content {
         position: relative;
     }
+    #ArticleItems .WidgetSimple .LightRow.Bottom {
+        border: none;
+    }
     fieldset.TableLike > label.AdditionalInformationResponsive,
     fieldset.TableLike > p.AdditionalInformationResponsive {
         display: block;
     }
-
     .Scroller {
         overflow-y:auto;
     }
@@ -726,24 +780,24 @@
     .ArticleMailHeader .Value {
         padding: 0;
     }
-    .TicketZoom .ResponsiveSidebarContainer .ItemRow {
+    .TicketZoom .ResponsiveWrapperContainer .ItemRow {
         margin: 10px 0 0 0;
     }
-    .ResponsiveSidebarContainer fieldset.Narrow {
+    .ResponsiveWrapperContainer fieldset.Narrow {
         padding: 0 10px;
     }
-    .ResponsiveSidebarContainer div.Content {
+    .ResponsiveWrapperContainer div.Content {
         font-size: 0.9em;
     }
-    .ResponsiveSidebarContainer fieldset.TableLike > label,
-    .ResponsiveSidebarContainer fieldset.TableLike > .Row > label {
+    .ResponsiveWrapperContainer fieldset.TableLike > label,
+    .ResponsiveWrapperContainer fieldset.TableLike > .Row > label {
         float: left;
         text-align: right;
     }
-    .ResponsiveSidebarContainer fieldset.TableLike {
+    .ResponsiveWrapperContainer fieldset.TableLike {
         line-height: 1.7em;
     }
-    .ResponsiveSidebarContainer fieldset.TableLike:empty {
+    .ResponsiveWrapperContainer fieldset.TableLike:empty {
         display: none;
     }
     .TicketZoom .Actions form {
@@ -767,10 +821,12 @@
         width: auto;
         float: none;
     }
+    #Messages {
+        z-index: 1;
+    }
 
 
     /* Errors */
-
     .MainBox.ErrorScreen {
         margin-top: 15px;
     }
@@ -789,7 +845,6 @@
 
 
     /* Popups */
-
     .LayoutPopup fieldset.TableLike.FixedLabel > label,
     .LayoutPopup fieldset.TableLike.FixedLabel > .Row > label {
         width: auto;
@@ -811,7 +866,6 @@
 
 
     /* Process dialogs */
-
     #ActivityDialogContent .LayoutPopup > .Content {
         padding: 0;
         border-top: 1px solid #ccc;
@@ -819,31 +873,29 @@
 
 
     /* Cluster */
-    #ResponsiveTicketMenuHandle,
     .ResponsiveMenuHandle {
         position: absolute;
         width: 15px;
         height: 15px;
         right: 0;
         text-align: center;
-        vertical-align: middle;
         padding: 5px;
         top: 0;
         display: block;
         font-size: 12pt;
         z-index: 1;
     }
-    .ResponsiveSidebarContainer .LightRow ul {
+    .ResponsiveWrapperContainer .LightRow ul {
         padding: 0;
     }
-    .ResponsiveSidebarContainer .Actions {
+    .ResponsiveWrapperContainer .Actions {
         white-space: normal;
         overflow: hidden;
     }
-    .ResponsiveSidebarContainer .Actions li::after {
+    .ResponsiveWrapperContainer .Actions li::after {
         display: none;
     }
-    .ResponsiveSidebarContainer .Cluster ul li.ClusterSelect ul {
+    .ResponsiveWrapperContainer .Cluster ul li.ClusterSelect ul {
         opacity: 100;
         visibility: visible;
         display: block;
@@ -852,30 +904,30 @@
         background: none;
         min-width: 0;
     }
-    .ResponsiveSidebarContainer .Cluster ul ul li {
+    .ResponsiveWrapperContainer .Cluster ul ul li {
         display: block;
         padding-left: 20px;
     }
-    .ResponsiveSidebarContainer .Cluster ul ul li:last-child {
+    .ResponsiveWrapperContainer .Cluster ul ul li:last-child {
         border: none;
     }
-    .ResponsiveSidebarContainer .Cluster ul ul li a {
+    .ResponsiveWrapperContainer .Cluster ul ul li a {
         padding: 5px 2px;
         background: none;
         border: none;
     }
-    .ResponsiveSidebarContainer .Cluster > ul > li > ul > li:last-child > a {
+    .ResponsiveWrapperContainer .Cluster > ul > li > ul > li:last-child > a {
         border: none;
     }
-    .ResponsiveSidebarContainer .Cluster ul ul li:after {
+    .ResponsiveWrapperContainer .Cluster ul ul li:after {
         display: none;
     }
-    .ResponsiveSidebarContainer .Cluster ul li:not(.ClusterSelect):hover ul {
+    .ResponsiveWrapperContainer .Cluster ul li:not(.ClusterSelect):hover ul {
         height: 0;
         display: none;
     }
-    .ResponsiveSidebarContainer .Cluster ul li > form,
-    .ResponsiveSidebarContainer .LightRow ul li > form {
+    .ResponsiveWrapperContainer .Cluster ul li > form,
+    .ResponsiveWrapperContainer .LightRow ul li > form {
         padding: 15px;
         display: block;
         margin: 0;
@@ -944,7 +996,6 @@
 
 
     /* Breadcrumb */
-
     .BreadCrumb {
         overflow-x: scroll;
         padding: 7px 0;
@@ -1036,9 +1087,6 @@
 */
 @media only screen and (min-width: 0px) and (max-width: 767px) {
 
-    #ContentItemTabs .SidebarColumn {
-        display: none;
-    }
     .MainBox > h1,
     .OverviewBox > h1 {
         font-size: 20px;

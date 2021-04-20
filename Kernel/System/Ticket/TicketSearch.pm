@@ -4468,6 +4468,17 @@ Result: 'undef'
 sub FilterPrepare {
     my ( $Self, %Param ) = @_;
 
+    # prepare lookup hash
+    my %LookupAttributes = (
+        Locks      => 'LockIDs',
+        Priorities => 'PriorityIDs',
+        Queues     => 'QueueIDs',
+        Services   => 'ServiceIDs',
+        SLAs       => 'SLAIDs',
+        States     => 'StateIDs',
+        Types      => 'TypeIDs',
+    );
+
     my %Prepared;
 
     FILTER:
@@ -4480,6 +4491,21 @@ sub FilterPrepare {
         for my $Attribute ( sort keys %{$Filter} ) {
             next ATTRIBUTE if !defined $Filter->{$Attribute};
             next ATTRIBUTE if $Filter->{$Attribute} eq 'undef';
+
+            # check if attribute lookup is needed
+            if ( $LookupAttributes{ $Attribute } ) {
+                # prepare new filter
+                my $NewFilter = $Self->_FilterPrepareLookup(
+                    Attribute => $Attribute,
+                    Filter    => $Filter->{ $Attribute }
+                );
+
+                # change current attribute
+                $Attribute = $LookupAttributes{ $Attribute };
+
+                # set new filter
+                $Filter->{ $Attribute } = $NewFilter;
+            }
 
             if ( $Prepared{$Attribute} ) {
                 if ( ref $Filter->{$Attribute} eq 'ARRAY' ) {
@@ -4506,6 +4532,7 @@ sub FilterPrepare {
                 }
             } else {
                 if ( ref $Filter->{$Attribute} eq 'ARRAY' ) {
+                    $Prepared{$Attribute} = [];
                     push(@{$Prepared{$Attribute}}, @{$Filter->{$Attribute}});
                 }
 
@@ -4517,6 +4544,127 @@ sub FilterPrepare {
     }
 
     return \%Prepared;
+}
+
+sub _FilterPrepareLookup {
+    my ( $Self, %Param ) = @_;
+
+    # declare new filter
+    my $NewFilter;
+
+    # check for filter ref ARRAY
+    if ( ref( $Param{Filter} ) eq 'ARRAY' ) {
+        # init new filter
+        $NewFilter = [];
+
+        # process filter entries
+        for my $Entry ( @{ $Param{Filter} } ) {
+            # check for attribute Locks
+            if ( $Param{Attribute} eq 'Locks' ) {
+                my $LockID = $Kernel::OM->Get('Kernel::System::Lock')->LockLookup(
+                    Lock => $Entry
+                );
+                push( @{ $NewFilter }, $LockID );
+            }
+            # check for attribute Priorities
+            elsif ( $Param{Attribute} eq 'Priorities' ) {
+                my $PriorityID = $Kernel::OM->Get('Kernel::System::Priority')->PriorityLookup(
+                    Priority => $Entry,
+                );
+                push( @{ $NewFilter }, $PriorityID );
+            }
+            # check for attribute Queues
+            elsif ( $Param{Attribute} eq 'Queues' ) {
+                my $QueueID = $Kernel::OM->Get('Kernel::System::Queue')->QueueLookup(
+                    Queue => $Entry,
+                );
+                push( @{ $NewFilter }, $QueueID );
+            }
+            # check for attribute Services
+            elsif ( $Param{Attribute} eq 'Services' ) {
+                my $ServiceID = $Kernel::OM->Get('Kernel::System::Service')->ServiceLookup(
+                    Name => $Entry,
+                );
+                push( @{ $NewFilter }, $ServiceID );
+            }
+            # check for attribute SLAs
+            elsif ( $Param{Attribute} eq 'SLAs' ) {
+                my $SLAID = $Kernel::OM->Get('Kernel::System::SLA')->SLALookup(
+                    Name => $Entry,
+                );
+                push( @{ $NewFilter }, $SLAID );
+            }
+            # check for attribute States
+            elsif ( $Param{Attribute} eq 'States' ) {
+                my $StateID = $Kernel::OM->Get('Kernel::System::State')->StateLookup(
+                    State => $Entry,
+                );
+                push( @{ $NewFilter }, $StateID );
+            }
+            # check for attribute Types
+            elsif ( $Param{Attribute} eq 'Types' ) {
+                my $TypeID = $Kernel::OM->Get('Kernel::System::Type')->TypeLookup(
+                    Type => $Entry
+                );
+                push( @{ $NewFilter }, $TypeID );
+            }
+        }
+    }
+    # handle as scalar
+    else {
+        # check for attribute Locks
+        if ( $Param{Attribute} eq 'Locks' ) {
+            my $LockID = $Kernel::OM->Get('Kernel::System::Lock')->LockLookup(
+                Lock => $Param{Filter}
+            );
+            $NewFilter = $LockID;
+        }
+        # check for attribute Priorities
+        elsif ( $Param{Attribute} eq 'Priorities' ) {
+            my $PriorityID = $Kernel::OM->Get('Kernel::System::Priority')->PriorityLookup(
+                Priority => $Param{Filter},
+            );
+            $NewFilter = $PriorityID;
+        }
+        # check for attribute Queues
+        elsif ( $Param{Attribute} eq 'Queues' ) {
+            my $QueueID = $Kernel::OM->Get('Kernel::System::Queue')->QueueLookup(
+                Queue => $Param{Filter},
+            );
+            $NewFilter = $QueueID;
+        }
+        # check for attribute Services
+        elsif ( $Param{Attribute} eq 'Services' ) {
+            my $ServiceID = $Kernel::OM->Get('Kernel::System::Service')->ServiceLookup(
+                Name => $Param{Filter},
+            );
+            $NewFilter = $ServiceID;
+        }
+        # check for attribute SLAs
+        elsif ( $Param{Attribute} eq 'SLAs' ) {
+            my $SLAID = $Kernel::OM->Get('Kernel::System::SLA')->SLALookup(
+                Name => $Param{Filter},
+            );
+            $NewFilter = $SLAID;
+        }
+        # check for attribute States
+        elsif ( $Param{Attribute} eq 'States' ) {
+            my $StateID = $Kernel::OM->Get('Kernel::System::State')->StateLookup(
+                State => $Param{Filter},
+            );
+            $NewFilter = $StateID;
+        }
+        # check for attribute Types
+        elsif ( $Param{Attribute} eq 'Types' ) {
+            my $TypeID = $Kernel::OM->Get('Kernel::System::Type')->TypeLookup(
+                Type => $Param{Filter}
+            );
+            $NewFilter = $TypeID;
+        }
+    }
+
+    # return new filter
+    return $NewFilter;
 }
 
 1;

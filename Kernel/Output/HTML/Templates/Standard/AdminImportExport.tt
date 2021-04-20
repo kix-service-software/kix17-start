@@ -365,26 +365,18 @@
 [% RenderBlockEnd("TemplateEdit4MapNumberColumn") %]
                                 <td class="Center">
 [% RenderBlockStart("TemplateEdit4UpButton") %]
-                                    <button class="ArrowUp"type="submit" name="MappingUp::[% Data.MappingID | html %]" value="[% Translate("Up") | html %]" title="[% Translate("Up") | html %]">
-                                        <i class="fa fa-chevron-up fa-lg"></i>
-                                    </button>
+                                    <button class="ArrowUp"type="submit" name="MappingUp::[% Data.MappingID | html %]" value="[% Translate("Up") | html %]" title="[% Translate("Up") | html %]"></button>
 [% RenderBlockEnd("TemplateEdit4UpButton") %]
 [% RenderBlockStart("TemplateEdit4NoUpButton") %]
-                                    <button class="ArrowUp" type="submit" disabled="disabled" title="[% Translate("Up") | html %]">
-                                        <i class="fa fa-chevron-up fa-lg"></i>
-                                    </button>
+                                    <button class="ArrowUp" type="submit" disabled="disabled" title="[% Translate("Up") | html %]"></button>
 [% RenderBlockEnd("TemplateEdit4NoUpButton") %]
                                 </td>
                                 <td class="Center">
 [% RenderBlockStart("TemplateEdit4DownButton") %]
-                                    <button class="ArrowDown" type="submit" name="MappingDown::[% Data.MappingID | html %]" value="[% Translate("Down") | html %]" title="[% Translate("Down") | html %]">
-                                        <i class="fa fa-chevron-down fa-lg"></i>
-                                    </button>
+                                    <button class="ArrowDown" type="submit" name="MappingDown::[% Data.MappingID | html %]" value="[% Translate("Down") | html %]" title="[% Translate("Down") | html %]"></button>
 [% RenderBlockEnd("TemplateEdit4DownButton") %]
 [% RenderBlockStart("TemplateEdit4NoDownButton") %]
-                                    <button class="ArrowDown" type="submit" disabled="disabled" title="[% Translate("Down") | html %]">
-                                        <i class="fa fa-chevron-down fa-lg"></i>
-                                    </button>
+                                    <button class="ArrowDown" type="submit" disabled="disabled" title="[% Translate("Down") | html %]"></button>
 [% RenderBlockEnd("TemplateEdit4NoDownButton") %]
                                 </td>
                                 <td class="Center">

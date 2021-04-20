@@ -24,6 +24,8 @@ sub new {
     my $Self = {%Param};
     bless( $Self, $Type );
 
+    $Self->{Config} = $Kernel::OM->Get('Kernel::Config')->{'Admin::Frontend::AdminRole'};
+
     return $Self;
 }
 
@@ -110,12 +112,10 @@ sub Run {
         # something went wrong
         my $Output = $LayoutObject->Header();
         $Output .= $LayoutObject->NavigationBar();
-        $Output .= $Note
-            ? $LayoutObject->Notify(
+        $Output .= $Note ? $LayoutObject->Notify(
             Priority => 'Error',
             Info     => $Note,
-            )
-            : '';
+        ) : '';
         $Self->_Edit(
             Action => 'Change',
             %GetParam,
@@ -134,7 +134,9 @@ sub Run {
     # ------------------------------------------------------------ #
     elsif ( $Self->{Subaction} eq 'Add' ) {
         my %GetParam = ();
+
         $GetParam{Name} = $ParamObject->GetParam( Param => 'Name' );
+
         my $Output = $LayoutObject->Header();
         $Output .= $LayoutObject->NavigationBar();
         $Self->_Edit(
@@ -197,12 +199,10 @@ sub Run {
             }
         }
         my $Output = $LayoutObject->Header();
-        $Output .= $Note
-            ? $LayoutObject->Notify(
+        $Output .= $Note ? $LayoutObject->Notify(
             Priority => 'Error',
             Info     => $Note,
-            )
-            : '';
+        ) : '';
         $Output .= $LayoutObject->NavigationBar();
         $Self->_Edit(
             Action => 'Add',
@@ -238,6 +238,10 @@ sub _Edit {
     my ( $Self, %Param ) = @_;
 
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $ParamObject  = $Kernel::OM->Get('Kernel::System::Web::Request');
+    my $ValidObject  = $Kernel::OM->Get('Kernel::System::Valid');
+
+    $Param{ValidityFilter} = $ParamObject->GetParam( Param => 'ValidityFilter' ) // $Self->{Config}->{ValidityFilter};
 
     $LayoutObject->Block(
         Name => 'Overview',
@@ -245,10 +249,15 @@ sub _Edit {
     );
 
     $LayoutObject->Block( Name => 'ActionList' );
-    $LayoutObject->Block( Name => 'ActionOverview' );
+    $LayoutObject->Block(
+        Name => 'ActionOverview',
+        Data => {
+            ValidityFilter => $Param{ValidityFilter}
+        }
+    );
 
     # get valid list
-    my %ValidList        = $Kernel::OM->Get('Kernel::System::Valid')->ValidList();
+    my %ValidList        = $ValidObject->ValidList();
     my %ValidListReverse = reverse %ValidList;
 
     $Param{ValidOption} = $LayoutObject->BuildSelection(
@@ -279,6 +288,22 @@ sub _Overview {
 
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my $GroupObject  = $Kernel::OM->Get('Kernel::System::Group');
+    my $ParamObject  = $Kernel::OM->Get('Kernel::System::Web::Request');
+    my $ValidObject  = $Kernel::OM->Get('Kernel::System::Valid');
+
+    # get valid list
+    my %ValidList          = $ValidObject->ValidList();
+    $Param{ValidityFilter} = $ParamObject->GetParam( Param => 'ValidityFilter' ) // $Self->{Config}->{ValidityFilter};
+
+    $Param{ValidOption} = $LayoutObject->BuildSelection(
+        Data       => {
+            %ValidList,
+            0 => 'all'
+        },
+        Name       => 'ValidityFilter',
+        SelectedID => $Param{ValidityFilter},
+        Class      => 'Modernize Fullsize',
+    );
 
     $LayoutObject->Block(
         Name => 'Overview',
@@ -287,9 +312,15 @@ sub _Overview {
 
     $LayoutObject->Block( Name => 'ActionList' );
     $LayoutObject->Block( Name => 'ActionAdd' );
+    $LayoutObject->Block(
+        Name => 'ActionFilter',
+        Data => {
+            %Param
+        }
+    );
 
     my %List = $GroupObject->RoleList(
-        ValidID => 0,
+        Valid => $Param{ValidityFilter},
     );
     my $ListSize = keys %List;
 
@@ -307,15 +338,14 @@ sub _Overview {
             Data => \%Param,
         );
 
-        # get valid list
-        my %ValidList = $Kernel::OM->Get('Kernel::System::Valid')->ValidList();
         for my $KeyList ( sort { $List{$a} cmp $List{$b} } keys %List ) {
 
             my %Data = $GroupObject->RoleGet( ID => $KeyList );
             $LayoutObject->Block(
                 Name => 'OverviewResultRow',
                 Data => {
-                    Valid => $ValidList{ $Data{ValidID} },
+                    Valid          => $ValidList{ $Data{ValidID} },
+                    ValidityFilter => $Param{ValidityFilter},
                     %Data,
                 },
             );
