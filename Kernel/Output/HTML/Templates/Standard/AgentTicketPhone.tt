@@ -165,6 +165,8 @@
     $('.CustomerTicketRadio').bind('change', function () {
         var CustomerKey;
         if ( $(this).prop('checked') ){
+            // reset selected customer id
+            $('#CustomerID').val('');
 
             CustomerKey = $( '#CustomerKey_' +$(this).val() ).val();
             // get customer tickets

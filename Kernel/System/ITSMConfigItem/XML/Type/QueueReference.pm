@@ -45,9 +45,6 @@ sub new {
     my $Self = {};
     bless( $Self, $Type );
 
-    $Self->{LogObject}   = $Kernel::OM->Get('Kernel::System::Log');
-    $Self->{QueueObject} = $Kernel::OM->Get('Kernel::System::Queue');
-
     return $Self;
 }
 
@@ -66,7 +63,7 @@ sub ValueLookup {
 
     return '' if !$Param{Value};
 
-    my %QueueData = $Self->{QueueObject}->QueueGet(
+    my %QueueData = $Kernel::OM->Get('Kernel::System::Queue')->QueueGet(
         ID => $Param{Value},
     );
 
@@ -97,7 +94,7 @@ sub StatsAttributeCreate {
     # check needed stuff
     for my $Argument (qw(Key Name Item)) {
         if ( !$Param{$Argument} ) {
-            $Self->{LogObject}->Log(
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => "Need $Argument!"
             );
@@ -140,7 +137,7 @@ sub ExportSearchValuePrepare {
     return '' if !$Param{Value};
 
     # lookup name for given Queue ID
-    my %QueueData = $Self->{QueueObject}->QueueGet(
+    my %QueueData = $Kernel::OM->Get('Kernel::System::Queue')->QueueGet(
         ID => $Param{Value},
     );
     if ( %QueueData && $QueueData{Name} ) {
@@ -170,7 +167,7 @@ sub ExportValuePrepare {
     return '' if !$Param{Value};
 
     # lookup name for given Queue ID
-    my %QueueData = $Self->{QueueObject}->QueueGet(
+    my %QueueData = $Kernel::OM->Get('Kernel::System::Queue')->QueueGet(
         ID => $Param{Value},
     );
     if ( %QueueData && $QueueData{Name} ) {
@@ -200,14 +197,14 @@ sub ImportSearchValuePrepare {
     return '' if !$Param{Value};
 
     # check if Queue name was given
-    my $QueueID = $Self->{QueueObject}->QueueLookup(
+    my $QueueID = $Kernel::OM->Get('Kernel::System::Queue')->QueueLookup(
         Queue => $Param{Value},
     );
     return $QueueID if $QueueID;
 
     # check if given value is a valid Queue ID
     if ( $Param{Value} !~ /\D/ ) {
-        my $QueueName = $Self->{QueueObject}->QueueLookup(
+        my $QueueName = $Kernel::OM->Get('Kernel::System::Queue')->QueueLookup(
             QueueID => $Param{Value},
         );
         return $Param{Value} if $QueueName;
@@ -236,14 +233,14 @@ sub ImportValuePrepare {
     return '' if !$Param{Value};
 
     # check if Queue name was given
-    my $QueueID = $Self->{QueueObject}->QueueLookup(
+    my $QueueID = $Kernel::OM->Get('Kernel::System::Queue')->QueueLookup(
         Queue => $Param{Value},
     );
     return $QueueID if $QueueID;
 
     # check if given value is a valid Queue ID
     if ( $Param{Value} !~ /\D/ ) {
-        my $QueueName = $Self->{QueueObject}->QueueLookup(
+        my $QueueName = $Kernel::OM->Get('Kernel::System::Queue')->QueueLookup(
             QueueID => $Param{Value},
         );
         return $Param{Value} if $QueueName;

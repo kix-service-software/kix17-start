@@ -19,14 +19,16 @@
 
     <ul class="BreadCrumb">
 [% RenderBlockStart("FAQPathCategoryElement") %]
-        <li>
+        <li title="[% Data.Name | html %]">
             <a href="[% Env("Baselink") %]Action=AgentFAQExplorer;CategoryID=[% Data.CategoryID | uri %];Nav=[% Data.Nav | uri %]">
                 [% Data.Name | html %]
             </a>
         </li>
 [% RenderBlockEnd("FAQPathCategoryElement") %]
 [% RenderBlockStart("FAQPathItemElement") %]
-        <li>[% Data.Title | html %]</li>
+        <li title="[% Data.Title | html %]">
+            [% Data.Title | html %]
+        </li>
 [% RenderBlockEnd("FAQPathItemElement") %]
     </ul>
 
@@ -242,7 +244,7 @@ function CheckIFrameHeight(IFrameID) {
 # Use the HTML5 sandbox attribute to prevent plugins and scripts from being executed in the browser.
 # Append session info to URL because IE will not send cookies.
 # Set 'allow-popups' to allow IE10+ to open links. ref: http://www.w3.org/html/wg/wiki/ChangeProposals/sandbox_allow_popups
-                            <iframe sandbox="allow-same-origin allow-popups ms-allow-popups allow-popups-to-escape-sandbox" class="FAQField" id="IframeFAQ[% Data.Field | html %]" onload="window.setTimeout( function (){ CheckIFrameHeight('IframeFAQ[% Data.Field | html %]'); }, 500);" src="[% Env("Baselink") %]Action=AgentFAQZoom;Subaction=HTMLView;ItemID=[% Data.ItemID | html %];Field=[% Data.Field | html %][% Data.Session | html %]"></iframe>
+                            <iframe [% IF !Config("FAQ::Frontend::AgentDisableSandbox") %]sandbox="allow-same-origin allow-popups ms-allow-popups allow-popups-to-escape-sandbox" [% END %]class="FAQField" id="IframeFAQ[% Data.Field | html %]" onload="window.setTimeout( function (){ CheckIFrameHeight('IframeFAQ[% Data.Field | html %]'); }, 500);" src="[% Env("Baselink") %]Action=AgentFAQZoom;Subaction=HTMLView;ItemID=[% Data.ItemID | html %];Field=[% Data.Field | html %][% Data.Session | html %]"></iframe>
                         </div>
 [% RenderBlockEnd("FAQContentHTML") %]
 [% WRAPPER JSOnDocumentComplete %]
@@ -316,6 +318,8 @@ function CheckIFrameHeight(IFrameID) {
 
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
+    Core.KIX4OTRS.KIXSidebar.Init('[% Env("AgentFAQZoomSidebarWidth") %]','[% Env("Action") %]','ItemID=[% Data.ItemID | uri %];');
+
     $('ul.Actions a.AsPopup').bind('click', function (Event) {
         Core.UI.Popup.OpenPopup ($(this).attr('href'), 'Action');
         return false;

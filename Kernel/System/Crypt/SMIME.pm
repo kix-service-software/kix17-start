@@ -475,13 +475,22 @@ sub Verify {
 
     # path to the cert, when self signed certs
     # specially for openssl 1.0
-    my $CertificateOption = '';
+    my @CertificateOption = ();
     if ( $Param{CACert} ) {
-        $CertificateOption = "-CAfile $Param{CACert}";
+        push( @CertificateOption, '-CAfile' );
+        push( @CertificateOption, $Param{CACert} );
+    }
+    if ( $Param{NoVerify} ) {
+        push( @CertificateOption, '-noverify' );
     }
 
-    my $Options = "smime -verify -in $SignedFile -out $VerifiedFile -signer $SignerFile "
-        . "-CApath $Self->{CertPath} $CertificateOption $SignedFile";
+    my $Options = 'smime -verify'
+                . ' -in ' . $SignedFile
+                . ' -out ' . $VerifiedFile
+                . ' -signer ' . $SignerFile
+                . ' -CApath ' . $Self->{CertPath}
+                . ' ' . join( ' ' , @CertificateOption )
+                . ' ' . $SignedFile;
 
     my @LogLines = qx{$Self->{Cmd} $Options 2>&1};
 
@@ -590,8 +599,8 @@ sub Search {
 search a local certifcate
 
     my @Result = $CryptObject->CertificateSearch(
-        Search      => 'some text to search',
-        OnlySubject => (0|1),                   # Optional. If set, search will only lookup subject attribute. Default 0
+        Search    => 'some text to search',
+        OnlyEmail => (0|1),                   # Optional. If set, search will only lookup email attribute. Default 0
     );
 
 =cut
@@ -599,8 +608,8 @@ search a local certifcate
 sub CertificateSearch {
     my ( $Self, %Param ) = @_;
 
-    my $Search      = $Param{Search} || '';
-    my $OnlySubject = $Param{OnlySubject} || 0;
+    my $Search    = $Param{Search} || '';
+    my $OnlyEmail = $Param{OnlyEmail} || 0;
 
     # 1 - Get certificate list
     my @CertList = $Self->CertificateList();
@@ -611,8 +620,8 @@ sub CertificateSearch {
         # 2 - For the certs in list get its attributes and add them to @Results
         @Result = $Self->_CheckCertificateList(
             CertificateList => \@CertList,
-            Search          => $Search,
-            OnlySubject     => $OnlySubject,
+            Search    => $Search,
+            OnlyEmail => $OnlyEmail,
         );
     }
 
@@ -631,8 +640,8 @@ sub CertificateSearch {
             if (@CertList) {
                 @Result = $Self->_CheckCertificateList(
                     CertificateList => \@CertList,
-                    Search          => $Search,
-                    OnlySubject     => $OnlySubject,
+                    Search    => $Search,
+                    OnlyEmail => $OnlyEmail,
                 );
             }
         }
@@ -644,15 +653,15 @@ sub CertificateSearch {
 sub _CheckCertificateList {
     my ( $Self, %Param ) = @_;
 
-    my @CertList    = @{ $Param{CertificateList} };
-    my $Search      = $Param{Search} || '';
-    my $OnlySubject = $Param{OnlySubject} || 0;
+    my @CertList  = @{ $Param{CertificateList} };
+    my $Search    = $Param{Search} || '';
+    my $OnlyEmail = $Param{OnlyEmail} || 0;
 
     my @Result;
 
     for my $Filename (@CertList) {
         my $Certificate = $Self->CertificateGet( Filename => $Filename );
-        my %Attributes = $Self->CertificateAttributes(
+        my %Attributes  = $Self->CertificateAttributes(
             Certificate => $Certificate,
             Filename    => $Filename,
         );
@@ -661,8 +670,8 @@ sub _CheckCertificateList {
             ATTRIBUTE:
             for my $Attribute ( sort keys %Attributes ) {
                 next ATTRIBUTE if (
-                    $OnlySubject
-                    && $Attribute ne 'Subject'
+                    $OnlyEmail
+                    && $Attribute ne 'Email'
                 );
                 if ( $Attributes{$Attribute} =~ m{\Q$Search\E}ixms ) {
                     $Hit = 1;
@@ -1267,8 +1276,8 @@ sub CertificateRead {
 returns private keys
 
     my @Result = $CryptObject->PrivateSearch(
-        Search      => 'some text to search',
-        OnlySubject => (0|1),                   # Optional. If set, search will only lookup subject attribute. Default 0
+        Search    => 'some text to search',
+        OnlyEmail => (0|1),                   # Optional. If set, search will only lookup email attribute. Default 0
     );
 
 =cut
@@ -1277,13 +1286,13 @@ sub PrivateSearch {
     my ( $Self, %Param ) = @_;
 
     my $Search       = $Param{Search} || '';
-    my $OnlySubject  = $Param{OnlySubject} || 0;
+    my $OnlyEmail    = $Param{OnlyEmail} || 0;
     my @Certificates = $Self->CertificateList();
     my @Result;
 
     for my $File (@Certificates) {
         my $Certificate = $Self->CertificateGet( Filename => $File );
-        my %Attributes = $Self->CertificateAttributes(
+        my %Attributes  = $Self->CertificateAttributes(
             Certificate => $Certificate,
             Filename    => $File,
         );
@@ -1293,8 +1302,8 @@ sub PrivateSearch {
             ATTRIBUTE:
             for my $Attribute ( sort keys %Attributes ) {
                 next ATTRIBUTE if (
-                    $OnlySubject
-                    && $Attribute ne 'Subject'
+                    $OnlyEmail
+                    && $Attribute ne 'Email'
                 );
                 if ( $Attributes{$Attribute} =~ m{\Q$Search\E}ixms ) {
                     $Hit = 1;

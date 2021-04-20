@@ -62,10 +62,12 @@ sub Check {
     # check if article is an email
     return if $Param{Article}->{ArticleType} !~ /email/i;
 
-    my $StoreDecryptedData = $ConfigObject->Get('SMIME::StoreDecryptedData');
+    # get configuration
+    my $StoreDecryptedData   = $ConfigObject->Get('SMIME::StoreDecryptedData');
+    my $ProcessUntrustedData = $ConfigObject->Get('SMIME::ProcessUntrustedData');
 
     # get needed objects
-    my $SMIMEObject = $Kernel::OM->Get('Kernel::System::Crypt::SMIME');
+    my $SMIMEObject  = $Kernel::OM->Get('Kernel::System::Crypt::SMIME');
     my $TicketObject = $Param{TicketObject} || $Kernel::OM->Get('Kernel::System::Ticket');
 
     # check inline smime
@@ -228,16 +230,22 @@ sub Check {
 
                     # If the signature was verified well, use the stripped content to store the email.
                     #   Now it contains only the email without other SMIME generated data.
-                    $EmailContent = $SignCheck{Content} if $SignCheck{Successful};
+                    if ( $SignCheck{Successful} && $SignCheck{Content} ) {
+                        $EmailContent = $SignCheck{Content};
+                    }
+                    # check if email without other SMIME generated data should be stored
+                    elsif ( $ProcessUntrustedData ) {
+                        # check message again without verify
+                        my %NoVerifySignCheck = $SMIMEObject->Verify(
+                            Message  => $Decrypt{Data},
+                            NoVerify => 1
+                        );
 
-                    push(
-                        @Return,
-                        {
-                            Key   => Translatable('Signed'),
-                            Value => $SignCheck{Message},
-                            %SignCheck,
+                        # If the signature was verified well, use the stripped content to store the email
+                        if ( $NoVerifySignCheck{Successful} && $NoVerifySignCheck{Content} ) {
+                            $EmailContent = $NoVerifySignCheck{Content};
                         }
-                    );
+                    }
                 }
 
                 # parse the decrypted email body
@@ -272,27 +280,29 @@ sub Check {
                     Email => \@OrigEmail,
                 );
 
-                my $OrigFrom   = $ParserObjectOrig->GetParam( WHAT => 'From' );
-                my $OrigSender = $ParserObjectOrig->GetEmailAddress( Email => $OrigFrom );
+                if ( $SignCheck{SignatureFound} ) {
+                    my $OrigFrom   = $ParserObjectOrig->GetParam( WHAT => 'From' ) || '';
+                    my $OrigSender = $ParserObjectOrig->GetEmailAddress( Email => $OrigFrom ) || '';
 
-                # compare sender email to signer email
-                my $SignerSenderMatch = 0;
-                SIGNER:
-                for my $Signer ( @{ $SignCheck{Signers} } ) {
-                    if ( $OrigSender =~ m{\A \Q$Signer\E \z}xmsi ) {
-                        $SignerSenderMatch = 1;
-                        last SIGNER;
+                    # compare sender email to signer email
+                    my $SignerSenderMatch = 0;
+                    SIGNER:
+                    for my $Signer ( @{ $SignCheck{Signers} } ) {
+                        if ( $OrigSender =~ m{\A \Q$Signer\E \z}xmsi ) {
+                            $SignerSenderMatch = 1;
+                            last SIGNER;
+                        }
                     }
-                }
 
-                # sender email does not match signing certificate!
-                if ( !$SignerSenderMatch ) {
-                    $SignCheck{Successful} = 0;
-                    $SignCheck{Message} =~ s/successful/failed!/;
-                    $SignCheck{Message} .= " (signed by "
-                        . join( ' | ', @{ $SignCheck{Signers} } )
-                        . ")"
-                        . ", but sender address $OrigSender: does not match certificate address!";
+                    # sender email does not match signing certificate!
+                    if ( !$SignerSenderMatch ) {
+                        $SignCheck{Successful} = 0;
+                        $SignCheck{Message} =~ s/successful/failed!/;
+                        $SignCheck{Message} .= " (signed by "
+                            . join( ' | ', @{ $SignCheck{Signers} } )
+                            . ")"
+                            . ", but sender address $OrigSender: does not match certificate address!";
+                    }
                 }
 
                 if ($StoreDecryptedData) {
@@ -321,8 +331,6 @@ sub Check {
                         );
                     }
                 }
-
-                return @Return;
             }
             else {
                 push(
@@ -336,22 +344,44 @@ sub Check {
             }
         }
 
-        if (
+        elsif (
             $ContentType
             && $ContentType =~ /application\/(x-pkcs7|pkcs7)/i
             && $ContentType =~ /signed/i
         ) {
+
+            # init mail content
+            my $EmailContent = $Message;
 
             # check sign and get clear content
             %SignCheck = $SMIMEObject->Verify(
                 Message => $Message,
             );
 
-            # parse and update clear content
-            if ( %SignCheck && $SignCheck{Successful} && $SignCheck{Content} ) {
+            # check for signature
+            if ( %SignCheck ) {
+
+                # If the signature was verified well, use the stripped content to store the email.
+                #   Now it contains only the email without other SMIME generated data.
+                if ( $SignCheck{Successful} && $SignCheck{Content} ) {
+                    $EmailContent = $SignCheck{Content};
+                }
+                # check if email without other SMIME generated data should be stored
+                elsif ( $ProcessUntrustedData ) {
+                    # check message again without verify
+                    my %NoVerifySignCheck = $SMIMEObject->Verify(
+                        Message  => $Message,
+                        NoVerify => 1
+                    );
+
+                    # If the signature was verified well, use the stripped content to store the email
+                    if ( $NoVerifySignCheck{Successful} && $NoVerifySignCheck{Content} ) {
+                        $EmailContent = $NoVerifySignCheck{Content};
+                    }
+                }
 
                 my @SignEmail = ();
-                my @SignLines = split( /\n/, $SignCheck{Content} );
+                my @SignLines = split( /\n/, $EmailContent );
                 for (@SignLines) {
                     push( @SignEmail, $_ . "\n" );
                 }
@@ -386,27 +416,29 @@ sub Check {
                     Email => \@OrigEmail,
                 );
 
-                my $OrigFrom   = $ParserObjectOrig->GetParam( WHAT => 'From' );
-                my $OrigSender = $ParserObjectOrig->GetEmailAddress( Email => $OrigFrom );
+                if ( $SignCheck{SignatureFound} ) {
+                    my $OrigFrom   = $ParserObjectOrig->GetParam( WHAT => 'From' ) || '';
+                    my $OrigSender = $ParserObjectOrig->GetEmailAddress( Email => $OrigFrom ) || '';
 
-                # compare sender email to signer email
-                my $SignerSenderMatch = 0;
-                SIGNER:
-                for my $Signer ( @{ $SignCheck{Signers} } ) {
-                    if ( $OrigSender =~ m{\A \Q$Signer\E \z}xmsi ) {
-                        $SignerSenderMatch = 1;
-                        last SIGNER;
+                    # compare sender email to signer email
+                    my $SignerSenderMatch = 0;
+                    SIGNER:
+                    for my $Signer ( @{ $SignCheck{Signers} } ) {
+                        if ( $OrigSender =~ m{\A \Q$Signer\E \z}xmsi ) {
+                            $SignerSenderMatch = 1;
+                            last SIGNER;
+                        }
                     }
-                }
 
-                # sender email does not match signing certificate!
-                if ( !$SignerSenderMatch ) {
-                    $SignCheck{Successful} = 0;
-                    $SignCheck{Message} =~ s/successful/failed!/;
-                    $SignCheck{Message} .= " (signed by "
-                        . join( ' | ', @{ $SignCheck{Signers} } )
-                        . ")"
-                        . ", but sender address $OrigSender: does not match certificate address!";
+                    # sender email does not match signing certificate!
+                    if ( !$SignerSenderMatch ) {
+                        $SignCheck{Successful} = 0;
+                        $SignCheck{Message} =~ s/successful/failed!/;
+                        $SignCheck{Message} .= " (signed by "
+                            . join( ' | ', @{ $SignCheck{Signers} } )
+                            . ")"
+                            . ", but sender address $OrigSender: does not match certificate address!";
+                    }
                 }
 
                 if ($StoreDecryptedData) {
@@ -436,31 +468,10 @@ sub Check {
                     }
                 }
             }
-
-            # output signature verification errors
-            elsif (
-                %SignCheck
-                && !$SignCheck{SignatureFound}
-                && !$SignCheck{Successful}
-                && !$SignCheck{Content}
-            ) {
-
-                # return result
-                push(
-                    @Return,
-                    {
-                        Key   => Translatable('Signed'),
-                        Value => $SignCheck{Message},
-                        %SignCheck,
-                    }
-                );
-            }
         }
     }
 
-    if ( $SignCheck{SignatureFound} ) {
-
-        # return result
+    if ( %SignCheck ) {
         push(
             @Return,
             {
@@ -470,6 +481,7 @@ sub Check {
             }
         );
     }
+
     return @Return;
 }
 

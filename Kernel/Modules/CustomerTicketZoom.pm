@@ -1412,8 +1412,12 @@ sub _Mask {
         my $RecipientDisplayType = $ConfigObject->Get('Ticket::Frontend::DefaultRecipientDisplayType') || 'Realname';
         my $SenderDisplayType    = $ConfigObject->Get('Ticket::Frontend::DefaultSenderDisplayType')    || 'Realname';
         RECIPIENT:
-        for my $Key (qw(From To Cc)) {
+        for my $Key (qw(From To Cc Bcc)) {
             next RECIPIENT if !$Article{$Key};
+            next RECIPIENT if (
+                $Key eq 'Bcc'
+                && !$Config->{ShowBccRecipient}
+            );
             my $DisplayType = $Key eq 'From'             ? $SenderDisplayType : $RecipientDisplayType;
             my $HiddenType  = $DisplayType eq 'Realname' ? 'Value'            : 'Realname';
             $LayoutObject->Block(

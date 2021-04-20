@@ -64,15 +64,12 @@
         width: 30%;
         text-align: right;
         min-height: 17px;
-        padding-top: 8px;
+        padding-top: 13px;
         padding-bottom: 1px;
         font-weight: bold;
         position: relative;
         text-overflow: ellipsis;
         overflow: hidden;
-    }
-    fieldset.TableLike > .Row > label {
-        padding-top: 3px;
     }
     fieldset.TableLike > label.SubElement {
         width: 40%;
@@ -87,21 +84,32 @@
     fieldset.TableLike > .Field,
     fieldset.TableLike > .Row > .Field {
         line-height: 1.0em;
-        margin: 5px 0 0 30%;
-        padding: 3px 0 3px 5px;
+        margin: 0 0 0 30%;
+        padding: 8px 0 0px 5px;
         min-height: 20px;
+    }
+    fieldset.TableLike > .Field.FieldPlain,
+    fieldset.TableLike > .Row > .Field.FieldPlain {
+        padding-top: 13px;
+    }
+    fieldset.TableLike > .Field > button,
+    fieldset.TableLike > .Row > .Field > button {
+        margin-top: 0;
     }
     fieldset.TableLike > .EndOfForm,
     fieldset.TableLike > .Row > .EndOfForm {
         margin-top: 20px;
     }
-    fieldset.TableLike > .Field > :first-child,
-    fieldset.TableLike > .Row > .Field > :first-child {
-        margin-top: -5px;
-    }
     fieldset.TableLike > .Field > .Size1of2,
     fieldset.TableLike > .Row > .Field > .Size1of2 {
-        margin-top: 0;
+        margin: 0;
+        border-style: solid;
+        border-width: 0;
+        box-sizing: border-box;
+    }
+    fieldset.TableLike > .Field > .Size1of2:first-child,
+    fieldset.TableLike > .Row > .Field > .Size1of2:first-child {
+        margin-right: 0.8%;
     }
     fieldset.TableLike > .Field.SubElement{
         margin-left: 40%;
@@ -109,17 +117,20 @@
     fieldset.TableLike > .Field.SubElement input.W50pc {
         width: 33%;
     }
-    fieldset.TableLike > .Field.Options {
-        padding-top: 8px;
-    }
     fieldset.TableLike > .Field.Options a {
         border-width: 1px;
         border-style: solid;
         padding: 3px 8px;
         margin-right: 5px;
+        display: inline-block;
     }
-    fieldset.TableLike > .Field > input[id$='Date'],
-    fieldset.TableLike > .Row > .Field > input[id$='Date'] {
+    fieldset.TableLike > .Field > input[type=checkbox],
+    fieldset.TableLike > .Row > .Field > input[type=checkbox] {
+        margin-top: 0;
+        vertical-align: middle;
+    }
+    fieldset.TableLike > .Field > input[id$='Date'][type!=radio],
+    fieldset.TableLike > .Row > .Field > input[id$='Date'][type!=radio] {
         width: 80px;
     }
     fieldset.TableLike > .Field > select,
@@ -140,7 +151,7 @@
     fieldset.TableLike > .Row > .Field > select[id$="TimePointFormat"],
     fieldset.TableLike > .Row > .Field > select[id$="TimePointValue"],
     fieldset.TableLike > .Row > .Field > select[id$="TimePoint"] {
-        width: 30.5%;
+        width: 21.4%;
     }
     fieldset.TableLike > .Field > select[id$="Time"],
     fieldset.TableLike > .Row > .Field > select[id$="Time"] {
@@ -196,6 +207,11 @@
         margin-left: 100px;
         margin-right: 0;
         word-wrap: break-word;
+        padding-top: 5px;
+    }
+    fieldset.TableLike.FixedLabelSmall > .Field.FieldPlain,
+    fieldset.TableLike.FixedLabelSmall > .Row > .Field.FieldPlain {
+        padding-top: 5px;
     }
     fieldset.TableLike.FixedLabelLarge > label,
     fieldset.TableLike.FixedLabelLarge > .Row > label {
@@ -212,7 +228,7 @@
     }
     fieldset.TableLike.FixedLabelLarge > .Field,
     fieldset.TableLike.FixedLabelLarge > .Row > .Field {
-        margin-top: 2px;
+        padding-top: 5px;
     }
     .CallForAction,
     body .cke_dialog_footer_buttons a.cke_dialog_ui_button {
@@ -400,6 +416,7 @@
         padding: 0;
     }
 
+
     /**
     *   @subsection ShowTreeSelection
     */
@@ -419,17 +436,17 @@
         display: inline-block;
     }
 
+
     /**
     *   @subsection Datepicker
     */
     .DatepickerIcon {
         font-size: 14px;
-        padding-top: 1px;
         margin: 1px 0 0 4px;
         height: 16px;
         width: 16px;
         display: inline-block;
-        vertical-align: top;
+        vertical-align: middle;
     }
 
 
@@ -494,7 +511,8 @@
     *   @subsection process mask
     */
     h2.HorizontalLine {
-        border-bottom: 1px solid #82C826;
+        border-bottom-style: solid;
+        border-bottom-width: 1px;
         font-size: 14px;
         font-weight: bold;
         padding: 5px 8px 4px;

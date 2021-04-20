@@ -247,6 +247,7 @@ sub MaskAgentZoomTabLinkedObjects {
         Subaction        => $Self->{Subaction},
         TicketID         => $Self->{TicketID},
         GetPreferences   => 1,
+        QuickLink        => $Self->{Config}->{QuickLink},
     );
 
     $LayoutObject->Block(

@@ -696,22 +696,6 @@ sub GetEmailParams {
         }
     }
 
-    # set article type if not given
-    for my $Key (qw(X-KIX-ArticleType X-KIX-FollowUp-ArticleType X-OTRS-ArticleType X-OTRS-FollowUp-ArticleType)) {
-        if ( !$GetParam{$Key} ) {
-            $GetParam{$Key} = 'email-external';
-        }
-
-        # check if X-KIX-ArticleType exists, if not, set 'email'
-        if ( !$TicketObject->ArticleTypeLookup( ArticleType => $GetParam{$Key} ) ) {
-            $Kernel::OM->Get('Kernel::System::Log')->Log(
-                Priority => 'error',
-                Message  => "Can't find article type '$GetParam{$Key}' in db, take 'email-external'",
-            );
-            $GetParam{$Key} = 'email-external';
-        }
-    }
-
     # get body
     $GetParam{Body} = $Self->{ParserObject}->GetMessageBody();
 

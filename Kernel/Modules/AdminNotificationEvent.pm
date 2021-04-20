@@ -37,6 +37,10 @@ sub Run {
         Valid      => 1,
         ObjectType => ['Ticket'],
     );
+    my $ArticleDynamicField = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
+        Valid      => 1,
+        ObjectType => ['Article'],
+    );
 
     if ( $RichText && !$ConfigObject->Get("Frontend::Admin::$Self->{Action}")->{RichText} ) {
         $RichText = 0;
@@ -159,7 +163,39 @@ sub Run {
                 # set search structure for display
                 %DynamicFieldValues = ( %DynamicFieldValues, %{$DynamicFieldValue} );
 
-                #make all values array refs
+                # make all values array refs
+                for my $FieldName ( sort keys %{$DynamicFieldValue} ) {
+                    if ( ref $DynamicFieldValue->{$FieldName} ne 'ARRAY' ) {
+                        $DynamicFieldValue->{$FieldName} = [ $DynamicFieldValue->{$FieldName} ];
+                    }
+                }
+
+                # store special structure for match
+                $GetParam{Data} = { %{ $GetParam{Data} }, %{$DynamicFieldValue} };
+            }
+        }
+
+        # get article dynamic fields for search from web request
+        # cycle trough the activated Dynamic Fields for this screen
+        DYNAMICFIELD:
+        for my $DynamicFieldConfig ( @{$ArticleDynamicField} ) {
+            next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
+
+            # extract the dynamic field value form the web request
+            my $DynamicFieldValue = $BackendObject->SearchFieldValueGet(
+                DynamicFieldConfig     => $DynamicFieldConfig,
+                ParamObject            => $ParamObject,
+                ReturnProfileStructure => 1,
+                LayoutObject           => $LayoutObject,
+            );
+
+            # set the complete value structure in GetParam to store it later in the Notification Item
+            if ( IsHashRefWithData($DynamicFieldValue) ) {
+
+                # set search structure for display
+                %DynamicFieldValues = ( %DynamicFieldValues, %{$DynamicFieldValue} );
+
+                # make all values array refs
                 for my $FieldName ( sort keys %{$DynamicFieldValue} ) {
                     if ( ref $DynamicFieldValue->{$FieldName} ne 'ARRAY' ) {
                         $DynamicFieldValue->{$FieldName} = [ $DynamicFieldValue->{$FieldName} ];
@@ -368,6 +404,38 @@ sub Run {
                 %DynamicFieldValues = ( %DynamicFieldValues, %{$DynamicFieldValue} );
 
                 #make all values array refs
+                for my $FieldName ( sort keys %{$DynamicFieldValue} ) {
+                    if ( ref $DynamicFieldValue->{$FieldName} ne 'ARRAY' ) {
+                        $DynamicFieldValue->{$FieldName} = [ $DynamicFieldValue->{$FieldName} ];
+                    }
+                }
+
+                # store special structure for match
+                $GetParam{Data} = { %{ $GetParam{Data} }, %{$DynamicFieldValue} };
+            }
+        }
+
+        # get article dynamic fields for search from web request
+        # cycle trough the activated Dynamic Fields for this screen
+        DYNAMICFIELD:
+        for my $DynamicFieldConfig ( @{$ArticleDynamicField} ) {
+            next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
+
+            # extract the dynamic field value form the web request
+            my $DynamicFieldValue = $BackendObject->SearchFieldValueGet(
+                DynamicFieldConfig     => $DynamicFieldConfig,
+                ParamObject            => $ParamObject,
+                ReturnProfileStructure => 1,
+                LayoutObject           => $LayoutObject,
+            );
+
+            # set the complete value structure in GetParam to store it later in the Notification Item
+            if ( IsHashRefWithData($DynamicFieldValue) ) {
+
+                # set search structure for display
+                %DynamicFieldValues = ( %DynamicFieldValues, %{$DynamicFieldValue} );
+
+                # make all values array refs
                 for my $FieldName ( sort keys %{$DynamicFieldValue} ) {
                     if ( ref $DynamicFieldValue->{$FieldName} ne 'ARRAY' ) {
                         $DynamicFieldValue->{$FieldName} = [ $DynamicFieldValue->{$FieldName} ];
@@ -1006,6 +1074,53 @@ sub _Edit {
         # output dynamic field
         $LayoutObject->Block(
             Name => 'DynamicFieldElement',
+            Data => {
+                Label => $DynamicFieldHTML->{Label},
+                Field => $DynamicFieldHTML->{Field},
+            },
+        );
+    }
+
+    # create dynamic field HTML for set with historical data options
+    my $PrintArticleDynamicFieldsSearchHeader = 1;
+
+    # cycle trough the activated Dynamic Fields for this screen
+    my $ArticleDynamicField = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
+        Valid      => 1,
+        ObjectType => ['Article'],
+    );
+
+    DYNAMICFIELD:
+    for my $DynamicFieldConfig ( @{$ArticleDynamicField} ) {
+        next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
+
+        # skip all dynamic fields that are not designed to be notification triggers
+        my $IsNotificationEventCondition = $BackendObject->HasBehavior(
+            DynamicFieldConfig => $DynamicFieldConfig,
+            Behavior           => 'IsNotificationEventCondition',
+        );
+
+        next DYNAMICFIELD if !$IsNotificationEventCondition;
+
+        # get field HTML
+        my $DynamicFieldHTML = $BackendObject->SearchFieldRender(
+            DynamicFieldConfig     => $DynamicFieldConfig,
+            Profile                => $Param{DynamicFieldValues} || {},
+            LayoutObject           => $LayoutObject,
+            ConfirmationCheckboxes => 1,
+            UseLabelHints          => 0,
+        );
+
+        next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldHTML);
+
+        if ($PrintArticleDynamicFieldsSearchHeader) {
+            $LayoutObject->Block( Name => 'ArticleDynamicField' );
+            $PrintArticleDynamicFieldsSearchHeader = 0;
+        }
+
+        # output dynamic field
+        $LayoutObject->Block(
+            Name => 'ArticleDynamicFieldElement',
             Data => {
                 Label => $DynamicFieldHTML->{Label},
                 Field => $DynamicFieldHTML->{Field},

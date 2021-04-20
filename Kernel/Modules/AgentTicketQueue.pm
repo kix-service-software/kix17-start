@@ -419,9 +419,15 @@ sub Run {
                 )
             )
         ) {
+            my $PreparedFilter = $TicketObject->FilterPrepare(
+                FilterArray   => [
+                    $Filters{ $Filter }->{Search},
+                    \%ColumnFilter
+                ]
+            );
+
             @OriginalViewableTickets = $TicketObject->TicketSearch(
-                %{ $Filters{$Filter}->{Search} },
-                %ColumnFilter,
+                %{ $PreparedFilter },
                 Limit  => $Limit,
                 Result => 'ARRAY',
             );
@@ -429,8 +435,7 @@ sub Run {
             my $Start = $ParamObject->GetParam( Param => 'StartHit' ) || 1;
 
             @ViewableTickets = $TicketObject->TicketSearch(
-                %{ $Filters{$Filter}->{Search} },
-                %ColumnFilter,
+                %{ $PreparedFilter },
                 Limit  => $Start + $PageShown - 1,
                 Result => 'ARRAY',
             );
@@ -657,8 +662,15 @@ sub Run {
             }
         }
 
+        my $PreparedFilter = $TicketObject->FilterPrepare(
+            FilterArray   => [
+                $Filters{ $Filter }->{Search},
+                \%ColumnFilter
+            ]
+        );
+
         @OriginalViewableTickets = $TicketObject->TicketSearch(
-            %{ $Filters{ $Filter }->{Search} },
+            %{ $PreparedFilter },
             Limit  => $Limit,
             Result => 'ARRAY',
         );
@@ -676,9 +688,15 @@ sub Run {
             $FulltextSearchParam =~ s/$TicketHook//g;
             $Filters{ $Filter }->{Search}->{TicketNumber} = '*' . $FulltextSearchParam . '*';
 
+            $PreparedFilter = $TicketObject->FilterPrepare(
+                FilterArray   => [
+                    $Filters{ $Filter }->{Search},
+                    \%ColumnFilter
+                ]
+            );
+
             my @OriginalViewableTicketIDsTN = $TicketObject->TicketSearch(
-                %{ $Filters{ $Filter }->{Search} },
-                %ColumnFilter,
+                %{ $PreparedFilter },
                 Limit  => $Limit,
                 Result => 'ARRAY',
             );
@@ -688,9 +706,15 @@ sub Run {
             # search tickets with Title
             $Filters{ $Filter }->{Search}->{Title} = $Filters{ $Filter }->{Search}->{Fulltext};
 
+            $PreparedFilter = $TicketObject->FilterPrepare(
+                FilterArray   => [
+                    $Filters{ $Filter }->{Search},
+                    \%ColumnFilter
+                ]
+            );
+
             my @OriginalViewableTicketIDsTitle = $TicketObject->TicketSearch(
-                %{ $Filters{ $Filter }->{Search} },
-                %ColumnFilter,
+                %{ $PreparedFilter },
                 Limit  => $Limit,
                 Result => 'ARRAY',
             );
@@ -700,9 +724,15 @@ sub Run {
             # search tickets with remarks (TicketNotes)
             $Filters{ $Filter }->{Search}->{TicketNotes} = $Filters{ $Filter }->{Search}->{Fulltext};
 
+            $PreparedFilter = $TicketObject->FilterPrepare(
+                FilterArray   => [
+                    $Filters{ $Filter }->{Search},
+                    \%ColumnFilter
+                ]
+            );
+
             my @OriginalViewableTicketIDsTicketNotes = $TicketObject->TicketSearch(
-                %{ $Filters{ $Filter }->{Search} },
-                %ColumnFilter,
+                %{ $PreparedFilter },
                 Limit  => $Limit,
                 Result => 'ARRAY',
             );
@@ -751,15 +781,22 @@ sub Run {
                         }
                     }
 
+                    $PreparedFilter = $TicketObject->FilterPrepare(
+                        FilterArray   => [
+                            $Filters{ $Filter }->{Search},
+                            \%ColumnFilter,
+                            \%DFSearchParameters
+                        ]
+                    );
+
                     # search all tickets
                     my @OriginalViewableTicketIDsThisDF = $TicketObject->TicketSearch(
-                        %Sort,
+                        %{ $PreparedFilter },
                         Result          => 'ARRAY',
                         Limit           => $Limit,
                         UserID          => $Self->{UserID},
                         ConditionInline => $AgentTicketSearchConfig->{ExtendedSearchCondition},
                         ArchiveFlags    => $Filters{ $Filter }->{Search}->{ArchiveFlags},
-                        %DFSearchParameters,
                     );
 
                     if (@OriginalViewableTicketIDsThisDF) {
@@ -887,9 +924,15 @@ sub Run {
             },
         );
 
+        my $PreparedFilter = $TicketObject->FilterPrepare(
+            FilterArray   => [
+                $Filters{ $Filter }->{Search},
+                \%ColumnFilter
+            ]
+        );
+
         @OriginalViewableTickets = $TicketObject->TicketSearch(
-            %{ $Filters{ $Filter }->{Search} },
-            %ColumnFilter,
+            %{ $PreparedFilter },
             Limit  => $Limit,
             Result => 'ARRAY',
         );
@@ -897,8 +940,7 @@ sub Run {
         my $Start = $ParamObject->GetParam( Param => 'StartHit' ) || 1;
 
         @ViewableTickets = $TicketObject->TicketSearch(
-            %{ $Filters{ $Filter }->{Search} },
-            %ColumnFilter,
+            %{ $PreparedFilter },
             Limit  => $Start + 50,
             Result => 'ARRAY',
         );
@@ -971,8 +1013,15 @@ sub Run {
             },
         );
 
+        my $PreparedFilter = $TicketObject->FilterPrepare(
+            FilterArray   => [
+                $Filters{ $Filter }->{SearchOR},
+                \%ColumnFilter
+            ]
+        );
+
         @OriginalViewableTickets = $TicketObject->TicketSearchOR(
-             %{ $Filters{ $Filter }->{SearchOR} },
+             %{ $PreparedFilter },
             Limit  => $Limit,
             Result => 'ARRAY',
         );
@@ -980,7 +1029,7 @@ sub Run {
         my $Start = $ParamObject->GetParam( Param => 'StartHit' ) || 1;
 
         @ViewableTickets = $TicketObject->TicketSearchOR(
-            %{ $Filters{ $Filter }->{SearchOR} },
+            %{ $PreparedFilter },
             Limit  => $Start + 50,
             Result => 'ARRAY',
         );
@@ -1034,9 +1083,16 @@ sub Run {
         if (@ViewableQueueIDs) {
 
             if ( $Filters{ $FilterColumn }->{SearchOR} ) {
+
+                my $PreparedFilter = $TicketObject->FilterPrepare(
+                    FilterArray   => [
+                        $Filters{ $FilterColumn }->{SearchOR},
+                        \%ColumnFilter
+                    ]
+                );
+
                 $Count = $TicketObject->TicketSearchOR(
-                    %{ $Filters{$FilterColumn}->{SearchOR} },
-                    %ColumnFilter,
+                    %{ $PreparedFilter },
                     Result => 'COUNT',
                 );
             }
@@ -1053,9 +1109,15 @@ sub Run {
                             $Filters{ $FilterColumn }->{Search}->{Fulltext};
                     }
 
+                    my $PreparedFilter = $TicketObject->FilterPrepare(
+                        FilterArray   => [
+                            $Filters{ $FilterColumn }->{Search},
+                            \%ColumnFilter
+                        ]
+                    );
+
                     my @CountTickets = $TicketObject->TicketSearch(
-                        %{ $Filters{ $FilterColumn }->{Search} },
-                        %ColumnFilter,
+                        %{ $PreparedFilter },
                         Result => 'ARRAY',
                     );
                     my @CountTicketIDsDF = ();
@@ -1072,27 +1134,47 @@ sub Run {
                     $FulltextSearchParam =~ s/$TicketHook//g;
                     $Filters{ $FilterColumn }->{Search}->{TicketNumber} = '*' . $FulltextSearchParam . '*';
 
+                    $PreparedFilter = $TicketObject->FilterPrepare(
+                        FilterArray   => [
+                            $Filters{ $FilterColumn }->{Search},
+                            \%ColumnFilter
+                        ]
+                    );
+
                     my @CountTicketIDsTN = $TicketObject->TicketSearch(
-                        %{ $Filters{ $FilterColumn }->{Search} },
-                        %ColumnFilter,
+                        %{ $PreparedFilter },
                         Result => 'ARRAY',
                     );
 
                     # search tickets with Title
                     delete $Filters{ $FilterColumn }->{Search}->{TicketNumber};
                     $Filters{ $FilterColumn }->{Search}->{Title} = $Filters{ $FilterColumn }->{Search}->{Fulltext};
+
+                    $PreparedFilter = $TicketObject->FilterPrepare(
+                        FilterArray   => [
+                            $Filters{ $FilterColumn }->{Search},
+                            \%ColumnFilter
+                        ]
+                    );
+
                     my @CountTicketIDsTitle = $TicketObject->TicketSearch(
-                        %{ $Filters{ $FilterColumn }->{Search} },
-                        %ColumnFilter,
+                        %{ $PreparedFilter },
                         Result => 'ARRAY',
                     );
 
                     # search tickets with remarks (TicketNotes)
                     delete $Filters{ $FilterColumn }->{Search}->{Title};
                     $Filters{ $FilterColumn }->{Search}->{TicketNotes} = $Filters{ $FilterColumn }->{Search}->{Fulltext};
+
+                    $PreparedFilter = $TicketObject->FilterPrepare(
+                        FilterArray   => [
+                            $Filters{ $FilterColumn }->{Search},
+                            \%ColumnFilter
+                        ]
+                    );
+
                     my @CountTicketIDsTicketNotes = $TicketObject->TicketSearch(
-                        %{ $Filters{ $FilterColumn }->{Search} },
-                        %ColumnFilter,
+                        %{ $PreparedFilter },
                         Result => 'ARRAY',
                     );
                     delete $Filters{ $FilterColumn }->{Search}->{TicketNotes};
@@ -1139,14 +1221,21 @@ sub Run {
                                 }
                             }
 
+                            $PreparedFilter = $TicketObject->FilterPrepare(
+                                FilterArray   => [
+                                    $Filters{ $FilterColumn }->{Search},
+                                    \%ColumnFilter,
+                                    \%DFSearchParameters
+                                ]
+                            );
+
                             # search tickets
                             my @CountTicketIDsThisDF = $TicketObject->TicketSearch(
-                                %Sort,
                                 Result          => 'ARRAY',
                                 UserID          => $Self->{UserID},
                                 ConditionInline => $AgentTicketSearchConfig->{ExtendedSearchCondition},
                                 ArchiveFlags    => $Filters{ $FilterColumn }->{Search}->{ArchiveFlags},
-                                %DFSearchParameters,
+                                %{ $PreparedFilter },
                             );
 
                             if (@CountTicketIDsThisDF) {
@@ -1187,9 +1276,16 @@ sub Run {
                     $Count = scalar( @CountTickets ) || 0;
                 }
                 else {
+
+                    my $PreparedFilter = $TicketObject->FilterPrepare(
+                        FilterArray   => [
+                            $Filters{ $FilterColumn }->{Search},
+                            \%ColumnFilter
+                        ]
+                    );
+
                     $Count = $TicketObject->TicketSearch(
-                        %{ $Filters{$FilterColumn}->{Search} },
-                        %ColumnFilter,
+                        %{ $PreparedFilter },
                         Result => 'COUNT',
                     );
                 }

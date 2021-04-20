@@ -24,6 +24,8 @@ sub new {
     my $Self = {%Param};
     bless( $Self, $Type );
 
+    $Self->{Config} = $Kernel::OM->Get('Kernel::Config')->{'Admin::Frontend::AdminUser'};
+
     return $Self;
 }
 
@@ -39,7 +41,8 @@ sub Run {
     my $MainObject      = $Kernel::OM->Get('Kernel::System::Main');
     my $CheckItemObject = $Kernel::OM->Get('Kernel::System::CheckItem');
 
-    my $Search = $ParamObject->GetParam( Param => 'Search' ) || '';
+    my $Search         = $ParamObject->GetParam( Param => 'Search' ) || '';
+    my $ValidityFilter = $ParamObject->GetParam( Param => 'ValidityFilter' ) // $Self->{Config}->{ValidityFilter};
 
     # ------------------------------------------------------------ #
     #  switch to user
@@ -142,8 +145,9 @@ sub Run {
         my $Output = $LayoutObject->Header();
         $Output .= $LayoutObject->NavigationBar();
         $Self->_Edit(
-            Action => 'Change',
-            Search => $Search,
+            Action         => 'Change',
+            Search         => $Search,
+            ValidityFilter => $ValidityFilter,
             %UserData,
         );
         $Output .= $LayoutObject->Output(
@@ -172,8 +176,9 @@ sub Run {
         my $Output = $LayoutObject->Header();
         $Output .= $LayoutObject->NavigationBar();
         $Self->_Edit(
-            Action => 'Clone',
-            Search => $Search,
+            Action         => 'Clone',
+            Search         => $Search,
+            ValidityFilter => $ValidityFilter,
             %UserData,
         );
         $Output .= $LayoutObject->Output(
@@ -288,7 +293,10 @@ sub Run {
                 }
 
                 if ( !$Note ) {
-                    $Self->_Overview( Search => $Search );
+                    $Self->_Overview(
+                        Search         => $Search,
+                        ValidityFilter => $ValidityFilter
+                    );
                     my $Output = $LayoutObject->Header();
                     $Output .= $LayoutObject->NavigationBar();
                     $Output .= $LayoutObject->Notify( Info => Translatable('Agent updated!') );
@@ -311,9 +319,10 @@ sub Run {
         $Output .= $Note;
         $Output .= $LayoutObject->NavigationBar();
         $Self->_Edit(
-            Action    => 'Change',
-            Search    => $Search,
-            ErrorType => $Errors{ErrorType} || '',
+            Action         => 'Change',
+            Search         => $Search,
+            ValidityFilter => $ValidityFilter,
+            ErrorType      => $Errors{ErrorType} || '',
             %GetParam,
             %Errors,
         );
@@ -337,8 +346,9 @@ sub Run {
         my $Output = $LayoutObject->Header();
         $Output .= $LayoutObject->NavigationBar();
         $Self->_Edit(
-            Action => 'Add',
-            Search => $Search,
+            Action         => 'Add',
+            Search         => $Search,
+            ValidityFilter => $ValidityFilter,
             %GetParam,
         );
         $Output .= $LayoutObject->Output(
@@ -477,17 +487,16 @@ sub Run {
             }
         }
         my $Output = $LayoutObject->Header();
-        $Output .= $Note
-            ? $LayoutObject->Notify(
+        $Output .= $Note ? $LayoutObject->Notify(
             Priority => 'Error',
             Info     => $Note,
-            )
-            : '';
+        ) : '';
         $Output .= $LayoutObject->NavigationBar();
         $Self->_Edit(
-            Action    => 'Add',
-            Search    => $Search,
-            ErrorType => $Errors{ErrorType} || '',
+            Action         => 'Add',
+            Search         => $Search,
+            ValidityFilter => $ValidityFilter,
+            ErrorType      => $Errors{ErrorType} || '',
             %GetParam,
             %Errors,
         );
@@ -503,7 +512,10 @@ sub Run {
     # overview
     # ------------------------------------------------------------ #
     else {
-        $Self->_Overview( Search => $Search );
+        $Self->_Overview(
+            Search         => $Search,
+            ValidityFilter => $ValidityFilter
+        );
         my $Output = $LayoutObject->Header();
         $Output .= $LayoutObject->NavigationBar();
         $Output .= $LayoutObject->Output(
@@ -518,8 +530,10 @@ sub Run {
 sub _Edit {
     my ( $Self, %Param ) = @_;
 
-    # get layout object
+    # get needed object
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $ValidObject  = $Kernel::OM->Get('Kernel::System::Valid');
 
     if ( $Param{Action} eq 'Clone' ) {
         $Param{UserLogin}    = '';
@@ -543,7 +557,7 @@ sub _Edit {
     }
 
     # get valid list
-    my %ValidList        = $Kernel::OM->Get('Kernel::System::Valid')->ValidList();
+    my %ValidList        = $ValidObject->ValidList();
     my %ValidListReverse = reverse %ValidList;
 
     $Param{ValidOption} = $LayoutObject->BuildSelection(
@@ -571,7 +585,10 @@ sub _Edit {
     }
 
     # add the correct server error message
-    if ( $Param{UserEmail} && $Param{ErrorType} ) {
+    if (
+        $Param{UserEmail}
+        && $Param{ErrorType}
+    ) {
 
         # display server error message according with the occurred email error type
         $LayoutObject->Block(
@@ -587,15 +604,15 @@ sub _Edit {
     }
 
     # show appropriate messages for ServerError
-    if ( defined $Param{UserLoginExists} && $Param{UserLoginExists} == 1 ) {
+    if (
+        defined $Param{UserLoginExists}
+        && $Param{UserLoginExists} == 1
+    ) {
         $LayoutObject->Block( Name => 'ExistUserLoginServerError' );
     }
     else {
         $LayoutObject->Block( Name => 'UserLoginServerError' );
     }
-
-    # get config object
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
     my @Groups = @{ $ConfigObject->Get('PreferencesView') };
     for my $Column (@Groups) {
@@ -695,7 +712,10 @@ sub _Overview {
     my ( $Self, %Param ) = @_;
 
     # get layout object
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $ValidObject  = $Kernel::OM->Get('Kernel::System::Valid');
+    my $UserObject   = $Kernel::OM->Get('Kernel::System::User');
 
     if ( $Param{Action} && $Param{Action} eq 'Clone' ) {
         $Param{UserLogin}    = '';
@@ -703,6 +723,19 @@ sub _Overview {
         $Param{Action}       = 'Add';
         $Param{ID}           = '';
     }
+
+    # get valid list
+    my %ValidList = $ValidObject->ValidList();
+
+    $Param{ValidOption} = $LayoutObject->BuildSelection(
+        Data       => {
+            %ValidList,
+            0 => 'all'
+        },
+        Name       => 'ValidityFilter',
+        SelectedID => $Param{ValidityFilter},
+        Class      => 'Modernize Fullsize',
+    );
 
     # when there is no data to show, a message is displayed on the table with this colspan
     my $ColSpan = 7;
@@ -718,9 +751,12 @@ sub _Overview {
         Data => \%Param,
     );
     $LayoutObject->Block( Name => 'ActionAdd' );
-
-    # get user object
-    my $UserObject = $Kernel::OM->Get('Kernel::System::User');
+    $LayoutObject->Block(
+        Name => 'ActionFilter',
+        Data => {
+            %Param
+        }
+    );
 
     # ShownUsers limitation in AdminUser
     my $Limit = 400;
@@ -728,7 +764,7 @@ sub _Overview {
     my %List = $UserObject->UserSearch(
         Search => $Param{Search} . '*',
         Limit  => $Limit,
-        Valid  => 0,
+        Valid  => $Param{ValidityFilter},
     );
     my %ListAll = $UserObject->UserSearch(
         Search => $Param{Search} . '*',
@@ -765,18 +801,12 @@ sub _Overview {
         Data => \%Param,
     );
 
-    # get config object
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-
     if ( $ConfigObject->Get('SwitchToUser') ) {
         $ColSpan = 8;
         $LayoutObject->Block(
             Name => 'OverviewResultSwitchToUser',
         );
     }
-
-    # get valid list
-    my %ValidList = $Kernel::OM->Get('Kernel::System::Valid')->ValidList();
 
     # if there are results to show
     if (%List) {
@@ -789,8 +819,9 @@ sub _Overview {
             $LayoutObject->Block(
                 Name => 'OverviewResultRow',
                 Data => {
-                    Valid  => $ValidList{ $UserData{ValidID} },
-                    Search => $Param{Search},
+                    Valid          => $ValidList{ $UserData{ValidID} },
+                    Search         => $Param{Search},
+                    ValidityFilter => $Param{ValidityFilter},
                     %UserData,
                 },
             );

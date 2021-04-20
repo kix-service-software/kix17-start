@@ -25,6 +25,8 @@ sub new {
     my $Self = {%Param};
     bless( $Self, $Type );
 
+    $Self->{Config} = $Kernel::OM->Get('Kernel::Config')->{'Admin::Frontend::AdminGroup'};
+
     return $Self;
 }
 
@@ -44,7 +46,7 @@ sub Run {
         my $ID = $ParamObject->GetParam( Param => 'ID' )
             || $ParamObject->GetParam( Param => 'GroupID' )
             || '';
-        my %Data = $GroupObject->GroupGet( ID => $ID );
+        my %Data   = $GroupObject->GroupGet( ID => $ID );
         my $Output = $LayoutObject->Header();
         $Output .= $LayoutObject->NavigationBar();
         $Self->_Edit(
@@ -127,7 +129,6 @@ sub Run {
         );
         $Output .= $LayoutObject->Footer();
         return $Output;
-
     }
 
     # ------------------------------------------------------------ #
@@ -212,12 +213,10 @@ sub Run {
         # something went wrong
         my $Output = $LayoutObject->Header();
         $Output .= $LayoutObject->NavigationBar();
-        $Output .= $Note
-            ? $LayoutObject->Notify(
+        $Output .= $Note ? $LayoutObject->Notify(
             Priority => 'Error',
             Info     => $Note,
-            )
-            : '';
+        ) : '';
         $Self->_Edit(
             Action => 'Add',
             %GetParam,
@@ -254,6 +253,10 @@ sub _Edit {
 
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my $ValidObject  = $Kernel::OM->Get('Kernel::System::Valid');
+    my $ParamObject  = $Kernel::OM->Get('Kernel::System::Web::Request');
+
+    # get validiy filter
+    $Param{ValidityFilter} = $ParamObject->GetParam( Param => 'ValidityFilter' ) // $Self->{Config}->{ValidityFilter};
 
     $LayoutObject->Block(
         Name => 'Overview',
@@ -261,7 +264,12 @@ sub _Edit {
     );
 
     $LayoutObject->Block( Name => 'ActionList' );
-    $LayoutObject->Block( Name => 'ActionOverview' );
+    $LayoutObject->Block(
+        Name => 'ActionOverview',
+        Data => {
+            ValidityFilter => $Param{ValidityFilter}
+        }
+    );
 
     # get valid list
     my %ValidList        = $ValidObject->ValidList();
@@ -296,6 +304,21 @@ sub _Overview {
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my $GroupObject  = $Kernel::OM->Get('Kernel::System::Group');
     my $ValidObject  = $Kernel::OM->Get('Kernel::System::Valid');
+    my $ParamObject  = $Kernel::OM->Get('Kernel::System::Web::Request');
+
+    # get valid list
+    my %ValidList          = $ValidObject->ValidList();
+    $Param{ValidityFilter} = $ParamObject->GetParam( Param => 'ValidityFilter' ) // $Self->{Config}->{ValidityFilter};
+
+    $Param{ValidOption} = $LayoutObject->BuildSelection(
+        Data       => {
+            %ValidList,
+            0 => 'all'
+        },
+        Name       => 'ValidityFilter',
+        SelectedID => $Param{ValidityFilter},
+        Class      => 'Modernize Fullsize',
+    );
 
     $LayoutObject->Block(
         Name => 'Overview',
@@ -304,9 +327,15 @@ sub _Overview {
 
     $LayoutObject->Block( Name => 'ActionList' );
     $LayoutObject->Block( Name => 'ActionAdd' );
+    $LayoutObject->Block(
+        Name => 'ActionFilter',
+        Data => {
+            %Param
+        }
+    );
 
     my %List = $GroupObject->GroupList(
-        ValidID => 0,
+        Valid => $Param{ValidityFilter},
     );
 
     my $ListSize = keys %List;
@@ -317,8 +346,6 @@ sub _Overview {
         Data => \%Param,
     );
 
-    # get valid list
-    my %ValidList = $ValidObject->ValidList();
     for my $ListKey ( sort { $List{$a} cmp $List{$b} } keys %List ) {
 
         my %Data = $GroupObject->GroupGet(
@@ -327,7 +354,8 @@ sub _Overview {
         $LayoutObject->Block(
             Name => 'OverviewResultRow',
             Data => {
-                Valid => $ValidList{ $Data{ValidID} },
+                Valid          => $ValidList{ $Data{ValidID} },
+                ValidityFilter => $Param{ValidityFilter},
                 %Data,
             },
         );

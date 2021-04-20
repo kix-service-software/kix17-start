@@ -1436,6 +1436,11 @@ sub _TicketCacheClear {
         Key  => 'ArticleIndex::' . $Param{TicketID} . '::ALL'
     );
 
+    # TicketSearch
+    $CacheObject->CleanUp(
+        Type => 'TicketSearch',
+    );
+
     return 1;
 }
 

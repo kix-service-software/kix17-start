@@ -17,7 +17,6 @@
     /**
      *  @subsubsection Icon Definition
      */
-
     .SaveButtons {
         margin-top: 30px;
     }
@@ -25,7 +24,6 @@
     .FieldDetailsOverlay.Icon {
         float: right;
     }
-
     .AvailableIn {
         display: inline-block;
         font-size: 10px;
@@ -35,35 +33,30 @@
         min-width: 8px;
         padding: 4px 4px 0px 4px;
     }
-
     .AllocationList .AvailableIn {
         float: left;
         margin-right: 5px;
         margin-top: 1px;
     }
 
+
     /**
      * @subsubsection  Process Element Accordion
      */
-
     ul#ProcessElements * {
         font-size: 11px;
     }
-
     ul#ProcessElements i {
         font-size: 13px;
     }
-
     ul#ProcessElements li.AccordionElement h2 {
         margin-bottom: 0px;
     }
-
     ul#ProcessElements li.AccordionElement h2 a {
         padding: 5px 5px 5px 20px;
         font-size: 12px;
         position: relative;
     }
-
     ul#ProcessElements li.AccordionElement h2 a span {
         display: block;
         width: 12px;
@@ -74,125 +67,105 @@
         opacity: 0.3;
         filter: Alpha(opacity=30);
     }
-
     ul#ProcessElements li.AccordionElement h2 a span i {
         font-size: 15px;
         display: block;
         text-align: center;
     }
-
     ul#ProcessElements li.AccordionElement h2 a span i.fa-caret-down,
     ul#ProcessElements li.AccordionElement.Active h2 a span i.fa-caret-right {
         display: none;
     }
-
     ul#ProcessElements li.AccordionElement.Active h2 a span i.fa-caret-down {
         display: inline-block;
     }
-
     ul#ProcessElements li.AccordionElement.Active h2 a span {
         opacity: 1.0;
         filter: Alpha(opacity=100);
         background-position: bottom center;
         top: 5px;
     }
-
     ul#ProcessElements li.AccordionElement div.Content {
         padding: 5px;
         display: none;
     }
-
     ul#ProcessElements li.AccordionElement div.Content .ProcessElementFilter {
         width: 228px;
         margin-top: 1px;
         margin-bottom: -5px;
     }
-
     ul#ProcessElements li.AccordionElement.Active div.Content {
         display: block;
     }
-
     ul#ProcessElements li.AccordionElement:last-child h2 {
         border-bottom: none;
     }
-
     ul#ProcessElements li.AccordionElement div.Content ul {
         margin-top: 10px;
         margin-bottom: 10px;
         max-height: 150px;
         overflow-y: auto;
     }
-
     ul#ProcessElements li.AccordionElement div.Content ul li {
         padding: 2px 5px 2px 5px;
         position: relative;
         cursor: move;
     }
-
     ul#ProcessElements li.AccordionElement div.Content ul li > span {
         position: absolute;
         right: 5px;
         top: 2px;
     }
-
     ul#ProcessElements li.AccordionElement div.Content ul li > span a {
         line-height: 100%;
         vertical-align: middle;
         margin-left: 2px;
     }
-
     ul#ProcessElements li.AccordionElement div.Content .ProcessElementButton {
         width: 234px;
         display: block;
         margin: -5px auto 2px auto;
     }
-
     .EntityDrag {
         display: block;
         height: 20px;
         width: 200px;
     }
 
+
     /**
      * @subsubsection     Diagram Canvas
      */
-
     #Canvas {
         width: 95%;
         position: relative;
     }
-
     .CanvasActions {
         position: absolute;
         right: 10px;
         top: 2px;
         overflow: hidden;
     }
-
     .CanvasActions a {
         float: left;
         width: 20px;
         height: 20px;
         opacity: 0.4;
     }
-
     .CanvasActions a#ShowEntityIDs {
         width: auto;
         opacity: 1.0;
         margin: 4px 10px 0px 0px;
     }
-
     .CanvasActions a:hover {
         opacity: 1.0;
     }
-
     .CanvasActions a#ExtendCanvasHeight,
     .CanvasActions a#ExtendCanvasWidth {
         font-size: 15px;
         margin-top: 2px;
         margin-left: 5px;
     }
-
     #DiagramTooltip {
         border-radius: 5px;
         width: 200px;
@@ -200,7 +173,6 @@
         position: absolute;
         z-index: 999;
     }
-
     #DiagramTooltip h4 {
         padding: 7px 10px 5px 10px;
         margin-bottom: 5px;
@@ -208,7 +180,6 @@
         border-top-right-radius: 5px;
         border-radius: 5px 5px 0px 0px;
     }
-
     #DiagramTooltip ul {
         padding: 5px 7px 3px 7px;
         overflow: hidden;
@@ -223,12 +194,10 @@
         font-size: 11px;
         line-height: 110%;
     }
-
     #DiagramTooltip li .AvailableIn {
         float: left;
         margin: -2px 5px -2px -6px;
     }
-
     #DiagramTooltip li.NoDialogsAssigned {
         background: none;
         font-style: italic;
@@ -236,13 +205,11 @@
         line-height: 120%;
         margin-top: -3px;
     }
-
     .DiagramDeleteLink,
     .DiagramEditLink {
         position: absolute;
         display: none;
     }
-
     .DiagramDeleteLink a,
     .DiagramEditLink a {
         border-radius: 13px;
@@ -256,17 +223,16 @@
         width: 20px;
         text-align: center;
     }
-
     .TaskTypeIcon {
         position: absolute;
         top: 10px;
         left: 10px;
     }
 
+
     /**
      * @subsubsection     Diagram Canvas Elements
      */
-
     #Canvas #StartEvent {
         width: 31px;
         height: 31px;
@@ -274,7 +240,6 @@
         position: absolute;
         z-index: 100;
     }
-
     #Canvas .Activity {
         width: 110px;
         height: 80px;
@@ -284,7 +249,6 @@
         cursor: move;
         opacity: 0.9;
     }
-
     em.EntityID {
         position: absolute;
         border-radius: 2px;
@@ -300,7 +264,6 @@
         left: 50%;
         margin-left: -149px;
     }
-
     em.EntityID input {
         border: 0px;
         font-size: 10px;
@@ -310,7 +273,6 @@
         box-shadow: none;
         text-align: center;
     }
-
     em.EntityID:after {
         top: 100%;
         left: 50%;
@@ -322,15 +284,12 @@
         margin-left: -5px;
         border-width: 5px;
     }
-
     .TransitionLabel em.EntityID {
         z-index: 103;
     }
-
     #Canvas .Activity.Hovered {
         z-index: 104;
     }
-
     #Canvas .Activity span {
         display: block;
         text-align: center;
@@ -339,7 +298,6 @@
         overflow: hidden;
         text-overflow: ellipsis;
     }
-
     #Canvas .Activity .Icon,
     #Canvas .TransitionLabel .Icon {
         display: none;
@@ -347,7 +305,6 @@
         background-repeat: none;
         background-position: center;
     }
-
     #Canvas .Activity .Icon {
         width: 16px;
         height: 16px;
@@ -356,7 +313,6 @@
         margin-top: -8px;
         margin-left: -8px;
     }
-
     #Canvas .TransitionLabel .Icon {
         width: 100%;
         height: 100%;
@@ -368,27 +324,22 @@
         background-repeat: no-repeat;
         padding: 0;
     }
-
     #Canvas .Activity#Dummy {
         visibility: hidden;
     }
-
     #Canvas .Activity .DiagramDeleteLink {
         position: absolute;
         top: -10px;
         right: -10px;
     }
-
     #Canvas .Activity .DiagramEditLink {
         position: absolute;
         top: -10px;
         left: -10px;
     }
-
     #Canvas .EndpointHover {
         z-index: 150;
     }
-
     #Canvas .TransitionLabel {
         font-size: 11px;
         padding: 6px 11px;
@@ -403,15 +354,12 @@
         max-width: 150px;
         text-align: center;
     }
-
     #Canvas .TransitionLabel.Hovered {
         z-index: 104;
     }
-
     #Canvas .TransitionLabel:hover {
         z-index: 104;
     }
-
     #Canvas .TransitionLabel a {
         border-radius: 13px;
         display: block;
@@ -429,42 +377,35 @@
         cursor: pointer;
         display: none;
     }
-
     #Canvas .TransitionLabel a.Edit {
         right: auto;
         left: -13px;
     }
-
     #Canvas .TransitionLabel:hover a {
         display: block;
     }
-
     #Canvas .TransitionLabel span {
         display: block;
         overflow: hidden;
         text-overflow: ellipsis;
     }
 
+
     /**
      * @subsubsection     Transition Popup / Transition Action Popup
      */
-
     .Fields {
         margin-top: 15px;
     }
-
     #TransitionForm .WidgetSimple .WidgetSimple {
         margin-top: 10px;
     }
-
     #TransitionForm .WidgetSimple .WidgetSimple + .WidgetSimple {
         margin-top: -5px;
     }
-
     #TransitionForm .WidgetSimple .WidgetSimple .WidgetSimple {
         margin-bottom: 0px;
     }
-
     #TransitionForm #PresentConditionsContainer > label,
     #TransitionForm #PresentConditionsContainer p {
         width: auto;
@@ -472,45 +413,38 @@
         margin-right: 5px;
         margin-left: 10px;
     }
-
     #TransitionForm #ConditionAdd {
         margin-left: 10px;
         margin-top: -5px;
     }
-
     #TransitionForm .Condition > fieldset > label {
         width: auto;
         display: inline-block;
         margin: 0px 5px 0px 10px;
     }
-
     #TransitionForm fieldset + fieldset {
         margin-top: 7px;
     }
-
     #TransitionForm .FieldWidget label {
         margin: 0px 3px 0px 5px;
     }
-
     #TransitionForm #ConfigParams input {
         width: 40%;
     }
-
     #TransitionForm #ConfigParams input + label {
         margin-left: 5px;
     }
 
+
     /**
      * @subsubsection     Path popup
      */
-
     ul.Path {
         overflow: hidden;
         padding: 10px 0px;
         width: 620px;
         margin-left: 160px;
     }
-
     ul.Path li {
         width: 130px;
         line-height: 120%;
@@ -520,13 +454,11 @@
         padding: 30px 10px;
         min-height: 25px;
     }
-
     ul.Path li.Transition {
         width: 230px;
         margin-left: 0px;
         padding: 30px 0px;
     }
-
     ul.Path li.StartActivity, ul.Path li.EndActivity {
         background-color: #e5e5e5;
         border: 1px solid #444;
@@ -538,7 +470,6 @@
         overflow: hidden;
         text-overflow: ellipsis;
     }
-
     ul.Path li select {
         width: 180px;
         position: absolute;
@@ -547,7 +478,6 @@
         margin-left: -90px;
         z-index: 2;
     }
-
     ul.Path li.Transition span {
         display: block;
         position: absolute;
@@ -558,12 +488,10 @@
         left: -20px;
         top: 38px;
     }
-
     #EditPath {
         position: relative;
         height: 30px;
     }
-
     #EditPath a {
         width: 180px;
         height: 30px;
@@ -575,25 +503,23 @@
         top: -20px;
     }
 
+
     /**
      * @subsubsection     Popup Result
      */
-
     div.AJAXWaiting {
         margin-top: 300px;
     }
 
+
     /**
      * @subsubsection     AllocationList
      */
-
     #AvailableFields .ShowOnAssignedList {
         display: none;
     }
-
     #AssignedFields .ShowOnAssignedList {
         display: inline;
     }
-
 }
 

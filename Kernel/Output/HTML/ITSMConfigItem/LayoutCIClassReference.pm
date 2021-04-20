@@ -189,18 +189,6 @@ sub InputCreate {
         Class => 'ITSM::ConfigItem::Class',
     );
 
-    # check for access rights on the classes
-    for my $ClassID ( sort keys %{$ClassList} ) {
-        my $HasAccess = $Self->{ConfigItemObject}->Permission(
-            Type    => 'ro',
-            Scope   => 'Class',
-            ClassID => $ClassID,
-            UserID  => $Self->{UserID} || 1,
-        );
-
-        delete $ClassList->{$ClassID} if !$HasAccess;
-    }
-
     my @ClassIDArray = ();
     if ($Param{Item}->{Input}->{ReferencedCIClassID}) {
         if ($Param{Item}->{Input}->{ReferencedCIClassID} eq 'All') {
@@ -409,8 +397,7 @@ sub InputCreate {
     }
 
     # AutoComplete CIClass
-    my $AutoCompleteConfig =
-        $Self->{ConfigObject}->Get('ITSMCIAttributeCollection::Frontend::CommonSearchAutoComplete');
+    my $AutoCompleteConfig = $Self->{ConfigObject}->Get('ITSMCIAttributeCollection::Frontend::CommonSearchAutoComplete');
 
     #create string...
     my $String = '';
@@ -528,18 +515,6 @@ sub SearchFormDataGet {
             my $ClassList = $Self->{GeneralCatalogObject}->ItemList(
                 Class => 'ITSM::ConfigItem::Class',
             );
-
-            # check for access rights on the classes
-            for my $ClassID ( sort keys %{$ClassList} ) {
-                my $HasAccess = $Self->{ConfigItemObject}->Permission(
-                    Type    => 'ro',
-                    Scope   => 'Class',
-                    ClassID => $ClassID,
-                    UserID  => $Self->{UserID} || 1,
-                );
-
-                delete $ClassList->{$ClassID} if !$HasAccess;
-            }
 
             my @ClassIDArray = ();
             if ($Param{Item}->{Input}->{ReferencedCIClassID}) {

@@ -109,7 +109,7 @@ sub Run {
     # get dynamic fields
     my $DynamicFieldList = $DynamicFieldObject->DynamicFieldListGet(
         Valid      => 1,
-        ObjectType => ['Ticket'],
+        ObjectType => ['Ticket', 'Article'],
     );
 
     # create a dynamic field config lookup table
@@ -457,6 +457,8 @@ sub _NotificationFilter {
 
                 next VALUE if !$DynamicFieldConfig;
 
+                next KEY if ( $DynamicFieldConfig->{ObjectType} ne 'Ticket' );
+
                 my $IsNotificationEventCondition = $DynamicFieldBackendObject->HasBehavior(
                     DynamicFieldConfig => $DynamicFieldConfig,
                     Behavior           => 'IsNotificationEventCondition',
@@ -508,7 +510,7 @@ sub _NotificationFilter {
         my %Article = $Kernel::OM->Get('Kernel::System::Ticket')->ArticleGet(
             ArticleID     => $Param{Data}->{ArticleID},
             UserID        => $Param{UserID},
-            DynamicFields => 0,
+            DynamicFields => 1,
         );
 
         # check article type
@@ -563,6 +565,64 @@ sub _NotificationFilter {
                     $Match = 1;
                     last VALUE;
                 }
+            }
+
+            return if !$Match;
+        }
+
+        KEY:
+        for my $Key ( sort keys %{ $Notification{Data} } ) {
+            next KEY if ( $Key !~ m{\A Search_DynamicField_}xms );
+
+            # remove search prefix
+            my $DynamicFieldName = $Key;
+
+            $DynamicFieldName =~ s{Search_DynamicField_}{};
+
+            # get the dynamic field config for this field
+            my $DynamicFieldConfig = $Param{DynamicFieldConfigLookup}->{$DynamicFieldName};
+
+            next KEY if !$DynamicFieldConfig;
+
+            next KEY if ( $DynamicFieldConfig->{ObjectType} ne 'Article' );
+
+            # init match param
+            my $Match = 0;
+
+            VALUE:
+            for my $Value ( @{ $Notification{Data}->{$Key} } ) {
+
+                next VALUE if !$Value;
+
+                my $IsNotificationEventCondition = $DynamicFieldBackendObject->HasBehavior(
+                    DynamicFieldConfig => $DynamicFieldConfig,
+                    Behavior           => 'IsNotificationEventCondition',
+                );
+
+                next VALUE if !$IsNotificationEventCondition;
+
+                # Get match value from the dynamic field backend, if applicable (bug#12257).
+                my $MatchValue;
+                my $SearchFieldParameter = $DynamicFieldBackendObject->SearchFieldParameterBuild(
+                    DynamicFieldConfig => $DynamicFieldConfig,
+                    Profile            => {
+                        $Key => $Value,
+                    },
+                );
+                if ( defined $SearchFieldParameter->{Parameter}->{Equals} ) {
+                    $MatchValue = $SearchFieldParameter->{Parameter}->{Equals};
+                }
+                else {
+                    $MatchValue = $Value;
+                }
+
+                $Match = $DynamicFieldBackendObject->ObjectMatch(
+                    DynamicFieldConfig => $DynamicFieldConfig,
+                    Value              => $MatchValue,
+                    ObjectAttributes   => \%Article,
+                );
+
+                last VALUE if $Match;
             }
 
             return if !$Match;

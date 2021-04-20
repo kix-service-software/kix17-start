@@ -45,9 +45,6 @@ sub new {
     my $Self = {};
     bless( $Self, $Type );
 
-    $Self->{LogObject}  = $Kernel::OM->Get('Kernel::System::Log');
-    $Self->{UserObject} = $Kernel::OM->Get('Kernel::System::User');
-
     return $Self;
 }
 
@@ -67,7 +64,7 @@ sub ValueLookup {
     return '' if !$Param{Value};
 
     # get User data
-    my %UserSearchList = $Self->{UserObject}->GetUserData(
+    my %UserSearchList = $Kernel::OM->Get('Kernel::System::User')->GetUserData(
         UserID => $Param{Value},
     );
     my $UserName = '';
@@ -100,7 +97,7 @@ sub StatsAttributeCreate {
     # check needed stuff
     for my $Argument (qw(Key Name Item)) {
         if ( !$Param{$Argument} ) {
-            $Self->{LogObject}->Log(
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => "Need $Argument!"
             );
@@ -138,11 +135,11 @@ sub ExportSearchValuePrepare {
 
     return if !defined $Param{Value};
 
-    my %UserData = $Self->{UserObject}->GetUserData(
+    my %UserData = $Kernel::OM->Get('Kernel::System::User')->GetUserData(
         UserID => $Param{Value},
     );
 
-    $Self->{LogObject}->Log(
+    $Kernel::OM->Get('Kernel::System::Log')->Log(
         Priority => 'error',
         Message  => "No user found for ID <$Param{Value}>!"
     );
@@ -165,11 +162,11 @@ sub ExportValuePrepare {
 
     return if !defined $Param{Value};
 
-    my %UserData = $Self->{UserObject}->GetUserData(
+    my %UserData = $Kernel::OM->Get('Kernel::System::User')->GetUserData(
         UserID => $Param{Value},
     );
 
-    $Self->{LogObject}->Log(
+    $Kernel::OM->Get('Kernel::System::Log')->Log(
         Priority => 'error',
         Message  => "No user found for ID <$Param{Value}>!"
     );
@@ -192,12 +189,12 @@ sub ImportSearchValuePrepare {
 
     return if !defined $Param{Value};
 
-    my %UserData = $Self->{UserObject}->GetUserData(
+    my %UserData = $Kernel::OM->Get('Kernel::System::User')->GetUserData(
         User => $Param{Value},
     );
 
     if ( !$UserData{UserID} ) {
-        $Self->{LogObject}->Log(
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => "No user found for login <$Param{Value}>!"
         );
@@ -222,12 +219,12 @@ sub ImportValuePrepare {
 
     return if !defined $Param{Value};
 
-    my %UserData = $Self->{UserObject}->GetUserData(
+    my %UserData = $Kernel::OM->Get('Kernel::System::User')->GetUserData(
         User => $Param{Value},
     );
 
     if ( !$UserData{UserID} ) {
-        $Self->{LogObject}->Log(
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => "No user found for login <$Param{Value}>!"
         );

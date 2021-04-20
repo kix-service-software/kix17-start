@@ -605,7 +605,7 @@ sub Run {
     # do article db insert
     my $ArticleID = $TicketObject->ArticleCreate(
         TicketID         => $TicketID,
-        ArticleType      => $GetParam{'X-KIX-ArticleType'} || $GetParam{'X-OTRS-ArticleType'} || $ArticleType,
+        ArticleType      => $GetParam{'X-KIX-ArticleType'} || $GetParam{'X-OTRS-ArticleType'} || $ArticleType || 'email-external',
         SenderType       => $GetParam{'X-KIX-SenderType'}  || $GetParam{'X-OTRS-SenderType'},
         From             => $GetParam{'X-KIX-From'}        || $GetParam{From},
         ReplyTo          => $GetParam{ReplyTo},

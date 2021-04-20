@@ -38,7 +38,7 @@ sub new {
 sub TicketTemplateList {
     my ( $Self, %Param ) = @_;
     my %Result;
-    
+
     # get the list of processes that customer can start
     my $ProcessListRef = $Self->{ProcessObject}->ProcessList(
         ProcessState => ['Active'],
@@ -47,7 +47,7 @@ sub TicketTemplateList {
     );
     return %Result if !IsHashRefWithData($ProcessListRef);
 
-    # filter ProcessList through ACLs 
+    # filter ProcessList through ACLs
     my %ProcessListACL = map { $_ => $_ } sort keys %{$ProcessListRef};
     my $ACL = $Self->{TicketObject}->TicketAcl(
         ReturnType     => 'Process',
@@ -74,16 +74,17 @@ sub TicketTemplateList {
             delete $Result{$ProcessID};
             next;
         }
-        
+
         my %Data = (
             PortalGroupID   => $Process->{CustomerPortalGroupID},
             Name            => $Result{$ProcessID},
             Link            => "Action=CustomerTicketProcess;Subaction=DisplayActivityDialog;ProcessEntityID=$ProcessID;IsMainWindow=1",
             LinkClass       => "",
         );
+
         $Result{$ProcessID} = \%Data;
     }
-    
+
     return %Result;
 }
 

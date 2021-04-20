@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application xmlns="http://wadl.dev.java.net/2009/02">
+    <doc title="GenericTicketConnectorREST" xml:lang="en">Ticket Connector REST Sample</doc>
+    <resources base="http://localhost/kix/nph-genericinterface.pl/Webservice/GenericTicketConnectorREST">
+        <resource id="Session" path="/Session">
+            <doc title="Session" xml:lang="en">Retrieve a new session id value</doc>
+            <method id="POST_SessionCreate" name="POST">
+                <doc title="POST_SessionCreate" xml:lang="en"/>
+                <request>
+                    <doc title="Session" xml:lang="en">UserLogin or CustomerUserLogin is required. Password is required</doc>
+                    <representation mediaType="application/json; charset=UTF-8">
+                        <param default="" name="UserLogin" required="false" style="query" type="xs:string" xmlns:xs="http://www.w3.org/2001/XMLSchema"/>
+                        <param default="" name="CustomerUserLogin" required="false" style="query" type="xs:string" xmlns:xs="http://www.w3.org/2001/XMLSchema"/>
+                        <param default="" name="Password" required="true" style="query" type="xs:string" xmlns:xs="http://www.w3.org/2001/XMLSchema"/>
+                    </representation>
+                </request>
+
+                <response status="500">
+                    <representation mediaType="text/plain; charset=UTF-8"/>
+                </response>
+                <response status="200">
+                    <representation mediaType="application/json; charset=UTF-8"/>
+                </response>
+            </method>
+        </resource>
+        <resource id="Ticket" path="/Ticket">
+            <doc title="Ticket" xml:lang="en">UserLogin or CustomerUserLogin or SessionID is required. If UserLogin or customerUserLogin is sent then Password is required</doc>
+            <param default="" name="UserLogin" required="false" style="query" type="xs:string" xmlns:xs="http://www.w3.org/2001/XMLSchema"/>
+            <param default="" name="CustomerUserLogin" required="false" style="query" type="xs:string" xmlns:xs="http://www.w3.org/2001/XMLSchema"/>
+            <param default="" name="Password" required="false" style="query" type="xs:string" xmlns:xs="http://www.w3.org/2001/XMLSchema"/>
+            <param default="" name="SessionID" required="false" style="query" type="xs:string" xmlns:xs="http://www.w3.org/2001/XMLSchema"/>
+
+            <method id="POST_TicketCreate" name="POST">
+                <doc title="POST_TicketCreate" xml:lang="en">Perform TicketCreate Operation. This will return the created ticket number. Ticket, Article, DynamicField and Attachment parameters must be specified in request body in JSON format</doc>
+                <request>
+                    <representation mediaType="application/json; charset=UTF-8"/>
+                </request>
+
+                <response status="500">
+                    <representation mediaType="text/plain; charset=UTF-8"/>
+                </response>
+                <response status="200">
+                    <representation mediaType="application/json; charset=UTF-8"/>
+                </response>
+            </method>
+
+
+            <resource id="TicketSearch" path="/Search">
+                <method id="POST_TicketSearch" name="POST">
+                    <doc title="GET_TicketSearch" xml:lang="en">Perform TicketSearch Operation. This will return a Ticket ID list</doc>
+                    <request>
+                        <representation mediaType="application/json; charset=UTF-8"/>
+                    </request>
+    
+                    <response status="500">
+                        <representation mediaType="text/plain; charset=UTF-8"/>
+                    </response>
+                    <response status="200">
+                        <representation mediaType="application/json; charset=UTF-8"/>
+                    </response>
+                </method>
+            </resource>
+
+            <resource id="TicketID" path="/{TicketID}">
+                <method id="GET_TicketGet" name="GET">
+                    <doc title="GET_TicketGet" xml:lang="en">Perform TicketGet Operation. This function is able to return one or more ticket entries in one call</doc>
+                    <request>
+                        <param default="" name="TicketID" required="true" style="template" type="xs:string" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+                            <doc title="TicketID" xml:lang="en">Required, can be comma separated IDs</doc>
+                        </param>
+                        <param default="0" name="DynamicFields" required="false" style="query">
+                            <doc title="DynamicFields" xml:lang="en">Optional, 0 as default. Indicate if Dynamic Fields should be included or not on the ticket content</doc>
+
+                            <option value="0"/>
+                            <option value="1"/>
+                        </param>
+
+                        <param default="0" name="Extended" required="false" style="query">
+                            <doc title="Extended" xml:lang="en">Optional, 0 as default. Indicate if extended data should be included or not on the ticket content</doc>
+
+                            <option value="0"/>
+                            <option value="1"/>
+                        </param>
+
+                        <param default="0" name="AllArticles" required="false" style="query">
+                            <doc title="AllArticles" xml:lang="en">Optional, 0 as default. Set as 1 will include articles for tickets</doc>
+
+                            <option value="0"/>
+                            <option value="1"/>
+                        </param>
+
+                        <param default="ASC" name="ArticleOrder" required="false" style="query">
+                            <doc title="ArticleOrder" xml:lang="en">Optional, DESC,ASC - default is ASC. Indicate order of articles</doc>
+
+                            <option value="ASC"/>
+                            <option value="DESC"/>
+                        </param>
+
+                        <param default="0" name="ArticleLimit" required="false" style="query" type="xs:integer" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+                            <doc title="ArticleLimit" xml:lang="en">Optional, 0 as default. Indicate if extended data should be included or not on the ticket content</doc>
+                        </param>
+
+                        <param default="1" name="Attachments" required="false" style="query">
+                            <doc title="Attachments" xml:lang="en">Optional, 1 as default. If it's set with the value 1, attachments for articles will be included on ticket data</doc>
+
+                            <option value="0"/>
+                            <option value="1"/>
+                        </param>
+
+                        <param default="0" name="HTMLBodyAsAttachment" required="false" style="query">
+                            <doc title="HTMLBodyAsAttachment" xml:lang="en">Optional, 0 as default. If enabled the HTML body version of each article is added to the attachments list</doc>
+
+                            <option value="0"/>
+                            <option value="1"/>
+                        </param>
+                    </request>
+
+                    <response status="500">
+                        <representation mediaType="text/plain; charset=UTF-8"/>
+                    </response>
+                    <response status="200">
+                        <representation mediaType="application/json; charset=UTF-8"/>
+                    </response>
+                </method>
+
+                <method id="PUT_TicketUpdate" name="PUT">
+                    <doc title="PUT_TicketUpdate" xml:lang="en">Perform TicketUpdate Operation. This will return the updated TicketID and if applicable the created ArticleID. Ticket, Article, DynamicField and Attachment parameters must be specified in request body in JSON format</doc>
+                    <request>
+                        <param default="" name="TicketID" required="true" style="template" type="xs:string" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+                            <doc title="TicketID" xml:lang="en">Required</doc>
+                        </param>
+
+                        <representation mediaType="application/json; charset=UTF-8"/>
+                    </request>
+
+                    <response status="500">
+                        <representation mediaType="text/plain; charset=UTF-8"/>
+                    </response>
+                    <response status="200">
+                        <representation mediaType="application/json; charset=UTF-8"/>
+                    </response>
+                </method>
+            </resource>
+        </resource>
+    </resources>
+</application>

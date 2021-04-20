@@ -19,20 +19,48 @@
         min-width: 80px;
     }
 
+
+    /**
+    *   @subsection Process
+    */
+    .PopupType_TicketAction {
+        border-width: 1px;
+        border-style: solid;
+        padding: 3px 8px;
+        margin-right: 5px;
+        display: inline-block;
+    }
+
+
     /**
     * @subsection TextModules
     */
     #TextModulesSelectionContainer {
         height: 250px;
-        background-color: #FFFFFF;
-        border: 1px solid #ccc;
+        border-width: 1px;
+        border-style: solid;
         overflow: auto;
         padding: 0px 10px 10px 10px;
     }
+    #TextModulesSelectionContainer:not(.jstree) {
+        padding: 0;
+    }
+    #TextModulesSelectionContainer > .TextModule {
+        line-height: 17px;
+        height: 15px;
+        padding: 2px 10px;
+        cursor: pointer;
+    }
 
-    #ServiceIncidentStateContainer .Flag, .SidebarColumn fieldset.TableLike div.Value .Flag {
+
+    /**
+    *   @subsection Flags for sidebar
+    */
+    #ServiceIncidentStateContainer .Flag,
+    .SidebarColumn fieldset.TableLike div.Value .Flag {
         margin-top: 2px;
     }
+
 
     /**
     * @subsection CustomerDetails
@@ -41,6 +69,11 @@
     .ResponsibleDetailsMagnifier {
         cursor: pointer;
     }
+
+
+    /**
+    * @subsection CustomerDetails
+    */
     .CustomerDetailsMagnifier {
         cursor: pointer;
         position: absolute;
@@ -61,12 +94,14 @@
         display: none;
     }
 
-       /**
+
+    /**
     *   @subsection CISearch
     */
     #CIClassSelection.Content {
         border-bottom: none;
     }
+
 
     /***
     *   @subsection PadNotes
@@ -74,6 +109,8 @@
     #ScratchPadNotes {
         width: 96%;
     }
+
+
     /***
     *   @subsection FAQ
     */
@@ -81,6 +118,7 @@
         display: block;
         font-size: 10px;
     }
+
 
     /**
     *   @subsection DisableSibebars

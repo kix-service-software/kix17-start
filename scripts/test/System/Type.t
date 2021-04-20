@@ -169,7 +169,7 @@ my %Type0007 = $TypeObject->TypeGet(
 );
 $Success = $Self->IsNotDeeply(
     TestName   => 'Get first type data by ID',
-    CheckValue => undef,
+    CheckValue => {},
     TestValue  => \%Type0007,
     StartTime  => $StartTime,
 );
@@ -184,7 +184,7 @@ my %Type0008 = $TypeObject->TypeGet(
 );
 $Success = $Self->IsNotDeeply(
     TestName   => 'Get first type data by name',
-    CheckValue => undef,
+    CheckValue => {},
     TestValue  => \%Type0008,
     StartTime  => $StartTime,
 );
@@ -281,7 +281,7 @@ $StartTime = $Self->GetMilliTimeStamp();
 my %List0014 = $TypeObject->TypeList();
 $Success = $Self->IsNotDeeply(
     TestName   => 'Get type list without parameter "Valid"',
-    CheckValue => undef,
+    CheckValue => {},
     TestValue  => \%List0014,
     StartTime  => $StartTime,
 );
@@ -296,7 +296,7 @@ my %List0015 = $TypeObject->TypeList(
 );
 $Success = $Self->IsNotDeeply(
     TestName   => 'Get type list with parameter "Valid" value "0"',
-    CheckValue => undef,
+    CheckValue => {},
     TestValue  => \%List0015,
     StartTime  => $StartTime,
 );
@@ -311,7 +311,7 @@ my %List0016 = $TypeObject->TypeList(
 );
 $Success = $Self->IsNotDeeply(
     TestName   => 'Get type list with parameter "Valid" value "1"',
-    CheckValue => undef,
+    CheckValue => {},
     TestValue  => \%List0016,
     StartTime  => $StartTime,
 );

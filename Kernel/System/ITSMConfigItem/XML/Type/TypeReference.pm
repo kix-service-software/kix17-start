@@ -116,7 +116,7 @@ sub ExportSearchValuePrepare {
     return '' if !$Param{Value};
 
     # lookup name for given Type ID
-    my %TypeData = $Self->{TypeObject}->TypeGet(
+    my %TypeData = $Kernel::OM->Get('Kernel::System::Type')->TypeGet(
         ID => $Param{Value},
     );
     if ( %TypeData && $TypeData{Name} ) {
@@ -146,7 +146,7 @@ sub ExportValuePrepare {
     return '' if !$Param{Value};
 
     # lookup name for given Type ID
-    my %TypeData = $Self->{TypeObject}->TypeGet(
+    my %TypeData = $Kernel::OM->Get('Kernel::System::Type')->TypeGet(
         ID => $Param{Value},
     );
     if ( %TypeData && $TypeData{Name} ) {
@@ -192,14 +192,14 @@ sub ImportValuePrepare {
     return '' if !$Param{Value};
 
     # check if Queue name was given
-    my $TypeID = $Self->{TypeObject}->TypeLookup(
+    my $TypeID = $Kernel::OM->Get('Kernel::System::Type')->TypeLookup(
         Type => $Param{Value},
     );
     return $TypeID if $TypeID;
 
     # check if given value is a valid Type ID
     if ( $Param{Value} !~ /\D/ ) {
-        my $TypeName = $Self->{TypeObject}->TypeLookup(
+        my $TypeName = $Kernel::OM->Get('Kernel::System::Type')->TypeLookup(
             TypeID => $Param{Value},
         );
         return $Param{Value} if $TypeName;

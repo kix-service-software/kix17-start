@@ -13,17 +13,19 @@
     <h1>[% Translate("GenericInterface Mapping XSLT for Web Service %s", Data.WebserviceName) | html %]</h1>
 
     <ul class="BreadCrumb">
-        <li>[% Translate("You are here") | html %]:</li>
-        <li>
+        <li title="[% Translate("You are here") | html %]" >
+            [% Translate("You are here") | html %]:
+        </li>
+        <li title="[% Translate("Web Services") | html %]" >
             <a href="[% Env("Baselink") %]Action=AdminGenericInterfaceWebservice">[% Translate("Web Services") | html %]</a>
         </li>
-        <li>
+        <li title="[% Data.WebserviceName | html %]" >
             <a href="[% Env("Baselink") %]Action=AdminGenericInterfaceWebservice;Subaction=Change;WebserviceID=[% Data.WebserviceID | uri %]">[% Data.WebserviceName | html %]</a>
         </li>
-        <li>
+        <li title="[% Data.ActionType | html %] [% Data.Action | html %]" >
             <a href="[% Env("Baselink") %]Action=[% Data.ActionFrontendModule | uri %];Subaction=Change;[% Data.ActionType | uri %]=[% Data.Action | uri %];WebserviceID=[% Data.WebserviceID | uri %]">[% Data.ActionType | html %] [% Data.Action | html %]</a>
         </li>
-        <li>
+        <li title="[% Translate(Data.MappingDirection) | html %]" >
             [% Translate(Data.MappingDirection) | html %]
         </li>
     </ul>

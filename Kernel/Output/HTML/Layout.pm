@@ -3884,6 +3884,7 @@ sub BuildDateSelection {
     # Add Datepicker JS to output.
     my $DatepickerJS = <<"END";
     Core.UI.Datepicker.Init({
+        Used: \$("#" + Core.App.EscapeSelector("$Prefix") + "Used"),
         Date: \$("#" + Core.App.EscapeSelector("$Prefix") + "Date"),
         Time: \$("#" + Core.App.EscapeSelector("$Prefix") + "Time"),
         Format: "$DateFormat",
@@ -4273,7 +4274,7 @@ sub CustomerHeader {
             Data     => {},
             RichText => '0',
             TicketID => $Self->{TicketID},
-            UserID   => $Self->{UserID},
+            UserID   => $ConfigObject->Get('CustomerPanelUserID'),
         );
     }
 
@@ -6249,6 +6250,13 @@ sub _BuildCustomFooter{
     my $CustomFooter = $ConfigObject->Get('CustomFooter');
     my $IsNotShow    = 1;
     my $Frontend     = $Param{Frontend} =~ /^(?:Customer|Public)$/ ? '3' : '2';
+    my $UserID       = 1;
+    if (
+        $Frontend eq '2'
+        && $Self->{UserID}
+    ) {
+        $UserID = $Self->{UserID};
+    }
 
     if (
         defined $CustomFooter->{Title}
@@ -6276,11 +6284,15 @@ sub _BuildCustomFooter{
             }
 
             if ( $CustomFooter->{URL}->{$Title} ) {
-                my $URL = $TemplateGeneratorObject->ReplacePlaceHolder(
-                    Text     => $CustomFooter->{URL}->{$Title},
+                my $URL = $CustomFooter->{URL}->{$Title};
+                if ( $Frontend eq '3' ) {
+                    $URL =~ s/<(?:KIX|OTRS)_CURRENT_.+?>/-/gi;
+                }
+                $URL = $TemplateGeneratorObject->ReplacePlaceHolder(
+                    Text     => $URL,
                     Data     => {},
                     RichText => 0,
-                    UserID   => 1
+                    UserID   => $UserID
                 );
 
                 if ( $IsNotShow ) {
@@ -6336,6 +6348,11 @@ sub _BuildCustomHighlight{
 
             if ( $View eq 'Large' ) {
                 $Selector = 'Flag span.' . $Selector;
+            }
+            else {
+                $Selector .= ', .'
+                    . $Selector
+                    . ' a';
             }
 
             $Self->Block(

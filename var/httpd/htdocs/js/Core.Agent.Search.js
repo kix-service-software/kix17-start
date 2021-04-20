@@ -111,12 +111,13 @@ Core.Agent.Search = (function (TargetNS) {
      * @memberof Core.Agent.Search
      * @function
      * @param {String} Profile - The profile name that will be delete.
+     * @param {String} Action - The action where the profile will be delete.
      * @description
      *      Delete a profile via an ajax requests.
      */
-    function SearchProfileDelete(Profile) {
+    function SearchProfileDelete(Profile, Action) {
         var Data = {
-            Action: 'AgentTicketSearch',
+            Action: Action,
             Subaction: 'AJAXProfileDelete',
             Profile: Profile
         };
@@ -153,10 +154,8 @@ Core.Agent.Search = (function (TargetNS) {
                 // label id, use the remaining name as name string for accessing
                 // the form input's value
                 ElementName = $(this).attr('id').substring(5);
-                // KIX4OTRS-capeIT
                 // used to search for sub-attributes of config items
                 ElementName = ElementName.replace(/\:\:/g, "\\:\\:");
-                // EO KIX4OTRS-capeIT
                 $Element = $('#SearchForm input[name=' + ElementName + ']');
 
                 // If there's no input element with the selected name
@@ -370,8 +369,6 @@ Core.Agent.Search = (function (TargetNS) {
                 $('#SearchProfileAddBlock').hide();
 
                 // hide save changes in template block
-                // KIX4OTRS-capeIT
-                // $('#SaveProfile').parent().hide().prev().hide().prev().hide();
                 $('#SearchProfileSaveChangesBlock').hide();
 
                 // hide virtual queue block
@@ -381,17 +378,18 @@ Core.Agent.Search = (function (TargetNS) {
                 $('#SearchProfileCategoryBlock').hide();
 
                 // hide save block
-                if ( !$('#SearchProfile').val() || ($('#SearchProfile').val().match(/^last-search/))) {
+                if (
+                    !$('#SearchProfile').val()
+                    || ($('#SearchProfile').val().match(/^last-search/))
+                ) {
                     $('#SearchProfileSaveBlock').hide();
                 }
-                // EO KIX4OTRS-capeIT
 
                 // search profile is selected
-                // KIX4OTRS-capeIT
-                // if ($('#SearchProfile').val() && $('#SearchProfile').val() !==
-                // 'last-search') {
-                if ($('#SearchProfile').val() && !($('#SearchProfile').val().match(/^last-search/))) {
-                    // EO KIX4OTRS-capeIT
+                if (
+                    $('#SearchProfile').val()
+                    && !($('#SearchProfile').val().match(/^last-search/))
+                ) {
 
                     // show delete button
                     $('#SearchProfileDelete').show();
@@ -400,9 +398,7 @@ Core.Agent.Search = (function (TargetNS) {
                     $('#SearchProfileAsLink').show();
 
                     // show save changes in template block
-                    // KIX4OTRS-capeIT
                     // only show save changes block if search profile is not subscribed
-                    // $('#SaveProfile').parent().show().prev().show().prev().show();
                     var UserLogin = $('#UserLogin').val(), Regexp = new RegExp(UserLogin + "$", "ig");
                     if ($('#SearchProfile').val().match(Regexp)) {
                         $('#SearchProfileSaveChangesBlock').show();
@@ -423,7 +419,6 @@ Core.Agent.Search = (function (TargetNS) {
 
                     // show virtual queue block
                     $('#SearchProfileVirtualQueueBlock').show();
-                    // KIX4OTRS-capeIT
 
                     // set SaveProfile to false
                     $('#SaveProfile').prop('checked', false);
@@ -520,23 +515,17 @@ Core.Agent.Search = (function (TargetNS) {
                 // show add profile block or not
                 $('#SearchProfileNew').bind('click', function (Event) {
 
-                    // KIX4OTRS-capeIT
                     $('#SearchProfileVirtualQueueBlock').toggle();
-                    // EO KIX4OTRS-capeIT
                     $('#SearchProfileAddBlock').toggle();
-                    // KIX4OTRS-capeIT
                     $('#SearchProfileCategoryBlock').show();
                     $('#SearchProfileSaveBlock').toggle();
-                    // EO KIX4OTRS-capeIT
                     $('#SearchProfileAddName').focus();
 
-                    // KIX4OTRS-capeIT
                     if ($('#SearchProfileShare').prop('checked')) {
                         $('#SearchProfileCategorySelectBlock').show();
                     } else {
                         $('#SearchProfileCategorySelectBlock').hide();
                     }
-                    // EO KIX4OTRS-capeIT
 
                     Event.preventDefault();
                     return false;
@@ -545,10 +534,7 @@ Core.Agent.Search = (function (TargetNS) {
                 // add new profile
                 $('#SearchProfileAddAction').bind('click', function () {
 
-                    // KIX4OTRS-capeIT
-                    // var ProfileName, $Element1;
                     var ProfileName, $Element1, UserLogin;
-                    // EO KIX4OTRS-capeIT
 
                     // get name
                     ProfileName = $('#SearchProfileAddName').val();
@@ -558,23 +544,16 @@ Core.Agent.Search = (function (TargetNS) {
                         return;
                     }
 
-                    // KIX4OTRS-capeIT
                     // if profile should be shared but no category is selected
                     if ($('#SearchProfileShare').prop('checked') && $('#SearchProfileCategory').val() == '' && $('#SearchProfileAddCategory').val() == '') {
                         return false;
                     }
-                    // EO KIX4OTRS-capeIT
 
                     // add name to profile selection
-                    // KIX4OTRS-capeIT
                     UserLogin = $('#SearchProfileAddName').closest('form').find('#UserLogin').val();
-                    // EO KIX4OTRS-capeIT
                     $Element1 = $('#SearchProfile').children().first().clone();
                     $Element1.text(ProfileName);
-                    // KIX4OTRS-capeIT
-                    // $Element1.attr('value', ProfileName);
                     $Element1.attr('value', ProfileName + '::' + UserLogin);
-                    // EO KIX4OTRS-capeIT
                     $Element1.prop('selected', true);
                     $('#SearchProfile').append($Element1).trigger('redraw.InputField');
 
@@ -597,7 +576,6 @@ Core.Agent.Search = (function (TargetNS) {
                     $('#SearchProfileAsLink').show();
                 });
 
-                // KIX4OTRS-capeIT
                 // add new profile
                 $('#SearchProfileShare').bind('click', function() {
 
@@ -628,7 +606,6 @@ Core.Agent.Search = (function (TargetNS) {
                         $('#SaveProfile').attr('checked','checked');
                     }
                 });
-                // EO KIX4OTRS-capeIT
 
                 // direct link to profile
                 $('#SearchProfileAsLink').bind('click', function () {
@@ -642,6 +619,7 @@ Core.Agent.Search = (function (TargetNS) {
 
                 // delete profile
                 $('#SearchProfileDelete').bind('click', function (Event) {
+                    var SearchProfileAction = $('#SearchAction').val();
 
                     // strip all already used attributes
                     $('#SearchProfile').find('option:selected').each(function () {
@@ -651,7 +629,7 @@ Core.Agent.Search = (function (TargetNS) {
                             $('#SearchInsert').text('');
 
                             // remove remote
-                            SearchProfileDelete($(this).val());
+                            SearchProfileDelete($(this).val(), SearchProfileAction);
 
                             // remove local
                             $(this).remove();

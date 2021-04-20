@@ -18,14 +18,16 @@
 
         <ul class="BreadCrumb">
 [% RenderBlockStart("FAQPathCategoryElement") %]
-            <li>
+            <li title="[% Data.Name | html %]">
                 <a href="[% Env("Baselink") %]Action=CustomerFAQExplorer;CategoryID=[% Data.CategoryID | uri %]">
                     [% Data.Name | html %]
                 </a>
             </li>
 [% RenderBlockEnd("FAQPathCategoryElement") %]
 [% RenderBlockStart("FAQPathCategoryElementNoLink") %]
-            <li>[% Data.Name | html %]</li>
+            <li title="[% Data.Name | html %]">
+                [% Data.Name | html %]
+            </li>
 [% RenderBlockEnd("FAQPathCategoryElementNoLink") %]
         </ul>
         <div class="Clear"></div>
@@ -221,6 +223,8 @@
 
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">
+Core.KIX4OTRS.KIXSidebar.Init('[% Env("CustomerFAQExplorerSidebarWidth") %]','[% Env("Action") %]','CategoryID=[% Data.CategoryID | uri %];');
+
 // make whole FAQ Item row clickable, but not the headers, can't use Core.Customer.ClickableRow()
 // since it uses "table tr" as selector, see bug#9329
 $("tbody tr").click(function(){

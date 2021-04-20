@@ -110,7 +110,7 @@ Core.UI.SystemMessage = (function (TargetNS) {
             BaseLink = Core.Config.Get('Baselink');
 
         if ( Module === 'Login' ) {
-            var Pattern = new RegExp(/(index|customer)(.pl)/, 'g');
+            var Pattern = new RegExp("(index|customer)(.pl)", 'g');
             BaseLink = BaseLink.replace(Pattern, 'public$2' );
         }
 

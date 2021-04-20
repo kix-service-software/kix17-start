@@ -12,8 +12,6 @@ use strict;
 use warnings;
 
 our @ObjectDependencies = (
-    'Kernel::Config',
-    'Kernel::System::CustomerCompany',
     'Kernel::System::Log'
 );
 
@@ -45,10 +43,6 @@ sub new {
     # allocate new hash for object
     my $Self = {};
     bless( $Self, $Type );
-
-    $Self->{ConfigObject}          = $Kernel::OM->Get('Kernel::Config');
-    $Self->{CustomerCompanyObject} = $Kernel::OM->Get('Kernel::System::CustomerCompany');
-    $Self->{LogObject}             = $Kernel::OM->Get('Kernel::System::Log');
 
     return $Self;
 }
@@ -88,7 +82,7 @@ sub StatsAttributeCreate {
     # check needed stuff
     for my $Argument (qw(Key Name Item)) {
         if ( !$Param{$Argument} ) {
-            $Self->{LogObject}->Log(
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => "Need $Argument!"
             );

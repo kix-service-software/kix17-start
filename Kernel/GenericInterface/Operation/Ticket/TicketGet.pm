@@ -467,6 +467,9 @@ sub Run {
                 ATTRIBUTE:
                 for my $Attribute ( sort keys %{$ArticleRaw} ) {
 
+                    # Skip Bcc
+                    next ATTRIBUTE if ( $Attribute eq 'Bcc' );
+
                     if ( $Attribute =~ m{\A DynamicField_(.*) \z}msx ) {
 
                         # Skip dynamic fields that are not for article object
