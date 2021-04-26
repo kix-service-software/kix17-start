@@ -37,7 +37,7 @@
 [% RenderBlockStart("Keywords") %]
                     <p class="Value" title="[% Translate("Search for articles with keyword") | html %]: [% Data.Keyword | html %]">
                         <span>
-                            <a href="[% Env("Baselink") %]Action=CustomerFAQSearch;Subaction=Search;Keyword=[% Data.Keyword | uri %]">[% Data.Keyword | html %]</a>
+                            <a href="[% Env("Baselink") %]Action=PublicFAQSearch;Subaction=Search;Keyword=[% Data.Keyword | uri %]">[% Data.Keyword | html %]</a>
                         </span>
                     </p>
 [% RenderBlockEnd("Keywords") %]
