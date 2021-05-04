@@ -399,10 +399,6 @@
 
 <!-- OutputFilterHook_TicketOptionsBegin -->
 
-[% RenderBlockStart("SpellCheck") %]
-                        <a href="#" id="OptionSpellCheck">[% Translate("Spell check") | html %]</a>
-[% RenderBlockEnd("SpellCheck") %]
-
 [% RenderBlockStart("OptionCustomer") %]
                         <a href="#" id="OptionCustomer">[% Translate("Contact") | html %]</a>
 [% RenderBlockEnd("OptionCustomer") %]

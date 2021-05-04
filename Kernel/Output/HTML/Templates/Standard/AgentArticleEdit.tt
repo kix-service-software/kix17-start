@@ -70,12 +70,7 @@
                         <div class="Options Field">
 <!-- OutputFilterHook_TicketOptionsBegin -->
 
-[% RenderBlockStart("SpellCheck") %]
-                            <a href="#" id="OptionSpellCheck">[% Translate("Spell check") | html %]</a>
-[% RenderBlockEnd("SpellCheck") %]
-
 <!-- OutputFilterHook_TicketOptionsEnd -->
-
                         </div>
                         <div class="Clear"></div>
 [% RenderBlockEnd("TicketOptions") %]

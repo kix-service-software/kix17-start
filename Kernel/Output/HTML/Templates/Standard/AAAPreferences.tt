@@ -21,9 +21,6 @@
 [% Translate("New password") | html %]
 [% Translate("Verify password") | html %]
 
-[% Translate("Spelling Dictionary") | html %]
-[% Translate("Default spelling dictionary") | html %]
-
 [% Translate("Max. shown Tickets a page in Overview.") | html %]
 
 [% Translate("The current password is not correct. Please try again!") | html %]

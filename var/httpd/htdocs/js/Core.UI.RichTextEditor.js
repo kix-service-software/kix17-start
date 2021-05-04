@@ -99,15 +99,6 @@ Core.UI.RichTextEditor = (function (TargetNS) {
                 }, 250);
             });
 
-            // if spell checker is used on paste new content should spell check again
-            Editor.editor.on('paste', function() {
-                Core.Config.Set('TextIsSpellChecked', false);
-            });
-            // if spell checker is used on any key new content should spell check again
-            Editor.editor.on('key', function() {
-                Core.Config.Set('TextIsSpellChecked', false);
-            });
-
             Core.App.Publish('Event.UI.RichTextEditor.InstanceCreated', [Editor]);
         });
 
@@ -155,7 +146,7 @@ Core.UI.RichTextEditor = (function (TargetNS) {
             toolbar: CheckFormID($EditorArea).length ? Core.Config.Get('RichText.Toolbar') : Core.Config.Get('RichText.ToolbarWithoutImage'),
             filebrowserBrowseUrl: '',
             filebrowserUploadUrl: UploadURL,
-            extraPlugins: Core.Config.Get('RichText.SpellChecker') ? 'aspell,splitquote,contextmenu_linkopen,preventimagepaste' : 'splitquote,contextmenu_linkopen,preventimagepaste',
+            extraPlugins: 'splitquote,contextmenu_linkopen,preventimagepaste',
             entities: false,
             skin: 'bootstrapck' + (Core.Config.Get('UserSkin') == 'dark' ? '_dark' : '')
         });
