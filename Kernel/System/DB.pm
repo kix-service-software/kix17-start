@@ -1203,10 +1203,10 @@ sub QueryCondition {
     $Param{Value} =~ s/\+/&&/g;
 
     # replace AND by &&
-    $Param{Value} =~ s/(\s|(?<!\\)\)|(?<!\\)\()AND(\s|(?<!\\)\(|(?<!\\)\))/$1&&$2/g;
+    $Param{Value} =~ s/(\s|(?<!\\)\))AND(\s|(?<!\\)\()/$1&&$2/g;
 
     # replace OR by ||
-    $Param{Value} =~ s/(\s|(?<!\\)\)|(?<!\\)\()OR(\s|(?<!\\)\(|(?<!\\)\))/$1||$2/g;
+    $Param{Value} =~ s/(\s|(?<!\\)\))OR(\s|(?<!\\)\()/$1||$2/g;
 
     # replace * with % (for SQL)
     $Param{Value} =~ s/\*/%/g;
