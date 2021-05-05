@@ -796,20 +796,6 @@ sub LoadDefaults {
 #    $Self->{'MIME-Viewer'}->{'text/xml'} = $Self->{Home}.'/scripts/tools/xml2html.pl';
 
     # --------------------------------------------------- #
-    # SpellChecker
-    # --------------------------------------------------- #
-    # (If ispell or aspell is available, then we will provide a spelling
-    # checker.)
-    #    $Self->{SpellChecker} = 0;
-    $Self->{SpellChecker}            = 0;
-    $Self->{SpellCheckerBin}         = '/usr/bin/ispell';
-    $Self->{SpellCheckerDictDefault} = 'english';
-
-    # SpellCheckerIgnore
-    # (A list of ignored words.)
-    $Self->{SpellCheckerIgnore} = [ 'www', 'webmail', 'https', 'http', 'html', 'rfc' ];
-
-    # --------------------------------------------------- #
     # CommonCSS                                           #
     # --------------------------------------------------- #
 
@@ -1027,26 +1013,6 @@ sub LoadDefaults {
         'PasswordNeedDigit' => '0',
         'PasswordRegExp' => '',
         'Prio' => '0500'
-    };
-    $Self->{PreferencesGroups}->{SpellDict} = {
-        Module => 'Kernel::Output::HTML::Preferences::Generic',
-        Column => 'Other Options',
-        Label  => 'Spelling Dictionary',
-        Desc   => 'Select your default spelling dictionary.',
-        Data   => {
-
-            # installed dict catalog (check your insalled catalogues, e. g. deutsch -=> german!)
-            # dict => frontend (ispell)
-            'english' => 'English',
-            'deutsch' => 'Deutsch',
-
-            # dict => frontend (aspell)
-#            'english' => 'English',
-#            'german'  => 'Deutsch',
-        },
-        PrefKey => 'UserSpellDict',
-        Prio    => 5000,
-        Active   => 1,
     };
     $Self->{PreferencesGroups}->{Comment} = {
         'Active' => '0',

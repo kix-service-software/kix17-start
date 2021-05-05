@@ -1183,14 +1183,6 @@ sub _Mask {
         Class      => 'Modernize',
     );
 
-    # show spell check
-    if ( $LayoutObject->{BrowserSpellChecker} ) {
-        $LayoutObject->Block(
-            Name => 'SpellCheck',
-            Data => {},
-        );
-    }
-
     # add rich text editor for note & email
     if ( $LayoutObject->{BrowserRichText} ) {
 

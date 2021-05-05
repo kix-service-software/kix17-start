@@ -3486,30 +3486,6 @@ END
 
     my $ShownOptionsBlock;
 
-    # show spell check
-    if ( $LayoutObject->{BrowserSpellChecker} ) {
-
-        # check if need to call Options block
-        if ( !$ShownOptionsBlock ) {
-            $LayoutObject->Block(
-                Name => 'TicketOptions',
-                Data => {
-                    %Param,
-                },
-            );
-
-            # set flag to "true" in order to prevent calling the Options block again
-            $ShownOptionsBlock = 1;
-        }
-
-        $LayoutObject->Block(
-            Name => 'SpellCheck',
-            Data => {
-                %Param,
-            },
-        );
-    }
-
     # show customer edit link
     my $OptionCustomer = $LayoutObject->Permission(
         Action => 'AdminCustomerUser',
@@ -3541,7 +3517,7 @@ END
 # ITSMIncidentProblemManagement
 # ---
     # make sure to show the options block so that the "Link Ticket" option is shown
-    # even if spellchecker and OptionCustomer is turned off
+    # even if OptionCustomer is turned off
     if ( !$ShownOptionsBlock ) {
         $LayoutObject->Block(
             Name => 'TicketOptions',

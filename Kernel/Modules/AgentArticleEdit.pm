@@ -1433,18 +1433,6 @@ sub _Mask {
             Data => \%Param,
         );
 
-        # show spell check
-        if ( $LayoutObject->{BrowserSpellChecker} ) {
-            $LayoutObject->Block(
-                Name => 'TicketOptions',
-                Data => {},
-            );
-            $LayoutObject->Block(
-                Name => 'SpellCheck',
-                Data => {},
-            );
-        }
-
         # add rich text editor
         if ( $LayoutObject->{BrowserRichText} ) {
             $LayoutObject->Block(
