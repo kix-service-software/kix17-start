@@ -1969,7 +1969,7 @@ sub Data {
         'Gültigkeit der Servicezuordnung zu Kundennutzer';
 
     # service ex-/import...
-    $Lang->{'Full Service Name'}                  = 'Vollstündiger Servicename';
+    $Lang->{'Full Service Name'}                  = 'Vollständiger Servicename';
     $Lang->{'Short Service Name'}                 = 'Kurzservicename';
     $Lang->{'Service Type (ITSM only)'}           = 'Servicetyp (nur ITSM)';
     $Lang->{'Criticality (ITSM only)'}            = 'Kritikalität (nur ITSM)';
