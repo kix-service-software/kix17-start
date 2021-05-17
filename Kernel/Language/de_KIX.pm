@@ -4487,8 +4487,8 @@ sub Data {
         = 'De-/aktiviert den Link zum Löschen im Dashboard für Autor und Benutzer einer Gruppe, die in "SystemMessage###GroupDashboard" definiert ist.';
     $Lang->{'Defines the group name to which the user must belong to see edit/delete link if not author.'}
         = 'Definiert den Gruppennamen, zu dem der Benutzer gehören muss, um den Link zum Bearbeiten/Löschen anzuzeigen, wenn er nicht autorisiert ist.';
-    $Lang->{'Allows the user to disable the message by clicking on "mark as read".'}
-        = 'Ermöglicht dem Benutzers die Neuigkeit zu deaktiveren bei Klick auf Als gelesen markieren".';
+    $Lang->{'By clicking on "mark as read" the news is not showed again as a popup. News widget will still display it.'}
+        = 'Beim Klick auf "Als gelesen markieren" wird die Neuigkeit nicht erneut als Popup angezeigt. Im Widget erscheint sie weiterhin.';
     $Lang->{'Open message when user visits dashboard'}  = 'Neuigkeit öffnen wenn Agenten das Dashboard öffnen';
     $Lang->{'Create and manage messages.'}              = 'Erstellt und verwaltet Neuigkeiten.';
     $Lang->{'Message Overview Limit'}                   = 'Übersichtsbegrenzung der Neuigkeiten';
