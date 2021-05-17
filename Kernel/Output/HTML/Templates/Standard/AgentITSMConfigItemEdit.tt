@@ -193,6 +193,15 @@
 [% RenderBlockEnd("EndNormal") %]
 
 
+[% RenderBlockStart("ScrollIntoView") %]
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+if ( document.getElementsByName('[% Data.DeleteKey %]').length ) {
+    document.getElementsByName('[% Data.DeleteKey %]')[0].scrollIntoView();
+}
+//]]></script>
+[% END %]
+[% RenderBlockEnd("ScrollIntoView") %]
 [% WRAPPER JSOnDocumentComplete %]
         <script type="text/javascript">//<![CDATA[
             $('#SubmitButton').on('click', function () {
