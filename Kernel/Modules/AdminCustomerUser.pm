@@ -221,11 +221,14 @@ sub Run {
         }
         my $Object = $Module->new(
             %{$Self},
+            UserData   => \%UserData,
             ConfigItem => $Preferences{$Group},
             UserObject => $CustomerUserObject,
             Debug      => $Self->{Debug},
         );
-        my %File = $Object->Download( UserData => \%UserData );
+        my %File = $Object->Download(
+            UserData => \%UserData
+        );
 
         return $LayoutObject->Attachment(%File);
     }
@@ -364,11 +367,14 @@ sub Run {
                     }
                     my $Object = $Module->new(
                         %{$Self},
+                        UserData   => \%UserData,
                         ConfigItem => $Preferences{$Group},
                         UserObject => $CustomerUserObject,
                         Debug      => $Self->{Debug},
                     );
-                    my @Params = $Object->Param( UserData => \%UserData );
+                    my @Params = $Object->Param(
+                        UserData => \%UserData,
+                    );
                     if (@Params) {
                         my %GroupParam;
                         for my $ParamItem (@Params) {
@@ -378,7 +384,7 @@ sub Run {
                         if (
                             !$Object->Run(
                                 GetParam => \%GroupParam,
-                                UserData => \%UserData
+                                UserData => \%UserData,
                             )
                         ) {
                             $Note .= $LayoutObject->Notify( Info => $Object->Error() );
@@ -537,11 +543,15 @@ sub Run {
                     }
                     my $Object = $Module->new(
                         %{$Self},
+                        UserData   => \%UserData,
                         ConfigItem => $Preferences{$Group},
                         UserObject => $CustomerUserObject,
                         Debug      => $Self->{Debug},
                     );
-                    my @Params = $Object->Param( %{ $Preferences{$Group} }, UserData => \%UserData );
+                    my @Params = $Object->Param(
+                        %{ $Preferences{$Group} },
+                        UserData => \%UserData,
+                    );
                     if (@Params) {
                         my %GroupParam;
                         for my $ParamItem (@Params) {
@@ -551,7 +561,7 @@ sub Run {
                         if (
                             !$Object->Run(
                                 GetParam => \%GroupParam,
-                                UserData => \%UserData
+                                UserData => \%UserData,
                             )
                         ) {
                             $Note .= $LayoutObject->Notify( Info => $Object->Error() );
@@ -1264,11 +1274,14 @@ sub _Edit {
                 if ( $Kernel::OM->Get('Kernel::System::Main')->Require($Module) ) {
                     my $Object = $Module->new(
                         %{$Self},
+                        UserData   => \%Param,
                         ConfigItem => \%Preference,
                         UserObject => $Kernel::OM->Get('Kernel::System::CustomerUser'),
                         Debug      => $Self->{Debug},
                     );
-                    my @Params = $Object->Param( UserData => \%Param );
+                    my @Params = $Object->Param(
+                        UserData => \%Param,
+                    );
                     if (@Params) {
                         for my $ParamItem (@Params) {
                             $LayoutObject->Block(

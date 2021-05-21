@@ -38,8 +38,31 @@ sub Run {
     my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
     my $QueueObject  = $Kernel::OM->Get('Kernel::System::Queue');
 
-    # check if own selection is configured
     my %NewTos;
+    my $UserData       = $Param{Env}->{UserData} || '';
+    my $CustomerUserID = '';
+
+    if (
+        $UserData
+        && ref $UserData eq 'HASH'
+    ) {
+        $CustomerUserID = $UserData->{UserID} || $UserData->{ID} || '';
+    }
+
+    if (
+        $Param{Env}->{UserType} eq 'User'
+        && !$CustomerUserID
+    ) {
+        return %NewTos;
+    }
+    elsif (
+        $Param{Env}->{UserType} ne 'User'
+        && !$CustomerUserID
+    ) {
+        $CustomerUserID = $Param{Env}->{UserID} || $Self->{UserID};
+    }
+
+    # check if own selection is configured
     if ( $ConfigObject->{CustomerPanelOwnSelection} ) {
         for my $Queue ( sort keys %{ $ConfigObject->{CustomerPanelOwnSelection} } ) {
             my $Value = $ConfigObject->{CustomerPanelOwnSelection}->{$Queue};
@@ -59,7 +82,7 @@ sub Run {
         # check create permissions
         my %Queues = $TicketObject->TicketMoveList(
             %{ $Param{ACLParams} },
-            CustomerUserID => $Param{Env}->{UserID},
+            CustomerUserID => $CustomerUserID,
             Type           => 'create',
             Action         => $Param{Env}->{Action},
         );
@@ -76,7 +99,7 @@ sub Run {
         if ( $ConfigObject->Get('CustomerPanelSelectionType') eq 'Queue' ) {
             %Tos = $TicketObject->TicketMoveList(
                 %{ $Param{ACLParams} },
-                CustomerUserID => $Param{Env}->{UserID},
+                CustomerUserID => $CustomerUserID,
                 Type           => 'create',
                 Action         => $Param{Env}->{Action},
             );
@@ -84,7 +107,7 @@ sub Run {
         else {
             my %Queues = $TicketObject->TicketMoveList(
                 %{ $Param{ACLParams} },
-                CustomerUserID => $Param{Env}->{UserID},
+                CustomerUserID => $CustomerUserID,
                 Type           => 'create',
                 Action         => $Param{Env}->{Action},
             );
