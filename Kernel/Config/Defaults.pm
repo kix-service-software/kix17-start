@@ -886,6 +886,7 @@ sub LoadDefaults {
         'thirdparty/jquery-pubsub/pubsub.js',
         'thirdparty/jquery-jstree-3.1.1/jquery.jstree.js',
         'thirdparty/jquery-tablesorter-2.31.1/jquery.tablesorter.min.js',
+        'thirdparty/jscolor-2.4.5/jscolor.min.js',
         'Core.JavaScriptEnhancements.js',
         'Core.Debug.js',
         'Core.Exception.js',

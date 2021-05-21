@@ -4800,16 +4800,6 @@
             </FrontendModuleReg>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="Loader::Agent::CommonJS###100-GeneralCatalog" Required="1" Valid="1">
-        <Description Translatable="1">List of JS files to always be loaded for the agent interface.</Description>
-        <Group>Framework</Group>
-        <SubGroup>Core::Web</SubGroup>
-        <Setting>
-            <Array>
-                <Item>thirdparty/jscolor_1.4.1/jscolor.js</Item>
-            </Array>
-        </Setting>
-    </ConfigItem>
     <ConfigItem Name="Frontend::Output::FilterElementPost###AdminTemplateX" Required="0" Valid="1">
         <Description Translatable="1">Post Output filter to add addresses to templates</Description>
         <Group>Framework</Group>
@@ -11896,6 +11886,7 @@ via the Preferences button after logging in.
                 <Item>thirdparty/jquery-pubsub/pubsub.js</Item>
                 <Item>thirdparty/jquery-jstree-3.1.1/jquery.jstree.js</Item>
                 <Item>thirdparty/jquery-tablesorter-2.31.1/jquery.tablesorter.min.js</Item>
+                <Item>thirdparty/jscolor-2.4.5/jscolor.min.js</Item>
                 <Item>Core.JavaScriptEnhancements.js</Item>
                 <Item>Core.Debug.js</Item>
                 <Item>Core.Exception.js</Item>
