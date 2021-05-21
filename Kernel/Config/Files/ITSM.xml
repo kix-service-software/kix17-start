@@ -1931,7 +1931,7 @@
                 <Title>LinkGraph</Title>
                 <NavBarName></NavBarName>
                 <Loader>
-                    <JavaScript>thirdparty/jsplumb-1.6.4/jsplumb.js</JavaScript>
+                    <JavaScript>thirdparty/jsplumb-1.7.6/jsplumb.min.js</JavaScript>
                 </Loader>
             </FrontendModuleReg>
         </Setting>
