@@ -29,7 +29,7 @@ Core.KIX4OTRS.CustomerDetails = (function(TargetNS) {
             $WidgetPopupResponsible = $TicketInfo.find('#ResponsibleDetails'),
             $WidgetPopupOwner       = $TicketInfo.find('#OwnerDetails');
 
-        $CustomerInfo.find('.CustomerDetailsMagnifier').bind('click', function(Event) {
+        $CustomerInfo.find('.CustomerDetailsMagnifier').on('click', function(Event) {
             var DetailPosition = Core.KIX4OTRS.GetWidgetPopupPosition($CustomerInfo, Event);
             Core.UI.Dialog.ShowDialog({
                 Type : "CustomerDetails",
@@ -40,7 +40,7 @@ Core.KIX4OTRS.CustomerDetails = (function(TargetNS) {
                 PositionLeft : DetailPosition.Left
             });
 
-            $('.Dialog > .Content').find('a.AsPopup').bind('click', function (Event) {
+            $('.Dialog > .Content').find('a.AsPopup').on('click', function (Event) {
                 var Matches,
                     PopupType = 'TicketAction';
 
@@ -54,7 +54,7 @@ Core.KIX4OTRS.CustomerDetails = (function(TargetNS) {
             });
         });
 
-        $TicketInfo.find('.ResponsibleDetailsMagnifier').bind('click', function(Event) {
+        $TicketInfo.find('.ResponsibleDetailsMagnifier').on('click', function(Event) {
             var DetailPosition = Core.KIX4OTRS.GetWidgetPopupPosition($TicketInfo, Event);
             Core.UI.Dialog.ShowDialog({
                 Type : "ResponsibleDetails",
@@ -65,7 +65,7 @@ Core.KIX4OTRS.CustomerDetails = (function(TargetNS) {
                 PositionLeft : DetailPosition.Left
             });
 
-            $('.Dialog > .Content').find('a.AsPopup').bind('click', function (Event) {
+            $('.Dialog > .Content').find('a.AsPopup').on('click', function (Event) {
                 var Matches,
                     PopupType = 'TicketAction';
 
@@ -79,7 +79,7 @@ Core.KIX4OTRS.CustomerDetails = (function(TargetNS) {
             });
         });
 
-        $TicketInfo.find('.OwnerDetailsMagnifier').bind('click', function(Event) {
+        $TicketInfo.find('.OwnerDetailsMagnifier').on('click', function(Event) {
             var DetailPosition = Core.KIX4OTRS.GetWidgetPopupPosition($TicketInfo, Event);
             Core.UI.Dialog.ShowDialog({
                 Type : "OwnerDetails",
@@ -90,7 +90,7 @@ Core.KIX4OTRS.CustomerDetails = (function(TargetNS) {
                 PositionLeft : DetailPosition.Left
             });
 
-            $('.Dialog > .Content').find('a.AsPopup').bind('click', function (Event) {
+            $('.Dialog > .Content').find('a.AsPopup').on('click', function (Event) {
                 var Matches,
                     PopupType = 'TicketAction';
 

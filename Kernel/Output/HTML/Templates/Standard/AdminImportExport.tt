@@ -410,12 +410,12 @@
         $FirstColumn = $('#Object\\:\\:0\\:\\:Key');
 
     // handle changes to the first column selector
-    $FirstColumn.bind('change', function (Event) {
+    $FirstColumn.on('change', function (Event) {
 
         // check if there is at least one column with a value
         if ( $FirstColumn.val() ) {
             // we remove the disabled attribute
-            $NextButton.removeAttr("disabled");
+            $NextButton.prop("disabled", false);
         }
         else {
             // we add the disabled attribute
@@ -425,18 +425,18 @@
     }).trigger('change');
 
     // set the hidden field to delete this column and submit the form
-    $('.DeleteColumn').unbind('click').bind('click', function(Event) {
+    $('.DeleteColumn').off('click').on('click', function(Event) {
         $(this).closest('td').find('input[type="hidden"]').val(1);
         $(this).closest('form').submit();
         return true;
     });
 
-    $('#MappingAddButton').bind('click', function (Event) {
+    $('#MappingAddButton').on('click', function (Event) {
         $('input[name=MappingAdd]').val('1');
         $('input[name=SubmitNext]').val('0');
     });
 
-    $('#SubmitNextButton').bind('click', function (Event) {
+    $('#SubmitNextButton').on('click', function (Event) {
         $('input[name=MappingAdd]').val('0');
         $('input[name=SubmitNext]').val('1');
     });
@@ -521,7 +521,7 @@
 
 [% WRAPPER JSOnDocumentComplete %]
     <script type="text/javascript">//<![CDATA[
-        $('button.Back').bind('click', function () {
+        $('button.Back').on('click', function () {
             location.href = "[% Env("Baselink") %][% Data.BackURL | html %]";
         });
     //]]></script>

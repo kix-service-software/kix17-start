@@ -31,7 +31,6 @@
                 <NavBarName>Config Item</NavBarName>
                 <Loader>
                     <JavaScript>ITSM.Agent.Zoom.js</JavaScript>
-                    <JavaScript>thirdparty/jquery-ui-tabs-1.10.3/jquery.ui.tabs.js</JavaScript>
                 </Loader>
             </FrontendModuleReg>
         </Setting>
@@ -48,7 +47,6 @@
                 <NavBarName>Config Item</NavBarName>
                 <Loader>
                     <JavaScript>ITSM.Agent.Zoom.js</JavaScript>
-                    <JavaScript>thirdparty/jquery-ui-tabs-1.10.3/jquery.ui.tabs.js</JavaScript>
                 </Loader>
             </FrontendModuleReg>
         </Setting>
@@ -65,7 +63,6 @@
                 <NavBarName>Config Item</NavBarName>
                 <Loader>
                     <JavaScript>ITSM.Agent.Zoom.js</JavaScript>
-                    <JavaScript>thirdparty/jquery-ui-tabs-1.10.3/jquery.ui.tabs.js</JavaScript>
                 </Loader>
             </FrontendModuleReg>
         </Setting>
@@ -83,7 +80,6 @@
                 <Loader>
                     <JavaScript>Core.KIX4OTRS.ConfigItemZoomTabs.js</JavaScript>
                     <JavaScript>ITSM.Agent.Zoom.js</JavaScript>
-                    <JavaScript>thirdparty/jquery-ui-tabs-1.10.3/jquery.ui.tabs.js</JavaScript>
                 </Loader>
             </FrontendModuleReg>
         </Setting>
@@ -901,8 +897,6 @@
                 <Title>Zoom</Title>
                 <NavBarName>Config Item</NavBarName>
                 <Loader>
-                    <JavaScript>thirdparty/jquery-tablesorter-2.0.5/jquery.tablesorter.js</JavaScript>
-                    <JavaScript>thirdparty/jquery-ui-tabs-1.10.3/jquery.ui.tabs.js</JavaScript>
                     <JavaScript>Core.KIX4OTRS.TicketZoomTabs.js</JavaScript>
                     <JavaScript>Core.KIX4OTRS.ConfigItemZoomTabs.js</JavaScript>
                     <JavaScript>Core.UI.AllocationList.js</JavaScript>
@@ -1002,7 +996,6 @@
                     <Prio>300</Prio>
                 </NavBar>
                 <Loader>
-                    <JavaScript>thirdparty/jquery-tablesorter-2.0.5/jquery.tablesorter.js</JavaScript>
                     <JavaScript>Core.UI.Table.Sort.js</JavaScript>
                     <JavaScript>ITSM.Agent.Zoom.js</JavaScript>
                 </Loader>
@@ -1953,9 +1946,6 @@
                 <Description>Shows objects linked with this config item</Description>
                 <Title>Zoom</Title>
                 <NavBarName>Config Item</NavBarName>
-                <Loader>
-                    <JavaScript>thirdparty/jquery-ui-tabs-1.10.3/jquery.ui.tabs.js</JavaScript>
-                </Loader>
             </FrontendModuleReg>
         </Setting>
     </ConfigItem>

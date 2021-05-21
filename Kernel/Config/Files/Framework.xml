@@ -10209,8 +10209,6 @@ via the Preferences button after logging in.
                     <JavaScript>Core.UI.AllocationList.js</JavaScript>
                     <JavaScript>Core.Agent.TableFilters.js</JavaScript>
                     <JavaScript>Core.Agent.Dashboard.js</JavaScript>
-
-                    <JavaScript>thirdparty/jquery-ui-tabs-1.10.3/jquery.ui.tabs.js</JavaScript>
                     <JavaScript>Core.Agent.CustomerSearch.js</JavaScript>
                     <JavaScript>Core.Agent.TicketAction.js</JavaScript>
                     <JavaScript>Core.KIX4OTRS.Agent.CustomerDashboard.js</JavaScript>
@@ -11889,14 +11887,15 @@ via the Preferences button after logging in.
         <SubGroup>Core::Web</SubGroup>
         <Setting>
             <Array>
-                <Item>thirdparty/jquery-2.1.4/jquery.js</Item>
+                <Item>thirdparty/jquery-3.6/jquery.min.js</Item>
                 <Item>thirdparty/jquery-browser-detection/jquery-browser-detection.js</Item>
-                <Item>thirdparty/jquery-ui-1.11.4/jquery-ui.js</Item>
+                <Item>thirdparty/jquery-ui-1.12.1/jquery-ui.min.js</Item>
                 <Item>thirdparty/jquery-ui-touch-punch-0.2.3/jquery.ui.touch-punch.js</Item>
-                <Item>thirdparty/jquery-validate-1.14.0/jquery.validate.js</Item>
+                <Item>thirdparty/jquery-validate-1.19.3/jquery.validate.min.js</Item>
                 <Item>thirdparty/stacktrace-0.6.4/stacktrace.js</Item>
                 <Item>thirdparty/jquery-pubsub/pubsub.js</Item>
                 <Item>thirdparty/jquery-jstree-3.1.1/jquery.jstree.js</Item>
+                <Item>thirdparty/jquery-tablesorter-2.31.1/jquery.tablesorter.min.js</Item>
                 <Item>Core.JavaScriptEnhancements.js</Item>
                 <Item>Core.Debug.js</Item>
                 <Item>Core.Exception.js</Item>
@@ -11939,7 +11938,7 @@ via the Preferences button after logging in.
         <SubGroup>Core::Web</SubGroup>
         <Setting>
             <Array>
-                <Item>thirdparty/jquery-migrate-1.2.1/jquery-migrate.js</Item>
+                <Item>thirdparty/jquery-migrate-3.3.2/jquery-migrate.js</Item>
             </Array>
         </Setting>
     </ConfigItem>
@@ -11982,13 +11981,14 @@ via the Preferences button after logging in.
         <SubGroup>Core::Web</SubGroup>
         <Setting>
             <Array>
-                <Item>thirdparty/jquery-2.1.4/jquery.js</Item>
+                <Item>thirdparty/jquery-3.6/jquery.min.js</Item>
                 <Item>thirdparty/jquery-browser-detection/jquery-browser-detection.js</Item>
-                <Item>thirdparty/jquery-validate-1.14.0/jquery.validate.js</Item>
-                <Item>thirdparty/jquery-ui-1.11.4/jquery-ui.js</Item>
+                <Item>thirdparty/jquery-validate-1.19.3/jquery.validate.min.js</Item>
+                <Item>thirdparty/jquery-ui-1.12.1/jquery-ui.min.js</Item>
                 <Item>thirdparty/stacktrace-0.6.4/stacktrace.js</Item>
                 <Item>thirdparty/jquery-pubsub/pubsub.js</Item>
                 <Item>thirdparty/jquery-jstree-3.1.1/jquery.jstree.js</Item>
+                <Item>thirdparty/jquery-tablesorter-2.31.1/jquery.tablesorter.min.js</Item>
                 <Item>Core.Debug.js</Item>
                 <Item>Core.Exception.js</Item>
                 <Item>Core.Data.js</Item>
@@ -12022,7 +12022,7 @@ via the Preferences button after logging in.
         <SubGroup>Core::Web</SubGroup>
         <Setting>
             <Array>
-                <Item>thirdparty/jquery-migrate-1.2.1/jquery-migrate.js</Item>
+                <Item>thirdparty/jquery-migrate-3.3.2/jquery-migrate.js</Item>
             </Array>
         </Setting>
     </ConfigItem>
@@ -12679,7 +12679,6 @@ via the Preferences button after logging in.
         <Setting>
             <Array>
                 <Item>KIXSidebarTools.js</Item>
-                <Item>thirdparty/jquery-tablesorter-2.0.5/jquery.tablesorter.js</Item>
             </Array>
         </Setting>
     </ConfigItem>
@@ -12690,7 +12689,6 @@ via the Preferences button after logging in.
         <Setting>
             <Array>
                 <Item>KIXSidebarTools.js</Item>
-                <Item>thirdparty/jquery-tablesorter-2.0.5/jquery.tablesorter.js</Item>
             </Array>
         </Setting>
     </ConfigItem>
@@ -13177,7 +13175,6 @@ via the Preferences button after logging in.
                     <Prio>150</Prio>
                 </NavBarModule>
                 <Loader>
-                    <JavaScript>thirdparty/jquery-tablesorter-2.0.5/jquery.tablesorter.js</JavaScript>
                     <JavaScript>Core.UI.Table.Sort.js</JavaScript>
                 </Loader>
             </FrontendModuleReg>

@@ -33,7 +33,7 @@ Core.Agent.Statistics = (function (TargetNS) {
      */
     TargetNS.InitAddScreen = function () {
 
-        $('.BigButtons a').bind('click', function () {
+        $('.BigButtons a').on('click', function () {
             var $Link = $(this);
 
             if ($Link.hasClass('Disabled')) {

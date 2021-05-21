@@ -115,7 +115,7 @@ ITSM.Agent.LinkGraph = ( function (TargetNS) {
         $Nodes[ID]         = $Node;
         NodesRightAttr[ID] = $Nodes[ID].find('#RightsAttr').val();
 
-        $Nodes[ID].bind('contextmenu', function(e) {
+        $Nodes[ID].on('contextmenu', function(e) {
             if (!e) {
                 e = window.event;
             }
@@ -505,7 +505,7 @@ ITSM.Agent.LinkGraph = ( function (TargetNS) {
             + 'OpenWindow=' + OpenWindow + ';'
             + SerializeData(Core.App.GetSessionInformation());
 
-        $iframe.attr('src', SourceURL).load();
+        $iframe.attr('src', SourceURL).on("load", function() {});
 
         return 0;
     };
@@ -1646,8 +1646,8 @@ ITSM.Agent.LinkGraph = ( function (TargetNS) {
             Core.AJAX.FunctionCall(URL, Data, function(Result) {
                 SavedGraphs = Result.Graphs;
                 $Dialog.find('#StillWorkingImage').remove();
-                $OverwriteRadio.removeAttr('disabled');
-                $SaveButton.removeAttr('disabled');
+                $OverwriteRadio.prop('disabled', false);
+                $SaveButton.prop('disabled', false);
                 $SaveButton.css('color', '');
             });
         } else {
@@ -1670,7 +1670,7 @@ ITSM.Agent.LinkGraph = ( function (TargetNS) {
             Overwrite = 0;
             HideSaveErrors();
             $Dialog.find('#NoSavedGraphs').addClass('Hidden');
-            $SaveButton.removeAttr('disabled');
+            $SaveButton.prop('disabled', false);
             $SaveButton.css('color', '');
             TargetNS.SetDialogPosition('', '');
         });
@@ -1679,7 +1679,6 @@ ITSM.Agent.LinkGraph = ( function (TargetNS) {
                 $Dialog.find('#SaveGraphSelection').html(SavedGraphs.Selection);
 
                 var $SavedGraphSelection = $('#SavedGraphSelection');
-
 
                 $SavedGraphSelection.change(function() {
                     var SavedGraphID = $SavedGraphSelection.val();
@@ -1921,7 +1920,7 @@ ITSM.Agent.LinkGraph = ( function (TargetNS) {
 
             if (Target == CIFullID) {
                 $Dialog.find('#Same').removeClass('Hidden');
-                $Dialog.find('button').removeAttr('disabled');
+                $Dialog.find('button').prop('disabled', false);
                 return;
             }
 
@@ -2085,7 +2084,7 @@ ITSM.Agent.LinkGraph = ( function (TargetNS) {
                                 SetRightAttr(DestObject, $DestNode);
 
                                 // bind function
-                                $('#' + DestObject).bind('mousedown', function(e) {
+                                $('#' + DestObject).on('mousedown', function(e) {
                                     NodeBindMousdown(e);
                                 });
 

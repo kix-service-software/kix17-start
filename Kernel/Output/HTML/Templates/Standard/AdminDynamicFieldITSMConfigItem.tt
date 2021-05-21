@@ -17,7 +17,7 @@
                         <div class="Clear"></div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-$('#ITSMConfigItemClasses').bind('change', function (Event) {
+$('#ITSMConfigItemClasses').on('change', function (Event) {
     $('input[name=DefaultValues]').siblings('div.Remove').find('a').trigger('click');
 });
 //]]></script>
@@ -31,7 +31,7 @@ $('#ITSMConfigItemClasses').bind('change', function (Event) {
                         <div class="Clear"></div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-$('#DeploymentStates').bind('change', function (Event) {
+$('#DeploymentStates').on('change', function (Event) {
     $('input[name=DefaultValues]').siblings('div.Remove').find('a').trigger('click');
 });
 //]]></script>
@@ -44,7 +44,7 @@ $('#DeploymentStates').bind('change', function (Event) {
                         </div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-$('#Constrictions').bind('change', function (Event) {
+$('#Constrictions').on('change', function (Event) {
     if ( $(this).val().indexOf('Configuration') >= 0 ) {
         $('input[name=DefaultValues]').siblings('div.Remove').find('a').trigger('click');
     }
@@ -83,7 +83,7 @@ $('#Constrictions').bind('change', function (Event) {
                         </div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-$('#MaxArraySize').bind('change', function (Event) {
+$('#MaxArraySize').on('change', function (Event) {
     if ( isNaN( $('#MaxArraySize').val() ) ) {
         $('#MaxArraySize').val('1');
     }
@@ -124,7 +124,7 @@ $('#MaxArraySize').bind('change', function (Event) {
                                     </div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-$('#DefaultValues_[% Data.ValueCounter | html %]').siblings('div.Remove').find('a').bind('click', function() {
+$('#DefaultValues_[% Data.ValueCounter | html %]').siblings('div.Remove').find('a').on('click', function() {
     $('#DefaultValues_[% Data.ValueCounter | html %]').parent().remove();
     if ($('input[name=DefaultValues]').length == 0) {
         $('#DefaultValues_Container').hide();
@@ -199,7 +199,7 @@ $('#DefaultValues_AutoComplete').autocomplete({
             + '</div>'
         );
         $('#DefaultValues_' + DefaultValueCount).siblings('div.Remove').find('a').data('counter', DefaultValueCount);
-        $('#DefaultValues_' + DefaultValueCount).siblings('div.Remove').find('a').bind('click', function() {
+        $('#DefaultValues_' + DefaultValueCount).siblings('div.Remove').find('a').on('click', function() {
             $('#DefaultValues_' + $(this).data('counter')).parent().remove();
             if ($('input[name=DefaultValues]').length == 0) {
                 $('#DefaultValues_Container').hide();

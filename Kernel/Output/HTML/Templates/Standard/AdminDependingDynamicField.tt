@@ -101,13 +101,13 @@ $('#DependingFieldContainer').on('click','span',function(event){
 });
 
 // expand all
-$('.Expand').bind('click',function(event){
+$('.Expand').on('click',function(event){
     $('#DependingFieldContainer').jstree('open_all');
     event.preventDefault();
 });
 
 // collaps all
-$('.Collaps').bind('click',function(event){
+$('.Collaps').on('click',function(event){
     $('#DependingFieldContainer').jstree('close_all');
     event.preventDefault();
 });
@@ -155,14 +155,14 @@ $('.Collaps').bind('click',function(event){
                     </fieldset>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#DynamicFieldTarget_[% Data.Counter %]').bind('change', function (Event) {
+    $('#DynamicFieldTarget_[% Data.Counter %]').on('change', function (Event) {
         var Counter = '[% Data.Counter %]';
 
         $('#CurrentCounter').val(Counter);
         Core.AJAX.FormUpdate($('#EditDependingFieldForm'), 'AJAXUpdate', 'DynamicFieldTarget_'+Counter, ['DynamicFieldTargetValue_'+Counter]);
     });
 
-$('#RemoveDynamicField_[% Data.Counter %]').bind('click',function(){
+$('#RemoveDynamicField_[% Data.Counter %]').on('click',function(){
     var CountMax = $('#CountMax').val(),
         Counter = [% Data.Counter %];
 
@@ -196,7 +196,7 @@ $('#RemoveDynamicField_[% Data.Counter %]').bind('click',function(){
                     </fieldset>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-$('#AddDynamicField').bind('click',function(){
+$('#AddDynamicField').on('click',function(){
     var CountMax = $('#CountMax').val();
 
     CountMax++;
@@ -253,7 +253,7 @@ $('#AddDynamicField').bind('click',function(){
                             [% Data.DynamicFieldString %]
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#DynamicField').bind('change', function (Event) {
+    $('#DynamicField').on('change', function (Event) {
         Core.AJAX.FormUpdate($('#AddDependingFieldForm'), 'AJAXUpdateNew', 'DynamicField', ['DynamicFieldValue']);
     });
 //]]></script>

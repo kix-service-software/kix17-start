@@ -42,7 +42,7 @@ System Information:
                         <a href="#" id="GoBack" class="CallForAction"><span>[% Translate("go back to the previous page") | html %]</span></a>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-$('#GoBack').bind('click', function (Event) {
+$('#GoBack').on('click', function (Event) {
     // check if an older history entry is available
     if (history.length > 1) {
         history.back();

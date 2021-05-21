@@ -30,12 +30,12 @@
 <script type="text/javascript">//<![CDATA[
     Core.UI.ActionRow.Init();
 
-    $('a.AsPopup').bind('click', function (Event) {
+    $('a.AsPopup').on('click', function (Event) {
         Core.UI.Popup.OpenPopup($(this).attr('href'), 'Action');
         return false;
     });
 
-    $('.ColumnFilter').bind('change', function (Event) {
+    $('.ColumnFilter').on('change', function (Event) {
         var URL, ColumnFilter, NewColumnFilterStrg, MyRegEx, SessionInformation;
 
         // define variables
@@ -476,7 +476,7 @@ $('.OverviewHeader').off('click').on('click', '.ColumnSettingsTrigger', function
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
     Core.UI.InitCheckboxSelection($('table td.Checkbox'));
-    $('.MasterAction').bind('click', function (Event) {
+    $('.MasterAction').on('click', function (Event) {
         var $MasterActionLink = $(this).find('.MasterActionLink');
         // prevent MasterAction on Dynamic Fields links
         if ($(Event.target).hasClass('DynamicFieldLink')) {
@@ -528,7 +528,7 @@ $('.OverviewHeader').off('click').on('click', '.ColumnSettingsTrigger', function
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
 // Show and hide article flag icon tooltips
-$('.ArticleFlagIcon').bind('mouseover',function(event) {
+$('.ArticleFlagIcon').on('mouseover',function(event) {
     if ( $(this).children('span').html() != '' ) {
         var Left = ( (event.pageX + 200 ) < document.body.clientWidth ) ? (event.pageX + 15) : (event.pageX - 30),
             Top  = ( (event.pageY + 200 ) < document.body.clientHeight ) ? (event.pageY + 15) : (event.pageY - 30);
@@ -538,11 +538,11 @@ $('.ArticleFlagIcon').bind('mouseover',function(event) {
             .html($(this).children('span').html());
     }
 });
-$('.ArticleFlagIcon').bind('mouseout',function(){
+$('.ArticleFlagIcon').on('mouseout',function(){
     $('.ArticleFlagIconTooltip').addClass('Hidden');
 });
 
-$('#SelectAllTickets').bind('click', function (Event) {
+$('#SelectAllTickets').on('click', function (Event) {
     var $Element = $(this);
 
     if ( $(this).hasClass('SelectAllItemsPages')

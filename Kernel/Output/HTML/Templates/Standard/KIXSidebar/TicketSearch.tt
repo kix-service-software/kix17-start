@@ -36,7 +36,7 @@
     } else if(typeof window.KIXSidebarCallback[% Data.Identifier | html %] === typeof undefined) {
         window.KIXSidebarCallback[% Data.Identifier | html %] = KIXSidebarCallback[% Data.Identifier | html %];
     }
-    $('#SearchString[% Data.Identifier | html %]').bind('keyup', function (Event) {
+    $('#SearchString[% Data.Identifier | html %]').on('keyup', function (Event) {
         if ( (Event.keyCode !== 13) && ($('#SearchString[% Data.Identifier | html %]').val().length >= [% Data.QueryMinLength | html %]) ) {
             var TicketID = '';
             var FormID = '';
@@ -90,7 +90,7 @@
             window.KIXSidebarCallback[% Data.Identifier | html %]
         );
     }
-    $('#SearchButton[% Data.Identifier | html %]').bind('click', function (Event) {
+    $('#SearchButton[% Data.Identifier | html %]').on('click', function (Event) {
         KIXSidebarTicketAJAXSearchBox[% Data.Identifier | html %]();
     });
     $('#SearchString[% Data.Identifier | html %]').keydown(function (Event) {
@@ -98,7 +98,7 @@
              KIXSidebarTicketAJAXSearchBox[% Data.Identifier | html %]();
          }
     });
-    $('#SelectedCustomerUser').bind('change', function () {
+    $('#SelectedCustomerUser').on('change', function () {
         KIXSidebarTicketAJAXSearchBox[% Data.Identifier | html %]();
     });
 //]]></script>
@@ -138,10 +138,10 @@
 </script>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#Subject').bind('blur', function () {
+    $('#Subject').on('blur', function () {
         KIXSidebarTicketAJAXSearchSubject[% Data.Identifier | html %]();
     });
-    $('#SelectedCustomerUser').bind('change', function () {
+    $('#SelectedCustomerUser').on('change', function () {
         KIXSidebarTicketAJAXSearchSubject[% Data.Identifier | html %]();
     });
 //]]>
@@ -182,7 +182,7 @@
 </script>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#SelectedCustomerUser').bind('change', function () {
+    $('#SelectedCustomerUser').on('change', function () {
         KIXSidebarTicketAJAXSearchAll[% Data.Identifier | html %]();
     });
 //]]>

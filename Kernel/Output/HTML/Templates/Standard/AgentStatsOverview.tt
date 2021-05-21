@@ -89,7 +89,7 @@
 
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('.DataTable > tbody > tr').bind('click', function (Event) {
+    $('.DataTable > tbody > tr').on('click', function (Event) {
         window.location = $(this).find('a').attr('href');
     });
 //]]></script>

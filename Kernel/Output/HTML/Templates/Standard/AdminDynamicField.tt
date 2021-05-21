@@ -32,7 +32,7 @@
                     </li>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-$('#[% Data.SelectName %]').bind('change', function() {
+$('#[% Data.SelectName %]').on('change', function() {
     if ($(this).val() !== '') {
         Core.Agent.Admin.DynamicField.Redirect($(this).val(), '[% Data.ObjectType %]');
 
@@ -101,7 +101,7 @@ $('#[% Data.SelectName %]').bind('change', function() {
 
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-$('#ShowContextSettingsDialog').bind('click', function (Event) {
+$('#ShowContextSettingsDialog').on('click', function (Event) {
     Core.UI.Dialog.ShowContentDialog($('#ContextSettingsDialogContainer'), [% Translate("Settings") | JSON %], '20%', 'Center', true,
         [
             {
@@ -189,7 +189,7 @@ $('#ShowContextSettingsDialog').bind('click', function (Event) {
 
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-$('.MasterAction').bind('click', function (Event) {
+$('.MasterAction').on('click', function (Event) {
     var $MasterActionLink = $(this).find('.MasterActionLink');
     // only act if the link was not clicked directly
     if (Event.target !== $MasterActionLink.get(0)) {
@@ -198,7 +198,7 @@ $('.MasterAction').bind('click', function (Event) {
     }
 });
 
-$('.DynamicFieldDelete').bind('click', function (Event) {
+$('.DynamicFieldDelete').on('click', function (Event) {
 
     if (window.confirm([% Translate("Do you really want to delete this dynamic field? ALL associated data will be LOST!") | JSON %])) {
 

@@ -12,7 +12,7 @@
 [% RenderBlockStart("ArticleFilterDialog") %]
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#SetArticleFilter').bind('click', function (Event) {
+    $('#SetArticleFilter').on('click', function (Event) {
         Core.UI.Dialog.ShowContentDialog($('#ArticleFilterDialog'), [% Translate("Article filter") | JSON %], '20px', 'Center', true, [
             {
                 Label: [% Translate("Apply") | JSON %],
@@ -39,7 +39,7 @@
         ]);
         return false;
     });
-    $('#ResetArticleFilter').bind('click', function (Event) {
+    $('#ResetArticleFilter').on('click', function (Event) {
         var Data = {
             Action:       'AgentTicketZoomTabArticle',
             Subaction:    'ArticleFilterSet',
@@ -118,7 +118,7 @@
 [% RenderBlockStart("EventTypeFilterDialog") %]
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#SetArticleFilter').bind('click', function (Event) {
+    $('#SetArticleFilter').on('click', function (Event) {
         $('#EventTypeFilterDialog').find('form').css('width', '500px');
         Core.UI.Dialog.ShowContentDialog($('#EventTypeFilterDialog'), [% Translate("Event Type Filter") | JSON %], '20px', 'Center', true, [
             {
@@ -139,7 +139,7 @@
         ]);
         return false;
     });
-    $('#ResetArticleFilter').bind('click', function (Event) {
+    $('#ResetArticleFilter').on('click', function (Event) {
         var Data = {
             Action:       'AgentTicketZoomTabArticle',
             Subaction:    'EvenTypeFilterSet',
@@ -637,7 +637,7 @@ function CheckIFrameHeight(IFrameID) {
         Core.UI.Floater.Init();
     }
 
-    $('#TicketMarkAsRead').bind('click', function(Event) {
+    $('#TicketMarkAsRead').on('click', function(Event) {
         Core.KIX4OTRS.TicketZoomTabs.MarkTicketAsSeen([% Data.TicketID | html %],0);
         return false;
     });

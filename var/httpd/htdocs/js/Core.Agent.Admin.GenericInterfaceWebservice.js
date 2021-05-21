@@ -61,27 +61,27 @@ Core.Agent.Admin.GenericInterfaceWebservice = (function (TargetNS) {
             TargetNS.HideElements();
         }
 
-        $('#DeleteButton').bind('click', TargetNS.ShowDeleteDialog);
-        $('#CloneButton').bind('click', TargetNS.ShowCloneDialog);
-        $('#ImportButton').bind('click', TargetNS.ShowImportDialog);
+        $('#DeleteButton').on('click', TargetNS.ShowDeleteDialog);
+        $('#CloneButton').on('click', TargetNS.ShowCloneDialog);
+        $('#ImportButton').on('click', TargetNS.ShowImportDialog);
 
-        $('#ProviderTransportProperties').bind('click', function() {
+        $('#ProviderTransportProperties').on('click', function() {
             TargetNS.Redirect('Webservice.Transport', 'ProviderTransportList', {CommunicationType: 'Provider'});
         });
 
-        $('#RequesterTransportProperties').bind('click', function() {
+        $('#RequesterTransportProperties').on('click', function() {
             TargetNS.Redirect('Webservice.Transport', 'RequesterTransportList', {CommunicationType: 'Requester'});
         });
 
-        $('#OperationList').bind('change', function() {
+        $('#OperationList').on('change', function() {
             TargetNS.Redirect('Webservice.Operation', 'OperationList', {OperationType: $(this).val()});
         });
 
-        $('#InvokerList').bind('change', function() {
+        $('#InvokerList').on('change', function() {
             TargetNS.Redirect('Webservice.Invoker', 'InvokerList', {InvokerType: $(this).val()});
         });
 
-        $('.HideTrigger').bind('change', function(){
+        $('.HideTrigger').on('change', function(){
             TargetNS.HideElements();
         });
 
@@ -171,11 +171,11 @@ Core.Agent.Admin.GenericInterfaceWebservice = (function (TargetNS) {
         $('.CloneName').val(CloneName);
 
         // bind button actions
-        $('#CancelCloneButtonAction').bind('click', function() {
+        $('#CancelCloneButtonAction').on('click', function() {
             Core.UI.Dialog.CloseDialog($('#CloneDialog'));
         });
 
-        $('#CloneButtonAction').bind('click', function() {
+        $('#CloneButtonAction').on('click', function() {
             $('#CloneForm').submit();
         });
 
@@ -204,11 +204,11 @@ Core.Agent.Admin.GenericInterfaceWebservice = (function (TargetNS) {
         // Currently we have not a function to initialize the validation on a single form
         Core.Form.Validate.Init();
 
-        $('#CancelImportButtonAction').bind('click', function() {
+        $('#CancelImportButtonAction').on('click', function() {
             Core.UI.Dialog.CloseDialog($('#ImportDialog'));
         });
 
-        $('#ImportButtonAction').bind('click', function() {
+        $('#ImportButtonAction').on('click', function() {
             $('#ImportForm').submit();
         });
 
@@ -334,7 +334,7 @@ Core.Agent.Admin.GenericInterfaceWebservice = (function (TargetNS) {
         DialogData[Data.ElementID] = Data;
 
         // binding a click event to the defined element
-        $(DialogData[Data.ElementID].ElementSelector).bind('click', TargetNS.ShowDeleteActionDialog);
+        $(DialogData[Data.ElementID].ElementSelector).on('click', TargetNS.ShowDeleteActionDialog);
     };
 
     return TargetNS;

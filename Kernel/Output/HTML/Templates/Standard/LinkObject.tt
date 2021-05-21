@@ -211,10 +211,10 @@ if (Core.UI.Popup.CurrentIsPopupWindow()) {
             });
     });
 
-    $('.LinkedObjects > input[type=checkbox]').bind('click', function (Event) {
+    $('.LinkedObjects > input[type=checkbox]').on('click', function (Event) {
         Event.stopPropagation();
     });
-    $('.MasterAction').bind('click', function (Event) {
+    $('.MasterAction').on('click', function (Event) {
         var $MasterActionLink = $(this).find('.MasterActionLink');
         // prevent MasterAction on Dynamic Fields links
         if ($(Event.target).hasClass('DynamicFieldLink')) {
@@ -237,7 +237,7 @@ if (Core.UI.Popup.CurrentIsPopupWindow()) {
 
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('.SelectAll').bind('click', function () {
+    $('.SelectAll').on('click', function () {
         var Status = $(this).prop('checked');
         $(this).closest('.WidgetSimple').find('table input[type=checkbox]').prop('checked', Status);
     });
@@ -428,7 +428,7 @@ if (Core.UI.Popup.CurrentIsPopupWindow()) {
 </div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-$("#SetColumnPreferences_[% Data.PreferencesID %]").bind('click', function (Event) {
+$("#SetColumnPreferences_[% Data.PreferencesID %]").on('click', function (Event) {
     var Action = '[% Env("Action") %]';
 
     if ( Action.match(/AgentLinkObject/) ) {

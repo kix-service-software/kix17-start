@@ -50,7 +50,7 @@ $(".QueueTreeContent").jstree({
     plugins: [ 'types' ]
 });
 
-$('#QueueTreeToggle').bind('click', function (Event) {
+$('#QueueTreeToggle').on('click', function (Event) {
     $('#QueueTreeControl, .QueueTreeContent').toggleClass('Hidden');
     $(this).closest('.SidebarColumn').toggleClass('Collapsed W35px');
  });
@@ -64,13 +64,13 @@ $(".QueueTreeContent").on("click",'a',function(e) {
 });
 
 // expand all
-$('.Expand').bind('click',function(event){
+$('.Expand').on('click',function(event){
     $(".QueueTreeContent").jstree('open_all');
     event.preventDefault();
 });
 
 // collaps all
-$('.Collaps').bind('click',function(event){
+$('.Collaps').on('click',function(event){
     $(".QueueTreeContent").jstree('close_all');
     event.preventDefault();
 });

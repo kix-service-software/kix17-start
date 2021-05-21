@@ -126,7 +126,7 @@
                     <div class="Clear"></div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('.CustomerTicketRemove').bind('click', function () {
+    $('.CustomerTicketRemove').on('click', function () {
         Core.Agent.CustomerSearch.RemoveCustomerTicket( $(this) );
         return false;
     });
@@ -357,7 +357,7 @@
                                 <input type="hidden" id="AttachmentDelete[% Data.FileID | html %]" name="AttachmentDelete[% Data.FileID | html %]" />
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#AttachmentDeleteButton[% Data.FileID | html %]').bind('click', function () {
+    $('#AttachmentDeleteButton[% Data.FileID | html %]').on('click', function () {
         var $Form = $('#AttachmentDeleteButton[% Data.FileID | html %]').closest('form');
         $('#AttachmentDelete[% Data.FileID | html %]').val(1);
         Core.Form.Validate.DisableValidation($Form);
@@ -374,7 +374,7 @@
                         </ul>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#FileUpload').bind('change', function () {
+    $('#FileUpload').on('change', function () {
         var $Form = $('#FileUpload').closest('form');
         Core.Form.Validate.DisableValidation($Form);
         $Form.find('#AttachmentUpload').val('1').end().submit();
@@ -389,7 +389,7 @@
                         [% Data.NextStatesStrg %]
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#StateID').bind('change', function (Event) {
+    $('#StateID').on('change', function (Event) {
         Core.AJAX.FormUpdate($('#ComposeTicket'), 'AJAXUpdate', 'StateID', [ [% Data.DynamicFieldNamesStrg %] ]);
     });
 //]]></script>

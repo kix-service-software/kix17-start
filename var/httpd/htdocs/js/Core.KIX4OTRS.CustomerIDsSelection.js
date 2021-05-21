@@ -30,7 +30,7 @@ Core.KIX4OTRS.CustomerIDsSelection = (function(TargetNS) {
         if (!$CustomerIDs.length || !$CustomerID.length)
             return;
 
-        $CustomerIDs.bind('click', function() {
+        $CustomerIDs.on('click', function() {
             $CustomerID.val($(this).val());
             if ($Form.length) {
                 Core.AJAX.FormUpdate($Form, 'AJAXUpdate', 'CustomerID', ['TypeID', 'Dest', 'NewUserID', 'NewResponsibleID', 'NextStateID', 'PriorityID', 'ServiceID', 'SLAID']);

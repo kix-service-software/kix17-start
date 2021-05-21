@@ -320,12 +320,12 @@ function CheckIFrameHeight(IFrameID) {
 <script type="text/javascript">//<![CDATA[
     Core.KIX4OTRS.KIXSidebar.Init('[% Env("AgentFAQZoomSidebarWidth") %]','[% Env("Action") %]','ItemID=[% Data.ItemID | uri %];');
 
-    $('ul.Actions a.AsPopup').bind('click', function (Event) {
+    $('ul.Actions a.AsPopup').on('click', function (Event) {
         Core.UI.Popup.OpenPopup ($(this).attr('href'), 'Action');
         return false;
     });
 
-    $('.RateButton').bind('click', function (Event) {
+    $('.RateButton').on('click', function (Event) {
         var RateNumber = parseInt($(this).closest('li').attr('id').replace(/RateButton/, ''), 10);
         $('#RateValue').val(RateNumber);
         $('#RateSubmitButton').fadeIn(250);

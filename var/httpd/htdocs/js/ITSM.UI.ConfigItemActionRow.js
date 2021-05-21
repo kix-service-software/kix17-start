@@ -131,7 +131,7 @@ ITSM.UI.ConfigItemActionRow = (function (TargetNS) {
                             ActionRowElement.attr('href', Value.Link);
                         }
                         if (Value.PopupType) {
-                            ActionRowElement.bind('click.Popup', function () {
+                            ActionRowElement.on('click.Popup', function () {
                                 Core.UI.Popup.OpenPopup(Value.Link, Value.PopupType);
                                 return false;
                             });
@@ -178,12 +178,12 @@ ITSM.UI.ConfigItemActionRow = (function (TargetNS) {
             ConfigItemView = 'Small';
         }
 
-        $(ConfigItemElementSelectors[ConfigItemView]).bind('click', function (Event) {
+        $(ConfigItemElementSelectors[ConfigItemView]).on('click', function (Event) {
             Event.stopPropagation();
             TargetNS.UpdateActionRow($(this), $(ConfigItemElementSelectors[ConfigItemView]), $('div.OverviewActions ul.Actions'));
         });
 
-        $('#ConfigItemBulkAction a').bind('click', function () {
+        $('#ConfigItemBulkAction a').on('click', function () {
             var $Element = $(this);
 
             if ($Element.parent('li').hasClass('Inactive')) {

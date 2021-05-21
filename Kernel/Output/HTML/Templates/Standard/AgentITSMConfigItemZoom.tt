@@ -98,7 +98,7 @@
 
     Core.KIX4OTRS.KIXSidebar.Init('[% Env("AgentITSMConfigItemZoomSidebarWidth") %]','[% Env("Action") %]','ConfigItemID=[% Data.ConfigItemID | uri %];');
 
-    $('ul.Actions a.AsPopup').bind('click', function (Event) {
+    $('ul.Actions a.AsPopup').on('click', function (Event) {
         if ( $(this).attr('href').match(/AgentTicket(Phone|Email)/) ) {
             window.open($(this).attr('href'),'_blank');
         }
@@ -108,7 +108,7 @@
         return false;
     });
 
-    $('ul.Actions a.HistoryBack').bind('click', function (Event) {
+    $('ul.Actions a.HistoryBack').on('click', function (Event) {
         history.back();
         return false;
     });
@@ -122,7 +122,7 @@
             $(this).find('div').html('<span class="AJAXLoader"></span>');
         },
         beforeActivate: function(event, ui) {
-            $(window).unbind();
+            $(window).off();
             $(this).find('div').html('<span class="AJAXLoader"></span>');
         },
         active: '[% Data.SelectedTab | uri %]',

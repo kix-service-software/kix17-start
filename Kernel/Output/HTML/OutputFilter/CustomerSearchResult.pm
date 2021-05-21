@@ -37,7 +37,7 @@ sub Run {
 
         # create replace string
         my $ReplaceString = '[% WRAPPER JSOnDocumentComplete %]'
-            . '$(\'#Submit\').bind(\'click\',function(){'
+            . '$(\'#Submit\').on(\'click\',function(){'
             . '     if ( $(\'#ResultForm\').val() == "Print" ) {'
             . '         $(\'form[name="compose"]\').attr(\'target\', \'SearchResultPage\');'
             . '     }'

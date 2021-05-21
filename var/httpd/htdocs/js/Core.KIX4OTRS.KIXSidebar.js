@@ -40,7 +40,7 @@ Core.KIX4OTRS.KIXSidebar = (function(TargetNS) {
         }
 
         // bind page click
-        $('.ArticleAttachmentPageLink').bind('click', function(event) {
+        $('.ArticleAttachmentPageLink').on('click', function(event) {
             var CurrentDivID = $(this).html();
 
             // hide all page divs
@@ -85,7 +85,7 @@ Core.KIX4OTRS.KIXSidebar = (function(TargetNS) {
         }
 
         // bind page click
-        $('.LinkedCIPageLink').bind('click', function(event) {
+        $('.LinkedCIPageLink').on('click', function(event) {
             var CurrentDivID = $(this).html();
 
             // hide all page divs

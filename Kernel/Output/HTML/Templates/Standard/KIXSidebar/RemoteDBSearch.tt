@@ -90,7 +90,7 @@
     } else if(typeof window.KIXSidebarCallback[% Data.Identifier | html %] === typeof undefined) {
         window.KIXSidebarCallback[% Data.Identifier | html %] = KIXSidebarCallback[% Data.Identifier | html %];
     }
-    $('#SearchString[% Data.Identifier | html %]').bind('keyup', function (Event) {
+    $('#SearchString[% Data.Identifier | html %]').on('keyup', function (Event) {
         if ( (Event.keyCode !== 13) && ($('#SearchString[% Data.Identifier | html %]').val().length >= [% Data.QueryMinLength | html %]) ) {
             var Data = {};
             Data.SearchString   = $('#SearchString[% Data.Identifier | html %]').val();
@@ -122,7 +122,7 @@
             window.KIXSidebarCallback[% Data.Identifier | html %]
         );
     };
-    $('#SearchButton[% Data.Identifier | html %]').bind('click', function (Event) {
+    $('#SearchButton[% Data.Identifier | html %]').on('click', function (Event) {
         KIXSidebarRemoteDBSearch[% Data.Identifier | html %]();
     });
     $('#SearchString[% Data.Identifier | html %]').keydown(function (Event) {
@@ -182,7 +182,7 @@
     } else if(typeof window.KIXSidebarCallback[% Data.Identifier | html %] === typeof undefined) {
         window.KIXSidebarCallback[% Data.Identifier | html %] = KIXSidebarCallback[% Data.Identifier | html %];
     }
-    $('#SelectedCustomerUser').bind('change',
+    $('#SelectedCustomerUser').on('change',
         function(){
 
             KIXSidebarTools.UpdateDynamicField('[% Data.DynamicFields | html %]', '', '[% Data.TicketID | html %]');
@@ -212,7 +212,7 @@
 [% RenderBlockStart("AutoSelectOne") %]
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#SearchResult[% Data.Identifier | html %]').bind('UpdateResultField',
+    $('#SearchResult[% Data.Identifier | html %]').on('UpdateResultField',
         function(){
             if ($('.ResultCheckbox[% Data.Identifier | html %]').length == 1) {
                 var Element = $('.ResultCheckbox[% Data.Identifier | html %]').first();

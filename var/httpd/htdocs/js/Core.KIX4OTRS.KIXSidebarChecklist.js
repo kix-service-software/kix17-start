@@ -30,7 +30,7 @@ Core.KIX4OTRS.KIXSidebarChecklist = (function(TargetNS) {
         }
 
         // show or hide settings
-        $('#Checklist .ActionMenu .WidgetAction.Settings a').unbind('click.WidgetToggle').bind('click', function() {
+        $('#Checklist .ActionMenu .WidgetAction.Settings a').off('click.WidgetToggle').on('click', function() {
 
             // show settings hide edit fields
             if ( $('#KIXSidebarChecklistEdit').hasClass('Hidden') ) {
@@ -49,7 +49,7 @@ Core.KIX4OTRS.KIXSidebarChecklist = (function(TargetNS) {
             StateStyles = AvailableStateStyles;
 
             // on submit update the task list
-            $('#ChecklistSubmit').bind('click', function (Event) {
+            $('#ChecklistSubmit').on('click', function (Event) {
                 var TicketID        = $('input[name="TicketID"]').val(),
                     TaskString      = $('#ChecklistTasks').val(),
                     Data = {

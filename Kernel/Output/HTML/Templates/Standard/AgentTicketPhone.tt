@@ -55,7 +55,7 @@
                         [% Data.DefaultSetSelStr %]
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#DefaultSetSelection').bind('change', function (Event) {
+    $('#DefaultSetSelection').on('change', function (Event) {
         Core.Form.Validate.DisableValidation($(this).closest('form'));
         $('#DefaultSet').val( $(this).val() );
         $('input[name="Subaction"]').val('');
@@ -63,7 +63,7 @@
         $('#DefaultSetTypeChanged').val('');
         $(this).closest('form').submit();
     });
-    $('#TypeID').bind('change', function (Event) {
+    $('#TypeID').on('change', function (Event) {
         if ( $('#DefaultSetSelection').val() != '' ) {
             $('#DefaultSetTypeChanged').val(1);
         }
@@ -85,7 +85,7 @@
                         <div id="TypeIDServerError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#TypeID').bind('change', function (Event) {
+    $('#TypeID').on('change', function (Event) {
         Core.AJAX.FormUpdate($('#NewPhoneTicket'), 'AJAXUpdate', 'TypeID', ['Dest', 'NewUserID', 'NewResponsibleID', 'NextStateID', 'PriorityID', 'ServiceID', 'SLAID', 'SignKeyID', 'CryptKeyID', 'To', 'Cc', 'Bcc', 'StandardTemplateID' [% Data.DynamicFieldNamesStrg %]]);
     });
 //]]></script>
@@ -162,7 +162,7 @@
                     <div class="Clear"></div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('.CustomerTicketRadio').bind('change', function () {
+    $('.CustomerTicketRadio').on('change', function () {
         var CustomerKey;
         if ( $(this).prop('checked') ){
             // reset selected customer id
@@ -175,7 +175,7 @@
         return false;
     });
 
-    $('.CustomerTicketRemove').bind('click', function () {
+    $('.CustomerTicketRemove').on('click', function () {
         Core.Agent.CustomerSearch.RemoveCustomerTicket( $(this) );
         return false;
     });
@@ -203,7 +203,7 @@
                         <div id="DestServerError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#Dest').bind('change', function (Event) {
+    $('#Dest').on('change', function (Event) {
         Core.AJAX.FormUpdate($('#NewPhoneTicket'), 'AJAXUpdate', 'Dest', ['TypeID', 'NewUserID', 'NewResponsibleID', 'NextStateID', 'PriorityID', 'ServiceID', 'SLAID', 'SignKeyID', 'CryptKeyID', 'To', 'Cc', 'Bcc', 'StandardTemplateID' [% Data.DynamicFieldNamesStrg %]]);
     });
 //]]></script>
@@ -218,7 +218,7 @@
                         <div id="ServiceIDServerError" class="TooltipErrorMessage"><p>[% Translate("Service invalid.") | html %]</p></div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#ServiceID').bind('change', function (Event) {
+    $('#ServiceID').on('change', function (Event) {
         Core.AJAX.FormUpdate($('#NewPhoneTicket'), 'AJAXUpdate', 'ServiceID', ['TypeID', 'Dest', 'NewUserID', 'NewResponsibleID', 'NextStateID', 'PriorityID', 'SLAID', 'SignKeyID', 'CryptKeyID', 'To', 'Cc', 'Bcc', 'StandardTemplateID' [% Data.DynamicFieldNamesStrg %]]);
 # ---
 # ITSMIncidentProblemManagement
@@ -261,7 +261,7 @@
                         <div id="ServiceIDServerError" class="TooltipErrorMessage"><p>[% Translate("Service invalid.") | html %]</p></div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#ServiceID').bind('change', function (Event) {
+    $('#ServiceID').on('change', function (Event) {
         Core.AJAX.FormUpdate($('#NewPhoneTicket'), 'AJAXUpdate', 'ServiceID', ['TypeID', 'Dest', 'NewUserID', 'NewResponsibleID', 'NextStateID', 'PriorityID', 'SLAID', 'SignKeyID', 'CryptKeyID', 'To', 'Cc', 'Bcc', 'StandardTemplateID' [% Data.DynamicFieldNamesStrg %]]);
 # ---
 # ITSMIncidentProblemManagement
@@ -301,7 +301,7 @@
                         [% Data.SLAStrg %]
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#SLAID').bind('change', function (Event) {
+    $('#SLAID').on('change', function (Event) {
         Core.AJAX.FormUpdate($('#NewPhoneTicket'), 'AJAXUpdate', 'SLAID', ['TypeID', 'Dest', 'NewUserID', 'NewResponsibleID', 'ServiceID', 'NextStateID', 'PriorityID', 'SignKeyID', 'CryptKeyID', 'To', 'Cc', 'Bcc', 'StandardTemplateID' [% Data.DynamicFieldNamesStrg %]]);
     });
 //]]></script>
@@ -318,7 +318,7 @@
                         <div id="SLAIDServerError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#SLAID').bind('change', function (Event) {
+    $('#SLAID').on('change', function (Event) {
         Core.AJAX.FormUpdate($('#NewPhoneTicket'), 'AJAXUpdate', 'SLAID', ['TypeID', 'Dest', 'NewUserID', 'NewResponsibleID', 'ServiceID', 'NextStateID', 'PriorityID', 'SignKeyID', 'CryptKeyID', 'To', 'Cc', 'Bcc', 'StandardTemplateID' [% Data.DynamicFieldNamesStrg %]]);
     });
 //]]></script>
@@ -337,7 +337,7 @@
                         </a>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#OwnerSelectionGetAll').bind('click', function (Event) {
+    $('#OwnerSelectionGetAll').on('click', function (Event) {
         $('#OwnerAll').val('1'); // Needed? Why?
         Core.AJAX.FormUpdate($('#NewPhoneTicket'), 'AJAXUpdate', 'OwnerAll', ['NewUserID'], function() {
             $('#NewUserID').focus();
@@ -345,7 +345,7 @@
         return false;
     });
 
-    $('#NewUserID').bind('change', function (Event) {
+    $('#NewUserID').on('change', function (Event) {
         Core.AJAX.FormUpdate($('#NewPhoneTicket'), 'AJAXUpdate', 'NewUserID', [ 'TypeID', 'Dest', 'NewResponsibleID', 'NextStateID', 'PriorityID', 'ServiceID', 'SLAID', 'SignKeyID', 'CryptKeyID', 'To', 'Cc', 'Bcc', 'StandardTemplateID' [% Data.DynamicFieldNamesStrg %]]);
     });
 //]]></script>
@@ -364,7 +364,7 @@
                         </a>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#ResponsibleSelectionGetAll').bind('click', function (Event) {
+    $('#ResponsibleSelectionGetAll').on('click', function (Event) {
         $('#ResponsibleAll').val('1'); // Needed? Why?
         Core.AJAX.FormUpdate($('#NewPhoneTicket'), 'AJAXUpdate', 'ResponsibleAll', ['NewResponsibleID'], function() {
             $('#NewResponsibleID').focus();
@@ -372,7 +372,7 @@
         return false;
     });
 
-    $('#NewResponsibleID').bind('change', function (Event) {
+    $('#NewResponsibleID').on('change', function (Event) {
         Core.AJAX.FormUpdate($('#NewPhoneTicket'), 'AJAXUpdate', 'NewResponsibleID', [ 'TypeID', 'Dest', 'NewUserID', 'NextStateID', 'PriorityID', 'ServiceID', 'SLAID', 'SignKeyID', 'CryptKeyID', 'To', 'Cc', 'Bcc', 'StandardTemplateID' [% Data.DynamicFieldNamesStrg %]]);
     });
 //]]></script>
@@ -425,7 +425,7 @@
                     <div class="Clear"></div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#StandardTemplateID').bind('change', function (Event) {
+    $('#StandardTemplateID').on('change', function (Event) {
         Core.Agent.TicketAction.ConfirmTemplateOverwrite('RichText', $(this), function () {
             Core.AJAX.FormUpdate($('#NewPhoneTicket'), 'AJAXUpdate', 'StandardTemplateID', ['RichTextField']);
         });
@@ -461,7 +461,7 @@
                                 <input type="hidden" id="AttachmentDelete[% Data.FileID | html %]" name="AttachmentDelete[% Data.FileID | html %]" />
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#AttachmentDeleteButton[% Data.FileID | html %]').bind('click', function () {
+    $('#AttachmentDeleteButton[% Data.FileID | html %]').on('click', function () {
         var $Form = $('#AttachmentDeleteButton[% Data.FileID | html %]').closest('form');
         $('#AttachmentDelete[% Data.FileID | html %]').val(1);
         Core.Form.Validate.DisableValidation($Form);
@@ -478,7 +478,7 @@
                         </ul>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#FileUpload').bind('change', function () {
+    $('#FileUpload').on('change', function () {
         var $Form = $('#FileUpload').closest('form');
         Core.Form.Validate.DisableValidation($Form);
         $Form.find('#AttachmentUpload').val('1').end().submit();
@@ -495,7 +495,7 @@
                         <div id="NextStateIDServerError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#NextStateID').bind('change', function (Event) {
+    $('#NextStateID').on('change', function (Event) {
         Core.AJAX.FormUpdate($('#NewPhoneTicket'), 'AJAXUpdate', 'NextStateID', [ 'TypeID', 'Dest', 'NewUserID','NewResponsibleID', 'PriorityID', 'ServiceID', 'SLAID', 'SignKeyID', 'CryptKeyID', 'To', 'Cc', 'Bcc', 'StandardTemplateID' [% Data.DynamicFieldNamesStrg %]]);
     });
 //]]></script>
@@ -534,7 +534,7 @@
                         <div id="PriorityIDServerError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#PriorityID').bind('change', function (Event) {
+    $('#PriorityID').on('change', function (Event) {
         Core.AJAX.FormUpdate($('#NewPhoneTicket'), 'AJAXUpdate', 'PriorityID', [ 'TypeID', 'Dest', 'NewUserID','NewResponsibleID', 'NextStateID', 'ServiceID', 'SLAID', 'SignKeyID', 'CryptKeyID', 'To', 'Cc', 'Bcc', 'StandardTemplateID' [% Data.DynamicFieldNamesStrg %]]);
     });
 //]]></script>
@@ -585,7 +585,7 @@
 # ---
 # ITSMIncidentProblemManagement
 # ---
-    $('a.AsPopup').bind('click', function (Event) { Core.UI.Popup.OpenPopup($(this).attr('href'), 'Action'); return false;});
+    $('a.AsPopup').on('click', function (Event) { Core.UI.Popup.OpenPopup($(this).attr('href'), 'Action'); return false;});
 
 /*global ITSM: true */
         // show service incident state and signal for the selected service (this part here is important if the page is reloaded due to e.g. attachment upload)

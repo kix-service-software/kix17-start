@@ -125,7 +125,7 @@
 
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-$('.NotificationDelete').bind('click', function (Event) {
+$('.NotificationDelete').on('click', function (Event) {
 
     if (window.confirm([% Translate("Do you really want to delete this notification?") | JSON %])) {
         window.location = $(this).attr('href');

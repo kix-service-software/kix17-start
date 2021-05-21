@@ -840,16 +840,16 @@ sub LoadDefaults {
     # --------------------------------------------------- #
     # CommonJS                                           #
     # --------------------------------------------------- #
-
     # Customer Common JS
     $Self->{'Loader::Customer::CommonJS'}->{'000-Framework'} =  [
-        'thirdparty/jquery-2.1.4/jquery.js',
+        'thirdparty/jquery-3.6/jquery.min.js',
         'thirdparty/jquery-browser-detection/jquery-browser-detection.js',
-        'thirdparty/jquery-validate-1.14.0/jquery.validate.js',
-        'thirdparty/jquery-ui-1.11.4/jquery-ui.js',
+        'thirdparty/jquery-validate-1.19.3/jquery.validate.min.js',
+        'thirdparty/jquery-ui-1.12.1/jquery-ui.min.js',
         'thirdparty/stacktrace-0.6.4/stacktrace.js',
         'thirdparty/jquery-pubsub/pubsub.js',
         'thirdparty/jquery-jstree-3.1.1/jquery.jstree.js',
+        'thirdparty/jquery-tablesorter-2.31.1/jquery.tablesorter.min.js',
         'Core.Debug.js',
         'Core.Exception.js',
         'Core.Data.js',
@@ -875,17 +875,17 @@ sub LoadDefaults {
         'Core.Customer.js',
         'Core.Customer.Responsive.js'
     ];
-
     # Agent Common JS
     $Self->{'Loader::Agent::CommonJS'}->{'000-Framework'} =  [
-        'thirdparty/jquery-2.1.4/jquery.js',
+        'thirdparty/jquery-3.6/jquery.min.js',
         'thirdparty/jquery-browser-detection/jquery-browser-detection.js',
-        'thirdparty/jquery-ui-1.11.4/jquery-ui.js',
+        'thirdparty/jquery-ui-1.12.1/jquery-ui.min.js',
         'thirdparty/jquery-ui-touch-punch-0.2.3/jquery.ui.touch-punch.js',
-        'thirdparty/jquery-validate-1.14.0/jquery.validate.js',
+        'thirdparty/jquery-validate-1.19.3/jquery.validate.min.js',
         'thirdparty/stacktrace-0.6.4/stacktrace.js',
         'thirdparty/jquery-pubsub/pubsub.js',
         'thirdparty/jquery-jstree-3.1.1/jquery.jstree.js',
+        'thirdparty/jquery-tablesorter-2.31.1/jquery.tablesorter.min.js',
         'Core.JavaScriptEnhancements.js',
         'Core.Debug.js',
         'Core.Exception.js',

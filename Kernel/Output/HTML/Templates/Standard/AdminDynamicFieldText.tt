@@ -126,12 +126,12 @@
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
 // click handler to remove regex
-$('.RemoveRegEx').bind('click', function () {
+$('.RemoveRegEx').on('click', function () {
     Core.Agent.Admin.DynamicFieldText.RemoveRegEx( $(this).attr('id') );
     return false;
 });
 // click handler to add regex
-$('#AddRegEx').bind('click', function () {
+$('#AddRegEx').on('click', function () {
     Core.Agent.Admin.DynamicFieldText.AddRegEx(
         $(this).closest('fieldset').find('.RegExInsert')
     );

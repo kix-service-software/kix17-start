@@ -204,7 +204,7 @@ function CheckIFrameHeight(IFrameID) {
 /*global FAQ: true */
 FAQ.Customer.FAQZoom.Init();
 
-$('a.AsPopup').bind('click', function (Event) {
+$('a.AsPopup').on('click', function (Event) {
     Core.UI.Popup.OpenPopup($(this).attr('href'), 'TicketAction');
     return false;
 });

@@ -103,7 +103,7 @@
     });
 
     // reload assigned config item sidebar if selected user changed
-    $('#SelectedCustomerUser').bind('change',function(){
+    $('#SelectedCustomerUser').on('change',function(){
         var SelectedCustomerUser = $('#SelectedCustomerUser').val(),
             URL = 'Action=KIXSidebarLinkedCIsAJAXHandler;CallingAction=' + CallingAction + ';CustomerUserID=' + SelectedCustomerUser + ';FormID=' + FormID;
         Core.AJAX.FunctionCall(Core.Config.Get('CGIHandle'), URL, function (Result) {
@@ -114,7 +114,7 @@
     });
 
     // reload assigned config items if class changed
-    $('#ConfigItemClass').bind('change',function(){
+    $('#ConfigItemClass').on('change',function(){
         // get ticket id
         var TicketID = '';
         if ( $('#TicketID').length ) {
@@ -142,7 +142,7 @@
     });
 
     // click event for filter use - opens new dialog popup
-    $('#KIXSidebarLinkedConfigItemSetClassFilter').bind('click', function (Event) {
+    $('#KIXSidebarLinkedConfigItemSetClassFilter').on('click', function (Event) {
         var Class = $('#ConfigItemClass').val();
 
         Core.UI.Dialog.ShowContentDialog($('#KIXSidebarLinkedConfigItemDialog'), [% Translate("Config Item Filter") | JSON %], '20px', 'Center', true, [
@@ -169,7 +169,7 @@
     });
 
     // reset filter
-    $('#KIXSidebarLinkedConfigItemResetClassFilter').bind('click', function (Event) {
+    $('#KIXSidebarLinkedConfigItemResetClassFilter').on('click', function (Event) {
             var Class = $('#ConfigItemClass').val(),
                 URL = Core.Config.Get('CGIHandle') + '?Action=KIXSidebarLinkedCIsAJAXHandler;CallingAction=' + CallingAction + ';CustomerUserID=' + CustomerUserID + ';FormID=' + FormID + ';ConfigItemClass=' + Class;
 

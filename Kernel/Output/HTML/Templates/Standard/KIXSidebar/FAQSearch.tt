@@ -45,7 +45,7 @@
     } else if(typeof window.KIXSidebarCallback[% Data.Identifier | html %] === typeof undefined) {
         window.KIXSidebarCallback[% Data.Identifier | html %] = KIXSidebarCallback[% Data.Identifier | html %];
     }
-    $('#SearchString[% Data.Identifier | html %]').bind('keyup', function (Event) {
+    $('#SearchString[% Data.Identifier | html %]').on('keyup', function (Event) {
         if ( (Event.keyCode !== 13) && ($('#SearchString[% Data.Identifier | html %]').val().length >= [% Data.QueryMinLength | html %]) ) {
             var TicketID = '';
             var FormID = '';
@@ -96,7 +96,7 @@
             window.KIXSidebarCallback[% Data.Identifier | html %]
         );
     }
-    $('#SearchButton[% Data.Identifier | html %]').bind('click', function (Event) {
+    $('#SearchButton[% Data.Identifier | html %]').on('click', function (Event) {
         KIXSidebarFAQAJAXSearchBox[% Data.Identifier | html %]();
     });
     $('#SearchString[% Data.Identifier | html %]').keydown(function (Event) {
@@ -139,7 +139,7 @@
 </script>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#Subject').bind('blur', function (Event) {
+    $('#Subject').on('blur', function (Event) {
         KIXSidebarFAQAJAXSearchSubject[% Data.Identifier | html %]();
     });
 //]]>
