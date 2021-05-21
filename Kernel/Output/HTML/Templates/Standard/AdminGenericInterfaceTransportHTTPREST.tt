@@ -166,7 +166,7 @@
                             </div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-$('#Authentication').bind('change', function(){
+$('#Authentication').on('change', function(){
     if ( $(this).val() === 'BasicAuth') {
         $('.BasicAuthField').removeClass('Hidden');
         $('.BasicAuthField').find('#User').each(function(){
@@ -218,7 +218,7 @@ $('#Authentication').bind('change', function(){
                             </div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-$('#UseX509').bind('change', function(){
+$('#UseX509').on('change', function(){
     if ( $(this).val() === 'Yes') {
         $('.X509Field').removeClass('Hidden');
 
@@ -296,7 +296,7 @@ $('#UseX509').bind('change', function(){
                                 <input type="hidden" name="ReturnToWebservice" id="ReturnToWebservice" value="" autocomplete="off" />
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-$('#SaveAndFinishButton').bind('click', function(){
+$('#SaveAndFinishButton').on('click', function(){
     $('#ReturnToWebservice').val(1);
 });
 //]]></script>

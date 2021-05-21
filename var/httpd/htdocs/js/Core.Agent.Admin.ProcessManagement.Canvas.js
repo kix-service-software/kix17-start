@@ -193,7 +193,7 @@ Core.Agent.Admin.ProcessManagement.Canvas = (function (TargetNS) {
                 'top': PosY + 'px',
                 'left': PosX + 'px'
             })
-            .bind('mouseenter.Activity', function() {
+            .on('mouseenter.Activity', function() {
                 TargetNS.ShowActivityTooltip($(this));
                 TargetNS.ShowActivityDeleteButton($(this));
                 TargetNS.ShowActivityEditButton($(this));
@@ -202,13 +202,13 @@ Core.Agent.Admin.ProcessManagement.Canvas = (function (TargetNS) {
                 }
                 $(this).addClass('Hovered');
             })
-            .bind('mouseleave.Activity', function() {
+            .on('mouseleave.Activity', function() {
                 $('#DiagramTooltip').hide();
                 $(this).removeClass('ReadyToDrop').find('.DiagramDeleteLink').remove();
                 $(this).removeClass('ReadyToDrop').find('.DiagramEditLink').remove();
                 $(this).removeClass('Hovered');
             })
-            .bind('dblclick.Activity', function() {
+            .on('dblclick.Activity', function() {
                 var Path = Core.Config.Get('Config.PopupPathActivity') + "EntityID=" + EntityID + ";ID=" + ActivityID,
                     SessionData = Core.App.GetSessionInformation();
                 if (!Core.Config.Get('SessionIDCookie') && Path.indexOf(SessionData[Core.Config.Get('SessionName')]) === -1) {
@@ -496,8 +496,8 @@ Core.Agent.Admin.ProcessManagement.Canvas = (function (TargetNS) {
 
         $delete
             .show()
-            .unbind('click')
-            .bind('click', function () {
+            .off('click')
+            .on('click', function () {
                 ShowRemoveEntityCanvasConfirmationDialog('Activity', Activity[ElementID].Name, ElementID, function () {
                     TargetNS.RemoveActivity(ElementID);
                     Core.UI.Dialog.CloseDialog($('.Dialog'));
@@ -532,8 +532,8 @@ Core.Agent.Admin.ProcessManagement.Canvas = (function (TargetNS) {
 
         $edit
             .show()
-            .unbind('click')
-            .bind('click', function () {
+            .off('click')
+            .on('click', function () {
                 var Path = Core.Config.Get('Config.PopupPathActivity') + "EntityID=" + ElementID + ";ID=" + Activity[ElementID].ID,
                     SessionData = Core.App.GetSessionInformation();
                 if (!Core.Config.Get('SessionIDCookie') && Path.indexOf(SessionData[Core.Config.Get('SessionName')]) === -1) {
@@ -803,6 +803,7 @@ Core.Agent.Admin.ProcessManagement.Canvas = (function (TargetNS) {
             }
         });
 
+        // bind function from the jsPlumb object.
         Connection.bind('mouseenter', function () {
             var Overlay = Connection.getOverlay('label');
 
@@ -812,6 +813,7 @@ Core.Agent.Admin.ProcessManagement.Canvas = (function (TargetNS) {
             }
         });
 
+        // bind function from the jsPlumb object.
         Connection.bind('mouseleave', function () {
             var Overlay = Connection.getOverlay('label');
 
@@ -821,6 +823,7 @@ Core.Agent.Admin.ProcessManagement.Canvas = (function (TargetNS) {
             }
         });
 
+        // bind function from the jsPlumb object.
         Connection.bind('dblclick', function(ConnectionObject, Event) {
             var EndActivityObject = ConnectionObject.endpoints[1],
                 SessionData = Core.App.GetSessionInformation();
@@ -852,7 +855,6 @@ Core.Agent.Admin.ProcessManagement.Canvas = (function (TargetNS) {
      *      Highlight transition label.
      */
     TargetNS.HighlightTransitionLabel = function(Connection, StartActivity, EndActivity) {
-
         var Config = Core.Agent.Admin.ProcessManagement.ProcessData,
             ProcessEntityID = $('#ProcessEntityID').val(),
             Path = Config.Process[ProcessEntityID].Path,
@@ -871,7 +873,7 @@ Core.Agent.Admin.ProcessManagement.Canvas = (function (TargetNS) {
         }
 
         if (!$(Connection.canvas).find('.Delete').length) {
-            $(Connection.canvas).append('<a class="Delete" title="' + Core.Agent.Admin.ProcessManagement.Localization.TransitionDeleteLink + '" href="#"><i class="fa fa-trash-o"></i></a>').find('.Delete').bind('click', function(Event) {
+            $(Connection.canvas).append('<a class="Delete" title="' + Core.Agent.Admin.ProcessManagement.Localization.TransitionDeleteLink + '" href="#"><i class="fa fa-trash-o"></i></a>').find('.Delete').on('click', function(Event) {
                 ShowRemoveEntityCanvasConfirmationDialog('Path', Config.Transition[TransitionEntityID].Name, TransitionEntityID, function () {
                     jsPlumb.detach(Connection.component);
                     delete Path[StartActivityID][TransitionEntityID];
@@ -884,7 +886,7 @@ Core.Agent.Admin.ProcessManagement.Canvas = (function (TargetNS) {
         }
 
         if (!$(Connection.canvas).find('.Edit').length) {
-            $(Connection.canvas).append('<a class="Edit" title="' + Core.Agent.Admin.ProcessManagement.Localization.TransitionEditLink + '" href="#"><i class="fa fa-edit"></i></a>').find('.Edit').bind('click', function(Event) {
+            $(Connection.canvas).append('<a class="Edit" title="' + Core.Agent.Admin.ProcessManagement.Localization.TransitionEditLink + '" href="#"><i class="fa fa-edit"></i></a>').find('.Edit').on('click', function(Event) {
                 if (EndActivity !== 'Dummy') {
                     if (!Core.Config.Get('SessionIDCookie') && PopupPath.indexOf(SessionData[Core.Config.Get('SessionName')]) === -1) {
                         PopupPath += ';' + encodeURIComponent(Core.Config.Get('SessionName')) + '=' + encodeURIComponent(SessionData[Core.Config.Get('SessionName')]);
@@ -904,7 +906,7 @@ Core.Agent.Admin.ProcessManagement.Canvas = (function (TargetNS) {
         // show tooltip with assigned transition actions
         TargetNS.ShowTransitionTooltip(Connection, StartActivity);
 
-        $(Connection.canvas).unbind('dblclick.Transition').bind('dblclick.Transition', function(Event) {
+        $(Connection.canvas).off('dblclick.Transition').on('dblclick.Transition', function(Event) {
             if (EndActivity !== 'Dummy') {
                 Core.Agent.Admin.ProcessManagement.ShowOverlay();
                 Core.UI.Popup.OpenPopup(PopupPath, 'Path');
@@ -1034,10 +1036,10 @@ Core.Agent.Admin.ProcessManagement.Canvas = (function (TargetNS) {
         TargetNS.MakeDraggable();
 
         $('div.TransitionLabel')
-            .delegate('a.Delete, a.Edit, span', 'mouseenter', function () {
+            .on('mouseenter', 'a.Delete, a.Edit, span', function () {
                 TargetNS.HighlightTransitionLabel(TargetNS.LastTransitionDetails.LabelOverlay, TargetNS.LastTransitionDetails.StartElement, TargetNS.LastTransitionDetails.EndElement);
             })
-            .delegate('a.Delete, a.Edit, span', 'mouseleave', function () {
+            .on('mouseleave', 'a.Delete, a.Edit, span', function () {
                 TargetNS.UnHighlightTransitionLabel(TargetNS.LastTransitionDetails.LabelOverlay);
             });
     };
@@ -1197,7 +1199,7 @@ Core.Agent.Admin.ProcessManagement.Canvas = (function (TargetNS) {
         // show EntityIDs of Activities
         $('.Activity').each(function() {
             ActivityEntityID = $(this).attr('id');
-            $(this).append('<em class="EntityID"><input type="text" value="' + ActivityEntityID + '" /></em>').find('.EntityID input').unbind().bind('focus', function(Event) {
+            $(this).append('<em class="EntityID"><input type="text" value="' + ActivityEntityID + '" /></em>').find('.EntityID input').off().on('focus', function(Event) {
                 this.select();
                 Event.stopPropagation();
             });
@@ -1209,7 +1211,7 @@ Core.Agent.Admin.ProcessManagement.Canvas = (function (TargetNS) {
             TransitionEntityID = this.getParameter('TransitionID');
             Overlay = this.getOverlay('label');
             if (Overlay) {
-                $(Overlay.canvas).append('<em class="EntityID"><input type="text" value="' + TransitionEntityID + '" /></em>').find('.EntityID input').unbind().bind('focus', function(Event) {
+                $(Overlay.canvas).append('<em class="EntityID"><input type="text" value="' + TransitionEntityID + '" /></em>').find('.EntityID input').off().on('focus', function(Event) {
                     this.select();
                     Event.stopPropagation();
                 });

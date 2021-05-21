@@ -51,7 +51,7 @@
 
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#TypeID').bind('change', function (Event) {
+    $('#TypeID').on('change', function (Event) {
         Core.AJAX.FormUpdate($('#NewCustomerTicket'), 'AJAXUpdate', 'TypeID', ['Dest', 'PriorityID', 'ServiceID', 'SLAID', [% Data.DynamicFieldNamesStrg %]]);
     });
 //]]></script>
@@ -71,7 +71,7 @@
                 <div class="Clear"></div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#Dest').bind('change', function (Event) {
+    $('#Dest').on('change', function (Event) {
         Core.AJAX.FormUpdate($('#NewCustomerTicket'), 'AJAXUpdate', 'Dest', ['TypeID', 'PriorityID', 'ServiceID', 'SLAID', [% Data.DynamicFieldNamesStrg %]]);
     });
 //]]></script>
@@ -86,7 +86,7 @@
                 <div class="Clear"></div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#ServiceID').bind('change', function (Event) {
+    $('#ServiceID').on('change', function (Event) {
         Core.AJAX.FormUpdate($('#NewCustomerTicket'), 'AJAXUpdate', 'ServiceID', ['TypeID', 'Dest', 'PriorityID', 'SLAID', [% Data.DynamicFieldNamesStrg %]]);
     });
 //]]></script>
@@ -103,7 +103,7 @@
                 <div class="Clear"></div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#ServiceID').bind('change', function (Event) {
+    $('#ServiceID').on('change', function (Event) {
         Core.AJAX.FormUpdate($('#NewCustomerTicket'), 'AJAXUpdate', 'ServiceID', ['TypeID', 'Dest', 'PriorityID', 'SLAID', [% Data.DynamicFieldNamesStrg %]]);
     });
 //]]></script>
@@ -118,7 +118,7 @@
                 <div class="Clear"></div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#SLAID').bind('change', function (Event) {
+    $('#SLAID').on('change', function (Event) {
         Core.AJAX.FormUpdate($('#NewCustomerTicket'), 'AJAXUpdate', 'SLAID', ['TypeID', 'Dest', 'ServiceID', 'PriorityID', 'SignKeyID', 'CryptKeyID', [% Data.DynamicFieldNamesStrg %]]);
     });
 //]]></script>
@@ -135,7 +135,7 @@
                 <div class="Clear"></div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#SLAID').bind('change', function (Event) {
+    $('#SLAID').on('change', function (Event) {
         Core.AJAX.FormUpdate($('#NewCustomerTicket'), 'AJAXUpdate', 'SLAID', ['TypeID', 'Dest', 'ServiceID', 'PriorityID', 'SignKeyID', 'CryptKeyID', [% Data.DynamicFieldNamesStrg %]]);
     });
 //]]></script>
@@ -171,7 +171,7 @@
                     <input type="hidden" id="AttachmentUpload" name="AttachmentUpload" value="0" />
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#Attachment').bind('change', function (Event) {
+    $('#Attachment').on('change', function (Event) {
         var $Form = $('#Attachment').closest('form');
         Core.Form.Validate.DisableValidation($Form);
         $Form.find('#AttachmentUpload').val('1').end().submit();
@@ -185,7 +185,7 @@
                         <input type="hidden" id="AttachmentDelete[% Data.FileID | html %]" name="AttachmentDelete[% Data.FileID | html %]" />
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#AttachmentDeleteButton[% Data.FileID | html %]').bind('click', function () {
+    $('#AttachmentDeleteButton[% Data.FileID | html %]').on('click', function () {
         var $Form = $('#AttachmentDeleteButton[% Data.FileID | html %]').closest('form');
         $('#AttachmentDelete[% Data.FileID | html %]').val(1);
         Core.Form.Validate.DisableValidation($Form);
@@ -206,7 +206,7 @@
                 <div class="Clear"></div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#PriorityID').bind('change', function (Event) {
+    $('#PriorityID').on('change', function (Event) {
         Core.AJAX.FormUpdate($('#NewCustomerTicket'), 'AJAXUpdate', 'PriorityID', [ 'TypeID', 'Dest', 'ServiceID', 'SLAID', [% Data.DynamicFieldNamesStrg %]]);
     });
 //]]></script>

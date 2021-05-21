@@ -216,7 +216,7 @@ Core.UI.Popup = (function (TargetNS) {
      *      Register the pop-up event for a window.
      */
     TargetNS.RegisterPopupEvent = function () {
-        $(window).bind('Popup', function (Event, Type, Param) {
+        $(window).on('Popup', function (Event, Type, Param) {
             if (Type && typeof Type !== 'undefined') {
                 if (Type === 'Reload') {
                     window.location.reload();
@@ -245,7 +245,7 @@ Core.UI.Popup = (function (TargetNS) {
             return;
         }
 
-        $(window).unbind('beforeunload.Popup');
+        $(window).off('beforeunload.Popup');
         Core.App.UnbindWindowUnloadEvent('Popup');
         $(window).trigger('Popup', [Type, Param]);
     };
@@ -696,7 +696,7 @@ Core.UI.Popup = (function (TargetNS) {
      */
     TargetNS.Init = function () {
 
-        $(window).bind('beforeunload.Popup', function () {
+        $(window).on('beforeunload.Popup', function () {
             return Core.UI.Popup.CheckPopupsOnUnload();
         });
         Core.App.BindWindowUnloadEvent('Popup', Core.UI.Popup.ClosePopupsOnUnload);
@@ -705,10 +705,10 @@ Core.UI.Popup = (function (TargetNS) {
         // if this window is a popup itself, register another function
         if (CurrentIsPopupWindow()) {
             Core.UI.Popup.InitRegisterPopupAtParentWindow();
-            $('.CancelClosePopup').bind('click', function () {
+            $('.CancelClosePopup').on('click', function () {
                 TargetNS.ClosePopup();
             });
-            $('.UndoClosePopup').bind('click', function () {
+            $('.UndoClosePopup').on('click', function () {
                 var RedirectURL = $(this).attr('href'),
                     ParentWindow = GetWindowParentObject();
                 ParentWindow.Core.UI.Popup.FirePopupEvent('URL', { URL: RedirectURL });
@@ -731,7 +731,7 @@ Core.UI.Popup = (function (TargetNS) {
      */
     TargetNS.InitClosedBulkHandler = function (CallAction, FormID, Submit, Task) {
 
-        $(window).unbind('beforeunload.Popup').bind('beforeunload.Popup', function() {
+        $(window).off('beforeunload.Popup').on('beforeunload.Popup', function() {
             if ( Task !== null) {
                 window.opener.Core.AJAX.FunctionCall(
                     Core.Config.Get('Baselink'),
@@ -759,16 +759,16 @@ Core.UI.Popup = (function (TargetNS) {
         });
 
         $(Submit).on('click',function(){
-            $(window).unbind("beforeunload.Popup");
+            $(window).off("beforeunload.Popup");
         });
 
         $('form').on('submit',function(){
             if ( $('#AttachmentUpload').val() == '1') {
-                $(window).unbind("beforeunload.Popup");
+                $(window).off("beforeunload.Popup");
             } else {
                 $.each($('input[id^="AttachmentDelete"]'), function() {
                     if ( $(this).val() == '1' ) {
-                        $(window).unbind("beforeunload.Popup");
+                        $(window).off("beforeunload.Popup");
                         return 1;
                     }
                 });
@@ -776,7 +776,7 @@ Core.UI.Popup = (function (TargetNS) {
         });
 
         $('#TaskAbort, .PopupUndoClose, .PopupCancelClose, .DisableValidation.Add, .DisableValidation.Remove').on('click',function(){
-            $(window).unbind("beforeunload.Popup");
+            $(window).off("beforeunload.Popup");
         });
 
         $(document).on('keypress keydown keyup', function(e) {
@@ -784,7 +784,7 @@ Core.UI.Popup = (function (TargetNS) {
                || (e.which === 116 && e.ctrlKey)
                || (e.which === 82 && e.ctrlKey)
             ) {
-                $(window).unbind("beforeunload.Popup");
+                $(window).off("beforeunload.Popup");
             }
         });
     };

@@ -132,7 +132,7 @@ Core.Customer = (function (TargetNS) {
             .filter(function () {
                 return $('ul', this).length;
             })
-            .bind('mouseenter', function () {
+            .on('mouseenter', function () {
                 var $Element = $(this);
 
                 // clear close timeout on mouseenter, even if OpenMainMenuOnHover is not enabled
@@ -164,7 +164,7 @@ Core.Customer = (function (TargetNS) {
                     });
                 }
             })
-            .bind('mouseleave', function () {
+            .on('mouseleave', function () {
 
                 var $Element = $(this);
 
@@ -188,7 +188,7 @@ Core.Customer = (function (TargetNS) {
                     });
                 }
             })
-            .bind('click', function (Event) {
+            .on('click', function (Event) {
 
                 var $Element = $(this),
                     $Target = $(Event.target);

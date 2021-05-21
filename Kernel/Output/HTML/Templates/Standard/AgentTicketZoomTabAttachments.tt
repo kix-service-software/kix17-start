@@ -61,7 +61,7 @@
                         </td>
                         <td class="Attachment">
                             <a class="Attachment AttachmentDownload" href="[% Env("CGIHandle") %]?Action=AgentTicketAttachment;ArticleID=[% Data.ArticleID | html %];FileID=[% Data.FileID | uri %][% Data.Session | html %]" [% Data.Target %]>
-                                <i class="fa fa-download"/>
+                                <i class="fa fa-download"></i>
                             </a>
                         </td>
                         <td class="Article">
@@ -101,7 +101,7 @@
     Core.UI.Table.InitTableFilter($('#FilterAttachmentTable'), $('#AttachmentTable'));
     Core.KIX4OTRS.TicketZoomTabs.AttachmentsInit();
 
-    $('input.Checkbox').bind('click',function(){
+    $('input.Checkbox').on('click',function(){
         // count selected checkboxes
         var enableButtons = false;
         $('#AttachmentForm').find(':checkbox').each(function () {
@@ -111,13 +111,13 @@
         });
 
         if ($(this).prop("checked") === false) {
-            $('#SelectAll').removeAttr("checked");
+            $('#SelectAll').prop("checked",false);
         }
 
         // if more than one selected enable delete / download button
         if ( enableButtons ) {
-            $('#Delete').removeAttr('disabled');
-            $('#Download').removeAttr('disabled');
+            $('#Delete').prop("disabled",false);
+            $('#Download').prop("disabled",false);
         }
         else {
             $('#Delete').attr('disabled','disabled');
@@ -125,7 +125,7 @@
         }
     });
 
-    $('#SelectAll').bind('click', function() {
+    $('#SelectAll').on('click', function() {
         var isChecked = $(this).prop("checked");
         $('#AttachmentForm').find(':checkbox').each(function () {
             if (isChecked === true ) {
@@ -136,8 +136,8 @@
             }
         });
         if (isChecked === true ) {
-            $('#Delete').removeAttr('disabled');
-            $('#Download').removeAttr('disabled');
+            $('#Delete').prop("disabled",false);
+            $('#Download').prop("disabled",false);
         }
         else {
             $('#Delete').attr('disabled','disabled');
@@ -145,7 +145,7 @@
         }
     });
 
-    $('#Delete').bind('click', function () {
+    $('#Delete').on('click', function () {
         Core.KIX4OTRS.Dialog.ShowQuestion(
             "[% Translate("Question") | html %]",
             "[% Translate("Do you really want to delete the selected attachments?") | html %]",
@@ -169,7 +169,7 @@
         );
     });
 
-    $('#Download').bind('click', function () {
+    $('#Download').on('click', function () {
         // use only visible attachments
         $('#AttachmentForm').find(':checkbox').filter(":hidden").each(function () {
             $(this).prop('checked', false);

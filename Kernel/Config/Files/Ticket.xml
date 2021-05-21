@@ -9447,11 +9447,9 @@
                 <Title Translatable="1">Zoom</Title>
                 <NavBarName>Ticket</NavBarName>
                 <Loader>
-                    <JavaScript>thirdparty/jquery-tablesorter-2.0.5/jquery.tablesorter.js</JavaScript>
                     <JavaScript>Core.Agent.TicketZoom.js</JavaScript>
                     <JavaScript>Core.KIX4OTRS.TicketZoomTabs.js</JavaScript>
                     <JavaScript>Core.KIX4OTRS.CustomerDetails.js</JavaScript>
-                    <JavaScript>thirdparty/jquery-ui-tabs-1.10.3/jquery.ui.tabs.js</JavaScript>
                     <JavaScript>Core.Agent.TicketAction.js</JavaScript>
                     <JavaScript>Core.Agent.CustomerSearch.js</JavaScript>
                     <JavaScript>Core.UI.AllocationList.js</JavaScript>
@@ -14549,7 +14547,6 @@ Thanks for your help!
                 <Title>Zoom</Title>
                 <NavBarName>Ticket</NavBarName>
                 <Loader>
-                    <JavaScript>thirdparty/jquery-tablesorter-2.0.5/jquery.tablesorter.js</JavaScript>
                     <JavaScript>Core.UI.Table.Sort.js</JavaScript>
                     <JavaScript>Core.KIX4OTRS.Agent.TicketMergeLink.js</JavaScript>
                     <JavaScript>Core.Agent.CustomerSearch.js</JavaScript>
@@ -14593,7 +14590,6 @@ Thanks for your help!
                 <Title>Attachments</Title>
                 <NavBarName>Ticket</NavBarName>
                 <Loader>
-                    <JavaScript>thirdparty/jquery-tablesorter-2.0.5/jquery.tablesorter.js</JavaScript>
                     <JavaScript>Core.UI.Table.Sort.js</JavaScript>
                 </Loader>
             </FrontendModuleReg>

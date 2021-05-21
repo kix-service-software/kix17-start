@@ -209,39 +209,39 @@ function CheckIFrameHeight(IFrameID) {
 /*global FAQ: true */
 Core.Config.Set('TicketCompose.UpdateArticleSubject', "[% Data.UpdateArticleSubject | html %]");
 
-$('#Cancel').bind('click', function (event) {
+$('#Cancel').on('click', function (event) {
     parent.Core.UI.Dialog.CloseDialog($('.Dialog', parent.document));
 });
 
-$('#InsertText').bind('click', function (event) {
+$('#InsertText').on('click', function (event) {
     var InsertText = 1,
         InsertLink = 0;
 
     FAQ.Agent.TicketCompose.SetText(InsertText, InsertLink);
 });
 
-$('#InsertLink').bind('click', function (event) {
+$('#InsertLink').on('click', function (event) {
     var InsertText = 0,
         InsertLink = 1;
 
     FAQ.Agent.TicketCompose.SetText(InsertText, InsertLink);
 });
 
-$('#InsertTextAndLink').bind('click', function (event) {
+$('#InsertTextAndLink').on('click', function (event) {
     var InsertText = 1,
         InsertLink = 1;
 
     FAQ.Agent.TicketCompose.SetText(InsertText, InsertLink);
 });
 
-$('#InsertFull').bind('click', function (event) {
+$('#InsertFull').on('click', function (event) {
     var InsertText = 1,
         InsertLink = 0;
 
     FAQ.Agent.TicketCompose.SetFullFAQ(InsertText, InsertLink);
 });
 
-$('#InsertFullAndLink').bind('click', function (event) {
+$('#InsertFullAndLink').on('click', function (event) {
     var InsertText = 1,
         InsertLink = 1;
 

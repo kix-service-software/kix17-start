@@ -55,7 +55,7 @@
 <script type="text/javascript">//<![CDATA[
 /*global ITSM: true */
     window.setTimeout(function (){
-        $('#SearchClassID').bind('change', function(){
+        $('#SearchClassID').on('change', function(){
             if ( $('#SearchClassID').val() !== "" ){
                 ITSM.Agent.ConfigItem.Search.LoadProfile( $('#SearchProfile').val() );
             }

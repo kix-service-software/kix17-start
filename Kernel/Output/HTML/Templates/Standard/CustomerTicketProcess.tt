@@ -40,7 +40,7 @@
 </div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#ProcessEntityID').bind('change', function() {
+    $('#ProcessEntityID').on('change', function() {
 
         // remove/destroy CKEditor instances
         // This is needed to initialize other instances (in other activity dialogs)

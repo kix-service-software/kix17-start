@@ -193,7 +193,6 @@
         -ms-user-select: none;
         user-select: none;
     }
-
     .jstree-InputField .jstree-wholerow-ul .jstree-anchor,
     .jstree-InputField .jstree-wholerow-ul .jstree-icon {
         position: relative;
@@ -211,6 +210,9 @@
         margin: 0;
         vertical-align: top;
     }
+    .jstree-InputField .Disabled > .jstree-anchor {
+        font-style: italic;
+    }
     .jstree-InputField-Tree .jstree-themeicon {
         background-position: -263px -7px;
     }
@@ -221,7 +223,6 @@
     .jstree-InputField .jstree-anchor > .jstree-themeicon-hidden {
         display: none;
     }
-
     .jstree-InputField .jstree-anchor,
     .jstree-InputField .jstree-anchor:link,
     .jstree-InputField .jstree-anchor:visited,
@@ -229,7 +230,6 @@
     .jstree-InputField .jstree-anchor:active {
         text-decoration: none;
     }
-
     .jstree-InputField-Tree .jstree-node,
     .jstree-InputField-Tree .jstree-icon {
         background-image: url('../img/inputfield_tree.png');
@@ -276,6 +276,7 @@
     .jstree-InputField-Tree .jstree-leaf > .jstree-ocl {
         background-position: -71px -7px;
     }
+
 
     /**
     * @subsection NoTree
@@ -348,7 +349,7 @@
         text-decoration: none;
         margin: 10px 0px 0px 5px;
     }
-    .ui-tabs-nav li a.ui-tabs-anchor {
+    .ui-tabs .ui-tabs-nav li a.ui-tabs-anchor {
         padding: 0 5px;
     }
     .ui-tabs .ui-tabs-nav li.ui-tabs-active a {
@@ -359,7 +360,7 @@
     .ui-state-active a:visited {
         z-index: 3;
     }
-    div.ui-widget-content {
+    div.ui-widget.ui-widget-content {
         border: 0px;
         background: none;
     }
@@ -368,8 +369,10 @@
         font-size: 12px;
         border-radius: 5px;
     }
-    div.ui-tabs > div {
+    div.ui-tabs > div.ui-tabs-panel {
         padding: 5px;
+        border-width: 1px;
+        border-style: solid;
     }
     .ui-tabs-panel > .MainBox {
         padding: 0;

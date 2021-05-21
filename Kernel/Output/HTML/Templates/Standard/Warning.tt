@@ -29,7 +29,7 @@
                     <a href="#" id="GoBack">[% Translate("Go back to the previous page") | html %]</a>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-$('#GoBack').bind('click', function (Event) {
+$('#GoBack').on('click', function (Event) {
     // check if an older history entry is available
     if (history.length > 1) {
         history.back();

@@ -56,7 +56,7 @@
                 Data;
 
             Core.AJAX.FunctionCall(Core.Config.Get('CGIHandle'), URL, function (Result) {
-                Data = $.parseJSON(Result);
+                Data = JSON.parse(Result);
             }, 'text', false);
 
             $('#TaskBarCount').html(MaxCount-Data.Count);
@@ -67,11 +67,11 @@
                 var URLOP = "?Action=[% Data.Action %][% Data.Session | html %]";
 
                 if ( ParamData ) {
-                    $.each($.parseJSON(ParamData), function(Key, Value){
+                    $.each(JSON.parse(ParamData), function(Key, Value){
                         URLOP += ";" + Key + "=" + Value;
                     });
                 }
-                $(window).unbind('beforeunload.Popup');
+                $(window).off('beforeunload.Popup');
                 window.location.href = URLOP;
             }
         }
@@ -92,7 +92,7 @@
                 Data,
                 function(){
                     if ( ParamData ) {
-                        $.each($.parseJSON(ParamData), function(Key, Value){
+                        $.each(JSON.parse(ParamData), function(Key, Value){
                             if ( Key === 'FormID' || Key === 'UserID' ) {
                                 URLOP += ";" + Key + "=" + Value;
                             }

@@ -156,13 +156,13 @@ Core.Agent.TicketAction = (function (TargetNS) {
     TargetNS.Init = function () {
 
         // Register event for addressbook dialog
-        $('#OptionAddressBook').bind('click', function () {
+        $('#OptionAddressBook').on('click', function () {
             OpenAddressBook();
             return false;
         });
 
         // Register event for customer dialog
-        $('#OptionCustomer').bind('click', function () {
+        $('#OptionCustomer').on('click', function () {
             OpenCustomerDialog();
             return false;
         });
@@ -215,13 +215,13 @@ Core.Agent.TicketAction = (function (TargetNS) {
      */
     TargetNS.InitAddressBook = function () {
         // Register event for copying mail address to input field
-        $('#SearchResult a').bind('click', function () {
+        $('#SearchResult a').on('click', function () {
             AddMailAddress($(this));
             return false;
         });
 
         // Register Apply button event
-        $('#Apply').bind('click', function () {
+        $('#Apply').on('click', function () {
             // Update ticket action popup fields
             var $To, $Cc, $Bcc, CustomerData;
 
@@ -277,7 +277,7 @@ Core.Agent.TicketAction = (function (TargetNS) {
         });
 
         // Register Cancel button event
-        $('#Cancel').bind('click', function () {
+        $('#Cancel').on('click', function () {
             // Because we are in an iframe, we need to call the parent frames javascript function
             // with a jQuery object which is in the parent frames context
             parent.Core.UI.Dialog.CloseDialog($('.Dialog', parent.document));

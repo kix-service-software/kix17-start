@@ -413,7 +413,7 @@
                             <input type="hidden" name="ReturnToWebservice" id="ReturnToWebservice" value="" autocomplete="off" />
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-$('#SaveAndFinishButton').bind('click', function(){
+$('#SaveAndFinishButton').on('click', function(){
     $('#ReturnToWebservice').val(1);
 });
 //]]></script>

@@ -126,7 +126,7 @@
                 <div class="Clear"></div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('.CustomerTicketRemove').bind('click', function () {
+    $('.CustomerTicketRemove').on('click', function () {
         Core.Agent.CustomerSearch.RemoveCustomerTicket( $(this) );
         return false;
     });
@@ -315,7 +315,7 @@
                 <div class="Clear"></div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#StandardTemplateID').bind('change', function (Event) {
+    $('#StandardTemplateID').on('change', function (Event) {
         Core.Agent.TicketAction.ConfirmTemplateOverwrite('RichText', $(this), function () {
             Core.AJAX.FormUpdate($('#Compose'), 'AJAXUpdateTemplate', 'StandardTemplateID', ['RichTextField']);
         });
@@ -346,7 +346,7 @@
                             <input type="hidden" id="AttachmentDelete[% Data.FileID | html %]" name="AttachmentDelete[% Data.FileID | html %]" />
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#AttachmentDeleteButton[% Data.FileID | html %]').bind('click', function () {
+    $('#AttachmentDeleteButton[% Data.FileID | html %]').on('click', function () {
         var $Form = $('#AttachmentDeleteButton[% Data.FileID | html %]').closest('form');
         $('#AttachmentDelete[% Data.FileID | html %]').val(1);
         Core.Form.Validate.DisableValidation($Form);
@@ -363,7 +363,7 @@
                     </ul>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#FileUpload').bind('change', function () {
+    $('#FileUpload').on('change', function () {
         var $Form = $('#FileUpload').closest('form');
         Core.Form.Validate.DisableValidation($Form);
         $Form.find('#AttachmentUpload').val('1').end().submit();
@@ -378,7 +378,7 @@
                     [% Data.NextStatesStrg %]
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#ComposeStateID').bind('change', function (Event) {
+    $('#ComposeStateID').on('change', function (Event) {
         Core.AJAX.FormUpdate($('#Compose'), 'AJAXUpdate', 'ComposeStateID', [ [% Data.DynamicFieldNamesStrg %] ]);
     });
 //]]></script>

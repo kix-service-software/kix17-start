@@ -142,12 +142,12 @@ Core.Agent.Admin.GenericInterfaceWebserviceHistory.Init({
 //Load Webservice list on startup without active filter
 Core.Agent.Admin.GenericInterfaceWebserviceHistory.GetWebserviceList();
 
-$('#ExportButton').bind('click', function(){
+$('#ExportButton').on('click', function(){
     $('#Subaction').attr('value','Export');
     $('#ActionForm').submit();
 });
 
-$('#RollbackButton').bind('click', Core.Agent.Admin.GenericInterfaceWebserviceHistory.ShowRollbackDialog);
+$('#RollbackButton').on('click', Core.Agent.Admin.GenericInterfaceWebserviceHistory.ShowRollbackDialog);
 
 //]]></script>
 [% END %]

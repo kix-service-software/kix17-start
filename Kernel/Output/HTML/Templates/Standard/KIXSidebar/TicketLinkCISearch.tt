@@ -33,7 +33,7 @@
     } else if(typeof window.KIXSidebarCallback[% Data.Identifier | html %] === typeof undefined) {
         window.KIXSidebarCallback[% Data.Identifier | html %] = KIXSidebarCallback[% Data.Identifier | html %];
     }
-    $('#SearchResult[% Data.TicketSidebarIdentifier | html %]').bind('UpdateResultField', function () {
+    $('#SearchResult[% Data.TicketSidebarIdentifier | html %]').on('UpdateResultField', function () {
         var TicketID = '';
         var FormID = '';
         if ($('input[name=TicketID]').length && $('input[name=TicketID]').val() != '') {

@@ -268,7 +268,7 @@
 <script type="text/javascript">//<![CDATA[
     Core.Agent.CustomerCompanySearch.AdminInit($(".CustomerCompanyAutoComplete"));
 
-    $('.CustomerTicketRemove').bind('click', function () {
+    $('.CustomerTicketRemove').on('click', function () {
         Core.Agent.CustomerCompanySearch.RemoveCustomerID( $(this) );
         return false;
     });
@@ -346,7 +346,7 @@
 [% RenderBlockStart("BorrowedViewJS") %]
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-$('#CustomerTable a').bind('click', function (Event) {
+$('#CustomerTable a').on('click', function (Event) {
     Core.Agent.TicketAction.UpdateCustomer($(this).text());
 });
 //]]></script>

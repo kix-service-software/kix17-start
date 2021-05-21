@@ -56,7 +56,7 @@
                             <div id="DestQueueIDServerError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#DestQueueID').bind('change', function (Event) {
+    $('#DestQueueID').on('change', function (Event) {
         $('#NoSubmit').val('1');
         Core.AJAX.FormUpdate($('#MoveTicketToQueue'), 'AJAXUpdate', 'DestQueueID', ['NewUserID', 'NewStateID', 'NewPriorityID', 'StandardTemplateID' [% Data.DynamicFieldNamesStrg %]]);
     });
@@ -76,7 +76,7 @@
                             </a>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#OwnerSelectionGetAll').bind('click', function (Event) {
+    $('#OwnerSelectionGetAll').on('click', function (Event) {
         $('#OwnerAll').val('1');
         Core.AJAX.FormUpdate($('#MoveTicketToQueue'), 'AJAXUpdate', 'OwnerAll', ['NewUserID'], function() {
             $('#NewUserID').focus();
@@ -84,7 +84,7 @@
         return false;
     });
 
-    $('#NewUserID').bind('change', function (Event) {
+    $('#NewUserID').on('change', function (Event) {
         Core.AJAX.FormUpdate($('#MoveTicketToQueue'), 'AJAXUpdate', 'NewUserID', ['DestQueueID', 'NewStateID', 'NewPriorityID' [% Data.DynamicFieldNamesStrg %]]);
     });
 //]]></script>
@@ -100,7 +100,7 @@
                             [% Data.NextStatesStrg %]
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#NewStateID').bind('change', function (Event) {
+    $('#NewStateID').on('change', function (Event) {
         Core.AJAX.FormUpdate($('#MoveTicketToQueue'), 'AJAXUpdate', 'NewStateID', ['DestQueueID', 'NewUserID', 'NewPriorityID' [% Data.DynamicFieldNamesStrg %]]);
     });
 //]]></script>
@@ -126,7 +126,7 @@
                             [% Data.NextPrioritiesStrg %]
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#NewPriorityID').bind('change', function (Event) {
+    $('#NewPriorityID').on('change', function (Event) {
         Core.AJAX.FormUpdate($('#MoveTicketToQueue'), 'AJAXUpdate', 'NewStateID', ['DestQueueID', 'NewUserID', 'NewStateID' [% Data.DynamicFieldNamesStrg %]]);
     });
 //]]></script>
@@ -213,7 +213,7 @@
                         <div class="Clear"></div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#StandardTemplateID').bind('change', function (Event) {
+    $('#StandardTemplateID').on('change', function (Event) {
         Core.Agent.TicketAction.ConfirmTemplateOverwrite('RichText', $(this), function () {
             Core.AJAX.FormUpdate($('#MoveTicketToQueue'), 'AJAXUpdate', 'StandardTemplateID', ['RichTextField']);
         });
@@ -251,7 +251,7 @@
                                     <input type="hidden" id="AttachmentDelete[% Data.FileID | html %]" name="AttachmentDelete[% Data.FileID | html %]" />
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#AttachmentDeleteButton[% Data.FileID | html %]').bind('click', function () {
+    $('#AttachmentDeleteButton[% Data.FileID | html %]').on('click', function () {
         var $Form = $('#AttachmentDeleteButton[% Data.FileID | html %]').closest('form');
         $('#AttachmentDelete[% Data.FileID | html %]').val(1);
         Core.Form.Validate.DisableValidation($Form);
@@ -268,7 +268,7 @@
                             </ul>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#FileUpload').bind('change', function () {
+    $('#FileUpload').on('change', function () {
         var $Form = $('#FileUpload').closest('form');
         Core.Form.Validate.DisableValidation($Form);
         $Form.find('#AttachmentUpload').val('1').end().submit();

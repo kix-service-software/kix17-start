@@ -111,7 +111,7 @@
 
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-$('.FilterDelete').bind('click', function (Event) {
+$('.FilterDelete').on('click', function (Event) {
 
     if (window.confirm([% Translate("Do you really want to delete this filter?") | JSON %])) {
         window.location = $(this).attr('href');
@@ -303,7 +303,7 @@ $('.FilterDelete').bind('click', function (Event) {
 
             // enable old value for all selects
             if (OldValue != "") {
-                $("form select[id^='" + IDPrefix + "'] option[value='" + OldValue + "']").removeAttr("disabled");
+                $("form select[id^='" + IDPrefix + "'] option[value='" + OldValue + "']").prop("disabled",false);
             }
 
             // Update old value

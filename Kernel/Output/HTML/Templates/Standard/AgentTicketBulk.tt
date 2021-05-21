@@ -230,7 +230,7 @@ $('#QueueID').on('change', function () {
                         <div class="Clear"></div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-$('#MergeTo').bind('blur', function() {
+$('#MergeTo').on('blur', function() {
     if ($(this).val()) {
         $('#OptionMergeTo').prop('checked', true);
     }

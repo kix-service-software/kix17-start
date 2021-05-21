@@ -349,7 +349,7 @@ EOF
 
         # add js to call FormUpdate()
         $Param{LayoutObject}->AddJSOnDocumentComplete( Code => <<"EOF");
-\$('$FieldSelector').bind('change', function (Event) {
+\$('$FieldSelector').on('change', function (Event) {
     Core.AJAX.FormUpdate(\$(this).parents('form'), 'AJAXUpdate', '$FieldName', [ $FieldsToUpdate ]);
 });
 EOF

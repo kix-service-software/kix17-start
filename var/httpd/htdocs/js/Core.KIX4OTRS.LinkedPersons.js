@@ -117,7 +117,7 @@ Core.KIX4OTRS.LinkedPersons = (function(TargetNS) {
     }
 
     TargetNS.InitList = function() {
-        $('#LinkedPersonsTable tbody > tr').find('.PersonDetails').bind('click', function(Event) {
+        $('#LinkedPersonsTable tbody > tr').find('.PersonDetails').on('click', function(Event) {
             var PersonID = $(this).find('.LinkedPersonID').val();
             var $Details = $('#LinkedPersonDetails' + PersonID);
             var DetailPosition = Core.KIX4OTRS.GetWidgetPopupPosition($Details.parent(), Event);
@@ -131,7 +131,7 @@ Core.KIX4OTRS.LinkedPersons = (function(TargetNS) {
             });
         });
 
-        $('.EmailRecipientType').bind('change', function(Event) {
+        $('.EmailRecipientType').on('change', function(Event) {
             AddAddress($(this).val(), $(this).next('.LinkedPersonMail').val());
         });
 
@@ -144,7 +144,7 @@ Core.KIX4OTRS.LinkedPersons = (function(TargetNS) {
     }
 
     TargetNS.Init = function() {
-        $('#LinkedPersons .WidgetAction.Toggle').bind('click', function() {
+        $('#LinkedPersons .WidgetAction.Toggle').on('click', function() {
             // load linked persons on first expand
             if ($('#LinkedPersons').hasClass('Collapsed') && $('#LinkedPersons').find('#LinkedPersonsTable tbody').length == 0)
                 RefreshLinkedPersons();

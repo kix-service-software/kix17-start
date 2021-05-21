@@ -75,7 +75,7 @@
         </div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('a.LinkZoomView').bind('click', function () {
+    $('a.LinkZoomView').on('click', function () {
         window.opener.Core.UI.Popup.FirePopupEvent('URL', { URL: $(this).attr('href')});
         window.close();
     });

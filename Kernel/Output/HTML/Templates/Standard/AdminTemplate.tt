@@ -119,7 +119,7 @@
 <script type="text/javascript">//<![CDATA[
     Core.UI.Table.InitTableFilter($('#Filter'), $('#Templates'));
 
-    $('.TemplateDelete').bind('click', function (Event) {
+    $('.TemplateDelete').on('click', function (Event) {
 
         if (window.confirm([% Translate("Do you really want to delete this template?") | JSON %])) {
             window.location = $(this).attr('href');

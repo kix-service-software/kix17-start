@@ -266,7 +266,7 @@ var DynamicFieldITSMConfigItem = (function (TargetNS) {
             }));
         });
 
-        $(Identifiers[Identifier]['ValidateFieldID']).closest('form').bind('submit', function() {
+        $(Identifiers[Identifier]['ValidateFieldID']).closest('form').on('submit', function() {
             if ( $(Identifiers[Identifier]['ValidateFieldID']).hasClass('Error') ) {
                 $('label[for=' + Identifier + ']').addClass('LabelError');
                 $(Identifiers[Identifier]['AutoCompleteFieldID']).addClass('Error');
@@ -326,7 +326,7 @@ var DynamicFieldITSMConfigItem = (function (TargetNS) {
      * @return nothing
      */
     TargetNS.InitEditValue = function (Identifier, Counter) {
-        $(Identifiers[Identifier]['ValueFieldID'] + Counter).siblings('div.Remove').find('a').bind('click', function() {
+        $(Identifiers[Identifier]['ValueFieldID'] + Counter).siblings('div.Remove').find('a').on('click', function() {
             $(this).closest('.InputField_Selection').remove();
             CheckInputFields(Identifier);
             $(Identifiers[Identifier]['FieldID']).trigger('change');
@@ -343,7 +343,7 @@ var DynamicFieldITSMConfigItem = (function (TargetNS) {
      * @return nothing
      */
     TargetNS.InitAJAXUpdate = function (Identifier, FieldsToUpdate) {
-        $(Identifiers[Identifier]['FieldID']).bind('change', function (Event) {
+        $(Identifiers[Identifier]['FieldID']).on('change', function (Event) {
             var CurrentValue = '';
             $('.InputField_Selection > input[name=' + Identifier + ']').each(function() {
                 if (CurrentValue.length > 0) {

@@ -22,7 +22,7 @@ Core.KIX4OTRS.Customer.TicketMergeLink = (function(TargetNS) {
     if (!$('iframe').length)
         return TargetNS;
 
-    $('iframe').bind('load', function() {
+    $('iframe').on('load', function() {
         var $body = $(this.contentDocument).find('body'), content = $body.html();
 
         if (content.search(/<!-- KIX4OTRS MergeTargetLinkEnd -->/) != -1) {
