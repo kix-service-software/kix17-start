@@ -52,6 +52,9 @@ sub _RemoveObsoleteDirectory {
         'var/httpd/htdocs/js/thirdparty/jquery-validate-1.14.0',
         'var/httpd/htdocs/skins/Agent/default/css/thirdparty/ui-theme',
         'var/httpd/htdocs/skins/Customer/default/css/thirdparty/ui-theme',
+
+        'var/httpd/htdocs/js/thirdparty/jsplumb-1.6.4',
+        'var/httpd/htdocs/js/thirdparty/farahey-0.5',
     );
 
     for my $Directory ( @DirectoryList ) {

@@ -779,24 +779,30 @@ Core.Agent.Admin.ProcessManagement.Canvas = (function (TargetNS) {
             detachable: true,
             reattach: true,
             overlays: [
-                [ "Diamond", { location: 18, width: 15, length: 25, paintStyle: { fillStyle: '#FFF', outlineWidth: 1, outlineColor: '#000'} } ],
-                [ "Label", { label: '<span id="' + EntityID + '" title="' + Core.App.EscapeHTML(TransitionName) + '">' + Core.App.EscapeHTML(TransitionName) + '</span>', location: 0.5, cssClass: 'TransitionLabel', id: 'label', events: {
-                    mouseenter: function(labelOverlay, originalEvent) {
-                        TargetNS.LastTransitionDetails = {
-                            LabelOverlay: labelOverlay,
-                            StartElement: StartElement,
-                            EndElement: EndElement
-                        };
-                        TargetNS.HighlightTransitionLabel(labelOverlay, StartElement, EndElement);
-                        originalEvent.stopPropagation();
-                        return false;
-                    },
-                    mouseleave: function(labelOverlay, originalEvent) {
-                        TargetNS.UnHighlightTransitionLabel(labelOverlay);
-                        originalEvent.stopPropagation();
-                        return false;
+                [ "Diamond", { location: 18, width: 15, length: 25, paintStyle: { fill: '#FFF', outlineWidth: 1, outlineColor: '#000'} } ],
+                [ "Label", {
+                    label: '<span id="' + EntityID + '" title="' + Core.App.EscapeHTML(TransitionName) + '">' + Core.App.EscapeHTML(TransitionName) + '</span>',
+                    location: 0.5,
+                    cssClass: 'TransitionLabel',
+                    id: 'label',
+                    events: {
+                        mouseover: function(labelOverlay, originalEvent) {
+                            TargetNS.LastTransitionDetails = {
+                                LabelOverlay: labelOverlay,
+                                StartElement: StartElement,
+                                EndElement: EndElement
+                            };
+                            TargetNS.HighlightTransitionLabel(labelOverlay, StartElement, EndElement);
+                            originalEvent.stopPropagation();
+                            return false;
+                        },
+                        mouseout: function(labelOverlay, originalEvent) {
+                            TargetNS.UnHighlightTransitionLabel(labelOverlay);
+                            originalEvent.stopPropagation();
+                            return false;
+                        }
                     }
-                }}]
+                }]
             ],
             parameters: {
                 TransitionID: EntityID
