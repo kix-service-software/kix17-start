@@ -1,6 +1,30 @@
 # Change log of KIX
 * Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.16.0-RC1 (2021/05/25)
+ * (2021/05/21) - CR: KIX17-2212 (Updated library fullcalendar to 3.10.2 and momentjs to 2.29.1) (fjacquemin)
+ * (2021/05/21) - CR: KIX17-2222 (updated StackTrace library to 2.0.2) (fjacquemin)
+ * (2021/05/21) - CR: KIX17-2208 (updated d3 and include necessary libraries (d3 to 3.5.17, nvd3 to 1.8.6, StringView to R12, rgbcolor to 2.1.2 and StackBlur to 2.5.0)) (fjacquemin)
+ * (2021/05/21) - CR: KIX17-2214 (updated jstree library to 3.3.11) (fjacquemin)
+ * (2021/05/21) - CR: KIX17-2213 (updated jscolor library to 2.4.5) (fjacquemin)
+ * (2021/05/21) - CR: KIX17-1854 (updated javascript libraries (jsplumb to 1.7.6 and farahey to 1.1.2)) (fjacquemin)
+ * (2021/05/21) - CR: KIX17-1852 (updated jquery libraries (core to 3.6 and ui to 1.12.1)) (fjacquemin)
+ * (2021/05/17) - Bugfix: KIX17-1861 (changed text of sysconfig key MarkAsRead for news) (ddoerffel)
+ * (2021/05/17) - Bugfix: KIX17-2187 (spelling mistake removed) (ddoerffel)
+ * (2021/05/12) - Bugfix: KIX17-2197 (scroll to added ci attribute entry) (millinger)
+ * (2021/05/12) - Bugfix: KIX17-2199 (use translations in referenced ci-attributes like service or sla) (millinger)
+ * (2021/05/04) - Bugfix: KIX17-2144 (removed spell checker) (fjacquemin)
+ * (2021/05/04) - Bugfix: KIX17-1869 (fixed missing preparation of the selections when displaying GenericCatalog in the search mask) (fjacquemin)
+ * (2021/05/04) - Bugfix: KIX17-2074 (fixed query condition with value 'OR') (millinger)
+ * (2021/04/26) - Bugfix: KIX17-2143 (fixed hyperlink for faq keywords in public frontend) (dbormann)
+ * (2021/04/23) - Bugfix: KIX17-2141 (fixed transfer of wrong UserID to preferences from the AdminCustomerUser) (fjacquemin)
+ * (2021/04/22) - Bugfix: KIX17-2136 (fixed Incorrect preparation of the fetching of the old values from SysConfig entries for the events) (fjacquemin)
+ * (2021/04/21) - Bugfix: KIX17-2131 (handle labels with mandatory class for HidePendingTimeInput) (millinger)
+ * (2021/04/13) - Bugfix: KIX17-2073 (fixed adding of attribute in config item form with default value) (millinger)
+ * (2021/04/13) - Bugfix: KIX17-2072 (fixed fulltext search for dashboard TicketGeneric) (millinger)
+ * (2021/04/09) - Bugfix: KIX17-1830 (fixed handling of shown dynamic fields in AgentTicketEmailOutbound) (millinger)
+ * (2021/04/08) - CR: KIX17-2165 (Add AccountedTime to TicketGet) (dbormann)
+
 # 17.15.0 (2021/04/20)
  * (2021/04/20) - productive release
  * (2021/04/13) - CR: KIX17-2092 (changed depend files) (fjacquemin)
