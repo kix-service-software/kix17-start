@@ -38,7 +38,7 @@ KIXSidebarTools.KIXSidebarRemoteDBView = (function (TargetNS) {
                     text: Counter,
                 });
                 $('#' + Identifier + 'Pagination').append($PageAction).append('&nbsp;');
-                $('#' + Identifier + 'Page' + Counter).bind('click', function() {
+                $('#' + Identifier + 'Page' + Counter).on('click', function() {
                     $('.' + Identifier + 'Page').hide();
                     Page.show();
 

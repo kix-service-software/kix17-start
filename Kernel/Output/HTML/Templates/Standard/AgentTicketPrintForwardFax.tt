@@ -36,7 +36,7 @@
                                   <input type="checkbox" id="Print_All" name="Print_All" value="1">
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-$('#Print_All').bind('change', function() {
+$('#Print_All').on('change', function() {
     ToggleAll();
 });
 //]]></script>

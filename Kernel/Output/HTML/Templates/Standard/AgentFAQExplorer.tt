@@ -65,7 +65,7 @@
                 </div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#AgentFAQSearch').bind('click', function (Event) {
+    $('#AgentFAQSearch').on('click', function (Event) {
         Core.Agent.Search.OpenSearchDialog('AgentFAQSearch');
         return false;
     });
@@ -158,7 +158,7 @@
 <script type="text/javascript">//<![CDATA[
     Core.KIX4OTRS.KIXSidebar.Init('[% Env("AgentFAQExplorerSidebarWidth") %]','[% Env("Action") %]','CategoryID=[% Data.CategoryID | uri %];');
 
-    $('.MasterAction').bind('click', function (Event) {
+    $('.MasterAction').on('click', function (Event) {
         var $MasterActionLink = $(this).find('.MasterActionLink');
         // only act if the link was not clicked directly
         if (Event.target !== $MasterActionLink.get(0)) {

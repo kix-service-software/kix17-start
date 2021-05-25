@@ -31,7 +31,7 @@ Core.Agent.TicketProcess = (function (TargetNS) {
      */
     TargetNS.Init = function () {
 
-        $('#ProcessEntityID').bind('change', function () {
+        $('#ProcessEntityID').on('change', function () {
             var Data = {
                 Action: 'AgentTicketProcess',
                 Subaction: 'DisplayActivityDialogAJAX',

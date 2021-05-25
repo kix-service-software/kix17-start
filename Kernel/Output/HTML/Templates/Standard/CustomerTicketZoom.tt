@@ -290,7 +290,7 @@
                                             <input type="hidden" id="AttachmentUpload" name="AttachmentUpload" value="0" />
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#Attachment').bind('change', function (Event) {
+    $('#Attachment').on('change', function (Event) {
         var $Form = $('#Attachment').closest('form');
         Core.Form.Validate.DisableValidation($Form);
         $Form.find('#AttachmentUpload').val('1').end().submit();
@@ -305,7 +305,7 @@
                                                 <input type="hidden" id="AttachmentDelete[% Data.FileID | html %]" name="AttachmentDelete[% Data.FileID | html %]" />
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#AttachmentDeleteButton[% Data.FileID | html %]').bind('click', function () {
+    $('#AttachmentDeleteButton[% Data.FileID | html %]').on('click', function () {
         var $Form = $('#AttachmentDeleteButton[% Data.FileID | html %]').closest('form');
         $('#AttachmentDelete[% Data.FileID | html %]').val(1);
         Core.Form.Validate.DisableValidation($Form);
@@ -325,7 +325,7 @@
                                         <div class="Clear"></div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#StateID').bind('change', function (Event) {
+    $('#StateID').on('change', function (Event) {
         Core.AJAX.FormUpdate($('#ReplyCustomerTicket'), 'AJAXUpdate', 'StateID', [ 'PriorityID', 'TicketID' [% Data.DynamicFieldNamesStrg %] ]);
     });
 //]]></script>
@@ -339,7 +339,7 @@
                                         <div class="Clear"></div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#PriorityID').bind('change', function (Event) {
+    $('#PriorityID').on('change', function (Event) {
         Core.AJAX.FormUpdate($('#ReplyCustomerTicket'), 'AJAXUpdate', 'PriorityID', [ 'StateID', 'TicketID' [% Data.DynamicFieldNamesStrg %] ]);
     });
 //]]></script>
@@ -377,7 +377,7 @@
     Core.Customer.TicketZoom.Init();
     Core.KIX4OTRS.KIXSidebar.Init('[% Env("CustomerTicketZoomSidebarWidth") %]','[% Env("Action") %]','TicketID=[% Data.TicketID | uri %]');
     Core.UI.InitWidgetActionToggle();
-    $('a.AsPopup').bind('click', function (Event) {
+    $('a.AsPopup').on('click', function (Event) {
         Core.UI.Popup.OpenPopup($(this).attr('href'), 'TicketAction');
         return false;
     });

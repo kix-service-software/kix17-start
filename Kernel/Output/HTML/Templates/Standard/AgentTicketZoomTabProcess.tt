@@ -41,7 +41,7 @@ else {
 
 $('.DynamicFieldAutoResize').width(FieldWidth);
 
-$('.ShowFieldInfoOverlay').bind('click', function() {
+$('.ShowFieldInfoOverlay').on('click', function() {
 
     var OverlayTitle  = $(this).closest('label').attr('title'),
         OverlayHTML   = $(this).closest('.FieldContainer').find('.Value').html();

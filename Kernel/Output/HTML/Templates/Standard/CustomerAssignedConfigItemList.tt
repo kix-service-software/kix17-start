@@ -22,7 +22,7 @@
 </span>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('.SelectedAssignedConfigItemLabel').bind('click', function (Event) {
+    $('.SelectedAssignedConfigItemLabel').on('click', function (Event) {
         var $checkbox = $(this).prev('input');
         $checkbox.prop('checked', !$checkbox.prop('checked'));
     });

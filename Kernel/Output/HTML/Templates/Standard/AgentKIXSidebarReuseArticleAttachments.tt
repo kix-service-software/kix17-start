@@ -60,7 +60,7 @@
 
     initReuseArticleAttachments();
 
-    $('#ReuseArticleAttachments .WidgetAction.Toggle').bind('click', function() {
+    $('#ReuseArticleAttachments .WidgetAction.Toggle').on('click', function() {
         // load attachments on first expand
         if ($('#ReuseArticleAttachments').hasClass('Expanded')) {
             var TicketID = $("input[name=TicketID]").val(),

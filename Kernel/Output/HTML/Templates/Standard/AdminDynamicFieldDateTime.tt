@@ -73,7 +73,7 @@
                         <div class="Clear"></div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-$('#YearsPeriod').bind('change', function (Event) {
+$('#YearsPeriod').on('change', function (Event) {
     Core.Agent.Admin.DynamicFieldDateTime.ToogleYearsPeriod($(this).val());
 });
 //]]></script>

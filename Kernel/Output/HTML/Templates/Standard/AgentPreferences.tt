@@ -215,14 +215,14 @@
     $Form.find('.Field.ButtonOnly').hide();
     $Form.find('input[name="Action"]').val('SearchprofilePreferencesAJAXHandler');
 
-    $('#PrefSearchProfileCategory').bind('change',function(){
+    $('#PrefSearchProfileCategory').on('change',function(){
         $Form.find('input[name="Subaction"]').val('AJAXUpdate');
         URL = '[% Env("Baselink") %]' + Core.AJAX.SerializeForm($Form);
         Core.AJAX.ContentUpdate($('#SearchProfileName_UpdateElement'), URL, function () {});
         $('#SearchProfileSelectionSaved').addClass('Hidden');
     });
 
-    $('#Subscribe').bind('click',function(event){
+    $('#Subscribe').on('click',function(event){
         $Form.find('input[name="Subaction"]').val('Subscribe');
         URL = '[% Env("Baselink") %]' + Core.AJAX.SerializeForm($Form);
         Core.AJAX.ContentUpdate($('#SearchProfileName_UpdateElement'), URL, function (Result) {});
@@ -230,7 +230,7 @@
         event.preventDefault();
     });
 
-    $('#Copy').bind('click',function(event){
+    $('#Copy').on('click',function(event){
         $Form.find('input[name="Subaction"]').val('Copy');
         var Data = Core.AJAX.SerializeForm($Form),
             $Element = $(this);

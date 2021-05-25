@@ -60,7 +60,7 @@ Core.Agent.TicketMerge = (function (TargetNS) {
         SwitchMandatoryFields();
 
         // watch for changes of inform sender field
-        $('#InformSender').bind('click', function(){
+        $('#InformSender').on('click', function(){
             SwitchMandatoryFields();
         });
 

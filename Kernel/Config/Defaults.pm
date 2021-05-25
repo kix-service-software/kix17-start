@@ -796,20 +796,6 @@ sub LoadDefaults {
 #    $Self->{'MIME-Viewer'}->{'text/xml'} = $Self->{Home}.'/scripts/tools/xml2html.pl';
 
     # --------------------------------------------------- #
-    # SpellChecker
-    # --------------------------------------------------- #
-    # (If ispell or aspell is available, then we will provide a spelling
-    # checker.)
-    #    $Self->{SpellChecker} = 0;
-    $Self->{SpellChecker}            = 0;
-    $Self->{SpellCheckerBin}         = '/usr/bin/ispell';
-    $Self->{SpellCheckerDictDefault} = 'english';
-
-    # SpellCheckerIgnore
-    # (A list of ignored words.)
-    $Self->{SpellCheckerIgnore} = [ 'www', 'webmail', 'https', 'http', 'html', 'rfc' ];
-
-    # --------------------------------------------------- #
     # CommonCSS                                           #
     # --------------------------------------------------- #
 
@@ -854,16 +840,16 @@ sub LoadDefaults {
     # --------------------------------------------------- #
     # CommonJS                                           #
     # --------------------------------------------------- #
-
     # Customer Common JS
     $Self->{'Loader::Customer::CommonJS'}->{'000-Framework'} =  [
-        'thirdparty/jquery-2.1.4/jquery.js',
+        'thirdparty/jquery-3.6/jquery.min.js',
         'thirdparty/jquery-browser-detection/jquery-browser-detection.js',
-        'thirdparty/jquery-validate-1.14.0/jquery.validate.js',
-        'thirdparty/jquery-ui-1.11.4/jquery-ui.js',
-        'thirdparty/stacktrace-0.6.4/stacktrace.js',
+        'thirdparty/jquery-validate-1.19.3/jquery.validate.min.js',
+        'thirdparty/jquery-ui-1.12.1/jquery-ui.min.js',
+        'thirdparty/stacktrace-2.0.2/stacktrace-with-promises-and-json-polyfills.min.js',
         'thirdparty/jquery-pubsub/pubsub.js',
-        'thirdparty/jquery-jstree-3.1.1/jquery.jstree.js',
+        'thirdparty/jstree-3.3.11/jstree.min.js',
+        'thirdparty/jquery-tablesorter-2.31.1/jquery.tablesorter.min.js',
         'Core.Debug.js',
         'Core.Exception.js',
         'Core.Data.js',
@@ -889,17 +875,18 @@ sub LoadDefaults {
         'Core.Customer.js',
         'Core.Customer.Responsive.js'
     ];
-
     # Agent Common JS
     $Self->{'Loader::Agent::CommonJS'}->{'000-Framework'} =  [
-        'thirdparty/jquery-2.1.4/jquery.js',
+        'thirdparty/jquery-3.6/jquery.min.js',
         'thirdparty/jquery-browser-detection/jquery-browser-detection.js',
-        'thirdparty/jquery-ui-1.11.4/jquery-ui.js',
+        'thirdparty/jquery-ui-1.12.1/jquery-ui.min.js',
         'thirdparty/jquery-ui-touch-punch-0.2.3/jquery.ui.touch-punch.js',
-        'thirdparty/jquery-validate-1.14.0/jquery.validate.js',
-        'thirdparty/stacktrace-0.6.4/stacktrace.js',
+        'thirdparty/jquery-validate-1.19.3/jquery.validate.min.js',
+        'thirdparty/stacktrace-2.0.2/stacktrace-with-promises-and-json-polyfills.min.js',
         'thirdparty/jquery-pubsub/pubsub.js',
-        'thirdparty/jquery-jstree-3.1.1/jquery.jstree.js',
+        'thirdparty/jstree-3.3.11/jstree.min.js',
+        'thirdparty/jquery-tablesorter-2.31.1/jquery.tablesorter.min.js',
+        'thirdparty/jscolor-2.4.5/jscolor.min.js',
         'Core.JavaScriptEnhancements.js',
         'Core.Debug.js',
         'Core.Exception.js',
@@ -1027,26 +1014,6 @@ sub LoadDefaults {
         'PasswordNeedDigit' => '0',
         'PasswordRegExp' => '',
         'Prio' => '0500'
-    };
-    $Self->{PreferencesGroups}->{SpellDict} = {
-        Module => 'Kernel::Output::HTML::Preferences::Generic',
-        Column => 'Other Options',
-        Label  => 'Spelling Dictionary',
-        Desc   => 'Select your default spelling dictionary.',
-        Data   => {
-
-            # installed dict catalog (check your insalled catalogues, e. g. deutsch -=> german!)
-            # dict => frontend (ispell)
-            'english' => 'English',
-            'deutsch' => 'Deutsch',
-
-            # dict => frontend (aspell)
-#            'english' => 'English',
-#            'german'  => 'Deutsch',
-        },
-        PrefKey => 'UserSpellDict',
-        Prio    => 5000,
-        Active   => 1,
     };
     $Self->{PreferencesGroups}->{Comment} = {
         'Active' => '0',

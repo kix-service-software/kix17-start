@@ -480,6 +480,8 @@ sub ConfigItemUpdate {
     $Param{Key} =~ s/'/\'/g;
     $Param{Key} =~ s/###/'}->{'/g;
 
+    my @ArrayKeys = split('###', $Param{OrgKey});
+
     # get option to store it
     my $Option = '';
     if ( !$Param{Valid} ) {
@@ -491,7 +493,10 @@ sub ConfigItemUpdate {
     }
 
     # get old value
-    my $OldValue = $Self->{ConfigObject}->{$Param{Key}};
+    my $OldValue = $Self->{ConfigObject};
+    for ( 0 .. (scalar(@ArrayKeys)-1) ) {
+        $OldValue = $OldValue->{$ArrayKeys[$_]};
+    }
 
     # get old config item
     my %OldConfig = $Self->ConfigItemGet( Name => $Param{OrgKey} );

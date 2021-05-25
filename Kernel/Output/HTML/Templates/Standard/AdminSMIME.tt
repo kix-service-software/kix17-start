@@ -197,7 +197,7 @@
                                 </a>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('a.CertificateRead').unbind('click').bind('click', function (Event) {
+    $('a.CertificateRead').off('click').on('click', function (Event) {
         Core.UI.Popup.OpenPopup($(this).attr('href'), 'CertificateRead');
         return false;
     });

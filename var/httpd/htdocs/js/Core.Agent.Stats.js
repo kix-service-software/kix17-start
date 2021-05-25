@@ -43,7 +43,7 @@ Core.Agent.Stats = (function (TargetNS) {
 
         // activate or deactivate the Graphsize menu
         if (Flag) {
-            $('#GraphSize').removeAttr('disabled');
+            $('#GraphSize').prop('disabled', false);
         }
         else {
             $('#GraphSize').attr('disabled', 'disabled');

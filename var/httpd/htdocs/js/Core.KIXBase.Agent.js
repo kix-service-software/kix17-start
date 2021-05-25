@@ -140,7 +140,7 @@ Core.KIXBase.Agent = (function(TargetNS) {
             $('form input[name=SysConfigGroup]').parents('li').remove();
         }
 
-        $('#SelectedCustomerUser').bind('change',function() {
+        $('#SelectedCustomerUser').on('change',function() {
             window.setTimeout(function() {
                 // check sidebars whether they should be opened
                 Core.KIXBase.Agent.AutoToggleSidebars();
@@ -261,7 +261,7 @@ Core.KIXBase.Agent = (function(TargetNS) {
             }, 5000);
 
             // save new size every time the size has changed
-            $(window).bind('resizeEnd', function() {
+            $(window).on('resizeEnd', function() {
 
                 if (!Start) {
                     var Height = window.outerHeight,
@@ -286,7 +286,7 @@ Core.KIXBase.Agent = (function(TargetNS) {
             });
 
             // save new position every time the size has changed
-            $(window).bind('moveEnd', function() {
+            $(window).on('moveEnd', function() {
                 if (!Start) {
                     var Height = window.outerHeight,
                         Width = window.outerWidth,

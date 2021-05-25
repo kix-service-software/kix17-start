@@ -352,7 +352,7 @@
         text-decoration: none;
         margin: 10px 0px 0px 5px;
     }
-    .ui-tabs-nav li a.ui-tabs-anchor {
+    .ui-tabs .ui-tabs-nav li a.ui-tabs-anchor {
         padding: 0 5px;
     }
     .ui-tabs .ui-tabs-nav li.ui-tabs-active a {
@@ -363,7 +363,7 @@
     .ui-state-active a:visited {
         z-index: 3;
     }
-    div.ui-widget-content {
+    div.ui-widget.ui-widget-content {
         border: 0px;
         background: none;
     }
@@ -372,8 +372,10 @@
         font-size: 12px;
         border-radius: 5px;
     }
-    div.ui-tabs > div {
+    div.ui-tabs > div.ui-tabs-panel {
         padding: 5px;
+        border-width: 1px;
+        border-style: solid;
     }
     .ui-tabs-panel > .MainBox {
         padding: 0;

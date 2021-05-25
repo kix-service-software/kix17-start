@@ -55,7 +55,7 @@
                             </div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-$('#SysConfigGroup').bind('change', function(){
+$('#SysConfigGroup').on('change', function(){
     $('#SysConfigGroupForm').submit();
 });
 //]]></script>

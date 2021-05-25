@@ -87,7 +87,7 @@
 
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-$('#ShowContextSettingsDialog').bind('click', function (Event) {
+$('#ShowContextSettingsDialog').on('click', function (Event) {
     Core.UI.Dialog.ShowContentDialog($('#ContextSettingsDialogContainer'), [% Translate("Settings") | JSON %], '20%', 'Center', true,
         [
             {

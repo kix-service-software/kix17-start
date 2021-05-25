@@ -29,12 +29,12 @@
                 </fieldset>
             </div>
         </div>
-        
+
         <div>
             <p class="SpacingBottomLarge">
                 [% Translate("Please click an icon below to create a ticket from the desired template.") | html %]
             </p>
-        
+
 [% RenderBlockStart("PortalGroup") %]
             <div id="PortalGroup[% Translate(Data.PortalGroupID) | html %]" class="PortalGroup">
                 <div class="Header">
@@ -56,9 +56,9 @@
     </div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    
+
     // init popups
-    $('a.AsPopup').bind('click', function(Event) {
+    $('a.AsPopup').on('click', function(Event) {
         var Matches, PopupType = 'TicketAction';
 
         Matches = $(this).attr('class').match(/PopupType_(\w+)/);
@@ -66,8 +66,8 @@
             PopupType = Matches[1];
         }
         $(this).addClass('PopupCalled');
-        $('a.TabAsPopup.PopupCalled').removeAttr('onClick');
-        $('a.TabAsPopup.PopupCalled').bind('click', function(Event) {
+        $('a.TabAsPopup.PopupCalled').prop('onClick',null);
+        $('a.TabAsPopup.PopupCalled').on('click', function(Event) {
             $(this).removeClass('PopupCalled');
             return false;
         });
@@ -76,7 +76,7 @@
     });
 
     // init group filter
-    $('#PortalGroupFilter').bind('keyup', function(e) {
+    $('#PortalGroupFilter').on('keyup', function(e) {
         var Filter = $(this).val().trim().toLowerCase();
         if (Filter.length > 0) {
             $('#PortalGroupFilterClear').css('visibility', 'visible');
@@ -98,14 +98,14 @@
                 $(this).hide();
         });
     });
-    $('#PortalGroupFilterClear').bind('click', function(e) {
+    $('#PortalGroupFilterClear').on('click', function(e) {
         e.preventDefault();
         $('#PortalGroupFilter').val('').trigger('keyup');
         $(this).css('visibility', 'hidden');
     });
 
     // init template filter
-    $('#TicketTemplateFilter').bind('keyup', function(e) {
+    $('#TicketTemplateFilter').on('keyup', function(e) {
         var Filter = $(this).val().trim().toLowerCase();
         if (Filter.length > 0) {
             $('#TicketTemplateFilterClear').css('visibility', 'visible');
@@ -128,19 +128,19 @@
             // trigger group filter again
             $('#PortalGroupFilter').trigger('keyup');
         }
-        
+
         // check if groups should be hidden because they are empty
         $('.PortalGroup').each(function() {
             if ($(this).find('.TicketTemplateElement:visible').length == 0)
                 $(this).hide();
         });
     });
-    $('#TicketTemplateFilterClear').bind('click', function(e) {
+    $('#TicketTemplateFilterClear').on('click', function(e) {
         e.preventDefault();
         $('#TicketTemplateFilter').val('').trigger('keyup');
         $(this).css('visibility', 'hidden');
     });
-    
+
 //]]></script>
 [% END %]
 </div>

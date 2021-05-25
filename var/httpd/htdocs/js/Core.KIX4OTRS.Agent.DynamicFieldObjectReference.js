@@ -39,7 +39,7 @@ Core.KIX4OTRS.Agent.DynamicFieldObjectReference = (function(TargetNS) {
     TargetNS.Init = function($Element, ActiveAutoComplete, ObjectReference) {
         if (isJQueryObject($Element)) {
             // Hide tooltip in autocomplete field, if user already typed something to prevent the autocomplete list to be hidden under the tooltip. (Only needed for serverside errors)
-            $Element.unbind('keyup.Validate').bind('keyup.Validate', function() {
+            $Element.off('keyup.Validate').on('keyup.Validate', function() {
                 var Value = $Element.val();
                 if ($Element.hasClass('ServerError') && Value.length) {
                     $('#OTRS_UI_Tooltips_ErrorTooltip').hide();
@@ -136,7 +136,7 @@ Core.KIX4OTRS.Agent.DynamicFieldObjectReference = (function(TargetNS) {
                     return false;
                 }
             });
-            $Element.bind('blur', function() {
+            $Element.on('blur', function() {
                 var ElementID   = $(this).attr('id').substr(0,$(this).attr('id').length-4);
                 if ($(this).val().length > 0) {
                     $(this).val($(this).data('LastValue'));
@@ -161,7 +161,7 @@ Core.KIX4OTRS.Agent.DynamicFieldObjectReference = (function(TargetNS) {
         }
 
         // On unload remove old selected data. If the page is reloaded (with F5) this data stays in the field and invokes an ajax request otherwise
-        $(window).bind('unload', function() {
+        $(window).on('unload', function() {
             $('#SelectedCustomerUser').val('');
         });
 

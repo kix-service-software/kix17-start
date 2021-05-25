@@ -33,10 +33,10 @@
     <div id="[% Data.FieldID | html %]ServerError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#[% Data.FieldID %]').bind('change', function (Event) {
+    $('#[% Data.FieldID %]').on('change', function (Event) {
         Core.AJAX.FormUpdate($(this).parents('form'), 'AJAXUpdate', '[% Data.FieldID %]' , [ [% Data.FieldsToUpdate %] ] );
     });
-    $('#OwnerSelectionGetAll').bind('click', function (Event) {
+    $('#OwnerSelectionGetAll').on('click', function (Event) {
         $('#OwnerAll').val('1');
         Core.AJAX.FormUpdate($(this).parents('form'), 'AJAXUpdate', '[% Data.FieldID %]', ['[% Data.FieldID %]']);
         return false;

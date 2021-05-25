@@ -797,15 +797,16 @@ sub _XMLFormGet {
                 $AddKey   = $Param{Prefix} . '::' . $AddKey;
             }
 
+            # get param object
+            my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+            my $ParamObject  = $Kernel::OM->Get('Kernel::System::Web::Request');
+
             # get param
-            my $FormValues = $Kernel::OM->Get('Kernel::Output::HTML::Layout')->ITSMConfigItemFormDataGet(
+            my $FormValues = $LayoutObject->ITSMConfigItemFormDataGet(
                 Key          => $InputKey,
                 Item         => $Item,
                 ConfigItemID => $Param{ConfigItemID},
             );
-
-            # get param object
-            my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
 
             if ( defined $FormValues->{Value} ) {
 
@@ -839,7 +840,15 @@ sub _XMLFormGet {
                             XMLDefinition => $Item->{Sub},
                         );
                     }
-                    $FormData->{ $Item->{Key} }->[$CounterInsert]->{Content} = '';
+                    $FormData->{ $Item->{Key} }->[$CounterInsert]->{Content} = undef;
+                    $FormData->{ $Item->{Key} }->[$CounterInsert]->{Init}    = 1;
+
+                    $LayoutObject->Block(
+                        Name => 'ScrollIntoView',
+                        Data => {
+                            DeleteKey => $InputKey . '::Delete',
+                        },
+                    );
                 }
                 last COUNTER;
             }
@@ -868,7 +877,8 @@ sub _XMLDefaultSet {
                 );
             }
 
-            $DefaultData->{ $Item->{Key} }->[$Counter]->{Content} = '';
+            $DefaultData->{ $Item->{Key} }->[$Counter]->{Content} = undef;
+            $DefaultData->{ $Item->{Key} }->[$Counter]->{Init}    = 1;
         }
     }
 
@@ -906,7 +916,10 @@ sub _XMLFormOutput {
             # search the last content
             COUNTER:
             for my $Counter ( 1 .. $Item->{CountMax} ) {
-                last COUNTER if !defined $Param{XMLData}->{ $Item->{Key} }->[$Counter]->{Content};
+                last COUNTER if ( 
+                    !defined $Param{XMLData}->{ $Item->{Key} }->[$Counter]->{Content}
+                    && !$Param{XMLData}->{ $Item->{Key} }->[$Counter]->{Init}
+                );
                 $Loop = $Counter;
             }
 

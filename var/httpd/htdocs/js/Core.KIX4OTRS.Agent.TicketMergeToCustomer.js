@@ -21,24 +21,20 @@ Core.KIX4OTRS.Agent = Core.KIX4OTRS.Agent || {};
 Core.KIX4OTRS.Agent.TicketMergeToCustomer = (function(TargetNS) {
     // Toggle Checkbox Status of all Tickets with JQuery
     TargetNS.Init = function() {
-        $('#ToggleChecker').bind('click', function() {
-            // Changed with use of JQuery 1.6.4
-            // $('.CheckTicket').attr('checked', $(this).attr('checked') );
+        $('#ToggleChecker').on('click', function() {
             $('.CheckTicket').prop('checked', $(this).prop('checked'));
         });
-        $('.TicketToMerge > td').bind('click', function() {
+        $('.TicketToMerge > td').on('click', function() {
             var $CheckBox = $(this).parent().find('.CheckTicket'),
-            // Changed with use of JQuery 1.6.4
-            // CheckState = $CheckBox.attr('checked');
+
             CheckState = $CheckBox.prop('checked');
 
-            // Changed with use of JQuery 1.6.4
-            // $CheckBox.attr('checked', !CheckState );
             $CheckBox.prop('checked', !CheckState);
-            if (CheckState)
-                $('#ToggleChecker').removeAttr('checked');
+            if (CheckState) {
+                $('#ToggleChecker').prop('checked', false);
+            }
         });
-        $('.CheckTicket').bind('click', function(event) {
+        $('.CheckTicket').on('click', function(event) {
             event.stopPropagation();
         });
     };

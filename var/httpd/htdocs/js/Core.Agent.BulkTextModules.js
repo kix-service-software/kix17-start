@@ -331,7 +331,7 @@ Core.Agent.BulkTextModules = (function(TargetNS) {
             SelectedTextModuleID = $('#BulkTextModulesSelectionContainer').find('.TextModule.Selected').attr('id');
             if (SelectedTextModuleID > 0) {
                 PreviewTextmodule(Event, SelectedTextModuleID);
-                $TMPreviewContainer.bind('click', function() {
+                $TMPreviewContainer.on('click', function() {
                     $TMPreviewContainer.hide();
                 });
             }
@@ -464,7 +464,7 @@ Core.Agent.BulkTextModules = (function(TargetNS) {
         // don't use AJAX refresh
         if (Action !== undefined) {
 
-            $('#BulkTextModules .WidgetAction.Toggle').bind('click', function() {
+            $('#BulkTextModules .WidgetAction.Toggle').on('click', function() {
                 // load text modules on first expand
                 if ($('#BulkTextModules').hasClass('Collapsed') && $TMTable.find('div.TextModule').length == 0)
                     RefreshTextmodules();

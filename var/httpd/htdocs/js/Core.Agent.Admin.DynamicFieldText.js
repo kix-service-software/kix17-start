@@ -83,7 +83,7 @@ Core.Agent.Admin.DynamicFieldText = (function (TargetNS) {
             if($(this).hasClass('RemoveRegEx')) {
 
                 // bind click function to remove button
-                $(this).bind('click', function () {
+                $(this).on('click', function () {
                     TargetNS.RemoveRegEx($(this).attr('id'));
                     return false;
                 });

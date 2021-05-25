@@ -44,7 +44,7 @@ sub Run {
         # create another replacement string
         $ReplacementString = '[% WRAPPER JSOnDocumentComplete %]'
             . '<script type="text/javascript">//<![CDATA['
-            . '    $(\'#ServiceID\').bind(\'change\', function (Event) {'
+            . '    $(\'#ServiceID\').on(\'change\', function (Event) {'
             . '        Core.KIX4OTRS.ServiceAssignedQueue();'
             . '    });'
             . '//]]></script>'

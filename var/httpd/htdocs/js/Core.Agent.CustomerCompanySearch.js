@@ -85,7 +85,7 @@ Core.Agent.CustomerCompanySearch = (function (TargetNS) {
         }
 
         // On unload remove old selected data. If the page is reloaded (with F5) this data stays in the field and invokes an ajax request otherwise
-        $(window).bind('unload', function () {
+        $(window).on('unload', function () {
             // escape possible colons (:) in element id because jQuery can not handle it in id attribute selectors
            $('#' + Core.App.EscapeSelector($Element.attr('id')) + 'Selected').val('');
         });
@@ -278,7 +278,7 @@ Core.Agent.CustomerCompanySearch = (function (TargetNS) {
 
                 var ObjectId = $(this).attr('id');
 
-                $('#' + ObjectId).bind('change', function () {
+                $('#' + ObjectId).on('change', function () {
 
                     if (!$('#' + ObjectId).val() || $('#' + ObjectId).val() === '') {
                         return false;
@@ -288,7 +288,7 @@ Core.Agent.CustomerCompanySearch = (function (TargetNS) {
                     return false;
                 });
 
-                $('#' + ObjectId).bind('keypress', function (e) {
+                $('#' + ObjectId).on('keypress', function (e) {
                     if (e.which === 13){
                         TargetNS.AddCustomerID(ObjectId, $('#' + ObjectId).val(), $('#' + ObjectId).prev('.CustomerCompanyKey').val());
                         return false;

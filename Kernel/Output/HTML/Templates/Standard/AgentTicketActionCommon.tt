@@ -111,7 +111,7 @@
                                 <div class="Clear"></div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-$('#TypeID').bind('change', function (Event) {
+$('#TypeID').on('change', function (Event) {
     Core.AJAX.FormUpdate($('#Compose'), 'AJAXUpdate', 'TypeID', [ 'ServiceID', 'SLAID', 'NewOwnerID', 'NewResponsibleID', 'NewStateID', 'NewPriorityID' [% Data.DynamicFieldNamesStrg %] ]);
 });
 //]]></script>
@@ -128,7 +128,7 @@ $('#TypeID').bind('change', function (Event) {
                                 <div class="Clear"></div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-$('#NewQueueID').bind('change', function (Event) {
+$('#NewQueueID').on('change', function (Event) {
     Core.AJAX.FormUpdate($('#Compose'), 'AJAXUpdate', 'NewQueueID', [ 'TypeID', 'ServiceID', 'NewOwnerID', 'NewResponsibleID', 'NewStateID', 'NewPriorityID', 'StandardTemplateID' [% Data.DynamicFieldNamesStrg %] ]);
 });
 //]]></script>
@@ -144,7 +144,7 @@ $('#NewQueueID').bind('change', function (Event) {
                                 <div class="Clear"></div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-$('#ServiceID').bind('change', function (Event) {
+$('#ServiceID').on('change', function (Event) {
     Core.AJAX.FormUpdate($('#Compose'), 'AJAXUpdate', 'ServiceID', [ 'TypeID', 'SLAID', 'NewOwnerID', 'NewResponsibleID', 'NewStateID', 'NewPriorityID' [% Data.DynamicFieldNamesStrg %] ]);
 /*global ITSM: true */
     // show service incident state and signal for the selected service
@@ -178,7 +178,7 @@ $('#ServiceID').bind('change', function (Event) {
                                 <div class="Clear"></div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-$('#ServiceID').bind('change', function (Event) {
+$('#ServiceID').on('change', function (Event) {
     Core.AJAX.FormUpdate($('#Compose'), 'AJAXUpdate', 'ServiceID', [ 'TypeID', 'SLAID', 'NewOwnerID', 'NewResponsibleID', 'NewStateID', 'NewPriorityID' [% Data.DynamicFieldNamesStrg %] ]);
 /*global ITSM: true */
     // show service incident state and signal for the selected service
@@ -210,7 +210,7 @@ $('#ServiceID').bind('change', function (Event) {
                                 <div class="Clear"></div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-$('#SLAID').bind('change', function (Event) {
+$('#SLAID').on('change', function (Event) {
     Core.AJAX.FormUpdate($('#Compose'), 'AJAXUpdate', 'SLAID', [ 'TypeID', 'ServiceID', 'NewOwnerID', 'NewResponsibleID', 'NewStateID', 'NewPriorityID' [% Data.DynamicFieldNamesStrg %] ]);
 });
 //]]></script>
@@ -227,7 +227,7 @@ $('#SLAID').bind('change', function (Event) {
                                 <div class="Clear"></div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-$('#SLAID').bind('change', function (Event) {
+$('#SLAID').on('change', function (Event) {
     Core.AJAX.FormUpdate($('#Compose'), 'AJAXUpdate', 'SLAID', [ 'TypeID', 'ServiceID', 'NewOwnerID', 'NewResponsibleID', 'NewStateID', 'NewPriorityID' [% Data.DynamicFieldNamesStrg %] ]);
 });
 //]]></script>
@@ -244,7 +244,7 @@ $('#SLAID').bind('change', function (Event) {
                                 <div class="Clear"></div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-$('#NewOwnerID').bind('change', function (Event) {
+$('#NewOwnerID').on('change', function (Event) {
     Core.AJAX.FormUpdate($('#Compose'), 'AJAXUpdate', 'NewOwnerID', [ 'TypeID', 'ServiceID', 'SLAID', 'NewResponsibleID', 'NewStateID', 'NewPriorityID' [% Data.DynamicFieldNamesStrg %] ]);
 });
 //]]></script>
@@ -261,7 +261,7 @@ $('#NewOwnerID').bind('change', function (Event) {
                                 <div class="Clear"></div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-$('#NewOwnerID').bind('change', function (Event) {
+$('#NewOwnerID').on('change', function (Event) {
     Core.AJAX.FormUpdate($('#Compose'), 'AJAXUpdate', 'NewOwnerID', [ 'TypeID', 'ServiceID', 'SLAID', 'NewResponsibleID', 'NewStateID', 'NewPriorityID' [% Data.DynamicFieldNamesStrg %] ]);
 });
 //]]></script>
@@ -276,7 +276,7 @@ $('#NewOwnerID').bind('change', function (Event) {
                                 <div class="Clear"></div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-$('#NewResponsibleID').bind('change', function (Event) {
+$('#NewResponsibleID').on('change', function (Event) {
     Core.AJAX.FormUpdate($('#Compose'), 'AJAXUpdate', 'NewResponsibleID', [ 'TypeID', 'ServiceID', 'SLAID', 'NewOwnerID', 'NewStateID', 'NewPriorityID' [% Data.DynamicFieldNamesStrg %] ]);
 });
 //]]></script>
@@ -291,7 +291,7 @@ $('#NewResponsibleID').bind('change', function (Event) {
                                 <div class="Clear"></div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-$('#NewStateID').bind('change', function (Event) {
+$('#NewStateID').on('change', function (Event) {
     Core.AJAX.FormUpdate($('#Compose'), 'AJAXUpdate', 'NewStateID', ['TypeID', 'ServiceID', 'SLAID', 'NewOwnerID', 'NewResponsibleID', 'NewPriorityID' [% Data.DynamicFieldNamesStrg %] ]);
 });
 //]]></script>
@@ -328,7 +328,7 @@ $('#NewStateID').bind('change', function (Event) {
                                 <div class="Clear"></div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-$('#NewPriorityID').bind('change', function (Event) {
+$('#NewPriorityID').on('change', function (Event) {
     Core.AJAX.FormUpdate($('#Compose'), 'AJAXUpdate', 'NewPriorityID', ['TypeID', 'ServiceID', 'SLAID', 'NewOwnerID', 'NewResponsibleID', 'NewStateID' [% Data.DynamicFieldNamesStrg %] ]);
 });
 //]]></script>
@@ -435,10 +435,6 @@ $('#NewPriorityID').bind('change', function (Event) {
 
 <!-- OutputFilterHook_TicketOptionsBegin -->
 
-[% RenderBlockStart("SpellCheck") %]
-                                    <a href="#" id="OptionSpellCheck">[% Translate("Spell check") | html %]</a>
-[% RenderBlockEnd("SpellCheck") %]
-
 <!-- OutputFilterHook_TicketOptionsEnd -->
 
                                 </div>
@@ -456,7 +452,7 @@ $('#NewPriorityID').bind('change', function (Event) {
                                 <div class="Clear"></div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-$('#StandardTemplateID').bind('change', function (Event) {
+$('#StandardTemplateID').on('change', function (Event) {
     Core.Agent.TicketAction.ConfirmTemplateOverwrite('RichText', $(this), function () {
         Core.AJAX.FormUpdate($('#Compose'), 'AJAXUpdate', 'StandardTemplateID', ['RichTextField']);
     });
@@ -493,7 +489,7 @@ $('#StandardTemplateID').bind('change', function (Event) {
                                             <input type="hidden" id="AttachmentDelete[% Data.FileID | html %]" name="AttachmentDelete[% Data.FileID | html %]" />
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-$('#AttachmentDeleteButton[% Data.FileID | html %]').bind('click', function () {
+$('#AttachmentDeleteButton[% Data.FileID | html %]').on('click', function () {
     var $Form = $('#AttachmentDeleteButton[% Data.FileID | html %]').closest('form');
     $('#AttachmentDelete[% Data.FileID | html %]').val(1);
     Core.Form.Validate.DisableValidation($Form);
@@ -510,7 +506,7 @@ $('#AttachmentDeleteButton[% Data.FileID | html %]').bind('click', function () {
                                     </ul>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-$('#FileUpload').bind('change', function (Event) {
+$('#FileUpload').on('change', function (Event) {
     var $Form = $('#FileUpload').closest('form');
     Core.Form.Validate.DisableValidation($Form);
     $Form.find('#AttachmentUpload').val('1').end().submit();

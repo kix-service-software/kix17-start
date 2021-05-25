@@ -45,7 +45,7 @@
                 </ul>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#FAQSearch').bind('click', function (Event) {
+    $('#FAQSearch').on('click', function (Event) {
         Core.Agent.Search.OpenSearchDialog( 'AgentFAQSearch', "[% Data.Profile | html %]" );
         return false;
     });
@@ -82,7 +82,7 @@
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
     // bind the ContextSettingsDialogContainer
-    $('#ShowContextSettingsDialog').bind('click', function (Event) {
+    $('#ShowContextSettingsDialog').on('click', function (Event) {
         Core.UI.Dialog.ShowContentDialog($('#ContextSettingsDialogContainer'), [% Translate("Settings") | JSON %], '20%', 'Center', true,
             [
                 {

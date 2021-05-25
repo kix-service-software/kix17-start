@@ -131,6 +131,7 @@ one or more ticket entries in one call.
                     Changed            => '2010-10-27 20:15:15',
                     ChangeBy           => 123,
                     ArchiveFlag        => 'y',
+                    AccountedTime      =>  1234
 
                     # If DynamicFields => 1 was passed, you'll get an entry like this for each dynamic field:
                     DynamicField => [
@@ -388,6 +389,11 @@ sub Run {
         if (@DynamicFields) {
             $TicketEntry{DynamicField} = \@DynamicFields;
         }
+
+        # add AccountedTime
+        $TicketEntry{AccountedTime} = $TicketObject->TicketAccountedTimeGet(
+            TicketID => $TicketID,
+        );
 
         # set Ticket entry data
         my $TicketBundle = {

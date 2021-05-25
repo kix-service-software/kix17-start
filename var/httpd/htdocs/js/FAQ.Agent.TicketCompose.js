@@ -100,10 +100,10 @@ FAQ.Agent.TicketCompose = (function (TargetNS) {
         }
         // Register events for saving the cursor position of textarea
         else {
-            $Element.unbind('click.FAQComposing').bind('click.FAQComposing', function () {
+            $Element.off('click.FAQComposing').on('click.FAQComposing', function () {
                 GetCursorPosition();
             });
-            $Element.unbind('keyup.FAQComposing').bind('keyup.FAQComposing', function () {
+            $Element.off('keyup.FAQComposing').on('keyup.FAQComposing', function () {
                 GetCursorPosition();
             });
         }

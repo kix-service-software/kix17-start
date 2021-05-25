@@ -124,7 +124,7 @@ FAQ.Agent.ConfirmationDialog = (function (TargetNS) {
         DialogData[Data.ElementID] = Data;
 
         // binding a click event to the defined element
-        $(DialogData[Data.ElementID].ElementSelector).bind('click', FAQ.Agent.ConfirmationDialog.ShowConfirmationDialog);
+        $(DialogData[Data.ElementID].ElementSelector).on('click', FAQ.Agent.ConfirmationDialog.ShowConfirmationDialog);
     };
 
     return TargetNS;

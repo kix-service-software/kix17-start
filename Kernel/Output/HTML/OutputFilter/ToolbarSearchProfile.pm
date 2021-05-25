@@ -58,7 +58,7 @@ sub Run {
     # create javascript for bind
     my $ReplaceString = '[% WRAPPER JSOnDocumentComplete %]'
         . '<script type="text/javascript">//<![CDATA['
-        . '$(\'#ToolBarSearchProfiles\').bind(\'change\', function (Event) {'
+        . '$(\'#ToolBarSearchProfiles\').on(\'change\', function (Event) {'
         . '    var Data = Core.AJAX.SerializeForm($(\'#SearchProfileForm\'));'
         . '    if ( $(this).val() != null ) {'
         . '        Core.AJAX.FunctionCall(Core.Config.Get(\'CGIHandle\'), Data, function (Result) {'

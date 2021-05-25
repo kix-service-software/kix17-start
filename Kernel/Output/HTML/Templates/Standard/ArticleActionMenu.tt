@@ -27,7 +27,7 @@
         [% IF Item.Type == 'OnLoad' %]
 <script type="text/javascript">//<![CDATA[
 "use strict";
-$('#[% Item.FormID | html %] select[name=ForwardTemplateID]').bind('change', function (Event) {
+$('#[% Item.FormID | html %] select[name=ForwardTemplateID]').on('change', function (Event) {
     var URL;
 
     if ($(this).val() > 0) {
@@ -90,7 +90,7 @@ $(document).on('change', '#[% Item.FormID | html %] select[name=ForwardTemplateI
         [% IF Item.Type == 'OnLoad' %]
 <script type="text/javascript">//<![CDATA[
 "use strict";
-$('#[% Item.FormID | html %] select[name=ResponseID]').bind('change', function (Event) {
+$('#[% Item.FormID | html %] select[name=ResponseID]').on('change', function (Event) {
     var URL;
 
     if ($(this).val() > 0) {

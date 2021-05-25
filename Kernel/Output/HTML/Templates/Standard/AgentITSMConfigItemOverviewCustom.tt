@@ -84,7 +84,7 @@
 
     Core.UI.InitCheckboxSelection($('table td.Checkbox'));
 
-    $('.MasterAction').bind('click', function (Event) {
+    $('.MasterAction').on('click', function (Event) {
         var $MasterActionLink = $(this).find('.MasterActionLink'),
             URL,
             Title = $(this).find('div').attr('title'),
@@ -104,7 +104,7 @@
         }
     });
 
-    $('#SelectAllConfigItems').bind('click', function (Event) {
+    $('#SelectAllConfigItems').on('click', function (Event) {
         var $Element = $(this);
 
         if ( $(this).hasClass('SelectAllItemsPages')

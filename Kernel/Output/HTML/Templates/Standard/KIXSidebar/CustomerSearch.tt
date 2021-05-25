@@ -31,7 +31,7 @@
 [% RenderBlockStart("SearchJS") %]
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#SearchString[% Data.Identifier | html %]').bind('keyup', function (Event) {
+    $('#SearchString[% Data.Identifier | html %]').on('keyup', function (Event) {
         if ( (Event.keyCode !== 13) && ($('#SearchString[% Data.Identifier | html %]').val().length >= [% Data.QueryMinLength | html %]) ) {
             var TicketID = '';
             var FormID = '';
@@ -87,7 +87,7 @@
             }
         );
     };
-    $('#SearchButton[% Data.Identifier | html %]').bind('click', function (Event) {
+    $('#SearchButton[% Data.Identifier | html %]').on('click', function (Event) {
         KIXSidebarCustomerSearch[% Data.Identifier | html %]();
     });
     $('#SearchString[% Data.Identifier | html %]').keydown(function (Event) {
@@ -146,7 +146,7 @@
 [% RenderBlockStart("AutoSelectOne") %]
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#SearchResult[% Data.Identifier | html %]').bind('UpdateResultField',
+    $('#SearchResult[% Data.Identifier | html %]').on('UpdateResultField',
         function(){
             var ObjectID = '';
             if ($('input[name=TicketID]').length && $('input[name=TicketID]').val() != '') {

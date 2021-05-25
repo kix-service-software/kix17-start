@@ -45,7 +45,7 @@
                 </ul>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#ITSMConfigItemSearch').bind('click', function (Event) {
+    $('#ITSMConfigItemSearch').on('click', function (Event) {
         ITSM.Agent.ConfigItem.Search.OpenSearchDialog( 'AgentITSMConfigItemSearch', '[% Data.Profile | html %]', '[% Data.ClassID | html %]' );
         return false;
     });
@@ -102,7 +102,7 @@
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
     // bind the ContextSettingsDialogContainer
-    $('#ShowContextSettingsDialog').bind('click', function (Event) {
+    $('#ShowContextSettingsDialog').on('click', function (Event) {
         Core.UI.Dialog.ShowContentDialog($('#ContextSettingsDialogContainer'), [% Translate("Settings") | JSON %], '20%', 'Center', true,
             [
                 {
@@ -117,7 +117,7 @@
         return false;
     });
 
-$('#ShowContextSettingsDialogTLV').bind('click', function (Event) {
+$('#ShowContextSettingsDialogTLV').on('click', function (Event) {
     Core.UI.Dialog.ShowContentDialog($('#ContextSettingsDialogContainerTLV'), [% Translate("Column Settings") | JSON %], '20%', 'Center', true,
         [
             {

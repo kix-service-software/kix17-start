@@ -36,7 +36,7 @@
 <script type="text/javascript">//<![CDATA[
     Core.UI.ActionRow.Init();
 
-    $('a.AsPopup').bind('click', function (Event) {
+    $('a.AsPopup').on('click', function (Event) {
         var Matches,
             PopupType = 'TicketAction';
 
@@ -286,7 +286,7 @@
 [% RenderBlockStart("DocumentReadyStart") %]
 <script type="text/javascript">//<![CDATA[
     Core.UI.InitCheckboxSelection($('div.Checkbox'));
-    $('.MasterAction').bind('click', function (Event) {
+    $('.MasterAction').on('click', function (Event) {
         var $MasterActionLink = $(this).find('.MasterActionLink');
         // prevent MasterAction on Dynamic Fields links
         if ($(Event.target).hasClass('DynamicFieldLink')) {
@@ -313,7 +313,7 @@
         return false;
     });
 
-    $('#SelectAllTickets').bind('click', function (Event) {
+    $('#SelectAllTickets').on('click', function (Event) {
         var $Element = $(this);
 
         if ( $(this).hasClass('SelectAllItemsPages')

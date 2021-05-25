@@ -242,7 +242,7 @@ Core.UI.Datepicker = (function (TargetNS) {
 
             // Check Used Element if available
             if ( typeof Element.Used !== 'undefined' ) {
-                Element.Used.prop('checked', true).trigger('change');
+                Element.Used.prop('checked', true);
             }
         };
         // KIX4OTRS-capeIT
@@ -302,7 +302,7 @@ Core.UI.Datepicker = (function (TargetNS) {
 
             // we need some special handling, if the element ID contains :: (CI edit)
             if (Element.Date.attr('id').indexOf('::') > -1) {
-                Element.Date.nextAll('a.DatepickerIcon').unbind('click.Datepicker').bind('click.Datepicker', function () {
+                Element.Date.nextAll('a.DatepickerIcon').off('click.Datepicker').on('click.Datepicker', function () {
                     $DatepickerElement.trigger('focus');
                     return false;
                 });
@@ -365,7 +365,7 @@ Core.UI.Datepicker = (function (TargetNS) {
         }
         // EO KIX4OTRS-capeIT
 
-        $('#' + Core.App.EscapeSelector(Element.Day.attr('id')) + 'DatepickerIcon').unbind('click.Datepicker').bind('click.Datepicker', function () {
+        $('#' + Core.App.EscapeSelector(Element.Day.attr('id')) + 'DatepickerIcon').off('click.Datepicker').on('click.Datepicker', function () {
             $DatepickerElement.datepicker('show');
             return false;
         });
@@ -373,7 +373,7 @@ Core.UI.Datepicker = (function (TargetNS) {
         // KIX4OTRS-capeIT
         // special handling for AgentStatistics
         if (Core.Config.Get('Action') === 'AgentStatistics') {
-            $('#EditDialog #' + Core.App.EscapeSelector(Element.Day.attr('id')) + 'DatepickerIcon').unbind('click.Datepicker').bind('click.Datepicker', function () {
+            $('#EditDialog #' + Core.App.EscapeSelector(Element.Day.attr('id')) + 'DatepickerIcon').off('click.Datepicker').on('click.Datepicker', function () {
                 $DatepickerElement.datepicker('show');
                 $('#ui-datepicker-div').prop('style', $('#ui-datepicker-div').attr('style') + '; z-index: 5000 !important');
                 return false;

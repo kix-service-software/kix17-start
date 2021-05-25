@@ -42,7 +42,7 @@
 </div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-$("#SetColumnPreferences_[% Data.PreferencesID %]").bind('click', function (Event) {
+$("#SetColumnPreferences_[% Data.PreferencesID %]").on('click', function (Event) {
     var Action = '[% Env("Action") %]';
 
     Core.UI.Dialog.ShowContentDialog($('#ContextSettingsDialogContainer-[% Data.PreferencesID %]'), [% Translate("Settings") | JSON %], '15%', 'Center', true,

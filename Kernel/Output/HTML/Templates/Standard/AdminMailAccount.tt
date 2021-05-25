@@ -362,7 +362,7 @@
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
 // Show IMAPFolder selection only for IMAP backends
-$('select#TypeAdd, select#Type').bind('change', function(){
+$('select#TypeAdd, select#Type').on('change', function(){
     if (/IMAP/.test($(this).val())) {
         $('.Row_IMAPFolder').show();
     }
@@ -371,7 +371,7 @@ $('select#TypeAdd, select#Type').bind('change', function(){
     }
 }).trigger('change');
 // Show only Queue field if Dispatch By Queue is selected
-$('select#DispatchingBy').bind('change', function(){
+$('select#DispatchingBy').on('change', function(){
     if (/Queue/.test($(this).val())) {
         $('.Row_Queue').show();
         Core.UI.InputFields.Activate();

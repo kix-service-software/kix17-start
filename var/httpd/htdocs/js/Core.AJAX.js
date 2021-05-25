@@ -267,7 +267,7 @@ Core.AJAX = (function (TargetNS) {
             );
 
             //3rd: set form submit and disable validation on attachment delete
-            $('#AttachmentDeleteButton' + FileID).bind('click', function () {
+            $('#AttachmentDeleteButton' + FileID).on('click', function () {
                 var $Form = $(this).closest('form');
                 $(this).next('input[type=hidden]').val(1);
                 Core.Form.Validate.DisableValidation($Form);
@@ -423,7 +423,7 @@ Core.AJAX = (function (TargetNS) {
                     if ( $('.Row_' + DataKey).length && $('.Row_' + DataKey).hasClass('Hidden') ) {
 
                         // hide dynamic fields which are marked as disabled
-                        $Element.removeAttr('readonly', 'readonly');
+                        $Element.prop('readonly', false);
                         Core.Form.Validate.DisableValidation($('.Row_' + DataKey));
                         $('.Row_' + DataKey).css({
                             "display" : "none"
@@ -471,7 +471,7 @@ Core.AJAX = (function (TargetNS) {
                     $.each(DataValue, function(Index, DataValue) {
                         // hide dynamic fields which are marked as disabled
                         if (!($.isArray(DataValue))) {
-                            $Element.removeAttr('readonly', 'readonly');
+                            $Element.prop('readonly', false);
                             Core.Form.Validate.DisableValidation($('.Row_' + Key));
                             $('.Row_' + Key).css({
                                 "display" : "none"

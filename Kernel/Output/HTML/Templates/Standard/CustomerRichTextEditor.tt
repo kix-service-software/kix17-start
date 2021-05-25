@@ -15,7 +15,6 @@
     Core.Config.Set('RichText.Width', '[% Config("Frontend::RichTextWidth") %]');
     Core.Config.Set('RichText.Height', '[% Config("Frontend::RichTextHeight") %]');
     Core.Config.Set('RichText.TextDir', '[% Env("TextDirection") %]');
-    Core.Config.Set('RichText.SpellChecker', '[% Env("BrowserSpellCheckerInline") %]');
     Core.Config.Set('RichText.EditingAreaCSS', 'body { [% Config("Frontend::RichText::DefaultCSS") %] }');
     Core.Config.Set('RichText.Lang.SplitQuote', '[% Translate('Split Quote') | html %]');
     Core.Config.Set('RichText.Lang.OpenLink', '[% Translate('Open link') | html %]');
@@ -25,24 +24,24 @@
         Core.Config.Set('RichText.Toolbar', [
             ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'NumberedList', 'BulletedList', 'Table', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'Link', 'Unlink', 'Undo', 'Redo', 'SelectAll' ],
             '/',
-            ['Image', 'HorizontalRule', 'PasteText', 'PasteFromWord', 'SplitQuote', 'RemoveQuote', '-', '-', 'Find', 'Replace', 'SpellCheck', 'TextColor', 'BGColor', 'RemoveFormat', '-', 'ShowBlocks', 'Source', 'SpecialChar', '-', 'Maximize'],
+            ['Image', 'HorizontalRule', 'PasteText', 'PasteFromWord', 'SplitQuote', 'RemoveQuote', '-', '-', 'Find', 'Replace', 'TextColor', 'BGColor', 'RemoveFormat', '-', 'ShowBlocks', 'Source', 'SpecialChar', '-', 'Maximize'],
             ['Format', 'Font', 'FontSize' ]
         ]);
         Core.Config.Set('RichText.ToolbarWithoutImage', [
             ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'NumberedList', 'BulletedList', 'Table', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'Link', 'Unlink', 'Undo', 'Redo', 'SelectAll' ],
             '/',
-            ['HorizontalRule', 'PasteText', 'PasteFromWord', 'SplitQuote', 'RemoveQuote', '-', '-', 'Find', 'Replace', 'SpellCheck', 'TextColor', 'BGColor', 'RemoveFormat', '-', 'ShowBlocks', 'Source', 'SpecialChar', '-', 'Maximize'],
+            ['HorizontalRule', 'PasteText', 'PasteFromWord', 'SplitQuote', 'RemoveQuote', '-', '-', 'Find', 'Replace', 'TextColor', 'BGColor', 'RemoveFormat', '-', 'ShowBlocks', 'Source', 'SpecialChar', '-', 'Maximize'],
             ['Format', 'Font', 'FontSize' ]
         ]);
     }
     else {
         Core.Config.Set('RichText.Toolbar', [
-            ['Bold', 'Italic', 'Underline', 'Strike', '-', 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'Link', 'Unlink', '-', 'Image', 'HorizontalRule', '-', 'Undo', 'Redo', '-', 'Find', 'SpellCheck'],
+            ['Bold', 'Italic', 'Underline', 'Strike', '-', 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'Link', 'Unlink', '-', 'Image', 'HorizontalRule', '-', 'Undo', 'Redo', '-', 'Find'],
             '/',
             ['Format', 'Font', 'FontSize', '-', 'TextColor', 'BGColor', 'RemoveFormat', '-', 'Source', 'SpecialChar', 'SplitQuote', 'RemoveQuote', '-', 'Maximize']
         ]);
         Core.Config.Set('RichText.ToolbarWithoutImage', [
-            ['Bold', 'Italic', 'Underline', 'Strike', '-', 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'Link', 'Unlink', '-', 'HorizontalRule', '-', 'Undo', 'Redo', '-', 'Find', 'SpellCheck'],
+            ['Bold', 'Italic', 'Underline', 'Strike', '-', 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'Link', 'Unlink', '-', 'HorizontalRule', '-', 'Undo', 'Redo', '-', 'Find'],
             '/',
             ['Format', 'Font', 'FontSize', '-', 'TextColor', 'BGColor', 'RemoveFormat', '-', 'Source', 'SpecialChar', 'SplitQuote', 'RemoveQuote', '-', 'Maximize']
         ]);

@@ -19,13 +19,18 @@ Core.KIX4OTRS.Agent = Core.KIX4OTRS.Agent || {};
  *              clickable link for merged tickets.
  */
 Core.KIX4OTRS.Agent.TicketMergeLink = (function(TargetNS) {
-    if (!$('iframe').length)
+    if (!$('iframe').length) {
         return TargetNS;
+    }
 
-    $('iframe').bind('load', function() {
-        var $body = $(this.contentDocument).find('body'), content = $body.html();
+    $('iframe').on('load', function() {
+        var $body   = $(this.contentDocument).find('body'),
+            content = $body.html();
 
-        if (content.search(/<!-- KIX4OTRS MergeTargetLinkEnd -->/) != -1) {
+        if (
+            content !== undefined
+            && content.search(/<!-- KIX4OTRS MergeTargetLinkEnd -->/) != -1
+        ) {
             content = content.replace(/<!--\sKIX4OTRS\sMergeTargetLinkStart\s::(.*)::\s-->/g, '<a  href="index.pl?Action=AgentTicketZoom;TicketID=$1" target="new">');
             content = content.replace(/<!-- KIX4OTRS MergeTargetLinkEnd -->/g, "</a>");
             $body.html(content);

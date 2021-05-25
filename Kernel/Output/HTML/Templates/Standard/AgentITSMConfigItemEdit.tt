@@ -146,7 +146,7 @@
                                     <button type="submit" id="AttachmentDelete[% Data.FileID | html %]" name="AttachmentDelete[% Data.FileID | html %]" value="[% Translate("Delete") | html %]">[% Translate("Delete") | html %]</button>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#AttachmentDelete[% Data.FileID | html %]').bind('click', function () {
+    $('#AttachmentDelete[% Data.FileID | html %]').on('click', function () {
         Core.Form.Validate.DisableValidation($('#AttachmentDelete[% Data.FileID | html %]').closest('form'));
     });
 //]]></script>
@@ -163,7 +163,7 @@
 
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#FileUpload').bind('change', function (Event) {
+    $('#FileUpload').on('change', function (Event) {
         var $Form = $('#FileUpload').closest('form');
         Core.Form.Validate.DisableValidation($Form);
         $Form.find('#AttachmentUpload').val('1').end().submit();
@@ -193,13 +193,22 @@
 [% RenderBlockEnd("EndNormal") %]
 
 
+[% RenderBlockStart("ScrollIntoView") %]
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+if ( document.getElementsByName('[% Data.DeleteKey %]').length ) {
+    document.getElementsByName('[% Data.DeleteKey %]')[0].scrollIntoView();
+}
+//]]></script>
+[% END %]
+[% RenderBlockEnd("ScrollIntoView") %]
 [% WRAPPER JSOnDocumentComplete %]
         <script type="text/javascript">//<![CDATA[
             $('#SubmitButton').on('click', function () {
                 $('input[name=SubmitSave]').val('1');
             });
 
-            $('.DisableValidation').bind('click', function (Event) {
+            $('.DisableValidation').on('click', function (Event) {
                 $('input[name=SubmitSave]').val('0');
                 $('#ButtonClick').attr({
                     name: $(this).attr('name'),

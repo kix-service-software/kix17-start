@@ -729,8 +729,11 @@ sub FilterContent {
     return if !$Param{FilterColumn};
 
     # get needed objects
+    my $ConfigObject       = $Kernel::OM->Get('Kernel::Config');
+    my $LayoutObject       = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my $TicketObject       = $Kernel::OM->Get('Kernel::System::Ticket');
     my $DynamicFieldObject = $Kernel::OM->Get('Kernel::System::DynamicField');
+    my $BackendObject      = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
 
     my $TicketIDs;
     my $HeaderColumn = $Param{FilterColumn};
@@ -772,6 +775,158 @@ sub FilterContent {
                 %{$PreparedFilter},
                 Result => 'ARRAY',
             );
+
+            if ( $PreparedFilter->{Fulltext} ) {
+                # isolate filter
+                my %PreparedFilter = %{ $PreparedFilter };
+
+                my @ViewableTicketIDsDF = ();
+
+                my $Config = $ConfigObject->Get("Ticket::Frontend::AgentTicketSearch");
+
+                # search tickets with TicketNumber
+                # (we have to do this here, because TicketSearch concatenates TN and Title with AND condition)
+                # clear additional parameters
+                for (qw(From To Cc Subject Body)) {
+                    delete $PreparedFilter{$_};
+                }
+
+                my $TicketHook          = $ConfigObject->Get('Ticket::Hook');
+                my $FulltextSearchParam = $PreparedFilter{Fulltext};
+                $FulltextSearchParam =~ s/$TicketHook//g;
+
+                local $Kernel::System::DB::UseSlaveDB = 1;
+
+                my @ViewableTicketIDsTN = $TicketObject->TicketSearch(
+                    %PreparedFilter,
+                    Result              => 'ARRAY',
+                    UserID              => $Self->{UserID},
+                    ConditionInline     => $Config->{ExtendedSearchCondition},
+                    ContentSearchPrefix => '*',
+                    ContentSearchSuffix => '*',
+                    FullTextIndex       => 1,
+                    TicketNumber        => '*' . $FulltextSearchParam . '*'
+                );
+
+                # search tickets with Title
+                my @ViewableTicketIDsTitle = $TicketObject->TicketSearch(
+                    %PreparedFilter,
+                    Result              => 'ARRAY',
+                    UserID              => $Self->{UserID},
+                    ConditionInline     => $Config->{ExtendedSearchCondition},
+                    ContentSearchPrefix => '*',
+                    ContentSearchSuffix => '*',
+                    FullTextIndex       => 1,
+                    Title               => $PreparedFilter{Fulltext},
+                );
+
+                # search tickets with remarks (TicketNotes)
+                my @ViewableTicketIDsTicketNotes = $TicketObject->TicketSearch(
+                    %PreparedFilter,
+                    Result              => 'ARRAY',
+                    UserID              => $Self->{UserID},
+                    ConditionInline     => $Config->{ExtendedSearchCondition},
+                    ContentSearchPrefix => '*',
+                    ContentSearchSuffix => '*',
+                    FullTextIndex       => 1,
+                    TicketNotes         => $PreparedFilter{Fulltext},
+                );
+
+                # search ticket with DF if configured
+                if ( $Config->{FulltextSearchInDynamicFields} ) {
+
+                    # get dynamic field config for fulltext search
+                    my $FulltextDynamicFieldFilter = $Config->{FulltextSearchInDynamicFields};
+
+                    # get the dynamic fields for fulltext search
+                    my $FulltextDynamicField = $DynamicFieldObject->DynamicFieldListGet(
+                        Valid       => 1,
+                        ObjectType  => [ 'Ticket', 'Article' ],
+                        FieldFilter => $FulltextDynamicFieldFilter || {},
+                    );
+
+                    # prepare fulltext search in DFs
+                    DYNAMICFIELDFULLTEXT:
+                    for my $DynamicFieldConfig ( @{$FulltextDynamicField} ) {
+                        next DYNAMICFIELDFULLTEXT if ( !$Config->{FulltextSearchInDynamicFields}->{ $DynamicFieldConfig->{Name} } );
+                        next DYNAMICFIELDFULLTEXT if ( !IsHashRefWithData($DynamicFieldConfig) );
+
+                        my %DFSearchParameters;
+
+                        # get search field preferences
+                        my $SearchFieldPreferences = $BackendObject->SearchFieldPreferences(
+                            DynamicFieldConfig => $DynamicFieldConfig,
+                        );
+
+                        next DYNAMICFIELDFULLTEXT if !IsArrayRefWithData($SearchFieldPreferences);
+
+                        PREFERENCEFULLTEXT:
+                        for my $Preference ( @{$SearchFieldPreferences} ) {
+
+                            # extract the dynamic field value from the profile
+                            my $SearchParameter = $BackendObject->SearchFieldParameterBuild(
+                                DynamicFieldConfig => $DynamicFieldConfig,
+                                Profile            => {
+                                    "Search_DynamicField_$DynamicFieldConfig->{Name}" => '*'
+                                        . $PreparedFilter{Fulltext} . '*',
+                                },
+                                LayoutObject => $LayoutObject,
+                                Type         => $Preference->{Type},
+                            );
+
+                            # set search parameter
+                            if ( defined $SearchParameter ) {
+                                $DFSearchParameters{ 'DynamicField_' . $DynamicFieldConfig->{Name} } = $SearchParameter->{Parameter};
+                            }
+                        }
+
+                        # search tickets
+                        my @ViewableTicketIDsThisDF = $TicketObject->TicketSearch(
+                            %PreparedFilter,
+                            %DFSearchParameters,
+                            Result          => 'ARRAY',
+                            UserID          => $Self->{UserID},
+                            ConditionInline => $Config->{ExtendedSearchCondition},
+                            ArchiveFlags    => $PreparedFilter{ArchiveFlags},
+                        );
+
+                        if (@ViewableTicketIDsThisDF) {
+
+                            # join arrays
+                            @ViewableTicketIDsDF = (
+                                @ViewableTicketIDsDF,
+                                @ViewableTicketIDsThisDF,
+                            );
+                        }
+                    }
+                }
+
+                # merge arrays
+                my @MergeArray;
+                push(
+                    @MergeArray,
+                    @OriginalViewableTickets,
+                    @ViewableTicketIDsTitle,
+                    @ViewableTicketIDsTicketNotes,
+                    @ViewableTicketIDsTN,
+                    @ViewableTicketIDsDF
+                );
+
+                if ( scalar(@MergeArray) > 1 ) {
+                    # sort merged tickets
+                    @OriginalViewableTickets = $TicketObject->TicketSearch(
+                        Result       => 'ARRAY',
+                        SortBy       => $PreparedFilter{SortBy},
+                        OrderBy      => $PreparedFilter{OrderBy},
+                        UserID       => $Self->{UserID},
+                        TicketID     => \@MergeArray,
+                        ArchiveFlags => $PreparedFilter{ArchiveFlags},
+                    );
+                }
+                else {
+                    @OriginalViewableTickets = @MergeArray;
+                }
+            }
         }
     }
 
@@ -1584,6 +1739,168 @@ sub Run {
                     %{$PreparedFilter},
                     Limit => $Self->{PageShown} + $Self->{StartHit} - 1,
                 );
+
+                if ( $PreparedFilter->{Fulltext} ) {
+                    # get needed objects
+                    my $ConfigObject       = $Kernel::OM->Get('Kernel::Config');
+                    my $DynamicFieldObject = $Kernel::OM->Get('Kernel::System::DynamicField');
+                    my $BackendObject      = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
+
+                    # isolate filter
+                    my %PreparedFilter = %{ $PreparedFilter };
+
+                    my @ViewableTicketIDsDF = ();
+
+                    my $Config = $ConfigObject->Get("Ticket::Frontend::AgentTicketSearch");
+
+                    # search tickets with TicketNumber
+                    # (we have to do this here, because TicketSearch concatenates TN and Title with AND condition)
+                    # clear additional parameters
+                    for (qw(From To Cc Subject Body)) {
+                        delete $PreparedFilter{$_};
+                    }
+
+                    my $TicketHook          = $ConfigObject->Get('Ticket::Hook');
+                    my $FulltextSearchParam = $PreparedFilter{Fulltext};
+                    $FulltextSearchParam =~ s/$TicketHook//g;
+
+                    local $Kernel::System::DB::UseSlaveDB = 1;
+
+                    my @ViewableTicketIDsTN = $TicketObject->TicketSearch(
+                        %PreparedFilter,
+                        Result              => 'ARRAY',
+                        UserID              => $Self->{UserID},
+                        ConditionInline     => $Config->{ExtendedSearchCondition},
+                        ContentSearchPrefix => '*',
+                        ContentSearchSuffix => '*',
+                        FullTextIndex       => 1,
+                        TicketNumber        => '*' . $FulltextSearchParam . '*',
+                        Limit               => $Self->{PageShown} + $Self->{StartHit} - 1,
+                    );
+
+                    # search tickets with Title
+                    my @ViewableTicketIDsTitle = $TicketObject->TicketSearch(
+                        %PreparedFilter,
+                        Result              => 'ARRAY',
+                        UserID              => $Self->{UserID},
+                        ConditionInline     => $Config->{ExtendedSearchCondition},
+                        ContentSearchPrefix => '*',
+                        ContentSearchSuffix => '*',
+                        FullTextIndex       => 1,
+                        Title               => $PreparedFilter{Fulltext},
+                        Limit               => $Self->{PageShown} + $Self->{StartHit} - 1,
+                    );
+
+                    # search tickets with remarks (TicketNotes)
+                    my @ViewableTicketIDsTicketNotes = $TicketObject->TicketSearch(
+                        %PreparedFilter,
+                        Result              => 'ARRAY',
+                        UserID              => $Self->{UserID},
+                        ConditionInline     => $Config->{ExtendedSearchCondition},
+                        ContentSearchPrefix => '*',
+                        ContentSearchSuffix => '*',
+                        FullTextIndex       => 1,
+                        TicketNotes         => $PreparedFilter{Fulltext},
+                        Limit               => $Self->{PageShown} + $Self->{StartHit} - 1,
+                    );
+
+                    # search ticket with DF if configured
+                    if ( $Config->{FulltextSearchInDynamicFields} ) {
+
+                        # get dynamic field config for fulltext search
+                        my $FulltextDynamicFieldFilter = $Config->{FulltextSearchInDynamicFields};
+
+                        # get the dynamic fields for fulltext search
+                        my $FulltextDynamicField = $DynamicFieldObject->DynamicFieldListGet(
+                            Valid       => 1,
+                            ObjectType  => [ 'Ticket', 'Article' ],
+                            FieldFilter => $FulltextDynamicFieldFilter || {},
+                        );
+
+                        # prepare fulltext search in DFs
+                        DYNAMICFIELDFULLTEXT:
+                        for my $DynamicFieldConfig ( @{$FulltextDynamicField} ) {
+                            next DYNAMICFIELDFULLTEXT if ( !$Config->{FulltextSearchInDynamicFields}->{ $DynamicFieldConfig->{Name} } );
+                            next DYNAMICFIELDFULLTEXT if ( !IsHashRefWithData($DynamicFieldConfig) );
+
+                            my %DFSearchParameters;
+
+                            # get search field preferences
+                            my $SearchFieldPreferences = $BackendObject->SearchFieldPreferences(
+                                DynamicFieldConfig => $DynamicFieldConfig,
+                            );
+
+                            next DYNAMICFIELDFULLTEXT if !IsArrayRefWithData($SearchFieldPreferences);
+
+                            PREFERENCEFULLTEXT:
+                            for my $Preference ( @{$SearchFieldPreferences} ) {
+
+                                # extract the dynamic field value from the profile
+                                my $SearchParameter = $BackendObject->SearchFieldParameterBuild(
+                                    DynamicFieldConfig => $DynamicFieldConfig,
+                                    Profile            => {
+                                        "Search_DynamicField_$DynamicFieldConfig->{Name}" => '*'
+                                            . $PreparedFilter{Fulltext} . '*',
+                                    },
+                                    LayoutObject => $LayoutObject,
+                                    Type         => $Preference->{Type},
+                                );
+
+                                # set search parameter
+                                if ( defined $SearchParameter ) {
+                                    $DFSearchParameters{ 'DynamicField_' . $DynamicFieldConfig->{Name} } = $SearchParameter->{Parameter};
+                                }
+                            }
+
+                            # search tickets
+                            my @ViewableTicketIDsThisDF = $TicketObject->TicketSearch(
+                                %PreparedFilter,
+                                %DFSearchParameters,
+                                Result          => 'ARRAY',
+                                UserID          => $Self->{UserID},
+                                ConditionInline => $Config->{ExtendedSearchCondition},
+                                ArchiveFlags    => $PreparedFilter{ArchiveFlags},
+                                Limit           => $Self->{PageShown} + $Self->{StartHit} - 1,
+                            );
+
+                            if (@ViewableTicketIDsThisDF) {
+
+                                # join arrays
+                                @ViewableTicketIDsDF = (
+                                    @ViewableTicketIDsDF,
+                                    @ViewableTicketIDsThisDF,
+                                );
+                            }
+                        }
+                    }
+
+                    # merge arrays
+                    my @MergeArray;
+                    push(
+                        @MergeArray,
+                        @TicketIDsArray,
+                        @ViewableTicketIDsTitle,
+                        @ViewableTicketIDsTicketNotes,
+                        @ViewableTicketIDsTN,
+                        @ViewableTicketIDsDF
+                    );
+
+                    if ( scalar(@MergeArray) > 1 ) {
+                        # sort merged tickets
+                        @TicketIDsArray = $TicketObject->TicketSearch(
+                            Result       => 'ARRAY',
+                            SortBy       => $PreparedFilter{SortBy},
+                            OrderBy      => $PreparedFilter{OrderBy},
+                            UserID       => $Self->{UserID},
+                            TicketID     => \@MergeArray,
+                            ArchiveFlags => $PreparedFilter{ArchiveFlags},
+                            Limit        => $Self->{PageShown} + $Self->{StartHit} - 1,
+                        );
+                    }
+                    else {
+                        @TicketIDsArray = @MergeArray;
+                    }
+                }
             }
         }
         $TicketIDs = \@TicketIDsArray;
@@ -1629,10 +1946,152 @@ sub Run {
                 );
 
                 if ( $PreparedFilter ) {
-                    $Summary->{$Type} = $TicketObject->TicketSearch(
-                        Result => 'COUNT',
-                        %{$PreparedFilter}
-                    ) || 0;
+                    my %ViewableTicketIDs = $TicketObject->TicketSearch(
+                        Result => 'HASH',
+                        %{$PreparedFilter},
+                    );
+
+                    if ( $PreparedFilter->{Fulltext} ) {
+                        # get needed objects
+                        my $ConfigObject       = $Kernel::OM->Get('Kernel::Config');
+                        my $DynamicFieldObject = $Kernel::OM->Get('Kernel::System::DynamicField');
+                        my $BackendObject      = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
+
+                        # isolate filter
+                        my %PreparedFilter = %{ $PreparedFilter };
+
+                        my %ViewableTicketIDsDF = ();
+
+                        my $Config = $ConfigObject->Get("Ticket::Frontend::AgentTicketSearch");
+
+                        # search tickets with TicketNumber
+                        # (we have to do this here, because TicketSearch concatenates TN and Title with AND condition)
+                        # clear additional parameters
+                        for (qw(From To Cc Subject Body)) {
+                            delete $PreparedFilter{$_};
+                        }
+
+                        my $TicketHook          = $ConfigObject->Get('Ticket::Hook');
+                        my $FulltextSearchParam = $PreparedFilter{Fulltext};
+                        $FulltextSearchParam =~ s/$TicketHook//g;
+
+                        local $Kernel::System::DB::UseSlaveDB = 1;
+
+                        my %ViewableTicketIDsTN = $TicketObject->TicketSearch(
+                            %PreparedFilter,
+                            Result              => 'HASH',
+                            UserID              => $Self->{UserID},
+                            ConditionInline     => $Config->{ExtendedSearchCondition},
+                            ContentSearchPrefix => '*',
+                            ContentSearchSuffix => '*',
+                            FullTextIndex       => 1,
+                            TicketNumber        => '*' . $FulltextSearchParam . '*',
+                        );
+
+                        # search tickets with Title
+                        my %ViewableTicketIDsTitle = $TicketObject->TicketSearch(
+                            %PreparedFilter,
+                            Result              => 'HASH',
+                            UserID              => $Self->{UserID},
+                            ConditionInline     => $Config->{ExtendedSearchCondition},
+                            ContentSearchPrefix => '*',
+                            ContentSearchSuffix => '*',
+                            FullTextIndex       => 1,
+                            Title               => $PreparedFilter->{Fulltext},
+                        );
+
+                        # search tickets with remarks (TicketNotes)
+                        my %ViewableTicketIDsTicketNotes = $TicketObject->TicketSearch(
+                            %PreparedFilter,
+                            Result              => 'HASH',
+                            UserID              => $Self->{UserID},
+                            ConditionInline     => $Config->{ExtendedSearchCondition},
+                            ContentSearchPrefix => '*',
+                            ContentSearchSuffix => '*',
+                            FullTextIndex       => 1,
+                            TicketNotes         => $PreparedFilter->{Fulltext},
+                        );
+
+                        # search ticket with DF if configured
+                        if ( $Config->{FulltextSearchInDynamicFields} ) {
+
+                            # get dynamic field config for fulltext search
+                            my $FulltextDynamicFieldFilter = $Config->{FulltextSearchInDynamicFields};
+
+                            # get the dynamic fields for fulltext search
+                            my $FulltextDynamicField = $DynamicFieldObject->DynamicFieldListGet(
+                                Valid       => 1,
+                                ObjectType  => [ 'Ticket', 'Article' ],
+                                FieldFilter => $FulltextDynamicFieldFilter || {},
+                            );
+
+                            # prepare fulltext search in DFs
+                            DYNAMICFIELDFULLTEXT:
+                            for my $DynamicFieldConfig ( @{$FulltextDynamicField} ) {
+                                next DYNAMICFIELDFULLTEXT if ( !$Config->{FulltextSearchInDynamicFields}->{ $DynamicFieldConfig->{Name} } );
+                                next DYNAMICFIELDFULLTEXT if ( !IsHashRefWithData($DynamicFieldConfig) );
+
+                                my %DFSearchParameters;
+
+                                # get search field preferences
+                                my $SearchFieldPreferences = $BackendObject->SearchFieldPreferences(
+                                    DynamicFieldConfig => $DynamicFieldConfig,
+                                );
+
+                                next DYNAMICFIELDFULLTEXT if !IsArrayRefWithData($SearchFieldPreferences);
+
+                                PREFERENCEFULLTEXT:
+                                for my $Preference ( @{$SearchFieldPreferences} ) {
+
+                                    # extract the dynamic field value from the profile
+                                    my $SearchParameter = $BackendObject->SearchFieldParameterBuild(
+                                        DynamicFieldConfig => $DynamicFieldConfig,
+                                        Profile            => {
+                                            "Search_DynamicField_$DynamicFieldConfig->{Name}" => '*'
+                                                . $PreparedFilter{Fulltext} . '*',
+                                        },
+                                        LayoutObject => $LayoutObject,
+                                        Type         => $Preference->{Type},
+                                    );
+
+                                    # set search parameter
+                                    if ( defined $SearchParameter ) {
+                                        $DFSearchParameters{ 'DynamicField_' . $DynamicFieldConfig->{Name} } = $SearchParameter->{Parameter};
+                                    }
+                                }
+
+                                # search tickets
+                                my %ViewableTicketIDsThisDF = $TicketObject->TicketSearch(
+                                    %PreparedFilter,
+                                    %DFSearchParameters,
+                                    Result          => 'HASH',
+                                    UserID          => $Self->{UserID},
+                                    ConditionInline => $Config->{ExtendedSearchCondition},
+                                    ArchiveFlags    => $PreparedFilter{ArchiveFlags},
+                                );
+
+                                if (%ViewableTicketIDsThisDF) {
+
+                                    # join arrays
+                                    %ViewableTicketIDsDF = (
+                                        %ViewableTicketIDsDF,
+                                        %ViewableTicketIDsThisDF,
+                                    );
+                                }
+                            }
+                        }
+
+                        # merge hashes
+                        %ViewableTicketIDs = ( 
+                            %ViewableTicketIDs,
+                            %ViewableTicketIDsTitle,
+                            %ViewableTicketIDsTicketNotes,
+                            %ViewableTicketIDsTN,
+                            %ViewableTicketIDsDF
+                        );
+                    }
+
+                    $Summary->{$Type} = keys( %ViewableTicketIDs ) || 0;
                 }
             }
         }
