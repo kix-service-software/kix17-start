@@ -9,8 +9,6 @@
 # --
 
 
-[% InsertTemplate("Colorpicker.tt") %]
-
 [% RenderBlockStart("Overview") %]
 <div class="MainBox ARIARoleMain LayoutFixedSidebar SidebarFirst">
     <h1>[% Translate("General Catalog Management") | html %]</h1>
@@ -196,7 +194,7 @@
 [% RenderBlockStart("ColorPicker") %]
                         <label for="[% Data.Name | html %]">[% Translate(Data.Label) | html %]:<br/><em>([% Translate(Data.Desc) | html %])</em></label>
                         <div class="Field">
-                            <input type="text" name="[% Data.Name | html %]" id="[% Data.Name | html %]" value="[% Data.SelectedID | html %]" class="W50pc JSColorPicker {pickerBorderColor:'#BBB #BBB #BBB #BBB', pickerInsetColor:'#BBB #BBB #BBB #BBB'}"/>
+                            <input type="text" name="[% Data.Name | html %]" id="[% Data.Name | html %]" value="[% Data.SelectedID | html %]" class="W50pc" data-jscolor="{required:false, format:'any'}"/>
                         </div>
                         <div class="Clear"></div>
 [% RenderBlockEnd("ColorPicker") %]

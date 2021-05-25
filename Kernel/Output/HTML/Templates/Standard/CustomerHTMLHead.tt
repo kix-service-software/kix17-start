@@ -43,7 +43,7 @@
 [% RenderBlockEnd("ModuleCSS") %]
 
     <link rel="stylesheet" type="text/css" href="[% Config("Frontend::WebPath") %]skins/Customer/default/css/thirdparty/jquery-ui-1.12.1/jquery-ui.min.css" />
-    <link rel="stylesheet" type="text/css" href="[% Config("Frontend::WebPath") %]skins/Customer/default/css/thirdparty/jstree-theme/default/style.css" />
+    <link rel="stylesheet" type="text/css" href="[% Config("Frontend::WebPath") %]skins/Customer/default/css/thirdparty/jstree-3.3.11/themes/default/style.min.css" />
 
     <style type="text/css">
 [% RenderBlockStart("LogoCSS") %]

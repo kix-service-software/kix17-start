@@ -182,13 +182,16 @@ Core.App = (function (TargetNS) {
     TargetNS.Ready = function (Callback) {
         if ($.isFunction(Callback)) {
             $(document).ready(function () {
-                var Trace;
                 try {
                     Callback();
                 }
                 catch (Error) {
-                    Trace = printStackTrace({e: Error, guess: true}).join('\n');
-                    Core.Exception.HandleFinalError(Error, Trace);
+                    StackTrace
+                        .fromError(Error)
+                        .then(Callback)
+                        .catch(function(Trace){
+                            Core.Exception.HandleFinalError(Error, Trace);
+                        });
                 }
             });
         }
