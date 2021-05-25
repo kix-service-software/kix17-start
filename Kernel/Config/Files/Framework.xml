@@ -10142,18 +10142,18 @@ via the Preferences button after logging in.
                 </NavBar>
                 <Loader>
                     <CSS>thirdparty/fullcalendar-2.4.0/fullcalendar.min.css</CSS>
-                    <CSS>thirdparty/nvd3-1.7.1/nv.d3.css</CSS>
+                    <CSS>thirdparty/nvd3-1.8.6/nv.d3.min.css</CSS>
                     <JavaScript>thirdparty/momentjs-2.10.6/moment.min.js</JavaScript>
                     <JavaScript>thirdparty/fullcalendar-2.4.0/fullcalendar.min.js</JavaScript>
-                    <JavaScript>thirdparty/d3-3.5.6/d3.min.js</JavaScript>
-                    <JavaScript>thirdparty/nvd3-1.7.1/nvd3.min.js</JavaScript>
-                    <JavaScript>thirdparty/nvd3-1.7.1/models/OTRSLineChart.js</JavaScript>
-                    <JavaScript>thirdparty/nvd3-1.7.1/models/OTRSMultiBarChart.js</JavaScript>
-                    <JavaScript>thirdparty/nvd3-1.7.1/models/OTRSStackedAreaChart.js</JavaScript>
-                    <JavaScript>thirdparty/canvg-1.4/rgbcolor.js</JavaScript>
-                    <JavaScript>thirdparty/canvg-1.4/StackBlur.js</JavaScript>
-                    <JavaScript>thirdparty/canvg-1.4/canvg.js</JavaScript>
-                    <JavaScript>thirdparty/StringView-8/stringview.js</JavaScript>
+                    <JavaScript>thirdparty/d3-3.5.17/d3.min.js</JavaScript>
+                    <JavaScript>thirdparty/nvd3-1.8.6/nv.d3.min.js</JavaScript>
+                    <JavaScript>thirdparty/nvd3-1.8.6/models/lineChart.js</JavaScript>
+                    <JavaScript>thirdparty/nvd3-1.8.6/models/multiBarChart.js</JavaScript>
+                    <JavaScript>thirdparty/nvd3-1.8.6/models/stackedAreaChart.js</JavaScript>
+                    <JavaScript>thirdparty/rgb-color-2.1.2/rgbcolor.min.js</JavaScript>
+                    <JavaScript>thirdparty/StackBlur-2.5.0/StackBlur.min.js</JavaScript>
+                    <JavaScript>thirdparty/canvg-2.0.0/canvg.min.js</JavaScript>
+                    <JavaScript>thirdparty/StringView-12/stringview.js</JavaScript>
                     <JavaScript>Core.UI.AdvancedChart.js</JavaScript>
                     <JavaScript>Core.UI.AllocationList.js</JavaScript>
                     <JavaScript>Core.Agent.TableFilters.js</JavaScript>
@@ -10183,18 +10183,18 @@ via the Preferences button after logging in.
                 </NavBar>
                 <Loader>
                     <CSS>thirdparty/fullcalendar-2.4.0/fullcalendar.min.css</CSS>
-                    <CSS>thirdparty/nvd3-1.7.1/nv.d3.css</CSS>
+                    <CSS>thirdparty/nvd3-1.8.6/nv.d3.min.css</CSS>
                     <JavaScript>thirdparty/momentjs-2.10.6/moment.min.js</JavaScript>
                     <JavaScript>thirdparty/fullcalendar-2.4.0/fullcalendar.min.js</JavaScript>
-                    <JavaScript>thirdparty/d3-3.5.6/d3.min.js</JavaScript>
-                    <JavaScript>thirdparty/nvd3-1.7.1/nvd3.min.js</JavaScript>
-                    <JavaScript>thirdparty/nvd3-1.7.1/models/OTRSLineChart.js</JavaScript>
-                    <JavaScript>thirdparty/nvd3-1.7.1/models/OTRSMultiBarChart.js</JavaScript>
-                    <JavaScript>thirdparty/nvd3-1.7.1/models/OTRSStackedAreaChart.js</JavaScript>
-                    <JavaScript>thirdparty/canvg-1.4/rgbcolor.js</JavaScript>
-                    <JavaScript>thirdparty/canvg-1.4/StackBlur.js</JavaScript>
-                    <JavaScript>thirdparty/canvg-1.4/canvg.js</JavaScript>
-                    <JavaScript>thirdparty/StringView-8/stringview.js</JavaScript>
+                    <JavaScript>thirdparty/d3-3.5.17/d3.min.js</JavaScript>
+                    <JavaScript>thirdparty/nvd3-1.8.6/nv.d3.min.js</JavaScript>
+                    <JavaScript>thirdparty/nvd3-1.8.6/models/lineChart.js</JavaScript>
+                    <JavaScript>thirdparty/nvd3-1.8.6/models/multiBarChart.js</JavaScript>
+                    <JavaScript>thirdparty/nvd3-1.8.6/models/stackedAreaChart.js</JavaScript>
+                    <JavaScript>thirdparty/rgb-color-2.1.2/rgbcolor.min.js</JavaScript>
+                    <JavaScript>thirdparty/StackBlur-2.5.0/StackBlur.min.js</JavaScript>
+                    <JavaScript>thirdparty/canvg-2.0.0/canvg.min.js</JavaScript>
+                    <JavaScript>thirdparty/StringView-12/stringview.js</JavaScript>
                     <JavaScript>Core.UI.AdvancedChart.js</JavaScript>
                     <JavaScript>Core.UI.AllocationList.js</JavaScript>
                     <JavaScript>Core.Agent.TableFilters.js</JavaScript>
@@ -11159,18 +11159,18 @@ via the Preferences button after logging in.
                     <AccessKey></AccessKey>
                 </NavBar>
                 <Loader>
-                    <JavaScript>thirdparty/d3-3.5.6/d3.min.js</JavaScript>
-                    <JavaScript>thirdparty/nvd3-1.7.1/nvd3.min.js</JavaScript>
-                    <JavaScript>thirdparty/nvd3-1.7.1/models/OTRSLineChart.js</JavaScript>
-                    <JavaScript>thirdparty/nvd3-1.7.1/models/OTRSMultiBarChart.js</JavaScript>
-                    <JavaScript>thirdparty/nvd3-1.7.1/models/OTRSStackedAreaChart.js</JavaScript>
-                    <JavaScript>thirdparty/canvg-1.4/rgbcolor.js</JavaScript>
-                    <JavaScript>thirdparty/canvg-1.4/StackBlur.js</JavaScript>
-                    <JavaScript>thirdparty/canvg-1.4/canvg.js</JavaScript>
-                    <JavaScript>thirdparty/StringView-8/stringview.js</JavaScript>
+                    <JavaScript>thirdparty/d3-3.5.17/d3.min.js</JavaScript>
+                    <JavaScript>thirdparty/nvd3-1.8.6/nv.d3.min.js</JavaScript>
+                    <JavaScript>thirdparty/nvd3-1.8.6/models/lineChart.js</JavaScript>
+                    <JavaScript>thirdparty/nvd3-1.8.6/models/multiBarChart.js</JavaScript>
+                    <JavaScript>thirdparty/nvd3-1.8.6/models/stackedAreaChart.js</JavaScript>
+                    <JavaScript>thirdparty/rgb-color-2.1.2/rgbcolor.min.js</JavaScript>
+                    <JavaScript>thirdparty/StackBlur-2.5.0/StackBlur.min.js</JavaScript>
+                    <JavaScript>thirdparty/canvg-2.0.0/canvg.min.js</JavaScript>
+                    <JavaScript>thirdparty/StringView-12/stringview.js</JavaScript>
                     <JavaScript>Core.Agent.Statistics.js</JavaScript>
                     <JavaScript>Core.UI.AdvancedChart.js</JavaScript>
-                    <CSS>thirdparty/nvd3-1.7.1/nv.d3.css</CSS>
+                    <CSS>thirdparty/nvd3-1.8.6/nv.d3.min.css</CSS>
                 </Loader>
             </FrontendModuleReg>
         </Setting>

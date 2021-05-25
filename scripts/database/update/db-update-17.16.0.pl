@@ -45,6 +45,12 @@ sub _RemoveObsoleteDirectory {
 
     # prepare file list
     my @DirectoryList = (
+        'var/httpd/htdocs/js/thirdparty/canvg-1.4',
+        'var/httpd/htdocs/js/thirdparty/d3-3.5.6',
+        'var/httpd/htdocs/js/thirdparty/nvd3-1.7.1',
+        'var/httpd/htdocs/js/thirdparty/StringView-8',
+        'var/httpd/htdocs/skins/Agent/default/css/thirdparty/nvd3-1.7.1',
+
         'var/httpd/htdocs/js/thirdparty/jquery-2.1.4',
         'var/httpd/htdocs/js/thirdparty/jquery-migrate-1.2.1',
         'var/httpd/htdocs/js/thirdparty/jquery-tablesorter-2.0.5',

@@ -1,4 +1,4 @@
-nv.models.OTRSmultiBarChart = function() {
+nv.models.multiBarChart = function() {
     "use strict";
 
     //============================================================
@@ -8,43 +8,42 @@ nv.models.OTRSmultiBarChart = function() {
     var multibar = nv.models.multiBar()
         , xAxis = nv.models.axis()
         , yAxis = nv.models.axis()
+        , interactiveLayer = nv.interactiveGuideline()
         , legend = nv.models.legend()
         , controls = nv.models.legend()
+        , tooltip = nv.models.tooltip()
         ;
 
     var margin = {top: 30, right: 20, bottom: 50, left: 60}
+        , marginTop = null
         , width = null
         , height = null
         , color = nv.utils.defaultColor()
         , showControls = true
         , controlLabels = {}
         , showLegend = true
+        , legendPosition = null
         , showXAxis = true
         , showYAxis = true
         , rightAlignYAxis = false
         , reduceXTicks = true // if false a tick will show for every data point
         , staggerLabels = false
+        , wrapLabels = false
         , rotateLabels = 0
-        , tooltips = true
-        , tooltip = function(key, x, y, e, graph) {
-            return '<h3>' + key + '</h3>' +
-                '<p>' +  y + ' on ' + x + '</p>'
-        }
         , x //can be accessed via chart.xScale()
         , y //can be accessed via chart.yScale()
         , state = nv.utils.state()
         , defaultState = null
-        , noData = "No Data Available."
-        , dispatch = d3.dispatch('tooltipShow', 'tooltipHide', 'stateChange', 'changeState', 'renderEnd')
+        , noData = null
+        , dispatch = d3.dispatch('stateChange', 'changeState', 'renderEnd')
         , controlWidth = function() { return showControls ? 180 : 0 }
         , duration = 250
+        , useInteractiveGuideline = false
         ;
 
     state.stacked = false // DEPRECATED Maintained for backward compatibility
 
-    multibar
-        .stacked(false)
-    ;
+    multibar.stacked(false);
     xAxis
         .orient('bottom')
         .tickPadding(7)
@@ -56,6 +55,40 @@ nv.models.OTRSmultiBarChart = function() {
         .tickFormat(d3.format(',.1f'))
     ;
 
+    tooltip
+        .duration(0)
+        .valueFormatter(function(d, i) {
+            return yAxis.tickFormat()(d, i);
+        })
+        .headerFormatter(function(d, i) {
+            return xAxis.tickFormat()(d, i);
+        });
+
+    interactiveLayer.tooltip
+        .valueFormatter(function(d, i) {
+            return d == null ? "N/A" : yAxis.tickFormat()(d, i);
+        })
+        .headerFormatter(function(d, i) {
+            return xAxis.tickFormat()(d, i);
+        });
+
+    interactiveLayer.tooltip
+        .valueFormatter(function (d, i) {
+            return d == null ? "N/A" : yAxis.tickFormat()(d, i);
+        })
+        .headerFormatter(function (d, i) {
+            return xAxis.tickFormat()(d, i);
+        });
+
+    interactiveLayer.tooltip
+        .duration(0)
+        .valueFormatter(function(d, i) {
+            return yAxis.tickFormat()(d, i);
+        })
+        .headerFormatter(function(d, i) {
+            return xAxis.tickFormat()(d, i);
+        });
+
     controls.updateState(false);
 
     //============================================================
@@ -64,28 +97,6 @@ nv.models.OTRSmultiBarChart = function() {
 
     var renderWatch = nv.utils.renderWatch(dispatch);
     var stacked = false;
-
-    var showTooltip = function(e, offsetElement) {
-        var left = e.pos[0] + ( offsetElement.offsetLeft || 0 ),
-            top = e.pos[1] + ( offsetElement.offsetTop || 0),
-            x = xAxis.tickFormat()(multibar.x()(e.point, e.pointIndex)),
-            y = yAxis.tickFormat()(multibar.y()(e.point, e.pointIndex)),
-            content = tooltip(e.series.key, x, y, e, chart);
-
-// ---
-// OTRS
-// ---
-      // because it could happen that x headings occurr multiple
-      // times (such as Thu 18 for two different months), we
-      // need to make sure the custom label which has been added to
-      // the data is removed properly for displaying
-      if ( content.match(/__LABEL_START__\d+__LABEL_END__/) ) {
-        content = content.replace(/__LABEL_START__\d+__LABEL_END__/, '');
-      }
-// ---
-
-        nv.tooltip.show([left, top], content, e.value < 0 ? 'n' : 's', null, offsetElement);
-    };
 
     var stateGetter = function(data) {
         return function(){
@@ -117,10 +128,8 @@ nv.models.OTRSmultiBarChart = function() {
             var container = d3.select(this),
                 that = this;
             nv.utils.initSVG(container);
-            var availableWidth = (width  || parseInt(container.style('width')) || 960)
-                    - margin.left - margin.right,
-                availableHeight = (height || parseInt(container.style('height')) || 400)
-                    - margin.top - margin.bottom;
+            var availableWidth = nv.utils.availableWidth(width, container, margin),
+                availableHeight = nv.utils.availableHeight(height, container, margin);
 
             chart.update = function() {
                 if (duration === 0)
@@ -153,18 +162,7 @@ nv.models.OTRSmultiBarChart = function() {
 
             // Display noData message if there's nothing to show.
             if (!data || !data.length || !data.filter(function(d) { return d.values.length }).length) {
-                var noDataText = container.selectAll('.nv-noData').data([noData]);
-
-                noDataText.enter().append('text')
-                    .attr('class', 'nvd3 nv-noData')
-                    .attr('dy', '-.7em')
-                    .style('text-anchor', 'middle');
-
-                noDataText
-                    .attr('x', margin.left + availableWidth / 2)
-                    .attr('y', margin.top + availableHeight / 2)
-                    .text(function(d) { return d });
-
+                nv.utils.noData(chart, container)
                 return chart;
             } else {
                 container.selectAll('.nv-noData').remove();
@@ -184,32 +182,44 @@ nv.models.OTRSmultiBarChart = function() {
             gEnter.append('g').attr('class', 'nv-barsWrap');
             gEnter.append('g').attr('class', 'nv-legendWrap');
             gEnter.append('g').attr('class', 'nv-controlsWrap');
+            gEnter.append('g').attr('class', 'nv-interactive');
 
             // Legend
-            if (showLegend) {
-                legend.width(availableWidth - controlWidth());
+            if (!showLegend) {
+                g.select('.nv-legendWrap').selectAll('*').remove();
+            } else {
+                if (legendPosition === 'bottom') {
+                    legend.width(availableWidth - margin.right);
 
-                if (multibar.barColor())
-                    data.forEach(function(series,i) {
-                        series.color = d3.rgb('#ccc').darker(i * 1.5).toString();
-                    });
+                     g.select('.nv-legendWrap')
+                         .datum(data)
+                         .call(legend);
 
-                g.select('.nv-legendWrap')
-                    .datum(data)
-                    .call(legend);
+                     margin.bottom = xAxis.height() + legend.height();
+                     availableHeight = nv.utils.availableHeight(height, container, margin);
+                     g.select('.nv-legendWrap')
+                         .attr('transform', 'translate(0,' + (availableHeight + xAxis.height())  +')');
+                } else {
+                    legend.width(availableWidth - controlWidth());
 
-                if ( margin.top != legend.height()) {
-                    margin.top = legend.height();
-                    availableHeight = (height || parseInt(container.style('height')) || 400)
-                        - margin.top - margin.bottom;
+                    g.select('.nv-legendWrap')
+                        .datum(data)
+                        .call(legend);
+
+                    if (!marginTop && legend.height() !== margin.top) {
+                        margin.top = legend.height();
+                        availableHeight = nv.utils.availableHeight(height, container, margin);
+                    }
+
+                    g.select('.nv-legendWrap')
+                        .attr('transform', 'translate(' + controlWidth() + ',' + (-margin.top) +')');
                 }
-
-                g.select('.nv-legendWrap')
-                    .attr('transform', 'translate(' + controlWidth() + ',' + (-margin.top) +')');
             }
 
             // Controls
-            if (showControls) {
+            if (!showControls) {
+                 g.select('.nv-controlsWrap').selectAll('*').remove();
+            } else {
                 var controlsData = [
                     { key: controlLabels.grouped || 'Grouped', disabled: multibar.stacked() },
                     { key: controlLabels.stacked || 'Stacked', disabled: !multibar.stacked() }
@@ -247,7 +257,7 @@ nv.models.OTRSmultiBarChart = function() {
             if (showXAxis) {
                 xAxis
                     .scale(x)
-                    .ticks( nv.utils.calcTicksX(availableWidth/100, data) )
+                    ._ticks( nv.utils.calcTicksX(availableWidth/100, data) )
                     .tickSize(-availableHeight, 0);
 
                 g.select('.nv-x.nv-axis')
@@ -281,6 +291,11 @@ nv.models.OTRSmultiBarChart = function() {
                         });
                 }
 
+                if (wrapLabels) {
+                    g.selectAll('.tick text')
+                        .call(nv.utils.wrapTicks, chart.xAxis.rangeBand())
+                }
+
                 if (reduceXTicks)
                     xTicks
                         .filter(function(d,i) {
@@ -302,11 +317,22 @@ nv.models.OTRSmultiBarChart = function() {
             if (showYAxis) {
                 yAxis
                     .scale(y)
-                    .ticks( nv.utils.calcTicksY(availableHeight/36, data) )
+                    ._ticks( nv.utils.calcTicksY(availableHeight/36, data) )
                     .tickSize( -availableWidth, 0);
 
                 g.select('.nv-y.nv-axis')
                     .call(yAxis);
+            }
+
+            //Set up interactive layer
+            if (useInteractiveGuideline) {
+                interactiveLayer
+                    .width(availableWidth)
+                    .height(availableHeight)
+                    .margin({left:margin.left, top:margin.top})
+                    .svgContainer(container)
+                    .xScale(x);
+                wrap.select(".nv-interactive").call(interactiveLayer);
             }
 
             //============================================================
@@ -330,80 +356,101 @@ nv.models.OTRSmultiBarChart = function() {
 
                 switch (d.key) {
                     case 'Grouped':
+                    case controlLabels.grouped:
                         multibar.stacked(false);
                         break;
                     case 'Stacked':
+                    case controlLabels.stacked:
                         multibar.stacked(true);
                         break;
                 }
 
                 state.stacked = multibar.stacked();
                 dispatch.stateChange(state);
-
                 chart.update();
-            });
-
-            dispatch.on('tooltipShow', function(e) {
-                if (tooltips) showTooltip(e, that.parentNode)
             });
 
             // Update chart from a state object passed to event handler
             dispatch.on('changeState', function(e) {
-
                 if (typeof e.disabled !== 'undefined') {
                     data.forEach(function(series,i) {
                         series.disabled = e.disabled[i];
                     });
-
                     state.disabled = e.disabled;
                 }
-
                 if (typeof e.stacked !== 'undefined') {
                     multibar.stacked(e.stacked);
                     state.stacked = e.stacked;
                     stacked = e.stacked;
                 }
-
                 chart.update();
             });
-// ---
-// OTRS
-// ---
-            // because it could happen that x axis headings occur multiple
-            // times (such as Thu 18 for two different months), we
-            // need to make sure the custom label which has been added to
-            // the data is removed properly for displaying
-            var TicksText = container.selectAll('.tick');
-            TicksText.each(function() {
-                var Content = $(this).text(),
-                    NewContent = '';
-                if ( Content.match(/__LABEL_START__\d+__LABEL_END__/) ) {
-                    NewContent = Content.replace(/__LABEL_START__\d+__LABEL_END__/, '');
-                    $(this).find('text').text(NewContent);
-                }
-            });
-// ---
+
+            if (useInteractiveGuideline) {
+                interactiveLayer.dispatch.on('elementMousemove', function(e) {
+                    if (e.pointXValue == undefined) return;
+
+                    var singlePoint, pointIndex, pointXLocation, xValue, allData = [];
+                    data
+                        .filter(function(series, i) {
+                            series.seriesIndex = i;
+                            return !series.disabled;
+                        })
+                        .forEach(function(series,i) {
+                            pointIndex = x.domain().indexOf(e.pointXValue)
+
+                            var point = series.values[pointIndex];
+                            if (point === undefined) return;
+
+                            xValue = point.x;
+                            if (singlePoint === undefined) singlePoint = point;
+                            if (pointXLocation === undefined) pointXLocation = e.mouseX
+                            allData.push({
+                                key: series.key,
+                                value: chart.y()(point, pointIndex),
+                                color: color(series,series.seriesIndex),
+                                data: series.values[pointIndex]
+                            });
+                        });
+
+                    interactiveLayer.tooltip
+                        .data({
+                            value: xValue,
+                            index: pointIndex,
+                            series: allData
+                        })();
+
+                    interactiveLayer.renderGuideLine(pointXLocation);
+                });
+
+                interactiveLayer.dispatch.on("elementMouseout",function(e) {
+                    interactiveLayer.tooltip.hidden(true);
+                });
+            }
+            else {
+                multibar.dispatch.on('elementMouseover.tooltip', function(evt) {
+                    evt.value = chart.x()(evt.data);
+                    evt['series'] = {
+                        key: evt.data.key,
+                        value: chart.y()(evt.data),
+                        color: evt.color
+                    };
+                    tooltip.data(evt).hidden(false);
+                });
+
+                multibar.dispatch.on('elementMouseout.tooltip', function(evt) {
+                    tooltip.hidden(true);
+                });
+
+                multibar.dispatch.on('elementMousemove.tooltip', function(evt) {
+                    tooltip();
+                });
+            }
         });
 
         renderWatch.renderEnd('multibarchart immediate');
         return chart;
     }
-
-    //============================================================
-    // Event Handling/Dispatching (out of chart's scope)
-    //------------------------------------------------------------
-
-    multibar.dispatch.on('elementMouseover.tooltip', function(e) {
-        e.pos = [e.pos[0] +  margin.left, e.pos[1] + margin.top];
-        dispatch.tooltipShow(e);
-    });
-
-    multibar.dispatch.on('elementMouseout.tooltip', function(e) {
-        dispatch.tooltipHide(e);
-    });
-    dispatch.on('tooltipHide', function() {
-        if (tooltips) nv.tooltip.cleanup();
-    });
 
     //============================================================
     // Expose Public Variables
@@ -413,9 +460,12 @@ nv.models.OTRSmultiBarChart = function() {
     chart.dispatch = dispatch;
     chart.multibar = multibar;
     chart.legend = legend;
+    chart.controls = controls;
     chart.xAxis = xAxis;
     chart.yAxis = yAxis;
     chart.state = state;
+    chart.tooltip = tooltip;
+    chart.interactiveLayer = interactiveLayer;
 
     chart.options = nv.utils.optionsFunc.bind(chart);
 
@@ -424,21 +474,24 @@ nv.models.OTRSmultiBarChart = function() {
         width:      {get: function(){return width;}, set: function(_){width=_;}},
         height:     {get: function(){return height;}, set: function(_){height=_;}},
         showLegend: {get: function(){return showLegend;}, set: function(_){showLegend=_;}},
+        legendPosition: {get: function(){return legendPosition;}, set: function(_){legendPosition=_;}},
         showControls: {get: function(){return showControls;}, set: function(_){showControls=_;}},
         controlLabels: {get: function(){return controlLabels;}, set: function(_){controlLabels=_;}},
         showXAxis:      {get: function(){return showXAxis;}, set: function(_){showXAxis=_;}},
         showYAxis:    {get: function(){return showYAxis;}, set: function(_){showYAxis=_;}},
-        tooltips:    {get: function(){return tooltips;}, set: function(_){tooltips=_;}},
-        tooltipContent:    {get: function(){return tooltip;}, set: function(_){tooltip=_;}},
         defaultState:    {get: function(){return defaultState;}, set: function(_){defaultState=_;}},
         noData:    {get: function(){return noData;}, set: function(_){noData=_;}},
         reduceXTicks:    {get: function(){return reduceXTicks;}, set: function(_){reduceXTicks=_;}},
         rotateLabels:    {get: function(){return rotateLabels;}, set: function(_){rotateLabels=_;}},
         staggerLabels:    {get: function(){return staggerLabels;}, set: function(_){staggerLabels=_;}},
+        wrapLabels:   {get: function(){return wrapLabels;}, set: function(_){wrapLabels=!!_;}},
 
         // options that require extra logic in the setter
         margin: {get: function(){return margin;}, set: function(_){
-            margin.top    = _.top    !== undefined ? _.top    : margin.top;
+            if (_.top !== undefined) {
+                margin.top = _.top;
+                marginTop = _.top;
+            }
             margin.right  = _.right  !== undefined ? _.right  : margin.right;
             margin.bottom = _.bottom !== undefined ? _.bottom : margin.bottom;
             margin.left   = _.left   !== undefined ? _.left   : margin.left;
@@ -457,6 +510,13 @@ nv.models.OTRSmultiBarChart = function() {
         rightAlignYAxis: {get: function(){return rightAlignYAxis;}, set: function(_){
             rightAlignYAxis = _;
             yAxis.orient( rightAlignYAxis ? 'right' : 'left');
+        }},
+        useInteractiveGuideline: {get: function(){return useInteractiveGuideline;}, set: function(_){
+            useInteractiveGuideline = _;
+        }},
+        barColor:  {get: function(){return multibar.barColor;}, set: function(_){
+            multibar.barColor(_);
+            legend.color(function(d,i) {return d3.rgb('#ccc').darker(i * 1.5).toString();})
         }}
     });
 
