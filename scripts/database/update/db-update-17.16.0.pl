@@ -67,6 +67,8 @@ sub _RemoveObsoleteDirectory {
 
         'var/httpd/htdocs/js/thirdparty/jsplumb-1.6.4',
         'var/httpd/htdocs/js/thirdparty/farahey-0.5',
+
+        'var/httpd/htdocs/js/thirdparty/stacktrace-0.6.4',
     );
 
     for my $Directory ( @DirectoryList ) {

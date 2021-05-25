@@ -11882,7 +11882,7 @@ via the Preferences button after logging in.
                 <Item>thirdparty/jquery-ui-1.12.1/jquery-ui.min.js</Item>
                 <Item>thirdparty/jquery-ui-touch-punch-0.2.3/jquery.ui.touch-punch.js</Item>
                 <Item>thirdparty/jquery-validate-1.19.3/jquery.validate.min.js</Item>
-                <Item>thirdparty/stacktrace-0.6.4/stacktrace.js</Item>
+                <Item>thirdparty/stacktrace-2.0.2/stacktrace-with-promises-and-json-polyfills.min.js</Item>
                 <Item>thirdparty/jquery-pubsub/pubsub.js</Item>
                 <Item>thirdparty/jstree-3.3.11/jstree.min.js</Item>
                 <Item>thirdparty/jquery-tablesorter-2.31.1/jquery.tablesorter.min.js</Item>
@@ -11976,7 +11976,7 @@ via the Preferences button after logging in.
                 <Item>thirdparty/jquery-browser-detection/jquery-browser-detection.js</Item>
                 <Item>thirdparty/jquery-validate-1.19.3/jquery.validate.min.js</Item>
                 <Item>thirdparty/jquery-ui-1.12.1/jquery-ui.min.js</Item>
-                <Item>thirdparty/stacktrace-0.6.4/stacktrace.js</Item>
+                <Item>thirdparty/stacktrace-2.0.2/stacktrace-with-promises-and-json-polyfills.min.js</Item>
                 <Item>thirdparty/jquery-pubsub/pubsub.js</Item>
                 <Item>thirdparty/jstree-3.3.11/jstree.min.js</Item>
                 <Item>thirdparty/jquery-tablesorter-2.31.1/jquery.tablesorter.min.js</Item>
