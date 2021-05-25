@@ -384,8 +384,9 @@ Core.Agent.Dashboard = (function (TargetNS) {
                 center: 'title',
                 right: 'prev,next today'
             },
+            nowIndicator: true,
             allDayText: Params.AllDayText,
-            axisFormat: 'H(:mm)', // uppercase H for 24-hour clock
+            slotLabelFormat: 'H(:mm)', // uppercase H for 24-hour clock
             editable: false,
             firstDay: Params.FirstDay,
             monthNames: Params.MonthNames,

@@ -51,10 +51,15 @@ sub _RemoveObsoleteDirectory {
         'var/httpd/htdocs/js/thirdparty/StringView-8',
         'var/httpd/htdocs/skins/Agent/default/css/thirdparty/nvd3-1.7.1',
 
+        'var/httpd/htdocs/js/thirdparty/fullcalendar-2.4.0',
+        'var/httpd/htdocs/js/thirdparty/momentjs-2.10.6',
+        'var/httpd/htdocs/skins/Agent/default/css/thirdparty/fullcalendar-2.4.0',
+
         'var/httpd/htdocs/js/thirdparty/jquery-2.1.4',
         'var/httpd/htdocs/js/thirdparty/jquery-migrate-1.2.1',
         'var/httpd/htdocs/js/thirdparty/jquery-tablesorter-2.0.5',
         'var/httpd/htdocs/js/thirdparty/jquery-ui-1.11.4',
+        'var/httpd/htdocs/js/thirdparty/jquery-ui-tabs-1.10.3',
         'var/httpd/htdocs/js/thirdparty/jquery-validate-1.14.0',
         'var/httpd/htdocs/skins/Agent/default/css/thirdparty/ui-theme',
         'var/httpd/htdocs/skins/Customer/default/css/thirdparty/ui-theme',
