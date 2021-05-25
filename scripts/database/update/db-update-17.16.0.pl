@@ -53,6 +53,10 @@ sub _RemoveObsoleteDirectory {
         'var/httpd/htdocs/skins/Agent/default/css/thirdparty/ui-theme',
         'var/httpd/htdocs/skins/Customer/default/css/thirdparty/ui-theme',
 
+        'var/httpd/htdocs/js/thirdparty/jquery-jstree-3.1.1',
+        'var/httpd/htdocs/skins/Agent/default/css/thirdparty/jstree-theme',
+        'var/httpd/htdocs/skins/Customer/default/css/thirdparty/jstree-theme',
+
         'var/httpd/htdocs/js/thirdparty/jscolor_1.4.1',
 
         'var/httpd/htdocs/js/thirdparty/jsplumb-1.6.4',
