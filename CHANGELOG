@@ -1,6 +1,9 @@
 # Change log of KIX
 * Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.16.0-RC2 (2021/05/26)
+ * (2021/05/26) - release candidate
+
 # 17.16.0-RC1 (2021/05/25)
  * (2021/05/21) - CR: KIX17-2212 (Updated library fullcalendar to 3.10.2 and momentjs to 2.29.1) (fjacquemin)
  * (2021/05/21) - CR: KIX17-2222 (updated StackTrace library to 2.0.2) (fjacquemin)
