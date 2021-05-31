@@ -261,9 +261,6 @@ Core.UI.TreeSelection = (function (TargetNS) {
 
         Elements = Core.UI.TreeSelection.BuildElementsArray($SelectObj);
 
-        // Set StyleSheetURL in order to correctly load the CSS for treeview
-        StyleSheetURL = Core.Config.Get('WebPath') + 'skins/Agent/default/css/thirdparty/jstree-3.3.11/themes/default/style.min.css';
-
         /*eslint-disable camelcase */
         $TreeObj.jstree({
             core: {
@@ -276,7 +273,6 @@ Core.UI.TreeSelection = (function (TargetNS) {
                     icons: false,
                     responsive: true,
                     variant: 'small',
-                    url: StyleSheetURL
                 }
             },
             search: {
