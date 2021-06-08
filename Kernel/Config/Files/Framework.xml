@@ -11842,6 +11842,8 @@ via the Preferences button after logging in.
         <SubGroup>Core::Web</SubGroup>
         <Setting>
             <Array>
+                <Item>thirdparty/fontawesome/font-awesome.css</Item>
+                <Item>thirdparty/jstree-3.3.11/themes/default/style.min.css</Item>
                 <Item>Base.ColorTheme.css</Item>
                 <Item>Base.css</Item>
                 <Item>Base.Header.css</Item>
@@ -11857,7 +11859,6 @@ via the Preferences button after logging in.
                 <Item>Base.LinkGraph.css</Item>
                 <Item>Base.Statistics.css</Item>
                 <Item>Base.Login.css</Item>
-                <Item>thirdparty/fontawesome/font-awesome.css</Item>
             </Array>
         </Setting>
     </ConfigItem>
@@ -11939,6 +11940,8 @@ via the Preferences button after logging in.
         <SubGroup>Core::Web</SubGroup>
         <Setting>
             <Array>
+                <Item>thirdparty/fontawesome/font-awesome.css</Item>
+                <Item>thirdparty/jstree-3.3.11/themes/default/style.min.css</Item>
                 <Item>Base.ColorTheme.css</Item>
                 <Item>Base.css</Item>
                 <Item>Base.Header.css</Item>
@@ -11952,7 +11955,6 @@ via the Preferences button after logging in.
                 <Item>Base.Sidebar.css</Item>
                 <Item>Base.Tooltip.css</Item>
                 <Item>Base.Login.css</Item>
-                <Item>thirdparty/fontawesome/font-awesome.css</Item>
             </Array>
         </Setting>
     </ConfigItem>
