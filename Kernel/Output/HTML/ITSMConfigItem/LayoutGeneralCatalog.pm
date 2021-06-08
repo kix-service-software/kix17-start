@@ -252,6 +252,11 @@ sub SearchFormDataGet {
                 push( @SearchValues, $ItemID );
                 last ITEM;
             }
+            elsif ( $ItemID eq $FormValue ) {
+                # add id to values
+                push( @SearchValues, $ItemID );
+                last ITEM;
+            }
         }
     }
 

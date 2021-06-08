@@ -6362,7 +6362,7 @@
     <ConfigItem Name="TimeVacationDaysModules::Calendar1###004-CorpusChristi" Required="0" Valid="0">
         <Description Translatable="1">Adds module to calculate date of feast of corpus christi for the indicated calendar.</Description>
         <Group>Framework</Group>
-        <SubGroup>Core::Time</SubGroup>
+        <SubGroup>Core::Time::Calendar1</SubGroup>
         <Setting>
             <Hash>
                 <Item Key="Module">Kernel::System::Time::VacationDay::CorpusChristi</Item>
@@ -6373,7 +6373,7 @@
     <ConfigItem Name="TimeVacationDaysModules::Calendar1###005-RepentancePrayer" Required="0" Valid="0">
         <Description Translatable="1">Adds module to calculate date of day of repentance and prayer for the indicated calendar.</Description>
         <Group>Framework</Group>
-        <SubGroup>Core::Time</SubGroup>
+        <SubGroup>Core::Time::Calendar1</SubGroup>
         <Setting>
             <Hash>
                 <Item Key="Module">Kernel::System::Time::VacationDay::RepentancePrayer</Item>
@@ -6555,7 +6555,7 @@
     <ConfigItem Name="TimeVacationDaysModules::Calendar2###000-MaundyThursday" Required="0" Valid="0">
         <Description Translatable="1">Adds module to calculate date of maundy thursday for the indicated calendar.</Description>
         <Group>Framework</Group>
-        <SubGroup>Core::Time::Calendar1</SubGroup>
+        <SubGroup>Core::Time::Calendar2</SubGroup>
         <Setting>
             <Hash>
                 <Item Key="Module">Kernel::System::Time::VacationDay::MaundyThursday</Item>
@@ -6610,7 +6610,7 @@
     <ConfigItem Name="TimeVacationDaysModules::Calendar2###004-CorpusChristi" Required="0" Valid="0">
         <Description Translatable="1">Adds module to calculate date of feast of corpus christi for the indicated calendar.</Description>
         <Group>Framework</Group>
-        <SubGroup>Core::Time</SubGroup>
+        <SubGroup>Core::Time::Calendar2</SubGroup>
         <Setting>
             <Hash>
                 <Item Key="Module">Kernel::System::Time::VacationDay::CorpusChristi</Item>
@@ -6621,7 +6621,7 @@
     <ConfigItem Name="TimeVacationDaysModules::Calendar2###005-RepentancePrayer" Required="0" Valid="0">
         <Description Translatable="1">Adds module to calculate date of day of repentance and prayer for the indicated calendar.</Description>
         <Group>Framework</Group>
-        <SubGroup>Core::Time</SubGroup>
+        <SubGroup>Core::Time::Calendar2</SubGroup>
         <Setting>
             <Hash>
                 <Item Key="Module">Kernel::System::Time::VacationDay::RepentancePrayer</Item>
@@ -6803,7 +6803,7 @@
     <ConfigItem Name="TimeVacationDaysModules::Calendar3###000-MaundyThursday" Required="0" Valid="0">
         <Description Translatable="1">Adds module to calculate date of maundy thursday for the indicated calendar.</Description>
         <Group>Framework</Group>
-        <SubGroup>Core::Time::Calendar1</SubGroup>
+        <SubGroup>Core::Time::Calendar3</SubGroup>
         <Setting>
             <Hash>
                 <Item Key="Module">Kernel::System::Time::VacationDay::MaundyThursday</Item>
@@ -6858,7 +6858,7 @@
     <ConfigItem Name="TimeVacationDaysModules::Calendar3###004-CorpusChristi" Required="0" Valid="0">
         <Description Translatable="1">Adds module to calculate date of feast of corpus christi for the indicated calendar.</Description>
         <Group>Framework</Group>
-        <SubGroup>Core::Time</SubGroup>
+        <SubGroup>Core::Time::Calendar3</SubGroup>
         <Setting>
             <Hash>
                 <Item Key="Module">Kernel::System::Time::VacationDay::CorpusChristi</Item>
@@ -6869,7 +6869,7 @@
     <ConfigItem Name="TimeVacationDaysModules::Calendar3###005-RepentancePrayer" Required="0" Valid="0">
         <Description Translatable="1">Adds module to calculate date of day of repentance and prayer for the indicated calendar.</Description>
         <Group>Framework</Group>
-        <SubGroup>Core::Time</SubGroup>
+        <SubGroup>Core::Time::Calendar3</SubGroup>
         <Setting>
             <Hash>
                 <Item Key="Module">Kernel::System::Time::VacationDay::RepentancePrayer</Item>
@@ -7051,7 +7051,7 @@
     <ConfigItem Name="TimeVacationDaysModules::Calendar4###000-MaundyThursday" Required="0" Valid="0">
         <Description Translatable="1">Adds module to calculate date of maundy thursday for the indicated calendar.</Description>
         <Group>Framework</Group>
-        <SubGroup>Core::Time::Calendar1</SubGroup>
+        <SubGroup>Core::Time::Calendar4</SubGroup>
         <Setting>
             <Hash>
                 <Item Key="Module">Kernel::System::Time::VacationDay::MaundyThursday</Item>
@@ -7106,7 +7106,7 @@
     <ConfigItem Name="TimeVacationDaysModules::Calendar4###004-CorpusChristi" Required="0" Valid="0">
         <Description Translatable="1">Adds module to calculate date of feast of corpus christi for the indicated calendar.</Description>
         <Group>Framework</Group>
-        <SubGroup>Core::Time</SubGroup>
+        <SubGroup>Core::Time::Calendar4</SubGroup>
         <Setting>
             <Hash>
                 <Item Key="Module">Kernel::System::Time::VacationDay::CorpusChristi</Item>
@@ -7117,7 +7117,7 @@
     <ConfigItem Name="TimeVacationDaysModules::Calendar4###005-RepentancePrayer" Required="0" Valid="0">
         <Description Translatable="1">Adds module to calculate date of day of repentance and prayer for the indicated calendar.</Description>
         <Group>Framework</Group>
-        <SubGroup>Core::Time</SubGroup>
+        <SubGroup>Core::Time::Calendar4</SubGroup>
         <Setting>
             <Hash>
                 <Item Key="Module">Kernel::System::Time::VacationDay::RepentancePrayer</Item>
@@ -7299,7 +7299,7 @@
     <ConfigItem Name="TimeVacationDaysModules::Calendar5###000-MaundyThursday" Required="0" Valid="0">
         <Description Translatable="1">Adds module to calculate date of maundy thursday for the indicated calendar.</Description>
         <Group>Framework</Group>
-        <SubGroup>Core::Time::Calendar1</SubGroup>
+        <SubGroup>Core::Time::Calendar5</SubGroup>
         <Setting>
             <Hash>
                 <Item Key="Module">Kernel::System::Time::VacationDay::MaundyThursday</Item>
@@ -7354,7 +7354,7 @@
     <ConfigItem Name="TimeVacationDaysModules::Calendar5###004-CorpusChristi" Required="0" Valid="0">
         <Description Translatable="1">Adds module to calculate date of feast of corpus christi for the indicated calendar.</Description>
         <Group>Framework</Group>
-        <SubGroup>Core::Time</SubGroup>
+        <SubGroup>Core::Time::Calendar5</SubGroup>
         <Setting>
             <Hash>
                 <Item Key="Module">Kernel::System::Time::VacationDay::CorpusChristi</Item>
@@ -7365,7 +7365,7 @@
     <ConfigItem Name="TimeVacationDaysModules::Calendar5###005-RepentancePrayer" Required="0" Valid="0">
         <Description Translatable="1">Adds module to calculate date of day of repentance and prayer for the indicated calendar.</Description>
         <Group>Framework</Group>
-        <SubGroup>Core::Time</SubGroup>
+        <SubGroup>Core::Time::Calendar5</SubGroup>
         <Setting>
             <Hash>
                 <Item Key="Module">Kernel::System::Time::VacationDay::RepentancePrayer</Item>
@@ -7547,7 +7547,7 @@
     <ConfigItem Name="TimeVacationDaysModules::Calendar6###000-MaundyThursday" Required="0" Valid="0">
         <Description Translatable="1">Adds module to calculate date of maundy thursday for the indicated calendar.</Description>
         <Group>Framework</Group>
-        <SubGroup>Core::Time::Calendar1</SubGroup>
+        <SubGroup>Core::Time::Calendar6</SubGroup>
         <Setting>
             <Hash>
                 <Item Key="Module">Kernel::System::Time::VacationDay::MaundyThursday</Item>
@@ -7602,7 +7602,7 @@
     <ConfigItem Name="TimeVacationDaysModules::Calendar6###004-CorpusChristi" Required="0" Valid="0">
         <Description Translatable="1">Adds module to calculate date of feast of corpus christi for the indicated calendar.</Description>
         <Group>Framework</Group>
-        <SubGroup>Core::Time</SubGroup>
+        <SubGroup>Core::Time::Calendar6</SubGroup>
         <Setting>
             <Hash>
                 <Item Key="Module">Kernel::System::Time::VacationDay::CorpusChristi</Item>
@@ -7613,7 +7613,7 @@
     <ConfigItem Name="TimeVacationDaysModules::Calendar6###005-RepentancePrayer" Required="0" Valid="0">
         <Description Translatable="1">Adds module to calculate date of day of repentance and prayer for the indicated calendar.</Description>
         <Group>Framework</Group>
-        <SubGroup>Core::Time</SubGroup>
+        <SubGroup>Core::Time::Calendar6</SubGroup>
         <Setting>
             <Hash>
                 <Item Key="Module">Kernel::System::Time::VacationDay::RepentancePrayer</Item>
@@ -7795,7 +7795,7 @@
     <ConfigItem Name="TimeVacationDaysModules::Calendar7###000-MaundyThursday" Required="0" Valid="0">
         <Description Translatable="1">Adds module to calculate date of maundy thursday for the indicated calendar.</Description>
         <Group>Framework</Group>
-        <SubGroup>Core::Time::Calendar1</SubGroup>
+        <SubGroup>Core::Time::Calendar7</SubGroup>
         <Setting>
             <Hash>
                 <Item Key="Module">Kernel::System::Time::VacationDay::MaundyThursday</Item>
@@ -7850,7 +7850,7 @@
     <ConfigItem Name="TimeVacationDaysModules::Calendar7###004-CorpusChristi" Required="0" Valid="0">
         <Description Translatable="1">Adds module to calculate date of feast of corpus christi for the indicated calendar.</Description>
         <Group>Framework</Group>
-        <SubGroup>Core::Time</SubGroup>
+        <SubGroup>Core::Time::Calendar7</SubGroup>
         <Setting>
             <Hash>
                 <Item Key="Module">Kernel::System::Time::VacationDay::CorpusChristi</Item>
@@ -7861,7 +7861,7 @@
     <ConfigItem Name="TimeVacationDaysModules::Calendar7###005-RepentancePrayer" Required="0" Valid="0">
         <Description Translatable="1">Adds module to calculate date of day of repentance and prayer for the indicated calendar.</Description>
         <Group>Framework</Group>
-        <SubGroup>Core::Time</SubGroup>
+        <SubGroup>Core::Time::Calendar7</SubGroup>
         <Setting>
             <Hash>
                 <Item Key="Module">Kernel::System::Time::VacationDay::RepentancePrayer</Item>
@@ -8043,7 +8043,7 @@
     <ConfigItem Name="TimeVacationDaysModules::Calendar8###000-MaundyThursday" Required="0" Valid="0">
         <Description Translatable="1">Adds module to calculate date of maundy thursday for the indicated calendar.</Description>
         <Group>Framework</Group>
-        <SubGroup>Core::Time::Calendar1</SubGroup>
+        <SubGroup>Core::Time::Calendar8</SubGroup>
         <Setting>
             <Hash>
                 <Item Key="Module">Kernel::System::Time::VacationDay::MaundyThursday</Item>
@@ -8098,7 +8098,7 @@
     <ConfigItem Name="TimeVacationDaysModules::Calendar8###004-CorpusChristi" Required="0" Valid="0">
         <Description Translatable="1">Adds module to calculate date of feast of corpus christi for the indicated calendar.</Description>
         <Group>Framework</Group>
-        <SubGroup>Core::Time</SubGroup>
+        <SubGroup>Core::Time::Calendar8</SubGroup>
         <Setting>
             <Hash>
                 <Item Key="Module">Kernel::System::Time::VacationDay::CorpusChristi</Item>
@@ -8109,7 +8109,7 @@
     <ConfigItem Name="TimeVacationDaysModules::Calendar8###005-RepentancePrayer" Required="0" Valid="0">
         <Description Translatable="1">Adds module to calculate date of day of repentance and prayer for the indicated calendar.</Description>
         <Group>Framework</Group>
-        <SubGroup>Core::Time</SubGroup>
+        <SubGroup>Core::Time::Calendar8</SubGroup>
         <Setting>
             <Hash>
                 <Item Key="Module">Kernel::System::Time::VacationDay::RepentancePrayer</Item>
@@ -8291,7 +8291,7 @@
     <ConfigItem Name="TimeVacationDaysModules::Calendar9###000-MaundyThursday" Required="0" Valid="0">
         <Description Translatable="1">Adds module to calculate date of maundy thursday for the indicated calendar.</Description>
         <Group>Framework</Group>
-        <SubGroup>Core::Time::Calendar1</SubGroup>
+        <SubGroup>Core::Time::Calendar9</SubGroup>
         <Setting>
             <Hash>
                 <Item Key="Module">Kernel::System::Time::VacationDay::MaundyThursday</Item>
@@ -8346,7 +8346,7 @@
     <ConfigItem Name="TimeVacationDaysModules::Calendar9###004-CorpusChristi" Required="0" Valid="0">
         <Description Translatable="1">Adds module to calculate date of feast of corpus christi for the indicated calendar.</Description>
         <Group>Framework</Group>
-        <SubGroup>Core::Time</SubGroup>
+        <SubGroup>Core::Time::Calendar9</SubGroup>
         <Setting>
             <Hash>
                 <Item Key="Module">Kernel::System::Time::VacationDay::CorpusChristi</Item>
@@ -8357,7 +8357,7 @@
     <ConfigItem Name="TimeVacationDaysModules::Calendar9###005-RepentancePrayer" Required="0" Valid="0">
         <Description Translatable="1">Adds module to calculate date of day of repentance and prayer for the indicated calendar.</Description>
         <Group>Framework</Group>
-        <SubGroup>Core::Time</SubGroup>
+        <SubGroup>Core::Time::Calendar9</SubGroup>
         <Setting>
             <Hash>
                 <Item Key="Module">Kernel::System::Time::VacationDay::RepentancePrayer</Item>
@@ -11842,6 +11842,8 @@ via the Preferences button after logging in.
         <SubGroup>Core::Web</SubGroup>
         <Setting>
             <Array>
+                <Item>thirdparty/fontawesome/font-awesome.css</Item>
+                <Item>thirdparty/jstree-3.3.11/themes/default/style.min.css</Item>
                 <Item>Base.ColorTheme.css</Item>
                 <Item>Base.css</Item>
                 <Item>Base.Header.css</Item>
@@ -11857,7 +11859,6 @@ via the Preferences button after logging in.
                 <Item>Base.LinkGraph.css</Item>
                 <Item>Base.Statistics.css</Item>
                 <Item>Base.Login.css</Item>
-                <Item>thirdparty/fontawesome/font-awesome.css</Item>
             </Array>
         </Setting>
     </ConfigItem>
@@ -11939,6 +11940,8 @@ via the Preferences button after logging in.
         <SubGroup>Core::Web</SubGroup>
         <Setting>
             <Array>
+                <Item>thirdparty/fontawesome/font-awesome.css</Item>
+                <Item>thirdparty/jstree-3.3.11/themes/default/style.min.css</Item>
                 <Item>Base.ColorTheme.css</Item>
                 <Item>Base.css</Item>
                 <Item>Base.Header.css</Item>
@@ -11952,7 +11955,6 @@ via the Preferences button after logging in.
                 <Item>Base.Sidebar.css</Item>
                 <Item>Base.Tooltip.css</Item>
                 <Item>Base.Login.css</Item>
-                <Item>thirdparty/fontawesome/font-awesome.css</Item>
             </Array>
         </Setting>
     </ConfigItem>

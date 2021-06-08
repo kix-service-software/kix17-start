@@ -96,7 +96,7 @@
                     <fieldset class="TableLike">
 [% RenderBlockEnd("XMLRowFieldsetStart") %]
 [% RenderBlockStart("XMLRowValue") %]
-                        <label [% Data.LabelClass %] [% Data.LabelFor %]>
+                        <label [% Data.LabelClass %] [% Data.LabelFor %] [% Data.LabelAnchor %]>
 [% RenderBlockStart("XMLRowValueContentRequired") %]
                             <span class="Marker">*</span>
 [% RenderBlockEnd("XMLRowValueContentRequired") %]
@@ -193,15 +193,6 @@
 [% RenderBlockEnd("EndNormal") %]
 
 
-[% RenderBlockStart("ScrollIntoView") %]
-[% WRAPPER JSOnDocumentComplete %]
-<script type="text/javascript">//<![CDATA[
-if ( document.getElementsByName('[% Data.DeleteKey %]').length ) {
-    document.getElementsByName('[% Data.DeleteKey %]')[0].scrollIntoView();
-}
-//]]></script>
-[% END %]
-[% RenderBlockEnd("ScrollIntoView") %]
 [% WRAPPER JSOnDocumentComplete %]
         <script type="text/javascript">//<![CDATA[
             $('#SubmitButton').on('click', function () {
@@ -221,5 +212,21 @@ if ( document.getElementsByName('[% Data.DeleteKey %]').length ) {
                 // trigger submit
                 $(this).closest('form').submit();
             });
+
+            if ( $('label[data-anchor=true]').length ) {
+                var wHeight = $(window).height(),
+                    wMiddle = wHeight / 3,
+                    elemPos = $('label[data-anchor=true]').offset();
+
+                if ( elemPos.top > wMiddle ) {
+                    window.scrollBy(
+                        {
+                            top: elemPos.top - wMiddle,
+                            left: 0,
+                            behavior: "smooth"
+                        }
+                    );
+                }
+            }
         //]]></script>
 [% END %]
