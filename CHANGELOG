@@ -1,6 +1,15 @@
 # Change log of KIX
 * Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.16.0-RC3 (2021/06/08)
+ * (2021/06/07) - Bugfix: KIX17-2253 (fixed missing background color when download report as svg) (fjacquemin)
+ * (2021/06/07) - Bugfix: KIX17-2252 (fixed factory check of the canvg javascript) (fjacquemin)
+ * (2021/05/31) - Bugfix: KIX17-2234 (fixed missing hiding of a Jstree element if this does not match the search) (fjacquemin)
+ * (2021/05/28) - Bugfix: KIX17-1869 (fixed table sorting if using GeneralCatalog attribute as search parameter) (fjacquemin)
+ * (2021/05/27) - Bugfix: TimeVacationDaysModules Subgroup (fixed subgroups of TimeVacationDaysModules entries) (millinger)
+ * (2021/05/27) - Bugfix: KIX17-2197 (optimized scroll behavior) (millinger)
+ * (2021/05/03) - CR: KIX17-1014 (implemented Office365 as mail account) (millinger)
+
 # 17.16.0-RC2 (2021/05/26)
  * (2021/05/26) - release candidate
 
