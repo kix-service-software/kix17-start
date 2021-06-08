@@ -135,36 +135,81 @@
                         </div>
                         <div class="Clear"></div>
 
-                        <label class="Mandatory" for="PasswordAdd"><span class="Marker">*</span> [% Translate("Password") | html %]:</label>
-                        <div class="Field">
-                            <input type="password" class="W50pc Validate_Required [% Data.PasswordAddInvalid | html %]" name="Password" id="PasswordAdd" value="" maxlength="200" autocomplete="off" />
-                            <div id="PasswordAddError" class="TooltipErrorMessage">
-                                <p>[% Translate("This field is required.") | html %]</p>
+                        <div class="Row Row_Password">
+                            <label class="Mandatory" for="PasswordAdd"><span class="Marker">*</span> [% Translate("Password") | html %]:</label>
+                            <div class="Field">
+                                <input type="password" class="W50pc Validate_Required [% Data.PasswordAddInvalid | html %]" name="Password" id="PasswordAdd" value="" maxlength="200" autocomplete="off" />
+                                <div id="PasswordAddError" class="TooltipErrorMessage">
+                                    <p>[% Translate("This field is required.") | html %]</p>
+                                </div>
+                                <div id="PasswordAddServerError" class="TooltipErrorMessage">
+                                    <p>[% Translate("This field is required.") | html %]</p>
+                                </div>
                             </div>
-                            <div id="PasswordAddServerError" class="TooltipErrorMessage">
-                                <p>[% Translate("This field is required.") | html %]</p>
-                            </div>
+                            <div class="Clear"></div>
                         </div>
-                        <div class="Clear"></div>
 
-                        <label class="Mandatory" for="HostAdd"><span class="Marker">*</span> [% Translate("Host") | html %]:</label>
-                        <div class="Field">
-                            <input type="text" class="W50pc Validate_Required [% Data.HostAddInvalid | html %]" name="Host" id="HostAdd" value="" maxlength="200"/>
-                            <div id="HostAddError" class="TooltipErrorMessage">
-                                <p>[% Translate("This field is required.") | html %]</p>
+                        <div class="Row Row_Host">
+                            <label class="Mandatory" for="HostAdd"><span class="Marker">*</span> [% Translate("Host") | html %]:</label>
+                            <div class="Field">
+                                <input type="text" class="W50pc Validate_Required [% Data.HostAddInvalid | html %]" name="Host" id="HostAdd" value="" maxlength="200"/>
+                                <div id="HostAddError" class="TooltipErrorMessage">
+                                    <p>[% Translate("This field is required.") | html %]</p>
+                                </div>
+                                <div id="HostAddServerError" class="TooltipErrorMessage">
+                                    <p>[% Translate("This field is required.") | html %]</p>
+                                </div>
+                                <p class="FieldExplanation">[% Translate("Example: mail.example.com") | html %]</p>
                             </div>
-                            <div id="HostAddServerError" class="TooltipErrorMessage">
-                                <p>[% Translate("This field is required.") | html %]</p>
-                            </div>
-                            <p class="FieldExplanation">[% Translate("Example: mail.example.com") | html %]</p>
+                            <div class="Clear"></div>
                         </div>
-                        <div class="Clear"></div>
 
                         <div class="Row Row_IMAPFolder Hidden">
                             <label for="IMAPFolder">[% Translate("IMAP Folder") | html %]:</label>
                             <div class="Field">
                                 <input type="text" class="W50pc" name="IMAPFolder" id="IMAPFolder" value="INBOX" maxlength="250"/>
                                 <p class="FieldExplanation">[% Translate("Only modify this if you need to fetch mail from a different folder than INBOX.") | html %]</p>
+                            </div>
+                            <div class="Clear"></div>
+                        </div>
+
+                        <div class="Row Row_Office365 Hidden">
+                            <label class="Mandatory" for="TenantID"><span class="Marker">*</span> [% Translate("Tenant-ID") | html %]:</label>
+                            <div class="Field">
+                                <input type="text" class="W50pc Validate_Required [% Data.TenantIDInvalid | html %]" name="TenantID" id="TenantID" value=""/>
+                                <div id="TenantIDError" class="TooltipErrorMessage">
+                                    <p>[% Translate("This field is required.") | html %]</p>
+                                </div>
+                                <div id="TenantIDServerError" class="TooltipErrorMessage">
+                                    <p>[% Translate("This field is required.") | html %]</p>
+                                </div>
+                                <p class="FieldExplanation">[% Translate("Tenant-ID of Microsoft Azure Active Directory application") | html %]</p>
+                            </div>
+                            <div class="Clear"></div>
+
+                            <label class="Mandatory" for="ClientID"><span class="Marker">*</span> [% Translate("Client-ID") | html %]:</label>
+                            <div class="Field">
+                                <input type="text" class="W50pc Validate_Required [% Data.ClientIDInvalid | html %]" name="ClientID" id="ClientID" value=""/>
+                                <div id="ClientIDError" class="TooltipErrorMessage">
+                                    <p>[% Translate("This field is required.") | html %]</p>
+                                </div>
+                                <div id="ClientIDServerError" class="TooltipErrorMessage">
+                                    <p>[% Translate("This field is required.") | html %]</p>
+                                </div>
+                                <p class="FieldExplanation">[% Translate("Client-ID of Microsoft Azure Active Directory application") | html %]</p>
+                            </div>
+                            <div class="Clear"></div>
+
+                            <label class="Mandatory" for="ClientSecret"><span class="Marker">*</span> [% Translate("Client Secret") | html %]:</label>
+                            <div class="Field">
+                                <input type="password" class="W50pc Validate_Required [% Data.ClientSecretInvalid | html %]" name="ClientSecret" id="ClientSecret" value=""/>
+                                <div id="ClientSecretError" class="TooltipErrorMessage">
+                                    <p>[% Translate("This field is required.") | html %]</p>
+                                </div>
+                                <div id="ClientSecretServerError" class="TooltipErrorMessage">
+                                    <p>[% Translate("This field is required.") | html %]</p>
+                                </div>
+                                <p class="FieldExplanation">[% Translate("Client Secret of Microsoft Azure Active Directory application") | html %]</p>
                             </div>
                             <div class="Clear"></div>
                         </div>
@@ -252,36 +297,81 @@
                         </div>
                         <div class="Clear"></div>
 
-                        <label class="Mandatory" for="PasswordEdit"><span class="Marker">*</span> [% Translate("Password") | html %]:</label>
-                        <div class="Field">
-                            <input type="password" class="W50pc Validate_Required [% Data.PasswordEditInvalid | html %]" name="Password" id="PasswordEdit" value="[% IF Data.Password %]kix-dummy-password-placeholder[% END %]" maxlength="200" autocomplete="off" />
-                            <div id="PasswordEditError" class="TooltipErrorMessage">
-                                <p>[% Translate("This field is required.") | html %]</p>
+                        <div class="Row Row_Password">
+                            <label class="Mandatory" for="PasswordEdit"><span class="Marker">*</span> [% Translate("Password") | html %]:</label>
+                            <div class="Field">
+                                <input type="password" class="W50pc Validate_Required [% Data.PasswordEditInvalid | html %]" name="Password" id="PasswordEdit" value="[% IF Data.Password %]kix-dummy-password-placeholder[% END %]" maxlength="200" autocomplete="off" />
+                                <div id="PasswordEditError" class="TooltipErrorMessage">
+                                    <p>[% Translate("This field is required.") | html %]</p>
+                                </div>
+                                <div id="PasswordEditServerError" class="TooltipErrorMessage">
+                                    <p>[% Translate("This field is required.") | html %]</p>
+                                </div>
                             </div>
-                            <div id="PasswordEditServerError" class="TooltipErrorMessage">
-                                <p>[% Translate("This field is required.") | html %]</p>
-                            </div>
+                            <div class="Clear"></div>
                         </div>
-                        <div class="Clear"></div>
 
-                        <label class="Mandatory" for="HostEdit"><span class="Marker">*</span> [% Translate("Host") | html %]:</label>
-                        <div class="Field">
-                            <input type="text" class="W50pc Validate_Required [% Data.HostEditInvalid | html %]" name="Host" id="HostEdit" value="[% Data.Host | html %]" maxlength="200"/>
-                            <div id="HostEditError" class="TooltipErrorMessage">
-                                <p>[% Translate("This field is required.") | html %]</p>
+                        <div class="Row Row_Host">
+                            <label class="Mandatory" for="HostEdit"><span class="Marker">*</span> [% Translate("Host") | html %]:</label>
+                            <div class="Field">
+                                <input type="text" class="W50pc Validate_Required [% Data.HostEditInvalid | html %]" name="Host" id="HostEdit" value="[% Data.Host | html %]" maxlength="200"/>
+                                <div id="HostEditError" class="TooltipErrorMessage">
+                                    <p>[% Translate("This field is required.") | html %]</p>
+                                </div>
+                                <div id="HostEditServerError" class="TooltipErrorMessage">
+                                    <p>[% Translate("This field is required.") | html %]</p>
+                                </div>
+                                <p class="FieldExplanation">[% Translate("Example: mail.example.com") | html %]</p>
                             </div>
-                            <div id="HostEditServerError" class="TooltipErrorMessage">
-                                <p>[% Translate("This field is required.") | html %]</p>
-                            </div>
-                            <p class="FieldExplanation">[% Translate("Example: mail.example.com") | html %]</p>
+                            <div class="Clear"></div>
                         </div>
-                        <div class="Clear"></div>
 
                         <div class="Row Row_IMAPFolder Hidden">
                             <label for="IMAPFolder">[% Translate("IMAP Folder") | html %]:</label>
                             <div class="Field">
                                 <input type="text" class="W50pc" name="IMAPFolder" id="IMAPFolder" value="[% Data.IMAPFolder | html %]" maxlength="250"/>
                                 <p class="FieldExplanation">[% Translate("Only modify this if you need to fetch mail from a different folder than INBOX.") | html %]</p>
+                            </div>
+                            <div class="Clear"></div>
+                        </div>
+
+                        <div class="Row Row_Office365 Hidden">
+                            <label class="Mandatory" for="TenantID"><span class="Marker">*</span> [% Translate("Tenant-ID") | html %]:</label>
+                            <div class="Field">
+                                <input type="text" class="W50pc Validate_Required [% Data.TenantIDInvalid | html %]" name="TenantID" id="TenantID" value="[% Data.TenantID | html %]"/>
+                                <div id="TenantIDError" class="TooltipErrorMessage">
+                                    <p>[% Translate("This field is required.") | html %]</p>
+                                </div>
+                                <div id="TenantIDServerError" class="TooltipErrorMessage">
+                                    <p>[% Translate("This field is required.") | html %]</p>
+                                </div>
+                                <p class="FieldExplanation">[% Translate("Tenant-ID of Microsoft Azure Active Directory application") | html %]</p>
+                            </div>
+                            <div class="Clear"></div>
+
+                            <label class="Mandatory" for="ClientID"><span class="Marker">*</span> [% Translate("Client-ID") | html %]:</label>
+                            <div class="Field">
+                                <input type="text" class="W50pc Validate_Required [% Data.ClientIDInvalid | html %]" name="ClientID" id="ClientID" value="[% Data.ClientID | html %]"/>
+                                <div id="ClientIDError" class="TooltipErrorMessage">
+                                    <p>[% Translate("This field is required.") | html %]</p>
+                                </div>
+                                <div id="ClientIDServerError" class="TooltipErrorMessage">
+                                    <p>[% Translate("This field is required.") | html %]</p>
+                                </div>
+                                <p class="FieldExplanation">[% Translate("Client-ID of Microsoft Azure Active Directory application") | html %]</p>
+                            </div>
+                            <div class="Clear"></div>
+
+                            <label class="Mandatory" for="ClientSecret"><span class="Marker">*</span> [% Translate("Client Secret") | html %]:</label>
+                            <div class="Field">
+                                <input type="password" class="W50pc Validate_Required [% Data.ClientSecretInvalid | html %]" name="ClientSecret" id="ClientSecret" value="[% Data.ClientSecret | html %]"/>
+                                <div id="ClientSecretError" class="TooltipErrorMessage">
+                                    <p>[% Translate("This field is required.") | html %]</p>
+                                </div>
+                                <div id="ClientSecretServerError" class="TooltipErrorMessage">
+                                    <p>[% Translate("This field is required.") | html %]</p>
+                                </div>
+                                <p class="FieldExplanation">[% Translate("Client Secret of Microsoft Azure Active Directory application") | html %]</p>
                             </div>
                             <div class="Clear"></div>
                         </div>
@@ -368,6 +458,26 @@ $('select#TypeAdd, select#Type').on('change', function(){
     }
     else {
         $('.Row_IMAPFolder').hide();
+    }
+    if (/^Office365/.test($(this).val())) {
+        $('.Row_Office365').show();
+        Core.Form.Validate.EnableValidation( $('.Row_Office365') );
+
+        $('.Row_Password').hide();
+        Core.Form.Validate.DisableValidation( $('.Row_Password') );
+
+        $('.Row_Host').hide();
+        Core.Form.Validate.DisableValidation( $('.Row_Host') );
+    }
+    else {
+        $('.Row_Office365').hide();
+        Core.Form.Validate.DisableValidation( $('.Row_Office365') );
+
+        $('.Row_Password').show();
+        Core.Form.Validate.EnableValidation( $('.Row_Password') );
+
+        $('.Row_Host').show();
+        Core.Form.Validate.EnableValidation( $('.Row_Host') );
     }
 }).trigger('change');
 // Show only Queue field if Dispatch By Queue is selected

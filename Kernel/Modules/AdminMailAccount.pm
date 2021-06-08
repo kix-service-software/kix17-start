@@ -13,6 +13,8 @@ package Kernel::Modules::AdminMailAccount;
 use strict;
 use warnings;
 
+use URI::Escape;
+
 use Kernel::Language qw(Translatable);
 
 our $ObjectManagerDisabled = 1;
@@ -30,13 +32,17 @@ sub new {
 sub Run {
     my ( $Self, %Param ) = @_;
 
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-    my $ParamObject  = $Kernel::OM->Get('Kernel::System::Web::Request');
     my $MailAccount  = $Kernel::OM->Get('Kernel::System::MailAccount');
+    my $ParamObject  = $Kernel::OM->Get('Kernel::System::Web::Request');
 
     my %GetParam = ();
     my @Params   = (
-        qw(ID Login Password Host Type TypeAdd Comment ValidID QueueID IMAPFolder Trusted DispatchingBy)
+        qw(
+            ID Login Password Host Type TypeAdd Comment ValidID QueueID IMAPFolder Trusted DispatchingBy
+            TenantID ClientID ClientSecret
+        )
     );
     for my $Parameter (@Params) {
         $GetParam{$Parameter} = $ParamObject->GetParam( Param => $Parameter );
@@ -109,6 +115,14 @@ sub Run {
 
         my %Errors;
 
+        if (
+            $GetParam{TypeAdd}
+            && $GetParam{TypeAdd} eq 'Office365'
+        ) {
+            $GetParam{Host}     = 'outlook.office365.com';
+            $GetParam{Password} = substr( $GetParam{ClientSecret}, 0, 200 );
+        }
+
         # check needed data
         for my $Needed (qw(Login Password Host)) {
             if ( !$GetParam{$Needed} ) {
@@ -118,6 +132,13 @@ sub Run {
         for my $Needed (qw(TypeAdd ValidID)) {
             if ( !$GetParam{$Needed} ) {
                 $Errors{ $Needed . 'Invalid' } = 'ServerError';
+            }
+        }
+        if ( $GetParam{TypeAdd} eq 'Office365' ) {
+            for my $Needed ( qw(TenantID ClientID ClientSecret) ) {
+                if ( !$GetParam{ $Needed } ) {
+                    $Errors{ $Needed . 'Invalid' } = 'ServerError';
+                }
             }
         }
 
@@ -131,6 +152,35 @@ sub Run {
                 UserID => $Self->{UserID},
             );
             if ($ID) {
+                if ( $GetParam{TypeAdd} eq 'Office365' ) {
+                    # set preferences
+                    for my $Preference ( qw(TenantID ClientID ClientSecret) ) {
+                        $MailAccount->SetPreferences(
+                            MailAccountID => $ID,
+                            Key           => $Preference,
+                            Value         => $GetParam{$Preference},
+                        );
+                    }
+
+                    # redirect to office365 authorization
+                    my $RedirectURI = $ConfigObject->Get('HttpType')
+                                    . '://'
+                                    . $ConfigObject->Get('FQDN')
+                                    . '/'
+                                    . $ConfigObject->Get('ScriptAlias')
+                                    . 'index.pl?Action=AdminMailAccount&Subaction=HandleCode';
+                    return $LayoutObject->Redirect(
+                        ExtURL => 'https://login.microsoftonline.com/' . $GetParam{'TenantID'} . '/oauth2/authorize?'
+                                . 'response_mode=query'
+                                . '&response_type=code'
+                                . '&client_id=' . URI::Escape::uri_escape_utf8($GetParam{'ClientID'})
+                                . '&scope=' . URI::Escape::uri_escape_utf8('https://outlook.office365.com/IMAP.AccessAsUser.All offline_access')
+                                . '&redirect_uri=' . URI::Escape::uri_escape_utf8($RedirectURI)
+                                . '&state=' . URI::Escape::uri_escape_utf8($ID)
+                    );
+                }
+
+                # load overview
                 $Self->_Overview();
                 my $Output = $LayoutObject->Header();
                 $Output .= $LayoutObject->NavigationBar();
@@ -190,6 +240,14 @@ sub Run {
 
         my %Errors;
 
+        if (
+            $GetParam{Type}
+            && $GetParam{Type} eq 'Office365'
+        ) {
+            $GetParam{Host}     = 'outlook.office365.com';
+            $GetParam{Password} = substr( $GetParam{ClientSecret}, 0, 200 );
+        }
+
         # check needed data
         for my $Needed (qw(Login Password Host)) {
             if ( !$GetParam{$Needed} ) {
@@ -203,6 +261,13 @@ sub Run {
         }
         if ( !$GetParam{Trusted} ) {
             $Errors{TrustedInvalid} = 'ServerError' if ( $GetParam{Trusted} != 0 );
+        }
+        if ( $GetParam{Type} eq 'Office365' ) {
+            for my $Needed ( qw(TenantID ClientID ClientSecret) ) {
+                if ( !$GetParam{$Needed} ) {
+                    $Errors{ $Needed . 'Invalid' } = 'ServerError';
+                }
+            }
         }
 
         # if no errors occurred
@@ -219,6 +284,40 @@ sub Run {
                 UserID => $Self->{UserID},
             );
             if ($Update) {
+                if ( $GetParam{Type} eq 'Office365' ) {
+                    # set preferences
+                    for my $Preference ( qw(TenantID ClientID ClientSecret) ) {
+                        $MailAccount->SetPreferences(
+                            MailAccountID => $GetParam{ID},
+                            Key           => $Preference,
+                            Value         => $GetParam{$Preference},
+                        );
+                    }
+
+                    # get current mail account data
+                    my %OriginalData = $MailAccount->MailAccountGet(%GetParam);
+
+                    # check for refresh token
+                    if ( !$OriginalData{RefreshToken} ) {
+                        # redirect to office365 authorization
+                        my $RedirectURI = $ConfigObject->Get('HttpType')
+                                        . '://'
+                                        . $ConfigObject->Get('FQDN')
+                                        . '/'
+                                        . $ConfigObject->Get('ScriptAlias')
+                                        . 'index.pl?Action=AdminMailAccount&Subaction=HandleCode';
+                        return $LayoutObject->Redirect(
+                            ExtURL => 'https://login.microsoftonline.com/' . $GetParam{'TenantID'} . '/oauth2/authorize?'
+                                    . 'response_mode=query'
+                                    . '&response_type=code'
+                                    . '&client_id=' . URI::Escape::uri_escape_utf8($GetParam{'ClientID'})
+                                    . '&scope=' . URI::Escape::uri_escape_utf8('https://outlook.office365.com/IMAP.AccessAsUser.All offline_access')
+                                    . '&redirect_uri=' . URI::Escape::uri_escape_utf8($RedirectURI)
+                                    . '&state=' . URI::Escape::uri_escape_utf8($GetParam{ID})
+                        );
+                    }
+                }
+
                 $Self->_Overview();
                 my $Output = $LayoutObject->Header();
                 $Output .= $LayoutObject->NavigationBar();
@@ -241,6 +340,35 @@ sub Run {
             Errors => \%Errors,
             %GetParam,
         );
+        $Output .= $LayoutObject->Output(
+            TemplateFile => 'AdminMailAccount',
+            Data         => \%Param,
+        );
+        $Output .= $LayoutObject->Footer();
+        return $Output;
+    }
+
+    # ------------------------------------------------------------ #
+    # handle code
+    # ------------------------------------------------------------ #
+    elsif ( $Self->{Subaction} eq 'HandleCode' ) {
+        my $Code          = $ParamObject->GetParam( Param => 'code' );
+        my $MailAccountID = $ParamObject->GetParam( Param => 'state' );
+
+        my $Success = $MailAccount->HandleCode(
+            ID   => $MailAccountID,
+            Code => $Code
+        );
+
+        $Self->_Overview();
+        my $Output = $LayoutObject->Header();
+        $Output .= $LayoutObject->NavigationBar();
+        if ( $Success ) {
+            $Output .= $LayoutObject->Notify( Info => Translatable('Got token for provided code!') );
+        }
+        else {
+            $Output .= $LayoutObject->Notify( Priority => 'Error' );
+        }
         $Output .= $LayoutObject->Output(
             TemplateFile => 'AdminMailAccount',
             Data         => \%Param,
