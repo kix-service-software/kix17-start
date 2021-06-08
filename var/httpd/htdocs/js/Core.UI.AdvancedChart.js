@@ -732,7 +732,8 @@ Core.UI.AdvancedChart = (function (TargetNS) {
             ReplaceMap = {
             'text': ['font-family', 'font-size'],
             'line': ['fill', 'stroke', 'opacity', 'shape-rendering', 'stroke-opacity'],
-            'path': ['fill', 'stroke', 'opacity', 'shape-rendering', 'stroke-opacity']
+            'path': ['fill', 'stroke', 'opacity', 'shape-rendering', 'stroke-opacity'],
+            'rect': ['fill', 'fill-opacity']
         };
 
         $.each(ReplaceMap, function(Selector, Attributes){
