@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<database Name="kix">
+    <TableCreate Name="mail_account_preferences">
+        <Column Name="mail_account_id"   Required="true"  Type="INTEGER"/>
+        <Column Name="preferences_key"   Required="true"  Type="VARCHAR" Size="150"/>
+        <Column Name="preferences_value" Required="false" Type="LONGBLOB"/>
+        <Index Name="mail_account_preferences_mail_account_id">
+            <IndexColumn Name="mail_account_id"/>
+        </Index>
+        <ForeignKey ForeignTable="mail_account">
+            <Reference Local="mail_account_id" Foreign="id"/>
+        </ForeignKey>
+    </TableCreate>
+</database>

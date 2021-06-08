@@ -4648,6 +4648,9 @@ sub Data {
     $Lang->{'Defines the standard filter for the validity, which initially restricts the AdminGroup table.'}
         = 'Legt den Standardfilter für die Gültigkeit fest, der die Tabelle von AdminGroup initial einschränkt.';
 
+    # MailAccount Office365
+    $Lang->{'Got token for provided code!'} = 'Token für bereitgestellten Code erhalten!';
+
     return 0;
 }
 

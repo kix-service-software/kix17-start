@@ -1584,6 +1584,19 @@
     </ForeignKey>
 </Table>
 
+<!-- mail_account_preferences -->
+<Table Name="mail_account_preferences">
+    <Column Name="mail_account_id"   Required="true"  Type="INTEGER"/>
+    <Column Name="preferences_key"   Required="true"  Type="VARCHAR" Size="150"/>
+    <Column Name="preferences_value" Required="false" Type="LONGBLOB"/>
+    <Index Name="mail_account_preferences_mail_account_id">
+        <IndexColumn Name="mail_account_id"/>
+    </Index>
+    <ForeignKey ForeignTable="mail_account">
+        <Reference Local="mail_account_id" Foreign="id"/>
+    </ForeignKey>
+</Table>
+
 <!-- postmaster_filter -->
 <Table Name="postmaster_filter">
     <Column Name="f_name" Required="true" Size="200" Type="VARCHAR"/>

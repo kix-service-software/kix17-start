@@ -13,6 +13,9 @@ package Kernel::System::MailAccount;
 use strict;
 use warnings;
 
+use HTTP::Request;
+use LWP::UserAgent;
+
 our @ObjectDependencies = (
     'Kernel::Config',
     'Kernel::System::DB',
@@ -220,6 +223,12 @@ sub MailAccountGet {
         $Data{IMAPFolder} = '';
     }
 
+    # get preferences
+    my %Preferences = $Self->GetPreferences( MailAccountID => $Data{ID} );
+
+    # merge hash
+    %Data = ( %Data, %Preferences );
+
     return %Data;
 }
 
@@ -316,6 +325,12 @@ sub MailAccountDelete {
         );
         return;
     }
+
+    # sql
+    return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
+        SQL  => 'DELETE FROM mail_account_preferences WHERE mail_account_id = ?',
+        Bind => [ \$Param{ID} ],
+    );
 
     # sql
     return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
@@ -447,6 +462,7 @@ sub MailAccountFetch {
 Check inbound mail configuration
 
     my %Check = $MailAccount->MailAccountCheck(
+        ID            => '1',
         Login         => 'mail',
         Password      => 'SomePassword',
         Host          => 'pop3.example.com',
@@ -461,7 +477,7 @@ sub MailAccountCheck {
     my ( $Self, %Param ) = @_;
 
     # check needed stuff
-    for (qw(Login Password Host Type Timeout Debug)) {
+    for (qw(ID Login Password Host Type Timeout Debug)) {
         if ( !defined $Param{$_} ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
@@ -492,6 +508,158 @@ sub MailAccountCheck {
             Message    => $Check{Message}
         );
     }
+}
+
+sub HandleCode {
+    my ( $Self, %Param ) = @_;
+
+    # check needed stuff
+    for (qw(ID Code)) {
+        if ( !$Param{$_} ) {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'error',
+                Message  => "Need $_!"
+            );
+            return;
+        }
+    }
+
+    # get data of mail account
+    my %Data = $Self->MailAccountGet(
+        ID => $Param{ID},
+    );
+    if ( !%Data ) {
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
+            Priority => 'error',
+            Message  => "Invalid mail account"
+        );
+        return;
+    }
+
+    # get needed objects
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+    my $JSONObject   = $Kernel::OM->Get('Kernel::System::JSON');
+
+    # Create a request
+    my $RedirectURI = $ConfigObject->Get('HttpType')
+                    . '://'
+                    . $ConfigObject->Get('FQDN')
+                    . '/'
+                    . $ConfigObject->Get('ScriptAlias')
+                    . 'index.pl?Action=AdminMailAccount&Subaction=HandleCode';
+    my $Content   = 'grant_type=authorization_code'
+                  . '&scope=' . URI::Escape::uri_escape_utf8('https://outlook.office365.com/IMAP.AccessAsUser.All offline_access')
+                  . '&client_id=' . URI::Escape::uri_escape_utf8($Data{ClientID})
+                  . '&client_secret=' . URI::Escape::uri_escape_utf8($Data{ClientSecret})
+                  . '&code=' . URI::Escape::uri_escape_utf8($Param{Code})
+                  . '&redirect_uri=' . URI::Escape::uri_escape_utf8($RedirectURI);
+    my $LWPClient = LWP::UserAgent->new();
+    my $Request   = HTTP::Request->new(POST => 'https://login.microsoftonline.com/' . $Data{TenantID} . '/oauth2/v2.0/token');
+    $Request->content_type('application/x-www-form-urlencoded');
+    $Request->content($Content);
+
+    # Pass request to the user agent and get a response back
+    my $Response = $LWPClient->request($Request);
+
+    # get content
+    my $ResponseContent = $Response->content;
+    if ( !$ResponseContent ) {
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
+            Priority => 'error',
+            Message  => "Invalid response while fetching token!"
+        );
+        return;
+    }
+
+    # to convert the data into a hash, use the JSON module
+    my $ResponseData = $JSONObject->Decode(
+        Data => $ResponseContent,
+    );
+
+    # check refresh token
+    if ( !$ResponseData->{refresh_token} ) {
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
+            Priority => 'error',
+            Message  => $ResponseData->{error_description} || "Invalid response while fetching token!"
+        );
+        return;
+    }
+
+    # save token
+    $Self->SetPreferences(
+        MailAccountID => $Param{ID},
+        Key           => 'RefreshToken',
+        Value         => $ResponseData->{refresh_token},
+    );
+
+    return 1;
+}
+
+sub SetPreferences {
+    my ( $Self, %Param ) = @_;
+
+    # check needed stuff
+    for (qw(MailAccountID Key)) {
+        if ( !$Param{$_} ) {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'error',
+                Message  => "Need $_!"
+            );
+            return;
+        }
+    }
+
+    my $Value = $Param{Value} // '';
+
+    my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
+
+    # delete old data
+    return if !$DBObject->Do(
+        SQL  => 'DELETE FROM mail_account_preferences WHERE mail_account_id = ? AND preferences_key = ?',
+        Bind => [ \$Param{MailAccountID}, \$Param{Key} ],
+    );
+
+    # insert new data
+    return if !$DBObject->Do(
+        SQL  => 'INSERT INTO mail_account_preferences (mail_account_id, preferences_key, preferences_value)'
+              . ' VALUES (?, ?, ?)',
+        Bind => [ \$Param{MailAccountID}, \$Param{Key}, \$Value ],
+    );
+
+    return 1;
+}
+
+sub GetPreferences {
+    my ( $Self, %Param ) = @_;
+
+    # check needed stuff
+    for (qw(MailAccountID)) {
+        if ( !$Param{$_} ) {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'error',
+                Message  => "Need $_!"
+            );
+            return;
+        }
+    }
+
+    my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
+
+    # get preferences
+    return if !$DBObject->Prepare(
+        SQL  => 'SELECT preferences_key, preferences_value'
+              . ' FROM mail_account_preferences'
+              . ' WHERE mail_account_id = ?',
+        Bind => [ \$Param{MailAccountID} ],
+    );
+
+    # fetch the result
+    my %Data;
+    while ( my @Row = $DBObject->FetchrowArray() ) {
+        $Data{ $Row[0] } = $Row[1];
+    }
+
+    return %Data;
 }
 
 1;
