@@ -658,6 +658,9 @@ sub _Edit {
             }
             my $Module = $Preference{Module} || 'Kernel::Output::HTML::Preferences::Generic';
 
+            # skip all ColumnFiltes, they are have no form inputs
+            next PRIO if $Module eq 'Kernel::Output::HTML::Preferences::ColumnFilters';
+
             # load module
             if ( $Kernel::OM->Get('Kernel::System::Main')->Require($Module) ) {
 
