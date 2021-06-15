@@ -14,9 +14,9 @@ use warnings;
 
 use File::Basename;
 use FindBin qw($RealBin);
-use lib "$RealBin/../..";
-use lib "$RealBin/../../Kernel/cpan-lib";
-use lib "$RealBin/../../Custom";
+use lib dirname($RealBin);
+use lib dirname($RealBin) . "/Kernel/cpan-lib";
+use lib dirname($RealBin) . "/Custom";
 
 use Net::LDAP;
 use Kernel::System::ObjectManager;
@@ -32,16 +32,12 @@ my $UidLDAP = 'uid';
 my $UidDB   = 'login';
 
 my %Map = (
-
-    # db => ldap
     email       => 'mail',
     customer_id => 'mail',
     first_name  => 'sn',
     last_name   => 'givenname',
     pw          => 'test',
-
-    #    comments => 'description',
-    comments => 'postaladdress',
+    comments    => 'postaladdress',
 );
 
 my $LDAPHost    = 'bay.csuhayward.edu';
@@ -51,12 +47,9 @@ my $LDAPBindDN  = '';
 my $LDAPBindPW  = '';
 my $LDAPScope   = 'sub';
 my $LDAPCharset = 'utf-8';
-
-#my $LDAPFilter = '';
-my $LDAPFilter = '(ObjectClass=*)';
-
-my $DBCharset = 'utf-8';
-my $DBTable   = 'customer_user';
+my $LDAPFilter  = '(ObjectClass=*)';
+my $DBCharset   = 'utf-8';
+my $DBTable     = 'customer_user';
 
 # ldap connect and bind (maybe with SearchUserDN and SearchUserPw)
 my $LDAP = Net::LDAP->new( $LDAPHost, %LDAPParams ) || die "$@";
@@ -65,8 +58,7 @@ if (
         dn       => $LDAPBindDN,
         password => $LDAPBindPW
     )
-    )
-{
+) {
     $Kernel::OM->Get('Kernel::System::Log')->Log(
         Priority => 'error',
         Message  => "Bind failed!",
@@ -101,9 +93,11 @@ for my $Prefix ( "0" .. "9", "a" .. "z" ) {
                 Bind  => [ \$UID ],
                 Limit => 1,
             );
+
             while ( my @Row = $DBObject->FetchrowArray() ) {
                 $Insert = 0;
             }
+
             my $SQLPre  = '';
             my $SQLPost = '';
             my $Type    = '';
@@ -113,6 +107,7 @@ for my $Prefix ( "0" .. "9", "a" .. "z" ) {
             else {
                 $Type = 'UPDATE';
             }
+
             for my $Key ( sort keys %Map ) {
                 my $Value = $DBObject->Quote(
                     _ConvertTo( $Entry->get_value( $Map{$Key} ) )
@@ -134,7 +129,9 @@ for my $Prefix ( "0" .. "9", "a" .. "z" ) {
                     $SQLPost .= "'$Value'";
                 }
             }
+
             my $SQL = '';
+
             if ( $Type eq 'UPDATE' ) {
                 print "UPDATE: $UID\n";
                 $SQL =
@@ -148,6 +145,7 @@ for my $Prefix ( "0" .. "9", "a" .. "z" ) {
                     "INSERT INTO $DBTable ($SQLPre, $UidDB, valid_id, create_time, create_by, change_time, change_by)"
                     . " VALUES ($SQLPost, ?, 1, current_timestamp, 1, current_timestamp, 1)";
             }
+
             $DBObject->Do(
                 SQL  => $SQL,
                 Bind => [ \$UID ],
