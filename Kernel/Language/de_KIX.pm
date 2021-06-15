@@ -2671,13 +2671,15 @@ sub Data {
         =
         'Prüfe Namen auf Eindeutigkeit innerhalb der selben ConfigItem-Klasse oder global, d.h. es werden alle ConfigItems jeglicher ConfigItem-Klasse bei der Prüfung auf einen eindeutigen Namen berücksichtigt.';
     $Lang->{'Config Items'} = 'Config Items';
-    $Self->{Translation}
-        ->{'Config item event module that enables logging to history in the agent interface.'}
-        =
-        '';
-    $Lang->{'Configuration Item Limit'} = 'Configuration Item Limit';
-    $Lang->{'Configuration Item limit per page'}
-        = 'Configuration Item Limit pro Seite';
+    $Lang->{'Config item event module that enables logging to history in the agent interface.'} = '';
+    $Lang->{'ITSM ConfigItem Overview "Small" Limit'}
+        = 'ITSM-ConfigItem Anzeige-Limit für die Small-Ansicht';
+    $Lang->{'ITSM ConfigItem Overview "Custom" Limit'}
+        = 'ITSM-ConfigItem Anzeige-Limit für die Custom-Ansicht';
+    $Lang->{'ConfigItem limit per page ITSM ConfigItem Overview "Small"'}
+        = 'ConfigItem limit pro Seite für die Small-Ansicht.';
+    $Lang->{'ConfigItem limit per page ITSM ConfigItem Overview "Custom"'}
+        = 'ConfigItem limit pro Seite für die Custom-Ansicht.';
     $Lang->{'Configuration item search backend router of the agent interface.'} =
         '';
     $Lang->{

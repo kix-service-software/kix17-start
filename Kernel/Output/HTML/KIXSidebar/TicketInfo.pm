@@ -321,7 +321,6 @@ sub Run {
                 },
             );
         }
-
     }
 
     # get ticket escalation preferences
@@ -335,66 +334,53 @@ sub Run {
     );
 
     # show first response time if needed
-    if ( $TicketEscalation->{'FirstResponse'} ) {
-        if ($TicketEscalationDisabled) {
-            $Ticket{FirstResponseTimeHuman}           = $LayoutObject->{LanguageObject}->Translate('suspended');
-            $Ticket{FirstResponseTimeWorkingTime}     = $LayoutObject->{LanguageObject}->Translate('suspended');
-            $Ticket{FirstResponseTimeDestinationDate} = '';
+    if (
+        $TicketEscalation->{'FirstResponse'}
+        && $Ticket{FirstResponseTime}
+    ) {
+        $Ticket{FirstResponseTimeHuman} = $LayoutObject->CustomerAgeInHours(
+            Age   => $Ticket{FirstResponseTime},
+            Space => ' ',
+        );
 
-            $LayoutObject->Block(
-                Name => 'FirstResponseTime',
-                Data => { %Ticket, %AclAction },
-            );
+        $Ticket{FirstResponseTimeWorkingTime} = $LayoutObject->CustomerAgeInHours(
+            Age   => $Ticket{FirstResponseTimeWorkingTime},
+            Space => ' ',
+        );
+
+        if ( 60 * 60 * 1 > $Ticket{FirstResponseTime} ) {
+            $Ticket{FirstResponseTimeClass} = 'Warning';
         }
-        elsif( $Ticket{FirstResponseTime} ) {
-            $Ticket{FirstResponseTimeHuman} = $LayoutObject->CustomerAgeInHours(
-                Age   => $Ticket{FirstResponseTime},
-                Space => ' ',
-            );
-            $Ticket{FirstResponseTimeWorkingTime} = $LayoutObject->CustomerAgeInHours(
-                Age   => $Ticket{FirstResponseTimeWorkingTime},
-                Space => ' ',
-            );
-            if ( 60 * 60 * 1 > $Ticket{FirstResponseTime} ) {
-                $Ticket{FirstResponseTimeClass} = 'Warning';
-            }
-            $LayoutObject->Block(
-                Name => 'FirstResponseTime',
-                Data => { %Ticket, %AclAction },
-            );
-        }
+
+        $LayoutObject->Block(
+            Name => 'FirstResponseTime',
+            Data => { %Ticket, %AclAction },
+        );
     }
 
     # show update time if needed
-    if ( $TicketEscalation->{'Update'} ) {
-        if ($TicketEscalationDisabled) {
-            $Ticket{UpdateTimeHuman}           = $LayoutObject->{LanguageObject}->Translate('suspended');
-            $Ticket{UpdateTimeWorkingTime}     = $LayoutObject->{LanguageObject}->Translate('suspended');
-            $Ticket{UpdateTimeDestinationDate} = '';
+    if (
+        $TicketEscalation->{'Update'}
+        && $Ticket{UpdateTime}
+    ) {
+        $Ticket{UpdateTimeHuman} = $LayoutObject->CustomerAgeInHours(
+            Age   => $Ticket{UpdateTime},
+            Space => ' ',
+        );
 
-            $LayoutObject->Block(
-                Name => 'UpdateTime',
-                Data => { %Ticket, %AclAction },
-            );
+        $Ticket{UpdateTimeWorkingTime} = $LayoutObject->CustomerAgeInHours(
+            Age   => $Ticket{UpdateTimeWorkingTime},
+            Space => ' ',
+        );
+
+        if ( 60 * 60 * 1 > $Ticket{UpdateTime} ) {
+            $Ticket{UpdateTimeClass} = 'Warning';
         }
-        elsif( $Ticket{UpdateTime} ) {
-            $Ticket{UpdateTimeHuman} = $LayoutObject->CustomerAgeInHours(
-                Age   => $Ticket{UpdateTime},
-                Space => ' ',
-            );
-            $Ticket{UpdateTimeWorkingTime} =
-                $LayoutObject->CustomerAgeInHours(
-                Age   => $Ticket{UpdateTimeWorkingTime},
-                Space => ' ',
-                );
-            if ( 60 * 60 * 1 > $Ticket{UpdateTime} ) {
-                $Ticket{UpdateTimeClass} = 'Warning';
-            }
-            $LayoutObject->Block(
-                Name => 'UpdateTime',
-                Data => { %Ticket, %AclAction },
-            );
-        }
+
+        $LayoutObject->Block(
+            Name => 'UpdateTime',
+            Data => { %Ticket, %AclAction },
+        );
     }
 
     # show solution time if needed

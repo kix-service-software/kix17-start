@@ -461,7 +461,7 @@ $('#FileUpload').on('change', function (Event) {
     // hide iframe
     UploadFileFrame.css("display", "none");
     // load iframe content
-    UploadFileFrame.on("load", (function(data) {
+    UploadFileFrame.on("load", function(data) {
 
         // set timeout
         setTimeout(function() {
