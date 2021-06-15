@@ -1385,8 +1385,8 @@
             <Hash>
                 <Item Key="Module">Kernel::Output::HTML::Preferences::Generic</Item>
                 <Item Key="Column">Other Settings</Item>
-                <Item Key="Label" Translatable="1">Configuration Item Limit</Item>
-                <Item Key="Key" Translatable="1">Configuration Item limit per page</Item>
+                <Item Key="Label" Translatable="1">ITSM ConfigItem Overview "Small" Limit</Item>
+                <Item Key="Key" Translatable="1">ConfigItem limit per page ITSM ConfigItem Overview "Small"</Item>
                 <Item Key="Data">
                     <Hash>
                         <Item Key="10">10</Item>
@@ -1867,8 +1867,8 @@
             <Hash>
                 <Item Key="Module">Kernel::Output::HTML::Preferences::Generic</Item>
                 <Item Key="Column">Other Settings</Item>
-                <Item Key="Label" Translatable="1">Configuration Item Limit</Item>
-                <Item Key="Key" Translatable="1">Configuration Item limit per page</Item>
+                <Item Key="Label" Translatable="1">ITSM ConfigItem Overview "Custom" Limit</Item>
+                <Item Key="Key" Translatable="1">ConfigItem limit per page ITSM ConfigItem Overview "Custom"</Item>
                 <Item Key="Data">
                     <Hash>
                         <Item Key="10">10</Item>
