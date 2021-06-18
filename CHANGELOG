@@ -1,6 +1,10 @@
 # Change log of KIX
 * Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.16.0-RC5 (2021/06/18)
+ * (2021/06/15) - Bugfix: KIX17-2286 (fixed incorrect handling of default language of the ckeditor) (fjacquemin)
+ * (2021/06/15) - Bugfix: KIX17-2278 (fixed missing handling of sending notification once per day for out of office substitute) (fjacquemin)
+
 # 17.16.0-RC4 (2021/06/15)
  * (2021/06/14) - Bugfix: KIX17-2241 (fixed incorrect library path of the script syncLDAP2DB.pl) (fjacquemin)
  * (2021/06/14) - Bugfix: KIX17-1211 (removed "suspended" display for the update time and first response if Ticket::EscalationDisabled::RelevantStates is configured) (fjacquemin)
