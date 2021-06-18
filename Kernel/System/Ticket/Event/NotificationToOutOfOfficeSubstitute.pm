@@ -11,6 +11,7 @@ package Kernel::System::Ticket::Event::NotificationToOutOfOfficeSubstitute;
 use strict;
 use warnings;
 
+use List::Util qw(first);
 use Kernel::System::VariableCheck qw(:all);
 
 our @ObjectDependencies = (
@@ -97,13 +98,13 @@ sub Run {
     return if !%User || !$User{OutOfOffice} || !$User{OutOfOfficeSubstitute};
 
     # check if user is out of office right now
-    my $CurrTime = $Self->{TimeObject}->SystemTime();
-    my $StartTime
-        = "$User{OutOfOfficeStartYear}-$User{OutOfOfficeStartMonth}-$User{OutOfOfficeStartDay} 00:00:00";
+    my $CurrTime  = $Self->{TimeObject}->SystemTime();
+    my $StartTime = "$User{OutOfOfficeStartYear}-$User{OutOfOfficeStartMonth}-$User{OutOfOfficeStartDay} 00:00:00";
+    my $EndTime   = "$User{OutOfOfficeEndYear}-$User{OutOfOfficeEndMonth}-$User{OutOfOfficeEndDay} 23:59:59";
+
     $StartTime = $Self->{TimeObject}->TimeStamp2SystemTime( String => $StartTime );
-    my $EndTime
-        = "$User{OutOfOfficeEndYear}-$User{OutOfOfficeEndMonth}-$User{OutOfOfficeEndDay} 23:59:59";
-    $EndTime = $Self->{TimeObject}->TimeStamp2SystemTime( String => $EndTime );
+    $EndTime   = $Self->{TimeObject}->TimeStamp2SystemTime( String => $EndTime );
+
     return if ( $StartTime > $CurrTime || $EndTime < $CurrTime );
 
     # get substitute data
@@ -112,6 +113,49 @@ sub Run {
         Valid  => 1,
     );
     return if !%SubstituteUser || !$SubstituteUser{UserEmail};
+
+    # check if the notification needs to be sent just one time per day
+    if ( $Notification{Data}->{OncePerDay} ) {
+
+        # get ticket history
+        my @HistoryLines = $Self->{TicketObject}->HistoryGet(
+            TicketID => $Param{Data}->{TicketID},
+            UserID   => $Param{UserID},
+        );
+
+        # get last notification sent ticket history entry for substitute user
+        my $LastNotificationHistory = first {
+            $_->{HistoryType} eq 'SendAgentNotification'
+                && $_->{Name} eq "\%\%$Notification{Name}\%\%$SubstituteUser{UserLogin} as Substitute\%\%Email",
+        }
+        reverse @HistoryLines;
+
+        if (
+            $LastNotificationHistory
+            && $LastNotificationHistory->{CreateTime}
+        ) {
+            # get last notification date
+            my ( $s, $m, $h, $D, $M, $Y, $WD ) = $Self->{TimeObject}->SystemTime2Date(
+                SystemTime => $Self->{TimeObject}->TimeStamp2SystemTime(
+                    String => $LastNotificationHistory->{CreateTime},
+                )
+            );
+
+            # get current date
+            my ( $Cs, $Cm, $Ch, $CD, $CM, $CY, $CWD ) = $Self->{TimeObject}->SystemTime2Date(
+                SystemTime => $CurrTime,
+            );
+
+            # do not send the notification if it has been sent already today
+            if (
+                $CY == $Y
+                && $CM == $M
+                && $CD == $D
+            ) {
+                return;
+            }
+        }
+    }
 
     # prepare notification body
     if ( $User{OutOfOfficeSubstituteNote} ) {
