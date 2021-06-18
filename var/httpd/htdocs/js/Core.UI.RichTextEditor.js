@@ -127,7 +127,7 @@ Core.UI.RichTextEditor = (function (TargetNS) {
         Editor = CKEDITOR.replace(EditorID,
         {
             customConfig: '', // avoid loading external config files
-            defaultLanguage: UserLanguage,
+            defaultLanguage: 'en',
             language: UserLanguage,
             width: Core.Config.Get('RichText.Width', 620),
             resize_enabled: true,
