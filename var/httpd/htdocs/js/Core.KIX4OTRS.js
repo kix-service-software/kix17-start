@@ -52,12 +52,13 @@ Core.KIX4OTRS = (function(TargetNS) {
 
     TargetNS.SelectLinkedObjects = function(Action) {
 
-        var $Tabs = $("[id^=ui-tabs-],[class^=ui-tabs-]"),
+        var $Tabs = $(".ui-tabs-tab"),
             $CurrentTab;
 
         $.each($Tabs, function() {
             if ($(this).attr('aria-expanded') == 'true') {
-                $CurrentTab = $(this);
+                var TabID = $(this).attr('aria-controls');
+                $CurrentTab = $('#' + TabID);
                 return false;
             }
         });
@@ -71,10 +72,10 @@ Core.KIX4OTRS = (function(TargetNS) {
             }
 
             // ask the user
-            var Type = Core.Config.Get('Question');
-            var Question = '<p class="Spacing">' + Core.Config.Get('DeleteLinksQuestion') + '</p>';
-            var Yes = Core.Config.Get('Yes');
-            var No = Core.Config.Get('No');
+            var Type     = Core.Config.Get('Question'),
+                Question = '<p class="Spacing">' + Core.Config.Get('DeleteLinksQuestion') + '</p>',
+                Yes      = Core.Config.Get('Yes'),
+                No       = Core.Config.Get('No');
 
             Core.KIX4OTRS.Dialog.ShowQuestion(Type, Question, Yes, function() {
                 // Yes - delete links
