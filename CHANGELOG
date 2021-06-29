@@ -1,6 +1,13 @@
 # Change log of KIX
 * Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.16.0-RC6 (2021/06/29)
+ * (2021/06/28) - Bugfix: KIX17-2309 (fixed slow loading of the allocation lists with too many items) (fjacquemin)
+ * (2021/06/28) - Bugfix: KIX17-2272 (enable use of brackets in ticket title) (ddoerffel)
+ * (2021/06/28) - Bugfix: KIX17-2253 (fixed missing background when download an report as svg) (fjacquemin)
+ * (2021/06/23) - Bugfix: KIX17-2214 (fixed picture path of jstree theme) (fjacquemin)
+ * (2021/06/23) - Bugfix: KIX17-1852 (fixed jquery tab handling) (fjacquemin)
+
 # 17.16.0-RC5 (2021/06/18)
  * (2021/06/15) - Bugfix: KIX17-2286 (fixed incorrect handling of default language of the ckeditor) (fjacquemin)
  * (2021/06/15) - Bugfix: KIX17-2278 (fixed missing handling of sending notification once per day for out of office substitute) (fjacquemin)
