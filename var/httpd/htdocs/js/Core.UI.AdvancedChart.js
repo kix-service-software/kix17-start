@@ -727,13 +727,13 @@ Core.UI.AdvancedChart = (function (TargetNS) {
      *      so that for export / rendering they are present even if the CSS is not there
      *      any more.
      */
-    function GetSVGContent($SVGContainer) {
+    function GetSVGContent($SVGContainer, Mode) {
         var $Clone,
             ReplaceMap = {
             'text': ['font-family', 'font-size'],
             'line': ['fill', 'stroke', 'opacity', 'shape-rendering', 'stroke-opacity'],
             'path': ['fill', 'stroke', 'opacity', 'shape-rendering', 'stroke-opacity'],
-            'rect': ['fill', 'fill-opacity']
+            'rect': ['fill']
         };
 
         $.each(ReplaceMap, function(Selector, Attributes){
@@ -756,6 +756,14 @@ Core.UI.AdvancedChart = (function (TargetNS) {
         // Remove controls for export.
         $Clone = $SVGContainer.clone();
         $Clone.find('.nv-controlsWrap').remove();
+
+        if (
+            Mode !== ''
+            && Mode !== undefined
+            && Mode === 'export'
+        ) {
+            $Clone.find('svg').prepend('<rect width="100%" height="100%" fill="#FFF" />');
+        }
 
         return $Clone.html().trim();
     }
@@ -817,7 +825,7 @@ Core.UI.AdvancedChart = (function (TargetNS) {
     TargetNS.ConvertSVGtoBase64 = function($SVGContainer) {
         // window.btoa() does not work because it does not support Unicode DOM strings.
         var SVGPrefix = '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">',
-            UnicodeStringView = new StringView(SVGPrefix + GetSVGContent($SVGContainer));
+            UnicodeStringView = new StringView(SVGPrefix + GetSVGContent($SVGContainer, 'export'));
         return 'data:image/svg+xml;base64,' + UnicodeStringView.toBase64();
     };
 
