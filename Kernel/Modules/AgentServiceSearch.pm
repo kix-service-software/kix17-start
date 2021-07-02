@@ -12,8 +12,8 @@ use strict;
 use warnings;
 
 our @ObjectDependencies = (
+    'Kernel::Config',
     'Kernel::Output::HTML::Layout',
-    'Kernel::System::Encode',
     'Kernel::System::Service',
     'Kernel::System::Web::Request'
 );
@@ -25,8 +25,8 @@ sub new {
     my $Self = {%Param};
     bless( $Self, $Type );
 
+    $Self->{ConfigObject}  = $Kernel::OM->Get('Kernel::Config');
     $Self->{LayoutObject}  = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-    $Self->{EncodeObject}  = $Kernel::OM->Get('Kernel::System::Encode');
     $Self->{ServiceObject} = $Kernel::OM->Get('Kernel::System::Service');
     $Self->{ParamObject}   = $Kernel::OM->Get('Kernel::System::Web::Request');
 
@@ -41,26 +41,33 @@ sub Run {
     # get needed params
     my $Search = $Self->{ParamObject}->GetParam( Param => 'Term' ) || '';
 
-    # get queue list
-    # search for name....
-    my @ServiceIDs = $Self->{ServiceObject}->ServiceSearch(
-        Name   => '*' . $Search . '*',
+    $Search =~ s/\_/\./g;
+    $Search =~ s/\%/\.\*/g;
+    $Search =~ s/\*/\.\*/g;
+
+    # get service list
+    my %ServiceList = $Self->{ServiceObject}->ServiceList(
+        Valid  => 1,
         UserID => 1,
     );
 
     # build data
     my @Data;
-    for my $CurrKey (@ServiceIDs) {
-        my %ServiceData = $Self->{ServiceObject}->ServiceGet(
-            ServiceID => $CurrKey,
-            UserID    => 1,
-        );
-        next if ( !%ServiceData );
-        push @Data, {
-            ServiceKey   => $CurrKey,
-            ServiceValue => $ServiceData{Name},
-        };
+    for my $ServiceID ( keys( %ServiceList ) ) {
+        my $ServiceName = $ServiceList{$ServiceID};
+        if ( $Self->{ConfigObject}->Get('Ticket::ServiceTranslation') ) {
+            $ServiceName = $Self->{LayoutObject}->{LanguageObject}->Translate( $ServiceName );
+        }
+
+        if ( $ServiceName =~ /$Search/i ) {
+            push @Data, {
+                ServiceKey   => $ServiceID,
+                ServiceValue => $ServiceName,
+            };
+        }
     }
+
+    @Data = sort{ $a->{ServiceValue} cmp $b->{ServiceValue} } ( @Data );
 
     # build JSON output
     $JSON = $Self->{LayoutObject}->JSONEncode(
