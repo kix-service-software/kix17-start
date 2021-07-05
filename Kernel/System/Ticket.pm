@@ -17,6 +17,7 @@ use File::Path;
 use utf8;
 use Encode ();
 use vars qw(@ISA);
+use Try::Tiny;
 
 use Kernel::Language qw(Translatable);
 use Kernel::System::EventHandler;
@@ -1436,10 +1437,12 @@ sub _TicketCacheClear {
         Key  => 'ArticleIndex::' . $Param{TicketID} . '::ALL'
     );
 
-    # TicketSearch
-    $CacheObject->CleanUp(
-        Type => 'TicketSearch',
-    );
+    # TicketSearch - enclosed in 'try' to catch error messages from bulk action
+    try {
+        $CacheObject->CleanUp(
+            Type => 'TicketSearch',
+        );
+    };
 
     return 1;
 }
