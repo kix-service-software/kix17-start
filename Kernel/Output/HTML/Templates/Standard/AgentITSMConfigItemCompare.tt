@@ -225,7 +225,7 @@
                                 "display":"block",
                                 })
                             .html('[% Translate("Do not compare two similar versions!") | JSON %]');
-                            $('#submitButton').prop('disabled','true');
+                            $('#submitButton').prop('disabled',true);
                             }
                         else {
                             $('#ITSMConfigItemCompareProblem').css({"display":"none"});
