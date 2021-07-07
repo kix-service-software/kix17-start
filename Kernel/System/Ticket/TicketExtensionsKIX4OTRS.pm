@@ -182,6 +182,34 @@ sub CountAttachments {
         $Result = $Result + ( scalar(@AtmKeys) || 0 );
     }
 
+    my $Config = $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Frontend::AgentTicketZoomTabAttachments');
+    if (
+        ref( $Config ) eq 'HASH'
+        && ref( $Config->{DynamicField} ) eq 'HASH'
+    ) {
+        # get the dynamic fields for this screen
+        my $DynamicField = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
+            Valid       => 1,
+            ObjectType  => 'Ticket',
+            FieldFilter => $Config->{DynamicField},
+        );
+
+        my %Ticket = $Self->TicketGet(
+            TicketID      => $Param{TicketID},
+            DynamicFields => 1
+        );
+
+        # cycle trough the activated Dynamic Fields for this screen
+        DYNAMICFIELD:
+        for my $DynamicFieldConfig ( @{$DynamicField} ) {
+            next DYNAMICFIELD if ( ref($DynamicFieldConfig) ne 'HASH' );
+            next DYNAMICFIELD if ( $DynamicFieldConfig->{FieldType} ne 'Attachment' );
+            next DYNAMICFIELD if ( ref($Ticket{'DynamicField_' . $DynamicFieldConfig->{Name}}) ne 'ARRAY' );
+
+            $Result = $Result + ( scalar(@{ $Ticket{'DynamicField_' . $DynamicFieldConfig->{Name}} }) || 0 );
+        }
+    }
+
     return $Result;
 }
 
@@ -930,14 +958,14 @@ sub ArticleFlagDataGet {
     }
     else {
 
-	    # fetch the result
-	    return if !$Kernel::OM->Get('Kernel::System::DB')->Prepare(
-	        SQL => 'SELECT article_id, article_key, subject, keywords, note, create_by'
-	            . ' FROM kix_article_flag'
-	            . ' WHERE article_id = ? AND article_key = ? AND create_by = ?',
-	        Bind => [ \$Param{ArticleID}, \$Param{ArticleFlagKey}, \$Param{UserID} ],
-	        Limit => 1,
-	    );
+        # fetch the result
+        return if !$Kernel::OM->Get('Kernel::System::DB')->Prepare(
+            SQL => 'SELECT article_id, article_key, subject, keywords, note, create_by'
+                . ' FROM kix_article_flag'
+                . ' WHERE article_id = ? AND article_key = ? AND create_by = ?',
+            Bind => [ \$Param{ArticleID}, \$Param{ArticleFlagKey}, \$Param{UserID} ],
+            Limit => 1,
+        );
     }
 
     my %ArticleFlagData;
@@ -1972,7 +2000,7 @@ sub TicketEscalationCheck {
         FirstResponse => 0,
         Update        => 0,
         Solution      => 0,
-        
+
     );
     # do no escalations on (merge|close|remove) tickets
     if ( $Ticket{StateType} =~ /^(?:merge|close|remove)/i ) {

@@ -1085,7 +1085,7 @@ sub Data {
     $Lang->{'Defines if flag is shared with other agents.'} = 'Legt fest, ob ein Flag mit anderen Agenten geteilt wird.';
     $Lang->{'Defines if flag has no edit function.'} = 'Legt fest, ob das Flag keine Bearbeiten-Funktion hat.';
     $Lang->{'DynamicFields that can be filtered in the article table of the agent interface. Possible settings: 0 = Disabled, 1 = Available.'}
-    	= 'Dynamische Felder, welche in der Artikeltabelle der Agentenoberfläche gefiltert werden können. Mögliche Einstellungen: 0 = deaktiviert, 1 = aktiviert';
+        = 'Dynamische Felder, welche in der Artikeltabelle der Agentenoberfläche gefiltert werden können. Mögliche Einstellungen: 0 = deaktiviert, 1 = aktiviert';
     $Lang->{'Defines icons from awesome fonts lib for article flag icons.'} = 'Legt Incos aus der Font Awesome Bibliothek für Artikel-Flag-Icons fest.';
     $Lang->{'Defines additional css styles for article flag icons. This value could be empty.'} = 'Legt zusätzliches CSS für Artikel-Flag-Icons fest. Dieser Wert kann leer sein.';
     $Lang->{'Defines whether article flags should be removed on ticket close. This value could be empty. Use "UserPref" if user could choose this preference by itself and 0 or 1 if not.'} = 'Legt fest, ob Artikel-Falgs beim Schließen eines Tickets entfernt werden sollen. Nutzen Sie "UserPref", wenn der Agent das selbst entscheiden kann oder 0 oder 1, wenn nicht.';
@@ -4652,6 +4652,10 @@ sub Data {
 
     # MailAccount Office365
     $Lang->{'Got token for provided code!'} = 'Token für bereitgestellten Code erhalten!';
+
+    # Ticket Tab Attachments
+    $Lang->{'Dynamic fields shown in the AgentTicketZoomTab "Attachments". Possible settings: 0 = Disabled, 1 = Enabled.'}
+        = 'Dynamische Felder, welche im Tab "Anlagen" der Agentenoberfläche angezeigt werden. Mögliche Einstellungen: 0 = deaktiviert, 1 = aktiviert.';
 
     return 0;
 }
