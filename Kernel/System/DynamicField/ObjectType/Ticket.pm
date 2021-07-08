@@ -128,12 +128,18 @@ sub PostValueSet {
     my $ValueStrg = $DynamicFieldBackendObject->ReadableValueRender(
         DynamicFieldConfig => $Param{DynamicFieldConfig},
         Value              => $HistoryValue,
+
+        # currently specially for dynamic field table
+        Result             => 'Content'
     );
     $HistoryValue = $ValueStrg->{Value};
 
     my $OldValueStrg = $DynamicFieldBackendObject->ReadableValueRender(
         DynamicFieldConfig => $Param{DynamicFieldConfig},
         Value              => $HistoryOldValue,
+
+        # currently pecially for dynamic field table
+        Result             => 'Content'
     );
     $HistoryOldValue = $OldValueStrg->{Value};
 
