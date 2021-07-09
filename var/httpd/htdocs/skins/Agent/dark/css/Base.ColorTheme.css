@@ -276,6 +276,18 @@
     .ContentColumn > .ControlRow {
         border-bottom: 1px solid #2B2A29;
     }
+    .WidgetAction > ul.WidgetTooltip {
+        background-color: #5B5B5B;
+        border-color: #373737;
+    }
+    .WidgetAction > ul.WidgetTooltip > li > a {
+        border-color: #373737;
+    }
+    .WidgetAction > ul.WidgetTooltip > li > a:hover {
+        background-color: #0A7CB3;
+        border-color: #0A7CB3;
+        color: #FFFFFF;
+    }
 
 
     /*

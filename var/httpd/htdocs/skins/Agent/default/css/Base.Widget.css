@@ -83,6 +83,31 @@
     .WidgetAction:hover i {
         cursor: pointer;
     }
+    .WidgetAction > ul.WidgetTooltip {
+        width: 240px;
+        position: absolute;
+        right: -4px;
+        top: 19px;
+        border-style: solid;
+        border-width: 1px;
+    }
+    .WidgetAction > ul.WidgetTooltip > li {
+        text-align: left;
+        position: relative;
+    }
+    .WidgetAction > ul.WidgetTooltip > li > a {
+        font-size: 1.12em;
+        display: block;
+        line-height: 1.5em;
+        padding: 8px 5px 4px 30px;
+        border-width: 0 0 1px 0;
+        border-style: solid;
+    }
+    .WidgetAction > ul.WidgetTooltip > li > a > i {
+        position: absolute;
+        left: 6px;
+        top: 7px;
+    }
     .Collapsed > .Header > .WidgetAction.Toggle i.fa-caret-down,
     .Expanded > .Header > .WidgetAction.Toggle i.fa-caret-right {
         display: none;

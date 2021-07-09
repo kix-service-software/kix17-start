@@ -39,29 +39,29 @@
                 <form name="form" action="[% Env("CGIHandle") %]" method="get">
                     <input type="hidden" name="Action" value="[% Env("Action") %]"/>
                     <input type="hidden" id="SelectedCategoryID" name="SelectedCategoryID" value="[% Data.SelectedCategoryID %]"/>
-                    <fieldset class="TableLike FixedLabelSmall">
-                        <label for="SearchName">[% Translate("Name") | html %]:</label>
-                        <p class="Value">
-                            <input type="text" id="SearchName" name="Name" size="18" value="[% Data.Name %]"/>
-                        </p>
-                        <div class="Clear"></div>
-                        <label for="Language">[% Translate("Language") | html %]:</label>
-                        <p class="Value">
+                    <ul class="ActionList">
+                        <li>
+                            <h4>[% Translate("Name") | html %]</h4>
+                            <input type="text" id="SearchName" name="Name" class="FilterBox" value="[% Data.Name %]"/>
+                        </li>
+                        <li>
+                            <h4>[% Translate("Language") | html %]</h4>
                             [% Data.LanguageOption %]
-                        </p>
-                        <div class="Clear"></div>
-                        <label for="ValidID">[% Translate("Valid") | html %]:</label>
-                        <p class="Value">
+                        </li>
+                        <li>
+                            <h4>[% Translate("Valid") | html %]</h4>
                             [% Data.ValidOption %]
-                        </p>
-                        <div class="Clear"></div>
-                        <label for="SearchLimit">[% Translate("Limit Results") | html %]:</label>
-                        <p class="Value">
-                            <input type="text" id="SearchLimit" name="Limit" size="18" value="[% Data.Limit %]"/>
-                        </p>
-                        <div class="Clear"></div>
-                        <button type="submit" id="ShowButton" name="Show" value="[% Translate("View") | html %]" class="CallForAction Fullsize Center"><span><i class="fa fa-search"></i> [% Translate("View") | html %]</span></button>
-                    </fieldset>
+                        </li>
+                        <li>
+                            <h4>[% Translate("Limit Results") | html %]</h4>
+                            <input type="text" id="SearchLimit" name="Limit" class="FilterBox" value="[% Data.Limit %]"/>
+                        </li>
+                        <li>
+                            <button type="submit" name="Show" value="[% Translate("View") | html %]" class="CallForAction Fullsize">
+                                <span><i class="fa fa-search"></i> [% Translate("View") | html %]</span>
+                            </button>
+                        </li>
+                    </ul>
                 </form>
             </div>
         </div>

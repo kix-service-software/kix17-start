@@ -809,8 +809,11 @@
     /**
     *   @subsection search
     */
-    .SearchTerms span {
-        border-color: #BBBBBB;
+    .SearchTerms {
+        background-color: #EEEEEE;
+    }
+    .SearchTerms > span {
+        border-color: #5B5B5B;
     }
 
 
