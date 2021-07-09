@@ -68,7 +68,8 @@ sub Run {
             ID  Name CustomerLogin CcCustomerLogin BccCustomerLogin ElementChanged
             PriorityID OwnerID QueueID From Subject Body StateID TimeUnits Cc Bcc FormID
             PendingOffset LinkType LinkDirection ArticleType ArticleSenderType
-            ResponsibleID ResponsibleAll OwnerAll TypeID ServiceID ServiceAll SLAID KIXSidebarChecklistTextField CustomerPortalGroupID
+            ResponsibleID ResponsibleAll OwnerAll TypeID ServiceID ServiceAll
+            SLAID KIXSidebarChecklistTextField CustomerPortalGroupID Description
         )
     ) {
         $GetParam{$Key} = $ParamObject->GetParam( Param => $Key ) || '';
@@ -188,7 +189,7 @@ sub Run {
             next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
             my $PossibleValuesFilter;
-            
+
             my $IsACLReducible = $BackendObject->HasBehavior(
                 DynamicFieldConfig => $DynamicFieldConfig,
                 Behavior           => 'IsACLReducible',
@@ -393,7 +394,7 @@ sub Run {
                 next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
                 my $PossibleValuesFilter;
-            
+
                 my $IsACLReducible = $BackendObject->HasBehavior(
                     DynamicFieldConfig => $DynamicFieldConfig,
                     Behavior           => 'IsACLReducible',
@@ -412,7 +413,7 @@ sub Run {
                         # convert possible values key => value to key => key for ACLs using a Hash slice
                         my %AclData = %{$PossibleValues};
                         @AclData{ keys %AclData } = keys %AclData;
- 
+
                         # set possible values filter from ACLs
                         my $ACL = $TicketObject->TicketAcl(
                             %GetParam,

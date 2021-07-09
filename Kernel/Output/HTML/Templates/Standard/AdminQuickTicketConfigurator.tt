@@ -137,6 +137,7 @@
                             <th>[% Translate("Name") | html %]</th>
                             <th>[% Translate("Frontend") | html %]</th>
                             <th>[% Translate("Customer Portal Group") | html %]</th>
+                            <th>[% Translate("Description") | html %]</th>
                             <th>[% Translate("Delete") | html %]</th>
                         </tr>
                     </thead>
@@ -148,6 +149,7 @@
                             </td>
                             <td title="[% Translate("A: agent frontend; C: customer frontend") | html %]">[% Data.FrontendInfoStrg | html %]</td>
                             <td>[% Translate(Data.CustomerPortalGroup) | html %]</td>
+                            <td title="[% Data.Description | html %]" >[% Data.Description | html %]</td>
                             <td class="Center">
                                 <a class="TicketTemplateDelete" href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=Delete;ID=[% Data.ID | html %]" title="[% Translate("Delete this template") | html %]">
                                     <i class="fa fa-trash-o"></i>
@@ -213,6 +215,11 @@ $('.TicketTemplateDelete').on('click', function (Event) {
                             <div id="NameServerError" class="TooltipErrorMessage">
                                 <p>[% Translate("This field is required and its content can not be longer than %s characters.", "80") | html %]</p>
                             </div>
+                        </div>
+                        <div class="Clear"></div>
+                        <label for="Description">[% Translate("Description") | html %]:</label>
+                        <div class="Field">
+                           <textarea name="Description" class="W75pc" rows="7" cols="20">[% Data.Description | html %]</textarea>
                         </div>
                         <div class="Clear"></div>
                         <label for="Frontend">[% Translate("Available in") | html %]:</label>
