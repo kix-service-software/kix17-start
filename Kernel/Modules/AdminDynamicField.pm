@@ -41,6 +41,27 @@ sub Run {
         );
     }
 
+    elsif ( $Self->{Subaction} eq 'DynamicFieldImport' ) {
+        my $DynamicFieldImport = $Self->_DynamicFieldImport(
+            %Param,
+        );
+
+        if ( !$DynamicFieldImport->{Success} ) {
+            my $Message = $DynamicFieldImport->{Message}
+                || Translatable('DynamicFields could not be imported due to a unknown error, please check KIX logs for more information.');
+
+            return $Kernel::OM->Get('Kernel::Output::HTML::Layout')->ErrorScreen(
+                Message => $Message,
+            );
+        }
+    }
+
+    elsif ( $Self->{Subaction} eq 'DynamicFieldExport' ) {
+        return $Self->_DynamicFieldExport(
+            %Param,
+        );
+    }
+
     return $Self->_ShowOverview(
         %Param,
         Action => 'Overview',
@@ -413,6 +434,479 @@ sub _DynamicFieldOrderReset {
     return $LayoutObject->Redirect(
         OP => "Action=AdminDynamicField",
     );
+}
+
+sub _DynamicFieldImport {
+    my ( $Self, %Param ) = @_;
+
+    # get needed objects
+    my $ConfigObject         = $Kernel::OM->Get('Kernel::Config');
+    my $LayoutObject         = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $DynamicFieldObject   = $Kernel::OM->Get('Kernel::System::DynamicField');
+    my $GeneralCatalogObject = $Kernel::OM->Get('Kernel::System::GeneralCatalog');
+    my $SysConfigObject      = $Kernel::OM->Get('Kernel::System::SysConfig');
+    my $ValidObject          = $Kernel::OM->Get('Kernel::System::Valid');
+    my $ParamObject          = $Kernel::OM->Get('Kernel::System::Web::Request');
+    my $YAMLObject           = $Kernel::OM->Get('Kernel::System::YAML');
+
+    # challenge token check for write action
+    $LayoutObject->ChallengeTokenCheck();
+
+    # get upload data
+    my $FormID = $ParamObject->GetParam( Param => 'FormID' ) || '';
+    my %UploadStuff = $ParamObject->GetUploadAll(
+        Param  => 'FileUpload',
+        Source => 'string',
+    );
+    return {
+        Success => 0,
+        Message => 'Content is missing, can not continue!',
+    } if ( !$UploadStuff{Content} );
+
+    # load data from yaml file
+    my $DynamicFieldData = $YAMLObject->Load(
+        Data => $UploadStuff{Content}
+    );
+    return {
+        Success => 0,
+        Message => 'Invalid data structure!',
+    } if ( ref( $DynamicFieldData ) ne 'ARRAY' );
+
+    # get list of valid values and reverse it
+    my %ValidList    = $ValidObject->ValidList();
+    my %ValidListRev = reverse( %ValidList );
+
+    # get all current dynamic fields
+    my $DynamicFieldList = $DynamicFieldObject->DynamicFieldListGet(
+        Valid => 0,
+    );
+
+    # create a dynamic fields lookup table
+    my %DynamicFieldLookup;
+    for my $DynamicField ( @{ $DynamicFieldList } ) {
+        next if ( !IsHashRefWithData($DynamicField) );
+        $DynamicFieldLookup{ $DynamicField->{Name} } = $DynamicField;
+    }
+
+    # init field order
+    my $FieldOrder = keys( %DynamicFieldLookup ) + 1;
+
+    # init postmaster headers
+    my %PostMasterHeaders = map { $_ => 1 } @{ $ConfigObject->Get('PostmasterX-Header') };
+
+    # process dynamic fields
+    for my $DynamicFieldConfig ( @{ $DynamicFieldData } ) {
+        # special handling for some configurations
+        if ( $DynamicFieldConfig->{Config}->{DeploymentStates}
+            || $DynamicFieldConfig->{Config}->{ITSMConfigItemClasses}
+        ) {
+            KEY:
+            for my $Key ( qw(DeploymentStates ITSMConfigItemClasses) ) {
+                next KEY if ( !$DynamicFieldConfig->{Config}->{ $Key } );
+                my @IDs;
+
+                ITEM:
+                for my $ItemName ( @{ $DynamicFieldConfig->{Config}->{ $Key } } ) {
+                    my $ItemDataRef = $GeneralCatalogObject->ItemGet(
+                        Class => 'ITSM::ConfigItem::' . ( $Key eq 'DeploymentStates' ? 'DeploymentState' : 'Class' ),
+                        Name  => $ItemName,
+                    );
+
+                    next ITEM if ( !$ItemDataRef );
+
+                    push( @IDs, $ItemDataRef->{Name} );
+                }
+
+                if ( scalar(@IDs) ) {
+                    $DynamicFieldConfig->{Config}->{ $Key } = \@IDs;
+                } else {
+                    delete( $DynamicFieldConfig->{Config}->{ $Key } );
+                }
+            }
+        }
+
+        # lookup valid id
+        if (
+            $DynamicFieldConfig->{ValidID}
+            && $ValidListRev{ $DynamicFieldConfig->{ValidID} }
+        ) {
+            $DynamicFieldConfig->{ValidID} = $ValidListRev{ $DynamicFieldConfig->{ValidID} };
+        }
+
+        # check if the dynamic field already exists
+        my $CreateDynamicField = 0;
+        if ( !IsHashRefWithData( $DynamicFieldLookup{ $DynamicFieldConfig->{Name} } ) ) {
+            $CreateDynamicField = 1;
+        }
+        # if the field exists check if the type match with the needed type
+        elsif (
+            $DynamicFieldLookup{ $DynamicFieldConfig->{Name} }->{FieldType} ne $DynamicFieldConfig->{FieldType}
+        ) {
+
+            # rename the field and create a new one
+            my $Success = $DynamicFieldObject->DynamicFieldUpdate(
+                %{ $DynamicFieldLookup{ $DynamicFieldConfig->{Name} } },
+                Name   => $DynamicFieldLookup{ $DynamicFieldConfig->{Name} }->{Name} . 'Old',
+                UserID => $Self->{UserID},
+            );
+            return {
+                Success => 0,
+                Message => 'Could not rename existing dynamic field "' . $DynamicFieldConfig->{Name} . '"!',
+            } if ( !$Success );
+
+            $CreateDynamicField = 1;
+        }
+        # otherwise if the field exists and the type match, update it to the new definition
+        else {
+            my $Success = $DynamicFieldObject->DynamicFieldUpdate(
+                %{ $DynamicFieldConfig },
+                ID         => $DynamicFieldLookup{ $DynamicFieldConfig->{Name} }->{ID},
+                FieldOrder => $DynamicFieldLookup{ $DynamicFieldConfig->{Name} }->{FieldOrder},
+                Reorder    => 0,
+                UserID     => $Self->{UserID},
+            );
+            return {
+                Success => 0,
+                Message => 'Could not update existing dynamic field "' . $DynamicFieldConfig->{Name} . '"!',
+            } if ( !$Success );
+        }
+
+        # check if new field has to be created
+        if ($CreateDynamicField) {
+
+            # create a new field
+            my $FieldID = $DynamicFieldObject->DynamicFieldAdd(
+                Name       => $DynamicFieldConfig->{Name},
+                Label      => $DynamicFieldConfig->{Label},
+                FieldOrder => $FieldOrder,
+                FieldType  => $DynamicFieldConfig->{FieldType},
+                ObjectType => $DynamicFieldConfig->{ObjectType},
+                Config     => $DynamicFieldConfig->{Config},
+                ValidID    => $DynamicFieldConfig->{ValidID},
+                UserID     => $Self->{UserID},
+            );
+            return {
+                Success => 0,
+                Message => 'Could not create dynamic field "' . $DynamicFieldConfig->{Name} . '"!',
+            } if ( !$FieldID );
+
+            # increment field order
+            $FieldOrder += 1;
+        }
+
+        # set Dynamic Field in ticket actions
+        if ( IsHashRefWithData( $DynamicFieldConfig->{ShowInRelevantAction} ) ) {
+            for my $Action ( keys( %{ $DynamicFieldConfig->{ShowInRelevantAction} } ) ) {
+                if ( $Action eq 'CustomerTicketZoomFollowUp' ) {
+                    $Self->_AddSysConfigValue(
+                        Name  => 'Ticket::Frontend::CustomerTicketZoom###FollowUpDynamicField',
+                        Key   => $DynamicFieldConfig->{Name},
+                        Value => $DynamicFieldConfig->{ShowInRelevantAction}->{ $Action } || 0,
+                    );
+                }
+                else {
+                    $Self->_AddSysConfigValue(
+                        Name  => 'Ticket::Frontend::' . $Action . '###DynamicField',
+                        Key   => $DynamicFieldConfig->{Name},
+                        Value => $DynamicFieldConfig->{ShowInRelevantAction}->{ $Action } || 0,
+                    );
+                }
+            }
+        }
+
+        # check if x-header for the dynamic field already exists
+        if ( !$PostMasterHeaders{ 'X-KIX-DynamicField-' . $DynamicFieldConfig->{Name} } ) {
+            $PostMasterHeaders{ 'X-KIX-DynamicField-' . $DynamicFieldConfig->{Name} } = 1;
+        }
+
+        if ( !$PostMasterHeaders{ 'X-KIX-FollowUp-DynamicField-' . $DynamicFieldConfig->{Name} } ) {
+            $PostMasterHeaders{ 'X-KIX-FollowUp-DynamicField-' . $DynamicFieldConfig->{Name} } = 1;
+        }
+
+        # revert values from hash into an array
+        my @PostMasterValuesToSet = sort( keys( %PostMasterHeaders ) );
+
+        # execute the update action in sysconfig
+        my $Success = $SysConfigObject->ConfigItemUpdate(
+            Valid => 1,
+            Key   => 'PostmasterX-Header',
+            Value => \@PostMasterValuesToSet,
+        );
+    }
+
+    return {
+        Success => 1,
+    }
+}
+
+sub _DynamicFieldExport {
+    my ( $Self, %Param ) = @_;
+
+    # get needed objects
+    my $LayoutObject         = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $DynamicFieldObject   = $Kernel::OM->Get('Kernel::System::DynamicField');
+    my $GeneralCatalogObject = $Kernel::OM->Get('Kernel::System::GeneralCatalog');
+    my $ValidObject          = $Kernel::OM->Get('Kernel::System::Valid');
+    my $ParamObject          = $Kernel::OM->Get('Kernel::System::Web::Request');
+    my $YAMLObject           = $Kernel::OM->Get('Kernel::System::YAML');
+
+    # get ID for single field to export
+    my $ParamID = $ParamObject->GetParam( Param => 'ID' );
+
+    # init dynamic field list to export
+    my @DynamicFields = ();
+
+    # check if single field id is given
+    if ( $ParamID ) {
+        push( @DynamicFields, $ParamID );
+    }
+    # get list of valid fields
+    else {
+        # get list of dynamic fields
+        my $DynamicFieldList = $DynamicFieldObject->DynamicFieldList(
+            ResultType => 'ARRAY',
+            Valid      => 1,
+        );
+
+        # isolate array
+        @DynamicFields = @{ $DynamicFieldList };
+    }
+
+    # get list of valid values
+    my %ValidList = $ValidObject->ValidList();
+
+    # prepare dynamic field data
+    my @DynamicFieldData = ();
+    for my $DynamicFieldID ( @DynamicFields ) {
+        # get config of dynamic field
+        my $DynamicFieldConfig = $DynamicFieldObject->DynamicFieldGet(
+            ID => $DynamicFieldID,
+        );
+
+        # check for dynamic field data
+        if ( ref( $DynamicFieldConfig ) eq 'HASH' ) {
+            # lookup valid id
+            if (
+                $DynamicFieldConfig->{ValidID}
+                && $ValidList{ $DynamicFieldConfig->{ValidID} }
+            ) {
+                $DynamicFieldConfig->{ValidID} = $ValidList{ $DynamicFieldConfig->{ValidID} };
+            }
+
+            # remove special entries
+            for my $Entry ( qw(ID CreateTime ChangeTime) ) {
+                delete( $DynamicFieldConfig->{ $Entry } );
+            }
+
+            # special handling for some configurations
+            if ( $DynamicFieldConfig->{Config}->{DeploymentStates}
+                || $DynamicFieldConfig->{Config}->{ITSMConfigItemClasses}
+            ) {
+                KEY:
+                for my $Key ( qw(DeploymentStates ITSMConfigItemClasses) ) {
+                    next KEY if ( !$DynamicFieldConfig->{Config}->{ $Key } );
+
+                    # init name list
+                    my @Names;
+
+                    # process configured entries
+                    ITEM:
+                    for my $ItemID ( @{ $DynamicFieldConfig->{Config}->{ $Key } } ) {
+                        # get data ref from general catalog
+                        my $ItemDataRef = $GeneralCatalogObject->ItemGet(
+                            ItemID => $ItemID,
+                        );
+
+                        # skip if no data ref is found
+                        next ITEM if ( !$ItemDataRef );
+
+                        # add ref name to list
+                        push( @Names, $ItemDataRef->{Name} );
+                    }
+
+                    # check for lookup entries
+                    if ( scalar(@Names) ) {
+                        # replace entries
+                        $DynamicFieldConfig->{Config}->{ $Key } = \@Names;
+                    }
+                    else {
+                        # remove configuration key
+                        delete( $DynamicFieldConfig->{Config}->{ $Key } );
+                    }
+                }
+            }
+
+            # get selections from sysconfig for dynamic field
+            $DynamicFieldConfig->{ShowInRelevantAction} = $Self->_GetDynamicFieldFrontendModules(
+                Name => $DynamicFieldConfig->{Name}
+            );
+
+            # add config to data
+            push( @DynamicFieldData, $DynamicFieldConfig );
+        }
+    }
+
+    # convert the DynamicField data hash to string
+    my $DynamicFieldDataYAML = $YAMLObject->Dump( Data => \@DynamicFieldData );
+
+    # send the result to the browser
+    return $LayoutObject->Attachment(
+        ContentType => 'text/html; charset=' . $LayoutObject->{Charset},
+        Content     => $DynamicFieldDataYAML,
+        Type        => 'attachment',
+        Filename    => 'Export_DynamicField.yml',
+        NoCache     => 1,
+    );
+}
+
+sub _GetDynamicFieldFrontendModules {
+    my ( $Self, %Param ) = @_;
+
+    # get needed objects
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+
+    my %Result;
+
+    # get all frontend modules
+    # get agent frontend modules
+    my $ConfigHashAgent = $ConfigObject->Get('Frontend::Module');
+
+    # get customer frontend modules
+    my $ConfigHashCustomer = $ConfigObject->Get('CustomerFrontend::Module');
+
+    # get admin frontend modules
+    my %ConfigHash = ( %{$ConfigHashAgent}, %{$ConfigHashCustomer} );
+
+    # get all tabs
+    my $ConfigHashTabs = $ConfigObject->Get('AgentTicketZoomBackend');
+    for my $Item ( keys %{$ConfigHashTabs} ) {
+
+        # if no link is given
+        next if !defined $ConfigHashTabs->{$Item}->{Link};
+
+        # look for PretendAction
+        my ($PretendAction) = $ConfigHashTabs->{$Item}->{Link} =~ /^(?:.*?)\;PretendAction=(.*?)\;(?:.*)$/;
+        next if ( !$PretendAction || $ConfigHash{$PretendAction} );
+
+     # if given and not already registered as frontend module - add width empty value to config hash
+        $ConfigHash{$PretendAction} = '';
+    }
+
+    # ticket overview - add width empty value to config hash
+    $ConfigHash{'OverviewCustom'}  = '';
+    $ConfigHash{'OverviewSmall'}   = '';
+    $ConfigHash{'OverviewMedium'}  = '';
+    $ConfigHash{'OverviewPreview'} = '';
+
+    # KIXSidebars - add width empty value to config hash
+    foreach my $Frontend (qw(Frontend CustomerFrontend)) {
+        my $SidebarConfig = $ConfigObject->Get( $Frontend . '::KIXSidebarBackend' );
+        if (
+            $SidebarConfig
+            && ref($SidebarConfig) eq 'HASH'
+        ) {
+            for my $Key ( sort( keys( %{$SidebarConfig} ) ) ) {
+                my $SidebarBackendConfig = $ConfigObject->Get( 'Ticket::Frontend::KIXSidebar' . $Key );
+                if ( exists( $SidebarBackendConfig->{DynamicField} ) ) {
+                    $ConfigHash{ 'KIXSidebar' . $Key } = '';
+                }
+            }
+        }
+    }
+
+    my %DynamicFieldFrontends = ();
+
+    # get all frontend modules with dynamic field config
+    for my $Item ( keys %ConfigHash ) {
+        my $ItemConfig = $ConfigObject->Get( "Ticket::Frontend::" . $Item );
+
+        # if dynamic field config exists
+        next if !( defined $ItemConfig && defined $ItemConfig->{DynamicField} );
+
+        # if dynamic field is activated
+        # for CustomerTicketZoom check also FollowUpDynamicFields
+        if (
+            $Item eq 'CustomerTicketZoom'
+            && defined( $ItemConfig->{FollowUpDynamicField}->{ $Param{Name} } )
+            && $ItemConfig->{FollowUpDynamicField}->{ $Param{Name} } ne '0'
+        ) {
+            $DynamicFieldFrontends{'CustomerTicketZoomFollowUp'} = $ItemConfig->{FollowUpDynamicField}->{ $Param{Name} };
+        }
+
+        # if dynamic field is activated
+        next if (
+            !defined $ItemConfig->{DynamicField}->{ $Param{Name} }
+            || $ItemConfig->{DynamicField}->{ $Param{Name} } eq '0'
+        );
+
+        $DynamicFieldFrontends{ $Item } = $ItemConfig->{DynamicField}->{ $Param{Name} };
+    }
+
+    return \%DynamicFieldFrontends;
+}
+
+sub _AddSysConfigValue {
+    my ( $Self, %Param ) = @_;
+
+    # get needed objects
+    my $ConfigObject    = $Kernel::OM->Get('Kernel::Config');
+    my $SysConfigObject = $Kernel::OM->Get('Kernel::System::SysConfig');
+
+    return if (!$Param{Name});
+
+    my $SysConfigVal = '';
+    if ($Param{Name} =~ /###/ ) {
+        my @SysConfigData = split(/###/,$Param{Name});
+        my $SysConfigObj  = $ConfigObject->Get($SysConfigData[0]);
+
+        if (
+            $SysConfigObj
+            && ref($SysConfigObj)
+            && $SysConfigObj->{$SysConfigData[1]}
+        ) {
+            $SysConfigVal = $SysConfigObj->{$SysConfigData[1]};
+        }
+    }
+
+    else {
+        $SysConfigVal = $ConfigObject->Get($Param{Name});
+    }
+
+    return if (!$SysConfigVal);
+
+    my $ObjectType = ref($SysConfigVal) || '';
+
+    return if (
+        !$ObjectType
+        && $ObjectType ne 'HASH'
+        && $ObjectType ne 'ARRAY'
+    );
+    return if (
+        $ObjectType eq 'HASH'
+        && (
+            !$Param{Key}
+            || !defined($Param{Value})
+        )
+    );
+    return if (
+        $ObjectType eq 'ARRAY'
+        && !$Param{Value}
+    );
+
+    if ($ObjectType eq 'HASH') {
+        $SysConfigVal->{$Param{Key}} = $Param{Value};
+    }
+    elsif ($ObjectType eq 'ARRAY') {
+        push(@{$SysConfigVal},$Param{Value});
+    }
+
+    my $Result = $SysConfigObject->ConfigItemUpdate(
+        Valid => 1,
+        Key   => $Param{Name},
+        Value => $SysConfigVal,
+    );
+
+    return 1;
 }
 
 1;
