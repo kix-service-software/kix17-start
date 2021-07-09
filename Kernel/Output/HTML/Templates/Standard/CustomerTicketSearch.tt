@@ -89,8 +89,8 @@
                 </div>
                 <div class="Clear"></div>
 [% RenderBlockStart("DynamicField") %]
-                <div>
-                    [% Data.Label %]
+                [% Data.Label %]
+                <div class="Field">
                     [% Data.Field %]
                 </div>
                 <div class="Clear"></div>

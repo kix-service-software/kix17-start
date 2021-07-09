@@ -281,6 +281,10 @@ sub Data {
     $Lang->{'Module Registration for TicketTemplate Base Module.'}
         = 'Modulregistrierung für das Ticketvorlagen Basismodul.';
     $Lang->{'TicketTemplate Base Module'} = 'Ticketvorlagen Basismodul';
+    $Lang->{'Defines restrictions for the viewability of templates for contacts. Key contains the template key followed by double colon and a contact attribute, while value contains a regexp. Matching this regexp means no access to the template.'} 
+        = 'Legt Einschränkungen für die Sichtbarkeit von Vorlagen für Kontakte fest. Der Schlüssel besteht aus dem Vorlagen-Schlüssel, gefolgt von zwei Doppelpunkten und einem Kontakt-Attribut. Der Wert enthält eine RegExp. Trifft die Regexp zu, so besteht kein Zugriff auf die Vorlage.';
+    $Lang->{'Defines a one-line description for each template.'}
+        = 'Legt einzeilige Beschreibungen für Vorlagen fest.';
 
     # ticket template configurator
     $Lang->{'Save template'}                  = 'Vorlage speichern';
@@ -2058,7 +2062,7 @@ sub Data {
     $Lang->{'Queue Assignment'}        = 'Zuordnung zu Queue';
     $Lang->{'Ticket Type Assignment'}  = 'Zuordnung zu Tickettyp';
     $Lang->{'Ticket State Assignment'} = 'Zuordnung zu Ticketstatus';
-    $Lang->{'Filter Overview'}         = 'übersicht einschränken';
+    $Lang->{'Filter Overview'}         = 'Übersicht einschränken';
     $Lang->{'Limit Results'}           = 'Anzahl limitieren';
     $Lang->{'Add a new text module'}   = 'Einen neuen Textbaustein hinzufügen';
     $Lang->{'New text module'}         = 'neuer Textbaustein';
@@ -2142,6 +2146,7 @@ sub Data {
     $Lang->{'List of JS files to always be loaded for the customer interface.'} =
         'Liste von JS-Dateien, die immer im Kunden-Interface geladen werden.';
     $Lang->{'Show or hide the text modules'} = 'Text-Bausteine zeigen oder verstecken';
+    $Lang->{'Default value for maximum number of entries shown in TextModuleCategory overview.'} = 'Standardwert für die maximale Anzahl an angezeigten Einträgen.';
 
     $Lang->{'Create and manage text templates.'} = 'Erstellen und verwalten von Textbausteinen.';
     $Lang->{'Text module Management'}            = 'Text-Bausteine Verwaltung';

@@ -542,20 +542,23 @@
     *   @subsection Search overview
     */
     .SearchTerms {
-        padding: 4px 7px;
+        padding: 8px;
         margin: 10px 0;
     }
-    .SearchTerms h2 {
+    .SearchTerms > h2 {
         margin: 0;
-        font-size: 15px;
+        font-size: 13px;
         display: inline;
+        font-weight: bold;
     }
-    .SearchTerms span {
+    .SearchTerms > span {
         padding: 1px 8px 0;
         margin: 0 3px;
-        border-width: 1px;
-        border-style: solid;
-        border-radius: 5px;
+        border-width: 0 1px 0 0;
+        border-style: dotted;
+    }
+    .SearchTerms > span:last-child {
+        border: 0;
     }
 
 

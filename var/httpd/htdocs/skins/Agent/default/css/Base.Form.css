@@ -78,7 +78,7 @@
     fieldset.TableLike > .Value,
     fieldset.TableLike > .Row > .Value {
         margin-left: 30%;
-        padding: 5px 0 3px 8px;
+        padding: 13px 0 3px 8px;
         line-height: 1.0em;
     }
     fieldset.TableLike > .Field,
