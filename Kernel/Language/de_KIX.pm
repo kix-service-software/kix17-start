@@ -4653,6 +4653,15 @@ sub Data {
     # MailAccount Office365
     $Lang->{'Got token for provided code!'} = 'Token für bereitgestellten Code erhalten!';
 
+    # DynamicField Import/Export
+    $Lang->{'Export dynamic fields'} = 'Dynamische Felder exportieren';
+    $Lang->{'Import dynamic fields'} = 'Dynamische Felder importieren';
+    $Lang->{'Dynamic fields could not be imported due to an unknown error, please check KIX logs for more information.'}
+        = 'Dynamische Felder konnten aufgrund eines unbekannten Fehlers nicht importiert werden, bitte prüfen Sie das KIX-Log für mehr Information.';
+    $Lang->{'Here you can upload a configuration file to import dynamic fields to your system. The file needs to be in .yml format as exported by this module.'}
+        = 'Hier können Sie eine Konfigurationsdatei hochladen, mit der dynamische Felder ins System importiert werden können. Diese Datei muss im .yml-Format vorliegen, so wie sie von diesem Modul exportiert wird.';
+    # EO DynamicField Import/Export
+
     # Ticket Tab Attachments
     $Lang->{'Dynamic fields shown in the AgentTicketZoomTab "Attachments". Possible settings: 0 = Disabled, 1 = Enabled.'}
         = 'Dynamische Felder, welche im Tab "Anlagen" der Agentenoberfläche angezeigt werden. Mögliche Einstellungen: 0 = deaktiviert, 1 = aktiviert.';

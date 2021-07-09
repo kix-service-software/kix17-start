@@ -46,6 +46,37 @@ $('#[% Data.SelectName %]').on('change', function() {
                 </ul>
             </div>
         </div>
+        <div class="WidgetSimple">
+            <div class="Header">
+                 <h2><span>[% Translate("Import/Export") | html %]</span></h2>
+            </div>
+            <div class="Content">
+                <ul class="ActionList">
+                    <li>
+                        <a href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=DynamicFieldExport" class="CallForAction Fullsize Center"><span><i class="fa fa-download"></i>[% Translate("Export DynamicFields") | html %]</span></a>
+                    </li>
+                </ul>
+                <hr />
+                <p class="FieldExplanation">
+                    [% Translate("Here you can upload a configuration file to import DynamicFields to your system. The file needs to be in .yml format as exported by this module.") | html %]
+                </p>
+                <ul class="ActionList">
+                    <li>
+                        <form action="[% Env("CGIHandle") %]" method="post" enctype="multipart/form-data" class="Validate PreventMultipleSubmits">
+                            <input type="hidden" name="Action" value="[% Env("Action") %]"/>
+                            <input type="hidden" name="Subaction" value="DynamicFieldImport"/>
+                            <input type="hidden" name="FormID" value="[% Data.FormID | html %]"/>
+                            <input name="FileUpload" id="FileUpload" type="file" size="18" class="Fixed W100pc Validate_Required [% Data.FileUploadInvalid | html %]"/>
+                            <div id="FileUploadError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
+                            <div id="FileUploadServerError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
+                            <button class="CallForAction Fullsize Center" type="submit" value="[% Translate("Import DynamicFields") | html %]">
+                                <span><i class="fa fa-upload"></i>[% Translate("Import DynamicFields") | html %]</span>
+                            </button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </div>
 
 [% RenderBlockStart("ConfigSet") %]
 [% WRAPPER JSOnDocumentComplete %]
@@ -134,6 +165,7 @@ $('#ShowContextSettingsDialog').on('click', function (Event) {
                             <th>[% Translate("Type") | html %]</th>
                             <th>[% Translate("Object") | html %]</th>
                             <th>[% Translate("Validity") | html %]</th>
+                            <th>[% Translate("Export") | html %]</th>
                             <th>[% Translate("Delete") | html %]</th>
                         </tr>
                     </thead>
@@ -165,6 +197,12 @@ $('#ShowContextSettingsDialog').on('click', function (Event) {
                             <td>
                                 <div>[% Translate(Data.Valid) | html %]</div>
                             </td>
+                            <td class="Center DynamicFieldExportLink">
+                                <a href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=DynamicFieldExport;ID=[% Data.ID | uri %];[% Env("ChallengeTokenParam") | html %]">
+                                    <i class="fa fa-download"></i>
+                                    <span class="InvisibleText">[% Translate("Export") | html %]</span>
+                                </a>
+                            </td>
                             <td class="Center">
 [% RenderBlockStart("DeleteLink") %]
                                 <a class="TrashCan DynamicFieldDelete" href="#" data-query-string="Action=AdminDynamicField;Subaction=DynamicFieldDelete;ID=[% Data.ID | uri %];[% Env("ChallengeTokenParam") | html %]" title="[% Translate("Delete this field") | html %]">[% Translate("Delete this field") | html %]
@@ -192,7 +230,11 @@ $('#ShowContextSettingsDialog').on('click', function (Event) {
 $('.MasterAction').on('click', function (Event) {
     var $MasterActionLink = $(this).find('.MasterActionLink');
     // only act if the link was not clicked directly
-    if (Event.target !== $MasterActionLink.get(0)) {
+    if (
+        Event.target !== $MasterActionLink.get(0)
+        && !$(Event.target).hasClass('DynamicFieldExportLink')
+        && !$(Event.target).closest('td').hasClass('DynamicFieldExportLink')
+    ) {
         window.location = $MasterActionLink.attr('href');
         return false;
     }
