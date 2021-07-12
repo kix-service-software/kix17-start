@@ -2,6 +2,7 @@
 # Modified version of the work: Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
 # Copyright (C) 2001-2021 OTRS AG, https://otrs.com/
+# Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -21,6 +22,7 @@ our @ObjectDependencies = (
     'Kernel::Config',
     'Kernel::System::Log',
     'Kernel::System::Main',
+    'Kernel::System::PostMaster',
 );
 
 sub new {
@@ -135,9 +137,7 @@ sub _Fetch {
     $Self->{Reconnect} = 0;
 
     my %Connect = $Self->Connect(
-        Host     => $Param{Host},
-        Login    => $Param{Login},
-        Password => $Param{Password},
+        %Param,
         Timeout  => 15,
         Debug    => $Debug
     );
@@ -303,7 +303,6 @@ This software is part of the KIX project
 
 This software comes with ABSOLUTELY NO WARRANTY. For details, see the enclosed file
 LICENSE for license information (AGPL). If you did not receive this file, see
-
 <https://www.gnu.org/licenses/agpl.txt>.
 
 =cut

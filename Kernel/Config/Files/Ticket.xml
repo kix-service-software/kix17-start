@@ -24,7 +24,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::CustomerTicketTemplates###UserAttributeRestriction" Required="1" Valid="1">
-        <Description Translatable="1">Defines restrictions for the viewability of templates for contacts. Key contains the template key followed by double colon and a contact attribute, while value contains a regexp which must match the given user attribute in order to have access to the template.</Description>
+        <Description Translatable="1">Defines restrictions for the viewability of templates for contacts. Key contains the template key followed by double colon and a contact attribute, while value contains a regexp. Matching this regexp means no access to the template.</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Customer::TicketTemplates</SubGroup>
         <Setting>
@@ -14739,6 +14739,15 @@ Thanks for your help!
                 <Item Key="0">No</Item>
                 <Item Key="1">Yes</Item>
             </Option>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentTicketZoomTabAttachments###DynamicField" Required="0" Valid="1">
+        <Description Translatable="1">Dynamic fields shown in the AgentTicketZoomTab "Attachments". Possible settings: 0 = Disabled, 1 = Enabled.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewTicketZoomTabAttachments</SubGroup>
+        <Setting>
+            <Hash>
+            </Hash>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::AgentTicketZoomTabArticle###ArticleEmailActions" Required="1" Valid="1">

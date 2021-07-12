@@ -281,6 +281,10 @@ sub Data {
     $Lang->{'Module Registration for TicketTemplate Base Module.'}
         = 'Modulregistrierung für das Ticketvorlagen Basismodul.';
     $Lang->{'TicketTemplate Base Module'} = 'Ticketvorlagen Basismodul';
+    $Lang->{'Defines restrictions for the viewability of templates for contacts. Key contains the template key followed by double colon and a contact attribute, while value contains a regexp. Matching this regexp means no access to the template.'} 
+        = 'Legt Einschränkungen für die Sichtbarkeit von Vorlagen für Kontakte fest. Der Schlüssel besteht aus dem Vorlagen-Schlüssel, gefolgt von zwei Doppelpunkten und einem Kontakt-Attribut. Der Wert enthält eine RegExp. Trifft die Regexp zu, so besteht kein Zugriff auf die Vorlage.';
+    $Lang->{'Defines a one-line description for each template.'}
+        = 'Legt einzeilige Beschreibungen für Vorlagen fest.';
 
     # ticket template configurator
     $Lang->{'Save template'}                  = 'Vorlage speichern';
@@ -1085,7 +1089,7 @@ sub Data {
     $Lang->{'Defines if flag is shared with other agents.'} = 'Legt fest, ob ein Flag mit anderen Agenten geteilt wird.';
     $Lang->{'Defines if flag has no edit function.'} = 'Legt fest, ob das Flag keine Bearbeiten-Funktion hat.';
     $Lang->{'DynamicFields that can be filtered in the article table of the agent interface. Possible settings: 0 = Disabled, 1 = Available.'}
-    	= 'Dynamische Felder, welche in der Artikeltabelle der Agentenoberfläche gefiltert werden können. Mögliche Einstellungen: 0 = deaktiviert, 1 = aktiviert';
+        = 'Dynamische Felder, welche in der Artikeltabelle der Agentenoberfläche gefiltert werden können. Mögliche Einstellungen: 0 = deaktiviert, 1 = aktiviert';
     $Lang->{'Defines icons from awesome fonts lib for article flag icons.'} = 'Legt Incos aus der Font Awesome Bibliothek für Artikel-Flag-Icons fest.';
     $Lang->{'Defines additional css styles for article flag icons. This value could be empty.'} = 'Legt zusätzliches CSS für Artikel-Flag-Icons fest. Dieser Wert kann leer sein.';
     $Lang->{'Defines whether article flags should be removed on ticket close. This value could be empty. Use "UserPref" if user could choose this preference by itself and 0 or 1 if not.'} = 'Legt fest, ob Artikel-Falgs beim Schließen eines Tickets entfernt werden sollen. Nutzen Sie "UserPref", wenn der Agent das selbst entscheiden kann oder 0 oder 1, wenn nicht.';
@@ -2058,7 +2062,7 @@ sub Data {
     $Lang->{'Queue Assignment'}        = 'Zuordnung zu Queue';
     $Lang->{'Ticket Type Assignment'}  = 'Zuordnung zu Tickettyp';
     $Lang->{'Ticket State Assignment'} = 'Zuordnung zu Ticketstatus';
-    $Lang->{'Filter Overview'}         = 'übersicht einschränken';
+    $Lang->{'Filter Overview'}         = 'Übersicht einschränken';
     $Lang->{'Limit Results'}           = 'Anzahl limitieren';
     $Lang->{'Add a new text module'}   = 'Einen neuen Textbaustein hinzufügen';
     $Lang->{'New text module'}         = 'neuer Textbaustein';
@@ -2142,6 +2146,7 @@ sub Data {
     $Lang->{'List of JS files to always be loaded for the customer interface.'} =
         'Liste von JS-Dateien, die immer im Kunden-Interface geladen werden.';
     $Lang->{'Show or hide the text modules'} = 'Text-Bausteine zeigen oder verstecken';
+    $Lang->{'Default value for maximum number of entries shown in TextModuleCategory overview.'} = 'Standardwert für die maximale Anzahl an angezeigten Einträgen.';
 
     $Lang->{'Create and manage text templates.'} = 'Erstellen und verwalten von Textbausteinen.';
     $Lang->{'Text module Management'}            = 'Text-Bausteine Verwaltung';
@@ -4650,8 +4655,45 @@ sub Data {
     $Lang->{'Defines the standard filter for the validity, which initially restricts the AdminGroup table.'}
         = 'Legt den Standardfilter für die Gültigkeit fest, der die Tabelle von AdminGroup initial einschränkt.';
 
-    # MailAccount Office365
-    $Lang->{'Got token for provided code!'} = 'Token für bereitgestellten Code erhalten!';
+    # OAuth2
+    $Lang->{'If any of the "OAuth2" mechanisms was selected as SendmailModule, the profile to use for OAuth2 must be specified.'}
+        = 'Wenn einer der OAuth2-Mechanismen als SendmailModule ausgewählt wurde, muss hier das OAuth2 Profil angegeben werden.';
+    $Lang->{'Need ID of profile!'} = 'Benötige ID eines Profils!';
+    $Lang->{'Could not save state token for authentification!'} = 'State-Tocket konnte für Authentifizierung nicht gespeichert werden!';
+    $Lang->{'Profile updated!'} = 'Profil aktualisiert!';
+    $Lang->{'Profile deleted!'} = 'Profil gelöscht!';
+    $Lang->{'Could not find profile for provided state!'} = 'Konnte kein Profil für den übergebenen State finden!';
+    $Lang->{'Could not get access token!'} = 'Konnte keinen Zugriffstoken erhalten!';
+    $Lang->{'Profile activated!'} = 'Profil aktiviert!';
+    $Lang->{'OAuth2 Profile Management'} = 'OAuth2-Profilverwaltung';
+    $Lang->{'Add OAuth2 profile'} = 'OAuth2-Profil hinzufügen';
+    $Lang->{'Reauthorization'} = 'Erneut authorisieren';
+    $Lang->{'Missing refresh token'} = 'Erneuerungstoken fehlt';
+    $Lang->{'Reauthorize profile'} = 'Profil erneut authorisieren';
+    $Lang->{'Delete profile'} = 'Profil löschen';
+    $Lang->{'Add OAuth2 Profile'} = 'OAuth2-Profil hinzufügen';
+    $Lang->{'Edit OAuth2 Profile'} = 'OAuth2-Profil bearbeiten';
+    $Lang->{'A profile with this name already exists!'} = 'Ein Profil mit diesem Namen existiert bereits!';
+    $Lang->{'URL Authorization'} = 'Authorisierungs-URL';
+    $Lang->{'URL Token'} = 'Token-URL';
+    $Lang->{'URL Redirect'} = 'Weiterleitungs-URL';
+    $Lang->{'Client ID'} = 'Client ID';
+    $Lang->{'Client Secret'} = 'Client Secret';
+    $Lang->{'Scope'} = 'Scope';
+    $Lang->{'OAuth2 Profile'} = 'OAuth2-Profil';
+
+    # DynamicField Import/Export
+    $Lang->{'Export dynamic fields'} = 'Dynamische Felder exportieren';
+    $Lang->{'Import dynamic fields'} = 'Dynamische Felder importieren';
+    $Lang->{'Dynamic fields could not be imported due to an unknown error, please check KIX logs for more information.'}
+        = 'Dynamische Felder konnten aufgrund eines unbekannten Fehlers nicht importiert werden, bitte prüfen Sie das KIX-Log für mehr Information.';
+    $Lang->{'Here you can upload a configuration file to import dynamic fields to your system. The file needs to be in .yml format as exported by this module.'}
+        = 'Hier können Sie eine Konfigurationsdatei hochladen, mit der dynamische Felder ins System importiert werden können. Diese Datei muss im .yml-Format vorliegen, so wie sie von diesem Modul exportiert wird.';
+    # EO DynamicField Import/Export
+
+    # Ticket Tab Attachments
+    $Lang->{'Dynamic fields shown in the AgentTicketZoomTab "Attachments". Possible settings: 0 = Disabled, 1 = Enabled.'}
+        = 'Dynamische Felder, welche im Tab "Anlagen" der Agentenoberfläche angezeigt werden. Mögliche Einstellungen: 0 = deaktiviert, 1 = aktiviert.';
 
     return 0;
 }

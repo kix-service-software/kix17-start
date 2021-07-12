@@ -11,28 +11,28 @@
 
 <fieldset class="TableLike">
     <label>[% Translate("Object") | html %]:</label>
-    <div class="Value">[% Translate(Data.ObjectName) | html %]</div>
+    <div class="Field">[% Translate(Data.ObjectName) | html %]</div>
     <div class="Clear"></div>
 
     <label>[% Translate("Description") | html %]:</label>
-    <div class="Value">[% Data.Description | html %]</div>
+    <div class="Field">[% Data.Description | html %]</div>
     <div class="Clear"></div>
 
 [% RenderBlockStart("Format") %]
     <label for="Format">[% Translate("Format") | html %]:</label>
-    <div class="Value">[% Data.SelectFormat %]</div>
+    <div class="Field">[% Data.SelectFormat %]</div>
     <div class="Clear"></div>
 [% RenderBlockEnd("Format") %]
 [% RenderBlockStart("FormatFixed") %]
     <input type="hidden" id="Format" name="Format" value="[% Data.FormatKey | html %]"/>
     <label>[% Translate("Format") | html %]:</label>
-    <div class="Value">[% Translate(Data.Format) | html %]</div>
+    <div class="Field">[% Translate(Data.Format) | html %]</div>
     <div class="Clear"></div>
 [% RenderBlockEnd("FormatFixed") %]
 
 [% RenderBlockStart("TimeZone") %]
     <label for="TimeZone">[% Translate("Time Zone") | html %]:</label>
-    <div class="Value">
+    <div class="Field">
         [% Data.SelectTimeZone %]
         <p class="FieldExplanation">
             [% Translate('The selected time periods in the statistic are time zone neutral.') | html %]
@@ -43,7 +43,7 @@
 
 [% RenderBlockStart("ExchangeAxis") %]
     <label>[% Translate("Exchange Axis") | html %]:</label>
-    <div class="Value">[% Data.ExchangeAxis %]</div>
+    <div class="Field">[% Data.ExchangeAxis %]</div>
     <div class="Clear"></div>
 [% RenderBlockEnd("ExchangeAxis") %]
 </fieldset>
@@ -55,7 +55,7 @@
 <fieldset class="TableLike">
 [% RenderBlockStart("ItemParam") %]
     <label for="[% Data.Name | html %]">[% Translate(Data.Param) | html %]:</label>
-    <div class="Value">[% Data.Field %]</div>
+    <div class="Field">[% Data.Field %]</div>
     <div class="Clear"></div>
 [% RenderBlockEnd("ItemParam") %]
 </fieldset>
@@ -66,13 +66,13 @@
 <fieldset class="TableLike">
     <legend><span>[% Translate(Data.Name) | html %]</span></legend>
 [% RenderBlockStart("NoElement") %]
-    <div class="Value">
+    <div class="Field">
         <p class="FieldExplanation">[% Translate("No element selected.") | html %]</p>
     </div>
 [% RenderBlockEnd("NoElement") %]
 [% RenderBlockStart("Element") %]
     <label>[% Translate(Data.Name) | html %]:</label>
-    <div class="Value">
+    <div class="Field">
 [% RenderBlockStart("TimePeriodFixed") %]
         [% Translate("Between") | html %] [% Data.TimeStart %] [% Translate("and") | html %] [% Data.TimeStop %]<br/>
 [% RenderBlockEnd("TimePeriodFixed") %]
@@ -108,7 +108,7 @@
 
 [% RenderBlockStart("TimePeriod") %]
     <label><em>[% Translate("Absolute period") | html %]</em>:</label>
-    <div class="Value">
+    <div class="Field">
         <p>
             [% Translate('Between') | html %] [% Data.TimeStart %] [% Translate("and") | html %] [% Data.TimeStop %]<br/>
         </p>
@@ -118,7 +118,7 @@
 
 [% RenderBlockStart("TimeScale") %]
     <label><em>[% Translate("Scale") | html %]</em>:</label>
-    <div class="Value">
+    <div class="Field">
     [% IF Data.TimeScaleCount %]
         [% Data.TimeScaleCount %]
     [% END %]
@@ -154,7 +154,7 @@
 
 [% RenderBlockStart("TimePeriodRelative") %]
     <label><em>[% Translate("Relative period") | html %]</em>:</label>
-    <div class="Value">
+    <div class="Field">
         [% Translate("The past complete %s and the current+upcoming complete %s %s", Data.TimeRelativeCount, Data.TimeRelativeUpcomingCount, Data.TimeRelativeUnit) %]
     </div>
     <div class="Clear"></div>
