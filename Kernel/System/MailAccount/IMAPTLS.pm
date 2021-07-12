@@ -128,11 +128,9 @@ sub _Fetch {
     $Self->{Reconnect} = 0;
 
     my %Connect = $Self->Connect(
-        Host     => $Param{Host},
-        Login    => $Param{Login},
-        Password => $Param{Password},
-        Timeout  => $Timeout,
-        Debug    => $Debug
+        %Param,
+        Timeout => $Timeout,
+        Debug   => $Debug
     );
 
     if ( !$Connect{Successful} ) {

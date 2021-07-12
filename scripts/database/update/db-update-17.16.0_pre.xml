@@ -1,14 +1,40 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <database Name="kix">
-    <TableCreate Name="mail_account_preferences">
-        <Column Name="mail_account_id"   Required="true"  Type="INTEGER"/>
-        <Column Name="preferences_key"   Required="true"  Type="VARCHAR" Size="150"/>
-        <Column Name="preferences_value" Required="false" Type="LONGBLOB"/>
-        <Index Name="mail_account_preferences_mail_account_id">
-            <IndexColumn Name="mail_account_id"/>
-        </Index>
-        <ForeignKey ForeignTable="mail_account">
-            <Reference Local="mail_account_id" Foreign="id"/>
+    <TableCreate Name="oauth2_profile">
+        <Column Name="id"            Required="true" Type="INTEGER" PrimaryKey="true" AutoIncrement="true"/>
+        <Column Name="name"          Required="true" Type="VARCHAR" Size="200"/>
+        <Column Name="url_auth"      Required="true" Type="VARCHAR" Size="1800000"/>
+        <Column Name="url_token"     Required="true" Type="VARCHAR" Size="1800000"/>
+        <Column Name="url_redirect"  Required="true" Type="VARCHAR" Size="1800000"/>
+        <Column Name="client_id"     Required="true" Type="VARCHAR" Size="1800000"/>
+        <Column Name="client_secret" Required="true" Type="VARCHAR" Size="1800000"/>
+        <Column Name="scope"         Required="true" Type="VARCHAR" Size="1800000"/>
+        <Column Name="valid_id"      Required="true" Type="SMALLINT"/>
+        <Column Name="create_time"   Required="true" Type="DATE"/>
+        <Column Name="create_by"     Required="true" Type="INTEGER"/>
+        <Column Name="change_time"   Required="true" Type="DATE"/>
+        <Column Name="change_by"     Required="true" Type="INTEGER"/>
+        <ForeignKey ForeignTable="valid">
+            <Reference Local="valid_id" Foreign="id"/>
+        </ForeignKey>
+        <ForeignKey ForeignTable="users">
+            <Reference Local="create_by" Foreign="id"/>
+            <Reference Local="change_by" Foreign="id"/>
         </ForeignKey>
     </TableCreate>
+    <TableCreate Name="oauth2_token">
+        <Column Name="profile_id"  Required="true" Type="INTEGER"/>
+        <Column Name="token_type"  Required="true" Type="VARCHAR" Size="20"/>
+        <Column Name="token"       Required="true" Type="VARCHAR" Size="1800000"/>
+        <Column Name="create_time" Required="true" Type="DATE"/>
+        <ForeignKey ForeignTable="oauth2_profile">
+            <Reference Local="profile_id" Foreign="id"/>
+        </ForeignKey>
+    </TableCreate>
+    <TableAlter Name="mail_account">
+        <ColumnAdd Default="0" Name="oauth2_profile_id" Required="false" Type="INTEGER" />
+        <ForeignKeyAdd ForeignTable="oauth2_profile">
+            <Reference Local="oauth2_profile_id" Foreign="id"/>
+        </ForeignKeyAdd>
+    </TableAlter>
 </database>

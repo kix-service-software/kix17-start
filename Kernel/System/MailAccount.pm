@@ -2,19 +2,20 @@
 # Modified version of the work: Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
 # Copyright (C) 2001-2021 OTRS AG, https://otrs.com/
+# Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/
 # --
-# This software comes with ABSOLUTELY NO WARRANTY. For details, see
-# the enclosed file LICENSE for license information (AGPL). If you
-# did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
+# This software comes with ABSOLUTELY NO WARRANTY. This program is
+# licensed under the AGPL-3.0 with code licensed under the GPL-3.0.
+# For details, see the enclosed files LICENSE (AGPL) and
+# LICENSE-GPL3 (GPL3) for license information. If you did not receive
+# this files, see https://www.gnu.org/licenses/agpl.txt (APGL) and
+# https://www.gnu.org/licenses/gpl-3.0.txt (GPL3).
 # --
 
 package Kernel::System::MailAccount;
 
 use strict;
 use warnings;
-
-use HTTP::Request;
-use LWP::UserAgent;
 
 our @ObjectDependencies = (
     'Kernel::Config',
@@ -73,12 +74,28 @@ adds a new mail account
         DispatchingBy => 'Queue', # Queue|From
         QueueID       => 12,
         UserID        => 123,
+### Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
+        OAuth2_ProfileID => 'Custom1',
+### EO Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
     );
 
 =cut
 
 sub MailAccountAdd {
     my ( $Self, %Param ) = @_;
+
+### Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
+    if ( $Param{Type} && $Param{Type} =~ m/_OAuth2$/xmsi ) {
+        if ( !$Param{OAuth2_ProfileID} ) {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'error',
+                Message  => "Need Profile for OAuth2!"
+            );
+            return;
+        }
+        $Param{Password} = '-';
+    }
+### EO Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
 
     # check needed stuff
     for (qw(Login Password Host ValidID Trusted DispatchingBy QueueID UserID)) {
@@ -130,12 +147,19 @@ sub MailAccountAdd {
     return if !$DBObject->Do(
         SQL =>
             'INSERT INTO mail_account (login, pw, host, account_type, valid_id, comments, queue_id, '
-            . ' imap_folder, trusted, create_time, create_by, change_time, change_by)'
-            . ' VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, current_timestamp, ?, current_timestamp, ?)',
+### Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
+#            . ' imap_folder, trusted, create_time, create_by, change_time, change_by)'
+#            . ' VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, current_timestamp, ?, current_timestamp, ?)',
+            . ' imap_folder, oauth2_profile_id, trusted, create_time, create_by, change_time, change_by)'
+            . ' VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, current_timestamp, ?, current_timestamp, ?)',
+### EO Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
         Bind => [
             \$Param{Login},   \$Param{Password}, \$Param{Host},    \$Param{Type},
             \$Param{ValidID}, \$Param{Comment},  \$Param{QueueID}, \$Param{IMAPFolder},
-            \$Param{Trusted}, \$Param{UserID},   \$Param{UserID},
+### Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
+#            \$Param{Trusted}, \$Param{UserID},   \$Param{UserID},
+            \$Param{OAuth2_ProfileID}, \$Param{Trusted}, \$Param{UserID},   \$Param{UserID},
+### EO Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
         ],
     );
 
@@ -160,7 +184,10 @@ returns a hash of mail account data
         ID => 123,
     );
 
-(returns: ID, Login, Password, Host, Type, QueueID, Trusted, IMAPFolder, Comment, DispatchingBy, ValidID)
+### Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
+#(returns: ID, Login, Password, Host, Type, QueueID, Trusted, IMAPFolder, Comment, DispatchingBy, ValidID)
+(returns: ID, Login, Password, Host, Type, QueueID, Trusted, IMAPFolder, OAuth2_Profile, Comment, DispatchingBy, ValidID)
+### EO Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
 
 =cut
 
@@ -183,7 +210,9 @@ sub MailAccountGet {
     return if !$DBObject->Prepare(
         SQL =>
             'SELECT login, pw, host, account_type, queue_id, imap_folder, trusted, comments, valid_id, '
-            . ' create_time, change_time FROM mail_account WHERE id = ?',
+### Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
+            . ' create_time, change_time, oauth2_profile_id FROM mail_account WHERE id = ?',
+### EO Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
         Bind => [ \$Param{ID} ],
     );
 
@@ -202,6 +231,9 @@ sub MailAccountGet {
             ValidID    => $Data[8],
             CreateTime => $Data[9],
             ChangeTime => $Data[10],
+### Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
+            OAuth2_ProfileID => $Data[11],
+### Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
         );
     }
 
@@ -223,12 +255,6 @@ sub MailAccountGet {
         $Data{IMAPFolder} = '';
     }
 
-    # get preferences
-    my %Preferences = $Self->GetPreferences( MailAccountID => $Data{ID} );
-
-    # merge hash
-    %Data = ( %Data, %Preferences );
-
     return %Data;
 }
 
@@ -248,12 +274,28 @@ update a new mail account
         DispatchingBy => 'Queue', # Queue|From
         QueueID       => 12,
         UserID        => 123,
+### Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
+        OAuth2_ProfileID => 'Custom1',
+### EO Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
     );
 
 =cut
 
 sub MailAccountUpdate {
     my ( $Self, %Param ) = @_;
+
+### Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
+    if ( $Param{Type} && $Param{Type} =~ m/_OAuth2$/xmsi ) {
+        if ( !$Param{OAuth2_ProfileID} ) {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'error',
+                Message  => "Need Profile for OAuth2!"
+            );
+            return;
+        }
+        $Param{Password} = '-';
+    }
+### EO Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
 
     # check needed stuff
     for (qw(ID Login Password Host Type ValidID Trusted DispatchingBy QueueID UserID)) {
@@ -293,11 +335,17 @@ sub MailAccountUpdate {
     return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
         SQL => 'UPDATE mail_account SET login = ?, pw = ?, host = ?, account_type = ?, '
             . ' comments = ?, imap_folder = ?, trusted = ?, valid_id = ?, change_time = current_timestamp, '
-            . ' change_by = ?, queue_id = ? WHERE id = ?',
+### Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
+#            . ' change_by = ?, queue_id = ? WHERE id = ?',
+            . ' oauth2_profile_id = ?, change_by = ?, queue_id = ? WHERE id = ?',
+### EO Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
         Bind => [
             \$Param{Login},   \$Param{Password},   \$Param{Host},    \$Param{Type},
             \$Param{Comment}, \$Param{IMAPFolder}, \$Param{Trusted}, \$Param{ValidID},
-            \$Param{UserID},  \$Param{QueueID},    \$Param{ID},
+### Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
+#            \$Param{UserID},  \$Param{QueueID},    \$Param{ID},
+            \$Param{OAuth2_ProfileID}, \$Param{UserID},  \$Param{QueueID},    \$Param{ID},
+### EO Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
         ],
     );
 
@@ -325,12 +373,6 @@ sub MailAccountDelete {
         );
         return;
     }
-
-    # sql
-    return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
-        SQL  => 'DELETE FROM mail_account_preferences WHERE mail_account_id = ?',
-        Bind => [ \$Param{ID} ],
-    );
 
     # sql
     return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
@@ -500,7 +542,7 @@ sub MailAccountCheck {
     my %Check   = $Backend->Connect(%Param);
 
     if ( $Check{Successful} ) {
-        return ( Successful => 1 )
+        return ( Successful => 1 );
     }
     else {
         return (
@@ -508,158 +550,6 @@ sub MailAccountCheck {
             Message    => $Check{Message}
         );
     }
-}
-
-sub HandleCode {
-    my ( $Self, %Param ) = @_;
-
-    # check needed stuff
-    for (qw(ID Code)) {
-        if ( !$Param{$_} ) {
-            $Kernel::OM->Get('Kernel::System::Log')->Log(
-                Priority => 'error',
-                Message  => "Need $_!"
-            );
-            return;
-        }
-    }
-
-    # get data of mail account
-    my %Data = $Self->MailAccountGet(
-        ID => $Param{ID},
-    );
-    if ( !%Data ) {
-        $Kernel::OM->Get('Kernel::System::Log')->Log(
-            Priority => 'error',
-            Message  => "Invalid mail account"
-        );
-        return;
-    }
-
-    # get needed objects
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-    my $JSONObject   = $Kernel::OM->Get('Kernel::System::JSON');
-
-    # Create a request
-    my $RedirectURI = $ConfigObject->Get('HttpType')
-                    . '://'
-                    . $ConfigObject->Get('FQDN')
-                    . '/'
-                    . $ConfigObject->Get('ScriptAlias')
-                    . 'index.pl?Action=AdminMailAccount&Subaction=HandleCode';
-    my $Content   = 'grant_type=authorization_code'
-                  . '&scope=' . URI::Escape::uri_escape_utf8('https://outlook.office365.com/IMAP.AccessAsUser.All offline_access')
-                  . '&client_id=' . URI::Escape::uri_escape_utf8($Data{ClientID})
-                  . '&client_secret=' . URI::Escape::uri_escape_utf8($Data{ClientSecret})
-                  . '&code=' . URI::Escape::uri_escape_utf8($Param{Code})
-                  . '&redirect_uri=' . URI::Escape::uri_escape_utf8($RedirectURI);
-    my $LWPClient = LWP::UserAgent->new();
-    my $Request   = HTTP::Request->new(POST => 'https://login.microsoftonline.com/' . $Data{TenantID} . '/oauth2/v2.0/token');
-    $Request->content_type('application/x-www-form-urlencoded');
-    $Request->content($Content);
-
-    # Pass request to the user agent and get a response back
-    my $Response = $LWPClient->request($Request);
-
-    # get content
-    my $ResponseContent = $Response->content;
-    if ( !$ResponseContent ) {
-        $Kernel::OM->Get('Kernel::System::Log')->Log(
-            Priority => 'error',
-            Message  => "Invalid response while fetching token!"
-        );
-        return;
-    }
-
-    # to convert the data into a hash, use the JSON module
-    my $ResponseData = $JSONObject->Decode(
-        Data => $ResponseContent,
-    );
-
-    # check refresh token
-    if ( !$ResponseData->{refresh_token} ) {
-        $Kernel::OM->Get('Kernel::System::Log')->Log(
-            Priority => 'error',
-            Message  => $ResponseData->{error_description} || "Invalid response while fetching token!"
-        );
-        return;
-    }
-
-    # save token
-    $Self->SetPreferences(
-        MailAccountID => $Param{ID},
-        Key           => 'RefreshToken',
-        Value         => $ResponseData->{refresh_token},
-    );
-
-    return 1;
-}
-
-sub SetPreferences {
-    my ( $Self, %Param ) = @_;
-
-    # check needed stuff
-    for (qw(MailAccountID Key)) {
-        if ( !$Param{$_} ) {
-            $Kernel::OM->Get('Kernel::System::Log')->Log(
-                Priority => 'error',
-                Message  => "Need $_!"
-            );
-            return;
-        }
-    }
-
-    my $Value = $Param{Value} // '';
-
-    my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
-
-    # delete old data
-    return if !$DBObject->Do(
-        SQL  => 'DELETE FROM mail_account_preferences WHERE mail_account_id = ? AND preferences_key = ?',
-        Bind => [ \$Param{MailAccountID}, \$Param{Key} ],
-    );
-
-    # insert new data
-    return if !$DBObject->Do(
-        SQL  => 'INSERT INTO mail_account_preferences (mail_account_id, preferences_key, preferences_value)'
-              . ' VALUES (?, ?, ?)',
-        Bind => [ \$Param{MailAccountID}, \$Param{Key}, \$Value ],
-    );
-
-    return 1;
-}
-
-sub GetPreferences {
-    my ( $Self, %Param ) = @_;
-
-    # check needed stuff
-    for (qw(MailAccountID)) {
-        if ( !$Param{$_} ) {
-            $Kernel::OM->Get('Kernel::System::Log')->Log(
-                Priority => 'error',
-                Message  => "Need $_!"
-            );
-            return;
-        }
-    }
-
-    my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
-
-    # get preferences
-    return if !$DBObject->Prepare(
-        SQL  => 'SELECT preferences_key, preferences_value'
-              . ' FROM mail_account_preferences'
-              . ' WHERE mail_account_id = ?',
-        Bind => [ \$Param{MailAccountID} ],
-    );
-
-    # fetch the result
-    my %Data;
-    while ( my @Row = $DBObject->FetchrowArray() ) {
-        $Data{ $Row[0] } = $Row[1];
-    }
-
-    return %Data;
 }
 
 1;
@@ -671,9 +561,11 @@ sub GetPreferences {
 This software is part of the KIX project
 (L<https://www.kixdesk.com/>).
 
-This software comes with ABSOLUTELY NO WARRANTY. For details, see the enclosed file
-LICENSE for license information (AGPL). If you did not receive this file, see
-
-<https://www.gnu.org/licenses/agpl.txt>.
+This software comes with ABSOLUTELY NO WARRANTY. This program is
+licensed under the AGPL-3.0 with code licensed under the GPL-3.0.
+For details, see the enclosed files LICENSE (AGPL) and
+LICENSE-GPL3 (GPL3) for license information. If you did not receive
+this files, see <https://www.gnu.org/licenses/agpl.txt> (APGL) and
+<https://www.gnu.org/licenses/gpl-3.0.txt> (GPL3).
 
 =cut
