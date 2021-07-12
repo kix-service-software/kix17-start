@@ -2,10 +2,14 @@
 # Modified version of the work: Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
 # Copyright (C) 2001-2021 OTRS AG, https://otrs.com/
+# Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/
 # --
-# This software comes with ABSOLUTELY NO WARRANTY. For details, see
-# the enclosed file LICENSE for license information (AGPL). If you
-# did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
+# This software comes with ABSOLUTELY NO WARRANTY. This program is
+# licensed under the AGPL-3.0 with code licensed under the GPL-3.0.
+# For details, see the enclosed files LICENSE (AGPL) and
+# LICENSE-GPL3 (GPL3) for license information. If you did not receive
+# this files, see https://www.gnu.org/licenses/agpl.txt (APGL) and
+# https://www.gnu.org/licenses/gpl-3.0.txt (GPL3).
 # --
 
 
@@ -123,6 +127,22 @@
                         </div>
                         <div class="Clear"></div>
 
+### Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
+                        <div class="Row Row_OAuth2_Profile Hidden">
+                            <label class="Mandatory" for="OAuth2_Profile"><span class="Marker">*</span> [% Translate("OAuth2 Profile") | html %]:</label>
+                            <div class="Field">
+                                [% Data.OAuth2_ProfileOption %]
+                                <div id="OAuth2_ProfileError" class="TooltipErrorMessage">
+                                    <p>[% Translate("This field is required.") | html %]</p>
+                                </div>
+                                <div id="OAuth2_ProfileServerError" class="TooltipErrorMessage">
+                                    <p>[% Translate("This field is required.") | html %]</p>
+                                </div>
+                            </div>
+                            <div class="Clear"></div>
+                        </div>
+### EO Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
+
                         <label class="Mandatory" for="LoginAdd"><span class="Marker">*</span> [% Translate("Username") | html %]:</label>
                         <div class="Field">
                             <input type="text" class="W50pc Validate_Required [% Data.LoginAddInvalid | html %]" name="Login" id="LoginAdd" value="" maxlength="200" autocomplete="off" />
@@ -169,47 +189,6 @@
                             <div class="Field">
                                 <input type="text" class="W50pc" name="IMAPFolder" id="IMAPFolder" value="INBOX" maxlength="250"/>
                                 <p class="FieldExplanation">[% Translate("Only modify this if you need to fetch mail from a different folder than INBOX.") | html %]</p>
-                            </div>
-                            <div class="Clear"></div>
-                        </div>
-
-                        <div class="Row Row_Office365 Hidden">
-                            <label class="Mandatory" for="TenantID"><span class="Marker">*</span> [% Translate("Tenant-ID") | html %]:</label>
-                            <div class="Field">
-                                <input type="text" class="W50pc Validate_Required [% Data.TenantIDInvalid | html %]" name="TenantID" id="TenantID" value=""/>
-                                <div id="TenantIDError" class="TooltipErrorMessage">
-                                    <p>[% Translate("This field is required.") | html %]</p>
-                                </div>
-                                <div id="TenantIDServerError" class="TooltipErrorMessage">
-                                    <p>[% Translate("This field is required.") | html %]</p>
-                                </div>
-                                <p class="FieldExplanation">[% Translate("Tenant-ID of Microsoft Azure Active Directory application") | html %]</p>
-                            </div>
-                            <div class="Clear"></div>
-
-                            <label class="Mandatory" for="ClientID"><span class="Marker">*</span> [% Translate("Client-ID") | html %]:</label>
-                            <div class="Field">
-                                <input type="text" class="W50pc Validate_Required [% Data.ClientIDInvalid | html %]" name="ClientID" id="ClientID" value=""/>
-                                <div id="ClientIDError" class="TooltipErrorMessage">
-                                    <p>[% Translate("This field is required.") | html %]</p>
-                                </div>
-                                <div id="ClientIDServerError" class="TooltipErrorMessage">
-                                    <p>[% Translate("This field is required.") | html %]</p>
-                                </div>
-                                <p class="FieldExplanation">[% Translate("Client-ID of Microsoft Azure Active Directory application") | html %]</p>
-                            </div>
-                            <div class="Clear"></div>
-
-                            <label class="Mandatory" for="ClientSecret"><span class="Marker">*</span> [% Translate("Client Secret") | html %]:</label>
-                            <div class="Field">
-                                <input type="password" class="W50pc Validate_Required [% Data.ClientSecretInvalid | html %]" name="ClientSecret" id="ClientSecret" value=""/>
-                                <div id="ClientSecretError" class="TooltipErrorMessage">
-                                    <p>[% Translate("This field is required.") | html %]</p>
-                                </div>
-                                <div id="ClientSecretServerError" class="TooltipErrorMessage">
-                                    <p>[% Translate("This field is required.") | html %]</p>
-                                </div>
-                                <p class="FieldExplanation">[% Translate("Client Secret of Microsoft Azure Active Directory application") | html %]</p>
                             </div>
                             <div class="Clear"></div>
                         </div>
@@ -285,6 +264,23 @@
                         </div>
                         <div class="Clear"></div>
 
+### Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
+                        <div class="Row Row_OAuth2_Profile Hidden">
+                            <label class="Mandatory" for="OAuth2_Profile"><span class="Marker">*</span> [% Translate("OAuth2 Profile") | html %]:</label>
+                            <div class="Field">
+                                [% Data.OAuth2_ProfileOption %]
+                                <div id="OAuth2_ProfileError" class="TooltipErrorMessage">
+                                    <p>[% Translate("This field is required.") | html %]</p>
+                                </div>
+                                <div id="OAuth2_ProfileServerError" class="TooltipErrorMessage">
+                                    <p>[% Translate("This field is required.") | html %]</p>
+                                </div>
+                                <p class="FieldExplanation">[% Translate('Profiles can be specified in the system configuration under the setting "OAuth2::MailAccount::Profiles".') | html %]</p>
+                            </div>
+                            <div class="Clear"></div>
+                        </div>
+### EO Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
+
                         <label class="Mandatory" for="LoginEdit"><span class="Marker">*</span> [% Translate("Username") | html %]:</label>
                         <div class="Field">
                             <input type="text" class="W50pc Validate_Required [% Data.LoginEditInvalid | html %]" name="Login" id="LoginEdit" value="[% Data.Login | html %]" maxlength="200" autocomplete="off" />
@@ -331,47 +327,6 @@
                             <div class="Field">
                                 <input type="text" class="W50pc" name="IMAPFolder" id="IMAPFolder" value="[% Data.IMAPFolder | html %]" maxlength="250"/>
                                 <p class="FieldExplanation">[% Translate("Only modify this if you need to fetch mail from a different folder than INBOX.") | html %]</p>
-                            </div>
-                            <div class="Clear"></div>
-                        </div>
-
-                        <div class="Row Row_Office365 Hidden">
-                            <label class="Mandatory" for="TenantID"><span class="Marker">*</span> [% Translate("Tenant-ID") | html %]:</label>
-                            <div class="Field">
-                                <input type="text" class="W50pc Validate_Required [% Data.TenantIDInvalid | html %]" name="TenantID" id="TenantID" value="[% Data.TenantID | html %]"/>
-                                <div id="TenantIDError" class="TooltipErrorMessage">
-                                    <p>[% Translate("This field is required.") | html %]</p>
-                                </div>
-                                <div id="TenantIDServerError" class="TooltipErrorMessage">
-                                    <p>[% Translate("This field is required.") | html %]</p>
-                                </div>
-                                <p class="FieldExplanation">[% Translate("Tenant-ID of Microsoft Azure Active Directory application") | html %]</p>
-                            </div>
-                            <div class="Clear"></div>
-
-                            <label class="Mandatory" for="ClientID"><span class="Marker">*</span> [% Translate("Client-ID") | html %]:</label>
-                            <div class="Field">
-                                <input type="text" class="W50pc Validate_Required [% Data.ClientIDInvalid | html %]" name="ClientID" id="ClientID" value="[% Data.ClientID | html %]"/>
-                                <div id="ClientIDError" class="TooltipErrorMessage">
-                                    <p>[% Translate("This field is required.") | html %]</p>
-                                </div>
-                                <div id="ClientIDServerError" class="TooltipErrorMessage">
-                                    <p>[% Translate("This field is required.") | html %]</p>
-                                </div>
-                                <p class="FieldExplanation">[% Translate("Client-ID of Microsoft Azure Active Directory application") | html %]</p>
-                            </div>
-                            <div class="Clear"></div>
-
-                            <label class="Mandatory" for="ClientSecret"><span class="Marker">*</span> [% Translate("Client Secret") | html %]:</label>
-                            <div class="Field">
-                                <input type="password" class="W50pc Validate_Required [% Data.ClientSecretInvalid | html %]" name="ClientSecret" id="ClientSecret" value="[% Data.ClientSecret | html %]"/>
-                                <div id="ClientSecretError" class="TooltipErrorMessage">
-                                    <p>[% Translate("This field is required.") | html %]</p>
-                                </div>
-                                <div id="ClientSecretServerError" class="TooltipErrorMessage">
-                                    <p>[% Translate("This field is required.") | html %]</p>
-                                </div>
-                                <p class="FieldExplanation">[% Translate("Client Secret of Microsoft Azure Active Directory application") | html %]</p>
                             </div>
                             <div class="Clear"></div>
                         </div>
@@ -459,25 +414,19 @@ $('select#TypeAdd, select#Type').on('change', function(){
     else {
         $('.Row_IMAPFolder').hide();
     }
-    if (/^Office365/.test($(this).val())) {
-        $('.Row_Office365').show();
-        Core.Form.Validate.EnableValidation( $('.Row_Office365') );
+    if (/_OAuth2$/.test($(this).val())) {
+        $('.Row_OAuth2_Profile').show();
+        Core.Form.Validate.EnableValidation( $('.Row_OAuth2_Profile') );
 
         $('.Row_Password').hide();
         Core.Form.Validate.DisableValidation( $('.Row_Password') );
-
-        $('.Row_Host').hide();
-        Core.Form.Validate.DisableValidation( $('.Row_Host') );
     }
     else {
-        $('.Row_Office365').hide();
-        Core.Form.Validate.DisableValidation( $('.Row_Office365') );
+        $('.Row_OAuth2_Profile').hide();
+        Core.Form.Validate.DisableValidation( $('.Row_OAuth2_Profile') );
 
         $('.Row_Password').show();
         Core.Form.Validate.EnableValidation( $('.Row_Password') );
-
-        $('.Row_Host').show();
-        Core.Form.Validate.EnableValidation( $('.Row_Host') );
     }
 }).trigger('change');
 // Show only Queue field if Dispatch By Queue is selected
