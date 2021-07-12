@@ -1,6 +1,17 @@
 # Change log of KIX
 * Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.16.0-RC7 (2021/07/12)
+ * (2021/07/09) - CR: KIX17-1014 (generalized implementation for OAuth2) (millinger)
+ * (2021/07/08) - Bugfix: KIX17-1959 (added description field in the ticket template administration) (fjacquemin)
+ * (2021/07/07) - CR: KIX17-2281 (changed ReadableValueRender in dynamic field object type ticket) (fjacquemin)
+ * (2021/07/07) - CR: KIX17-2184 (added display/download of dynamic field attachment at AgentTicketZoomTabAttachment) (fjacquemin)
+ * (2021/07/06) - CR: KIX17-2125 (im-/export for dynamic field administration) (fjacquemin)
+ * (2021/07/06) - Bugfix: KIX17-2363 (fixed select all of config item compare) (ddoerffel)
+ * (2021/07/05) - Bugfix: KIX17-2290 (silence cache cleanup for ticket bulk action) (millinger)
+ * (2021/07/02) - Bugfix: KIX17-2199 (fixed configurable translation for autocomplete search of service and sla) (millinger)
+ * (2021/07/01) - Bugfix: KIX17-2030 (fixed some layout errors) (ddoerffel)
+
 # 17.16.0-RC6 (2021/06/29)
  * (2021/06/28) - Bugfix: KIX17-2309 (fixed slow loading of the allocation lists with too many items) (fjacquemin)
  * (2021/06/28) - Bugfix: KIX17-2272 (enable use of brackets in ticket title) (ddoerffel)
