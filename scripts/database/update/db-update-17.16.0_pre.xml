@@ -32,7 +32,7 @@
         </ForeignKey>
     </TableCreate>
     <TableAlter Name="mail_account">
-        <ColumnAdd Default="0" Name="oauth2_profile_id" Required="false" Type="INTEGER" />
+        <ColumnAdd Name="oauth2_profile_id" Required="false" Type="INTEGER" />
         <ForeignKeyAdd ForeignTable="oauth2_profile">
             <Reference Local="oauth2_profile_id" Foreign="id"/>
         </ForeignKeyAdd>

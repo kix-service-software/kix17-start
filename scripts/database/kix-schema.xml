@@ -1585,7 +1585,7 @@
 
 <!-- oauth2_token -->
 <Table Name="oauth2_token">
-    <Column Name="profile_id"  Required="true" Type="VARCHAR" Size="200"/>
+    <Column Name="profile_id"  Required="true" Type="INTEGER"/>
     <Column Name="token_type"  Required="true" Type="VARCHAR" Size="20"/>
     <Column Name="token"       Required="true" Type="VARCHAR" Size="1800000"/>
     <Column Name="create_time" Required="true" Type="DATE"/>
