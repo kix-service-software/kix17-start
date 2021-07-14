@@ -1,6 +1,10 @@
 # Change log of KIX
 * Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.16.0-RC8 (2021/07/14)
+ * (2021/07/14) - Bugfix: KIX17-2387 (check connection to mail account before authentication) (millinger)
+ * (2021/07/12) - Bugfix: KIX17-2385 (fixed database insert for mail accounts without OAuth2 profile) (millinger)
+
 # 17.16.0-RC7 (2021/07/12)
  * (2021/07/09) - CR: KIX17-1014 (generalized implementation for OAuth2) (millinger)
  * (2021/07/08) - Bugfix: KIX17-1959 (added description field in the ticket template administration) (fjacquemin)
