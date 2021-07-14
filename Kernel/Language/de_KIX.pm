@@ -4658,29 +4658,31 @@ sub Data {
     # OAuth2
     $Lang->{'If any of the "OAuth2" mechanisms was selected as SendmailModule, the profile to use for OAuth2 must be specified.'}
         = 'Wenn einer der OAuth2-Mechanismen als SendmailModule ausgewählt wurde, muss hier das OAuth2 Profil angegeben werden.';
-    $Lang->{'Need ID of profile!'} = 'Benötige ID eines Profils!';
     $Lang->{'Could not save state token for authentification!'} = 'State-Tocket konnte für Authentifizierung nicht gespeichert werden!';
-    $Lang->{'Profile updated!'} = 'Profil aktualisiert!';
-    $Lang->{'Profile deleted!'} = 'Profil gelöscht!';
-    $Lang->{'Could not find profile for provided state!'} = 'Konnte kein Profil für den übergebenen State finden!';
-    $Lang->{'Could not get access token!'} = 'Konnte keinen Zugriffstoken erhalten!';
-    $Lang->{'Profile activated!'} = 'Profil aktiviert!';
-    $Lang->{'OAuth2 Profile Management'} = 'OAuth2-Profilverwaltung';
-    $Lang->{'Add OAuth2 profile'} = 'OAuth2-Profil hinzufügen';
-    $Lang->{'Reauthorization'} = 'Erneut authorisieren';
-    $Lang->{'Missing refresh token'} = 'Erneuerungstoken fehlt';
-    $Lang->{'Reauthorize profile'} = 'Profil erneut authorisieren';
-    $Lang->{'Delete profile'} = 'Profil löschen';
-    $Lang->{'Add OAuth2 Profile'} = 'OAuth2-Profil hinzufügen';
-    $Lang->{'Edit OAuth2 Profile'} = 'OAuth2-Profil bearbeiten';
-    $Lang->{'A profile with this name already exists!'} = 'Ein Profil mit diesem Namen existiert bereits!';
-    $Lang->{'URL Authorization'} = 'Authorisierungs-URL';
-    $Lang->{'URL Token'} = 'Token-URL';
-    $Lang->{'URL Redirect'} = 'Weiterleitungs-URL';
-    $Lang->{'Client ID'} = 'Client ID';
-    $Lang->{'Client Secret'} = 'Client Secret';
-    $Lang->{'Scope'} = 'Scope';
-    $Lang->{'OAuth2 Profile'} = 'OAuth2-Profil';
+    $Lang->{'Could not find profile for provided state!'}       = 'Konnte kein Profil für den übergebenen State finden!';
+    $Lang->{'A profile with this name already exists!'}         = 'Ein Profil mit diesem Namen existiert bereits!';
+    $Lang->{'Need ID of profile!'}                              = 'Benötige ID eines Profils!';
+    $Lang->{'Profile updated!'}                                 = 'Profil aktualisiert!';
+    $Lang->{'Profile deleted!'}                                 = 'Profil gelöscht!';
+    $Lang->{'Could not get access token!'}                      = 'Konnte keinen Zugriffstoken erhalten!';
+    $Lang->{'Profile activated!'}                               = 'Profil aktiviert!';
+    $Lang->{'OAuth2 Profile Management'}                        = 'OAuth2-Profilverwaltung';
+    $Lang->{'Add OAuth2 profile'}                               = 'OAuth2-Profil hinzufügen';
+    $Lang->{'Reauthorization'}                                  = 'Erneut authorisieren';
+    $Lang->{'Missing refresh token'}                            = 'Erneuerungstoken fehlt';
+    $Lang->{'Reauthorize profile'}                              = 'Profil erneut authorisieren';
+    $Lang->{'Delete profile'}                                   = 'Profil löschen';
+    $Lang->{'Add OAuth2 Profile'}                               = 'OAuth2-Profil hinzufügen';
+    $Lang->{'Edit OAuth2 Profile'}                              = 'OAuth2-Profil bearbeiten';
+    $Lang->{'URL Authorization'}                                = 'Authorisierungs-URL';
+    $Lang->{'URL Token'}                                        = 'Token-URL';
+    $Lang->{'URL Redirect'}                                     = 'Weiterleitungs-URL';
+    $Lang->{'Client ID'}                                        = 'Client ID';
+    $Lang->{'Client Secret'}                                    = 'Client Secret';
+    $Lang->{'Scope'}                                            = 'Scope';
+    $Lang->{'OAuth2 Profile'}                                   = 'OAuth2-Profil';
+    $Lang->{'OAuth2 Profiles'}                                  = 'OAuth2-Profile';
+    $Lang->{'Manage OAuth2 profiles.'}                          = 'OAuth2-Profile verwalten.';
 
     # DynamicField Import/Export
     $Lang->{'Export dynamic fields'} = 'Dynamische Felder exportieren';
