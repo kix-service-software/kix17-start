@@ -96,6 +96,10 @@ sub MailAccountAdd {
         $Param{Password} = '-';
     }
 ### EO Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
+    else {
+        # set value to undef/NULL to prevent database errors
+        $Param{OAuth2_ProfileID} = undef;
+    }
 
     # check needed stuff
     for (qw(Login Password Host ValidID Trusted DispatchingBy QueueID UserID)) {
@@ -296,6 +300,10 @@ sub MailAccountUpdate {
         $Param{Password} = '-';
     }
 ### EO Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
+    else {
+        # set value to undef/NULL to prevent database errors
+        $Param{OAuth2_ProfileID} = undef;
+    }
 
     # check needed stuff
     for (qw(ID Login Password Host Type ValidID Trusted DispatchingBy QueueID UserID)) {
