@@ -52,6 +52,17 @@ sub Connect {
         }
     }
 
+    # get access token
+    my $AccessToken = $Kernel::OM->Get('Kernel::System::OAuth2')->GetAccessToken(
+        ProfileID => $Param{OAuth2_ProfileID}
+    );
+    if ( !$AccessToken ) {
+        return (
+            Successful => 0,
+            Message    => "$Type: Could not request access token for $Param{Login}/$Param{Host}'. The refresh token could be expired or invalid."
+        );
+    }
+
     # connect to host
     my $PopObject = Net::POP3->new(
         $Param{Host},
@@ -62,7 +73,7 @@ sub Connect {
     if ( !$PopObject ) {
         return (
             Successful => 0,
-            Message    => "$Type: Can't connect to $Param{Host}"
+            Message    => "$Type: Can't connect to $Param{Host}: $!!"
         );
     }
 
@@ -71,18 +82,7 @@ sub Connect {
         SSL_verify_mode => 0,
     );
 
-    # authentication
-    my $AccessToken = $Kernel::OM->Get('Kernel::System::OAuth2')->GetAccessToken(
-        ProfileID => $Param{OAuth2_ProfileID}
-    );
-
-    if ( !$AccessToken ) {
-        return (
-            Successful => 0,
-            Message    => "$Type: Could not request access token for $Param{Login}/$Param{Host}'. The refresh token could be expired or invalid."
-        );
-    }
-
+    # auth via SASL XOAUTH2
     my $SASLXOAUTH2 = encode_base64( 'user=' . $Param{Login} . "\x01auth=Bearer " . $AccessToken . "\x01\x01" );
     $PopObject->command( 'AUTH', 'XOAUTH2' )->response();
     my $NOM = $PopObject->command($SASLXOAUTH2)->response();
