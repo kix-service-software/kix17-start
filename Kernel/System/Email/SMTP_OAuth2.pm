@@ -99,7 +99,7 @@ sub Check {
         );
     }
 
-    my $SASLXOAUTH2 = encode_base64( 'user=' . $Param{AuthUser} . "\x01auth=Bearer " . $AccessToken . "\x01\x01" );
+    my $SASLXOAUTH2 = encode_base64( 'user=' . $ConfigData{AuthUser} . "\x01auth=Bearer " . $AccessToken . "\x01\x01" );
     $SMTP->command( 'AUTH', 'XOAUTH2' )->response();
     my $NOM = $SMTP->command($SASLXOAUTH2)->response();
 
