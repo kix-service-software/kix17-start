@@ -40,7 +40,7 @@ sub new {
 sub Connect {
     my ( $Self, %Param ) = @_;
 
-    my $Type = 'IMAP_OAuth2';
+    my $Type = 'IMAPTLS_OAuth2';
 
 ### Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
     # check needed stuff

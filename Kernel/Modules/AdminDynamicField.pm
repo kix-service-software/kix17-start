@@ -463,6 +463,9 @@ sub _DynamicFieldImport {
         Message => 'Content is missing, can not continue!',
     } if ( !$UploadStuff{Content} );
 
+    # check if existing entries should be overwriten
+    my $OverwriteExistingEntities = $ParamObject->GetParam( Param => 'OverwriteExistingEntities' ) || '';
+
     # load data from yaml file
     my $DynamicFieldData = $YAMLObject->Load(
         Data => $UploadStuff{Content}
@@ -495,7 +498,14 @@ sub _DynamicFieldImport {
     my %PostMasterHeaders = map { $_ => 1 } @{ $ConfigObject->Get('PostmasterX-Header') };
 
     # process dynamic fields
+    DYNAMICFIELD:
     for my $DynamicFieldConfig ( @{ $DynamicFieldData } ) {
+        # check if existing fields should be skipped
+        next DYNAMICFIELD if (
+            !$OverwriteExistingEntities
+            && IsHashRefWithData( $DynamicFieldLookup{ $DynamicFieldConfig->{Name} } )
+        );
+
         # special handling for some configurations
         if ( $DynamicFieldConfig->{Config}->{DeploymentStates}
             || $DynamicFieldConfig->{Config}->{ITSMConfigItemClasses}

@@ -8,89 +8,105 @@
 
 
 [% RenderBlockStart("TabContent") %]
-<div class="MainBox ARIARoleMain LayoutFixedSidebar SidebarFirst">
+<div class="MainBox ARIARoleMain">
 [% RenderBlockStart("AttachmentMsg") %]
     <div class="NothingAvailableMsg">
     [% Data.NothingAvailableMsg %]
     </div>
 [% RenderBlockEnd("AttachmentMsg") %]
 [% RenderBlockStart("AttachmentList") %]
-    <div class="SidebarColumn">
-        <div class="WidgetSimple">
-            <div class="Header">
-                 <h2><span><label for="FilterAttachmentTable">[% Translate("Filter for attachments") | html %]</label></span></h2>
+    <div class="WidgetSimple SpacingTop Expanded" id="WidgetArticleAttachments">
+        <div class="Header">
+            <div class="WidgetAction Toggle" title="[% Translate("Show or hide the content.") | html %]" ></div>
+            <h2><span>[% Translate("Article attachments") | html %]</span></h2>
+        </div>
+        <div id="ContentID_ArticleAttachments" class="Content AutoHeight LayoutFixedSidebar SidebarFirst">
+            <div class="SidebarColumn">
+                <div class="WidgetSimple">
+                    <div class="Header">
+                         <h2><span><label for="FilterAttachmentTable">[% Translate("Filter for attachments") | html %]</label></span></h2>
+                    </div>
+                    <div class="Content">
+                        <input type="text" id="FilterAttachmentTable" class="W75pc" name="FilterAttachmentTable" value="" title="[% Translate("Filter for attachments") | html %]" />
+                    </div>
+                </div>
             </div>
-            <div class="Content">
-                <input type="text" id="FilterAttachmentTable" class="W75pc" name="FilterAttachmentTable" value="" title="[% Translate("Filter for attachments") | html %]" />
+            <div class="ContentColumn">
+                <div class="Bottom">
+                    <input type="checkbox" name="SelectAll" id="SelectAll"/>[% Translate("All") | html %]
+                </div>
+                <form action="[% Env("CGIHandle") %]" method="post" id="AttachmentForm">
+                    <input type="hidden" name="Action" value="[% Env("Action") %]">
+                    <input type="hidden" name="Subaction" value="Download">
+                    <table id="AttachmentTable" class="DataTable TableFixed">
+                        <thead>
+                            <tr>
+                                <th class="Fixed" style="width: 66px;"><a href="#">[% Translate("Select") | html %]</a></th>
+                                <th class="Sortable"><a href="#">[% Translate("Name") | html %]</a></th>
+                                <th class="Sortable W100px"><a href="#">[% Translate("Size") | html %]</a></th>
+                                <th class="W100px">[% Translate("Download") | html %]</th>
+                                <th class="Sortable"><a href="#">[% Translate("Article") | html %]</a></th>
+                                <th class="Sortable"><a href="#">[% Translate("From") | html %]</a></th>
+                                <th class="Sortable"><a href="#">[% Translate("Date") | html %]</a></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+[% RenderBlockStart("Attachment") %]
+                            <tr>
+                                <td class="Checkbox Fixed" style="width: 36px;">
+                                    <input class="Checkbox AutocompleteOff" type="checkbox" value="[% Data.ArticleID | html %]::[% Data.Filename | html %]" name="AttachmentID" autocomplete="off">
+                                    <input type="hidden" name="TicketID" value="[% Data.TicketID | html %]">
+                                </td>
+                                <td class="Name breakword" title="[% Data.Filename | html %]">
+                                    [% Data.Filename | truncate(60) | html %]
+                                    <input type="hidden" class="SortData" value="[% Data.Filename | uri %]" />
+                                </td>
+                                <td class="Size Right">
+                                    [% Data.Filesize | html %]
+                                    <input type="hidden" class="SortData" value="[% Data.FilesizeRaw | html %]" />
+                                </td>
+                                <td class="Attachment">
+                                    <a class="Attachment AttachmentDownload" href="[% Env("CGIHandle") %]?Action=AgentTicketAttachment;ArticleID=[% Data.ArticleID | html %];FileID=[% Data.FileID | uri %][% Data.Session | html %]" [% Data.Target %]>
+                                        <i class="fa fa-download"></i>
+                                    </a>
+                                </td>
+                                <td class="Article">
+                                    <a href="[% Env("Baselink") %]Action=AgentTicketZoom;TicketID=[% Data.TicketID | html %]#[% Data.ArticleID | html %]" title="[% Translate("Direct URL to article %s: %s", Data.ArticleIdx, Data.Subject) | html %]">[% Data.ArticleIdx | html %].: [% Data.Subject | truncate(30) | html %]</a>
+                                    <input type="hidden" class="SortData" value="[% Data.Subject | html %]" />
+                                    <input type="hidden" name="ArticleID" value="[% Data.ArticleID | html %]">
+                                    <input type="hidden" name="ArticleIdx" value="[% Data.ArticleID | html %]::[% Data.ArticleIdx | html %]">
+                                </td>
+                                <td class="Size">
+                                    [% Data.FromRealname | html %]
+                                    <input type="hidden" class="SortData" value="[% Data.From | html %]" />
+                                </td>
+                                <td class="Size">
+                                    [% Data.Created | Localize("TimeShort") %]
+                                    <input type="hidden" class="SortData" value="[% Data.Created | html %]" />
+                                </td>
+                            </tr>
+[% RenderBlockEnd("Attachment") %]
+                        </tbody>
+                    </table>
+                    <div class="SpacingTopSmall">
+[% RenderBlockStart("AttachmentDelete") %]
+                        <button class="Primary CallForAction" id="Delete"  title="Attachments delete" type="button" disabled="disabled"><span>[% Translate("Delete Attachments") | html %]</span></button>
+[% RenderBlockEnd("AttachmentDelete") %]
+                        <button class="Primary CallForAction Download" id="Download" type="button" name="Download" disabled="disabled"><span>[% Translate("Download Attachments") | html %]</span></button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
-    <div class="ContentColumn">
-        <div class="Bottom">
-            <input type="checkbox" name="SelectAll" id="SelectAll"/>[% Translate("All") | html %]
+    <div class="Clear"></div>
+[% RenderBlockEnd("AttachmentList") %]
+[% RenderBlockStart("DynamicFieldAttachmentList") %]
+    <div class="WidgetSimple SpacingTop Expanded" id="WidgetDynamicFieldAttachments">
+        <div class="Header">
+            <div class="WidgetAction Toggle" title="[% Translate("Show or hide the content.") | html %]" ></div>
+            <h2><span>[% Translate("DynamicField attachments") | html %]</span></h2>
         </div>
-        <form action="[% Env("CGIHandle") %]" method="post" id="AttachmentForm">
-            <input type="hidden" name="Action" value="[% Env("Action") %]">
-            <input type="hidden" name="Subaction" value="Download">
-            <table id="AttachmentTable" class="DataTable TableFixed">
-                <thead>
-                    <tr>
-                        <th class="Fixed" style="width: 66px;"><a href="#">[% Translate("Select") | html %]</a></th>
-                        <th class="Sortable"><a href="#">[% Translate("Name") | html %]</a></th>
-                        <th class="Sortable W100px"><a href="#">[% Translate("Size") | html %]</a></th>
-                        <th class="W100px">[% Translate("Download") | html %]</th>
-                        <th class="Sortable"><a href="#">[% Translate("Article") | html %]</a></th>
-                        <th class="Sortable"><a href="#">[% Translate("From") | html %]</a></th>
-                        <th class="Sortable"><a href="#">[% Translate("Date") | html %]</a></th>
-                    </tr>
-                </thead>
-                <tbody>
-[% RenderBlockStart("Attachment") %]
-                    <tr>
-                        <td class="Checkbox Fixed" style="width: 36px;">
-                            <input class="Checkbox AutocompleteOff" type="checkbox" value="[% Data.ArticleID | html %]::[% Data.Filename | html %]" name="AttachmentID" autocomplete="off">
-                            <input type="hidden" name="TicketID" value="[% Data.TicketID | html %]">
-                        </td>
-                        <td class="Name breakword" title="[% Data.Filename | html %]">
-                            [% Data.Filename | truncate(60) | html %]
-                            <input type="hidden" class="SortData" value="[% Data.Filename | uri %]" />
-                        </td>
-                        <td class="Size Right">
-                            [% Data.Filesize | html %]
-                            <input type="hidden" class="SortData" value="[% Data.FilesizeRaw | html %]" />
-                        </td>
-                        <td class="Attachment">
-                            <a class="Attachment AttachmentDownload" href="[% Env("CGIHandle") %]?Action=AgentTicketAttachment;ArticleID=[% Data.ArticleID | html %];FileID=[% Data.FileID | uri %][% Data.Session | html %]" [% Data.Target %]>
-                                <i class="fa fa-download"></i>
-                            </a>
-                        </td>
-                        <td class="Article">
-                            <a href="[% Env("Baselink") %]Action=AgentTicketZoom;TicketID=[% Data.TicketID | html %]#[% Data.ArticleID | html %]" title="[% Translate("Direct URL to article %s: %s", Data.ArticleIdx, Data.Subject) | html %]">[% Data.ArticleIdx | html %].: [% Data.Subject | truncate(30) | html %]</a>
-                            <input type="hidden" class="SortData" value="[% Data.Subject | html %]" />
-                            <input type="hidden" name="ArticleID" value="[% Data.ArticleID | html %]">
-                            <input type="hidden" name="ArticleIdx" value="[% Data.ArticleID | html %]::[% Data.ArticleIdx | html %]">
-                        </td>
-                        <td class="Size">
-                            [% Data.FromRealname | html %]
-                            <input type="hidden" class="SortData" value="[% Data.From | html %]" />
-                        </td>
-                        <td class="Size">
-                            [% Data.Created | Localize("TimeShort") %]
-                            <input type="hidden" class="SortData" value="[% Data.Created | html %]" />
-                        </td>
-                    </tr>
-[% RenderBlockEnd("Attachment") %]
-                </tbody>
-            </table>
-            <div class="SpacingTopSmall">
-[% RenderBlockStart("AttachmentDelete") %]
-                <button class="Primary CallForAction" id="Delete"  title="Attachments delete" type="button" disabled="disabled"><span>[% Translate("Delete Attachments") | html %]</span></button>
-[% RenderBlockEnd("AttachmentDelete") %]
-                <button class="Primary CallForAction Download" id="Download" type="button" name="Download" disabled="disabled"><span>[% Translate("Download Attachments") | html %]</span></button>
-            </div>
-        </form>
-[% RenderBlockStart("DynamicFieldAttachmentListShared") %]
-        <div class="SpacingTopSmall">
+        <div id="ContentID_DynamicFieldAttachments" class="Content AutoHeight">
             <table id="DynamicFieldAttachmentTable" class="DataTable TableFixed">
                 <thead>
                     <tr>
@@ -101,48 +117,7 @@
                     </tr>
                 </thead>
                 <tbody>
-[% RenderBlockStart("DynamicFieldAttachmentShared") %]
-                        <tr>
-                            <td class="Name breakword" title="[% Data.FileName | html %]">
-                                [% Data.FileName | truncate(60) | html %]
-                                <input type="hidden" class="SortData" value="[% Data.FileName | uri %]" />
-                            </td>
-                            <td class="Size Right">
-                                [% Data.FileSize | html %]
-                                <input type="hidden" class="SortData" value="[% Data.FileSizeRaw | html %]" />
-                            </td>
-                            <td class="Attachment">
-                                <a class="Attachment AttachmentDownload" href="[% Env("CGIHandle") %]?Action=DynamicFieldAttachmentHandler;Subaction=Download;DynamicFieldID=[% Data.DynamicFieldID | uri %];Filename=[% Data.FileKey | uri %][% Data.Session | html %]" [% Data.Target %]>
-                                    <i class="fa fa-download"></i>
-                                </a>
-                            </td>
-                            <td class="DynamicField">
-                                [% Translate(Data.DynamicField) | html %]
-                                <input type="hidden" class="SortData" value="[% Data.DynamicField | html %]" />
-                            </td>
-                        </tr>
-[% RenderBlockEnd("DynamicFieldAttachmentShared") %]
-                </tbody>
-            </table>
-        </div>
-[% RenderBlockEnd("DynamicFieldAttachmentListShared") %]
-
-    </div>
-[% RenderBlockEnd("AttachmentList") %]
-    <div class="Clear"></div>
-[% RenderBlockStart("DynamicFieldAttachmentListStandalone") %]
-    <div class="ContentColumn">
-        <table id="DynamicFieldAttachmentTable" class="DataTable TableFixed">
-            <thead>
-                <tr>
-                    <th class="Sortable"><a href="#">[% Translate("Name") | html %]</a></th>
-                    <th class="Sortable W100px"><a href="#">[% Translate("Size") | html %]</a></th>
-                    <th class="W100px">[% Translate("Download") | html %]</th>
-                    <th class="Sortable"><a href="#">[% Translate("Dynamic Field") | html %]</a></th>
-                </tr>
-            </thead>
-            <tbody>
-[% RenderBlockStart("DynamicFieldAttachmentStandalone") %]
+[% RenderBlockStart("DynamicFieldAttachment") %]
                     <tr>
                         <td class="Name breakword" title="[% Data.FileName | html %]">
                             [% Data.FileName | truncate(60) | html %]
@@ -162,12 +137,12 @@
                             <input type="hidden" class="SortData" value="[% Data.DynamicField | html %]" />
                         </td>
                     </tr>
-[% RenderBlockEnd("DynamicFieldAttachmentStandalone") %]
+[% RenderBlockEnd("DynamicFieldAttachment) %]
             </tbody>
         </table>
     </div>
     <div class="Clear"></div>
-[% RenderBlockEnd("DynamicFieldAttachmentListStandalone") %]
+[% RenderBlockEnd("DynamicFieldAttachmentList") %]
 </div>
 [% RenderBlockEnd("TabContent") %]
 

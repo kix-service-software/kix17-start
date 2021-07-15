@@ -40,7 +40,7 @@ BEGIN {
 sub Connect {
     my ( $Self, %Param ) = @_;
 
-    my $Type = 'POP3_OAuth2';
+    my $Type = 'POP3TLS_OAuth2';
 
     # check needed stuff
     for (qw(OAuth2_ProfileID Login Password Host Timeout Debug)) {

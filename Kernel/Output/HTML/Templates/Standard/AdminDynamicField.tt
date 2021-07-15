@@ -69,6 +69,10 @@ $('#[% Data.SelectName %]').on('change', function() {
                             <input name="FileUpload" id="FileUpload" type="file" size="18" class="Fixed W100pc Validate_Required [% Data.FileUploadInvalid | html %]"/>
                             <div id="FileUploadError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
                             <div id="FileUploadServerError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
+                            <fieldset class="Separated">
+                                <input type="checkbox" id="OverwriteExistingEntities" name="OverwriteExistingEntities" value="1" />
+                                <label for="OverwriteExistingEntities">[% Translate("Overwrite existing DynamicFields?") | html %]</label>
+                            </fieldset>
                             <button class="CallForAction Fullsize Center" type="submit" value="[% Translate("Import DynamicFields") | html %]">
                                 <span><i class="fa fa-upload"></i>[% Translate("Import DynamicFields") | html %]</span>
                             </button>
