@@ -336,6 +336,7 @@ $('#Authentication').on('change', function(){
                                     [% Translate("Show or hide SSL options to connect to the remote system.") | html %]
                                 </p>
                             </div>
+                            <div class="Clear"></div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
 $('#UseSSL').on('change', function(){

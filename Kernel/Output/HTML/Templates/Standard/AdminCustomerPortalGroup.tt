@@ -212,7 +212,7 @@
                             <img style="display:block" class="SpacingBottomSmall" src="data:[% Data.ContentType | html %];base64,[% Data.Content | html %]"/>
 [% RenderBlockEnd("DisplayIcon") %]
                             <input name="FileUpload" id="FileUpload" type="file" size="30"/><br/>
-                            <span class="FieldExplanation">[% Translate("(The icon should have a size of 64x64 pixels. Otherwise it will be scaled automatically.)") | html %]</span>
+                            <p class="FieldExplanation">[% Translate("(The icon should have a size of 64x64 pixels. Otherwise it will be scaled automatically.)") | html %]</p>
                         </div>
                         <div class="Clear"></div>
                         <label class="" for="ValidID">[% Translate("Valid") | html %]:</label>
