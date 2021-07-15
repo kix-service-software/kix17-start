@@ -1,6 +1,11 @@
 # Change log of KIX
 * Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.16.0-RC9 (2021/07/15)
+ * (2021/07/15) - CR: KIX17-2184 (added widgets for article and dynamic field attachments) (millinger)
+ * (2021/07/15) - CR: KIX17-2125 (added checkbox to control overwrite of existing dynamic fields on import) (millinger)
+ * (2021/07/15) - CR: KIX17-2378 (changes by depends check) (fjacquemin)
+
 # 17.16.0-RC8 (2021/07/14)
  * (2021/07/14) - Bugfix: KIX17-2387 (check connection to mail account before authentication) (millinger)
  * (2021/07/12) - Bugfix: KIX17-2385 (fixed database insert for mail accounts without OAuth2 profile) (millinger)
