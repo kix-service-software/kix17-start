@@ -158,6 +158,11 @@ sub Run {
     if (
         ref( $Config ) eq 'HASH'
         && ref( $Config->{DynamicField} ) eq 'HASH'
+        && %{ $Config->{DynamicField} }
+        && $MainObject->Require(
+            'Kernel::System::DFAttachment',
+            Silent => 1,
+        )
     ) {
         # get needed objects
         my $DFAttachmentObject = $Kernel::OM->Get('Kernel::System::DFAttachment');
@@ -176,7 +181,6 @@ sub Run {
         );
 
         my $DFAttachmentCount = 0;
-        my $BlockSuffix       = 'Shared';
 
         # cycle trough the activated Dynamic Fields for this screen
         DYNAMICFIELD:
@@ -186,12 +190,9 @@ sub Run {
             next DYNAMICFIELD if ( ref( $Ticket{ 'DynamicField_' . $DynamicFieldConfig->{Name} } ) ne 'ARRAY' );
 
             if ( !$DFAttachmentCount ) {
-                if ( !$AttachmentCount ) {
-                    $BlockSuffix = 'Standalone';
-                }
                 # create outer block
                 $LayoutObject->Block(
-                    Name => 'DynamicFieldAttachmentList' . $BlockSuffix,
+                    Name => 'DynamicFieldAttachmentList',
                 );
             }
             $AttachmentCount++;
@@ -204,7 +205,7 @@ sub Run {
                 );
 
                 $LayoutObject->Block(
-                    Name => 'DynamicFieldAttachment' . $BlockSuffix,
+                    Name => 'DynamicFieldAttachment',
                     Data => {
                         FileName       => $File{Preferences}->{Filename},
                         FileKey        => $DFAttachmentKey,

@@ -4694,6 +4694,8 @@ sub Data {
     # EO DynamicField Import/Export
 
     # Ticket Tab Attachments
+    $Lang->{'Article attachments'}      = 'Artikelanlagen';
+    $Lang->{'DynamicField attachments'} = 'Anlagen dynamischer Felder';
     $Lang->{'Dynamic fields shown in the AgentTicketZoomTab "Attachments". Possible settings: 0 = Disabled, 1 = Enabled.'}
         = 'Dynamische Felder, welche im Tab "Anlagen" der Agentenoberfläche angezeigt werden. Mögliche Einstellungen: 0 = deaktiviert, 1 = aktiviert.';
 
