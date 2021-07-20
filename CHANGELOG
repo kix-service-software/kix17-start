@@ -1,6 +1,9 @@
 # Change log of KIX
 * Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.16.0-RC10 (2021/07/20)
+ * (2021/07/19) - Bugfix: KIX17-2302 (Limited match for subdomain to 255 characters in Kernel::Output::HTML::FilterText::URL) (millinger)
+
 # 17.16.0-RC9 (2021/07/15)
  * (2021/07/15) - CR: KIX17-2184 (added widgets for article and dynamic field attachments) (millinger)
  * (2021/07/15) - CR: KIX17-2125 (added checkbox to control overwrite of existing dynamic fields on import) (millinger)
