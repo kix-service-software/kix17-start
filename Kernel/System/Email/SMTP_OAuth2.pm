@@ -11,6 +11,7 @@ package Kernel::System::Email::SMTP_OAuth2;
 use strict;
 use warnings;
 
+use Authen::SASL qw(Perl);
 use MIME::Base64 qw(encode_base64);
 
 use parent qw(Kernel::System::Email::SMTP);
@@ -51,11 +52,10 @@ sub Check {
         Name => $ConfigData{OAuth2_Profile},
     );
     if ( !$ProfileID ) {
-        $Kernel::OM->Get('Kernel::System::Log')->Log(
-            Priority => 'error',
-            Message  => "ID for OAuth2 profile '$ConfigData{OAuth2_Profile}' not found!"
+        return (
+            Successful => 0,
+            Message    => 'ID for OAuth2 profile "' . $ConfigData{OAuth2_Profile} . '" not found!'
         );
-        return;
     }
 
     # authentication
@@ -64,11 +64,10 @@ sub Check {
     );
 
     if ( !$AccessToken ) {
-        $Kernel::OM->Get('Kernel::System::Log')->Log(
-            Priority => 'error',
-            Message  => "Could not request access token for $ConfigData{AuthUser}/$ConfigData{Host}'. The refresh token could be expired or invalid."
+        return (
+            Successful => 0,
+            Message    => 'Could not request access token for ' . $ConfigData{AuthUser} . '/' . $ConfigData{Host} . '. The refresh token could be expired or invalid.'
         );
-        return;
     }
 
     # try it 3 times to connect with the SMTP server
@@ -99,15 +98,21 @@ sub Check {
         );
     }
 
-    my $SASLXOAUTH2 = encode_base64( 'user=' . $ConfigData{AuthUser} . "\x01auth=Bearer " . $AccessToken . "\x01\x01" );
-    $SMTP->command( 'AUTH', 'XOAUTH2' )->response();
-    my $NOM = $SMTP->command($SASLXOAUTH2)->response();
-
-    if ( !defined $NOM ) {
+    # prepare authentication with sasl
+    my $SASL = Authen::SASL->new(
+        mechanism => 'XOAUTH2',
+        callback => {
+            user         => $ConfigData{AuthUser},
+            auth         => 'Bearer',
+            access_token => $AccessToken,
+        }
+    );
+    my $AuthSuccess = $SMTP->auth($SASL);
+    if ( !$AuthSuccess ) {
         $SMTP->quit();
         return (
             Successful => 0,
-            Message    => "Auth for user $ConfigData{AuthUser}/$ConfigData{Host} failed!"
+            Message    => 'Auth for user ' . $ConfigData{AuthUser} . '/' . $ConfigData{Host} . ' failed!'
         );
     }
 
