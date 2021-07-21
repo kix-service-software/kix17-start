@@ -64,7 +64,7 @@ KIXSidebarTools.KIXSidebarDisableSidebar = (function (TargetNS) {
                 $(this).children().each(function() {
                     if ($(this).is('select,input,textarea')) {
                         if ($(this).prop('disabled') === true) {
-                            $(this).removeAttr('disabled');
+                            $(this).prop('disabled', false);
                         }
                     }
                 });

@@ -32,7 +32,7 @@
 
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#CustomerDashboardFurtherInformationSubmit').bind('click', function (Event) {
+    $('#CustomerDashboardFurtherInformationSubmit').on('click', function (Event) {
         Core.AJAX.FormUpdate($('#CustomerDashboardFurtherInformation'), 'UpdateNotes', 'CustomerDashboardFurtherInformationNotes', ['CustomerDashboardFurtherInformationResult'],
             function() {
                 if ($('#CustomerDashboardFurtherInformationResult').val() == 1)
@@ -40,7 +40,7 @@
             },
             'CustomerDashboardFurtherInformationAJAXHandler');
     });
-    $('#CustomerDashboardFurtherInformationNotes').bind('keydown', function (Event) {
+    $('#CustomerDashboardFurtherInformationNotes').on('keydown', function (Event) {
         if (!$('#CustomerDashboardFurtherInformationSaved').hasClass('Hidden')) {
             $('#CustomerDashboardFurtherInformationSaved').addClass('Hidden');
             $('#CustomerDashboardFurtherInformationResult').val('0');

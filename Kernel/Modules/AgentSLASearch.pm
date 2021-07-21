@@ -12,8 +12,8 @@ use strict;
 use warnings;
 
 our @ObjectDependencies = (
+    'Kernel::Config',
     'Kernel::Output::HTML::Layout',
-    'Kernel::System::Encode',
     'Kernel::System::Package',
     'Kernel::System::Service',
     'Kernel::System::SLA',
@@ -27,8 +27,8 @@ sub new {
     my $Self = {%Param};
     bless( $Self, $Type );
 
+    $Self->{ConfigObject}  = $Kernel::OM->Get('Kernel::Config');
     $Self->{LayoutObject}  = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-    $Self->{EncodeObject}  = $Kernel::OM->Get('Kernel::System::Encode');
     $Self->{PackageObject} = $Kernel::OM->Get('Kernel::System::Package');
     $Self->{ServiceObject} = $Kernel::OM->Get('Kernel::System::Service');
     $Self->{SLAObject}     = $Kernel::OM->Get('Kernel::System::SLA');
@@ -272,13 +272,20 @@ sub Run {
     # build data
     my @Data;
     for my $SLAID ( keys %SLAs ) {
-        if ( $SLAs{$SLAID} =~ /$Search/i ) {
+        my $SLAName = $SLAs{$SLAID};
+        if ( $Self->{ConfigObject}->Get('Ticket::SLATranslation') ) {
+            $SLAName = $Self->{LayoutObject}->{LanguageObject}->Translate( $SLAName );
+        }
+
+        if ( $SLAName =~ /$Search/i ) {
             push @Data, {
                 SLAKey   => $SLAID,
-                SLAValue => $SLAs{$SLAID},
+                SLAValue => $SLAName,
             };
         }
     }
+
+    @Data = sort{ $a->{SLAValue} cmp $b->{SLAValue} } ( @Data );
 
     # build JSON output
     $JSON = $Self->{LayoutObject}->JSONEncode(

@@ -1,0 +1,220 @@
+# --
+# Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file LICENSE for license information (AGPL). If you
+# did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
+# --
+
+
+[% RenderBlockStart("Overview") %]
+<div class="MainBox ARIARoleMain LayoutFixedSidebar SidebarFirst">
+    <h1>[% Translate("OAuth2 Profile Management") | html %]</h1>
+
+    <div class="SidebarColumn">
+
+[% RenderBlockStart("ActionList") %]
+        <div class="WidgetSimple">
+            <div class="Header">
+                <h2><span>[% Translate("Actions") | html %]</span></h2>
+            </div>
+            <div class="Content">
+                <ul class="ActionList">
+[% RenderBlockStart("ActionOverview") %]
+                    <li>
+                        <a href="[% Env("Baselink") %]Action=[% Env("Action") %]" class="CallForAction Fullsize Center"><span><i class="fa fa-caret-left"></i>[% Translate("Go to overview") | html %]</span></a>
+                    </li>
+[% RenderBlockEnd("ActionOverview") %]
+
+[% RenderBlockStart("ActionAdd") %]
+                    <li>
+                        <a href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=Add" class="CallForAction Fullsize Center"><span><i class="fa fa-plus-square"></i>[% Translate("Add OAuth2 profile") | html %]</span></a>
+                    </li>
+[% RenderBlockEnd("ActionAdd") %]
+
+                </ul>
+            </div>
+        </div>
+[% RenderBlockEnd("ActionList") %]
+    </div>
+
+    <div class="ContentColumn">
+        <div class="WidgetSimple">
+
+[% RenderBlockStart("OverviewResult") %]
+            <div class="Header">
+                 <h2><span>[% Translate("List") | html %]</span></h2>
+            </div>
+            <div class="Content">
+
+                <table class="DataTable">
+                    <thead>
+                        <tr>
+                            <th>[% Translate("Name") | html %]</th>
+                            <th>[% Translate("Validity") | html %]</th>
+                            <th>[% Translate("Changed") | html %]</th>
+                            <th>[% Translate("Created") | html %]</th>
+                            <th>[% Translate("Reauthorization") | html %]</th>
+                            <th>[% Translate("Delete") | html %]</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+[% RenderBlockStart("NoDataFoundMsg") %]
+                        <tr>
+                            <td colspan="5">
+                                [% Translate("No data found.") | html %]
+                            </td>
+                        </tr>
+[% RenderBlockEnd("NoDataFoundMsg") %]
+[% RenderBlockStart("OverviewResultRow") %]
+                        <tr [%IF Data.ValidID != 1%]class="Invalid"[% END %]>
+                            <td><a class="AsBlock" href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=Change;ID=[% Data.ID | uri %]">[% Data.Name | html %][%IF Data.RefreshTokenExists != 1%]&nbsp;<span class="Warning" title="[% Translate("Missing refresh token") | html %]"><i class="fa fa-warning"></i></span>[% END %]</a></td>
+                            <td>[% Translate(Data.Valid) | html %]</td>
+                            <td>[% Data.ChangeTime | Localize("TimeShort") %]</td>
+                            <td>[% Data.CreateTime | Localize("TimeShort") %]</td>
+                            <td class="Center">
+                                <a href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=Reauthorization;ID=[% Data.ID | uri %];[% Env("ChallengeTokenParam") | html %]" title="[% Translate("Reauthorize profile") | html %]"><span class="InvisibleText">[% Translate("Reauthorize profile") | html %]</span><i class="fa fa-refresh"></i></a>
+                            </td>
+                            <td class="Center">
+                                <a  href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=Delete;ID=[% Data.ID | uri %];[% Env("ChallengeTokenParam") | html %]" title="[% Translate("Delete profile") | html %]"><span class="InvisibleText">[% Translate("Delete profile") | html %]</span><i class="fa fa-trash-o"></i></a>
+                            </td>
+                        </tr>
+[% RenderBlockEnd("OverviewResultRow") %]
+                    </tbody>
+                </table>
+            </div>
+[% RenderBlockEnd("OverviewResult") %]
+
+[% RenderBlockStart("OverviewUpdate") %]
+            <div class="Header">
+[% RenderBlockStart("HeaderAdd") %]
+                 <h2><span>[% Translate("Add OAuth2 Profile") | html %]</span></h2>
+[% RenderBlockEnd("HeaderAdd") %]
+[% RenderBlockStart("HeaderEdit") %]
+                 <h2><span>[% Translate("Edit OAuth2 Profile") | html %]</span></h2>
+[% RenderBlockEnd("HeaderEdit") %]
+            </div>
+            <div class="Content">
+
+                <form action="[% Env("CGIHandle") %]" method="post" class="Validate PreventMultipleSubmits">
+                    <input type="hidden" name="Action" value="[% Env("Action") %]"/>
+                    <input type="hidden" name="Subaction" value="[% Data.Action | uri %]Action"/>
+                    <input type="hidden" name="ID" value="[% Data.ID | html %]"/>
+                    <fieldset class="TableLike">
+                        <label class="Mandatory" for="Name"><span class="Marker">*</span> [% Translate("Name") | html %]:</label>
+                        <div class="Field">
+                            <input type="text" name="Name" id="Name" value="[% Data.Name | html %]" class="W50pc Validate_Required [% Data.NameInvalid | html %]" maxlength="200"/>
+                            <div id="NameError" class="TooltipErrorMessage">
+                                <p>[% Translate("This field is required.") | html %]</p>
+                            </div>
+                            <div id="NameServerError" class="TooltipErrorMessage">
+[% RenderBlockStart("NameServerError") %]
+                                <p>[% Translate("This field is required.") | html %]</p>
+[% RenderBlockEnd("NameServerError") %]
+[% RenderBlockStart("ExistNameServerError") %]
+                                <p>[% Translate("A profile with this name already exists!") | html %]</p>
+[% RenderBlockEnd("ExistNameServerError") %]
+                            </div>
+                        </div>
+                        <div class="Clear"></div>
+
+                        <label class="Mandatory" for="URLAuth"><span class="Marker">*</span> [% Translate("URL Authorization") | html %]:</label>
+                        <div class="Field">
+                            <input type="text" class="W50pc Validate_Required [% Data.URLAuthInvalid | html %]" name="URLAuth" id="URLAuth" value="[% Data.URLAuth | html %]" maxlength="200" autocomplete="off" />
+                            <div id="URLAuthError" class="TooltipErrorMessage">
+                                <p>[% Translate("This field is required.") | html %]</p>
+                            </div>
+                            <div id="URLAuthServerError" class="TooltipErrorMessage">
+                                <p>[% Translate("This field is required.") | html %]</p>
+                            </div>
+                        </div>
+                        <div class="Clear"></div>
+
+                        <label class="Mandatory" for="URLToken"><span class="Marker">*</span> [% Translate("URL Token") | html %]:</label>
+                        <div class="Field">
+                            <input type="text" class="W50pc Validate_Required [% Data.URLTokenInvalid | html %]" name="URLToken" id="URLToken" value="[% Data.URLToken | html %]" maxlength="200" autocomplete="off" />
+                            <div id="URLTokenError" class="TooltipErrorMessage">
+                                <p>[% Translate("This field is required.") | html %]</p>
+                            </div>
+                            <div id="URLTokenServerError" class="TooltipErrorMessage">
+                                <p>[% Translate("This field is required.") | html %]</p>
+                            </div>
+                        </div>
+                        <div class="Clear"></div>
+
+                        <label class="Mandatory" for="URLRedirect"><span class="Marker">*</span> [% Translate("URL Redirect") | html %]:</label>
+                        <div class="Field">
+                            <input type="text" class="W50pc Validate_Required [% Data.URLRedirectInvalid | html %]" name="URLRedirect" id="URLRedirect" value="[% Data.URLRedirect | html %]" maxlength="200" autocomplete="off" />
+                            <div id="URLRedirectError" class="TooltipErrorMessage">
+                                <p>[% Translate("This field is required.") | html %]</p>
+                            </div>
+                            <div id="URLRedirectServerError" class="TooltipErrorMessage">
+                                <p>[% Translate("This field is required.") | html %]</p>
+                            </div>
+                        </div>
+                        <div class="Clear"></div>
+
+                        <label class="Mandatory" for="ClientID"><span class="Marker">*</span> [% Translate("Client ID") | html %]:</label>
+                        <div class="Field">
+                            <input type="text" class="W50pc Validate_Required [% Data.ClientIDInvalid | html %]" name="ClientID" id="ClientID" value="[% Data.ClientID | html %]" maxlength="200" autocomplete="off" />
+                            <div id="ClientIDError" class="TooltipErrorMessage">
+                                <p>[% Translate("This field is required.") | html %]</p>
+                            </div>
+                            <div id="ClientIDServerError" class="TooltipErrorMessage">
+                                <p>[% Translate("This field is required.") | html %]</p>
+                            </div>
+                        </div>
+                        <div class="Clear"></div>
+
+                        <label class="Mandatory" for="ClientSecret"><span class="Marker">*</span> [% Translate("Client Secret") | html %]:</label>
+                        <div class="Field">
+                            <input type="password" class="W50pc Validate_Required [% Data.PasswordEditInvalid | html %]" name="ClientSecret" id="ClientSecret" value="[% IF Data.ClientSecret %]kix-dummy-secret-placeholder[% END %]" maxlength="200" autocomplete="off" />
+                            <div id="ClientSecretError" class="TooltipErrorMessage">
+                                <p>[% Translate("This field is required.") | html %]</p>
+                            </div>
+                            <div id="ClientSecretServerError" class="TooltipErrorMessage">
+                                <p>[% Translate("This field is required.") | html %]</p>
+                            </div>
+                        </div>
+                        <div class="Clear"></div>
+
+                        <label class="Mandatory" for="Scope"><span class="Marker">*</span> [% Translate("Scope") | html %]:</label>
+                        <div class="Field">
+                            <input type="text" class="W50pc Validate_Required [% Data.ScopeInvalid | html %]" name="Scope" id="Scope" value="[% Data.Scope | html %]" maxlength="200" autocomplete="off" />
+                            <div id="ScopeError" class="TooltipErrorMessage">
+                                <p>[% Translate("This field is required.") | html %]</p>
+                            </div>
+                            <div id="ScopeServerError" class="TooltipErrorMessage">
+                                <p>[% Translate("This field is required.") | html %]</p>
+                            </div>
+                        </div>
+                        <div class="Clear"></div>
+
+                        <label class="Mandatory" for="ValidID"><span class="Marker">*</span> [% Translate("Validity") | html %]:</label>
+                        <div class="Field">
+                            [% Data.ValidOption %]
+                            <div id="ValidIDError" class="TooltipErrorMessage">
+                                <p>[% Translate("This field is required.") | html %]</p>
+                            </div>
+                            <div id="ValidIDServerError" class="TooltipErrorMessage">
+                                <p>[% Translate("This field is required.") | html %]</p>
+                            </div>
+                        </div>
+                        <div class="Clear"></div>
+
+                        <div class="Field">
+                            <button class="Primary CallForAction" type="submit" value="[% Translate("Submit") | html %]"><span>[% Translate("Submit") | html %]</span></button>
+                            [% Translate("or") | html %]
+                            <a href="[% Env("Baselink") %]Action=[% Env("Action") %]">[% Translate("Cancel") | html %]</a>
+                        </div>
+                        <div class="Clear"></div>
+                    </fieldset>
+                </form>
+            </div>
+[% RenderBlockEnd("OverviewUpdate") %]
+
+        </div>
+    </div>
+    <div class="Clear"></div>
+</div>
+[% RenderBlockEnd("Overview") %]

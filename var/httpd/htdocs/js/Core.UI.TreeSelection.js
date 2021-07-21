@@ -261,9 +261,6 @@ Core.UI.TreeSelection = (function (TargetNS) {
 
         Elements = Core.UI.TreeSelection.BuildElementsArray($SelectObj);
 
-        // Set StyleSheetURL in order to correctly load the CSS for treeview
-        StyleSheetURL = Core.Config.Get('WebPath') + 'skins/Agent/default/css/thirdparty/jstree-theme/default/style.css';
-
         /*eslint-disable camelcase */
         $TreeObj.jstree({
             core: {
@@ -276,7 +273,6 @@ Core.UI.TreeSelection = (function (TargetNS) {
                     icons: false,
                     responsive: true,
                     variant: 'small',
-                    url: StyleSheetURL
                 }
             },
             search: {
@@ -286,7 +282,7 @@ Core.UI.TreeSelection = (function (TargetNS) {
             plugins: [ 'search' ]
         })
         /*eslint-enable camelcase */
-        .bind('select_node.jstree', function (node, selected, event) {
+        .on('select_node.jstree', function (node, selected, event) {
             var $Node = $('#' + selected.node.id);
             if ($Node.hasClass('Disabled') || !$Node.is(':visible')) {
                 $TreeObj.jstree('deselect_node', selected.node);
@@ -318,7 +314,7 @@ Core.UI.TreeSelection = (function (TargetNS) {
             }
 
         })
-        .bind('deselect_node.jstree', function () {
+        .on('deselect_node.jstree', function () {
             // If we are already in a dialog, we don't use the submit
             // button for the tree selection, so we need to apply the changes 'live'
             if (InDialog) {
@@ -362,7 +358,7 @@ Core.UI.TreeSelection = (function (TargetNS) {
         $CurrentFocusedObj = document.activeElement;
         $('#TreeSearch').find('input').focus();
 
-        $('#TreeSearch').find('input').bind('keyup', function() {
+        $('#TreeSearch').find('input').on('keyup', function() {
             $TreeObj.jstree('search', $(this).val());
 
             // Make sure sub-trees of matched nodes are expanded
@@ -375,12 +371,12 @@ Core.UI.TreeSelection = (function (TargetNS) {
                 });
         });
 
-        $('#TreeSearch').find('span').bind('click', function() {
+        $('#TreeSearch').find('span').on('click', function() {
             $(this).prev('input').val('');
             $TreeObj.jstree('clear_search');
         });
 
-        $('#TreeContainer').find('input#SubmitTree').bind('click', function() {
+        $('#TreeContainer').find('input#SubmitTree').on('click', function() {
             var SelectedObj = $TreeObj.jstree('get_selected', true),
                 $Node;
             if (typeof SelectedObj === 'object' && SelectedObj[0]) {

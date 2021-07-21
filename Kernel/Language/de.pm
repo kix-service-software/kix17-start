@@ -487,8 +487,6 @@ sub Data {
         'Current password' => 'Aktuelles Passwort',
         'New password' => 'Neues Passwort',
         'Verify password' => 'Passwort verifizieren',
-        'Spelling Dictionary' => 'Rechtschreib-Wörterbuch',
-        'Default spelling dictionary' => 'Standard-Rechtschreib-Wörterbuch',
         'Max. shown Tickets a page in Overview.' => 'Maximale Anzahl angezeigter Tickets pro Seite in der Übersicht.',
         'The current password is not correct. Please try again!' => 'Das eingegebene Passwort ist nicht korrekt. Bitte versuchen Sie es erneut!',
         'Can\'t update password, your new passwords do not match. Please try again!' =>
@@ -2434,11 +2432,6 @@ sub Data {
         # Template: AgentPreferences
         'Edit your preferences' => 'Persönliche Einstellungen bearbeiten',
 
-        # Template: AgentSpelling
-        'Spell Checker' => 'Rechtschreibprüfung',
-        'spelling error(s)' => 'Rechtschreibfehler',
-        'Apply these changes' => 'Änderungen übernehmen',
-
         # Template: AgentStatisticsAdd
         'Statistics » Add' => 'Statistiken » Hinzufügen',
         'Add New Statistic' => 'Neue Statistik hinzufügen',
@@ -2507,7 +2500,6 @@ sub Data {
         'Here you can select additional agents which should receive a notification regarding the new article.' =>
             'Hier können Sie zusätzliche Agenten auswählen, die eine Benachrichtigung über den neuen Artikel enthalten sollen.',
         'Text will also be received by' => 'Text wird auch gesendet an',
-        'Spell check' => 'Rechtschreibprüfung',
         'Text Template' => 'Textvorlage',
         'Setting a template will overwrite any text or attachment.' => 'Die Auswahl einer Vorlage wird bereits bestehenden Text oder Anlagen löschen.',
         'Note type' => 'Notiztyp',
@@ -2875,7 +2867,6 @@ sub Data {
         'Please remove the following words from your search as they cannot be searched for:' =>
             'Bitte entfernen Sie die folgenden Wörter aus Ihrer Suche, da nach ihnen nicht gesucht werden kann:',
         'Please check the fields marked as red for valid inputs.' => 'Bitte prüfen Sie die rot markierten Felder auf gültige Eingaben.',
-        'Please perform a spell check on the the text first.' => 'Bitte führen Sie zuerst eine Rechtschreibprüfung aus.',
         'Slide the navigation bar' => 'Verschieben Sie die Navigationsleiste',
         'New customer chat request' => 'Neue Kundenchatanfrage',
         'New activity' => 'Neue Aktivität',
@@ -4633,8 +4624,6 @@ Ihr Helpdesk-Team
             'Definiert einen Punkt, welcher ein GoogleSymbol am Endes der Kundeninformation hinzufügt.',
         'Defines a customer item, which generates a google maps icon at the end of a contact info block.' =>
             'Definiert einen Punkt, welcher ein Google-Maps-Symbol am Endes der Kundeninformation hinzufügt.',
-        'Defines a default list of words, that are ignored by the spell checker.' =>
-            'Definiert eine Standardliste von Wörtern, die von der Rechtschreibprüfung ignoriert werden.',
         'Defines a filter for html output to add links behind CVE numbers. The element Image allows two input kinds. At once the name of an image (e.g. faq.png). In this case the KIX image path will be used. The second possiblity is to insert the link to the image.' =>
             'Definiert einen Filter für die HTML-Ausgabe um Links hinter CVE-Nummern hinzufügen. Das Element Bild erlaubt zwei Eingabearten. Zum einem den Namen eines Bildes (Beispielsweise faq.png). In diesem Fall wird der KIX-Bildpfad verwendet. Die zweite Möglichkeit ist, den Link zu dem Bild einzufügen.',
         'Defines a filter for html output to add links behind MSBulletin numbers. The element Image allows two input kinds. At once the name of an image (e.g. faq.png). In this case the KIX image path will be used. The second possiblity is to insert the link to the image.' =>
@@ -4718,8 +4707,6 @@ Ihr Helpdesk-Team
             'Steuert, ob Agenten, die die Zweifaktor-Authentifizierung nicht nutzen, sich im System einloggen dürfen.',
         'Defines if backslash should be double quoted for LIKE-statements.' =>
             'Steuert, ob Backslash in LIKE-Statements doppelt gequotet werden sollen',
-        'Defines if composed messages have to be spell checked in the agent interface.' =>
-            'Bestimmt, ob im Agenten-Interface eine Rechtschreibprüfung für Nachrichten vorgenommen werden muss.',
         'Defines if customers should be allowed to login if they have no shared secret stored in their preferences and therefore are not using two-factor authentication.' =>
             'Steuert, ob Kunden, die die Zweifaktor-Authentifizierung nicht nutzen, sich im System einloggen dürfen.',
         'Defines if the enhanced mode should be used (enables use of table, replace, subscript, superscript, paste from word, etc.) in customer interface.' =>
@@ -4858,7 +4845,6 @@ Ihr Helpdesk-Team
             'Definiert die standardmäßig eingestellten Sortierkriterien für alle in der Queue-Ansicht angezeigten Queues, nachdem nach Priorität sortiert wurde.',
         'Defines the default sort order for all services in the service view, after priority sort.' =>
             'Definiert die standardmäßig eingestellten Sortierkriterien für alle in der Service-Ansicht angezeigten Services, nachdem nach Priorität sortiert wurde.',
-        'Defines the default spell checker dictionary.' => 'Definiert das Standard Rechtschreib-Wörterbuch',
         'Defines the default state of new customer tickets in the customer interface.' =>
             'Definiert den Standard-Status von neuen Kundentickets in der Kundenoberfläche.',
         'Defines the default state of new tickets.' => 'Definiert den Standard-Status von neuen Tickets.',
@@ -5038,7 +5024,7 @@ Ihr Helpdesk-Team
             'Definiert den Verlaufstyp für diese Operation, der für den Ticket-Verlauf in der Agenten-Schnittstelle verwendet wird.',
         'Defines the hours and week days of the indicated calendar, to count the working time.' =>
             'Definiert die Stunden und Wochentage des angegebenen Kalenders um die Arbeitszeit zu messen.',
-        'Defines the hours and week days to count the working time.' => 'Definiert den Zeitraum und die Wochentage welche als Arbeitszeit zählen.',        
+        'Defines the hours and week days to count the working time.' => 'Definiert den Zeitraum und die Wochentage welche als Arbeitszeit zählen.',
         'Defines the key to be checked with Kernel::Modules::AgentInfo module. If this user preferences key is true, the message is accepted by the system.' =>
             'Definiert den Schlüssel, der mit dem Modul Kernel::Modules::AgentInfo geprüft wird. Wenn dieser Nutzer-Einstellungs-Schlüssel "wahr" ist, wird die Nachricht vom System akzeptiert.',
         'Defines the key to check with CustomerAccept. If this user preferences key is true, then the message is accepted by the system.' =>
@@ -5404,7 +5390,6 @@ Ihr Helpdesk-Team
             'Aktiviert oder deaktiviert das Ticket-Beobachten-Feature, das das beobachten von Tickets erlaubt, ohne der Bearbeiter oder Verantwortliche zu sein.',
         'Enables performance log (to log the page response time). It will affect the system performance. Frontend::Module###AdminPerformanceLog must be enabled.' =>
             'Aktiviert den Performance-Log zum erfassen der Seiten-Antwortzeiten. Diese Einstellung beeinflusst die Gesamtperformance des Systems. Frontend::Module###AdminPerformanceLog muss aktiviert sein.',
-        'Enables spell checker support.' => 'Aktiviert die Unterstützung für die Rechtschreibprüfung.',
         'Enables the minimal ticket counter size (if "Date" was selected as TicketNumberGenerator).' =>
             'Aktiviert die Minimalgröße für Ticketzähler (wenn "Datum" als TicketNumberGenerator ausgewählt ist).',
         'Enables ticket bulk action feature for the agent frontend to work on more than one ticket at a time.' =>
@@ -5688,8 +5673,6 @@ Ihr Helpdesk-Team
             '',
         'Indonesian' => 'Indonesisch',
         'Input' => 'Eingabe',
-        'Install ispell or aspell on the system, if you want to use a spell checker. Please specify the path to the aspell or ispell binary on your operating system.' =>
-            '',
         'Interface language' => 'Sprache Benutzeroberfläche',
         'It is possible to configure different skins, for example to distinguish between diferent agents, to be used on a per-domain basis within the application. Using a regular expression (regex), you can configure a Key/Content pair to match a domain. The value in "Key" should match the domain, and the value in "Content" should be a valid skin on your system. Please see the example entries for the proper form of the regex.' =>
             'Es ist möglich, verschiedene Skins zu konfigurieren, zum Beispiel um zwischen verschiedenen Agenten auf Basis der jeweiligen Domain zu unterscheiden. Sie können durch Nutzung von regulären Ausdrücken mithilfe von Schlüssel-/Wert-Paaren auf Domains prüfen. Der Inhalt von "Schlüssel" sollte die Prüfung auf die Domain beinhalten, der Inhalt von "Wert" den Namen des zu selektierenden Skins für diese Domain. Bitte beachten Sie die Einträge mit Beispielen für korrekte reguläre Ausdrücke.',
@@ -6522,7 +6505,6 @@ Ihr Helpdesk-Team
             'Geben Sie das Kennwort für die Authentifikation mit der ersten Spiegeldatenbank an.',
         'Specify the username to authenticate for the first mirror database.' =>
             'Geben Sie den Benutzernamen für die Authentifikation mit der ersten Spiegeldatenbank an.',
-        'Spell checker.' => 'Rechtschreibprüfung.',
         'Standard available permissions for agents within the application. If more permissions are needed, they can be entered here. Permissions must be defined to be effective. Some other good permissions have also been provided built-in: note, close, pending, customer, freetext, move, compose, responsible, forward, and bounce. Make sure that "rw" is always the last registered permission.' =>
             '',
         'Start number for statistics counting. Every new stat increments this number.' =>

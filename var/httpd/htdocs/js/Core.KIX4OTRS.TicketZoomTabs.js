@@ -312,7 +312,7 @@ Core.KIX4OTRS.TicketZoomTabs = (function(TargetNS) {
                 PopupType = Matches[1];
             }
             $(this).addClass('PopupCalled');
-            $('a.TabAsPopup.PopupCalled').removeAttr('onClick');
+            $('a.TabAsPopup.PopupCalled').prop('onClick', null);
             $('a.TabAsPopup.PopupCalled').on('click', function() {
                 $(this).removeClass('PopupCalled');
                 return false;

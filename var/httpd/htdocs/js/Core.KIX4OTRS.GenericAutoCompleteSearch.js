@@ -49,7 +49,7 @@ Core.KIX4OTRS.GenericAutoCompleteSearch = (function(TargetNS) {
         // only AgentTicketZoom and QueueMove autocompete then unbind change
         if (Core.Config.Get('Action') === 'AgentTicketZoom') {
             if (ActiveAutoComplete && $Element.val() && $Element.val().length && !$('#DestQueueID').val().length) {
-                $('#DestQueueID').unbind('change');
+                $('#DestQueueID').off('change');
             }
         }
 
@@ -136,7 +136,7 @@ Core.KIX4OTRS.GenericAutoCompleteSearch = (function(TargetNS) {
 
         // On unload remove old selected data. If the page is reloaded (with F5)
         // this data stays in the field and invokes an ajax request otherwise
-        $(window).bind('unload', function() {
+        $(window).on('unload', function() {
             $Element.val('');
         });
     };

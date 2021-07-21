@@ -51,7 +51,7 @@ sub Run {
     # check if state field exists
     # .{2} fmatches '="'
     # .{0,7} matches '' or 'New' or 'Next' or 'Compose'
-    my $MatchStr = '<label.for.{2}(.{0,7}StateID)">';
+    my $MatchStr = '<label.+?for.{2}(.{0,7}StateID)">';
     if ( ${ $Param{Data} } =~ m{$MatchStr}ixms ) {
         my $StateField = $1;
 

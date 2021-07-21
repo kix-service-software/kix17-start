@@ -18,7 +18,7 @@
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
     Core.Agent.Dashboard.Init();
-    $('#CustomerInformationCenterHeading').bind('click', function() {
+    $('#CustomerInformationCenterHeading').on('click', function() {
         Core.Agent.CustomerInformationCenterSearch.OpenSearchDialog();
         return false;
     });

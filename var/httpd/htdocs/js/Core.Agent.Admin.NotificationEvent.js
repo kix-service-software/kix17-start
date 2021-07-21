@@ -36,13 +36,13 @@ Core.Agent.Admin.NotificationEvent = (function (TargetNS) {
         TargetNS.Localization = Params.Localization;
 
         // bind click function to add button
-        $('.LanguageAdd').bind('change', function () {
+        $('.LanguageAdd').on('change', function () {
             TargetNS.AddLanguage($(this).val(), $('.LanguageAdd option:selected').text());
             return false;
         });
 
         //bind click function to remove button
-        $('.LanguageRemove').bind('click', function () {
+        $('.LanguageRemove').on('click', function () {
 
             if (window.confirm(TargetNS.Localization.DeleteNotificationLanguageMsg)) {
                 TargetNS.RemoveLanguage($(this));
@@ -54,7 +54,7 @@ Core.Agent.Admin.NotificationEvent = (function (TargetNS) {
             var TooltipObject = $('#VisibleForAgentTooltip');
 
             if ($('#VisibleForAgent').val() > 0) {
-                TooltipObject.removeAttr('readonly');
+                TooltipObject.prop('readonly', false);
 
                 // show default transport value
                 $('.AgentEnabledByDefault').show();
@@ -67,7 +67,7 @@ Core.Agent.Admin.NotificationEvent = (function (TargetNS) {
             }
         }
 
-        $('#VisibleForAgent').bind('change', VisibleForAgentHandler);
+        $('#VisibleForAgent').on('change', VisibleForAgentHandler);
 
         // Run on first view.
         VisibleForAgentHandler();
@@ -84,12 +84,15 @@ Core.Agent.Admin.NotificationEvent = (function (TargetNS) {
             if (this.checked) {
                 $.each(InputField, function(index, item) {
                     $('#' + item)
-                        .removeAttr('readonly disabled')
+                        .prop({
+                            'readonly': false,
+                            'disabled': false
+                        })
                         .parent()
                         .removeClass('AlreadyDisabled');
                 });
 
-                $('.Security').removeAttr('disabled', 'disabled');
+                $('.Security').prop('disabled', false);
             }
             else {
                 $.each(InputField, function(index, item) {
@@ -170,7 +173,7 @@ Core.Agent.Admin.NotificationEvent = (function (TargetNS) {
         }
 
         // bind click function to remove button
-        $('.LanguageRemove').bind('click', function () {
+        $('.LanguageRemove').on('click', function () {
 
             if (window.confirm(TargetNS.Localization.DeleteNotificationLanguageMsg)) {
                 TargetNS.RemoveLanguage($(this));
@@ -221,7 +224,7 @@ Core.Agent.Admin.NotificationEvent = (function (TargetNS) {
         });
 
         // bind click function to add button
-        $('.LanguageAdd').bind('change', function () {
+        $('.LanguageAdd').on('change', function () {
             TargetNS.AddLanguage($(this).val(), $('.LanguageAdd option:selected').text());
             return false;
         });

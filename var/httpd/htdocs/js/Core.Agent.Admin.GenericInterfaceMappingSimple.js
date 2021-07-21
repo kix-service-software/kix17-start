@@ -40,7 +40,7 @@ Core.Agent.Admin.GenericInterfaceMapping = (function (TargetNS) {
         // a validation is fire on hidden fields
         $('.KeyTemplate').find(':input').removeClass('Validate_Required');
 
-        $('.DefaultType').bind('change', function(){
+        $('.DefaultType').on('change', function(){
 
             // call function to hide or show
             // MapTo field
@@ -48,26 +48,26 @@ Core.Agent.Admin.GenericInterfaceMapping = (function (TargetNS) {
         });
 
         // register add of attribute
-        $('#AddKeyMapping').bind('click', function () {
+        $('#AddKeyMapping').on('click', function () {
             TargetNS.AddKeyMapping();
             return false;
         });
 
         // register change new key name action
-        $('.NewValue').bind('change', function(){
+        $('.NewValue').on('change', function(){
 
             // modified title
             $(this).closest('.WidgetKey').find('.Title').html('Mapping for Key ' + $(this).val());
         });
 
         // register remove key action
-        $('.AdditionalInformation .KeyMapRemove').bind('click', function () {
+        $('.AdditionalInformation .KeyMapRemove').on('click', function () {
             TargetNS.ShowDeleteDialog($(this).attr('id'));
             return false;
         });
 
         //bind click function to add button
-        $('.ValueAdd').bind('click', function () {
+        $('.ValueAdd').on('click', function () {
             TargetNS.AddValueMapping(
                 $(this).closest('fieldset').parent().find('.ValueInsert'),
                 $(this).closest('fieldset').parent().find('.KeyIndex').val()
@@ -76,7 +76,7 @@ Core.Agent.Admin.GenericInterfaceMapping = (function (TargetNS) {
         });
 
         //bind click function to add button
-        $('.ValueRemove').bind('click', function () {
+        $('.ValueRemove').on('click', function () {
             TargetNS.RemoveValueMapping($(this));
         //            $(this).parent().remove();
             return false;
@@ -117,7 +117,7 @@ Core.Agent.Admin.GenericInterfaceMapping = (function (TargetNS) {
             if($(this).hasClass('ValueAdd')) {
 
                 // bind click function to add button
-                $(this).bind('click', function () {
+                $(this).on('click', function () {
                     TargetNS.AddValueMapping($(this).closest('fieldset').parent().find('.ValueInsert'), KeyCounter);
                     return false;
                 });
@@ -126,14 +126,14 @@ Core.Agent.Admin.GenericInterfaceMapping = (function (TargetNS) {
             if($(this).hasClass('KeyMapRemove')) {
 
                 // bind click function to add button
-                $(this).bind('click', function () {
+                $(this).on('click', function () {
                     TargetNS.ShowDeleteDialog($(this).attr('id'));
                     return false;
                 });
             }
 
             if($(this).hasClass('DefaultType')) {
-                $(this).bind('change', function(){
+                $(this).on('change', function(){
 
                     // call function to hide or show
                     // MapTo field
@@ -142,7 +142,7 @@ Core.Agent.Admin.GenericInterfaceMapping = (function (TargetNS) {
             }
 
             if($(this).hasClass('NewValue')) {
-                $(this).bind('change', function(){
+                $(this).on('change', function(){
 
                     // modified title
                     $(this).closest('.WidgetKey').find('.Title').html('Mapping for Key ' + $(this).val());
@@ -216,7 +216,7 @@ Core.Agent.Admin.GenericInterfaceMapping = (function (TargetNS) {
             if($(this).hasClass('ValueRemove')) {
 
                 // bind click function to add button
-                $(this).bind('click', function () {
+                $(this).on('click', function () {
                     // remove row
                     TargetNS.RemoveValueMapping($(this));
                     return false;

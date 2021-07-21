@@ -149,8 +149,8 @@ Core.Agent.Admin.GenericInterfaceDebugger.Init({
     }
 });
 
-$('#FilterRefresh').bind('click', Core.Agent.Admin.GenericInterfaceDebugger.GetRequestList);
-$('#DeleteButton').bind('click', Core.Agent.Admin.GenericInterfaceDebugger.ShowDeleteDialog);
+$('#FilterRefresh').on('click', Core.Agent.Admin.GenericInterfaceDebugger.GetRequestList);
+$('#DeleteButton').on('click', Core.Agent.Admin.GenericInterfaceDebugger.ShowDeleteDialog);
 
 //Load Request list on startup without active filter
 Core.Agent.Admin.GenericInterfaceDebugger.GetRequestList();

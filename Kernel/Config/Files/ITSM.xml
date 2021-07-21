@@ -31,7 +31,6 @@
                 <NavBarName>Config Item</NavBarName>
                 <Loader>
                     <JavaScript>ITSM.Agent.Zoom.js</JavaScript>
-                    <JavaScript>thirdparty/jquery-ui-tabs-1.10.3/jquery.ui.tabs.js</JavaScript>
                 </Loader>
             </FrontendModuleReg>
         </Setting>
@@ -48,7 +47,6 @@
                 <NavBarName>Config Item</NavBarName>
                 <Loader>
                     <JavaScript>ITSM.Agent.Zoom.js</JavaScript>
-                    <JavaScript>thirdparty/jquery-ui-tabs-1.10.3/jquery.ui.tabs.js</JavaScript>
                 </Loader>
             </FrontendModuleReg>
         </Setting>
@@ -65,7 +63,6 @@
                 <NavBarName>Config Item</NavBarName>
                 <Loader>
                     <JavaScript>ITSM.Agent.Zoom.js</JavaScript>
-                    <JavaScript>thirdparty/jquery-ui-tabs-1.10.3/jquery.ui.tabs.js</JavaScript>
                 </Loader>
             </FrontendModuleReg>
         </Setting>
@@ -83,7 +80,6 @@
                 <Loader>
                     <JavaScript>Core.KIX4OTRS.ConfigItemZoomTabs.js</JavaScript>
                     <JavaScript>ITSM.Agent.Zoom.js</JavaScript>
-                    <JavaScript>thirdparty/jquery-ui-tabs-1.10.3/jquery.ui.tabs.js</JavaScript>
                 </Loader>
             </FrontendModuleReg>
         </Setting>
@@ -901,8 +897,6 @@
                 <Title>Zoom</Title>
                 <NavBarName>Config Item</NavBarName>
                 <Loader>
-                    <JavaScript>thirdparty/jquery-tablesorter-2.0.5/jquery.tablesorter.js</JavaScript>
-                    <JavaScript>thirdparty/jquery-ui-tabs-1.10.3/jquery.ui.tabs.js</JavaScript>
                     <JavaScript>Core.KIX4OTRS.TicketZoomTabs.js</JavaScript>
                     <JavaScript>Core.KIX4OTRS.ConfigItemZoomTabs.js</JavaScript>
                     <JavaScript>Core.UI.AllocationList.js</JavaScript>
@@ -1002,7 +996,6 @@
                     <Prio>300</Prio>
                 </NavBar>
                 <Loader>
-                    <JavaScript>thirdparty/jquery-tablesorter-2.0.5/jquery.tablesorter.js</JavaScript>
                     <JavaScript>Core.UI.Table.Sort.js</JavaScript>
                     <JavaScript>ITSM.Agent.Zoom.js</JavaScript>
                 </Loader>
@@ -1392,8 +1385,8 @@
             <Hash>
                 <Item Key="Module">Kernel::Output::HTML::Preferences::Generic</Item>
                 <Item Key="Column">Other Settings</Item>
-                <Item Key="Label" Translatable="1">Configuration Item Limit</Item>
-                <Item Key="Key" Translatable="1">Configuration Item limit per page</Item>
+                <Item Key="Label" Translatable="1">ITSM ConfigItem Overview "Small" Limit</Item>
+                <Item Key="Key" Translatable="1">ConfigItem limit per page ITSM ConfigItem Overview "Small"</Item>
                 <Item Key="Data">
                     <Hash>
                         <Item Key="10">10</Item>
@@ -1874,8 +1867,8 @@
             <Hash>
                 <Item Key="Module">Kernel::Output::HTML::Preferences::Generic</Item>
                 <Item Key="Column">Other Settings</Item>
-                <Item Key="Label" Translatable="1">Configuration Item Limit</Item>
-                <Item Key="Key" Translatable="1">Configuration Item limit per page</Item>
+                <Item Key="Label" Translatable="1">ITSM ConfigItem Overview "Custom" Limit</Item>
+                <Item Key="Key" Translatable="1">ConfigItem limit per page ITSM ConfigItem Overview "Custom"</Item>
                 <Item Key="Data">
                     <Hash>
                         <Item Key="10">10</Item>
@@ -1938,7 +1931,7 @@
                 <Title>LinkGraph</Title>
                 <NavBarName></NavBarName>
                 <Loader>
-                    <JavaScript>thirdparty/jsplumb-1.6.4/jsplumb.js</JavaScript>
+                    <JavaScript>thirdparty/jsplumb-1.7.6/jsplumb.min.js</JavaScript>
                 </Loader>
             </FrontendModuleReg>
         </Setting>
@@ -1953,9 +1946,6 @@
                 <Description>Shows objects linked with this config item</Description>
                 <Title>Zoom</Title>
                 <NavBarName>Config Item</NavBarName>
-                <Loader>
-                    <JavaScript>thirdparty/jquery-ui-tabs-1.10.3/jquery.ui.tabs.js</JavaScript>
-                </Loader>
             </FrontendModuleReg>
         </Setting>
     </ConfigItem>

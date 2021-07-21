@@ -44,7 +44,7 @@
             </li>
 [% WRAPPER JSOnDocumentComplete %]
             <script type="text/javascript">//<![CDATA[
-                $('#ToolBarSearchProfile').bind('change', function (Event) {
+                $('#ToolBarSearchProfile').on('change', function (Event) {
                     $(Event.target).closest('form').submit();
                     Event.preventDefault();
                     Event.stopPropagation();

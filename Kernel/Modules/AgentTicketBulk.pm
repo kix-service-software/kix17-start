@@ -155,7 +155,9 @@ sub Run {
     }
     # subaction AJAXUpdate
     elsif ( $Self->{Subaction} eq 'AJAXUpdate' ) {
-        my $QueueID = $ParamObject->GetParam( Param => 'QueueID' ) || '';
+        my $QueueID       = $ParamObject->GetParam( Param => 'QueueID' ) || '';
+        my $OwnerID       = $ParamObject->GetParam( Param => 'OwnerID' ) || '';
+        my $ResponsibleID = $ParamObject->GetParam( Param => 'ResponsibleID' ) || '';
 
         # get all users
         my %AllGroupsMembers = $Kernel::OM->Get('Kernel::System::User')->UserList(
@@ -205,6 +207,7 @@ sub Run {
                 Name         => 'OwnerID',
                 Data         => \%AllGroupsMembers,
                 PossibleNone => 1,
+                SelectedID   => $OwnerID,
             }
         );
 
@@ -216,6 +219,7 @@ sub Run {
                 Name         => 'ResponsibleID',
                 Data         => \%AllGroupsMembers,
                 PossibleNone => 1,
+                SelectedID   => $ResponsibleID,
             };
         }
 
@@ -1182,14 +1186,6 @@ sub _Mask {
         SelectedID => $Param{Unlock} // $Config->{Unlock} // 1,
         Class      => 'Modernize',
     );
-
-    # show spell check
-    if ( $LayoutObject->{BrowserSpellChecker} ) {
-        $LayoutObject->Block(
-            Name => 'SpellCheck',
-            Data => {},
-        );
-    }
 
     # add rich text editor for note & email
     if ( $LayoutObject->{BrowserRichText} ) {

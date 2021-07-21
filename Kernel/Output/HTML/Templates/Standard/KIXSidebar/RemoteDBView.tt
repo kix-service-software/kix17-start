@@ -45,7 +45,7 @@
         window.KIXSidebarCallback[% Data.Identifier | html %]
     );
 [% RenderBlockStart("DynamicFieldSearch") %]
-    $('#DynamicField_[% Data.DynamicField | html %]').bind('change', function () {
+    $('#DynamicField_[% Data.DynamicField | html %]').on('change', function () {
         var Data = {};
 
         KIXSidebarTools.UpdateSidebar(

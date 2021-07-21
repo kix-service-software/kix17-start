@@ -331,7 +331,7 @@ Core.KIX4OTRS.TextModules = (function(TargetNS) {
         // this is needed, because TextModulePreviewContainer will be loaded dynamically and therefore may be an empty selection during JS init
         $TMPreviewContainer = $('#TextModulePreviewContainer');
 
-        $TMTable.find('div.TextModule').bind({
+        $TMTable.find('div.TextModule').on({
             click : function(Event) {
                 if ($(this).attr('id') != SelectedTextModuleID) {
                     // remove old selection
@@ -352,31 +352,31 @@ Core.KIX4OTRS.TextModules = (function(TargetNS) {
         });
 
         // bind insert-event on button
-        $('#TextModuleInsert').bind('click', function() {
+        $('#TextModuleInsert').on('click', function() {
             SelectedTextModuleID = $('#TextModulesSelectionContainer').find('.TextModule.Selected').attr('id');
             if (SelectedTextModuleID > 0)
                 InsertTextmodule(SelectedTextModuleID);
         });
 
         // bind preview-event on button
-        $('#TextModulePreview').bind('click', function(Event) {
+        $('#TextModulePreview').on('click', function(Event) {
             SelectedTextModuleID = $('#TextModulesSelectionContainer').find('.TextModule.Selected').attr('id');
             if (SelectedTextModuleID > 0) {
                 PreviewTextmodule(Event, SelectedTextModuleID);
-                $TMPreviewContainer.bind('click', function() {
+                $TMPreviewContainer.on('click', function() {
                     $TMPreviewContainer.hide();
                 });
             }
         });
 
         // bind close preview on button
-        $('#TextModulePreviewClose').bind('click', function(Event) {
+        $('#TextModulePreviewClose').on('click', function(Event) {
             $TMPreviewContainer.hide();
             Event.preventDefault();
         });
 
         // bind remove-event on button
-        $('#TextModuleUndo').bind('click', function() {
+        $('#TextModuleUndo').on('click', function() {
             UndoTextmodule('RichText');
         });
 
@@ -413,7 +413,7 @@ Core.KIX4OTRS.TextModules = (function(TargetNS) {
         });
 
         // expand or collapse text module view
-        $('#CategoryTreeToggle').bind('click', function(Event) {
+        $('#CategoryTreeToggle').on('click', function(Event) {
             // get more space for ticket list
             if (!$('.SidebarColumn').hasClass('Collapsed W35px')) {
                 $('.ContentColumn').css({
@@ -454,7 +454,7 @@ Core.KIX4OTRS.TextModules = (function(TargetNS) {
         });
 
         // bind insert-event on button
-        $('#TextModuleInsert').bind('click', function(Event) {
+        $('#TextModuleInsert').on('click', function(Event) {
             SelectedTextModuleID = $('#TextModulesSelectionContainer a.jstree-clicked > span').attr('id');
             if (SelectedTextModuleID > 0)
                 InsertTextmodule(SelectedTextModuleID);
@@ -462,11 +462,11 @@ Core.KIX4OTRS.TextModules = (function(TargetNS) {
         });
 
         // bind preview-event on button
-        $('#TextModulePreview').bind('click', function(Event) {
+        $('#TextModulePreview').on('click', function(Event) {
             SelectedTextModuleID = $('#TextModulesSelectionContainer a.jstree-clicked > span').attr('id');
             if (SelectedTextModuleID > 0) {
                 PreviewTextmodule(Event, SelectedTextModuleID);
-                $TMPreviewContainer.bind('click', function() {
+                $TMPreviewContainer.on('click', function() {
                     $TMPreviewContainer.hide();
                 });
             }
@@ -474,7 +474,7 @@ Core.KIX4OTRS.TextModules = (function(TargetNS) {
         });
 
         // bind close preview on button
-        $('#TextModulePreviewClose').bind('click', function(Event) {
+        $('#TextModulePreviewClose').on('click', function(Event) {
             $TMPreviewContainer.hide();
             Event.preventDefault();
         });
@@ -496,40 +496,40 @@ Core.KIX4OTRS.TextModules = (function(TargetNS) {
 
             if ($('#TypeID').length) {
                 // bind ajax reload on TypeID dropdown
-                $('#TypeID').bind('change', function() {
+                $('#TypeID').on('change', function() {
                     RefreshTextmodules();
                 });
             }
 
             if ($('#NewQueueID').length) {
                 // bind ajax reload on NewQueueID dropdown (AgentTicketActionCommon)
-                $('#NewQueueID').bind('change', function() {
+                $('#NewQueueID').on('change', function() {
                     RefreshTextmodules();
                 });
             }
 
             else if ($('#Dest').length) {
                 // bind ajax reload on Dest dropdown (AgentTicketPhone)
-                $('#Dest').bind('change', function() {
+                $('#Dest').on('change', function() {
                     RefreshTextmodules();
                 });
             }
 
             if ($('#SelectedCustomerUser').length) {
                 // bind ajax reload on SelectedCustomerUser dropdown (AgentTicketPhone / AgentTicketEmail)
-                $('#SelectedCustomerUser').bind('change', function() {
+                $('#SelectedCustomerUser').on('change', function() {
                     RefreshTextmodules();
                 });
             }
 
             if ($('#NextStateID').length) {
                 // bind ajax reload on NextState dropdown (AgentTicketPhone / AgentTicketEmail)
-                $('#NextStateID').bind('change', function() {
+                $('#NextStateID').on('change', function() {
                     RefreshTextmodules();
                 });
             }
 
-            $('#TextModules .WidgetAction.Toggle').bind('click', function() {
+            $('#TextModules .WidgetAction.Toggle').on('click', function() {
                 // load text modules on first expand
                 if ($('#TextModules').hasClass('Collapsed') && $TMTable.find('div.TextModule').length == 0)
                     RefreshTextmodules();

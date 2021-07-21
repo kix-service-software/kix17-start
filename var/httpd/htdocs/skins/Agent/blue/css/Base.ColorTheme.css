@@ -140,10 +140,11 @@
     /**
     *   @subsection tabs
     */
-    div.ui-datepicker.ui-widget {
+    div.ui-datepicker.ui-widget.ui-widget-content {
         background: #FFFFFF;
         border: 1px solid #9E9E9E;
     }
+    .ui-datepicker .ui-state-default,
     .ui-state-default,
     .ui-widget-content .ui-state-default,
     .ui-widget-header .ui-state-default {
@@ -158,6 +159,7 @@
         background: -ms-linear-gradient(top,#FFF0A5 0%,#FFE45C 100%);
         background: linear-gradient(to bottom,#FFF0A5 0%,#FFE45C 100%);
     }
+    .ui-datepicker .ui-state-default:hover,
     .ui-state-hover,
     .ui-widget-content .ui-state-hover,
     .ui-widget-header .ui-state-hover,
@@ -174,14 +176,19 @@
         border: 1px solid #9E9E9E;
         color: #5B5B5B;
     }
-    div.ui-tabs > div {
-        border: 1px solid #9E9E9E;
+    div.ui-tabs > div.ui-tabs-panel {
+        border-color: #9E9E9E;
     }
     .ui-tabs .ui-tabs-nav li.ui-state-active a,
     .ui-tabs .ui-tabs-nav li.ui-state-active a:link,
     .ui-tabs .ui-tabs-nav li.ui-state-active a:visited {
         color: #FFFFFF;
         background-color: #0A7CB3;
+    }
+    .ui-datepicker .ui-state-highlight,
+    .ui-datepicker .ui-state-highlight:hover {
+        background: #0A7CB3;
+        color: #FFFFFF;
     }
 
 
@@ -249,6 +256,18 @@
     }
     .ContentColumn > .ControlRow {
         border-bottom: 1px solid #9E9E9E;
+    }
+    .WidgetAction > ul.WidgetTooltip {
+        background-color: #FDFDFD;
+        border-color: #9E9E9E;
+    }
+    .WidgetAction > ul.WidgetTooltip > li > a {
+        border-color: #CCC;
+    }
+    .WidgetAction > ul.WidgetTooltip > li > a:hover {
+        background-color: #0A7CB3;
+        border-color: #0A7CB3;
+        color: #FFFFFF;
     }
 
 

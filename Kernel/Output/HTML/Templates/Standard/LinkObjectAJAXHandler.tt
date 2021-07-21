@@ -78,7 +78,7 @@
 [% RenderBlockEnd("TableComplex") %]
 
 <script type="text/javascript">//<![CDATA[
-    $('.SelectAll').bind('click', function () {
+    $('.SelectAll').on('click', function () {
         var Status = $(this).prop('checked');
         $(this).closest('.WidgetSimple').find('table input[type=checkbox]').prop('checked', Status);
     });

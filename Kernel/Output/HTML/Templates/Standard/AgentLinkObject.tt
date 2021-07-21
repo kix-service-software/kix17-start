@@ -22,7 +22,7 @@
 [% RenderBlockStart("LinkAddTemporaryLink") %]
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#LinkAddCloseLink').bind('click', function (Event) {
+    $('#LinkAddCloseLink').on('click', function (Event) {
         window.close();
         return false;
     });
@@ -60,7 +60,7 @@
                             [% Data.TargetObjectStrg %]
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#TargetIdentifier').bind('change', function (Event) {
+    $('#TargetIdentifier').on('change', function (Event) {
         Core.Form.Validate.DisableValidation($(this).closest('form'));
         $('#SubmitSelect').addClass('gotclicked');
         $(this).closest('form').submit();
@@ -68,7 +68,7 @@
     // Two submits in this form
     // if SubmitSelect or AddLinks button was clicked,
     // add "gotclicked" class to this button
-    $('#SubmitSelect, #AddLinks').bind('click.Submit', function () {
+    $('#SubmitSelect, #AddLinks').on('click.Submit', function () {
        Core.Form.Validate.DisableValidation($(this).closest('form'));
        $('#SubmitSelect').addClass('gotclicked');
     });
@@ -146,7 +146,7 @@
 [% RenderBlockStart("LinkDeleteTemporaryLink") %]
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#LinkDeleteCloseLink').bind('click', function (Event) {
+    $('#LinkDeleteCloseLink').on('click', function (Event) {
         window.close();
         return false;
     });

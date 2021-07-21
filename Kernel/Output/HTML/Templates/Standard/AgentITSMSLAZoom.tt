@@ -167,12 +167,12 @@
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
 
-    $('ul.Actions a.AsPopup').bind('click', function (Event) {
+    $('ul.Actions a.AsPopup').on('click', function (Event) {
         Core.UI.Popup.OpenPopup($(this).attr('href'), 'Action');
         return false;
     });
 
-    $('ul.Actions a.HistoryBack').bind('click', function (Event) {
+    $('ul.Actions a.HistoryBack').on('click', function (Event) {
         history.back();
         return false;
     });

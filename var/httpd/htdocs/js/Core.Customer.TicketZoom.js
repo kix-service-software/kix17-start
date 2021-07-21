@@ -88,7 +88,7 @@ Core.Customer.TicketZoom = (function (TargetNS) {
         var Source;
 
         if ($.browser.safari || $.browser.opera){
-            $(Iframe).load(function(){
+            $(Iframe).on("load", function(){
                 setTimeout(ResizeIframe, 0, this, Callback);
             });
             Source = Iframe.src;
@@ -96,7 +96,7 @@ Core.Customer.TicketZoom = (function (TargetNS) {
             Iframe.src = Source;
         }
         else {
-            $(Iframe).load(function(){
+            $(Iframe).on("load", function(){
                 ResizeIframe(this, Callback);
             });
         }

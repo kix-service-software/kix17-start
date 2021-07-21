@@ -2,10 +2,14 @@
 # Modified version of the work: Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
 # Copyright (C) 2001-2021 OTRS AG, https://otrs.com/
+# Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/
 # --
-# This software comes with ABSOLUTELY NO WARRANTY. For details, see
-# the enclosed file LICENSE for license information (AGPL). If you
-# did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
+# This software comes with ABSOLUTELY NO WARRANTY. This program is
+# licensed under the AGPL-3.0 with code licensed under the GPL-3.0.
+# For details, see the enclosed files LICENSE (AGPL) and
+# LICENSE-GPL3 (GPL3) for license information. If you did not receive
+# this files, see https://www.gnu.org/licenses/agpl.txt (APGL) and
+# https://www.gnu.org/licenses/gpl-3.0.txt (GPL3).
 # --
 
 package Kernel::Modules::AdminMailAccount;
@@ -30,13 +34,17 @@ sub new {
 sub Run {
     my ( $Self, %Param ) = @_;
 
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-    my $ParamObject  = $Kernel::OM->Get('Kernel::System::Web::Request');
     my $MailAccount  = $Kernel::OM->Get('Kernel::System::MailAccount');
+    my $ParamObject  = $Kernel::OM->Get('Kernel::System::Web::Request');
 
     my %GetParam = ();
     my @Params   = (
-        qw(ID Login Password Host Type TypeAdd Comment ValidID QueueID IMAPFolder Trusted DispatchingBy)
+### Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
+#        qw(ID Login Password Host Type TypeAdd Comment ValidID QueueID IMAPFolder Trusted DispatchingBy)
+        qw(ID Login Password Host Type TypeAdd Comment ValidID QueueID IMAPFolder Trusted DispatchingBy OAuth2_ProfileID)
+### EO Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
     );
     for my $Parameter (@Params) {
         $GetParam{$Parameter} = $ParamObject->GetParam( Param => $Parameter );
@@ -108,14 +116,23 @@ sub Run {
         $LayoutObject->ChallengeTokenCheck();
 
         my %Errors;
+### Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
+        my $OAuth2 = ( $GetParam{TypeAdd} && $GetParam{TypeAdd} =~ /_OAuth2$/ ) ? 1 : 0;
+### EO Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
 
-        # check needed data
-        for my $Needed (qw(Login Password Host)) {
+       # check needed data
+### Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
+#        for my $Needed (qw(Login Password Host)) {
+        for my $Needed ( qw(Login Host), ( $OAuth2 ? qw() : qw(Password) ) ) {
+### EO Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
             if ( !$GetParam{$Needed} ) {
                 $Errors{ $Needed . 'AddInvalid' } = 'ServerError';
             }
         }
-        for my $Needed (qw(TypeAdd ValidID)) {
+### Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
+#        for my $Needed (qw(TypeAdd ValidID)) {
+        for my $Needed ( qw(TypeAdd ValidID), ( $OAuth2 ? qw(OAuth2_ProfileID) : qw() ) ) {
+### EO Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
             if ( !$GetParam{$Needed} ) {
                 $Errors{ $Needed . 'Invalid' } = 'ServerError';
             }
@@ -123,7 +140,6 @@ sub Run {
 
         # if no errors occurred
         if ( !%Errors ) {
-
             # add mail account
             my $ID = $MailAccount->MailAccountAdd(
                 %GetParam,
@@ -131,6 +147,7 @@ sub Run {
                 UserID => $Self->{UserID},
             );
             if ($ID) {
+                # load overview
                 $Self->_Overview();
                 my $Output = $LayoutObject->Header();
                 $Output .= $LayoutObject->NavigationBar();
@@ -189,14 +206,23 @@ sub Run {
         $LayoutObject->ChallengeTokenCheck();
 
         my %Errors;
+### Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
+        my $OAuth2 = ( $GetParam{TypeAdd} && $GetParam{TypeAdd} =~ /_OAuth2$/ ) ? 1 : 0;
+### EO Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
 
         # check needed data
-        for my $Needed (qw(Login Password Host)) {
+### Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
+#        for my $Needed (qw(Login Password Host)) {
+        for my $Needed ( qw(Login Host), ( $OAuth2 ? qw() : qw(Password) ) ) {
+### EO Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
             if ( !$GetParam{$Needed} ) {
                 $Errors{ $Needed . 'EditInvalid' } = 'ServerError';
             }
         }
-        for my $Needed (qw(Type ValidID DispatchingBy QueueID)) {
+### Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
+#        for my $Needed (qw(Type ValidID DispatchingBy QueueID)) {
+        for my $Needed ( qw(Type ValidID DispatchingBy QueueID), ( $OAuth2 ? qw(OAuth2_ProfileID) : qw() ) ) {
+### EO Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
             if ( !$GetParam{$Needed} ) {
                 $Errors{ $Needed . 'Invalid' } = 'ServerError';
             }
@@ -207,7 +233,6 @@ sub Run {
 
         # if no errors occurred
         if ( !%Errors ) {
-
             if ( $GetParam{Password} eq 'kix-dummy-password-placeholder' ) {
                 my %OriginalData = $MailAccount->MailAccountGet(%GetParam);
                 $GetParam{Password} = $OriginalData{Password};
@@ -219,6 +244,7 @@ sub Run {
                 UserID => $Self->{UserID},
             );
             if ($Update) {
+                # load overview
                 $Self->_Overview();
                 my $Output = $LayoutObject->Header();
                 $Output .= $LayoutObject->NavigationBar();
@@ -371,6 +397,16 @@ sub _MaskUpdateMailAccount {
         OnChangeSubmit => 0,
         Class => 'Modernize Validate_Required ' . ( $Param{Errors}->{'QueueIDInvalid'} || '' ),
     );
+
+### Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
+    $Param{OAuth2_ProfileOption} = $LayoutObject->BuildSelection(
+        Data        => { $Kernel::OM->Get('Kernel::System::OAuth2')->ProfileList( Valid => 1 ) },
+        Name        => 'OAuth2_ProfileID',
+        SelectedID  => $Param{OAuth2_ProfileID} || '',
+        Class       => 'Modernize',
+        PossibleNone => 1
+    );
+### EO Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
     $LayoutObject->Block(
         Name => 'Overview',
         Data => { %Param, },
@@ -440,6 +476,16 @@ sub _MaskAddMailAccount {
         OnChangeSubmit => 0,
         Class => 'Modernize Validate_Required ' . ( $Param{Errors}->{'QueueIDInvalid'} || '' ),
     );
+
+### Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
+    $Param{OAuth2_ProfileOption} = $LayoutObject->BuildSelection(
+        Data        => { $Kernel::OM->Get('Kernel::System::OAuth2')->ProfileList( Valid => 1 ) },
+        Name        => 'OAuth2_ProfileID',
+        SelectedID  => $Param{OAuth2_ProfileID} || '',
+        Class       => 'Modernize',
+        PossibleNone => 1
+    );
+### EO Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
     $LayoutObject->Block(
         Name => 'Overview',
         Data => { %Param, },
@@ -470,9 +516,11 @@ sub _MaskAddMailAccount {
 This software is part of the KIX project
 (L<https://www.kixdesk.com/>).
 
-This software comes with ABSOLUTELY NO WARRANTY. For details, see the enclosed file
-LICENSE for license information (AGPL). If you did not receive this file, see
-
-<https://www.gnu.org/licenses/agpl.txt>.
+This software comes with ABSOLUTELY NO WARRANTY. This program is
+licensed under the AGPL-3.0 with code licensed under the GPL-3.0.
+For details, see the enclosed files LICENSE (AGPL) and
+LICENSE-GPL3 (GPL3) for license information. If you did not receive
+this files, see <https://www.gnu.org/licenses/agpl.txt> (APGL) and
+<https://www.gnu.org/licenses/gpl-3.0.txt> (GPL3).
 
 =cut

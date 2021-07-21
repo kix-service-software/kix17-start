@@ -127,7 +127,7 @@
 
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-$('.StatDelete').bind('click', function (Event) {
+$('.StatDelete').on('click', function (Event) {
     var ConfirmText = '"' + $(this).data('stat-title') + '"\n\n' + [% Translate("Do you really want to delete this statistic?") | JSON %];
     if (!window.confirm( ConfirmText ) ) {
         Event.stopPropagation();

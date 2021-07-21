@@ -32,7 +32,7 @@
                     </li>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-$('#[% Data.SelectName %]').bind('change', function() {
+$('#[% Data.SelectName %]').on('change', function() {
     if ($(this).val() !== '') {
         Core.Agent.Admin.DynamicField.Redirect($(this).val(), '[% Data.ObjectType %]');
 
@@ -43,6 +43,41 @@ $('#[% Data.SelectName %]').bind('change', function() {
 //]]></script>
 [% END %]
 [% RenderBlockEnd("ActionAddDynamicField") %]
+                </ul>
+            </div>
+        </div>
+        <div class="WidgetSimple">
+            <div class="Header">
+                 <h2><span>[% Translate("Import/Export") | html %]</span></h2>
+            </div>
+            <div class="Content">
+                <ul class="ActionList">
+                    <li>
+                        <a href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=DynamicFieldExport" class="CallForAction Fullsize Center"><span><i class="fa fa-download"></i>[% Translate("Export DynamicFields") | html %]</span></a>
+                    </li>
+                </ul>
+                <hr />
+                <p class="FieldExplanation">
+                    [% Translate("Here you can upload a configuration file to import DynamicFields to your system. The file needs to be in .yml format as exported by this module.") | html %]
+                </p>
+                <ul class="ActionList">
+                    <li>
+                        <form action="[% Env("CGIHandle") %]" method="post" enctype="multipart/form-data" class="Validate PreventMultipleSubmits">
+                            <input type="hidden" name="Action" value="[% Env("Action") %]"/>
+                            <input type="hidden" name="Subaction" value="DynamicFieldImport"/>
+                            <input type="hidden" name="FormID" value="[% Data.FormID | html %]"/>
+                            <input name="FileUpload" id="FileUpload" type="file" size="18" class="Fixed W100pc Validate_Required [% Data.FileUploadInvalid | html %]"/>
+                            <div id="FileUploadError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
+                            <div id="FileUploadServerError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
+                            <fieldset class="Separated">
+                                <input type="checkbox" id="OverwriteExistingEntities" name="OverwriteExistingEntities" value="1" />
+                                <label for="OverwriteExistingEntities">[% Translate("Overwrite existing DynamicFields?") | html %]</label>
+                            </fieldset>
+                            <button class="CallForAction Fullsize Center" type="submit" value="[% Translate("Import DynamicFields") | html %]">
+                                <span><i class="fa fa-upload"></i>[% Translate("Import DynamicFields") | html %]</span>
+                            </button>
+                        </form>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -101,7 +136,7 @@ $('#[% Data.SelectName %]').bind('change', function() {
 
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-$('#ShowContextSettingsDialog').bind('click', function (Event) {
+$('#ShowContextSettingsDialog').on('click', function (Event) {
     Core.UI.Dialog.ShowContentDialog($('#ContextSettingsDialogContainer'), [% Translate("Settings") | JSON %], '20%', 'Center', true,
         [
             {
@@ -134,6 +169,7 @@ $('#ShowContextSettingsDialog').bind('click', function (Event) {
                             <th>[% Translate("Type") | html %]</th>
                             <th>[% Translate("Object") | html %]</th>
                             <th>[% Translate("Validity") | html %]</th>
+                            <th>[% Translate("Export") | html %]</th>
                             <th>[% Translate("Delete") | html %]</th>
                         </tr>
                     </thead>
@@ -165,6 +201,12 @@ $('#ShowContextSettingsDialog').bind('click', function (Event) {
                             <td>
                                 <div>[% Translate(Data.Valid) | html %]</div>
                             </td>
+                            <td class="Center DynamicFieldExportLink">
+                                <a href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=DynamicFieldExport;ID=[% Data.ID | uri %];[% Env("ChallengeTokenParam") | html %]">
+                                    <i class="fa fa-download"></i>
+                                    <span class="InvisibleText">[% Translate("Export") | html %]</span>
+                                </a>
+                            </td>
                             <td class="Center">
 [% RenderBlockStart("DeleteLink") %]
                                 <a class="TrashCan DynamicFieldDelete" href="#" data-query-string="Action=AdminDynamicField;Subaction=DynamicFieldDelete;ID=[% Data.ID | uri %];[% Env("ChallengeTokenParam") | html %]" title="[% Translate("Delete this field") | html %]">[% Translate("Delete this field") | html %]
@@ -189,16 +231,20 @@ $('#ShowContextSettingsDialog').bind('click', function (Event) {
 
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-$('.MasterAction').bind('click', function (Event) {
+$('.MasterAction').on('click', function (Event) {
     var $MasterActionLink = $(this).find('.MasterActionLink');
     // only act if the link was not clicked directly
-    if (Event.target !== $MasterActionLink.get(0)) {
+    if (
+        Event.target !== $MasterActionLink.get(0)
+        && !$(Event.target).hasClass('DynamicFieldExportLink')
+        && !$(Event.target).closest('td').hasClass('DynamicFieldExportLink')
+    ) {
         window.location = $MasterActionLink.attr('href');
         return false;
     }
 });
 
-$('.DynamicFieldDelete').bind('click', function (Event) {
+$('.DynamicFieldDelete').on('click', function (Event) {
 
     if (window.confirm([% Translate("Do you really want to delete this dynamic field? ALL associated data will be LOST!") | JSON %])) {
 

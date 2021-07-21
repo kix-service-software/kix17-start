@@ -371,16 +371,6 @@ EOF
         $Self->{BrowserRichText} = 0;
     }
 
-    # check if spell check should be active
-    if ( $Self->{BrowserJavaScriptSupport} && $ConfigObject->Get('SpellChecker') ) {
-        if ( $ConfigObject->Get('Frontend::RichText') ) {
-            $Self->{BrowserSpellCheckerInline} = 1;
-        }
-        else {
-            $Self->{BrowserSpellChecker} = 1;
-        }
-    }
-
     # load theme
     my $Theme = $Self->{UserTheme} || $ConfigObject->Get('DefaultTheme') || Translatable('Standard');
 

@@ -245,12 +245,12 @@ function CheckIFrameHeight(IFrameID) {
 FAQ.Customer.FAQZoom.Init();
     Core.KIX4OTRS.KIXSidebar.Init('[% Env("CustomerFAQZoomSidebarWidth") %]','[% Env("Action") %]','ItemID=[% Data.ItemID | uri %];');
 
-$('a.AsPopup').bind('click', function (Event) {
+$('a.AsPopup').on('click', function (Event) {
     Core.UI.Popup.OpenPopup($(this).attr('href'), 'TicketAction');
     return false;
 });
 
-$('.RateButton').bind('click', function (Event) {
+$('.RateButton').on('click', function (Event) {
     var RateNumber = parseInt($(this).closest('div').attr('id').replace(/RateButton/, ''), 10);
     $('#RateValue').val(RateNumber);
     $('#RateSubmitButton').fadeIn(250);

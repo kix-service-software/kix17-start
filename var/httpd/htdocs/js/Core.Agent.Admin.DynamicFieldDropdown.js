@@ -110,7 +110,7 @@ Core.Agent.Admin.DynamicFieldDropdown = (function (TargetNS) {
             if($(this).hasClass('RemoveButton')) {
 
                 // bind click function to remove button
-                $(this).bind('click', function () {
+                $(this).on('click', function () {
                     TargetNS.RemoveValue($(this).attr('id'));
                     return false;
                 });
@@ -128,7 +128,7 @@ Core.Agent.Admin.DynamicFieldDropdown = (function (TargetNS) {
         // set new value for KeyName
         $('#ValueCounter').val(ValueCounter);
 
-        $('.DefaultValueKeyItem,.DefaultValueItem').bind('keyup', function () {
+        $('.DefaultValueKeyItem,.DefaultValueItem').on('keyup', function () {
             Core.Agent.Admin.DynamicFieldDropdown.RecreateDefaultValueList();
         });
 

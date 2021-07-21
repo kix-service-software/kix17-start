@@ -36,7 +36,7 @@
 <script type="text/javascript">//<![CDATA[
     Core.UI.ActionRow.Init();
 
-    $('a.AsPopup').bind('click', function (Event) {
+    $('a.AsPopup').on('click', function (Event) {
         var Matches,
             PopupType = 'TicketAction';
 
@@ -294,7 +294,7 @@
                                         </form>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#[% Data.FormID | html %] select[name=ResponseID]').bind('change', function (Event) {
+    $('#[% Data.FormID | html %] select[name=ResponseID]').on('change', function (Event) {
         var URL;
 
         if ($(this).val() > 0) {
@@ -305,7 +305,7 @@
         }
     });
     // make sure this click event does not bubble up to the table row and execute its click handler
-    $('#[% Data.FormID | html %] select[name=ResponseID]').bind('click', function (Event) {
+    $('#[% Data.FormID | html %] select[name=ResponseID]').on('click', function (Event) {
         Event.stopPropagation();
         return false;
     });
@@ -382,7 +382,7 @@
 [% RenderBlockStart("DocumentReadyStart") %]
 <script type="text/javascript">//<![CDATA[
     Core.UI.InitCheckboxSelection($('div.Checkbox'));
-    $('.MasterAction').bind('click', function (Event) {
+    $('.MasterAction').on('click', function (Event) {
         var $MasterActionLink = $(this).find('.MasterActionLink');
 
         // if the user is trying to select text from an article, MasterAction should not be executed
@@ -417,7 +417,7 @@
         return false;
     });
 
-    $('#SelectAllTickets').bind('click', function (Event) {
+    $('#SelectAllTickets').on('click', function (Event) {
         var $Element = $(this);
 
         if ( $(this).hasClass('SelectAllItemsPages')

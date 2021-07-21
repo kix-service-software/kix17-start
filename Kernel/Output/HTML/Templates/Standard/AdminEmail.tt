@@ -107,6 +107,7 @@
                                 <p>[% Translate("This field is required.") | html %]</p>
                             </div>
                         </div>
+                        <div class="Clear"></div>
 
                         <label class="Mandatory" for="RichText"><span class="Marker">*</span> [% Translate("Body") | html %]:</label>
                         <div class="RichTextField">

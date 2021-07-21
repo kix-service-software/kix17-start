@@ -525,7 +525,7 @@
             $(this)
                 .append('&nbsp;<a href="#" class="DescriptionOverlay">' + LinkText + '</a>')
                 .find('a.DescriptionOverlay')
-                .bind('click', function() {
+                .on('click', function() {
 
                     Core.UI.Dialog.ShowDialog({
                         Modal: true,

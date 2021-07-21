@@ -252,6 +252,11 @@ sub SearchFormDataGet {
                 push( @SearchValues, $ItemID );
                 last ITEM;
             }
+            elsif ( $ItemID eq $FormValue ) {
+                # add id to values
+                push( @SearchValues, $ItemID );
+                last ITEM;
+            }
         }
     }
 
@@ -284,14 +289,18 @@ sub SearchInputCreate {
     }
 
     # get form data
-    my @FormValues;
+    my @Values;
+    my %FormValues;
     if ( $Param{Value} ) {
-        @FormValues = @{ $Param{Value} };
+        %FormValues = map { $_ => 1 } @{ $Param{Value} };
     }
     else {
-        @FormValues = $Kernel::OM->Get('Kernel::System::Web::Request')->GetArray( Param => $Param{Key} );
+        my @DataValues = $Kernel::OM->Get('Kernel::System::Web::Request')->GetArray( Param => $Param{Key} );
+
+        if ( scalar( @DataValues ) ) {
+            %FormValues = map{ $_ => 1 } @DataValues;
+        }
     }
-    my $Values = \@FormValues;
 
     # translation on or off
     my $Translation = 0;
@@ -308,8 +317,17 @@ sub SearchInputCreate {
                 Class => $Class,
             );
             # add values to data
-            for my $Value ( values( %{ $ClassList } ) ) {
+            for my $ItemID ( keys( %{ $ClassList } ) ) {
+                my $Value = $ClassList->{$ItemID};
+
                 $Data{ $Value } = $Value;
+
+                if (
+                    %FormValues
+                    && $FormValues{$ItemID}
+                ) {
+                    push( @Values, $Value );
+                }
             }
         }
     }
@@ -319,8 +337,17 @@ sub SearchInputCreate {
             Class => $Param{Item}->{Input}->{Class} || '',
         );
         # add values to data
-        for my $Value ( values( %{ $ClassList } ) ) {
+        for my $ItemID ( keys( %{ $ClassList } ) ) {
+            my $Value = $ClassList->{$ItemID};
+
             $Data{ $Value } = $Value;
+
+            if (
+                %FormValues
+                && $FormValues{$ItemID}
+            ) {
+                push( @Values, $Value );
+            }
         }
     }
 
@@ -331,7 +358,7 @@ sub SearchInputCreate {
         Size        => 5,
         Multiple    => 1,
         Translation => $Translation,
-        SelectedID  => $Values,
+        SelectedID  => \@Values,
         Class       => 'Modernize',
     );
 

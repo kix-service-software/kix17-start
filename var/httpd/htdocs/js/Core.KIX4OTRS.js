@@ -50,19 +50,21 @@ Core.KIX4OTRS = (function(TargetNS) {
         };
     }
 
-    TargetNS.SelectLinkedObjects = function(Action, Language) {
+    TargetNS.SelectLinkedObjects = function(Action) {
 
-        var $Tabs = $("[id^=ui-tabs-]"),
+        var $Tabs = $(".ui-tabs-tab"),
             $CurrentTab;
 
         $.each($Tabs, function() {
             if ($(this).attr('aria-expanded') == 'true') {
-                $CurrentTab = $(this);
+                var TabID = $(this).attr('aria-controls');
+                $CurrentTab = $('#' + TabID);
+                return false;
             }
         });
 
         // bind delete button
-        $CurrentTab.find('.Primary').bind('click', function() {
+        $CurrentTab.find('.Primary').on('click', function() {
             var $SelectedLinks = $(this).parent().parent().find('input:checked');
 
             if ($SelectedLinks.length == 0) {
@@ -70,10 +72,10 @@ Core.KIX4OTRS = (function(TargetNS) {
             }
 
             // ask the user
-            var Type = Core.Config.Get('Question');
-            var Question = '<p class="Spacing">' + Core.Config.Get('DeleteLinksQuestion') + '</p>';
-            var Yes = Core.Config.Get('Yes');
-            var No = Core.Config.Get('No');
+            var Type     = Core.Config.Get('Question'),
+                Question = '<p class="Spacing">' + Core.Config.Get('DeleteLinksQuestion') + '</p>',
+                Yes      = Core.Config.Get('Yes'),
+                No       = Core.Config.Get('No');
 
             Core.KIX4OTRS.Dialog.ShowQuestion(Type, Question, Yes, function() {
                 // Yes - delete links
@@ -151,7 +153,7 @@ Core.KIX4OTRS = (function(TargetNS) {
             });
 
             // save new size every time the size has changed
-            $(window).bind('resizeEnd', function() {
+            $(window).on('resizeEnd', function() {
 
                 if (!Start) {
                     var Height = window.outerHeight, Width = window.outerWidth;
@@ -326,7 +328,7 @@ Core.KIX4OTRS = (function(TargetNS) {
         });
 
         // delete draft when clicking on Cancel link
-        $('div.Header a.CancelClosePopup').bind('click', function() {
+        $('div.Header a.CancelClosePopup').on('click', function() {
             DeleteDraft(Action, TicketID);
         });
 
@@ -350,7 +352,7 @@ Core.KIX4OTRS = (function(TargetNS) {
             Attributes[Key] = '#' + Value;
         });
         AttributeString = Attributes.join(', ');
-        $(AttributeString).bind('keydown', function(event) {
+        $(AttributeString).on('keydown', function(event) {
             window.clearTimeout(ActiveInterval);
             ActiveInterval = window.setTimeout(function() {
                 SaveDraft();
@@ -359,7 +361,7 @@ Core.KIX4OTRS = (function(TargetNS) {
 
         if ( InitialLoadDraft !== 'false' ) {
             // show dialog on load if saved form is available
-            $(window).load(function() {
+            $(window).on("load", function() {
                 TargetNS.LoadDraft(Action, TicketID, FormID, Question);
             });
 
@@ -440,7 +442,6 @@ Core.KIX4OTRS = (function(TargetNS) {
                         });
                     }
                 }
-
             });
 
             // reset action

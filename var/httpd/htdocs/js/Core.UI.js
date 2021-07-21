@@ -142,8 +142,8 @@ Core.UI = (function (TargetNS) {
      */
     TargetNS.InitMessageBoxClose = function () {
         $(".MessageBox > a.Close")
-            .unbind('click.MessageBoxClose')
-            .bind('click.MessageBoxClose', function (Event) {
+            .off('click.MessageBoxClose')
+            .on('click.MessageBoxClose', function (Event) {
                 $(this).parent().fadeOut("slow");
                 Core.Agent.PreferencesUpdate('UserAgentDoNotShowNotifiyMessage_' + $(this).parent('div').attr('id') , Core.Config.Get('SessionID'));
             });
@@ -240,7 +240,7 @@ Core.UI = (function (TargetNS) {
         }
 
         // e.g. 'table td.Checkbox' or 'div.Checkbox'
-        $Element.unbind('click.CheckboxSelection').bind('click.CheckboxSelection', function (Event) {
+        $Element.off('click.CheckboxSelection').on('click.CheckboxSelection', function (Event) {
             var $Checkbox = $(this).find('input[type="checkbox"]');
 
             if (!$Checkbox.length) {

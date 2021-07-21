@@ -797,15 +797,16 @@ sub _XMLFormGet {
                 $AddKey   = $Param{Prefix} . '::' . $AddKey;
             }
 
+            # get param object
+            my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+            my $ParamObject  = $Kernel::OM->Get('Kernel::System::Web::Request');
+
             # get param
-            my $FormValues = $Kernel::OM->Get('Kernel::Output::HTML::Layout')->ITSMConfigItemFormDataGet(
+            my $FormValues = $LayoutObject->ITSMConfigItemFormDataGet(
                 Key          => $InputKey,
                 Item         => $Item,
                 ConfigItemID => $Param{ConfigItemID},
             );
-
-            # get param object
-            my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
 
             if ( defined $FormValues->{Value} ) {
 
@@ -839,7 +840,8 @@ sub _XMLFormGet {
                             XMLDefinition => $Item->{Sub},
                         );
                     }
-                    $FormData->{ $Item->{Key} }->[$CounterInsert]->{Content} = '';
+                    $FormData->{ $Item->{Key} }->[$CounterInsert]->{Content} = undef;
+                    $FormData->{ $Item->{Key} }->[$CounterInsert]->{Init}    = 1;
                 }
                 last COUNTER;
             }
@@ -868,7 +870,8 @@ sub _XMLDefaultSet {
                 );
             }
 
-            $DefaultData->{ $Item->{Key} }->[$Counter]->{Content} = '';
+            $DefaultData->{ $Item->{Key} }->[$Counter]->{Content} = undef;
+            $DefaultData->{ $Item->{Key} }->[$Counter]->{Init}    = 1;
         }
     }
 
@@ -882,11 +885,15 @@ sub _XMLFormOutput {
     return if !$Param{XMLDefinition};
     return if ref $Param{XMLDefinition} ne 'ARRAY';
 
+        # get needed objects
+        my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+        my $ParamObject  = $Kernel::OM->Get('Kernel::System::Web::Request');
+
     $Param{Level}  ||= 0;
     $Param{Prefix} ||= '';
 
     # get submit save
-    my $SubmitSave = $Kernel::OM->Get('Kernel::System::Web::Request')->GetParam( Param => 'SubmitSave' );
+    my $SubmitSave = $ParamObject->GetParam( Param => 'SubmitSave' );
 
     # set data present mode
     my $DataPresentMode = 0;
@@ -906,7 +913,10 @@ sub _XMLFormOutput {
             # search the last content
             COUNTER:
             for my $Counter ( 1 .. $Item->{CountMax} ) {
-                last COUNTER if !defined $Param{XMLData}->{ $Item->{Key} }->[$Counter]->{Content};
+                last COUNTER if ( 
+                    !defined $Param{XMLData}->{ $Item->{Key} }->[$Counter]->{Content}
+                    && !$Param{XMLData}->{ $Item->{Key} }->[$Counter]->{Init}
+                );
                 $Loop = $Counter;
             }
 
@@ -922,9 +932,6 @@ sub _XMLFormOutput {
             $Delete = 1;
         }
 
-        # get layout object
-        my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-
         # output content rows
         for my $Counter ( 1 .. $Loop ) {
 
@@ -937,8 +944,10 @@ sub _XMLFormOutput {
 
             # create inputkey and addkey
             my $InputKey = $Item->{Key} . '::' . $Counter;
+            my $AddKey   = $Item->{Key} . '::Add';
             if ( $Param{Prefix} ) {
                 $InputKey = $Param{Prefix} . '::' . $InputKey;
+                $AddKey   = $Param{Prefix} . '::' . $AddKey;
             }
 
             # output blue required star
@@ -988,6 +997,15 @@ sub _XMLFormOutput {
                 $LabelFor = 'for="' . $LabelFor . '"';
             }
 
+            # set anchor on last element of the input key
+            my $LabelAnchor = '';
+            if (
+                $Counter == $Loop
+                && $ParamObject->GetParam( Param => $AddKey )
+            ) {
+                $LabelAnchor = 'data-anchor="true"';
+            }
+
             # is this a sub field?
             my $Class = '';
             if ( $Param{Level} ) {
@@ -1006,13 +1024,14 @@ sub _XMLFormOutput {
             $LayoutObject->Block(
                 Name => 'XMLRowValue',
                 Data => {
-                    Name        => $Item->{Name},
-                    ItemID      => $ItemID,
-                    LabelFor    => $LabelFor || '',
-                    Description => $Item->{Description} || $Item->{Name},
-                    InputString => $InputString,
-                    LabelClass  => $LabelClass || '',
-                    Class       => $Class || '',
+                    Name         => $Item->{Name},
+                    ItemID       => $ItemID,
+                    Description  => $Item->{Description} || $Item->{Name},
+                    InputString  => $InputString,
+                    Class        => $Class || '',
+                    LabelFor     => $LabelFor || '',
+                    LabelClass   => $LabelClass || '',
+                    LabelAnchor  => $LabelAnchor || '',
                 },
             );
 

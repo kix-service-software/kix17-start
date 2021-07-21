@@ -72,7 +72,7 @@
                         </form>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-$('#[% Data.FormID | html %] select[name=[% Data.PhoneElementID | html %]]').bind('change', function (Event) {
+$('#[% Data.FormID | html %] select[name=[% Data.PhoneElementID | html %]]').on('change', function (Event) {
     var URL;
 
     if ($(this).val() > 0) {
@@ -97,7 +97,7 @@ $('#[% Data.FormID | html %] select[name=[% Data.PhoneElementID | html %]]').bin
                         </form>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#DestQueueID').bind('change', function (Event) {
+    $('#DestQueueID').on('change', function (Event) {
         if ($('#DestQueueID option:selected').val() !== '0' ) {
             $(this).closest('form').submit();
         }
@@ -121,7 +121,7 @@ $('#[% Data.FormID | html %] select[name=[% Data.PhoneElementID | html %]]').bin
                         </form>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#QuickStateID').bind('change', function (Event) {
+    $('#QuickStateID').on('change', function (Event) {
         if ($('#QuickStateID option:selected').val() !== '0' ) {
             $(this).closest('form').submit();
         }
@@ -180,7 +180,7 @@ $('#[% Data.FormID | html %] select[name=[% Data.PhoneElementID | html %]]').bin
     $Element.tabs({
         beforeActivate: function(event, ui) {
             $(this).find('div').html('<span class="AJAXLoader"></span>');
-            $(window).unbind();
+            $(window).off();
         },
         beforeLoad: function( event, ui ) {
             ui.ajaxSettings.cache = false,

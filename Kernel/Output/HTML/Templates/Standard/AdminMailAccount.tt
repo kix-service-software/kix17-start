@@ -2,10 +2,14 @@
 # Modified version of the work: Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
 # Copyright (C) 2001-2021 OTRS AG, https://otrs.com/
+# Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/
 # --
-# This software comes with ABSOLUTELY NO WARRANTY. For details, see
-# the enclosed file LICENSE for license information (AGPL). If you
-# did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
+# This software comes with ABSOLUTELY NO WARRANTY. This program is
+# licensed under the AGPL-3.0 with code licensed under the GPL-3.0.
+# For details, see the enclosed files LICENSE (AGPL) and
+# LICENSE-GPL3 (GPL3) for license information. If you did not receive
+# this files, see https://www.gnu.org/licenses/agpl.txt (APGL) and
+# https://www.gnu.org/licenses/gpl-3.0.txt (GPL3).
 # --
 
 
@@ -123,6 +127,22 @@
                         </div>
                         <div class="Clear"></div>
 
+### Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
+                        <div class="Row Row_OAuth2_Profile Hidden">
+                            <label class="Mandatory" for="OAuth2_Profile"><span class="Marker">*</span> [% Translate("OAuth2 Profile") | html %]:</label>
+                            <div class="Field">
+                                [% Data.OAuth2_ProfileOption %]
+                                <div id="OAuth2_ProfileError" class="TooltipErrorMessage">
+                                    <p>[% Translate("This field is required.") | html %]</p>
+                                </div>
+                                <div id="OAuth2_ProfileServerError" class="TooltipErrorMessage">
+                                    <p>[% Translate("This field is required.") | html %]</p>
+                                </div>
+                            </div>
+                            <div class="Clear"></div>
+                        </div>
+### EO Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
+
                         <label class="Mandatory" for="LoginAdd"><span class="Marker">*</span> [% Translate("Username") | html %]:</label>
                         <div class="Field">
                             <input type="text" class="W50pc Validate_Required [% Data.LoginAddInvalid | html %]" name="Login" id="LoginAdd" value="" maxlength="200" autocomplete="off" />
@@ -135,30 +155,34 @@
                         </div>
                         <div class="Clear"></div>
 
-                        <label class="Mandatory" for="PasswordAdd"><span class="Marker">*</span> [% Translate("Password") | html %]:</label>
-                        <div class="Field">
-                            <input type="password" class="W50pc Validate_Required [% Data.PasswordAddInvalid | html %]" name="Password" id="PasswordAdd" value="" maxlength="200" autocomplete="off" />
-                            <div id="PasswordAddError" class="TooltipErrorMessage">
-                                <p>[% Translate("This field is required.") | html %]</p>
+                        <div class="Row Row_Password">
+                            <label class="Mandatory" for="PasswordAdd"><span class="Marker">*</span> [% Translate("Password") | html %]:</label>
+                            <div class="Field">
+                                <input type="password" class="W50pc Validate_Required [% Data.PasswordAddInvalid | html %]" name="Password" id="PasswordAdd" value="" maxlength="200" autocomplete="off" />
+                                <div id="PasswordAddError" class="TooltipErrorMessage">
+                                    <p>[% Translate("This field is required.") | html %]</p>
+                                </div>
+                                <div id="PasswordAddServerError" class="TooltipErrorMessage">
+                                    <p>[% Translate("This field is required.") | html %]</p>
+                                </div>
                             </div>
-                            <div id="PasswordAddServerError" class="TooltipErrorMessage">
-                                <p>[% Translate("This field is required.") | html %]</p>
-                            </div>
+                            <div class="Clear"></div>
                         </div>
-                        <div class="Clear"></div>
 
-                        <label class="Mandatory" for="HostAdd"><span class="Marker">*</span> [% Translate("Host") | html %]:</label>
-                        <div class="Field">
-                            <input type="text" class="W50pc Validate_Required [% Data.HostAddInvalid | html %]" name="Host" id="HostAdd" value="" maxlength="200"/>
-                            <div id="HostAddError" class="TooltipErrorMessage">
-                                <p>[% Translate("This field is required.") | html %]</p>
+                        <div class="Row Row_Host">
+                            <label class="Mandatory" for="HostAdd"><span class="Marker">*</span> [% Translate("Host") | html %]:</label>
+                            <div class="Field">
+                                <input type="text" class="W50pc Validate_Required [% Data.HostAddInvalid | html %]" name="Host" id="HostAdd" value="" maxlength="200"/>
+                                <div id="HostAddError" class="TooltipErrorMessage">
+                                    <p>[% Translate("This field is required.") | html %]</p>
+                                </div>
+                                <div id="HostAddServerError" class="TooltipErrorMessage">
+                                    <p>[% Translate("This field is required.") | html %]</p>
+                                </div>
+                                <p class="FieldExplanation">[% Translate("Example: mail.example.com") | html %]</p>
                             </div>
-                            <div id="HostAddServerError" class="TooltipErrorMessage">
-                                <p>[% Translate("This field is required.") | html %]</p>
-                            </div>
-                            <p class="FieldExplanation">[% Translate("Example: mail.example.com") | html %]</p>
+                            <div class="Clear"></div>
                         </div>
-                        <div class="Clear"></div>
 
                         <div class="Row Row_IMAPFolder Hidden">
                             <label for="IMAPFolder">[% Translate("IMAP Folder") | html %]:</label>
@@ -240,6 +264,22 @@
                         </div>
                         <div class="Clear"></div>
 
+### Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
+                        <div class="Row Row_OAuth2_Profile Hidden">
+                            <label class="Mandatory" for="OAuth2_Profile"><span class="Marker">*</span> [% Translate("OAuth2 Profile") | html %]:</label>
+                            <div class="Field">
+                                [% Data.OAuth2_ProfileOption %]
+                                <div id="OAuth2_ProfileError" class="TooltipErrorMessage">
+                                    <p>[% Translate("This field is required.") | html %]</p>
+                                </div>
+                                <div id="OAuth2_ProfileServerError" class="TooltipErrorMessage">
+                                    <p>[% Translate("This field is required.") | html %]</p>
+                                </div>
+                            </div>
+                            <div class="Clear"></div>
+                        </div>
+### EO Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
+
                         <label class="Mandatory" for="LoginEdit"><span class="Marker">*</span> [% Translate("Username") | html %]:</label>
                         <div class="Field">
                             <input type="text" class="W50pc Validate_Required [% Data.LoginEditInvalid | html %]" name="Login" id="LoginEdit" value="[% Data.Login | html %]" maxlength="200" autocomplete="off" />
@@ -252,30 +292,34 @@
                         </div>
                         <div class="Clear"></div>
 
-                        <label class="Mandatory" for="PasswordEdit"><span class="Marker">*</span> [% Translate("Password") | html %]:</label>
-                        <div class="Field">
-                            <input type="password" class="W50pc Validate_Required [% Data.PasswordEditInvalid | html %]" name="Password" id="PasswordEdit" value="[% IF Data.Password %]kix-dummy-password-placeholder[% END %]" maxlength="200" autocomplete="off" />
-                            <div id="PasswordEditError" class="TooltipErrorMessage">
-                                <p>[% Translate("This field is required.") | html %]</p>
+                        <div class="Row Row_Password">
+                            <label class="Mandatory" for="PasswordEdit"><span class="Marker">*</span> [% Translate("Password") | html %]:</label>
+                            <div class="Field">
+                                <input type="password" class="W50pc Validate_Required [% Data.PasswordEditInvalid | html %]" name="Password" id="PasswordEdit" value="[% IF Data.Password %]kix-dummy-password-placeholder[% END %]" maxlength="200" autocomplete="off" />
+                                <div id="PasswordEditError" class="TooltipErrorMessage">
+                                    <p>[% Translate("This field is required.") | html %]</p>
+                                </div>
+                                <div id="PasswordEditServerError" class="TooltipErrorMessage">
+                                    <p>[% Translate("This field is required.") | html %]</p>
+                                </div>
                             </div>
-                            <div id="PasswordEditServerError" class="TooltipErrorMessage">
-                                <p>[% Translate("This field is required.") | html %]</p>
-                            </div>
+                            <div class="Clear"></div>
                         </div>
-                        <div class="Clear"></div>
 
-                        <label class="Mandatory" for="HostEdit"><span class="Marker">*</span> [% Translate("Host") | html %]:</label>
-                        <div class="Field">
-                            <input type="text" class="W50pc Validate_Required [% Data.HostEditInvalid | html %]" name="Host" id="HostEdit" value="[% Data.Host | html %]" maxlength="200"/>
-                            <div id="HostEditError" class="TooltipErrorMessage">
-                                <p>[% Translate("This field is required.") | html %]</p>
+                        <div class="Row Row_Host">
+                            <label class="Mandatory" for="HostEdit"><span class="Marker">*</span> [% Translate("Host") | html %]:</label>
+                            <div class="Field">
+                                <input type="text" class="W50pc Validate_Required [% Data.HostEditInvalid | html %]" name="Host" id="HostEdit" value="[% Data.Host | html %]" maxlength="200"/>
+                                <div id="HostEditError" class="TooltipErrorMessage">
+                                    <p>[% Translate("This field is required.") | html %]</p>
+                                </div>
+                                <div id="HostEditServerError" class="TooltipErrorMessage">
+                                    <p>[% Translate("This field is required.") | html %]</p>
+                                </div>
+                                <p class="FieldExplanation">[% Translate("Example: mail.example.com") | html %]</p>
                             </div>
-                            <div id="HostEditServerError" class="TooltipErrorMessage">
-                                <p>[% Translate("This field is required.") | html %]</p>
-                            </div>
-                            <p class="FieldExplanation">[% Translate("Example: mail.example.com") | html %]</p>
+                            <div class="Clear"></div>
                         </div>
-                        <div class="Clear"></div>
 
                         <div class="Row Row_IMAPFolder Hidden">
                             <label for="IMAPFolder">[% Translate("IMAP Folder") | html %]:</label>
@@ -362,16 +406,30 @@
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
 // Show IMAPFolder selection only for IMAP backends
-$('select#TypeAdd, select#Type').bind('change', function(){
+$('select#TypeAdd, select#Type').on('change', function(){
     if (/IMAP/.test($(this).val())) {
         $('.Row_IMAPFolder').show();
     }
     else {
         $('.Row_IMAPFolder').hide();
     }
+    if (/_OAuth2$/.test($(this).val())) {
+        $('.Row_OAuth2_Profile').show();
+        Core.Form.Validate.EnableValidation( $('.Row_OAuth2_Profile') );
+
+        $('.Row_Password').hide();
+        Core.Form.Validate.DisableValidation( $('.Row_Password') );
+    }
+    else {
+        $('.Row_OAuth2_Profile').hide();
+        Core.Form.Validate.DisableValidation( $('.Row_OAuth2_Profile') );
+
+        $('.Row_Password').show();
+        Core.Form.Validate.EnableValidation( $('.Row_Password') );
+    }
 }).trigger('change');
 // Show only Queue field if Dispatch By Queue is selected
-$('select#DispatchingBy').bind('change', function(){
+$('select#DispatchingBy').on('change', function(){
     if (/Queue/.test($(this).val())) {
         $('.Row_Queue').show();
         Core.UI.InputFields.Activate();
