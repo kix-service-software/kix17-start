@@ -801,6 +801,8 @@ sub LoadDefaults {
 
     # Customer Common CSS
     $Self->{'Loader::Customer::CommonCSS'}->{'000-Framework'} =  [
+        'thirdparty/fontawesome/font-awesome.css',
+        'thirdparty/jstree-3.3.11/themes/default/style.min.css',
         'Base.ColorTheme.css',
         'Base.css',
         'Base.Header.css',
@@ -813,12 +815,13 @@ sub LoadDefaults {
         'Base.Form.css',
         'Base.Sidebar.css',
         'Base.Tooltip.css',
-        'Base.Login.css',
-        'thirdparty/fontawesome/font-awesome.css'
+        'Base.Login.css'
     ];
 
     # Agent Common CSS
     $Self->{'Loader::Agent::CommonCSS'}->{'000-Framework'} =  [
+        'thirdparty/fontawesome/font-awesome.css',
+        'thirdparty/jstree-3.3.11/themes/default/style.min.css',
         'Base.ColorTheme.css',
         'Base.css',
         'Base.Header.css',
@@ -833,8 +836,7 @@ sub LoadDefaults {
         'Base.Tooltip.css',
         'Base.LinkGraph.css',
         'Base.Statistics.css',
-        'Base.Login.css',
-        'thirdparty/fontawesome/font-awesome.css',
+        'Base.Login.css'
     ];
 
     # --------------------------------------------------- #
