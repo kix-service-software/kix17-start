@@ -200,7 +200,7 @@
             // remove old selections
             $('input[id^="Checkbox_'+RightOrLeft+'"]').each( function() {
                 if ( $(this).attr('id') != $Element.attr('id') ) {
-                    $(this).removeAttr('checked');
+                    $(this).prop('checked',false);
                 }
             })
             // set new selection
@@ -225,11 +225,11 @@
                                 "display":"block",
                                 })
                             .html('[% Translate("Do not compare two similar versions!") | JSON %]');
-                            $('#submitButton').prop('disabled','true');
+                            $('#submitButton').prop('disabled',true);
                             }
                         else {
                             $('#ITSMConfigItemCompareProblem').css({"display":"none"});
-                            $('#submitButton').removeAttr('disabled');
+                            $('#submitButton').prop('disabled',false);
                         }
                     }
                 });

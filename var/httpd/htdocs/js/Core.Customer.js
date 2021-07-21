@@ -132,7 +132,7 @@ Core.Customer = (function (TargetNS) {
             .filter(function () {
                 return $('ul', this).length;
             })
-            .bind('mouseenter', function () {
+            .on('mouseenter', function () {
                 var $Element = $(this);
 
                 // clear close timeout on mouseenter, even if OpenMainMenuOnHover is not enabled
@@ -164,7 +164,7 @@ Core.Customer = (function (TargetNS) {
                     });
                 }
             })
-            .bind('mouseleave', function () {
+            .on('mouseleave', function () {
 
                 var $Element = $(this);
 
@@ -188,7 +188,7 @@ Core.Customer = (function (TargetNS) {
                     });
                 }
             })
-            .bind('click', function (Event) {
+            .on('click', function (Event) {
 
                 var $Element = $(this),
                     $Target = $(Event.target);
@@ -352,13 +352,32 @@ Core.Customer = (function (TargetNS) {
                 }
             });
             $.each($('.Field:has(*)'), function() {
+                var Empty = 1;
                 if (
-                    $(this).find(':visible').length
-                    || $(this).hasClass('Hidden')
+                    $(this).hasClass('Hidden')
+                    || $(this).hasClass('Options')
                 ) {
-                    return;
+                        return false;
                 }
-                $(this).addClass('FieldPlain');
+                $.each($(this).children(), function() {
+                    if (
+                        (
+                            $(this).is(':input')
+                            || $(this).hasClass('InputField_InputContainer')
+                            || $(this).find('#AttachmentUpload').length
+                        )
+                        && $(this).css('display') != 'none'
+                    ) {
+                        Empty = 0;
+                        return false;
+                    }
+                });
+                if ( Empty ) {
+                    $(this).addClass('FieldPlain');
+                }
+                else {
+                    $(this).removeClass('FieldPlain');
+                }
             });
         }
     };

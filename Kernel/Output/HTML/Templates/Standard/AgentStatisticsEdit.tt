@@ -79,7 +79,7 @@
                             <input type="hidden" name="ReturnToStatisticOverview" id="ReturnToStatisticOverview" value="" autocomplete="off" />
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-$('#SaveAndFinish').bind('click', function(){
+$('#SaveAndFinish').on('click', function(){
     $('#ReturnToStatisticOverview').val(1);
 });
 //]]></script>

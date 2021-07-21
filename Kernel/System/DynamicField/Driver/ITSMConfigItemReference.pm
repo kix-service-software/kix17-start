@@ -913,7 +913,7 @@ END
         </div>
 <script type="text/javascript">//<![CDATA[
     function Init$ValueFieldName$ValueCounter() {
-        \$('#$ValueFieldName$ValueCounter').siblings('div.Remove').find('a').bind('click', function() {
+        \$('#$ValueFieldName$ValueCounter').siblings('div.Remove').find('a').on('click', function() {
             \$('#$ValueFieldName$ValueCounter').parent().remove();
             if (\$('input[name=$FieldName]').length == 0) {
                 \$('#$ContainerFieldName').hide();
@@ -923,7 +923,7 @@ END
     }
     function Wait$ValueFieldName$ValueCounter() {
         if (window.jQuery) {
-            \$('#Attribute').bind('redraw.InputField', function() {
+            \$('#Attribute').on('redraw.InputField', function() {
                 Init$ValueFieldName$ValueCounter();
             });
             if (
@@ -1014,7 +1014,7 @@ END
                     + '</div>'
                 );
                 \$('#$ValueFieldName' + $IDCounterName).siblings('div.Remove').find('a').data('counter', $IDCounterName);
-                \$('#$ValueFieldName' + $IDCounterName).siblings('div.Remove').find('a').bind('click', function() {
+                \$('#$ValueFieldName' + $IDCounterName).siblings('div.Remove').find('a').on('click', function() {
                     \$('#$ValueFieldName' + \$(this).data('counter')).parent().remove();
                     if (\$('input[name=$FieldName]').length == 0) {
                         \$('#$ContainerFieldName').hide();
@@ -1037,7 +1037,7 @@ END
     }
     function Wait$AutoCompleteFieldName() {
         if (window.jQuery) {
-            \$('#Attribute').bind('redraw.InputField', function() {
+            \$('#Attribute').on('redraw.InputField', function() {
                 Init$AutoCompleteFieldName();
             });
             if (

@@ -152,7 +152,7 @@
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
     Core.Form.InitSelectAllCheckboxes($('#UserRoles input:checkbox[name=[% Data.Type | html %]]'), $('#SelectAll[% Data.Type | html %]'));
-    $('#UserRoles input:checkbox[name=[% Data.Type | html %]]').bind('click', function () {
+    $('#UserRoles input:checkbox[name=[% Data.Type | html %]]').on('click', function () {
         Core.Form.SelectAllCheckboxes($(this), $('#SelectAll[% Data.Type | html %]'));
     });
     Core.UI.Table.InitTableFilter($('#Filter'), $('#UserRoles'));

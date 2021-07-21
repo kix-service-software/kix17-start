@@ -152,7 +152,7 @@
                             <input type="hidden" name="ReturnToWebservice" id="ReturnToWebservice" value="" autocomplete="off" />
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-$('#SaveAndFinishButton').bind('click', function(){
+$('#SaveAndFinishButton').on('click', function(){
     $('#ReturnToWebservice').val(1);
 });
 //]]></script>
@@ -185,11 +185,11 @@ Core.Agent.Admin.GenericInterfaceOperation.Init({
     }
 });
 
-$('.RegisterChange').bind('change.RegisterChange keyup.RegisterChange', function (Event) {
+$('.RegisterChange').on('change.RegisterChange keyup.RegisterChange', function (Event) {
     $('.HideOnChange').hide();
     $('.ShowOnChange').show();
 });
 
-$('#DeleteButton').bind('click', Core.Agent.Admin.GenericInterfaceOperation.ShowDeleteDialog);
+$('#DeleteButton').on('click', Core.Agent.Admin.GenericInterfaceOperation.ShowDeleteDialog);
 //]]></script>
 [% END %]

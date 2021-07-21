@@ -297,7 +297,7 @@ Core.Agent.Dashboard = (function (TargetNS) {
             if ($(this).find('input').prop('checked')) {
                 $(this).addClass('Checked');
             }
-            $(this).bind('click', function() {
+            $(this).on('click', function() {
                 $(this).toggleClass('Checked', $(this).find('input').prop('checked'));
             });
         });
@@ -384,8 +384,9 @@ Core.Agent.Dashboard = (function (TargetNS) {
                 center: 'title',
                 right: 'prev,next today'
             },
+            nowIndicator: true,
             allDayText: Params.AllDayText,
-            axisFormat: 'H(:mm)', // uppercase H for 24-hour clock
+            slotLabelFormat: 'H(:mm)', // uppercase H for 24-hour clock
             editable: false,
             firstDay: Params.FirstDay,
             monthNames: Params.MonthNames,
@@ -559,7 +560,7 @@ Core.Agent.Dashboard = (function (TargetNS) {
             $Container.prev('.StatsSettingsJSON').val(Core.JSON.Stringify(Data));
         }
 
-        $Container.find('select, input').bind('change', function() {
+        $Container.find('select, input').on('change', function() {
             CollectStatsData();
             ValidateTimeSettings();
         });

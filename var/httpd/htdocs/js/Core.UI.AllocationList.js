@@ -76,6 +76,7 @@ Core.UI.AllocationList = (function (TargetNS) {
             .find('li').removeClass('Even').end()
             .sortable({
                 connectWith: ConnectorSelector,
+                items: '.sorting-initialize',
                 receive: function (Event, UI) {
                     if ($.isFunction(ReceiveCallback)) {
                         ReceiveCallback(Event, UI);
@@ -92,6 +93,16 @@ Core.UI.AllocationList = (function (TargetNS) {
                     }
                 }
             }).disableSelection();
+
+        $Lists.find('li').one("mouseover",function(){
+            if ( !$(this).hasClass('sorting-initialize') ) {
+                $(this).prev('li').addClass("sorting-initialize");
+                $(this).addClass("sorting-initialize");
+                $(this).next('li').addClass("sorting-initialize");
+                $Lists.find('li').off('remove');
+                $Lists.sortable('refresh');
+            }
+        });
     };
 
     return TargetNS;

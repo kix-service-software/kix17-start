@@ -124,7 +124,7 @@
 
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('.ShowItemMessage').bind('click', function() {
+    $('.ShowItemMessage').on('click', function() {
         Core.UI.Dialog.ShowContentDialog($(this).next('.Hidden').html(), $(this).closest('tr').find('.ItemLabel').text(), '200px', 'Center');
         return false;
     });

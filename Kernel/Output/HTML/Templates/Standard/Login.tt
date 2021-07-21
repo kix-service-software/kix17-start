@@ -24,7 +24,7 @@ X-KIX-Login: [% Env("Baselink") %]
     <link rel="stylesheet" type="text/css" href="[% Config("Frontend::WebPath") %]skins/Agent/[% Data.Skin | uri %]/[% Data.CSSDirectory %]/[% Data.Filename %]" />
 [% RenderBlockEnd("CommonCSS") %]
 
-    <link rel="stylesheet" href="[% Config("Frontend::WebPath") %]skins/Agent/default/css/thirdparty/ui-theme/jquery-ui.css" />
+    <link rel="stylesheet" href="[% Config("Frontend::WebPath") %]skins/Agent/default/css/thirdparty/jquery-ui-1.12.1/jquery-ui.min.css" />
 
     <style type="text/css">
 [% RenderBlockStart("LoginLogoCSS") %]
@@ -42,11 +42,11 @@ X-KIX-Login: [% Env("Baselink") %]
     <style type="text/css">
         @font-face {
           font-family: 'FontAwesome';
-          src: url('[% Config("Frontend::WebPath") %]skins/Agent/default/css/thirdparty/fontawesome/fontawesome-webfont.eot?v=4.3.0');
-          src: url('[% Config("Frontend::WebPath") %]skins/Agent/default/css/thirdparty/fontawesome/fontawesome-webfont.eot?#iefix&v=4.3.0') format('embedded-opentype'),
-               url('[% Config("Frontend::WebPath") %]skins/Agent/default/css/thirdparty/fontawesome/fontawesome-webfont.woff?v=4.3.0') format('woff'),
-               url('[% Config("Frontend::WebPath") %]skins/Agent/default/css/thirdparty/fontawesome/fontawesome-webfont.ttf?v=4.3.0') format('truetype'),
-               url('[% Config("Frontend::WebPath") %]skins/Agent/default/css/thirdparty/fontawesome/fontawesome-webfont.svg#fontawesomeregular?v=4.3.0') format('svg');
+          src: url('[% Config("Frontend::WebPath") %]skins/Agent/default/css/thirdparty/fontawesome/fontawesome-webfont.eot?v=4.7.0');
+          src: url('[% Config("Frontend::WebPath") %]skins/Agent/default/css/thirdparty/fontawesome/fontawesome-webfont.eot?#iefix&v=4.7.0') format('embedded-opentype'),
+               url('[% Config("Frontend::WebPath") %]skins/Agent/default/css/thirdparty/fontawesome/fontawesome-webfont.woff?v=4.7.0') format('woff'),
+               url('[% Config("Frontend::WebPath") %]skins/Agent/default/css/thirdparty/fontawesome/fontawesome-webfont.ttf?v=4.7.0') format('truetype'),
+               url('[% Config("Frontend::WebPath") %]skins/Agent/default/css/thirdparty/fontawesome/fontawesome-webfont.svg#fontawesomeregular?v=4.7.0') format('svg');
           font-weight: normal;
           font-style: normal;
         }
@@ -56,9 +56,9 @@ X-KIX-Login: [% Env("Baselink") %]
             @font-face {
                 font-family: 'FontAwesome';
                 src: url('[% Config("Frontend::WebPath") %]skins/Agent/default/css/thirdparty/fontawesome/fontawesome-webfont.svg#fontawesomeregular') format('svg'),
-                     url('[% Config("Frontend::WebPath") %]skins/Agent/default/css/thirdparty/fontawesome/fontawesome-webfont.eot?#iefix&v=4.3.0') format('embedded-opentype'),
-                     url('[% Config("Frontend::WebPath") %]skins/Agent/default/css/thirdparty/fontawesome/fontawesome-webfont.woff?v=4.3.0') format('woff'),
-                     url('[% Config("Frontend::WebPath") %]skins/Agent/default/css/thirdparty/fontawesome/fontawesome-webfont.ttf?v=4.3.0') format('truetype');
+                     url('[% Config("Frontend::WebPath") %]skins/Agent/default/css/thirdparty/fontawesome/fontawesome-webfont.eot?#iefix&v=4.7.0') format('embedded-opentype'),
+                     url('[% Config("Frontend::WebPath") %]skins/Agent/default/css/thirdparty/fontawesome/fontawesome-webfont.woff?v=4.7.0') format('woff'),
+                     url('[% Config("Frontend::WebPath") %]skins/Agent/default/css/thirdparty/fontawesome/fontawesome-webfont.ttf?v=4.7.0') format('truetype');
                 font-weight: normal;
                 font-style: normal;
             }

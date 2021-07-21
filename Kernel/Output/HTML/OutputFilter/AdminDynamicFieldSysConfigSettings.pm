@@ -118,7 +118,7 @@ END
     # add some javascript / jquery to move selected fields into mandatory fields
     $SearchPattern     = 'Core\.Agent\.Admin\.DynamicField\.ValidationInit';
     $ReplacementString = <<"END";
-    \$('#AvailableFrontends').bind('click',function(){
+    \$('#AvailableFrontends').on('click',function(){
         var OptionStrg      = '',
             SelectedOptions = new Array();
         \$('#MandatoryFrontends').find('option:selected').each(function(){

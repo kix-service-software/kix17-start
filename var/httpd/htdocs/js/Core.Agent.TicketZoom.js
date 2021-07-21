@@ -278,7 +278,7 @@ Core.Agent.TicketZoom = (function (TargetNS) {
             // Table element, Identifiere, Action
             Core.UI.Table.InitColumnResize($('#ArticleTable'), 'ArticleTable', File, Core.Config.Get('UserArticleTableColumnResizing') );
 
-            $(window).bind('resize', function () {
+            $(window).on('resize', function () {
                 window.clearTimeout(ResizeTimeoutWindow);
                 ResizeTimeoutWindow = window.setTimeout(function () {
                     if ( !Core.Config.Get('UserArticleTableColumnResizing') ) {
@@ -288,7 +288,7 @@ Core.Agent.TicketZoom = (function (TargetNS) {
                 }, 50);
             });
 
-            $('.DataTable tbody td a.Attachment').bind('click', function (Event) {
+            $('.DataTable tbody td a.Attachment').on('click', function (Event) {
                 var Position;
                 if ($(this).attr('rel') && $('#' + $(this).attr('rel')).length) {
                     Position = $(this).offset();
@@ -324,12 +324,12 @@ Core.Agent.TicketZoom = (function (TargetNS) {
                     }
                 }
             }
-            $('a.Timeline').bind('click', function() {
+            $('a.Timeline').on('click', function() {
                 $(this).attr('href', $(this).attr('href') + ';ArticleID=' + URLHash);
             });
 
             // loading new articles
-            $('#ArticleTable tbody tr').bind('click', function () {
+            $('#ArticleTable tbody tr').on('click', function () {
 
                 Core.App.Publish('Event.Agent.TicketZoom.ArticleClick');
 
@@ -360,7 +360,7 @@ Core.Agent.TicketZoom = (function (TargetNS) {
         }
 
         if (typeof File === 'undefined' || File != 'AgentTicketZoomTabArticle') {
-            $('a.AsPopup').bind('click', function () {
+            $('a.AsPopup').on('click', function () {
                 var Matches,
                     PopupType = 'TicketAction';
 
@@ -410,7 +410,7 @@ Core.Agent.TicketZoom = (function (TargetNS) {
             $TBodyElements = $TBody.find('tr:first td'),
             THeadElementWidth,
             TBodyWidths,
-            TableSize   = $THeadElements.size(),
+            TableSize   = $THeadElements.length,
             Adjusted    = true,
             Adjustments = [],
             I;

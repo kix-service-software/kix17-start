@@ -39,7 +39,7 @@
 
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-$('#TargetIdentifier').bind('change',function(){
+$('#TargetIdentifier').on('change',function(){
     var TargetObject = $(this).find('option:selected').val();
     $('#TargetObject').val(TargetObject);
 
@@ -63,7 +63,7 @@ $('#TargetIdentifier').bind('change',function(){
     }
 });
 
-$('#QuickLinkSubmit').bind('click',function(){
+$('#QuickLinkSubmit').on('click',function(){
 
     $('#QuickLinkLoading').removeClass('Hidden');
     $('#Shows_all_objects_linked_with_this_ticket').find('form').each(function() {
@@ -75,7 +75,7 @@ $('#QuickLinkSubmit').bind('click',function(){
         var URL = Core.Config.Get('CGIHandle') + '?' + $('#RefreshURL').val(),
             TabIndex = 'ui-tabs-1';
 
-        $(window).unbind();
+        $(window).off();
 
         // get linked objects tab
         $('li[role="tab"]').each(function(){

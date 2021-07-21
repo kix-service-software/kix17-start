@@ -105,7 +105,7 @@ sub Run {
                         # check for matching ContentID
                         if (
                             $FileEntry->{ContentID}
-                            && $FileEntry->{ContentID} eq $ContentID
+                            && $FileEntry->{ContentID} =~ m/^$ContentID/
                         ) {
                             # add file to new FormID
                             $UploadCacheObject->FormIDAddFile(
@@ -120,6 +120,9 @@ sub Run {
                             last FILE;
                         }
                     }
+
+                    # remove remaining entries
+                    $Item->{Content} =~ s/<.+?Action=PictureUpload;FormID=\d+\.\d+\.\d+;ContentID=$ContentID.+?>//g;
                 }
 
                 # replace occurences with new FormID

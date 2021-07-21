@@ -17,7 +17,7 @@
                         <div class="Clear"></div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#GeneralCatalogClass').bind('change', function (Event) {
+    $('#GeneralCatalogClass').on('change', function (Event) {
         Core.AJAX.FormUpdate($('#DynamicFieldMultiselectGeneralCatalog'), 'AJAXUpdate', 'GeneralCatalogClass', ['DefaultValue']);
     });
 //]]></script>

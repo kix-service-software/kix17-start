@@ -35,7 +35,7 @@
     <link rel="shortcut icon" href="[% Config("Frontend::ImagePath") %][% Config("ProductIcon") %]" type="image/ico" />
     <link rel="apple-touch-icon" href="[% Config("Frontend::ImagePath") %][% Config("ProductIcon") %]" />
 
-    <link rel="stylesheet" type="text/css" href="[% Config("Frontend::WebPath") %]skins/Agent/default/css/thirdparty/ui-theme/jquery-ui.css" />
+    <link rel="stylesheet" type="text/css" href="[% Config("Frontend::WebPath") %]skins/Agent/default/css/thirdparty/jquery-ui-1.12.1/jquery-ui.min.css" />
 
 [% RenderBlockStart("CommonCSS") %]
     <link rel="stylesheet" type="text/css" href="[% Config("Frontend::WebPath") %]skins/Agent/[% Data.Skin | uri %]/[% Data.CSSDirectory %]/[% Data.Filename %]" />
@@ -74,11 +74,11 @@
     <style type="text/css">
         @font-face {
           font-family: 'FontAwesome';
-          src: url('[% Config("Frontend::WebPath") %]skins/Agent/default/css/thirdparty/fontawesome/fontawesome-webfont.eot?v=4.3.0');
-          src: url('[% Config("Frontend::WebPath") %]skins/Agent/default/css/thirdparty/fontawesome/fontawesome-webfont.eot?#iefix&v=4.3.0') format('embedded-opentype'),
-               url('[% Config("Frontend::WebPath") %]skins/Agent/default/css/thirdparty/fontawesome/fontawesome-webfont.woff?v=4.3.0') format('woff'),
-               url('[% Config("Frontend::WebPath") %]skins/Agent/default/css/thirdparty/fontawesome/fontawesome-webfont.ttf?v=4.3.0') format('truetype'),
-               url('[% Config("Frontend::WebPath") %]skins/Agent/default/css/thirdparty/fontawesome/fontawesome-webfont.svg#fontawesomeregular?v=4.3.0') format('svg');
+          src: url('[% Config("Frontend::WebPath") %]skins/Agent/default/css/thirdparty/fontawesome/fontawesome-webfont.eot?v=4.7.0');
+          src: url('[% Config("Frontend::WebPath") %]skins/Agent/default/css/thirdparty/fontawesome/fontawesome-webfont.eot?#iefix&v=4.7.0') format('embedded-opentype'),
+               url('[% Config("Frontend::WebPath") %]skins/Agent/default/css/thirdparty/fontawesome/fontawesome-webfont.woff?v=4.7.0') format('woff'),
+               url('[% Config("Frontend::WebPath") %]skins/Agent/default/css/thirdparty/fontawesome/fontawesome-webfont.ttf?v=4.7.0') format('truetype'),
+               url('[% Config("Frontend::WebPath") %]skins/Agent/default/css/thirdparty/fontawesome/fontawesome-webfont.svg#fontawesomeregular?v=4.7.0') format('svg');
           font-weight: normal;
           font-style: normal;
         }
@@ -88,9 +88,9 @@
             @font-face {
                 font-family: 'FontAwesome';
                 src: url('[% Config("Frontend::WebPath") %]skins/Agent/default/css/thirdparty/fontawesome/fontawesome-webfont.svg#fontawesomeregular') format('svg'),
-                     url('[% Config("Frontend::WebPath") %]skins/Agent/default/css/thirdparty/fontawesome/fontawesome-webfont.eot?#iefix&v=4.3.0') format('embedded-opentype'),
-                     url('[% Config("Frontend::WebPath") %]skins/Agent/default/css/thirdparty/fontawesome/fontawesome-webfont.woff?v=4.3.0') format('woff'),
-                     url('[% Config("Frontend::WebPath") %]skins/Agent/default/css/thirdparty/fontawesome/fontawesome-webfont.ttf?v=4.3.0') format('truetype');
+                     url('[% Config("Frontend::WebPath") %]skins/Agent/default/css/thirdparty/fontawesome/fontawesome-webfont.eot?#iefix&v=4.7.0') format('embedded-opentype'),
+                     url('[% Config("Frontend::WebPath") %]skins/Agent/default/css/thirdparty/fontawesome/fontawesome-webfont.woff?v=4.7.0') format('woff'),
+                     url('[% Config("Frontend::WebPath") %]skins/Agent/default/css/thirdparty/fontawesome/fontawesome-webfont.ttf?v=4.7.0') format('truetype');
                 font-weight: normal;
                 font-style: normal;
             }
@@ -121,7 +121,7 @@
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
 // Register event for tree selection dialog
-$('.ShowTreeSelection').bind('click', function (Event) {
+$('.ShowTreeSelection').on('click', function (Event) {
     Core.UI.TreeSelection.ShowTreeSelection($(this));
     return false;
 });

@@ -46,7 +46,7 @@ Core.Agent.Admin.Group = (function (TargetNS) {
     return TargetNS;
 }(Core.Agent.Admin.Group || {}));
 
-    $('#Submit').bind('click', Core.Agent.Admin.Group.AdminGroupCheck);
+    $('#Submit').on('click', Core.Agent.Admin.Group.AdminGroupCheck);
 //]]></script>
 [% END %]
 

@@ -144,7 +144,7 @@ Core.KIX4OTRS.Agent.CustomerDashboard = (function(TargetNS) {
      */
     TargetNS.RegisterCustomerSearch = function($TargetElement, $ChangedElement) {
         $TargetElement.focus();
-        $ChangedElement.bind('change', function() {
+        $ChangedElement.on('change', function() {
             var CustomerUserLogin = $(this).val(), URL = 'Action=AgentCustomerDashboard;Subaction=ElementsUpdate;CustomerUserLogin=' + CustomerUserLogin;
 
             Core.AJAX.FunctionCall(Core.Config.Get('CGIHandle'), URL, function(Data) {

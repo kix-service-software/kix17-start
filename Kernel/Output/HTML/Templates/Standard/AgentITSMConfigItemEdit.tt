@@ -96,7 +96,7 @@
                     <fieldset class="TableLike">
 [% RenderBlockEnd("XMLRowFieldsetStart") %]
 [% RenderBlockStart("XMLRowValue") %]
-                        <label [% Data.LabelClass %] [% Data.LabelFor %]>
+                        <label [% Data.LabelClass %] [% Data.LabelFor %] [% Data.LabelAnchor %]>
 [% RenderBlockStart("XMLRowValueContentRequired") %]
                             <span class="Marker">*</span>
 [% RenderBlockEnd("XMLRowValueContentRequired") %]
@@ -146,7 +146,7 @@
                                     <button type="submit" id="AttachmentDelete[% Data.FileID | html %]" name="AttachmentDelete[% Data.FileID | html %]" value="[% Translate("Delete") | html %]">[% Translate("Delete") | html %]</button>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#AttachmentDelete[% Data.FileID | html %]').bind('click', function () {
+    $('#AttachmentDelete[% Data.FileID | html %]').on('click', function () {
         Core.Form.Validate.DisableValidation($('#AttachmentDelete[% Data.FileID | html %]').closest('form'));
     });
 //]]></script>
@@ -163,7 +163,7 @@
 
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#FileUpload').bind('change', function (Event) {
+    $('#FileUpload').on('change', function (Event) {
         var $Form = $('#FileUpload').closest('form');
         Core.Form.Validate.DisableValidation($Form);
         $Form.find('#AttachmentUpload').val('1').end().submit();
@@ -199,7 +199,7 @@
                 $('input[name=SubmitSave]').val('1');
             });
 
-            $('.DisableValidation').bind('click', function (Event) {
+            $('.DisableValidation').on('click', function (Event) {
                 $('input[name=SubmitSave]').val('0');
                 $('#ButtonClick').attr({
                     name: $(this).attr('name'),
@@ -212,5 +212,21 @@
                 // trigger submit
                 $(this).closest('form').submit();
             });
+
+            if ( $('label[data-anchor=true]').length ) {
+                var wHeight = $(window).height(),
+                    wMiddle = wHeight / 3,
+                    elemPos = $('label[data-anchor=true]').offset();
+
+                if ( elemPos.top > wMiddle ) {
+                    window.scrollBy(
+                        {
+                            top: elemPos.top - wMiddle,
+                            left: 0,
+                            behavior: "smooth"
+                        }
+                    );
+                }
+            }
         //]]></script>
 [% END %]

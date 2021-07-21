@@ -68,14 +68,6 @@
                                 </div>
                                 <div class="Clear"></div>
 
-[% RenderBlockStart("SpellCheck") %]
-                                <label>[% Translate("Options") | html %]:</label>
-                                <div class="Options Field">
-                                    <a href="#" id="OptionSpellCheck">[% Translate("Spell check") | html %]</a>
-                                </div>
-                                <div class="Clear"></div>
-[% RenderBlockEnd("SpellCheck") %]
-
                                 <label class="Mandatory" for="Body"><span class="Marker">*</span> [% Translate("Text") | html %]:</label>
                                 <div class="RichTextField">
 [% RenderBlockStart("RichText") %]
@@ -125,14 +117,6 @@
                                     <div id="EmailSubjectServerError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
                                 </div>
                                 <div class="Clear"></div>
-
-[% RenderBlockStart("SpellCheckEmail") %]
-                                <label>[% Translate("Options") | html %]:</label>
-                                <div class="Field">
-                                    <a href="#" id="EmailOptionSpellCheck">[ [% Translate("Spell check") | html %] ]</a>
-                                </div>
-                                <div class="Clear"></div>
-[% RenderBlockEnd("SpellCheckEmail") %]
 
                                 <label class="Mandatory" for="EmailBody"><span class="Marker">*</span> [% Translate("Text") | html %]:</label>
                                 <div class="RichTextField">
@@ -246,7 +230,7 @@ $('#QueueID').on('change', function () {
                         <div class="Clear"></div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-$('#MergeTo').bind('blur', function() {
+$('#MergeTo').on('blur', function() {
     if ($(this).val()) {
         $('#OptionMergeTo').prop('checked', true);
     }

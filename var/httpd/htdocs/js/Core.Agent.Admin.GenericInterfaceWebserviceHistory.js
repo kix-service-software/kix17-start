@@ -88,7 +88,7 @@ Core.Agent.Admin.GenericInterfaceWebserviceHistory = (function (TargetNS) {
                 });
                 $('#WebserviceList tbody').html(HTML);
 
-                $('#WebserviceList a').bind('click', function() {
+                $('#WebserviceList a').on('click', function() {
                     var WebserviceHistoryID = $(this).blur().parents('tr').find('input.WebserviceHistoryID').val(),
                     WebserviceHistoryVersion = $(this).blur().parents('tr').find('input.WebserviceHistoryVersion').val();
 

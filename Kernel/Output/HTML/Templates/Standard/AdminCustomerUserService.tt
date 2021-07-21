@@ -152,7 +152,7 @@
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
 Core.Form.InitSelectAllCheckboxes($('table td input[type="checkbox"][name=ItemsSelected]'), $('#SelectAllItemsSelected'));
-$('input[type="checkbox"][name=ItemsSelected]').bind('click', function () {
+$('input[type="checkbox"][name=ItemsSelected]').on('click', function () {
     Core.Form.SelectAllCheckboxes($(this), $('#SelectAllItemsSelected'));
 });
 //]]></script>

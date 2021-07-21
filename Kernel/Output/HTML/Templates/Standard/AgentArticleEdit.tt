@@ -70,12 +70,7 @@
                         <div class="Options Field">
 <!-- OutputFilterHook_TicketOptionsBegin -->
 
-[% RenderBlockStart("SpellCheck") %]
-                            <a href="#" id="OptionSpellCheck">[% Translate("Spell check") | html %]</a>
-[% RenderBlockEnd("SpellCheck") %]
-
 <!-- OutputFilterHook_TicketOptionsEnd -->
-
                         </div>
                         <div class="Clear"></div>
 [% RenderBlockEnd("TicketOptions") %]
@@ -109,7 +104,7 @@
                                     <input type="hidden" id="AttachmentDelete[% Data.FileID | html %]" name="AttachmentDelete[% Data.FileID | html %]" />
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#AttachmentDeleteButton[% Data.FileID | html %]').bind('click', function () {
+    $('#AttachmentDeleteButton[% Data.FileID | html %]').on('click', function () {
         var $Form = $('#AttachmentDeleteButton[% Data.FileID | html %]').closest('form');
         $('#AttachmentDelete[% Data.FileID | html %]').val(1);
         Core.Form.Validate.DisableValidation($Form);
@@ -127,7 +122,7 @@
                             </ul>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#FileUpload').bind('change', function (Event) {
+    $('#FileUpload').on('change', function (Event) {
         var $Form = $('#FileUpload').closest('form');
         Core.Form.Validate.DisableValidation($Form);
         $Form.find('#AttachmentUpload').val('1').end().submit();
@@ -272,10 +267,10 @@
     $('.WidgetSimple.Expanded').not('.ArticleEdit').removeClass('Expanded').addClass('Collapsed');
 
     // remove default toggle
-    $(".WidgetAction.Toggle > a").unbind();
+    $(".WidgetAction.Toggle > a").off();
 
     // on open another widget close and disable other
-    $('.WidgetSimple').bind('click',function(){
+    $('.WidgetSimple').on('click',function(){
         var ElementClass    = $(this).attr('class'),
             ClassArray      = ElementClass.split(/\s/),
             Action          = ClassArray[1];
@@ -290,7 +285,7 @@
         $('.WidgetSimple.Expanded').not(ElementClass).removeClass('Expanded').addClass('Collapsed');
         $(this).removeClass('Collapsed').addClass('Expanded');
 
-        $('input[name="NewTicketNumber"]').removeAttr('disabled');
+        $('input[name="NewTicketNumber"]').prop("disabled",false);
 
         if ( Action == 'ArticleEdit' ) {
             $('#DeletedConfirm').removeClass('Validate_Required');
@@ -298,7 +293,7 @@
         }
         else if ( Action == 'ArticleMove' || Action == 'ArticleCopy' ) {
             $('#DeletedConfirm').removeClass('Validate_Required');
-            $('input[name^="NewTicketNumber"]').removeAttr('disabled');
+            $('input[name^="NewTicketNumber"]').prop("disabled",false);
             $('input[name^="NewTicketNumber"]').not('.'+Action+' input').attr('disabled','disabled');
             $(this).find('ArticleMove#NewTicketNumberAutoComplete').addClass('Validate_Required');
         }
@@ -331,7 +326,7 @@ $.validator.addClassRules("Validate_Lower", {
 });
 
 // disable validation of time units, if it is not a copy action
-$('.ArticleActionRadio').bind('change', function () {
+$('.ArticleActionRadio').on('change', function () {
     var $TimeUnits = $('#TimeUnits');
     if ($(this).val() == 'Copy') $TimeUnits.addClass('Validate_Lower [% Data.NeedAccountedTime | html %]');
     else $TimeUnits.removeClass('Validate_Lower [% Data.NeedAccountedTime | html %]');

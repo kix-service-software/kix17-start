@@ -137,6 +137,7 @@
                             <th>[% Translate("Name") | html %]</th>
                             <th>[% Translate("Frontend") | html %]</th>
                             <th>[% Translate("Customer Portal Group") | html %]</th>
+                            <th>[% Translate("Description") | html %]</th>
                             <th>[% Translate("Delete") | html %]</th>
                         </tr>
                     </thead>
@@ -148,6 +149,7 @@
                             </td>
                             <td title="[% Translate("A: agent frontend; C: customer frontend") | html %]">[% Data.FrontendInfoStrg | html %]</td>
                             <td>[% Translate(Data.CustomerPortalGroup) | html %]</td>
+                            <td title="[% Data.Description | html %]" >[% Data.Description | html %]</td>
                             <td class="Center">
                                 <a class="TicketTemplateDelete" href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=Delete;ID=[% Data.ID | html %]" title="[% Translate("Delete this template") | html %]">
                                     <i class="fa fa-trash-o"></i>
@@ -168,7 +170,7 @@
         </div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-$('.TicketTemplateDelete').bind('click', function (Event) {
+$('.TicketTemplateDelete').on('click', function (Event) {
 
     if (window.confirm([% Translate("Do you really want to delete this template?") | JSON %])) {
         window.location = $(this).attr('href');
@@ -213,6 +215,11 @@ $('.TicketTemplateDelete').bind('click', function (Event) {
                             <div id="NameServerError" class="TooltipErrorMessage">
                                 <p>[% Translate("This field is required and its content can not be longer than %s characters.", "80") | html %]</p>
                             </div>
+                        </div>
+                        <div class="Clear"></div>
+                        <label for="Description">[% Translate("Description") | html %]:</label>
+                        <div class="Field">
+                           <textarea name="Description" class="W75pc" rows="7" cols="20">[% Data.Description | html %]</textarea>
                         </div>
                         <div class="Clear"></div>
                         <label for="Frontend">[% Translate("Available in") | html %]:</label>
@@ -260,7 +267,7 @@ $('.TicketTemplateDelete').bind('click', function (Event) {
 
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-$('#QueueID').bind('change', function (Event) {
+$('#QueueID').on('change', function (Event) {
     Core.AJAX.FormUpdate($('#TicketTemplateForm'), 'AJAXUpdate', 'QueueID', ['OwnerID', 'ResponsibleID', 'NextStateID', 'PriorityID', 'ServiceID', 'SLAID' [% Data.DynamicFieldNamesStrg %]]);
 });
 //]]></script>
@@ -290,7 +297,7 @@ $('#QueueID').bind('change', function (Event) {
                         <div class="Clear"></div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-$('#ToCustomer, #CcCustomer, #BccCustomer').bind('change',function() {
+$('#ToCustomer, #CcCustomer, #BccCustomer').on('change',function() {
     var Key = $(this).attr('name');
     if (Key == 'From' ) Key = '';
     if ( $(this).val() == '' ) {
@@ -316,10 +323,10 @@ $('#ToCustomer, #CcCustomer, #BccCustomer').bind('change',function() {
                         </a>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#ServiceID').bind('change', function (Event) {
+    $('#ServiceID').on('change', function (Event) {
         Core.AJAX.FormUpdate($('#TicketTemplateForm'), 'AJAXUpdate', 'ServiceID', [ 'SLAID' ] );
     });
-$('#ServiceSelectionGetAll').bind('click', function (Event) {
+$('#ServiceSelectionGetAll').on('click', function (Event) {
     $('#ServiceAll').val('1');
     Core.AJAX.FormUpdate($('#TicketTemplateForm'), 'AJAXUpdate', 'ServiceAll', ['ServiceID'], function() {
         $('#ServiceID').focus();
@@ -352,7 +359,7 @@ $('#ServiceSelectionGetAll').bind('click', function (Event) {
                         </a>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-$('#OwnerSelectionGetAll').bind('click', function (Event) {
+$('#OwnerSelectionGetAll').on('click', function (Event) {
     $('#OwnerAll').val('1');
     Core.AJAX.FormUpdate($('#TicketTemplateForm'), 'AJAXUpdate', 'OwnerAll', ['OwnerID'], function() {
         $('#OwnerID').focus();
@@ -374,7 +381,7 @@ $('#OwnerSelectionGetAll').bind('click', function (Event) {
                         </a>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-$('#ResponsibleSelectionGetAll').bind('click', function (Event) {
+$('#ResponsibleSelectionGetAll').on('click', function (Event) {
     $('#ResponsibleAll').val('1');
     Core.AJAX.FormUpdate($('#TicketTemplateForm'), 'AJAXUpdate', 'ResponsibleAll', ['ResponsibleID'], function() {
         $('#ResponsibleID').focus();
@@ -466,7 +473,7 @@ $('#ResponsibleSelectionGetAll').bind('click', function (Event) {
                         </div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#LinkType').bind('change', function (Event) {
+    $('#LinkType').on('change', function (Event) {
         Core.AJAX.FormUpdate($('#TicketTemplateForm'), 'AJAXUpdate', 'LinkType', ['LinkDirection']);
     });
 //]]></script>
@@ -501,7 +508,7 @@ $('#ResponsibleSelectionGetAll').bind('click', function (Event) {
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
 Core.Agent.TicketAction.Init();
-$('input').bind('click',function(){
+$('input').on('click',function(){
     // for text input fields remove checked
     if ( $(this).attr('type') == 'text' ) {
         var Name = $(this).attr('name'),
@@ -520,7 +527,7 @@ $('input').bind('click',function(){
         }
     }
 });
-$('select').bind('change',function(){
+$('select').on('change',function(){
     var Name = $(this).attr('name'),
         NameEmpty = Name + 'Empty';
 
@@ -542,7 +549,7 @@ $(document).on('click','.LimitTemplateSelectionIcon_Fixed',function(){
 });
 
 // hide CustomerPortalGroup selection if customer frontend is not active
-$('#CustomerFrontend').bind('change', function() {
+$('#CustomerFrontend').on('change', function() {
     if ($(this).is(':checked')) {
         $('#CustomerPortalGroupID').parent('.Field').show();
         $('#CustomerPortalGroupID').addClass('Validate_Required');

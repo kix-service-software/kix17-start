@@ -105,7 +105,7 @@
 
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('input[name=ID]').bind('change', function (Event) {
+    $('input[name=ID]').on('change', function (Event) {
         if ($('input[name=ID]:checked').length > 0) {
             $('#DeleteButton').prop('disabled', false);
             $('#DeleteButton').removeClass('Disabled');
@@ -116,7 +116,7 @@
         }
     });
 
-    $('#DeleteButton').bind('click', function (Event) {
+    $('#DeleteButton').on('click', function (Event) {
         Core.KIX4OTRS.Dialog.ShowQuestion(
             "[% Translate("Question") | html %]",
             "[% Translate("Do you really want to delete the selected entries?") | html %]",
@@ -134,7 +134,7 @@
         );
     });
 
-    $('#EmptyButton').bind('click', function (Event) {
+    $('#EmptyButton').on('click', function (Event) {
         Core.KIX4OTRS.Dialog.ShowQuestion(
             "[% Translate("Question") | html %]",
             "[% Translate("Do you really want to empty the whole address book ? All entries will be deleted!") | html %]",
@@ -152,7 +152,7 @@
         );
     });
 
-    $('#SelectAll').bind('change', function (Event) {
+    $('#SelectAll').on('change', function (Event) {
         $('input[name=ID]').prop('checked', $(this).is(':checked')).change();
     });
 //]]></script>

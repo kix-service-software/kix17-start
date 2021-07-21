@@ -18,7 +18,7 @@
 
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#QueueDropDownContent > select').bind('change', function () {
+    $('#QueueDropDownContent > select').on('change', function () {
         document.location.href = $(this).val();
     });
 //]]></script>

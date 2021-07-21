@@ -72,7 +72,7 @@ Core.KIX4OTRS.ConfigItemZoomTabs = (function(TargetNS) {
         }
 
         // show preview
-        $('.CIImageImage').bind('click', function() {
+        $('.CIImageImage').on('click', function() {
             var that         = $(this);
             var imgContainer = $('#CIImageDialogPreviewImage');
             imgContainer.html('');
@@ -95,7 +95,7 @@ Core.KIX4OTRS.ConfigItemZoomTabs = (function(TargetNS) {
         $('.CIImagePreview').find('img').each(function() {
             var Width, Height, NewWidth, NewHeight, $Image = $(this);
 
-            $("<img/>").attr("src", $(this).attr("src")).load(function() {
+            $("<img/>").attr("src", $(this).attr("src")).on("load", function() {
                 Width = this.width;
                 Height = this.height;
 
@@ -118,7 +118,7 @@ Core.KIX4OTRS.ConfigItemZoomTabs = (function(TargetNS) {
         });
 
         // close button
-        $('.ActionMenu > .Close').bind('click', function(event) {
+        $('.ActionMenu > .Close').on('click', function(event) {
 
             var URL = $(this).find('a').attr('href'), RegexpImageID = /\;ImageID\=(.*?)\;/, RegexpImageType = /\;ImageType\=(.*?)\;/, ImageID, ImageType;
 
@@ -146,7 +146,7 @@ Core.KIX4OTRS.ConfigItemZoomTabs = (function(TargetNS) {
         });
 
         // edit button
-        $('.Settings').bind('click', function(event) {
+        $('.Settings').on('click', function(event) {
 
             var URL = $(this).find('a').attr('href'), RegexpImageID = /\;ImageID\=(.*?)\;/, ImageID;
 
@@ -160,14 +160,14 @@ Core.KIX4OTRS.ConfigItemZoomTabs = (function(TargetNS) {
         });
 
         // manage file upload
-        $('#FileUpload').bind('change', function() {
+        $('#FileUpload').on('change', function() {
             var $Form = $('#FileUpload').closest('form');
             Core.Form.Validate.DisableValidation($Form);
             $Form.find('#AttachmentUpload').val('1').end().submit();
         });
 
         // edit image text
-        $('.CIImageText').bind('click', function() {
+        $('.CIImageText').on('click', function() {
             var ImageID = $(this).attr('id').split("_")[1];
 
             $('#ImageNote').html($('#Text_' + ImageID).html());

@@ -78,6 +78,10 @@ create output string
 sub OutputStringCreate {
     my ( $Self, %Param ) = @_;
 
+    if ( $Self->{ConfigObject}->Get('Ticket::SLATranslation') ) {
+        $Param{Value} = $Self->{LayoutObject}->{LanguageObject}->Translate( $Param{Value} );
+    }
+
     #transform ascii to html...
     $Param{Value} = $Self->{LayoutObject}->Ascii2Html(
         Text => $Param{Value} || '',
@@ -227,8 +231,9 @@ sub InputCreate {
 
             #create option list...
             $StringOption = $Self->{LayoutObject}->BuildSelection(
-                Name => $Param{Key} . '::Select',
-                Data => \%SLAList,
+                Name        => $Param{Key} . '::Select',
+                Data        => \%SLAList,
+                Translation => $Self->{ConfigObject}->Get('Ticket::SLATranslation'),
             );
             $StringOption .= '<br>';
 

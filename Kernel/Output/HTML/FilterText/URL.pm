@@ -2,10 +2,14 @@
 # Modified version of the work: Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
 # Copyright (C) 2001-2021 OTRS AG, https://otrs.com/
+# Copyright (C) 2021 Znuny GmbH, https://znuny.org/
 # --
-# This software comes with ABSOLUTELY NO WARRANTY. For details, see
-# the enclosed file LICENSE for license information (AGPL). If you
-# did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
+# This software comes with ABSOLUTELY NO WARRANTY. This program is
+# licensed under the AGPL-3.0 with patches licensed under the GPL-3.0.
+# For details, see the enclosed files LICENSE (AGPL) and
+# LICENSE-GPL3 (GPL3) for license information. If you did not receive
+# this files, see https://www.gnu.org/licenses/agpl.txt (APGL) and
+# https://www.gnu.org/licenses/gpl-3.0.txt (GPL3).
 # --
 
 package Kernel::Output::HTML::FilterText::URL;
@@ -48,7 +52,10 @@ sub Pre {
         (                                            #2
             (?:                                      # http or only www
                 (?: (?: http s? | ftp ) :\/\/) |     # http://,https:// and ftp://
-                (?: [a-z0-9\-]* \.?                  # allow for sub-domain or prefixes bug#12472
+### Patch licensed under the GPL-3.0, Copyright (C) 2021 Znuny GmbH, https://znuny.org/ ###
+#                (?: [a-z0-9\-]* \.?                  # allow for sub-domain or prefixes bug#12472
+                (?: [a-z0-9\-]{0,255} \.?                  # allow for sub-domain or prefixes bug#12472
+### Patch licensed under the GPL-3.0, Copyright (C) 2021 Znuny GmbH, https://znuny.org/ ###
                     (?: www | ftp ) \. \w+           # www.something and ftp.something
                 )
             )
@@ -130,9 +137,11 @@ sub Post {
 This software is part of the KIX project
 (L<https://www.kixdesk.com/>).
 
-This software comes with ABSOLUTELY NO WARRANTY. For details, see the enclosed file
-LICENSE for license information (AGPL). If you did not receive this file, see
-
-<https://www.gnu.org/licenses/agpl.txt>.
+This software comes with ABSOLUTELY NO WARRANTY. This program is
+licensed under the AGPL-3.0 with patches licensed under the GPL-3.0.
+For details, see the enclosed files LICENSE (AGPL) and
+LICENSE-GPL3 (GPL3) for license information. If you did not receive
+this files, see <https://www.gnu.org/licenses/agpl.txt> (APGL) and
+<https://www.gnu.org/licenses/gpl-3.0.txt> (GPL3).
 
 =cut

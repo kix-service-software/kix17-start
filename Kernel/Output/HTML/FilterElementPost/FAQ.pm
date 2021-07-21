@@ -80,7 +80,7 @@ END
         $LayoutObject->AddJSOnDocumentComplete( Code => <<"EOF");
 /*global FAQ: true */
 FAQ.Agent.TicketCompose.InitFAQTicketCompose(\$('#RichText'));
-\$('#OptionFAQ').bind('click', function (event) {
+\$('#OptionFAQ').on('click', function (event) {
     var FAQIFrame = '<iframe class=\"TextOption FAQ\" src=\"' + Core.Config.Get('CGIHandle') + '?' + '$SessionString' + 'Action=AgentFAQExplorer;Nav=None;Subject=;What=\"></iframe>';
     Core.UI.Dialog.ShowContentDialog(FAQIFrame, '', '10px', 'Center', true);
     return false;
@@ -106,7 +106,7 @@ END
     $LayoutObject->AddJSOnDocumentComplete( Code => <<"EOF");
 /*global FAQ: true */
 FAQ.Agent.TicketCompose.InitFAQTicketCompose(\$('#RichText'));
-\$('#OptionFAQ').bind('click', function (event) {
+\$('#OptionFAQ').on('click', function (event) {
     var FAQIFrame = '<iframe class="TextOption FAQ" src="' + Core.Config.Get('CGIHandle') + '?' + '$SessionString' + 'Action=AgentFAQExplorer;Nav=None;Subject=;What="></iframe>';
     Core.UI.Dialog.ShowContentDialog(FAQIFrame, '', '10px', 'Center', true);
     return false;

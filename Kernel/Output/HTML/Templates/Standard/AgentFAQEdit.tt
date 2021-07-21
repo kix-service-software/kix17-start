@@ -139,7 +139,7 @@
                                     <button type="submit" id="AttachmentDelete[% Data.FileID | html %]" name="AttachmentDelete[% Data.FileID | html %]" value="[% Translate("Delete") | html %]">[% Translate("Delete") | html %]</button>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-$('#AttachmentDelete[% Data.FileID | html %]').bind('click', function () {
+$('#AttachmentDelete[% Data.FileID | html %]').on('click', function () {
 Core.Form.Validate.DisableValidation($('#AttachmentDelete[% Data.FileID | html %]').closest('form'));
 });
 //]]></script>
@@ -156,7 +156,7 @@ Core.Form.Validate.DisableValidation($('#AttachmentDelete[% Data.FileID | html %
 
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-$('#FileUpload').bind('change', function (Event) {
+$('#FileUpload').on('change', function (Event) {
 var $Form = $('#FileUpload').closest('form');
 Core.Form.Validate.DisableValidation($Form);
 $Form.find('#AttachmentUpload').val('1').end().submit();
@@ -198,7 +198,7 @@ $Form.find('#AttachmentUpload').val('1').end().submit();
         </form>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-$('#FAQSubmit').bind('click', function (Event) {
+$('#FAQSubmit').on('click', function (Event) {
     // prevent too fast submitions that could lead into no changes sent to server, due to RTE to
     // textarea data transfer
     window.setTimeout(function () {

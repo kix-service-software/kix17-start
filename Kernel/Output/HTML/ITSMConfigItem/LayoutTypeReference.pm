@@ -12,6 +12,7 @@ use strict;
 use warnings;
 
 our @ObjectDependencies = (
+    'Kernel::Config',
     'Kernel::Output::HTML::Layout',
     'Kernel::System::Log',
     'Kernel::System::Type',
@@ -47,6 +48,7 @@ sub new {
     my $Self = {};
     bless( $Self, $Type );
 
+    $Self->{ConfigObject} = $Kernel::OM->Get('Kernel::Config');
     $Self->{LayoutObject} = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     $Self->{LogObject}    = $Kernel::OM->Get('Kernel::System::Log');
     $Self->{TypeObject}   = $Kernel::OM->Get('Kernel::System::Type');
@@ -67,6 +69,10 @@ create output string
 
 sub OutputStringCreate {
     my ( $Self, %Param ) = @_;
+
+    if ( $Self->{ConfigObject}->Get('Ticket::TypeTranslation') ) {
+        $Param{Value} = $Self->{LayoutObject}->{LanguageObject}->Translate( $Param{Value} );
+    }
 
     #transform ascii to html...
     $Param{Value} = $Self->{LayoutObject}->Ascii2Html(
@@ -148,11 +154,12 @@ sub InputCreate {
     }
 
     my $TypeSelectionStrg = $Self->{LayoutObject}->BuildSelection(
-        Name       => $Param{Key},
-        ID         => $ItemId,
-        Data       => \%TicketTypes,
-        SelectedID => $Selected,
-        Class      => $Class,
+        Name        => $Param{Key},
+        ID          => $ItemId,
+        Data        => \%TicketTypes,
+        SelectedID  => $Selected,
+        Class       => $Class,
+        Translation => $Self->{ConfigObject}->Get('Ticket::TypeTranslation'),
     );
     return $TypeSelectionStrg;
 }
@@ -210,8 +217,9 @@ sub SearchInputCreate {
     );
 
     my $TypeSelectionStrg = $Self->{LayoutObject}->BuildSelection(
-        Name => $Param{Key},
-        Data => \%TicketTypes,
+        Name        => $Param{Key},
+        Data        => \%TicketTypes,
+        Translation => $Self->{ConfigObject}->Get('Ticket::TypeTranslation'),
     );
 
     return $TypeSelectionStrg;

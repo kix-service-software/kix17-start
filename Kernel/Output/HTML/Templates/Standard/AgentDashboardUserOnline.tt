@@ -18,12 +18,12 @@
 </div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#Dashboard' + Core.App.EscapeSelector('[% Data.Name | html %]') + 'Agent').unbind('click').bind('click', function(){
+    $('#Dashboard' + Core.App.EscapeSelector('[% Data.Name | html %]') + 'Agent').off('click').on('click', function(){
         Core.AJAX.ContentUpdate($('#Dashboard' + Core.App.EscapeSelector('[% Data.Name | html %]')), '[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=Element;Name=[% Data.Name | html %];Filter=Agent', function () {
         });
         return false;
     });
-    $('#Dashboard' + Core.App.EscapeSelector('[% Data.Name | html %]') + 'Customer').unbind('click').bind('click', function(){
+    $('#Dashboard' + Core.App.EscapeSelector('[% Data.Name | html %]') + 'Customer').off('click').on('click', function(){
         Core.AJAX.ContentUpdate($('#Dashboard' + Core.App.EscapeSelector('[% Data.Name | html %]')), '[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=Element;Name=[% Data.Name | html %];Filter=Customer', function () {
         });
         return false;

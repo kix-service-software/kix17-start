@@ -84,12 +84,12 @@
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
     // update some background values
-    $('.SelectedCustomerRadio').bind('click', function () {
+    $('.SelectedCustomerRadio').on('click', function () {
         $('#SelectedCustomerID').val( $(this).val() );
     });
 
     // form validation
-    $('#submitCustomerUserID').bind('click', function () {
+    $('#submitCustomerUserID').on('click', function () {
         var AlertDialogCloseFunction = function() {Core.UI.Dialog.CloseDialog($('.Dialog:visible'));};
 
         if( !$('#SelectedCustomerID').val() ) {

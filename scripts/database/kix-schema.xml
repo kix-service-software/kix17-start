@@ -1559,6 +1559,41 @@
     </Unique>
 </Table>
 
+<!-- oauth2_profile -->
+<Table Name="oauth2_profile">
+    <Column Name="id"            Required="true" Type="INTEGER" PrimaryKey="true" AutoIncrement="true"/>
+    <Column Name="name"          Required="true" Type="VARCHAR" Size="200"/>
+    <Column Name="url_auth"      Required="true" Type="VARCHAR" Size="1800000"/>
+    <Column Name="url_token"     Required="true" Type="VARCHAR" Size="1800000"/>
+    <Column Name="url_redirect"  Required="true" Type="VARCHAR" Size="1800000"/>
+    <Column Name="client_id"     Required="true" Type="VARCHAR" Size="1800000"/>
+    <Column Name="client_secret" Required="true" Type="VARCHAR" Size="1800000"/>
+    <Column Name="scope"         Required="true" Type="VARCHAR" Size="1800000"/>
+    <Column Name="valid_id"      Required="true" Type="SMALLINT"/>
+    <Column Name="create_time"   Required="true" Type="DATE"/>
+    <Column Name="create_by"     Required="true" Type="INTEGER"/>
+    <Column Name="change_time"   Required="true" Type="DATE"/>
+    <Column Name="change_by"     Required="true" Type="INTEGER"/>
+    <ForeignKey ForeignTable="valid">
+        <Reference Local="valid_id" Foreign="id"/>
+    </ForeignKey>
+    <ForeignKey ForeignTable="users">
+        <Reference Local="create_by" Foreign="id"/>
+        <Reference Local="change_by" Foreign="id"/>
+    </ForeignKey>
+</Table>
+
+<!-- oauth2_token -->
+<Table Name="oauth2_token">
+    <Column Name="profile_id"  Required="true" Type="INTEGER"/>
+    <Column Name="token_type"  Required="true" Type="VARCHAR" Size="20"/>
+    <Column Name="token"       Required="true" Type="VARCHAR" Size="1800000"/>
+    <Column Name="create_time" Required="true" Type="DATE"/>
+    <ForeignKey ForeignTable="oauth2_profile">
+        <Reference Local="profile_id" Foreign="id"/>
+    </ForeignKey>
+</Table>
+
 <!-- mail_account -->
 <Table Name="mail_account">
     <Column Name="id" Required="true" PrimaryKey="true" AutoIncrement="true" Type="INTEGER"/>
@@ -1569,12 +1604,16 @@
     <Column Name="queue_id" Required="true" Type="INTEGER"/>
     <Column Name="trusted" Required="true" Type="SMALLINT"/>
     <Column Name="imap_folder" Required="false" Size="250" Type="VARCHAR"/>
+    <Column Name="oauth2_profile_id" Required="false" Type="INTEGER"/>
     <Column Name="comments" Required="false" Size="250" Type="VARCHAR"/>
     <Column Name="valid_id" Required="true" Type="SMALLINT"/>
     <Column Name="create_time" Required="true" Type="DATE"/>
     <Column Name="create_by" Required="true" Type="INTEGER"/>
     <Column Name="change_time" Required="true" Type="DATE"/>
     <Column Name="change_by" Required="true" Type="INTEGER"/>
+    <ForeignKey ForeignTable="oauth2_profile">
+        <Reference Local="oauth2_profile_id" Foreign="id"/>
+    </ForeignKey>
     <ForeignKey ForeignTable="valid">
         <Reference Local="valid_id" Foreign="id"/>
     </ForeignKey>

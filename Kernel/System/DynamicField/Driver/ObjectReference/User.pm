@@ -773,7 +773,7 @@ EOF
     }
     function Wait$FieldNameKey() {
         if (window.jQuery) {
-            \$('#Attribute').bind('redraw.InputField', function() {
+            \$('#Attribute').on('redraw.InputField', function() {
                 Init$FieldNameKey();
             });
             if (

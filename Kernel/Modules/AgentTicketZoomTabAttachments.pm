@@ -154,6 +154,72 @@ sub Run {
         }
     }
 
+    my $Config = $ConfigObject->Get('Ticket::Frontend::AgentTicketZoomTabAttachments');
+    if (
+        ref( $Config ) eq 'HASH'
+        && ref( $Config->{DynamicField} ) eq 'HASH'
+        && %{ $Config->{DynamicField} }
+        && $MainObject->Require(
+            'Kernel::System::DFAttachment',
+            Silent => 1,
+        )
+    ) {
+        # get needed objects
+        my $DFAttachmentObject = $Kernel::OM->Get('Kernel::System::DFAttachment');
+        my $DynamicFieldObject = $Kernel::OM->Get('Kernel::System::DynamicField');
+
+        # get the dynamic fields for this screen
+        my $DynamicField = $DynamicFieldObject->DynamicFieldListGet(
+            Valid       => 1,
+            ObjectType  => 'Ticket',
+            FieldFilter => $Config->{DynamicField},
+        );
+
+        my %Ticket = $TicketObject->TicketGet(
+            TicketID      => $GetParam{TicketID},
+            DynamicFields => 1
+        );
+
+        my $DFAttachmentCount = 0;
+
+        # cycle trough the activated Dynamic Fields for this screen
+        DYNAMICFIELD:
+        for my $DynamicFieldConfig ( @{ $DynamicField } ) {
+            next DYNAMICFIELD if ( ref( $DynamicFieldConfig ) ne 'HASH' );
+            next DYNAMICFIELD if ( $DynamicFieldConfig->{FieldType} ne 'Attachment' );
+            next DYNAMICFIELD if ( ref( $Ticket{ 'DynamicField_' . $DynamicFieldConfig->{Name} } ) ne 'ARRAY' );
+
+            if ( !$DFAttachmentCount ) {
+                # create outer block
+                $LayoutObject->Block(
+                    Name => 'DynamicFieldAttachmentList',
+                );
+            }
+            $AttachmentCount++;
+            $DFAttachmentCount++;
+
+            for my $DFAttachmentKey ( @{ $Ticket{'DynamicField_' . $DynamicFieldConfig->{Name}} } ) {
+                my %File = $DFAttachmentObject->Read(
+                    Filename => $DFAttachmentKey,
+                    Mode     => 'preferences',
+                );
+
+                $LayoutObject->Block(
+                    Name => 'DynamicFieldAttachment',
+                    Data => {
+                        FileName       => $File{Preferences}->{Filename},
+                        FileKey        => $DFAttachmentKey,
+                        FileSize       => $File{Preferences}->{Filesize},
+                        FileSizeRaw    => $File{Preferences}->{FilesizeRaw},
+                        DynamicFieldID => $DynamicFieldConfig->{ID},
+                        DynamicField   => $DynamicFieldConfig->{Label},
+                        Session        => $Session,
+                    },
+                );
+            }
+        }
+    }
+
     # nothing to show
     if ( !$AttachmentCount ) {
         $Param{NothingAvailableMsg}

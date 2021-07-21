@@ -123,7 +123,7 @@
 
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('input[name=PortalGroupID]').bind('change', function (Event) {
+    $('input[name=PortalGroupID]').on('change', function (Event) {
         if ($('input[name=PortalGroupID]:checked').length > 0) {
             $('#DeleteButton').prop('disabled', false);
             $('#DeleteButton').removeClass('Disabled');
@@ -134,7 +134,7 @@
         }
     });
 
-    $('#DeleteButton').bind('click', function (Event) {
+    $('#DeleteButton').on('click', function (Event) {
         Core.KIX4OTRS.Dialog.ShowQuestion(
             "[% Translate("Question") | html %]",
             "[% Translate("Do you really want to delete the selected entries?") | html %]",
@@ -152,7 +152,7 @@
         );
     });
 
-    $('#SelectAll').bind('change', function (Event) {
+    $('#SelectAll').on('change', function (Event) {
         $('input[name=PortalGroupID]').prop('checked', $(this).is(':checked')).change();
     });
 //]]></script>
@@ -212,7 +212,7 @@
                             <img style="display:block" class="SpacingBottomSmall" src="data:[% Data.ContentType | html %];base64,[% Data.Content | html %]"/>
 [% RenderBlockEnd("DisplayIcon") %]
                             <input name="FileUpload" id="FileUpload" type="file" size="30"/><br/>
-                            <span class="FieldExplanation">[% Translate("(The icon should have a size of 64x64 pixels. Otherwise it will be scaled automatically.)") | html %]</span>
+                            <p class="FieldExplanation">[% Translate("(The icon should have a size of 64x64 pixels. Otherwise it will be scaled automatically.)") | html %]</p>
                         </div>
                         <div class="Clear"></div>
                         <label class="" for="ValidID">[% Translate("Valid") | html %]:</label>

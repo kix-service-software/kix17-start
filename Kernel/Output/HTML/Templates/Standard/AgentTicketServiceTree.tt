@@ -50,7 +50,7 @@ $(".ServiceTreeContent").jstree({
     plugins: [ 'wholerow', 'types' ]
 });
 
-$('#ServiceTreeToggle').bind('click', function (Event) {
+$('#ServiceTreeToggle').on('click', function (Event) {
     $('#ServiceTreeControl, .ServiceTreeContent').toggleClass('Hidden');
     $(this).closest('.SidebarColumn').toggleClass('Collapsed W35px');
  });
@@ -64,13 +64,13 @@ $(".ServiceTreeContent").on("click",'a',function(e) {
 });
 
 // expand all
-$('.Expand').bind('click',function(event){
+$('.Expand').on('click',function(event){
     $(".ServiceTreeContent").jstree('open_all');
     event.preventDefault();
 });
 
 // collaps all
-$('.Collaps').bind('click',function(event){
+$('.Collaps').on('click',function(event){
     $(".ServiceTreeContent").jstree('close_all');
     event.preventDefault();
 });

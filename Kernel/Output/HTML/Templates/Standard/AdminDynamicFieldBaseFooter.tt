@@ -23,7 +23,7 @@
 </div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-$('.ShowWarning').bind('change keyup', function (Event) {
+$('.ShowWarning').on('change keyup', function (Event) {
     $('p.Warning').removeClass('Hidden');
 });
 

@@ -80,7 +80,7 @@
                             <input type="hidden" name="ReturnToAction" id="ReturnToAction" value="" autocomplete="off" />
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-$('#SaveAndFinishButton').bind('click', function(){
+$('#SaveAndFinishButton').on('click', function(){
     $('#ReturnToAction').val(1);
 });
 //]]></script>

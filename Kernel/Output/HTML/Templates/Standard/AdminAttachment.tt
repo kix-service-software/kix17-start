@@ -95,7 +95,7 @@
 
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-$('.AttachmentDelete').bind('click', function (Event) {
+$('.AttachmentDelete').on('click', function (Event) {
 
     if (window.confirm([% Translate("Do you really want to delete this attachment?") | JSON %])) {
         window.location = $(this).attr('href');

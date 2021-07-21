@@ -164,13 +164,11 @@ Core.UI.AdvancedChart = (function (TargetNS) {
 
         nv.addGraph(function() {
 
-            var Chart = nv.models.OTRSlineChart(),
+            var Chart = nv.models.lineChart(),
                 ShowLegend = Options.HideLegend ? false : true;
 
             // don't let nv/d3 exceptions block the rest of KIX JavaScript
             try {
-
-                Chart.staggerLabels(true);
 
                 Chart.margin({
                     top: 20,
@@ -203,9 +201,11 @@ Core.UI.AdvancedChart = (function (TargetNS) {
 
                 });
 
-                Chart.xAxis.tickFormat(function(d) {
-                    return Headings[d];
-                });
+                Chart.xAxis
+                    .tickFormat(function(d) {
+                        return Headings[d];
+                    })
+                    .staggerLabels(true);
 
                 Chart.yAxis
                     .tickFormat(d3.format(ValueFormat));
@@ -305,12 +305,9 @@ Core.UI.AdvancedChart = (function (TargetNS) {
 
         nv.addGraph(function() {
 
-            // KIX4OTRS-capeIT
-            var ArrayLength = ResultData[0].values.length;
-            // EO KIX4OTRS-capeIT
-
-            var Chart = nv.models.OTRSlineChart(),
-                ShowLegend = Options.HideLegend ? false : true;
+            var ArrayLength = ResultData[0].values.length,
+                Chart       = nv.models.lineChart(),
+                ShowLegend  = Options.HideLegend ? false : true;
 
             // don't let nv/d3 exceptions block the rest of KIX JavaScript
             try {
@@ -324,25 +321,20 @@ Core.UI.AdvancedChart = (function (TargetNS) {
 
                 Chart.useInteractiveGuideline(true)
                     .duration(Options.Duration || 0)
-                    .reduceXTicks(Options.ReduceXTicks)
                     .showLegend(ShowLegend)
                     .showYAxis(true)
                     .showXAxis(true);
 
                 Chart.xAxis.tickFormat(function(d) {
-                    // KIX4OTRS-capeIT
                     // return Headings[d];
                     if ( Math.round((ArrayLength+1)/10) > 1 && d%(Math.round((ArrayLength+1)/10)) != 0 )
                         return '';
                     else
                         return Headings[d];
-                    // EO KIX4OTRS-capeIT
                 });
 
-                // KIX4OTRS-capeIT
-                // Chart.xAxis.tickValues([1, 2, 3, 4, 5, 6, 7]);
-                Chart.xAxis.tickValues(d3.range(1,ArrayLength));
-                // EO KIX4OTRS-capeIT
+                Chart.xAxis
+                    .tickValues(d3.range(1,ArrayLength));
 
                 Chart.yAxis
                     .tickFormat(d3.format(ValueFormat));
@@ -447,13 +439,8 @@ Core.UI.AdvancedChart = (function (TargetNS) {
                     ValueFormat = ',1f'; // Set y axis format to float
                 }
 
-                // nv d3 does not work correcly with non numeric values
-                // because it could happen that x axis headings occur multiple
-                // times (such as Thu 18 for two different months), we
-                // add a custom label for uniquity of the headings which is being
-                // removed later (see OTRSmultiBarChart.js)
                 ResultLine.values.push({
-                    x: '__LABEL_START__' + InnerCounter + '__LABEL_END__' + HeadingElement + ' ',
+                    x: HeadingElement,
                     y: Value
                 });
             });
@@ -466,27 +453,37 @@ Core.UI.AdvancedChart = (function (TargetNS) {
 
         nv.addGraph(function() {
 
-            var Chart = nv.models.OTRSmultiBarChart(),
+            var Chart = nv.models.multiBarChart(),
                 ShowLegend = Options.HideLegend ? false : true;
 
             // don't let nv/d3 exceptions block the rest of KIX JavaScript
             try {
 
-                Chart.staggerLabels(true);
+                Chart
+                    .duration(Options.Duration || 0)
+                    .margin({
+                        top: 20,
+                        right: 80,
+                        bottom: 50,
+                        left: 80
+                    })
+                    .groupSpacing(0.1)
+                    .showLegend(ShowLegend);
 
-                Chart.margin({
-                    top: 20,
-                    right: 20,
-                    bottom: 50,
-                    left: 50
-                });
+                // set stacked/grouped state
+                if (PreferencesData && PreferencesData.State) {
+                    Chart.stacked((PreferencesData.State.Style === 'stacked') ? true : false);
+                }
 
-                Chart.duration(Options.Duration || 0);
-                Chart.showLegend(ShowLegend);
+                Chart.yAxis
+                    .axisLabel("Values")
+                    .tickFormat(d3.format(ValueFormat));
 
-                Chart.tooltips(function(key, x, y) {
-                    return '<h3>' + key + '</h3>' + '<p>' + x + ': ' + y + '</p>';
-                });
+                d3.select(Element)
+                    .datum(ResultData)
+                    .call(Chart);
+
+                nv.utils.windowResize(Chart.update);
 
                 Chart.dispatch.on('stateChange', function(state) {
 
@@ -508,20 +505,6 @@ Core.UI.AdvancedChart = (function (TargetNS) {
                     }
 
                 });
-
-                // set stacked/grouped state
-                if (PreferencesData && PreferencesData.State) {
-                    Chart.stacked((PreferencesData.State.Style === 'stacked') ? true : false);
-                }
-                Chart.yAxis.axisLabel("Values").tickFormat(d3.format(ValueFormat));
-
-                d3.select(Element)
-                    .datum(ResultData)
-                    .transition()
-                    .duration(500)
-                    .call(Chart);
-
-                nv.utils.windowResize(Chart.update);
             }
             catch (Error) {
                 Core.Debug.Log(Error);
@@ -621,19 +604,17 @@ Core.UI.AdvancedChart = (function (TargetNS) {
 
         nv.addGraph(function() {
 
-            var Chart = nv.models.OTRSstackedAreaChart(),
+            var Chart = nv.models.stackedAreaChart(),
                 ShowLegend = Options.HideLegend ? false : true;
 
             // don't let nv/d3 exceptions block the rest of KIX JavaScript
             try {
 
-                Chart.staggerLabels(true);
-
                 Chart.margin({
                     top: 20,
-                    right: 50,
+                    right: 80,
                     bottom: 50,
-                    left: 50
+                    left: 80
                 });
 
                 Chart.duration(Options.Duration || 0);
@@ -676,7 +657,8 @@ Core.UI.AdvancedChart = (function (TargetNS) {
                 Chart.xAxis
                     .tickFormat(function(d) {
                         return Headings[d];
-                    });
+                    })
+                    .staggerLabels(true);
                 Chart.yAxis
                     .tickFormat(d3.format(',.0f'));
 
@@ -745,12 +727,13 @@ Core.UI.AdvancedChart = (function (TargetNS) {
      *      so that for export / rendering they are present even if the CSS is not there
      *      any more.
      */
-    function GetSVGContent($SVGContainer) {
+    function GetSVGContent($SVGContainer, Mode) {
         var $Clone,
             ReplaceMap = {
             'text': ['font-family', 'font-size'],
             'line': ['fill', 'stroke', 'opacity', 'shape-rendering', 'stroke-opacity'],
-            'path': ['fill', 'stroke', 'opacity', 'shape-rendering', 'stroke-opacity']
+            'path': ['fill', 'stroke', 'opacity', 'shape-rendering', 'stroke-opacity'],
+            'rect': ['fill']
         };
 
         $.each(ReplaceMap, function(Selector, Attributes){
@@ -773,6 +756,14 @@ Core.UI.AdvancedChart = (function (TargetNS) {
         // Remove controls for export.
         $Clone = $SVGContainer.clone();
         $Clone.find('.nv-controlsWrap').remove();
+
+        if (
+            Mode !== ''
+            && Mode !== undefined
+            && Mode === 'export'
+        ) {
+            $Clone.find('svg').prepend('<rect width="100%" height="100%" fill="#FFF" />');
+        }
 
         return $Clone.html().trim();
     }
@@ -834,7 +825,7 @@ Core.UI.AdvancedChart = (function (TargetNS) {
     TargetNS.ConvertSVGtoBase64 = function($SVGContainer) {
         // window.btoa() does not work because it does not support Unicode DOM strings.
         var SVGPrefix = '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">',
-            UnicodeStringView = new StringView(SVGPrefix + GetSVGContent($SVGContainer));
+            UnicodeStringView = new StringView(SVGPrefix + GetSVGContent($SVGContainer, 'export'));
         return 'data:image/svg+xml;base64,' + UnicodeStringView.toBase64();
     };
 

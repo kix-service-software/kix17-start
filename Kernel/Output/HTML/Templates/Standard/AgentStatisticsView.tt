@@ -108,7 +108,7 @@
 
                         [% WRAPPER JSOnDocumentComplete %]
                         <script type="text/javascript">//<![CDATA[
-                        $('#StartStatistic').bind('click', function (Event) {
+                        $('#StartStatistic').on('click', function (Event) {
                             var Format = $('#Format').val(),
                                 $Form = $(this).parents('form');
 

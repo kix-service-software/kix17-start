@@ -183,13 +183,13 @@ Core.Form.ErrorTooltips = (function (TargetNS) {
      *      This function initializes the tooltips on an input field.
      */
     TargetNS.InitTooltip = function ($Element, TooltipContent) {
-        $Element.unbind('focus.Tooltip');
-        $Element.bind('focus.Tooltip', function () {
+        $Element.off('focus.Tooltip');
+        $Element.on('focus.Tooltip', function () {
             TargetNS.ShowTooltip($Element, TooltipContent);
         });
 
-        $Element.unbind('blur.Tooltip');
-        $Element.bind('blur.Tooltip', TargetNS.HideTooltip);
+        $Element.off('blur.Tooltip');
+        $Element.on('blur.Tooltip', TargetNS.HideTooltip);
     };
 
     /**
@@ -202,8 +202,8 @@ Core.Form.ErrorTooltips = (function (TargetNS) {
      */
     TargetNS.RemoveTooltip = function ($Element) {
         TargetNS.HideTooltip();
-        $Element.unbind('focus.Tooltip');
-        $Element.unbind('blur.Tooltip');
+        $Element.off('focus.Tooltip');
+        $Element.off('blur.Tooltip');
     };
 
     /**

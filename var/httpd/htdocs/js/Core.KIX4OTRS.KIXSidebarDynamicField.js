@@ -29,7 +29,7 @@ Core.KIX4OTRS.KIXSidebarDynamicField = (function(TargetNS) {
         $('#KIXSidebarDynamicField').find('a').css({"width":"30px"});
 
         // show or hide settings
-        $('#DynamicField .ActionMenu .WidgetAction.Settings a').unbind('click.WidgetToggle').bind('click', function() {
+        $('#DynamicField .ActionMenu .WidgetAction.Settings a').off('click.WidgetToggle').on('click', function() {
 
             // show settings hide edit fields
             if ( $('#KIXSidebarDynamicFieldSelect').hasClass('Hidden') ) {

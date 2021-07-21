@@ -221,13 +221,13 @@ $('#CategorySelectionContainer').on('click','span',function(event){
 });
 
 // expand all
-$('.Expand').bind('click',function(event){
+$('.Expand').on('click',function(event){
     $('#CategorySelectionContainer').jstree('open_all');
     event.preventDefault();
 });
 
 // collaps all
-$('.Collaps').bind('click',function(event){
+$('.Collaps').on('click',function(event){
     $('#CategorySelectionContainer').jstree('close_all');
     event.preventDefault();
 });
