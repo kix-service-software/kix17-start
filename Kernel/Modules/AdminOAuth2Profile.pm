@@ -419,6 +419,7 @@ sub Run {
             Data         => \%Param,
         );
         $Output .= $LayoutObject->Footer();
+        return $Output;
     }
 
     # ------------------------------------------------------------

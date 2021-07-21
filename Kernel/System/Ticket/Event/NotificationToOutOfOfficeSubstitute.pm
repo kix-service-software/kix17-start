@@ -126,7 +126,7 @@ sub Run {
         # get last notification sent ticket history entry for substitute user
         my $LastNotificationHistory = first {
             $_->{HistoryType} eq 'SendAgentNotification'
-                && $_->{Name} eq "\%\%$Notification{Name}\%\%$SubstituteUser{UserLogin} as Substitute\%\%Email",
+                && $_->{Name} eq "\%\%$Notification{Name}\%\%$SubstituteUser{UserLogin} as Substitute\%\%Email"
         }
         reverse @HistoryLines;
 
