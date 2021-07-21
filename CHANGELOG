@@ -1,6 +1,9 @@
 # Change log of KIX
 * Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.16.0-RC13 (2021/07/21)
+ * (2021/07/21) - release candidate
+
 # 17.16.0-RC12 (2021/07/21)
  * (2021/07/21) - Bugfix: KIX17-2369 (fixed infinite loop while loading draft with inline image) (millinger)
  * (2021/07/21) - Bugfix: KIX17-1852 (updated CommonCSS in Defaults.pm) (millinger)
