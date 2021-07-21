@@ -89,7 +89,7 @@ sub Run {
 
             # check if we have a new FormID for inline images of the draft
             if ( $NewFormID ) {
-                while( $Item->{Content} =~ m/Action=PictureUpload;FormID=(\d+\.\d+\.\d+);ContentID=(inline\d+\.\d+\.\d+\.\d+\.\d+@.+?)"/ ) {
+                while( $Item->{Content} =~ m/Action=PictureUpload;FormID=(\d+\.\d+\.\d+);ContentID=(inline\d+\.\d+\.\d+\.\d+\.\d+@)/ ) {
                     # get data of inline image
                     my $OldFormID = $1;
                     my $ContentID = $2;
@@ -105,7 +105,7 @@ sub Run {
                         # check for matching ContentID
                         if (
                             $FileEntry->{ContentID}
-                            && $FileEntry->{ContentID} eq $ContentID
+                            && $FileEntry->{ContentID} =~ m/^$ContentID/
                         ) {
                             # add file to new FormID
                             $UploadCacheObject->FormIDAddFile(
