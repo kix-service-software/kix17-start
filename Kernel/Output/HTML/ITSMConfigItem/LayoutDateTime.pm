@@ -67,7 +67,7 @@ sub OutputStringCreate {
     return '' if !$Param{Value};
 
     $Param{Value} = $Kernel::OM->Get('Kernel::Output::HTML::Layout')->Output(
-        Template => '[% Data.Date | Localize("TimeLong") %]',
+        Template => '[% Data.Date | Localize("TimeLong") | html %]',
         Data     => {
             Date => $Param{Value} . ':00',
         },

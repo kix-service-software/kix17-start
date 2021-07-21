@@ -29,10 +29,10 @@
             <p class="Value" title="[% Translate(Data.Content) | html %]">[% Data.Content | html %]</p>
 [% RenderBlockEnd("KeyContentQuoted") %]
 [% RenderBlockStart("KeyContentTimeLong") %]
-            <p class="Value">[% Data.Content | Localize("TimeLong") %]</p>
+            <p class="Value">[% Data.Content | Localize("TimeLong") | html %]</p>
 [% RenderBlockEnd("KeyContentTimeLong") %]
 [% RenderBlockStart("KeyContentTimeShort") %]
-            <p class="Value">[% Data.Content | Localize("TimeShort") %]</p>
+            <p class="Value">[% Data.Content | Localize("TimeShort") | html %]</p>
 [% RenderBlockEnd("KeyContentTimeShort") %]
 [% RenderBlockStart("KeyContentUnquoted") %]
             <p class="Value">[% Data.Content %]</p>
