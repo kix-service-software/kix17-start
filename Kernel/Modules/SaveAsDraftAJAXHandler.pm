@@ -89,7 +89,7 @@ sub Run {
 
             # check if we have a new FormID for inline images of the draft
             if ( $NewFormID ) {
-                while( $Item->{Content} =~ m/Action=PictureUpload;FormID=(\d+\.\d+\.\d+);ContentID=(inline\d+\.\d+\.\d+\.\d+\.\d+@)/ ) {
+                while( $Item->{Content} =~ m/Action=PictureUpload;FormID=(\d+\.\d+\.\d+);ContentID=(inline\d+\.\d+\.\d+\.\d+\.\d+@.+?)"/ ) {
                     # get data of inline image
                     my $OldFormID = $1;
                     my $ContentID = $2;
@@ -120,6 +120,9 @@ sub Run {
                             last FILE;
                         }
                     }
+
+                    # remove remaining entries
+                    $Item->{Content} =~ s/<.+?Action=PictureUpload;FormID=\d+\.\d+\.\d+;ContentID=$ContentID.+?>//g;
                 }
 
                 # replace occurences with new FormID
