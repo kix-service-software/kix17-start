@@ -1527,8 +1527,8 @@ sub TicketChecklistTaskCreate {
 
     # get inserted id
     return if !$Kernel::OM->Get('Kernel::System::DB')->Prepare(
-        SQL   => 'SELECT id FROM kix_ticket_checklist WHERE task = ?',
-        Bind  => [ \$Param{Task} ],
+        SQL   => 'SELECT id FROM kix_ticket_checklist WHERE ticket_id = ? AND task = ?',
+        Bind  => [ \$Param{TicketID}, \$Param{Task} ],
         Limit => 1,
     );
 
