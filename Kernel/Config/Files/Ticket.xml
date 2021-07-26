@@ -238,6 +238,18 @@
             </Array>
         </Setting>
     </ConfigItem>
+    <ConfigItem Name="Ticket::MergeChecklist" Required="1" Valid="1">
+        <Description Translatable="1">The handling of checklists when merged into the main ticket during a merge operation. "Target" keeps the checklist of the main ticket. "Source" inherits the checklist of the source ticket, but only if the main ticket has no own checklist. "Append" adds entries of the source ticket checklist to the main ticket checklist that not already exist. States of entries are always unchanged.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Core::Ticket</SubGroup>
+        <Setting>
+            <Option SelectedID="Target">
+                <Item Key="Target" Translatable="1">Target</Item>
+                <Item Key="Source" Translatable="1">Source</Item>
+                <Item Key="Append" Translatable="1">Append</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
     <ConfigItem Name="Ticket::CustomQueue" Required="1" Valid="1">
         <Description Translatable="1">Name of custom queue. The custom queue is a queue selection of your preferred queues and can be selected in the preferences settings.</Description>
         <Group>Ticket</Group>
