@@ -1578,6 +1578,7 @@ Returns a hash of task string and task data
 
     my $HashRef = $TicketObject->TicketChecklistGet(
         TicketID => 123,
+        Result   => 'Task',    # Task, Position, or ID
     );
 
 =cut

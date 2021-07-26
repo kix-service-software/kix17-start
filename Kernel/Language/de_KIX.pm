@@ -4699,6 +4699,14 @@ sub Data {
     $Lang->{'DynamicField attachments'} = 'Anlagen dynamischer Felder';
     $Lang->{'Dynamic fields shown in the AgentTicketZoomTab "Attachments". Possible settings: 0 = Disabled, 1 = Enabled.'}
         = 'Dynamische Felder, welche im Tab "Anlagen" der Agentenoberfläche angezeigt werden. Mögliche Einstellungen: 0 = deaktiviert, 1 = aktiviert.';
+    # EO Ticket Tab Attachments
+
+    # Ticket::MergeChecklist
+    $Lang->{'Source'} = 'Quelle';
+    $Lang->{'Append'} = 'Anfügen';
+    $Lang->{'The handling of checklists when merged into the main ticket during a merge operation. "Target" keeps the checklist of the main ticket. "Source" inherits the checklist of the source ticket, but only if the main ticket has no own checklist. "Append" adds entries of the source ticket checklist to the main ticket checklist that not already exist. States of entries are always unchanged.'}
+        = 'Handhabung von Checklisten beim Zusammenfassen in ein Hauptticket. "Ziel" behält die Checkliste des Haupttickets. "Quelle" übernimmt die Checkliste des Quelltickets, aber nur wenn keine Checkliste am Hauptticket hinterlegt ist. "Anfügen" fügt Einträge, welche noch nicht in der Checkliste des Haupttickets enthalten sind, ans Ende an. Status der Einträge werden immer unverändert gelassen.';
+    # EO Ticket::MergeChecklist
 
     return 0;
 }
