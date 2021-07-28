@@ -189,7 +189,7 @@ if (Core.UI.Popup.CurrentIsPopupWindow()) {
             $WidgetElement.addClass('Expanded');
         }
 
-        $WidgetElement.find('.WidgetAction > a')
+        $WidgetElement.find('.WidgetAction.Toggle')
             .attr('aria-controls', ContentDivID)
             .attr('aria-expanded', $WidgetElement.hasClass('Expanded'))
             .off('click.WidgetToggle')
@@ -218,6 +218,7 @@ if (Core.UI.Popup.CurrentIsPopupWindow()) {
                 }
 
                 Event.preventDefault();
+                Event.stopPropagation();
             });
     });
 
