@@ -346,10 +346,11 @@ Core.UI.Dialog = (function (TargetNS) {
                 // If the data does not exists Core.Data.Get returns an empty hash
                 DialogCopy = Core.Data.Get($('body'), 'DialogCopy');
                 HTMLBackup = (Params.HTML)[0].innerHTML;
-                DialogCopySelector = Params.HTML.selector;
+                DialogCopySelector = '#' + Params.HTML.attr('id');
                 // Add the new HTML data to the data structure and save it to the document
                 DialogCopy[DialogCopySelector] = HTMLBackup;
                 Core.Data.Set($('body'), 'DialogCopy', DialogCopy);
+                Core.Data.Set($Dialog, 'DialogCopySelector', DialogCopySelector);
                 // Additionally, we save the selector as data on the dialog itself for later restoring
                 // Remove the original dialog template content from the page
                 Params.HTML.empty();
