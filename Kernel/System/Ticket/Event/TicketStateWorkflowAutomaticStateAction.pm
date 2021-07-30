@@ -278,10 +278,15 @@ END
 
             # check if it's a pending state...
             my $PendingTimeStamp = 0;
-            my %PendingStateHash = $Self->{StateObject}->StateGetStatesByType(
-                StateType => [ 'pending reminder', 'pending auto' ],
+            my %PendingAutoStateHash = $Self->{StateObject}->StateGetStatesByType(
+                Type   => 'PendingAuto',
                 Result => 'HASH',
             );
+            my %PendingReminderStateHash = $Self->{StateObject}->StateGetStatesByType(
+                Type   => 'PendingReminder',
+                Result => 'HASH',
+            );
+            my %PendingStateHash = (%PendingAutoStateHash, %PendingReminderStateHash);
             if ( $PendingStateHash{ $NextState{ID} } ) {
                 my $DestinationTime = $Self->{TimeObject}->DestinationTime(
                     StartTime => $Self->{TimeObject}->SystemTime(),

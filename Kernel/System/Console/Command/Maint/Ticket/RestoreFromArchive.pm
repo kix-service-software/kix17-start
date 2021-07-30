@@ -56,7 +56,7 @@ sub Run {
 
     # get all tickets with an archive flag and an open statetype
     my @TicketIDs = $TicketObject->TicketSearch(
-        StateType    => [ 'new', 'open', 'pending reminder', 'pending auto' ],
+        StateType    => 'Open',
         ArchiveFlags => ['y'],
         Result       => 'ARRAY',
         Limit        => 100_000_000,
