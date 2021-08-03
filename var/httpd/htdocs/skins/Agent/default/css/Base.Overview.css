@@ -132,7 +132,6 @@
     .ControlRow li > a > span {
         padding-left: 4px;
     }
-
     ul.ContextFunctions {
         position: absolute;
         right: 0;
@@ -996,6 +995,7 @@
         height: 100px;
         padding: 5px;
         border-radius: 5px;
+        box-sizing: border-box;
     }
     .BulkNotify p, .WINotify p {
         padding: 2px 5px;
