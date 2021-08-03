@@ -1757,16 +1757,20 @@
 
 
     /**
-    * @subsection TextModules
+    * @subsection TextModules/BulkTextModules
     */
+    #BulkTextModulesSelectionContainer,
     #TextModulesSelectionContainer {
         background-color: #FFFFFF;
         border-color: #CCCCCC;
     }
+    #BulkTextModulesSelectionContainer > .TextModule:nth-child(2n+1),
     #TextModulesSelectionContainer > .TextModule:nth-child(2n+1) {
         background-color: #F5F5F5;
     }
+    #BulkTextModulesSelectionContainer > .TextModule:hover,
     #TextModulesSelectionContainer > .TextModule:hover,
+    #BulkTextModulesSelectionContainer > .TextModule.Selected,
     #TextModulesSelectionContainer > .TextModule.Selected {
         background-color: #0A7CB3;
         color: #FFFFFF;
