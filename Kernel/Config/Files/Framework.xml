@@ -14375,6 +14375,7 @@ via the Preferences button after logging in.
                 <Item>CustomerTicketTemplate</Item>
                 <Item>CustomerTicketMessage</Item>
                 <Item>CustomerTicketOverview</Item>
+                <Item>AgentDashboard</Item>
                 <Item>AgentTicketZoom</Item>
                 <Item>AgentTicketPhone</Item>
                 <Item>AgentTicketEmail</Item>
