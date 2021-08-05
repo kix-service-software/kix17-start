@@ -1449,7 +1449,7 @@
         background-color: #373737;
         border: 1px solid #373737;
     }
-    .WidgetSimple > .Content.ProcessInfo fieldset .FieldContainer p  {
+    .WidgetSimple > .Content.ProcessInfo fieldset .FieldContainer > div  {
         background-color: #F0F0F0;
         color: #111111;
     }

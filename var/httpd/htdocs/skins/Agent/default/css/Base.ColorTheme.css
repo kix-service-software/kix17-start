@@ -1376,7 +1376,7 @@
         background-color: #EEEEEE;
         border: 1px solid #CCCCCC;
     }
-    .WidgetSimple > .Content.ProcessInfo fieldset .FieldContainer p  {
+    .WidgetSimple > .Content.ProcessInfo fieldset .FieldContainer > div  {
         background-color: #FFFFFF;
     }
     .WidgetSimple > .Content.ProcessInfo fieldset .FieldContainer label {
