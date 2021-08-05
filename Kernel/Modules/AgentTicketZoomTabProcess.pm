@@ -364,11 +364,11 @@ sub MaskAgentZoom {
             );
 
             push @FieldsWidget, {
-                Name  => $DynamicFieldConfig->{Name},
-                Title => $ValueStrg->{Title},
-                Value => $ValueStrg->{Value},
-                ValueKey
-                    => $Ticket{ 'DynamicField_' . $DynamicFieldConfig->{Name} },
+                FieldType                   => $DynamicFieldConfig->{FieldType},
+                Name                        => $DynamicFieldConfig->{Name},
+                Title                       => $ValueStrg->{Title},
+                Value                       => $ValueStrg->{Value},
+                ValueKey                    => $Ticket{ 'DynamicField_' . $DynamicFieldConfig->{Name} },
                 Label                       => $Label,
                 Link                        => $ValueStrg->{Link},
                 LinkPreview                 => $ValueStrg->{LinkPreview},
@@ -389,6 +389,7 @@ sub MaskAgentZoom {
             $Self->{DisplaySettings}->{DynamicField}->{ $DynamicFieldConfig->{Name} }
         ) {
             push @FieldsSidebar, {
+                FieldType                   => $DynamicFieldConfig->{FieldType},
                 Name                        => $DynamicFieldConfig->{Name},
                 Title                       => $ValueStrg->{Title},
                 Value                       => $ValueStrg->{Value},
@@ -466,6 +467,15 @@ sub MaskAgentZoom {
                                     Link           => $Field->{Link},
                                     LinkPreview    => $Field->{LinkPreview},
                                     $Field->{Name} => $Field->{Title},
+                                },
+                            );
+                        }
+                        elsif ( $Field->{FieldType} eq 'Table' ) {
+                            $LayoutObject->Block(
+                                Name => 'ProcessWidgetDynamicFieldTable',
+                                Data => {
+                                    Value => $Field->{Value},
+                                    Title => $Field->{Title},
                                 },
                             );
                         }
