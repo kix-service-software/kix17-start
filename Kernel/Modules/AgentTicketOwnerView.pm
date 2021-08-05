@@ -31,9 +31,12 @@ sub Run {
 
     # get needed object
     my $ConfigObject  = $Kernel::OM->Get('Kernel::Config');
-    my $ParamObject   = $Kernel::OM->Get('Kernel::System::Web::Request');
-    my $SessionObject = $Kernel::OM->Get('Kernel::System::AuthSession');
     my $LayoutObject  = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $SessionObject = $Kernel::OM->Get('Kernel::System::AuthSession');
+    my $JSONObject    = $Kernel::OM->Get('Kernel::System::JSON');
+    my $StateObject   = $Kernel::OM->Get('Kernel::System::State');
+    my $UserObject    = $Kernel::OM->Get('Kernel::System::User');
+    my $ParamObject   = $Kernel::OM->Get('Kernel::System::Web::Request');
 
     my $Config = $ConfigObject->Get("Ticket::Frontend::$Self->{Action}");
 
@@ -60,16 +63,12 @@ sub Run {
         Value     => $URL,
     );
 
-    # store last queue screen
+    # store last overview screen
     $SessionObject->UpdateSessionID(
         SessionID => $Self->{SessionID},
         Key       => 'LastScreenOverview',
         Value     => $URL,
     );
-
-    # get needed objects
-    my $JSONObject = $Kernel::OM->Get('Kernel::System::JSON');
-    my $UserObject = $Kernel::OM->Get('Kernel::System::User');
 
     # get filters stored in the user preferences
     my %Preferences = $UserObject->GetPreferences(
@@ -177,6 +176,17 @@ sub Run {
         $SortByS = 'Age';
     }
 
+    # get pending states
+    my @PendingAutoStateIDs = $StateObject->StateGetStatesByType(
+        Type   => 'PendingAuto',
+        Result => 'ID',
+    );
+    my @PendingReminderStateIDs = $StateObject->StateGetStatesByType(
+        Type   => 'PendingReminder',
+        Result => 'ID',
+    );
+    my @PendingsStateIDs = (@PendingAutoStateIDs, @PendingReminderStateIDs);
+
     my %Filters = (
         All => {
             Name   => Translatable('All'),
@@ -210,7 +220,7 @@ sub Run {
             Name   => Translatable('Pending'),
             Prio   => 1002,
             Search => {
-                StateType  => [ 'pending reminder', 'pending auto' ],
+                StateIDs   => \@PendingsStateIDs,
                 OwnerIDs   => [ $Self->{UserID} ],
                 OrderBy    => $OrderBy,
                 SortBy     => $SortByS,
@@ -222,7 +232,7 @@ sub Run {
             Name   => Translatable('Reminder Reached'),
             Prio   => 1003,
             Search => {
-                StateType                     => ['pending reminder'],
+                StateIDs                      => \@PendingReminderStateIDs,
                 TicketPendingTimeOlderMinutes => 1,
                 OwnerIDs                      => [ $Self->{UserID} ],
                 OrderBy                       => $OrderBy,

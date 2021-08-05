@@ -17,9 +17,10 @@ use Kernel::Language qw(Translatable);
 
 our @ObjectDependencies = (
     'Kernel::Config',
+    'Kernel::System::Output::HTML::Layout',
     'Kernel::System::Log',
+    'Kernel::System::State',
     'Kernel::System::Ticket',
-    'Kernel::Output::HTML::Layout',
 );
 
 sub new {
@@ -38,9 +39,6 @@ sub new {
 sub Run {
     my ( $Self, %Param ) = @_;
 
-    # check responsible feature
-    return if !$Kernel::OM->Get('Kernel::Config')->Get('Ticket::Responsible');
-
     # check needed stuff
     for (qw(Config)) {
         if ( !$Param{$_} ) {
@@ -52,8 +50,20 @@ sub Run {
         }
     }
 
-    # get ticket object
+    # get needed objects
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $StateObject  = $Kernel::OM->Get('Kernel::System::State');
     my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
+
+    # check responsible feature
+    return if !$ConfigObject->Get('Ticket::Responsible');
+
+    # get pending states
+    my @PendingReminderStateIDs = $StateObject->StateGetStatesByType(
+        Type   => 'PendingReminder',
+        Result => 'ID',
+    );
 
     my $Count = $TicketObject->TicketSearch(
         Result         => 'COUNT',
@@ -77,8 +87,8 @@ sub Run {
 
     my $CountReached = $TicketObject->TicketSearch(
         Result                        => 'COUNT',
-        StateType                     => ['pending reminder'],
         ResponsibleIDs                => [ $Self->{UserID} ],
+        StateIDs                      => \@PendingReminderStateIDs,
         TicketPendingTimeOlderMinutes => 1,
         UserID                        => 1,
         Permission                    => 'ro',
@@ -92,7 +102,7 @@ sub Run {
     my $IconNew     = $Param{Config}->{IconNew};
     my $IconReached = $Param{Config}->{IconReached};
 
-    my $URL = $Kernel::OM->Get('Kernel::Output::HTML::Layout')->{Baselink};
+    my $URL = $LayoutObject->{Baselink};
     my %Return;
     my $Priority = $Param{Config}->{Priority};
     if ($CountNew) {

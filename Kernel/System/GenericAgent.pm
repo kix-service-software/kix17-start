@@ -941,6 +941,7 @@ sub _JobRunTicket {
     }
 
     # get needed objects
+    my $StateObject             = $Kernel::OM->Get('Kernel::System::State');
     my $TemplateGeneratorObject = $Kernel::OM->Get('Kernel::System::TemplateGenerator');
     my $TicketObject            = $Kernel::OM->Get('Kernel::System::Ticket');
 
@@ -1033,12 +1034,18 @@ sub _JobRunTicket {
         }
     }
 
-    my %PendingStates = $Kernel::OM->Get('Kernel::System::State')->StateGetStatesByType(
-        StateType => [ 'pending auto', 'pending reminder' ],
-        Result    => 'HASH',
+    # get pending states
+    my %PendingAutoStateHash = $$StateObject->StateGetStatesByType(
+        Type   => 'PendingAuto',
+        Result => 'HASH',
     );
+    my %PendingReminderStateHash = $StateObject->StateGetStatesByType(
+        Type   => 'PendingReminder',
+        Result => 'HASH',
+    );
+    my %PendingStateHash = (%PendingAutoStateHash, %PendingReminderStateHash);
 
-    $Self->{PendingStateList} = \%PendingStates || {};
+    $Self->{PendingStateList} = \%PendingStateHash || {};
 
     # set new state
     my $IsPendingState;
