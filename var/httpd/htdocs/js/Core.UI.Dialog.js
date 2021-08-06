@@ -217,7 +217,7 @@ Core.UI.Dialog = (function (TargetNS) {
      */
     TargetNS.ShowDialog = function(Params) {
 
-        var $Dialog, $Content, $ButtonFooter, HTMLBackup, DialogCopy, DialogCopySelector,
+        var $Dialog, $Content, $ButtonFooter, HTMLBackup,
             DialogHTML = '<div class="Dialog"><div class="Header"><a class="Close" title="' + Core.Config.Get('DialogCloseMsg') + '" href="#"><i class="fa fa-times"></i></a></div><div class="Content"></div><div class="Footer"></div></div>',
             FullsizeMode = false;
 
@@ -341,20 +341,15 @@ Core.UI.Dialog = (function (TargetNS) {
             // Be careful: There can be more than one dialog, we have to save the data dependent on the dialog
 
             // Get HTML with JS function innerHTML, because jQuery html() strips out the script blocks
-            if (typeof Params.HTML !== 'string' && isJQueryObject(Params.HTML)) {
-                // First get the data structure, ehich is (perhaps) already saved
-                // If the data does not exists Core.Data.Get returns an empty hash
-                DialogCopy = Core.Data.Get($('body'), 'DialogCopy');
+            if (
+                typeof Params.HTML !== 'string'
+                && isJQueryObject(Params.HTML)
+                && (Params.HTML)[0].id
+            ) {
                 HTMLBackup = (Params.HTML)[0].innerHTML;
-                DialogCopySelector = '#' + Params.HTML.attr('id');
-                // Add the new HTML data to the data structure and save it to the document
-                DialogCopy[DialogCopySelector] = HTMLBackup;
-                Core.Data.Set($('body'), 'DialogCopy', DialogCopy);
-                Core.Data.Set($Dialog, 'DialogCopySelector', DialogCopySelector);
-                // Additionally, we save the selector as data on the dialog itself for later restoring
-                // Remove the original dialog template content from the page
+                Core.Data.Set($Dialog, 'BackupHTMLSelector', '#' + (Params.HTML)[0].id);
+                Core.Data.Set($Dialog, 'BackupHTML', HTMLBackup);
                 Params.HTML.empty();
-                // and use the variable as string (!!) with the content which was cut out
                 Params.HTML = HTMLBackup;
             }
         }
@@ -426,11 +421,6 @@ Core.UI.Dialog = (function (TargetNS) {
         if ($Dialog.find('.Content .ContentFooter').length) {
             // change default Footer
             $Dialog.find('.Footer').addClass('ContentFooter');
-        }
-
-        // Now add the selector for the original dialog template content to the dialog, if it exists
-        if (DialogCopySelector && DialogCopySelector.length) {
-            Core.Data.Set($Dialog, 'DialogCopySelector', DialogCopySelector);
         }
 
         // Set position for Dialog
@@ -623,11 +613,12 @@ Core.UI.Dialog = (function (TargetNS) {
      *      Closes all dialogs specified.
      */
     TargetNS.CloseDialog = function (Object) {
-        var $Dialog, DialogCopy, DialogCopySelector, BackupHTML;
+        var $Dialog, BackupHTMLSelector, BackupHTML;
         $Dialog = $(Object).closest('.Dialog:visible');
 
         // Get the original selector for the content template
-        DialogCopySelector = Core.Data.Get($Dialog, 'DialogCopySelector');
+        BackupHTMLSelector = Core.Data.Get($Dialog, 'BackupHTMLSelector');
+        BackupHTML         = Core.Data.Get($Dialog, 'BackupHTML');
 
         // publish close event
         Core.App.Publish('Event.UI.Dialog.CloseDialog.Close', [$Dialog]);
@@ -642,23 +633,12 @@ Core.UI.Dialog = (function (TargetNS) {
         $('body').css('min-height', 'auto');
 
         // Revert orignal html
-        if (DialogCopySelector.length) {
-            DialogCopy = Core.Data.Get($('body'), 'DialogCopy');
-            // Get saved HTML
-            if (typeof DialogCopy !== 'undefined') {
-                BackupHTML = DialogCopy[DialogCopySelector];
-
-                // If HTML could be restored, write it back into the page
-                if (BackupHTML && BackupHTML.length) {
-                    $(DialogCopySelector).append(BackupHTML);
-                }
-
-                // delete this variable from the object
-                delete DialogCopy[DialogCopySelector];
-            }
-
-            // write the new DialogCopy back
-            Core.Data.Set($('body'), 'DialogCopy', DialogCopy);
+        if (
+            BackupHTMLSelector.length
+            && BackupHTML
+            && BackupHTML.length
+        ) {
+            $(BackupHTMLSelector).append(BackupHTML);
         }
     };
 
