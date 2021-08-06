@@ -842,9 +842,6 @@
         font-size: 11px;
         display: inline-block;
     }
-    .ui-tabs .ui-tabs-nav li a {
-        height: auto;
-    }
     div.ui-tabs > div.ui-tabs-panel {
         padding: 0;
         border-width: 1px 0 0 0;

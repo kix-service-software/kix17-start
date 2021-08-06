@@ -342,7 +342,6 @@
 
     .ui-tabs .ui-tabs-nav li a {
         float: left;
-        height: 0;
         line-height: 25px;
         position: relative;
         text-decoration: none;
