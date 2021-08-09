@@ -505,7 +505,7 @@
             </Option>
         </Setting>
     </ConfigItem>
-    
+
     <ConfigItem Name="GenericInterface::Operation::Module###LinkObject::LinkAdd" Required="0" Valid="1">
         <Description Translatable="1">GenericInterface module registration for the operation layer.</Description>
         <Group>GenericInterface</Group>
@@ -518,4 +518,52 @@
             </Hash>
         </Setting>
     </ConfigItem>
+    <ConfigItem Name="GenericInterface::Operation::Module###LinkObject::LinkDelete" Required="0" Valid="1">
+        <Description Translatable="1">GenericInterface module registration for the operation layer.</Description>
+        <Group>GenericInterface</Group>
+        <SubGroup>GenericInterface::Operation::ModuleRegistration</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Name">LinkDelete</Item>
+                <Item Key="Controller">LinkObject</Item>
+                <Item Key="ConfigDialog">AdminGenericInterfaceOperationDefault</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="GenericInterface::Operation::Module###LinkObject::LinkDeleteAll" Required="0" Valid="1">
+        <Description Translatable="1">GenericInterface module registration for the operation layer.</Description>
+        <Group>GenericInterface</Group>
+        <SubGroup>GenericInterface::Operation::ModuleRegistration</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Name">LinkDeleteAll</Item>
+                <Item Key="Controller">LinkObject</Item>
+                <Item Key="ConfigDialog">AdminGenericInterfaceOperationDefault</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="GenericInterface::Operation::Module###LinkObject::LinkList" Required="0" Valid="1">
+        <Description Translatable="1">GenericInterface module registration for the operation layer.</Description>
+        <Group>GenericInterface</Group>
+        <SubGroup>GenericInterface::Operation::ModuleRegistration</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Name">LinkList</Item>
+                <Item Key="Controller">LinkObject</Item>
+                <Item Key="ConfigDialog">AdminGenericInterfaceOperationDefault</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="GenericInterface::Operation::LinkObject::RequireAdminPermission" Required="1" Valid="1">
+        <Description Translatable="1">Defines if operations of the linkobject can only be used by an agent in group "admin" with "rw" permission.</Description>
+        <Group>GenericInterface</Group>
+        <SubGroup>GenericInterface::Operation::LinkObject</SubGroup>
+        <Setting>
+            <Option SelectedID="0">
+                <Item Key="0">No</Item>
+                <Item Key="1">Yes</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
+
 </otrs_config>
