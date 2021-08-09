@@ -1386,19 +1386,14 @@ Core.Agent.Admin.ProcessManagement = (function (TargetNS) {
      *      Initialize path edit screen.
      */
     TargetNS.InitPathEdit = function () {
-        var CurrentProcessEntityID = Core.Config.Get('Config.ProcessEntityID'),
+        var CurrentProcessEntityID    = Core.Config.Get('Config.ProcessEntityID'),
             CurrentTransitionEntityID = Core.Config.Get('Config.TransitionEntityID'),
-            StartActivityID = Core.Config.Get('Config.StartActivityID'),
-            ActivityInfo = window.opener.Core.Agent.Admin.ProcessManagement.ProcessData.Activity,
-            PathInfo = window.opener.Core.Agent.Admin.ProcessManagement.ProcessData.Process[CurrentProcessEntityID].Path,
-            StartActivityEntityID = '', EndActivityEntityID = '',
+            StartActivityID           = Core.Config.Get('Config.StartActivityID'),
+            ActivityInfo              = window.opener.Core.Agent.Admin.ProcessManagement.ProcessData.Activity,
+            PathInfo                  = window.opener.Core.Agent.Admin.ProcessManagement.ProcessData.Process[CurrentProcessEntityID].Path,
+            StartActivityEntityID     = '',
+            EndActivityEntityID       = '',
             AssignedTransitionActions = [];
-
-        // Initialize Allocation List
-        Core.UI.AllocationList.Init("#AvailableTransitionActions, #AssignedTransitionActions", ".AllocationList");
-
-        // Initialize list filter
-        Core.UI.Table.InitTableFilter($('#FilterAvailableTransitionActions'), $('#AvailableTransitionActions'));
 
         // store process data to hidden field for later merging
         $('#ProcessData').val(Core.JSON.Stringify(window.opener.Core.Agent.Admin.ProcessManagement.ProcessData.Process));
@@ -1427,6 +1422,12 @@ Core.Agent.Admin.ProcessManagement = (function (TargetNS) {
                 $('#AvailableTransitionActions').find('#' + TransitionActionEntityID).remove().appendTo($('#AssignedTransitionActions'));
             });
         }
+
+        // Initialize Allocation List
+        Core.UI.AllocationList.Init("#AvailableTransitionActions, #AssignedTransitionActions", ".AllocationList");
+
+        // Initialize list filter
+        Core.UI.Table.InitTableFilter($('#FilterAvailableTransitionActions'), $('#AvailableTransitionActions'));
 
         // if transition select is updated, also update transition edit link
         $('#Transition').on('change', function () {
