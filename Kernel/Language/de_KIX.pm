@@ -4708,6 +4708,10 @@ sub Data {
         = 'Handhabung von Checklisten beim Zusammenfassen in ein Hauptticket. "Ziel" behält die Checkliste des Haupttickets. "Quelle" übernimmt die Checkliste des Quelltickets, aber nur wenn keine Checkliste am Hauptticket hinterlegt ist. "Anfügen" fügt Einträge, welche noch nicht in der Checkliste des Haupttickets enthalten sind, ans Ende an. Status der Einträge werden immer unverändert gelassen.';
     # EO Ticket::MergeChecklist
 
+    # GenericInferface LinkObject SysConfig
+    $Lang->{'Defines if operations of the linkobject can only be used by an agent in group "admin" with "rw" permission.'}
+        = 'Bestimmt ob die Operationen des Link-Objektes nur von einem Agenten der Gruppe "admin" mit "rw"-Berechtigung verwendet werden können.';
+
     return 0;
 }
 
