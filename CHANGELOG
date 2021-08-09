@@ -1,6 +1,26 @@
 # Change log of KIX
 * Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.17.0-RC1 (2021/08/09)
+ * (2021/08/06) - CR: KIX17-2452 (generic interface operations for link object) (millinger)
+ * (2021/08/06) - Bugfix: KIX17-2415 (fixed css of jquery tabs) (fjacquemin)
+ * (2021/08/06) - Bugfix: KIX17-2453 (fixed open/close handling of dialogs) (fjacquemin)
+ * (2021/08/06) - Bugfix: KIX17-2450 (fixed missing allocation event of the assigned transition action list in the process path edit) (fjacquemin)
+ * (2021/08/05) - Bugfix: KIX17-2440 (fixed display of the dynamic field table in the process tab) (fjacquemin)
+ * (2021/08/05) - Bugfix: KIX17-2420 (enable ticket state acl for agent ticket bulk based on action and user) (millinger)
+ * (2021/08/05) - Bugfix: KIX17-2368 (fix usage of RequiredLock for ticket tabs with pretend action) (millinger)
+ * (2021/08/04) - Bugfix: KIX17-1832 (sorted order of cmdb search attributes) (millinger)
+ * (2021/08/04) - Bugfix: KIX17-1957 (only show system messages in agent dashboard that are configured for it) (millinger)
+ * (2021/08/03) - Bugfix: KIX17-2375 (fixed sql error in faq search) (millinger)
+ * (2021/07/30) - Bugfix: KIX17-2167 (fix bulk text modules without categories) (millinger)
+ * (2021/07/30) - Bugfix: KIX17-2219 (fixes display of escalation time in small overview) (millinger)
+ * (2021/07/30) - Bugfix: KIX17-2009 (modules do not consider configured own pending state types) (millinger)
+ * (2021/07/30) - Bugfix: KIX17-1860 (fixed placeholder replacement for faq approval) (millinger)
+ * (2021/07/28) - Bugfix: KIX17-2287 (fixed reopening of preference dialogs) (millinger)
+ * (2021/07/22) - Bugfix: KIX17-2419 (fix state update of checklist entries after initial fill) (millinger)
+ * (2021/07/21) - CR: KIX17-2403 (handle checklists on ticket merge) (millinger)
+ * (2021/07/21) - Bugfix: KIX17-2404 (fix a XSS vulnerability) (millinger)
+
 # 17.16.0 (2021/07/21)
  * (2021/07/21) - productive release
 
