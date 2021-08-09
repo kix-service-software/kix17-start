@@ -6,7 +6,7 @@
 # did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
 # --
 
-package Kernel::GenericInterface::Operation::LinkObject::LinkAdd;
+package Kernel::GenericInterface::Operation::LinkObject::LinkDeleteAll;
 
 use strict;
 use warnings;
@@ -18,7 +18,7 @@ our $ObjectManagerDisabled = 1;
 
 =head1 NAME
 
-Kernel::GenericInterface::Operation::LinkObject::LinkAdd - GenericInterface Link Create Operation backend
+Kernel::GenericInterface::Operation::LinkObject::LinkDeleteAll - GenericInterface Link Delete All Operation backend
 
 =head1 SYNOPSIS
 
@@ -62,17 +62,13 @@ Create a new link.
 
     my $Result = $OperationObject->Run(
         Data => {
-            UserLogin         => 'some agent login',                            # UserLogin or SessionID (of agent) is required
+            UserLogin         => 'some agent login',                            # UserLogin or SessionID (of agent in group 'admin' with permission 'rw') is required
             SessionID         => 123,
 
             Password  => 'some password',                                       # if UserLogin is sent then Password is required
 
-            SourceObject => 'Ticket',
-            SourceKey    => '123',
-            TargetObject => 'ITSMConfigItem',
-            TargetKey    => '123',
-            Type         => 'ParentChild',
-            State        => 'Valid',
+            Object => 'Ticket',
+            Key    => '321',
         },
     );
 
@@ -101,16 +97,16 @@ sub Run {
     # check needed stuff
     if ( !IsHashRefWithData( $Param{Data} ) ) {
         return $Self->ReturnError(
-            ErrorCode    => 'LinkAdd.MissingParameter',
+            ErrorCode    => 'LinkDeleteAll.MissingParameter',
             ErrorMessage => 'The request is empty!',
         );
     }
 
-    for my $Needed ( qw(SourceObject SourceKey TargetObject TargetKey Type State) ) {
+    for my $Needed ( qw(Object Key) ) {
         # check needed stuff
         if ( !$Param{Data}->{$Needed} ) {
             return $Self->ReturnError(
-                ErrorCode    => 'LinkAdd.MissingParameter',
+                ErrorCode    => 'LinkDeleteAll.MissingParameter',
                 ErrorMessage => 'Got no ' . $Needed . '!',
             );
         } else {
@@ -122,17 +118,19 @@ sub Run {
     if (
         !$Param{Data}->{UserLogin}
         && !$Param{Data}->{SessionID}
-        )
-    {
+    ) {
         return $Self->ReturnError(
-            ErrorCode    => 'LinkAdd.MissingParameter',
+            ErrorCode    => 'LinkDeleteAll.MissingParameter',
             ErrorMessage => 'UserLogin or SessionID is required!',
         );
     }
 
-    if ( $Param{Data}->{UserLogin} && !$Param{Data}->{Password} ) {
+    if (
+        $Param{Data}->{UserLogin}
+        && !$Param{Data}->{Password}
+    ) {
         return $Self->ReturnError(
-            ErrorCode    => 'LinkAdd.MissingParameter',
+            ErrorCode    => 'LinkDeleteAll.MissingParameter',
             ErrorMessage => 'Password for UserLogin is required!',
         );
     }
@@ -144,7 +142,7 @@ sub Run {
 
     if ( !$UserID ) {
         return $Self->ReturnError(
-            ErrorCode    => 'LinkAdd.AuthFail',
+            ErrorCode    => 'LinkDeleteAll.AuthFail',
             ErrorMessage => 'User could not be authenticated!',
         );
     }
@@ -155,7 +153,7 @@ sub Run {
         || $UserType ne 'User'
     ) {
         return $Self->ReturnError(
-            ErrorCode    => 'LinkAdd.AuthFail',
+            ErrorCode    => 'LinkDeleteAll.AuthFail',
             ErrorMessage => 'Authentification with user type "User" required!',
         );
     }
@@ -181,37 +179,14 @@ sub Run {
         # check if user is in group 'admin' with 'rw' permission
         if ( !$UserList{ $UserID } ) {
             return $Self->ReturnError(
-                ErrorCode    => 'LinkAdd.AuthFail',
+                ErrorCode    => 'LinkDeleteAll.AuthFail',
                 ErrorMessage => 'Authentification with user in group "admin" and "rw" permission required!',
             );
         }
     }
 
-    # check link type
-    my $TypeID = $LinkObject->TypeLookup(
-        Name   => $GetParam{Type},
-        UserID => $UserID,
-    );
-    if ( !$TypeID ) {
-        return $Self->ReturnError(
-            ErrorCode    => 'LinkAdd.InvalidParameter',
-            ErrorMessage => 'Type doesn\'t exists!',
-        );
-    }
-
-    # check link state
-    my $StateID = $LinkObject->StateLookup(
-        Name   => $GetParam{State},
-    );
-    if ( !$StateID ) {
-        return $Self->ReturnError(
-            ErrorCode    => 'LinkAdd.InvalidParameter',
-            ErrorMessage => 'State doesn\'t exists!',
-        );
-    }
-
-    # create link
-    my $Success = $LinkObject->LinkAdd(
+    # delete all links
+    my $Success = $LinkObject->LinkDeleteAll(
         %GetParam,
         UserID => $UserID,
     );
@@ -223,8 +198,8 @@ sub Run {
             What => 'Message',
         );
         return $Self->ReturnError(
-            ErrorCode    => 'LinkAdd.LinkAddError',
-            ErrorMessage => ( $ErrorMessage || 'Could not create link!' ),
+            ErrorCode    => 'LinkDeleteAll.LinkDeleteAllError',
+            ErrorMessage => ( $ErrorMessage || 'Could not delete link!' ),
         );
     }
 

@@ -2,10 +2,14 @@
 # Modified version of the work: Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
 # Copyright (C) 2001-2021 OTRS AG, https://otrs.com/
+# Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/
 # --
-# This software comes with ABSOLUTELY NO WARRANTY. For details, see
-# the enclosed file LICENSE for license information (AGPL). If you
-# did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
+# This software comes with ABSOLUTELY NO WARRANTY. This program is
+# licensed under the AGPL-3.0 with patches licensed under the GPL-3.0.
+# For details, see the enclosed files LICENSE (AGPL) and
+# LICENSE-GPL3 (GPL3) for license information. If you did not receive
+# this files, see https://www.gnu.org/licenses/agpl.txt (APGL) and
+# https://www.gnu.org/licenses/gpl-3.0.txt (GPL3).
 # --
 
 
@@ -36,11 +40,17 @@ if (Core.UI.Popup.CurrentIsPopupWindow()) {
 
 
 [% RenderBlockStart("TimeLong") %]
-<label for="Checkbox[% Data.Key | html %]" title="[% Data.Content | Localize("TimeLong") %]" class="[% Data.Class | html %]" [% Data.CssStyle %]>[% Data.Content | Localize("TimeLong") %]</label>
+### Patch licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
+#<label for="Checkbox[% Data.Key | html %]" title="[% Data.Content | Localize("TimeLong") %]" class="[% Data.Class | html %]" [% Data.CssStyle %]>[% Data.Content | Localize("TimeLong") %]</label>
+<label for="Checkbox[% Data.Key | html %]" title="[% Data.Content | Localize("TimeLong") | html %]" class="[% Data.Class | html %]" [% Data.CssStyle %]>[% Data.Content | Localize("TimeLong") | html %]</label>
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
 [% RenderBlockEnd("TimeLong") %]
 
 [% RenderBlockStart("Date") %]
-[% Data.Content | Localize("Date") %]
+### Patch licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
+#[% Data.Content | Localize("Date") %]
+[% Data.Content | Localize("Date") | html %]
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
 [% RenderBlockEnd("Date") %]
 
 [% RenderBlockStart("Checkbox") %]
@@ -179,7 +189,7 @@ if (Core.UI.Popup.CurrentIsPopupWindow()) {
             $WidgetElement.addClass('Expanded');
         }
 
-        $WidgetElement.find('.WidgetAction > a')
+        $WidgetElement.find('.WidgetAction.Toggle')
             .attr('aria-controls', ContentDivID)
             .attr('aria-expanded', $WidgetElement.hasClass('Expanded'))
             .off('click.WidgetToggle')
@@ -208,6 +218,7 @@ if (Core.UI.Popup.CurrentIsPopupWindow()) {
                 }
 
                 Event.preventDefault();
+                Event.stopPropagation();
             });
     });
 

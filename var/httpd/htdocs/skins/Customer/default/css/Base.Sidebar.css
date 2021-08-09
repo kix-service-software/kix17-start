@@ -51,6 +51,15 @@
         padding: 2px 10px;
         cursor: pointer;
     }
+    #TextModulesSelectionContainer > .Loader::after {
+        font-size: 4em;
+        line-height: 5em;
+    }
+    #TextModulesSelectionContainer > .TextModule.Loader::after {
+        font-size: 1em;
+        line-height: 1em;
+        margin-left: 5px;
+    }
 
 
     /**

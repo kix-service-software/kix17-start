@@ -16,9 +16,10 @@ use warnings;
 use Kernel::Language qw(Translatable);
 
 our @ObjectDependencies = (
+    'Kernel::System::Output::HTML::Layout',
     'Kernel::System::Log',
+    'Kernel::System::State',
     'Kernel::System::Ticket',
-    'Kernel::Output::HTML::Layout',
 );
 
 sub new {
@@ -48,8 +49,16 @@ sub Run {
         }
     }
 
-    # get ticket object
+    # get needed objects
+    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $StateObject  = $Kernel::OM->Get('Kernel::System::State');
     my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
+
+    # get pending states
+    my @PendingReminderStateIDs = $StateObject->StateGetStatesByType(
+        Type   => 'PendingReminder',
+        Result => 'ID',
+    );
 
     # get user lock data
     my $Count = $TicketObject->TicketSearch(
@@ -74,7 +83,7 @@ sub Run {
     my $CountReached = $TicketObject->TicketSearch(
         Result                        => 'COUNT',
         Locks                         => [ 'lock', 'tmp_lock' ],
-        StateType                     => ['pending reminder'],
+        StateIDs                      => \@PendingReminderStateIDs,
         TicketPendingTimeOlderMinutes => 1,
         OwnerIDs                      => [ $Self->{UserID} ],
         UserID                        => 1,
@@ -89,7 +98,7 @@ sub Run {
     my $IconNew     = $Param{Config}->{IconNew};
     my $IconReached = $Param{Config}->{IconReached};
 
-    my $URL = $Kernel::OM->Get('Kernel::Output::HTML::Layout')->{Baselink};
+    my $URL = $LayoutObject->{Baselink};
     my %Return;
     my $Priority = $Param{Config}->{Priority};
     if ($CountNew) {

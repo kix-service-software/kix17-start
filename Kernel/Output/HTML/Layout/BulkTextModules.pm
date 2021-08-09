@@ -275,6 +275,12 @@ sub ShowAllBulkTextModules {
     my $ConfigObject  = $Kernel::OM->Get('Kernel::Config');
     my $MainObject    = $Kernel::OM->Get('Kernel::System::Main');
 
+    my $ShowCategories = $Kernel::OM->Get('Kernel::Config')->Get('TextModule::ShowCategories');
+
+    if (!$ShowCategories) {
+        $Param{DisplayType} = 'List';
+    }
+
     $Self->Block(
         Name => 'BulkTextModuleBlock',
         Data => {
@@ -346,8 +352,6 @@ sub ShowAllBulkTextModules {
             }
         }
 
-        my $ShowCategories = $Kernel::OM->Get('Kernel::Config')->Get('TextModule::ShowCategories');
-
         if ($ShowCategories) {
 
             $Param{TextModuleSelection} = $Self->BulkTextModuleCategoryTree(
@@ -381,8 +385,6 @@ sub ShowAllBulkTextModules {
                     Data => $TextModuleContentData{$TextModuleID},
                 );
             }
-
-            $Param{DisplayType} = 'List';
         }
 
         return $Self->Output(

@@ -2953,7 +2953,13 @@ END
     # End Widget Article
 
     # get output back
-    return $LayoutObject->Output( TemplateFile => $Self->{DTLAction}, Data => \%Param );
+    return $LayoutObject->Output(
+        TemplateFile => $Self->{DTLAction},
+        Data         => {
+            %Param,
+            PretendAction => $Self->{PretendAction},
+        }
+    );
 }
 
 sub _GetNextStates {

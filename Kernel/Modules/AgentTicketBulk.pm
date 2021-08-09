@@ -902,6 +902,18 @@ sub _Mask {
             );
         }
 
+        # check ticket acl with user and action
+        my $ACL = $TicketObject->TicketAcl(
+            Action        => $Self->{Action},
+            UserID        => $Self->{UserID},
+            ReturnType    => 'Ticket',
+            ReturnSubType => 'State',
+            Data          => \%StateList,
+        );
+        if ( $ACL ) {
+            %StateList = $TicketObject->TicketAclData();
+        }
+
         if (
             !$Config->{StateDefault}
             && !defined( $StateList{''} )

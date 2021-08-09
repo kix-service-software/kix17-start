@@ -1687,7 +1687,11 @@ sub Run {
                         );
                         next TICKETCOLUMN;
                     }
-                    else {
+                    elsif (
+                        $TicketEscalation->{'FirstResponse'}
+                        || $TicketEscalation->{'Update'}
+                        || $TicketEscalation->{'Solution'}
+                    ) {
                         $EscalationData{EscalationTime}            = $Article{EscalationTime}            || 0;
                         $EscalationData{EscalationDestinationDate} = $Article{EscalationDestinationDate} || 0;
 
@@ -1711,6 +1715,16 @@ sub Run {
                         );
                         next TICKETCOLUMN;
                     }
+                    else {
+                        $LayoutObject->Block(
+                            Name => "RecordTicketColumnTranslatable",
+                            Data => {
+                                GenericValue => 'none',
+                                Class        => '',
+                            },
+                        );
+                        next TICKETCOLUMN;
+                    }
                 }
 
                 my $BlockType = '';
@@ -1723,7 +1737,7 @@ sub Run {
                         $BlockType = 'Translatable';
                         $DataValue = 'suspended';
                     }
-                    else {
+                    elsif ( $TicketEscalation->{'Solution'} ) {
                         $BlockType = 'Escalation';
                         $DataValue = $LayoutObject->CustomerAgeInHours(
                             Age => $Article{SolutionTime} || 0,
@@ -1732,6 +1746,10 @@ sub Run {
                         if ( defined $Article{SolutionTime} && $Article{SolutionTime} < 60 * 60 * 1 ) {
                             $CSSClass = 'Warning';
                         }
+                    }
+                    else {
+                        $BlockType = 'Translatable';
+                        $DataValue = 'none';
                     }
                 }
                 elsif ( $TicketColumn eq 'EscalationResponseTime' ) {
@@ -1742,7 +1760,7 @@ sub Run {
                         $BlockType = 'Translatable';
                         $DataValue = 'suspended';
                     }
-                    else {
+                    elsif ( $TicketEscalation->{'FirstResponse'} ) {
                         $BlockType = 'Escalation';
                         $DataValue = $LayoutObject->CustomerAgeInHours(
                             Age => $Article{FirstResponseTime} || 0,
@@ -1755,6 +1773,10 @@ sub Run {
                             $CSSClass = 'Warning';
                         }
                     }
+                    else {
+                        $BlockType = 'Translatable';
+                        $DataValue = 'none';
+                    }
                 }
                 elsif ( $TicketColumn eq 'EscalationUpdateTime' ) {
                     if (
@@ -1764,7 +1786,7 @@ sub Run {
                         $BlockType = 'Translatable';
                         $DataValue = 'suspended';
                     }
-                    else {
+                    elsif ( $TicketEscalation->{'Update'} ) {
                         $BlockType = 'Escalation';
                         $DataValue = $LayoutObject->CustomerAgeInHours(
                             Age => $Article{UpdateTime} || 0,
@@ -1773,6 +1795,10 @@ sub Run {
                         if ( defined $Article{UpdateTime} && $Article{UpdateTime} < 60 * 60 * 1 ) {
                             $CSSClass = 'Warning';
                         }
+                    }
+                    else {
+                        $BlockType = 'Translatable';
+                        $DataValue = 'none';
                     }
                 }
                 elsif ( $TicketColumn eq 'PendingTime' ) {

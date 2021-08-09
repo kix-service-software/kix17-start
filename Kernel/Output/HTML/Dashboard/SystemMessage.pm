@@ -68,6 +68,7 @@ sub Run {
 
     # get message list
     my @MessageIDList = $SystemMessageObject->MessageSearch(
+        Action    => 'AgentDashboard',
         DateCheck => 1,
         Valid     => 1,
         UserID    => $Self->{UserID},

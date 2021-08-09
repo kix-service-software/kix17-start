@@ -6,7 +6,7 @@
 # did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
 # --
 
-package Kernel::GenericInterface::Operation::LinkObject::LinkAdd;
+package Kernel::GenericInterface::Operation::LinkObject::LinkList;
 
 use strict;
 use warnings;
@@ -18,7 +18,7 @@ our $ObjectManagerDisabled = 1;
 
 =head1 NAME
 
-Kernel::GenericInterface::Operation::LinkObject::LinkAdd - GenericInterface Link Create Operation backend
+Kernel::GenericInterface::Operation::LinkObject::LinkList - GenericInterface Link List Operation backend
 
 =head1 SYNOPSIS
 
@@ -62,17 +62,17 @@ Create a new link.
 
     my $Result = $OperationObject->Run(
         Data => {
-            UserLogin         => 'some agent login',                            # UserLogin or SessionID (of agent) is required
+            UserLogin         => 'some agent login',                            # UserLogin or SessionID (of agent in group 'admin' with permission 'rw') is required
             SessionID         => 123,
 
             Password  => 'some password',                                       # if UserLogin is sent then Password is required
 
-            SourceObject => 'Ticket',
-            SourceKey    => '123',
-            TargetObject => 'ITSMConfigItem',
-            TargetKey    => '123',
-            Type         => 'ParentChild',
-            State        => 'Valid',
+            Object    => 'Ticket',
+            Key       => '321',
+            Object2   => 'FAQ',         # (optional)
+            State     => 'Valid',
+            Type      => 'ParentChild', # (optional)
+            Direction => 'Target',      # (optional) default Both      (Source|Target|Both)
         },
     );
 
@@ -80,13 +80,32 @@ Create a new link.
         Success => 1,          # 0 or 1
 
         Data => {
-            # In case of success
-            Success => 1
-
-            # In case of an error
-            Error => {
-                ErrorCode    => $ErrorCode,
-                ErrorMessage => $ErrorMessage
+            Ticket => {
+                Normal => {
+                    Source => {
+                        12  => 1,
+                        212 => 1,
+                        332 => 1,
+                    },
+                },
+                ParentChild => {
+                    Source => {
+                        5 => 1,
+                        9 => 1,
+                    },
+                    Target => {
+                        4  => 1,
+                        8  => 1,
+                        15 => 1,
+                    },
+                },
+            },
+            FAQ => {
+                ParentChild => {
+                    Source => {
+                        5 => 1,
+                    },
+                },
             }
         }
     };
@@ -101,16 +120,16 @@ sub Run {
     # check needed stuff
     if ( !IsHashRefWithData( $Param{Data} ) ) {
         return $Self->ReturnError(
-            ErrorCode    => 'LinkAdd.MissingParameter',
+            ErrorCode    => 'LinkList.MissingParameter',
             ErrorMessage => 'The request is empty!',
         );
     }
 
-    for my $Needed ( qw(SourceObject SourceKey TargetObject TargetKey Type State) ) {
+    for my $Needed ( qw(Object Key State) ) {
         # check needed stuff
         if ( !$Param{Data}->{$Needed} ) {
             return $Self->ReturnError(
-                ErrorCode    => 'LinkAdd.MissingParameter',
+                ErrorCode    => 'LinkList.MissingParameter',
                 ErrorMessage => 'Got no ' . $Needed . '!',
             );
         } else {
@@ -118,21 +137,30 @@ sub Run {
         }
     }
 
+    for my $Optional ( qw(Object2 Type Direction) ) {
+        # get optional parameter
+        if ( $Param{Data}->{ $Optional } ) {
+            $GetParam{ $Optional } = $Param{Data}->{ $Optional };
+        }
+    }
+
     # check needed stuff
     if (
         !$Param{Data}->{UserLogin}
         && !$Param{Data}->{SessionID}
-        )
-    {
+    ) {
         return $Self->ReturnError(
-            ErrorCode    => 'LinkAdd.MissingParameter',
+            ErrorCode    => 'LinkList.MissingParameter',
             ErrorMessage => 'UserLogin or SessionID is required!',
         );
     }
 
-    if ( $Param{Data}->{UserLogin} && !$Param{Data}->{Password} ) {
+    if (
+        $Param{Data}->{UserLogin}
+        && !$Param{Data}->{Password}
+    ) {
         return $Self->ReturnError(
-            ErrorCode    => 'LinkAdd.MissingParameter',
+            ErrorCode    => 'LinkList.MissingParameter',
             ErrorMessage => 'Password for UserLogin is required!',
         );
     }
@@ -144,7 +172,7 @@ sub Run {
 
     if ( !$UserID ) {
         return $Self->ReturnError(
-            ErrorCode    => 'LinkAdd.AuthFail',
+            ErrorCode    => 'LinkList.AuthFail',
             ErrorMessage => 'User could not be authenticated!',
         );
     }
@@ -155,7 +183,7 @@ sub Run {
         || $UserType ne 'User'
     ) {
         return $Self->ReturnError(
-            ErrorCode    => 'LinkAdd.AuthFail',
+            ErrorCode    => 'LinkList.AuthFail',
             ErrorMessage => 'Authentification with user type "User" required!',
         );
     }
@@ -181,58 +209,33 @@ sub Run {
         # check if user is in group 'admin' with 'rw' permission
         if ( !$UserList{ $UserID } ) {
             return $Self->ReturnError(
-                ErrorCode    => 'LinkAdd.AuthFail',
+                ErrorCode    => 'LinkList.AuthFail',
                 ErrorMessage => 'Authentification with user in group "admin" and "rw" permission required!',
             );
         }
     }
 
-    # check link type
-    my $TypeID = $LinkObject->TypeLookup(
-        Name   => $GetParam{Type},
-        UserID => $UserID,
-    );
-    if ( !$TypeID ) {
-        return $Self->ReturnError(
-            ErrorCode    => 'LinkAdd.InvalidParameter',
-            ErrorMessage => 'Type doesn\'t exists!',
-        );
-    }
-
-    # check link state
-    my $StateID = $LinkObject->StateLookup(
-        Name   => $GetParam{State},
-    );
-    if ( !$StateID ) {
-        return $Self->ReturnError(
-            ErrorCode    => 'LinkAdd.InvalidParameter',
-            ErrorMessage => 'State doesn\'t exists!',
-        );
-    }
-
-    # create link
-    my $Success = $LinkObject->LinkAdd(
+    # get link list
+    my $LinkList = $LinkObject->LinkList(
         %GetParam,
         UserID => $UserID,
     );
 
-    if ( !$Success ) {
+    if ( ref( $LinkList ) ne 'HASH' ) {
         # get error message
         my $ErrorMessage = $Kernel::OM->Get('Kernel::System::Log')->GetLogEntry(
             Type => 'error',
             What => 'Message',
         );
         return $Self->ReturnError(
-            ErrorCode    => 'LinkAdd.LinkAddError',
-            ErrorMessage => ( $ErrorMessage || 'Could not create link!' ),
+            ErrorCode    => 'LinkAdd.LinkListError',
+            ErrorMessage => ( $ErrorMessage || 'Could not get link list!' ),
         );
     }
 
     return {
         Success => 1,
-        Data    => {
-            Success => $Success,
-        },
+        Data    => $LinkList,
     };
 }
 

@@ -408,7 +408,7 @@ sub _Mask {
         MODULE:
         for my $Module ( sort keys %{ $ConfigObject->Get( $Key . '::Module' ) } ) {
             next MODULE if $Module !~ /^(?:Customer|Login|Agent|Public)/;
-            next MODULE if $Module =~ /(Handler|AJAXHandler|Add|Delete|Edit|Print|Event|Dashboard)$/;
+            next MODULE if $Module =~ /(Handler|AJAXHandler|Add|Delete|Edit|Print|Event)$/;
             if (
                 $Config->{ActionWhitelist}
                 && IsArrayRefWithData($Config->{ActionWhitelist})
