@@ -626,15 +626,20 @@ sub Run {
                 if ( ref( $GetParam{What} ) eq 'ARRAY' ) {
                     for my $FormData ( @{ $XMLFormData } ) {
                         for my $FormKey ( keys( %{ $FormData } ) ) {
+                            my $KeyFound = 0;
                             for my $WhatData ( @{ $GetParam{What} } ) {
                                 for my $WhatKey ( keys( %{ $WhatData } ) ) {
-                                    if (
-                                        $FormKey eq $WhatKey
-                                        && ref( $WhatData->{ $WhatKey } ) eq 'ARRAY'
-                                    ) {
-                                        push( @{ $WhatData->{ $WhatKey } }, @{ $FormData->{ $FormKey } } );
+                                    if ( $FormKey eq $WhatKey ) {
+                                        $KeyFound = 1;
+
+                                        if ( ref( $WhatData->{ $WhatKey } ) eq 'ARRAY' ) {
+                                            push( @{ $WhatData->{ $WhatKey } }, @{ $FormData->{ $FormKey } } );
+                                        }
                                     }
                                 }
+                            }
+                            if ( !$KeyFound ) {
+                                push( @{ $GetParam{What} }, $FormData );
                             }
                         }
                     }

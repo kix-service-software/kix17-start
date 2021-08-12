@@ -777,6 +777,12 @@ sub _HandlePossibleFollowUp {
             && ref( $Param{SkipTicketIDs} ) eq 'HASH'
             && $Param{SkipTicketIDs}->{ $Param{TicketID} }
         ) {
+            my $MessageID = $Param{GetParam}->{'Message-ID'};
+
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'notice',
+                Message  => "Follow up for [$Param{TicketNumber}], but message id already exists ($MessageID). Followup is skipped."
+            );
             return (6, $Param{TicketID});
         }
 

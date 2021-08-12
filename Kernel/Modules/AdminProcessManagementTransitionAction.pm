@@ -541,13 +541,21 @@ sub _ShowEdit {
 
     # lookup existing Transition Actions on disk
     my $Home        = $Kernel::OM->Get('Kernel::Config')->Get('Home');
-    my @KIXFolders  = ( $Home . '/Kernel/System/ProcessManagement/TransitionAction' );
+    if ( $Home !~ m{^.*\/$}x ) {
+        $Home .= '/';
+    }
 
-    foreach my $TmpDir (@INC) {
-        last if $TmpDir =~ /\/Custom$/;
-        my $NewDir = $TmpDir.'/Kernel/System/ProcessManagement/TransitionAction';
+    my @KIXFolders  = (
+        $Home . 'Kernel/System/ProcessManagement/TransitionAction',
+        $Home . 'Custom/Kernel/System/ProcessManagement/TransitionAction'
+    );
+
+    
+    my @KIXPackages = $Kernel::OM->Get('Kernel::System::KIXUtils')->GetRegisteredCustomPackages( Result => 'ARRAY' );
+    for my $Package ( @KIXPackages ) {
+        my $NewDir = $Home . $Package . '/Kernel/System/ProcessManagement/TransitionAction';
         next if !( -e $NewDir );
-        push @KIXFolders, $NewDir;
+        push( @KIXFolders, $NewDir );
     }
 
     my @List = ();
