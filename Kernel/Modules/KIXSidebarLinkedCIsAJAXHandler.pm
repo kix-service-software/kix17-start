@@ -215,7 +215,14 @@ sub Run {
     }
 
     # generate output
-    if ( $Param{CustomerUserID} && $Param{CallingAction} && $Param{FormID} ) {
+    if (
+        $Param{CustomerUserID}
+        && $Param{CallingAction}
+        && (
+            $Param{FormID}
+            || $Param{TicketID}
+        )
+    ) {
         $Param{LinkConfigItemStrg} =
             $LayoutObject->KIXSideBarAssignedConfigItemsTable(
             %GetParam,
