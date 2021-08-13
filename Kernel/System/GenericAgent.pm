@@ -1035,7 +1035,7 @@ sub _JobRunTicket {
     }
 
     # get pending states
-    my %PendingAutoStateHash = $$StateObject->StateGetStatesByType(
+    my %PendingAutoStateHash = $StateObject->StateGetStatesByType(
         Type   => 'PendingAuto',
         Result => 'HASH',
     );
