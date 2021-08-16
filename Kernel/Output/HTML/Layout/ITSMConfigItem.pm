@@ -242,7 +242,7 @@ sub _ITSMLoadLayoutBackend {
         return;
     }
 
-    my $GenericModule = "Kernel::Output::HTML::ITSMConfigItem::Layout$Param{Type}";
+    my $GenericModule = 'Kernel::Output::HTML::ITSMConfigItem::Layout' . $Param{Type};
 
     # load the backend module
     if ( !$Kernel::OM->Get('Kernel::System::Main')->Require($GenericModule) ) {
