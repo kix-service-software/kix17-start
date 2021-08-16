@@ -844,13 +844,6 @@ sub Run {
             $Error{NameServerErrorMessage} = Translatable('This field is required');
         }
 
-        if ( !$GetParam->{Description} ) {
-
-            # add server error error class
-            $Error{DescriptionServerError}        = 'ServerError';
-            $Error{DescriptionServerErrorMessage} = Translatable('This field is required');
-        }
-
         # check if state exists
         my $StateList = $StateObject->StateList( UserID => $Self->{UserID} );
 
@@ -1011,13 +1004,6 @@ sub Run {
             # add server error error class
             $Error{NameServerError}        = 'ServerError';
             $Error{NameServerErrorMessage} = Translatable('This field is required');
-        }
-
-        if ( !$GetParam->{Description} ) {
-
-            # add server error error class
-            $Error{DescriptionServerError}        = 'ServerError';
-            $Error{DescriptionServerErrorMessage} = Translatable('This field is required');
         }
 
         # check if state exists
