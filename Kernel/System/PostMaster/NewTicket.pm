@@ -91,7 +91,7 @@ sub Run {
                 %Ticket
                 && $Ticket{QueueID} eq $QueueID
             ) {
-                my $MessageID = GetParam{'Message-ID'};
+                my $MessageID = $GetParam{'Message-ID'};
 
                 $Kernel::OM->Get('Kernel::System::Log')->Log(
                     Priority => 'notice',
