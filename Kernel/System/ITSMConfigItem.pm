@@ -1644,6 +1644,9 @@ sub CurInciStateRecalc {
     # get incident link types and directions from config
     my $IncidentLinkTypeDirection = $Kernel::OM->Get('Kernel::Config')->Get('ITSM::Core::IncidentLinkTypeDirection');
 
+    # nothing to do if config is not set
+    return 1 if ( ref( $IncidentLinkTypeDirection ) ne 'HASH' );
+
     # to store the new incident state for CIs
     # calculated from all incident link types
     my %NewConfigItemIncidentState;
@@ -1652,43 +1655,57 @@ sub CurInciStateRecalc {
     my %ServiceCIRelation;
 
     # remember the scanned config items
-    my %ScannedConfigItemIDs;
+    $Param{ScannedConfigItemIDs} //= {};
+    my %KnownScannedConfigItemIDs = %{ $Param{ScannedConfigItemIDs} };
 
     # find all config items with an incident state
     $Self->_FindInciConfigItems(
         ConfigItemID              => $Param{ConfigItemID},
         IncidentLinkTypeDirection => $IncidentLinkTypeDirection,
-        ScannedConfigItemIDs      => \%ScannedConfigItemIDs,
+        ScannedConfigItemIDs      => $Param{ScannedConfigItemIDs},
     );
 
     # calculate the new CI incident state for each configured linktype
     LINKTYPE:
-    for my $LinkType ( sort keys %{$IncidentLinkTypeDirection} ) {
+    for my $LinkType ( keys %{ $IncidentLinkTypeDirection } ) {
 
         # get the direction
-        my $LinkDirection = $IncidentLinkTypeDirection->{$LinkType};
+        my $LinkDirection = $IncidentLinkTypeDirection->{ $LinkType };
 
         # investigate all config items with a warning state
         CONFIGITEMID:
-        for my $ConfigItemID ( sort keys %ScannedConfigItemIDs ) {
+        for my $ConfigItemID ( keys %{ $Param{ScannedConfigItemIDs} } ) {
 
             # investigate only config items with an incident state
-            next CONFIGITEMID if $ScannedConfigItemIDs{$ConfigItemID}->{Type} ne 'incident';
+            next CONFIGITEMID if ( $Param{ScannedConfigItemIDs}->{ $ConfigItemID }->{Type} ne 'incident' );
+
+            # skip config items known from previous run
+            next CONFIGITEMID if (
+                $KnownScannedConfigItemIDs{ $ConfigItemID }
+                && $KnownScannedConfigItemIDs{ $ConfigItemID }->{Type}
+                && $KnownScannedConfigItemIDs{ $ConfigItemID }->{Type} eq $Param{ScannedConfigItemIDs}->{ $ConfigItemID }->{Type}
+            );
 
             $Self->_FindWarnConfigItems(
                 ConfigItemID         => $ConfigItemID,
                 LinkType             => $LinkType,
                 Direction            => $LinkDirection,
-                NumberOfLinkTypes    => scalar keys %{$IncidentLinkTypeDirection},
-                ScannedConfigItemIDs => \%ScannedConfigItemIDs,
+                ScannedConfigItemIDs => $Param{ScannedConfigItemIDs},
             );
         }
 
         CONFIGITEMID:
-        for my $ConfigItemID ( sort keys %ScannedConfigItemIDs ) {
+        for my $ConfigItemID ( keys %{ $Param{ScannedConfigItemIDs} } ) {
+
+            # skip config items known from previous run
+            next CONFIGITEMID if (
+                $KnownScannedConfigItemIDs{ $ConfigItemID }
+                && $KnownScannedConfigItemIDs{ $ConfigItemID }->{Type}
+                && $KnownScannedConfigItemIDs{ $ConfigItemID }->{Type} eq $Param{ScannedConfigItemIDs}->{ $ConfigItemID }->{Type}
+            );
 
             # extract incident state type
-            my $InciStateType = $ScannedConfigItemIDs{$ConfigItemID}->{Type};
+            my $InciStateType = $Param{ScannedConfigItemIDs}->{ $ConfigItemID }->{Type};
 
             # find all linked services of this CI
             my %LinkedServiceIDs = $Kernel::OM->Get('Kernel::System::LinkObject')->LinkKeyList(
@@ -1705,18 +1722,18 @@ sub CurInciStateRecalc {
             for my $ServiceID ( sort keys %LinkedServiceIDs ) {
 
                 # remember the CIs that are linked with this service
-                push @{ $ServiceCIRelation{$ServiceID} }, $ConfigItemID;
+                push( @{ $ServiceCIRelation{$ServiceID} }, $ConfigItemID );
             }
 
-            next CONFIGITEMID if $InciStateType eq 'incident';
+            next CONFIGITEMID if ( $InciStateType eq 'incident' );
 
             # if nothing has been set already or if the currently set incident state is 'operational'
             # ('operational' can always be overwritten)
             if (
-                !$NewConfigItemIncidentState{$ConfigItemID}
-                || $NewConfigItemIncidentState{$ConfigItemID} eq 'operational'
+                !$NewConfigItemIncidentState{ $ConfigItemID }
+                || $NewConfigItemIncidentState{ $ConfigItemID } eq 'operational'
             ) {
-                $NewConfigItemIncidentState{$ConfigItemID} = $InciStateType;
+                $NewConfigItemIncidentState{ $ConfigItemID } = $InciStateType;
             }
         }
     }
@@ -1735,7 +1752,20 @@ sub CurInciStateRecalc {
 
     # set the new current incident state for CIs
     CONFIGITEMID:
-    for my $ConfigItemID ( sort keys %NewConfigItemIncidentState ) {
+    for my $ConfigItemID ( keys %NewConfigItemIncidentState ) {
+
+        # get config item data
+        my $ConfigItem = $Self->ConfigItemGet(
+            ConfigItemID => $ConfigItemID,
+            Cache        => 0,
+        );
+
+        # check the current incident state type is in 'incident'
+        # then we do not want to change it to warning
+        next CONFIGITEMID if (
+            $ConfigItem->{CurInciStateType}
+            && $ConfigItem->{CurInciStateType} eq 'incident'
+        );
 
         # get new incident state type (can only be 'operational' or 'warning')
         my $InciStateType = $NewConfigItemIncidentState{$ConfigItemID};
@@ -1749,15 +1779,17 @@ sub CurInciStateRecalc {
         my $CurInciStateID;
         if ( $InciStateType eq 'warning' ) {
 
-            # check the current incident state type is in 'incident'
-            # then we do not want to change it to warning
-            next CONFIGITEMID if $LastVersion->{InciStateType} eq 'incident';
-
             $CurInciStateID = $WarningStateID;
         }
         elsif ( $InciStateType eq 'operational' ) {
             $CurInciStateID = $LastVersion->{InciStateID};
         }
+
+        # check current incident state for needed change
+        next CONFIGITEMID if (
+            $ConfigItem->{CurInciStateID}
+            && $ConfigItem->{CurInciStateID} eq $CurInciStateID
+        );
 
         # update current incident state
         $Kernel::OM->Get('Kernel::System::DB')->Do(
@@ -2356,18 +2388,13 @@ sub _FindInciConfigItems {
     # check needed stuff
     return if !$Param{ConfigItemID};
 
-    # ignore already scanned ids (infinite loop protection)
-    return if $Param{ScannedConfigItemIDs}->{ $Param{ConfigItemID} };
-
-    $Param{ScannedConfigItemIDs}->{ $Param{ConfigItemID} }->{Type} = 'operational';
-
     # add own config item id to list of linked config items
     my %ConfigItemIDs = (
         $Param{ConfigItemID} => 1,
     );
 
     LINKTYPE:
-    for my $LinkType ( sort keys %{ $Param{IncidentLinkTypeDirection} } ) {
+    for my $LinkType ( keys %{ $Param{IncidentLinkTypeDirection} } ) {
 
         # find all linked config items (childs)
         my %LinkedConfigItemIDs = $Kernel::OM->Get('Kernel::System::LinkObject')->LinkKeyList(
@@ -2388,8 +2415,12 @@ sub _FindInciConfigItems {
         %ConfigItemIDs = ( %ConfigItemIDs, %LinkedConfigItemIDs );
     }
 
+    # check current incident state of config items
+    my %RecursionConfigItemIDs = ();
     CONFIGITEMID:
-    for my $ConfigItemID ( sort keys %ConfigItemIDs ) {
+    for my $ConfigItemID ( keys %ConfigItemIDs ) {
+        # skip already scanned config items
+        next CONFIGITEMID if ( $Param{ScannedConfigItemIDs}->{ $ConfigItemID }->{Type} );
 
         # get config item data
         my $ConfigItem = $Self->ConfigItemGet(
@@ -2398,10 +2429,26 @@ sub _FindInciConfigItems {
         );
 
         # set incident state
-        if ( $ConfigItem->{CurInciStateType} eq 'incident' ) {
-            $Param{ScannedConfigItemIDs}->{$ConfigItemID}->{Type} = 'incident';
+        if (
+            $ConfigItem->{CurInciStateType}
+            && $ConfigItem->{CurInciStateType} eq 'incident'
+        ) {
+            $Param{ScannedConfigItemIDs}->{ $ConfigItemID }->{Type} = 'incident';
             next CONFIGITEMID;
         }
+        else {
+            $Param{ScannedConfigItemIDs}->{ $ConfigItemID }->{Type} = 'operational';
+        }
+
+        # remember config item id for recursion
+        $RecursionConfigItemIDs{ $ConfigItemID } = 1;
+    }
+
+    # process needed recursion
+    CONFIGITEMID:
+    for my $ConfigItemID ( keys %RecursionConfigItemIDs ) {
+        # no recursion for current config item
+        next CONFIGITEMID if ( $Param{ConfigItemID} eq $ConfigItemID );
 
         # start recursion
         $Self->_FindInciConfigItems(
@@ -2422,7 +2469,6 @@ find all config items with a warning
         ConfigItemID         => $ConfigItemID,
         LinkType             => $LinkType,
         Direction            => $LinkDirection,
-        NumberOfLinkTypes    => 2,
         ScannedConfigItemIDs => $ScannedConfigItemIDs,
     );
 
@@ -2433,30 +2479,8 @@ sub _FindWarnConfigItems {
 
     # check needed stuff
     return if !$Param{ConfigItemID};
-
-    my $IncidentCount = 0;
-    for my $ConfigItemID ( sort keys %{ $Param{ScannedConfigItemIDs} } ) {
-        if (
-            $Param{ScannedConfigItemIDs}->{$ConfigItemID}->{Type}
-            && $Param{ScannedConfigItemIDs}->{$ConfigItemID}->{Type} eq 'incident'
-        ) {
-            $IncidentCount++;
-        }
-    }
-
-# ignore already scanned ids (infinite loop protection)
-# it is ok that a config item is investigated as many times as there are configured link types * number of incident config iteems
-    if (
-        $Param{ScannedConfigItemIDs}->{ $Param{ConfigItemID} }->{FindWarn}
-        && $Param{ScannedConfigItemIDs}->{ $Param{ConfigItemID} }->{FindWarn} >= ( $Param{NumberOfLinkTypes} * $IncidentCount )
-    ) {
-        return;
-    }
-
-    $Self->{Direction} = $Kernel::OM->Get('Kernel::Config')->Get('ITSMConfigItem::CILinkDirection') || 'Both';
-
-    # increase the visit counter
-    $Param{ScannedConfigItemIDs}->{ $Param{ConfigItemID} }->{FindWarn}++;
+    return if !$Param{LinkType};
+    return if !$Param{Direction};
 
     # find all linked config items
     my %LinkedConfigItemIDs = $Kernel::OM->Get('Kernel::System::LinkObject')->LinkKeyList(
@@ -2469,24 +2493,41 @@ sub _FindWarnConfigItems {
         UserID    => 1,
     );
 
+    # set incident state of config items to warning, if its not incident state
+    my %RecursionConfigItemIDs = ();
     CONFIGITEMID:
-    for my $ConfigItemID ( sort keys %LinkedConfigItemIDs ) {
+    for my $ConfigItemID ( keys %LinkedConfigItemIDs ) {
+        # skip already scanned config items
+        next CONFIGITEMID if ( $Param{ScannedConfigItemIDs}->{ $ConfigItemID }->{FindWarn}->{ $Param{LinkType} } );
+
+        # remember as scanned for this link type
+        $Param{ScannedConfigItemIDs}->{ $ConfigItemID }->{FindWarn}->{ $Param{LinkType} } = 1;
+
+        # do not change incident state if type is incident
+        next CONFIGITEMID if (
+            $Param{ScannedConfigItemIDs}->{ $ConfigItemID }->{Type}
+            && $Param{ScannedConfigItemIDs}->{ $ConfigItemID }->{Type} eq 'incident'
+        );
+
+        # remember config item id for recursion
+        $RecursionConfigItemIDs{ $ConfigItemID } = 1;
+
+        # set warning state
+        $Param{ScannedConfigItemIDs}->{ $ConfigItemID }->{Type} = 'warning';
+    }
+
+    # process needed recursion
+    for my $ConfigItemID ( keys %RecursionConfigItemIDs ) {
+        # no recursion for current config item
+        next CONFIGITEMID if ( $Param{ConfigItemID} eq $ConfigItemID );
 
         # start recursion
         $Self->_FindWarnConfigItems(
             ConfigItemID         => $ConfigItemID,
             LinkType             => $Param{LinkType},
             Direction            => $Param{Direction},
-            NumberOfLinkTypes    => $Param{NumberOfLinkTypes},
             ScannedConfigItemIDs => $Param{ScannedConfigItemIDs},
         );
-
-        next CONFIGITEMID
-            if $Param{ScannedConfigItemIDs}->{$ConfigItemID}->{Type}
-            && $Param{ScannedConfigItemIDs}->{$ConfigItemID}->{Type} eq 'incident';
-
-        # set warning state
-        $Param{ScannedConfigItemIDs}->{$ConfigItemID}->{Type} = 'warning';
     }
 
     return 1;
