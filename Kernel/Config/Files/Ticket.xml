@@ -15184,7 +15184,6 @@ Thanks for your help!
         <SubGroup>Frontend::Agent::ModuleRegistration</SubGroup>
         <Setting>
             <FrontendModuleReg>
-                <Group>users</Group>
                 <Description>download all Attachments of selected article</Description>
                 <Title>Attachments download</Title>
                 <NavBarName></NavBarName>
