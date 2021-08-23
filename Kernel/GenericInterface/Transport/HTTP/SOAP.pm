@@ -427,7 +427,7 @@ sub ProviderGenerateResponse {
     if ($SOAPResult) {
         push @CallData, $SOAPResult;
     }
-    my $Serialized = SOAP::Serializer->autotype(0)->default_ns( $Config->{NameSpace} )->envelope(@CallData);
+    my $Serialized = eval{ SOAP::Serializer->autotype(0)->default_ns( $Config->{NameSpace} )->envelope(@CallData); };
     my $SerializedFault = $@ || '';
     if ($SerializedFault) {
         return $Self->_Output(
