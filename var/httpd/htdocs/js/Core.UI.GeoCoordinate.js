@@ -57,7 +57,10 @@ Core.UI.GeoCoordinate = (function (TargetNS) {
             }
 
             if ( inputFilter(/^[-+]?\d*$/, this) ) {
-                if ( maxLength == $(this).val().length ) {
+                if (
+                    maxLength == $(this).val().length
+                    && nextField !== undefined
+                ) {
                     $('[name="' + nextField + '"]').focus();
                 }
             }
