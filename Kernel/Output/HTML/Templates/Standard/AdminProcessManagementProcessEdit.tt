@@ -198,15 +198,9 @@
                         </div>
                         <div class="Clear"></div>
 
-                        <label class="Mandatory" for="Description"><span class="Marker">*</span> [% Translate("Description") | html %]:</label>
+                        <label for="Description">[% Translate("Description") | html %]:</label>
                         <div class="Field">
-                            <textarea name="Description" id="Description" class="W75pc Validate_Required [% Data.DescriptionServerError | html %]" rows="7" cols="20">[% Data.Description | html %]</textarea>
-                            <div id="DescriptionError" class="TooltipErrorMessage">
-                                <p>[% Translate("This field is required.") | html %]</p>
-                            </div>
-                            <div id="DescriptionServerError" class="TooltipErrorMessage">
-                                <p>[% Translate("This field is required.") | html %]</p>
-                            </div>
+                            <textarea name="Description" id="Description" class="W75pc" rows="7" cols="20">[% Data.Description | html %]</textarea>
                         </div>
                         <div class="Clear"></div>
 
