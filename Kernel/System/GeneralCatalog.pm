@@ -289,13 +289,15 @@ get item attributes
 
     my $ItemDataRef = $GeneralCatalogObject->ItemGet(
         ItemID => 3,
+        Silent => 0,         # Optional, default 0. To suppress the warning if the item does not exist.
     );
 
     or
 
     my $ItemDataRef = $GeneralCatalogObject->ItemGet(
-        Class => 'ITSM::Service::Type',
-        Name  => 'Underpinning Contract',
+        Class  => 'ITSM::Service::Type',
+        Name   => 'Underpinning Contract',
+        Silent => 0,         # Optional, default 0. To suppress the warning if the item does not exist.
     );
 
 returns
@@ -384,10 +386,12 @@ sub ItemGet {
 
     # check item
     if ( !$ItemData{ItemID} ) {
-        $Kernel::OM->Get('Kernel::System::Log')->Log(
-            Priority => 'error',
-            Message  => 'Item not found in database!',
-        );
+        if ( !$Param{Silent} ) {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'error',
+                Message  => 'Item not found in database!',
+            );
+        }
         return;
     }
 
