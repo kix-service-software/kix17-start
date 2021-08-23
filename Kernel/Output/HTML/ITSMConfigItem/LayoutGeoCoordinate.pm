@@ -256,12 +256,12 @@ sub InputCreate {
 
         if ( $Format eq 'DecimalDegree' ) {
             $DegreeFollow = $DecimalDegKey;
-            if ( $CoordKey eq 'Long' ) {
-                $DecimalDegFollow = $Key . '::' . 'LatDegree';
+            if ( $CoordKey eq 'Lat' ) {
+                $DecimalDegFollow = $Key . '::' . 'LongDegree';
             }
         } else {
-            if ( $CoordKey eq 'Long' ) {
-                $DecimalSecFollow = $Key . '::' . 'LatDegree';
+            if ( $CoordKey eq 'Lat' ) {
+                $DecimalSecFollow = $Key . '::' . 'LongDegree';
             }
         }
 

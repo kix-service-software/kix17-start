@@ -1212,25 +1212,25 @@ sub _Mask {
         );
     }
 
+    my $URL = $Self->{LastScreenOverview};
+
+    # add session if no cookies are enabled
+    if (
+        $Self->{SessionID}
+        && !$Self->{SessionIDCookie}
+    ) {
+        $URL .= ';' . $Self->{SessionName} . '=' . $Self->{SessionID};
+    }
+
+    $LayoutObject->Block(
+        Name => 'ParentReload',
+        Data => {
+            URL => $URL,
+        },
+    );
+
     # reload parent window
     if ( $Param{TicketsWereLocked} ) {
-
-        my $URL = $Self->{LastScreenOverview};
-
-        # add session if no cookies are enabled
-        if (
-            $Self->{SessionID}
-            && !$Self->{SessionIDCookie}
-        ) {
-            $URL .= ';' . $Self->{SessionName} . '=' . $Self->{SessionID};
-        }
-
-        $LayoutObject->Block(
-            Name => 'ParentReload',
-            Data => {
-                URL => $URL,
-            },
-        );
 
         # show undo&close link
         $LayoutObject->Block(
