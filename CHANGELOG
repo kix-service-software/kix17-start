@@ -1,6 +1,19 @@
 # Change log of KIX
 * Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.17.0-RC3 (2021/08/24)
+ * (2021/08/23) - Bugfix: KIX17-2477 (fix soap envelope serialization error message) (millinger)
+ * (2021/08/23) - Bugfix: KIX17-1841 (added option to check for general catalog item without error) (millinger)
+ * (2021/08/23) - Bugfix: KIX17-431 (show attachments in faq small zoom view) (millinger)
+ * (2021/08/23) - Bugfix: KIX17-2411 (fixed graph output for monthly scaled data) (millinger)
+ * (2021/08/23) - Bugfix: KIX17-593 (removed group permission for module AgentTicketAttachmentDownload) (millinger)
+ * (2021/08/23) - Bugfix: KIX17-859 (fixed automatic focus switch for geo coordinate field) (millinger)
+ * (2021/08/23) - Bugfix: KIX17-1915 (always reload parent after ticket bulk form is loaded) (millinger)
+ * (2021/08/18) - Bugfix: KIX17-2414 (prevent deep recursion on current incident state recalc) (millinger)
+ * (2021/08/16) - Bugfix: KIX17-2402 (process description as optional field) (millinger)
+ * (2021/08/16) - Bugfix: KIX17-945 (prevent internal server error for missing config item xml type modules) (millinger)
+ * (2021/08/16) - Bugfix: KIX17-1658 (fix translation of type, service and sla in ticket overviews) (millinger)
+
 # 17.17.0-RC2 (2021/08/13)
  * (2021/08/13) - Bugfix: KIX17-2308 (fix filter of linked ci sidebar in agent ticket zoom) (millinger)
  * (2021/08/12) - Bugfix: KIX17-2318 (keep transport config when renaming operation or invoker) (millinger)
