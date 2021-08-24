@@ -568,29 +568,27 @@ sub Run {
             Votes      => $FAQData{Votes},
         );
     }
-    if ( $Nav ne 'None' ) {
 
-        # output existing attachments
-        my @AttachmentIndex = $FAQObject->AttachmentIndex(
-            ItemID     => $GetParam{ItemID},
-            ShowInline => 0,
-            UserID     => $Self->{UserID},
+    # output existing attachments
+    my @AttachmentIndex = $FAQObject->AttachmentIndex(
+        ItemID     => $GetParam{ItemID},
+        ShowInline => 0,
+        UserID     => $Self->{UserID},
+    );
+
+    # output header and all attachments
+    if (@AttachmentIndex) {
+        $LayoutObject->Block(
+            Name => 'AttachmentHeader',
         );
-
-        # output header and all attachments
-        if (@AttachmentIndex) {
+        for my $Attachment (@AttachmentIndex) {
             $LayoutObject->Block(
-                Name => 'AttachmentHeader',
+                Name => 'AttachmentRow',
+                Data => {
+                    %FAQData,
+                    %{$Attachment},
+                },
             );
-            for my $Attachment (@AttachmentIndex) {
-                $LayoutObject->Block(
-                    Name => 'AttachmentRow',
-                    Data => {
-                        %FAQData,
-                        %{$Attachment},
-                    },
-                );
-            }
         }
     }
 

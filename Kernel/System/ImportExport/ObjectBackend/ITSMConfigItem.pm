@@ -1706,7 +1706,7 @@ sub _ImportXMLDataMerge {
                         && $XMLData->{ $Item->{Key} }
                         && scalar( @{ $XMLData->{ $Item->{Key} } } ) == 1
                     ) {
-                        delete( $XMLData->{ $Item->{Key} );
+                        delete( $XMLData->{ $Item->{Key} } );
                     }
                 }
                 next COUNTER;

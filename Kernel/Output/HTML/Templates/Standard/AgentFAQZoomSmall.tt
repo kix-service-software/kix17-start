@@ -111,6 +111,29 @@
         </div>
         <div class="ContentColumn">
             <div>
+[% RenderBlockStart("AttachmentHeader") %]
+                <div class="WidgetSimple">
+                    <div class="Header">
+                         <h2><span>[% Translate("Attachments") | html %]:</span></h2>
+                        <div class="Clear"></div>
+                    </div>
+                    <div class="Content">
+                        <div class="message">
+
+[% RenderBlockStart("AttachmentRow") %]
+                            <span class="DownloadAttachment" title="[% Translate("Download Attachment") | html %]">
+                                <a href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=DownloadAttachment;ItemID=[% Data.ItemID | uri %];FileID=[% Data.FileID | uri %]">
+                                    [% Data.Filename | html %]
+                                </a>
+                                , [% Data.Filesize | html %]
+                            </span>
+                            <br/>
+[% RenderBlockEnd("AttachmentRow") %]
+
+                        </div>
+                    </div>
+                </div>
+[% RenderBlockEnd("AttachmentHeader") %]
 [% RenderBlockStart("FAQContent") %]
                 <div class="WidgetSimple">
                     <div class="Header">
