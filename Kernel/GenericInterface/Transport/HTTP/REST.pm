@@ -510,16 +510,9 @@ sub RequesterPerformRequest {
     );
 
     if ( !$RestClient ) {
-
-        my $ErrorMessage = "Error while creating REST client from 'REST::Client'.";
-
-        # log to debugger
-        $Self->{DebuggerObject}->Error(
-            Summary => $ErrorMessage,
-        );
         return {
             Success      => 0,
-            ErrorMessage => $ErrorMessage,
+            ErrorMessage => 'REST Transport: Error while creating REST client from "REST::Client".',
         };
     }
 
@@ -550,16 +543,9 @@ sub RequesterPerformRequest {
     $RestCommand = uc $RestCommand;
 
     if ( !grep { $_ eq $RestCommand } qw(GET POST PUT PATCH DELETE HEAD OPTIONS CONNECT TRACE) ) {
-
-        my $ErrorMessage = "'$RestCommand' is not a valid REST command.";
-
-        # log to debugger
-        $Self->{DebuggerObject}->Error(
-            Summary => $ErrorMessage,
-        );
         return {
             Success      => 0,
-            ErrorMessage => $ErrorMessage,
+            ErrorMessage => 'REST Transport: "' . $RestCommand . '" is not a valid REST command.',
         };
     }
 
@@ -570,15 +556,9 @@ sub RequesterPerformRequest {
             $Config->{InvokerControllerMapping}->{ $Param{Operation} }->{Controller}
         )
     ) {
-        my $ErrorMessage = "REST Transport: Have no Invoker <-> Controller mapping for Invoker '$Param{Operation}'.";
-
-        # log to debugger
-        $Self->{DebuggerObject}->Error(
-            Summary => $ErrorMessage,
-        );
         return {
             Success      => 0,
-            ErrorMessage => $ErrorMessage,
+            ErrorMessage => 'REST Transport: Have no Invoker <-> Controller mapping for Invoker "' . $Param{Operation} . '".',
         };
     }
 
@@ -609,7 +589,7 @@ sub RequesterPerformRequest {
     }
 
     $Self->{DebuggerObject}->Debug(
-        Summary => "URI after interpolating URI params from outgoing data",
+        Summary => 'URI after interpolating URI params from outgoing data',
         Data    => $Controller,
     );
 
@@ -632,7 +612,7 @@ sub RequesterPerformRequest {
         $Controller .= $QueryParamsStr;
 
         $Self->{DebuggerObject}->Debug(
-            Summary => "URI after interpolating Query params from outgoing data",
+            Summary => 'URI after interpolating Query params from outgoing data',
             Data    => $Controller,
         );
     }
@@ -656,7 +636,7 @@ sub RequesterPerformRequest {
             || $RestCommand eq 'PATCH'
         ) {
             $Self->{DebuggerObject}->Debug(
-                Summary => "Remaining outgoing data to be sent",
+                Summary => 'Remaining outgoing data to be sent',
                 Data    => $Param{Data},
             );
 
@@ -684,14 +664,13 @@ sub RequesterPerformRequest {
             $Controller .= $QueryParams;
 
             $Self->{DebuggerObject}->Debug(
-                Summary => "URI after adding Query params from outgoing data",
+                Summary => 'URI after adding Query params from outgoing data',
                 Data    => $Controller,
             );
 
             $Self->{DebuggerObject}->Debug(
-                Summary => "Remaining outgoing data to be sent",
-                Data    => "No data is sent in the request body as $RestCommand command sets all"
-                    . " Data as query params",
+                Summary => 'Remaining outgoing data to be sent',
+                Data    => 'No data is sent in the request body as "' . $RestCommand . '" command sets all Data as query params',
             );
         }
     }
@@ -707,51 +686,37 @@ sub RequesterPerformRequest {
 
     $RestClient->$RestCommand(@RequestParam);
 
-    my $ResponseCode = $RestClient->responseCode();
-    my $ResponseError;
-    my $ErrorMessage = "Error while performing REST '$RestCommand' request to Controller '$Controller' on Host '"
-        . $Config->{Host} . "'.";
+    my $ResponseCode    = $RestClient->responseCode();
+    my $ResponseContent = $RestClient->responseContent();
+    my $ErrorMessage    = 'Error while performing REST "' . $RestCommand . '" request to Controller "' . $Controller . '" on Host "' . $Config->{Host} . '".';
+
+    # log received data for debugging
+    $Self->{DebuggerObject}->Debug(
+        Summary => 'Data received from remote system',
+        Data    => {
+            ResponseCode    => $ResponseCode,
+            ResponseContent => $ResponseContent,
+        },
+    );
 
     if ( !IsStringWithData($ResponseCode) ) {
-        $ResponseError = $ErrorMessage;
+        return {
+            Success      => 0,
+            ErrorMessage => $ErrorMessage . ' No response code provided.',
+        };
     }
 
     if ( $ResponseCode !~ m{ \A 20 \d \z }xms ) {
-        $ResponseError = $ErrorMessage . " Response code '$ResponseCode'.";
-
-        # log to debugger
-        $Self->{DebuggerObject}->Error(
-            Summary => $ResponseError,
-        );
-    }
-
-    my $ResponseContent = $RestClient->responseContent();
-    if ( $ResponseCode ne '204' && !IsStringWithData($ResponseContent) ) {
-
-        $ResponseError = $ErrorMessage . ' No content provided.';
-
-        # log to debugger
-        $Self->{DebuggerObject}->Error(
-            Summary => $ResponseError,
-        );
-    }
-
-    # else {
-
-    # Send processed data to debugger.
-    $Self->{DebuggerObject}->Debug(
-        Summary => 'JSON data received from remote system',
-        Data    => $ResponseContent,
-    );
-
-    # }
-
-    # Return early in case an error on response.
-    if ($ResponseError) {
-
         return {
             Success      => 0,
-            ErrorMessage => $ResponseError,
+            ErrorMessage => $ErrorMessage . ' Response code "' . $ResponseCode . '".',
+        };
+    }
+
+    if ( $ResponseCode ne '204' && !IsStringWithData($ResponseContent) ) {
+        return {
+            Success      => 0,
+            ErrorMessage => $ErrorMessage . ' No content provided.',
         };
     }
 
@@ -773,9 +738,8 @@ sub RequesterPerformRequest {
         else {
             $SizeExeeded = 1;
             $Self->{DebuggerObject}->Debug(
-                Summary => "JSON data received from remote system was too large for logging",
-                Data =>
-                    'See SysConfig option GenericInterface::Operation::ResponseLoggingMaxSize to change the maximum.',
+                Summary => 'JSON data received from remote system was too large for logging',
+                Data    => 'See SysConfig option GenericInterface::Operation::ResponseLoggingMaxSize to change the maximum.',
             );
         }
     }
@@ -796,15 +760,9 @@ sub RequesterPerformRequest {
         );
 
         if ( !$Result ) {
-            my $ResultResponseError = $ErrorMessage . ' Error while parsing JSON data.';
-
-            # log to debugger
-            $Self->{DebuggerObject}->Error(
-                Summary => $ResultResponseError,
-            );
             return {
                 Success      => 0,
-                ErrorMessage => $ResultResponseError,
+                ErrorMessage => $ErrorMessage . ' Error while parsing JSON data.',
             };
         }
     }
