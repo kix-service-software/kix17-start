@@ -15,6 +15,7 @@ use Kernel::System::VariableCheck qw(:all);
 
 our @ObjectDependencies = (
     'Kernel::Config',
+    'Kernel::System::AsynchronousExecutor::LinkedTicketPersonExecutor',
     'Kernel::System::CustomerUser',
     'Kernel::System::DynamicField',
     'Kernel::System::LinkObject',
@@ -36,8 +37,9 @@ sub new {
     bless( $Self, $Type );
 
     # create needed objects
-    $Self->{DynamicFieldObject} = $Kernel::OM->Get('Kernel::System::DynamicField');
+    $Self->{ExecutorObject}     = $Kernel::OM->Get('Kernel::System::AsynchronousExecutor::LinkedTicketPersonExecutor');
     $Self->{CustomerUserObject} = $Kernel::OM->Get('Kernel::System::CustomerUser');
+    $Self->{DynamicFieldObject} = $Kernel::OM->Get('Kernel::System::DynamicField');
     $Self->{LinkObject}         = $Kernel::OM->Get('Kernel::System::LinkObject');
     $Self->{LogObject}          = $Kernel::OM->Get('Kernel::System::Log');
     $Self->{TicketObject}       = $Kernel::OM->Get('Kernel::System::Ticket');
@@ -93,21 +95,13 @@ sub Run {
             my %CustomerUserData = $Self->{CustomerUserObject}->CustomerUserDataGet( User => $CustomerUserID );
             next CUSTOMERUSER if ( !%CustomerUserData );
 
-            # add links to database
-            my $Success = $Self->{LinkObject}->LinkAdd(
-                SourceObject => 'Person',
-                SourceKey    => $CustomerUserData{UserLogin},
-                TargetObject => 'Ticket',
-                TargetKey    => $Ticket{TicketID},
-                Type         => 'Customer',
-                State        => 'Valid',
-                UserID       => $Param{UserID},
-            );
-            $Self->{TicketObject}->HistoryAdd(
-                Name         => 'added involved person ' . $CustomerUserData{UserLogin},
-                HistoryType  => 'TicketLinkAdd',
-                TicketID     => $Ticket{TicketID},
-                CreateUserID => 1,
+            # call async execution
+            $Self->{ExecutorObject}->AsyncCall(
+                TicketID      => $Ticket{TicketID},
+                PersonID      => $CustomerUserData{UserLogin},
+                PersonHistory => $CustomerUserData{UserLogin},
+                LinkType      => 'Customer',
+                UserID        => $Param{UserID},
             );
         }
     }
