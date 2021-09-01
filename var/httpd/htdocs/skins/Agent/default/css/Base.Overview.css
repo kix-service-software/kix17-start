@@ -37,6 +37,7 @@
     }
     .LayoutFixedSidebar > .SidebarColumn {
         overflow-x: hidden;
+        height: 100%;
     }
     .LayoutFixedSidebar.Dashboard > .SidebarColumn {
         overflow-x: visible;
