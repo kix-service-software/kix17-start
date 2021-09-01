@@ -82,11 +82,11 @@ if applicable the created ArticleID.
             TicketID     => 123,                                                # TicketID or TicketNumber is required
             TicketNumber => '2004040510440485',
 
-            Ticket {                                                            # optional
-                Title      => 'some ticket title',
+            Ticket => {                                                         # optional
+                Title         => 'some ticket title',                           # optional
 
-                QueueID       => 123,                                           # Optional
-                Queue         => 'some queue name',                             # Optional
+                QueueID       => 123,                                           # optional
+                Queue         => 'some queue name',                             # optional
                 LockID        => 123,                                           # optional
                 Lock          => 'some lock name',                              # optional
                 TypeID        => 123,                                           # optional
@@ -117,13 +117,17 @@ if applicable the created ArticleID.
                 #     Diff => 10080, # Pending time in minutes
                 #},
             },
-            Article => {                                                          # optional
+            Article => {                                                       # optional
                 ArticleTypeID                   => 123,                        # optional
                 ArticleType                     => 'some article type name',   # optional
                 SenderTypeID                    => 123,                        # optional
                 SenderType                      => 'some sender type name',    # optional
                 AutoResponseType                => 'some auto response type',  # optional
                 From                            => 'some from string',         # optional
+                To                              => 'some to string',           # optional
+                Cc                              => 'some cc string',           # optional
+                Bcc                             => 'some bcc string',          # optional
+                ReplyTo                         => 'some reply to string',     # optional
                 Subject                         => 'some subject',
                 Body                            => 'some body',
 
@@ -138,6 +142,22 @@ if applicable the created ArticleID.
                 ForceNotificationToUserID       => [1, 2, 3]                   # optional
                 ExcludeNotificationToUserID     => [1, 2, 3]                   # optional
                 ExcludeMuteNotificationToUserID => [1, 2, 3]                   # optional
+                AppendQueueSignature            => 1,                          # optional
+                ArticleSend                     => 1,                          # optional
+                Sign                            => {                           # optional, only used if ArticleSend is set
+                    Type    => 'PGP',
+                    SubType => 'Inline|Detached',
+                    Key     => '81877F5E',
+                    Type    => 'SMIME',
+                    Key     => '3b630c80',
+                },
+                Crypt                           => {                           # optional, only used if ArticleSend is set
+                    Type    => 'PGP',
+                    SubType => 'Inline|Detached',
+                    Key     => '81877F5E',
+                    Type    => 'SMIME',
+                    Key     => '3b630c80',
+                },
             },
 
             DynamicField => [                                                  # optional
@@ -148,12 +168,12 @@ if applicable the created ArticleID.
                 # ...
             ],
             # or
-            # DynamicField {
+            # DynamicField => {
             #    Name   => 'some name',
             #    Value  => $Value,
             #},
 
-            Attachment [
+            Attachment => [
                 {
                     Content     => 'content'                                 # base64 encoded
                     ContentType => 'some content type'
@@ -162,7 +182,7 @@ if applicable the created ArticleID.
                 # ...
             ],
             #or
-            #Attachment {
+            #Attachment => {
             #    Content     => 'content'
             #    ContentType => 'some content type'
             #    Filename    => 'some fine name'
@@ -236,7 +256,9 @@ sub Run {
     }
 
     # authenticate user
-    my ( $UserID, $UserType ) = $Self->Auth(%Param);
+    my ( $UserID, $UserType ) = $Self->Auth(
+        %Param,
+    );
 
     if ( !$UserID ) {
         return $Self->ReturnError(
@@ -246,7 +268,6 @@ sub Run {
     }
 
     my $PermissionUserID = $UserID;
-
     if ( $UserType eq 'Customer' ) {
         $UserID = $Kernel::OM->Get('Kernel::Config')->Get('CustomerPanelUserID');
     }
@@ -822,6 +843,111 @@ sub _CheckArticle {
         }
     }
 
+    if ( $Article->{ArticleSend} ) {
+        if (
+            !$Article->{To}
+            && !$Article->{Cc}
+            && !$Article->{Bcc}
+        ) {
+            return {
+                ErrorCode    => 'TicketUpdate.MissingParameter',
+                ErrorMessage => 'TicketUpdate: Article->To or Article->Cc or Article->Bcc parameter is required when Article->ArticleSend is set!',
+            };
+        }
+
+        # check address params
+        for my $AddressParam ( qw( To Cc Bcc ReplyTo ) ) {
+            if (
+                $Article->{ $AddressParam }
+                && !$Self->ValidateEmail( Email => $Article->{ $AddressParam } )
+            ) {
+                return {
+                    ErrorCode    => 'TicketUpdate.InvalidParameter',
+                    ErrorMessage => 'TicketUpdate: Article->' . $AddressParam . ' parameter is invalid!',
+                };
+            }
+        }
+
+        # check sign parameter
+        if ( ref( $Article->{Sign} ) eq 'HASH' ) {
+            for my $SignParam ( qw(Type SubType Key) ) {
+                if ( !$Article->{Sign}->{ $SignParam } ) {
+                    return {
+                        ErrorCode    => 'TicketUpdate.MissingParameter',
+                        ErrorMessage => 'TicketUpdate: Article->Sign->' . $SignParam . ' is required in Sign hash!',
+                    };
+                }
+            }
+
+            if ( $Article->{Sign}->{Type} !~ m/^(?:PGP|SMIME)$/ ) {
+                return {
+                    ErrorCode    => 'TicketUpdate.InvalidParameter',
+                    ErrorMessage => 'TicketUpdate: Article->Sign->Type parameter is invalid! Only "PGP" and "SMIME" are allowed.',
+                };
+            }
+
+            if (
+                $Article->{Sign}->{Type} eq 'PGP'
+                && $Article->{Sign}->{SubType} !~ m/^(?:Detached|Inline)$/
+            ) {
+                return {
+                    ErrorCode    => 'TicketUpdate.InvalidParameter',
+                    ErrorMessage => 'TicketUpdate: Article->Sign->SubType parameter is invalid! Only "Detached" and "Inline" are allowed for type "PGP".',
+                };
+            }
+            elsif (
+                $Article->{Sign}->{Type} eq 'SMIME'
+                && $Article->{Sign}->{SubType} ne 'Detached'
+            ) {
+                return {
+                    ErrorCode    => 'TicketUpdate.InvalidParameter',
+                    ErrorMessage => 'TicketUpdate: Article->Sign->SubType parameter is invalid! Only "Detached" is allowed for type "SMIME".',
+                };
+            }
+        }
+        elsif ( defined( $Article->{Sign} ) ) {
+            return {
+                ErrorCode    => 'TicketUpdate.InvalidParameter',
+                ErrorMessage => 'TicketUpdate: Article->Sign parameter has to be hash if defined!',
+            };
+        }
+
+        # check crypt parameter
+        if ( ref( $Article->{Crypt} ) eq 'HASH' ) {
+            for my $SignParam ( qw(Type Key) ) {
+                if ( !$Article->{Crypt}->{ $SignParam } ) {
+                    return {
+                        ErrorCode    => 'TicketUpdate.MissingParameter',
+                        ErrorMessage => 'TicketUpdate: Article->Crypt->' . $SignParam . ' is required in Crypt hash!',
+                    };
+                }
+            }
+
+            if ( $Article->{Crypt}->{Type} !~ m/^(?:PGP|SMIME)$/ ) {
+                return {
+                    ErrorCode    => 'TicketUpdate.InvalidParameter',
+                    ErrorMessage => 'TicketUpdate: Article->Crypt->Type parameter is invalid! Only "PGP" and "SMIME" are allowed.',
+                };
+            }
+
+            if (
+                $Article->{Crypt}->{Type} eq 'PGP'
+                && $Article->{Crypt}->{SubType} !~ m/^(?:Detached|Inline)$/
+            ) {
+                return {
+                    ErrorCode    => 'TicketUpdate.InvalidParameter',
+                    ErrorMessage => 'TicketUpdate: Article->Crypt->SubType parameter is invalid! Only "Detached" and "Inline" are allowed for type "PGP".',
+                };
+            }
+        }
+        elsif ( defined( $Article->{Crypt} ) ) {
+            return {
+                ErrorCode    => 'TicketUpdate.InvalidParameter',
+                ErrorMessage => 'TicketUpdate: Article->Crypt parameter has to be hash if defined!',
+            };
+        }
+    }
+
     # check Article->ContentType vs Article->MimeType and Article->Charset
     if ( !$Article->{ContentType} && !$Article->{MimeType} && !$Article->{Charset} ) {
         return {
@@ -1393,9 +1519,9 @@ sub _TicketUpdate {
     my $DynamicFieldList = $Param{DynamicFieldList};
     my $AttachmentList   = $Param{AttachmentList};
 
-    my $Access = $Self->_CheckUpdatePermissions(%Param);
 
     # if no permissions return error
+    my $Access = $Self->_CheckUpdatePermissions(%Param);
     if ( !$Access->{Success} ) {
         return $Self->ReturnError( %{$Access} );
     }
@@ -1927,6 +2053,25 @@ sub _TicketUpdate {
         if ( $Article->{From} ) {
             $From = $Article->{From};
         }
+
+        # use data from queue if article should be send
+        elsif ( $Article->{ArticleSend} ) {
+            my $QueueID;
+            if ( $Ticket->{QueueID} ) {
+                $QueueID = $Ticket->{QueueID};
+            }
+            elsif( $Ticket->{Queue} ) {
+                $QueueID = $Kernel::OM->Get('Kernel::System::Queue')->QueueLookup(
+                    Queue => $Ticket->{Queue},
+                );
+            }
+
+            my %SystemAddress = $Kernel::OM->Get('Kernel::System::Queue')->GetSystemAddress(
+                QueueID => $QueueID || $TicketData{QueueID},
+            );
+            $From = '"' . $SystemAddress{RealName} . '" <' . $SystemAddress{Email} . '>';
+        }
+
         elsif ( $Param{UserType} eq 'Customer' ) {
 
             # use data from customer user (if customer user is in database)
@@ -1950,45 +2095,125 @@ sub _TicketUpdate {
         }
 
         # set Article To
-        my $To = '';
+        my $To;
+        if ( $Article->{To} ) {
+            $To = $Article->{To};
+        }
+        elsif ( $Ticket->{Queue} ) {
+            $To = $Ticket->{Queue};
+        }
+        else {
+            $To = $Kernel::OM->Get('Kernel::System::Queue')->QueueLookup(
+                QueueID => $Ticket->{QueueID},
+            );
+        }
+
+        # check if signature of queue should be appended to body
+        if ( $Article->{AppendQueueSignature} ) {
+            # get signature
+            my $Signature = $Kernel::OM->Get('Kernel::System::TemplateGenerator')->Signature(
+                Data     => { TicketID => $TicketID },
+                UserID   => $Param{UserID},
+                TicketID => $TicketID,
+            );
+
+            # check mimetype
+            if (
+                (
+                    $Article->{ContentType}
+                    && $Article->{ContentType} =~ /text\/html/i
+                )
+                || (
+                    $Article->{MimeType}
+                && $Article->{MimeType} =~ /text\/html/i
+                )
+            ) {
+                $Article->{Body} .= '<br/><br/>' . $Signature;
+            }
+            else {
+                $Article->{Body} .= "\n\n" . $Signature;
+            }
+        }
 
         my $PlainBody = $Article->{Body};
 
         # Convert article body to plain text, if HTML content was supplied. This is necessary since auto response code
         #   expects plain text content. Please see bug#13397 for more information.
-        if ( $Article->{ContentType} =~ /text\/html/i || $Article->{MimeType} =~ /text\/html/i ) {
+        if (
+            (
+                $Article->{ContentType}
+                && $Article->{ContentType} =~ /text\/html/i
+            )
+            || (
+                $Article->{MimeType}
+                && $Article->{MimeType} =~ /text\/html/i
+            )
+        ) {
             $PlainBody = $Kernel::OM->Get('Kernel::System::HTMLUtils')->ToAscii(
                 String => $Article->{Body},
             );
         }
 
+        # init default values
+        $Article->{NoAgentNotify}  ||= 0;
+        $Article->{HistoryComment} ||= '%%';
+        for my $InitParam ( qw(ArticleTypeID ArticleType SenderTypeID SenderType Cc Bcc ReplyTo MimeType Charset ContentType) ) {
+            $Article->{ $InitParam }  ||= '';
+        }
+
+        # set attachments
+        if ( IsArrayRefWithData($AttachmentList) ) {
+            for my $Attachment ( @{ $AttachmentList } ) {
+                my $Result = $Self->PrepareAttachment(
+                    Attachment => $Attachment,
+                );
+
+                if ( !$Result->{Success} ) {
+                    my $ErrorMessage = $Result->{ErrorMessage} || "Attachment could not be prepared, please contact the system administrator";
+
+                    return {
+                        Success      => 0,
+                        ErrorMessage => $ErrorMessage,
+                    };
+                }
+            }
+
+            $Article->{Attachment} = $AttachmentList;
+        }
+
         # create article
-        $ArticleID = $TicketObject->ArticleCreate(
-            NoAgentNotify    => $Article->{NoAgentNotify} || 0,
-            TicketID         => $TicketID,
-            ArticleTypeID    => $Article->{ArticleTypeID} || '',
-            ArticleType      => $Article->{ArticleType} || '',
-            SenderTypeID     => $Article->{SenderTypeID} || '',
-            SenderType       => $Article->{SenderType} || '',
-            From             => $From,
-            To               => $To,
-            Subject          => $Article->{Subject},
-            Body             => $Article->{Body},
-            MimeType         => $Article->{MimeType} || '',
-            Charset          => $Article->{Charset} || '',
-            ContentType      => $Article->{ContentType} || '',
-            UserID           => $Param{UserID},
-            HistoryType      => $Article->{HistoryType},
-            HistoryComment   => $Article->{HistoryComment} || '%%',
-            AutoResponseType => $Article->{AutoResponseType},
-            UnlockOnAway     => $UnlockOnAway,
-            OrigHeader       => {
-                From    => $From,
-                To      => $To,
-                Subject => $Article->{Subject},
-                Body    => $PlainBody,
-            },
-        );
+        if ( $Article->{ArticleSend} ) {
+            $ArticleID = $TicketObject->ArticleSend(
+                %{ $Article },
+                TicketID     => $TicketID,
+                From         => $From,
+                To           => $To,
+                UnlockOnAway => $UnlockOnAway,
+                UserID       => $Param{UserID},
+                OrigHeader   => {
+                    From    => $From,
+                    To      => $To,
+                    Subject => $Article->{Subject},
+                    Body    => $PlainBody,
+                },
+            );
+        }
+        else {
+            $ArticleID = $TicketObject->ArticleCreate(
+                %{ $Article },
+                TicketID     => $TicketID,
+                From         => $From,
+                To           => $To,
+                UnlockOnAway => $UnlockOnAway,
+                UserID       => $Param{UserID},
+                OrigHeader   => {
+                    From    => $From,
+                    To      => $To,
+                    Subject => $Article->{Subject},
+                    Body    => $PlainBody,
+                },
+            );
+        }
 
         if ( !$ArticleID ) {
             return {
@@ -2022,27 +2247,6 @@ sub _TicketUpdate {
             my $ErrorMessage =
                 $Result->{ErrorMessage} || "Dynamic Field $DynamicField->{Name} could not be set,"
                 . " please contact the system administrator";
-
-            return {
-                Success      => 0,
-                ErrorMessage => $ErrorMessage,
-            };
-        }
-    }
-
-    # set attachments
-
-    for my $Attachment ( @{$AttachmentList} ) {
-        my $Result = $Self->CreateAttachment(
-            Attachment => $Attachment,
-            ArticleID  => $ArticleID || '',
-            UserID     => $Param{UserID}
-        );
-
-        if ( !$Result->{Success} ) {
-            my $ErrorMessage =
-                $Result->{ErrorMessage} || "Attachment could not be created, please contact the "
-                . " system administrator";
 
             return {
                 Success      => 0,
