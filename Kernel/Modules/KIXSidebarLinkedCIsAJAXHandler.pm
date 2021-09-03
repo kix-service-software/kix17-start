@@ -41,6 +41,7 @@ sub Run {
     my $LayoutObject         = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my $ConfigItemObject     = $Kernel::OM->Get('Kernel::System::ITSMConfigItem');
     my $GeneralCatalogObject = $Kernel::OM->Get('Kernel::System::GeneralCatalog');
+    my $TicketObject         = $Kernel::OM->Get('Kernel::System::Ticket');
     my $ParamObject          = $Kernel::OM->Get('Kernel::System::Web::Request');
     my $UserObject           = $Kernel::OM->Get('Kernel::System::User');
 
@@ -109,6 +110,21 @@ sub Run {
             UserID => $Self->{UserID},
         );
         $Param{CustomerUserID} = $UserData{UserLogin};
+    }
+
+    # if no customer user id given, lookup with ticket id
+    if (
+        !$Param{CustomerUserID}
+        && $Param{TicketID}
+    ) {
+        my %Ticket = $TicketObject->TicketGet(
+            TicketID      => $Param{TicketID},
+            DynamicFields => 0,
+            UserID        => $Self->{UserID},
+            Silent        => 0,
+        );
+
+        $Param{CustomerUserID} = $Ticket{CustomerUserID};
     }
 
     # reload attribute selection after removing attributes from filter dialog
