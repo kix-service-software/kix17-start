@@ -91,6 +91,9 @@
     .OverviewControl > div {
         padding: 0 16px 0 8px;
     }
+    .OverviewControl > div > .ControlRow{
+        padding-right: 55px;
+    }
     .ControlRow {
         position: relative;
         overflow: hidden;
