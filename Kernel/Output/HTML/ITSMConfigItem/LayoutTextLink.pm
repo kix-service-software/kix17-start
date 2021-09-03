@@ -109,7 +109,7 @@ sub OutputStringCreate {
         LinkFeature    => $LinkFeature,
     );
 
-    my $Link = $Param{Item}->{Input}->{URL};
+    my $Link = $Param{Item}->{Input}->{URL} || '';
     $Link =~ s/<VALUE>/$Param{Value}/;
     $Param{Value} =
           '<a href="'
