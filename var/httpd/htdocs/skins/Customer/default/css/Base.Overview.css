@@ -39,6 +39,7 @@
     }
     .LayoutFixedSidebar > .SidebarColumn {
         overflow-x: hidden;
+        height: 100%;
     }
     .LayoutFixedSidebar.SidebarFirst > .SidebarColumn {
         width: 270px;
