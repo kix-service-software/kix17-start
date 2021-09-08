@@ -37,6 +37,9 @@
     }
     .LayoutFixedSidebar > .SidebarColumn {
         overflow-x: hidden;
+        min-width: 250px;
+        max-width: 50%;
+        height: 100%;
     }
     .LayoutFixedSidebar.Dashboard > .SidebarColumn {
         overflow-x: visible;
@@ -90,6 +93,9 @@
     }
     .OverviewControl > div {
         padding: 0 16px 0 8px;
+    }
+    .OverviewControl > div > .ControlRow{
+        padding-right: 55px;
     }
     .ControlRow {
         position: relative;

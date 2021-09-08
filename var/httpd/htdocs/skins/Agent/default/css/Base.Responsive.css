@@ -485,13 +485,13 @@
     .WidgetSimple .Buttons span {
         font-size: 14px;
     }
-    .WidgetSimple .Content form {
+    :not(.SidebarColumn) > .WidgetSimple .Content form {
         display: block;
         width: 100%;
         overflow-y: hidden;
         overflow-x: auto;
     }
-    .WidgetSimple .Content form table.DataTable {
+    :not(.SidebarColumn) > .WidgetSimple .Content form table.DataTable {
         min-width: 500px;
     }
     .WidgetSimple .ActionMenu {

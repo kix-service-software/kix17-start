@@ -1925,13 +1925,14 @@ sub FAQTop10Get {
     my $ValidIDsString = join ', ', $Kernel::OM->Get('Kernel::System::Valid')->ValidIDsGet();
 
     # prepare SQL
-    my @Bind;
+    my @Bind = ( \$Param{Interface} );
     my $SQL = 'SELECT item_id, count(item_id) as itemcount, faq_state_type.name, approved '
         . 'FROM faq_log, faq_item, faq_state, faq_state_type '
         . 'WHERE faq_log.item_id = faq_item.id '
         . 'AND faq_item.state_id = faq_state.id '
         . "AND faq_item.valid_id IN ($ValidIDsString) "
-        . 'AND faq_state.type_id = faq_state_type.id ';
+        . 'AND faq_state.type_id = faq_state_type.id '
+        . 'AND faq_log.interface = ? ';
 
     # get database object
     my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
@@ -1970,15 +1971,16 @@ sub FAQTop10Get {
         # only show approved articles
         $SQL .= 'AND faq_item.approved = 1 ';
 
+    }
+
+    if ( $Param{Interface} eq 'public' ) {
         # only show the public articles
-        $SQL .= "AND ( ( faq_state_type.name = 'public' AND faq_log.interface = 'public' ) ";
+        $SQL .= "AND faq_state_type.name = 'public' ";
+    }
 
-        # customers can additionally see the external articles
-        if ( $Param{Interface} eq 'external' ) {
-            $SQL .= "OR ( faq_state_type.name = 'external' AND faq_log.interface = 'external' ) ";
-        }
-
-        $SQL .= ') ';
+    # customers can additionally see the external articles
+    if ( $Param{Interface} eq 'external' ) {
+        $SQL .= "AND ( faq_state_type.name = 'external' OR faq_state_type.name = 'public' ) ";
     }
 
     # filter results for defined time period
@@ -1989,7 +1991,7 @@ sub FAQTop10Get {
 
     # complete SQL statement
     $SQL .= 'GROUP BY item_id, faq_state_type.name, approved '
-        . 'ORDER BY itemcount DESC';
+        . 'ORDER BY itemcount DESC, item_id DESC';
 
     # get the top 10 article ids from database
     return [] if !$DBObject->Prepare(
