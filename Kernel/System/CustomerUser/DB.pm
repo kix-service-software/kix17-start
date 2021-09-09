@@ -260,7 +260,7 @@ sub CustomerSearch {
     elsif ( $Param{PostMasterSearch} ) {
         if (
             ref( $Self->{CustomerUserMap}->{CustomerUserPostMasterSearchFields} ) eq 'ARRAY'
-            @{ $Self->{CustomerUserMap}->{CustomerUserPostMasterSearchFields} }
+            && @{ $Self->{CustomerUserMap}->{CustomerUserPostMasterSearchFields} }
         ) {
             my $SQLExt = '';
             for my $Field ( @{ $Self->{CustomerUserMap}->{CustomerUserPostMasterSearchFields} } ) {
