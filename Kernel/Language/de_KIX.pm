@@ -4711,6 +4711,13 @@ sub Data {
     # GenericInferface LinkObject SysConfig
     $Lang->{'Defines if operations of the linkobject can only be used by an agent in group "admin" with "rw" permission.'}
         = 'Bestimmt ob die Operationen des Link-Objektes nur von einem Agenten der Gruppe "admin" mit "rw"-Berechtigung verwendet werden können.';
+    # EO GenericInferface LinkObject SysConfig
+
+    # Richtext browser context menu
+    $Lang->{'Use browser context menu'} = 'Kontextmenü des Browser verweden';
+    $Lang->{'Select to decide whether richtext or browser context menu should be used.'}
+        = 'Wählen Sie, ob das Kontextmenü des Browsers im Richtext Editor genutzt werden sollen.';
+    # EO Richtext browser context menu
 
     return 0;
 }
