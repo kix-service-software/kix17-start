@@ -1,6 +1,9 @@
 # Change log of KIX
 * Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.17.0-RC5 (2021/09/09)
+ * (2021/09/09) - Bugfix: KIX17-2402 (remove Description as mandatory attribut from Config in processes) (millinger)
+
 # 17.17.0-RC4 (2021/09/08)
  * (2021/09/03) - Bugfix: KIX17-2472 (fixed incorrect display of selection menu of checklist items in responsive mode) (fjacquemin)
  * (2021/09/03) - Bugfix: KIX17-1197 (fixed overlap of menu tabs in the control row) (fjacquemin)
