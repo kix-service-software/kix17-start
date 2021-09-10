@@ -1811,9 +1811,9 @@ sub FAQLogAdd {
     # check if a log entry exists newer than the ReloadBlockTime
     return if !$DBObject->Prepare(
         SQL => 'SELECT id FROM faq_log '
-            . 'WHERE item_id = ? AND ip = ? '
+            . 'WHERE item_id = ? AND ip = ? AND interface = ? '
             . 'AND user_agent = ? AND created >= ? ',
-        Bind  => [ \$Param{ItemID}, \$IP, \$UserAgent, \$TimeStamp ],
+        Bind  => [ \$Param{ItemID}, \$IP, \$Param{Interface}, \$UserAgent, \$TimeStamp ],
         Limit => 1,
     );
 
