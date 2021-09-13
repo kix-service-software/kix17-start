@@ -1570,13 +1570,14 @@ sub MaskForm {
     }
 
     $Param{ServicesStrg} = $LayoutObject->BuildSelection(
-        Data       => \%ServiceList,
-        Name       => 'ServiceIDs',
-        Multiple   => 1,
-        Size       => 5,
-        SelectedID => $Param{ServiceIDs},
-        TreeView   => $TreeView,
-        Class      => 'Modernize',
+        Data        => \%ServiceList,
+        Name        => 'ServiceIDs',
+        Multiple    => 1,
+        Size        => 5,
+        SelectedID  => $Param{ServiceIDs},
+        TreeView    => $TreeView,
+        Translation => $ConfigObject->Get('Ticket::ServiceTranslation') || 0,
+        Class       => 'Modernize',
     );
     $Param{TypesStrg} = $LayoutObject->BuildSelection(
         Data => {

@@ -435,8 +435,9 @@ sub Run {
 sub _RenderAjax {
     my ( $Self, %Param ) = @_;
 
-    # get layout object
+    # get needed object
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
     for my $Needed (qw(ProcessEntityID)) {
         if ( !$Param{$Needed} ) {
@@ -469,7 +470,7 @@ sub _RenderAjax {
 
     # get list type
     my $TreeView = 0;
-    if ( $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Frontend::ListType') eq 'tree' ) {
+    if ( $ConfigObject->Get('Ticket::Frontend::ListType') eq 'tree' ) {
         $TreeView = 1;
     }
 
@@ -716,8 +717,9 @@ sub _RenderAjax {
 # ---
             # check if priority needs to be recalculated
             if (
-                ( $Param{GetParam}->{ElementChanged} eq 'ServiceID'
-                || $Param{GetParam}->{ElementChanged} eq 'DynamicField_ITSMImpact'
+                (
+                    $Param{GetParam}->{ElementChanged} eq 'ServiceID'
+                    || $Param{GetParam}->{ElementChanged} eq 'DynamicField_ITSMImpact'
                 )
                 && $Param{GetParam}->{ServiceID}
                 && $Param{GetParam}->{DynamicField_ITSMImpact}
@@ -776,7 +778,7 @@ sub _RenderAjax {
                     Data         => $Data,
                     SelectedID   => $ParamObject->GetParam( Param => 'ServiceID' ) || '',
                     PossibleNone => 1,
-                    Translation  => 0,
+                    Translation  => $ConfigObject->Get('Ticket::ServiceTranslation') || 0,
                     TreeView     => $TreeView,
                     Max          => 100,
                 },
@@ -808,7 +810,7 @@ sub _RenderAjax {
                     Data         => $Data,
                     SelectedID   => $ParamObject->GetParam( Param => 'SLAID' ) || '',
                     PossibleNone => 1,
-                    Translation  => 0,
+                    Translation  => $ConfigObject->Get('Ticket::SLATranslation') || 0,
                     Max          => 100,
                 },
             );
@@ -3466,6 +3468,7 @@ sub _RenderSLA {
 
     # get layout object
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
     for my $Needed (qw(FormID)) {
         if ( !$Param{$Needed} ) {
@@ -3577,7 +3580,7 @@ sub _RenderSLA {
         SelectedValue => $SelectedValue,
         PossibleNone  => 1,
         Sort          => 'AlphanumericValue',
-        Translation   => 0,
+        Translation   => $ConfigObject->Get('Ticket::SLATranslation') || 0,
         Class         => "Modernize $ServerError",
         Max           => 200,
     );
@@ -3628,8 +3631,9 @@ sub _RenderSLA {
 sub _RenderService {
     my ( $Self, %Param ) = @_;
 
-    # get layout object
+    # get needed objects
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
     for my $Needed (qw(FormID)) {
         if ( !$Param{$Needed} ) {
@@ -3732,7 +3736,7 @@ sub _RenderService {
 
     # get list type
     my $TreeView = 0;
-    if ( $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Frontend::ListType') eq 'tree' ) {
+    if ( $ConfigObject->Get('Ticket::Frontend::ListType') eq 'tree' ) {
         $TreeView = 1;
     }
 
@@ -3745,7 +3749,7 @@ sub _RenderService {
         PossibleNone  => 1,
         TreeView      => $TreeView,
         Sort          => 'TreeView',
-        Translation   => 0,
+        Translation   => $ConfigObject->Get('Ticket::ServiceTranslation') || 0,
         Max           => 200,
     );
 
