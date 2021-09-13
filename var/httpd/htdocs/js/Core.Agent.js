@@ -678,13 +678,13 @@ Core.Agent = (function (TargetNS) {
                     $(this).hasClass('Hidden')
                     || $(this).hasClass('Options')
                 ) {
-                        return false;
+                    return false;
                 }
                 $.each($(this).children(), function() {
                     if (
                         (
                             $(this).is(':input')
-                            || $(this).hasClass('InputField_InputContainer')
+                            || $(this).hasClass('InputField_Container')
                             || $(this).find('#AttachmentUpload').length
                         )
                         && $(this).css('display') != 'none'
