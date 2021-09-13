@@ -14217,7 +14217,7 @@ Thanks for your help!
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::ServiceTranslation" Required="1" Valid="1">
-        <Description Translatable="1">Defines whether the service should be translated in the selection box.</Description>
+        <Description Translatable="1">Defines whether the service is translated in the selection box and ticket overviews (except in the admin area).</Description>
         <Group>Ticket</Group>
         <SubGroup>Core::Ticket</SubGroup>
         <Setting>
@@ -14228,7 +14228,7 @@ Thanks for your help!
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::SLATranslation" Required="1" Valid="1">
-        <Description Translatable="1">Defines whether the sla should be translated in the selection box.</Description>
+        <Description Translatable="1">Defines whether the sla is translated in the selection box and ticket overviews (except in the admin area).</Description>
         <Group>Ticket</Group>
         <SubGroup>Core::Ticket</SubGroup>
         <Setting>
@@ -17507,7 +17507,7 @@ Thanks for your help!
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::TypeTranslation" Required="1" Valid="1">
-        <Description Translatable="1">Defines whether the ticket type should be translated in the selection box.</Description>
+        <Description Translatable="1">Defines whether the ticket type is translated in the selection box and ticket overviews (except in the admin area).</Description>
         <Group>Ticket</Group>
         <SubGroup>Core::Ticket</SubGroup>
         <Setting>
