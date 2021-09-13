@@ -281,8 +281,10 @@ sub Data {
     $Lang->{'Module Registration for TicketTemplate Base Module.'}
         = 'Modulregistrierung für das Ticketvorlagen Basismodul.';
     $Lang->{'TicketTemplate Base Module'} = 'Ticketvorlagen Basismodul';
-    $Lang->{'Defines restrictions for the viewability of templates for contacts. Key contains the template key followed by double colon and a contact attribute, while value contains a regexp. Matching this regexp means no access to the template.'} 
-        = 'Legt Einschränkungen für die Sichtbarkeit von Vorlagen für Kontakte fest. Der Schlüssel besteht aus dem Vorlagen-Schlüssel, gefolgt von zwei Doppelpunkten und einem Kontakt-Attribut. Der Wert enthält eine RegExp. Trifft die Regexp zu, so besteht kein Zugriff auf die Vorlage.';
+    $Lang->{'Defines restrictions (blacklist) for the viewability of templates for contacts. Key contains the template key followed by double colon and a contact attribute, while value contains a regexp. Matching this regexp means no access to the template.'}
+        = 'Legt Einschränkungen (Blacklist) für die Sichtbarkeit von Vorlagen für Kontakte fest. Der Schlüssel besteht aus dem Vorlagen-Schlüssel, gefolgt von zwei Doppelpunkten und einem Kontakt-Attribut. Der Wert enthält eine RegExp. Trifft die Regexp zu, so besteht kein Zugriff auf die Vorlage.';
+    $Lang->{'Defines restrictions (whitelist) for the viewability of templates for contacts. Key contains the template key followed by double colon and a contact attribute, while value contains a regexp. Matching this regexp means no access to the template.'}
+        = 'Legt Einschränkungen (Whitelist) für die Sichtbarkeit von Vorlagen für Kontakte fest. Der Schlüssel besteht aus dem Vorlagen-Schlüssel, gefolgt von zwei Doppelpunkten und einem Kontakt-Attribut. Der Wert enthält eine RegExp. Trifft die Regexp zu, so besteht kein Zugriff auf die Vorlage.';
     $Lang->{'Defines a one-line description for each template.'}
         = 'Legt einzeilige Beschreibungen für Vorlagen fest.';
 

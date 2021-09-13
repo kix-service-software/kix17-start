@@ -30,10 +30,43 @@ local $Kernel::OM = Kernel::System::ObjectManager->new(
 
 use vars qw(%INC);
 
+# switched configuration
+_SwitchConfig();
+
 # remove obsolete files
 _RemoveObsoleteFiles();
 
 exit 0;
+
+sub _SwitchConfig {
+    my ( $Self, %Param ) = @_;
+
+    # get config values to save from config object
+    my %ConfigBackup = ();
+    my $Config   = $Kernel::OM->Get('Kernel::Config')->Get( 'Ticket::Frontend::CustomerTicketTemplates' );
+    for my $Key ( qw( UserAttributeRestriction ) ) {
+        my $Data = $Config->{$Key};
+
+        if ( ref $Data eq 'HASH' ) {
+            for my $Entry ( sort keys %{$Data} ) {
+                next ENTRY if $ConfigBackup{$Entry} && $ConfigBackup{$Entry} eq $Data->{$Entry};
+
+                $ConfigBackup{$Entry} = $Data->{$Entry};
+            }
+        }
+    }
+
+    return if !%ConfigBackup;
+
+    # update SysConfig
+    my $Result = $Kernel::OM->Get('Kernel::System::SysConfig')->ConfigItemUpdate(
+        Key   => 'Ticket::Frontend::CustomerTicketTemplates###UserAttributeBlacklist',
+        Value => \%ConfigBackup,
+        Valid => 1,
+    );
+
+    return $Result;
+}
 
 sub _RemoveObsoleteFiles {
 
