@@ -615,8 +615,8 @@ sub Data {
         'Create new phone ticket from "default user support"-template'
         }
         = 'Erstellt neues Telefonticket von der Vorlage "default user support"';
-    $Lang->{'Defines whether the ticket type should be translated in the selection box.'}
-        = 'Definiert, ob der Tickettyp in der Auswahlbox übersetzt wird.';
+    $Lang->{'Defines whether the ticket type is translated in the selection box and ticket overviews (except in the admin area).'}
+        = 'Definiert, ob der Tickettyp in der Auswahlbox und Ticketübersichten übersetzt wird (ausgenommen im Adminbereich).';
     $Lang->{'Do you really want to delete this template?'}
         = 'Wollen Sie diese Vorlage wirklich löschen?';
     $Lang->{'Delete this template'}
@@ -4142,10 +4142,10 @@ sub Data {
     $Lang->{'ascending'}         = 'aufsteigend';
     $Lang->{'descending'}        = 'absteigend';
     $Lang->{'CustomerUserID'}    = 'KundennutzerID';
-    $Lang->{'Defines whether the service should be translated in the selection box.'}
-        = 'Legt fest, ob der Service in Auswahlfeldern übersetzt werden soll.';
-    $Lang->{'Defines whether the sla should be translated in the selection box.'}
-        = 'Legt fest, ob die SLA in Auswahlfeldern übersetzt werden soll.';
+    $Lang->{'Defines whether the service is translated in the selection box and ticket overviews (except in the admin area).'}
+        = 'Definiert, ob der Service in der Auswahlbox und Ticketübersichten übersetzt wird (ausgenommen im Adminbereich).';
+    $Lang->{'Defines whether the sla is translated in the selection box and ticket overviews (except in the admin area).'}
+        = 'Definiert, ob der SLA in der Auswahlbox und Ticketübersichten übersetzt wird (ausgenommen im Adminbereich).';
 
     $Lang->{'Alternative to'}        = 'Alternativ zu';
     $Lang->{'Availability'}          = 'Verfügbarkeit';
