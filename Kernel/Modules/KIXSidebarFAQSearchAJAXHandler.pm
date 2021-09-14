@@ -177,7 +177,7 @@ sub Run {
             Data => {
                 Identifier  => $Self->{Identifier},
                 FAQID       => $ID,
-                }
+            }
         );
 
         if ($FAQLink) {
@@ -194,7 +194,7 @@ sub Run {
                     LinkMode       => $LinkMode,
                     LinkType       => $LinkType,
                     IsChecked      => $Checked,
-                    }
+                }
             );
         }
 
@@ -205,7 +205,7 @@ sub Run {
                     Result      => $Result,
                     ResultShort => $ResultShort,
                     FAQID       => $ID,
-                    }
+                }
             );
         }
         else {
@@ -216,10 +216,9 @@ sub Run {
                     ResultShort => $ResultShort,
                     FAQID       => $ID,
                     Frontend    => $Frontend,
-                    }
+                }
             );
         }
-
     }
 
     # output result
@@ -238,7 +237,6 @@ sub Run {
         Type    => 'inline',
         NoCache => 1,
     );
-
 }
 
 1;
