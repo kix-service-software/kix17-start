@@ -21,6 +21,7 @@
         <input type="hidden" value="" name="SelectedSearchFields" id="SelectedSearchFields" />
         <input type="hidden" value="" name="SelectedClass" id="SelectedClass" />
         <input type="hidden" value="[% Data.CustomerUserID %]" name="KIXSidebarCustomerUserID" />
+        <input type="hidden" value="[% Data.CustomerID %]" name="KIXSidebarCustomerID" />
         <fieldset class="TableLike"  style="width:500px;" id="KIXSidebarLinkedConfigItemAttributes">
             <label for="KIXSidebarLinkedCIAttribute">[% Translate("Attribute") | html %]:</label>
             <div class="Field">
@@ -93,6 +94,7 @@
 
     var CallingAction = '',
         CustomerUserID = $('#KIXSidebarCustomerUserID').val(),
+        CustomerID = $('#KIXSidebarCustomerID').val(),
         FormID = $('input[name=FormID]').val();
 
     // get calling action
@@ -102,10 +104,11 @@
         }
     });
 
-    // reload assigned config item sidebar if selected user changed
-    $('#SelectedCustomerUser').on('change',function(){
+    // reload assigned config item sidebar if selected user or company changed
+    $('#SelectedCustomerUser,#CustomerID').on('change',function(){
         var SelectedCustomerUser = $('#SelectedCustomerUser').val(),
-            URL = 'Action=KIXSidebarLinkedCIsAJAXHandler;CallingAction=' + CallingAction + ';CustomerUserID=' + SelectedCustomerUser + ';FormID=' + FormID;
+            SelectedCustomer = $('#CustomerID').val(),
+            URL = 'Action=KIXSidebarLinkedCIsAJAXHandler;CallingAction=' + CallingAction + ';CustomerUserID=' + SelectedCustomerUser + ';CustomerID=' + SelectedCustomer + ';FormID=' + FormID;
         Core.AJAX.FunctionCall(Core.Config.Get('CGIHandle'), URL, function (Result) {
             $('#LinkConfigItemStrgContainer').html(Result);
             initLinkedCICheckboxes();
@@ -117,6 +120,7 @@
     $('#ConfigItemClass').on('change',function(){
         // get ticket id
         var TicketID = '';
+
         if ( $('#TicketID').length ) {
             TicketID = $('#TicketID').val();
         }
@@ -126,15 +130,20 @@
             CustomerUserID = $('#SelectedCustomerUser').val();
         }
 
+        // get customer id
+        if ( $('#CustomerID').length ) {
+            CustomerID = $('#CustomerID').val();
+        }
+
         var Class = $('#ConfigItemClass').val(),
-            URL = Core.Config.Get('CGIHandle') + '?Action=KIXSidebarLinkedCIsAJAXHandler;CallingAction=' + CallingAction + ';CustomerUserID=' + CustomerUserID + ';FormID=' + FormID + ';ConfigItemClass=' + Class + ';TicketID=' + TicketID;
+            URL = Core.Config.Get('CGIHandle') + '?Action=KIXSidebarLinkedCIsAJAXHandler;CallingAction=' + CallingAction + ';CustomerUserID=' + CustomerUserID + ';CustomerID=' + CustomerID + ';FormID=' + FormID + ';ConfigItemClass=' + Class + ';TicketID=' + TicketID;
         Core.AJAX.ContentUpdate($('#LinkConfigItemStrgContainer'), URL , function () {
             initLinkedCICheckboxes();
         });
 
         // reload attribute selection for this class
         var Data = Core.AJAX.SerializeForm($('#KIXSidebarLinkedConfigItemDialogForm')),
-            URL = Core.Config.Get('CGIHandle') + '?Action=KIXSidebarLinkedCIsAJAXHandler;Subaction=AJAXUpdateSelection;CallingAction=' + CallingAction + ';CustomerUserID=' + CustomerUserID + ';FormID=' + FormID + ';ConfigItemClass=' + Class + ';' + Data + ';TicketID=' + TicketID;
+            URL = Core.Config.Get('CGIHandle') + '?Action=KIXSidebarLinkedCIsAJAXHandler;Subaction=AJAXUpdateSelection;CallingAction=' + CallingAction + ';CustomerUserID=' + CustomerUserID + ';CustomerID=' + CustomerID + ';FormID=' + FormID + ';ConfigItemClass=' + Class + ';' + Data + ';TicketID=' + TicketID;
         Core.AJAX.ContentUpdate($('#KIXSidebarLinkedCIAttribute'), URL , function () {
             $('#KIXSidebarLinkedConfigItemResetClassFilter').addClass('Hidden');
             initLinkedCICheckboxes();
@@ -150,7 +159,7 @@
                 Label: [% Translate("Apply") | JSON %],
                 Function: function () {
                     var Data = Core.AJAX.SerializeForm($('#KIXSidebarLinkedConfigItemDialogForm')),
-                        ExtendedData = 'CallingAction=' + CallingAction + ';CustomerUserID=' + CustomerUserID + ';FormID=' + FormID + ';ConfigItemClass=' + Class;
+                        ExtendedData = 'CallingAction=' + CallingAction + ';CustomerUserID=' + CustomerUserID + ';CustomerID=' + CustomerID + ';FormID=' + FormID + ';ConfigItemClass=' + Class;
 
                     Core.AJAX.ContentUpdate($('#LinkConfigItemStrgContainer'), Core.Config.Get('CGIHandle') + '?' + Data + ExtendedData , function () {
                         initLinkedCICheckboxes();
@@ -171,7 +180,7 @@
     // reset filter
     $('#KIXSidebarLinkedConfigItemResetClassFilter').on('click', function (Event) {
             var Class = $('#ConfigItemClass').val(),
-                URL = Core.Config.Get('CGIHandle') + '?Action=KIXSidebarLinkedCIsAJAXHandler;CallingAction=' + CallingAction + ';CustomerUserID=' + CustomerUserID + ';FormID=' + FormID + ';ConfigItemClass=' + Class;
+                URL = Core.Config.Get('CGIHandle') + '?Action=KIXSidebarLinkedCIsAJAXHandler;CallingAction=' + CallingAction + ';CustomerUserID=' + CustomerUserID + ';CustomerID=' + CustomerID + ';FormID=' + FormID + ';ConfigItemClass=' + Class;
 
             Core.AJAX.ContentUpdate($('#LinkConfigItemStrgContainer'), URL , function () {
                 initLinkedCICheckboxes();
@@ -238,7 +247,7 @@
 
         // add option to selection again
         var Data = Core.AJAX.SerializeForm($('#KIXSidebarLinkedConfigItemDialogForm')),
-            URL = Core.Config.Get('CGIHandle') + '?Action=KIXSidebarLinkedCIsAJAXHandler;Subaction=AJAXUpdateSelection;CallingAction=' + CallingAction + ';CustomerUserID=' + CustomerUserID + ';FormID=' + FormID + ';ConfigItemClass=' + Class + ';' + Data;
+            URL = Core.Config.Get('CGIHandle') + '?Action=KIXSidebarLinkedCIsAJAXHandler;Subaction=AJAXUpdateSelection;CallingAction=' + CallingAction + ';CustomerUserID=' + CustomerUserID + ';CustomerID=' + CustomerID + ';FormID=' + FormID + ';ConfigItemClass=' + Class + ';' + Data;
         Core.AJAX.ContentUpdate($('#KIXSidebarLinkedCIAttribute'), URL , function () {
             initLinkedCICheckboxes();
         });
