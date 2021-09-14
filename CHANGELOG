@@ -1,6 +1,18 @@
 # Change log of KIX
 * Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.17.0-RC6 (2021/09/14)
+ * (2021/09/13) - Bugfix: KIX17-2380 (changed configuration description and translation of Service-,SLA-,TicketTranslation) (fjacquemin)
+ * (2021/09/13) - CR: KIX17-2380 (fixed incorrect text size in the overlay of selected FAQ from KIXSidebar KIXSBSimiliarFAQ) (fjacquemin)
+ * (2021/09/13) - Bugfix: KIX17-2380 (fixed overlay of selected FAQ from Customer-KIXSibebar KIXSBSimiliarFAQ) (fjacquemin)
+ * (2021/09/13) - CR: KIX17-2519 (extend generic interface debugger to use array ref data) (millinger)
+ * (2021/09/13) - Bugfix: KIX17-2380 (fixed missing translation of filter note by add new config item) (fjacquemin)
+ * (2021/09/10) - Bugfix: KIX17-2332 (added service and sla translation for selecitons) (fjacquemin)
+ * (2021/09/10) - Bugfix: KIX17-588 (changed display of import result of ticket templates) (fjacquemin)
+ * (2021/09/10) - Bugfix: KIX17-2442 (block faq log based on interface) (millinger)
+ * (2021/09/09) - CR: KIX17-2518 (changed templates restriction of the CustomerTicketTemplates) (fjacquemin)
+ * (2021/09/09) - CR: KIX17-2258 (agent preference to use browser context menu in richtext editor) (millinger)
+
 # 17.17.0-RC5 (2021/09/09)
  * (2021/09/09) - Bugfix: KIX17-2402 (remove Description as mandatory attribut from Config in processes) (millinger)
 
