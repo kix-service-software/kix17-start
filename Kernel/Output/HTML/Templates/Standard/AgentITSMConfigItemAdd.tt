@@ -19,7 +19,7 @@
                  <h2><span><label for="FilterClasses">[% Translate("Filter for Classes") | html %]</label></span></h2>
             </div>
             <div class="Content">
-                <input type="text" id="FilterClasses" class="FilterBox" name="FilterClasses" value="" title="[% Translate("Filter for Classes") | html %]" placeholder="Just start typing to filter..." />
+                <input type="text" id="FilterClasses" class="FilterBox" name="FilterClasses" value="" title="[% Translate("Filter for Classes") | html %]" placeholder="[% Translate("Just start typing to filter...") %]" />
             </div>
         </div>
 
