@@ -281,8 +281,10 @@ sub Data {
     $Lang->{'Module Registration for TicketTemplate Base Module.'}
         = 'Modulregistrierung für das Ticketvorlagen Basismodul.';
     $Lang->{'TicketTemplate Base Module'} = 'Ticketvorlagen Basismodul';
-    $Lang->{'Defines restrictions for the viewability of templates for contacts. Key contains the template key followed by double colon and a contact attribute, while value contains a regexp. Matching this regexp means no access to the template.'} 
-        = 'Legt Einschränkungen für die Sichtbarkeit von Vorlagen für Kontakte fest. Der Schlüssel besteht aus dem Vorlagen-Schlüssel, gefolgt von zwei Doppelpunkten und einem Kontakt-Attribut. Der Wert enthält eine RegExp. Trifft die Regexp zu, so besteht kein Zugriff auf die Vorlage.';
+    $Lang->{'Defines restrictions (blacklist) for the viewability of templates for contacts. Key contains the template key followed by double colon and a contact attribute, while value contains a regexp. Matching this regexp means no access to the template.'}
+        = 'Legt Einschränkungen (Blacklist) für die Sichtbarkeit von Vorlagen für Kontakte fest. Der Schlüssel besteht aus dem Vorlagen-Schlüssel, gefolgt von zwei Doppelpunkten und einem Kontakt-Attribut. Der Wert enthält eine RegExp. Trifft die Regexp zu, so besteht kein Zugriff auf die Vorlage.';
+    $Lang->{'Defines restrictions (whitelist) for the viewability of templates for contacts. Key contains the template key followed by double colon and a contact attribute, while value contains a regexp. Matching this regexp means no access to the template.'}
+        = 'Legt Einschränkungen (Whitelist) für die Sichtbarkeit von Vorlagen für Kontakte fest. Der Schlüssel besteht aus dem Vorlagen-Schlüssel, gefolgt von zwei Doppelpunkten und einem Kontakt-Attribut. Der Wert enthält eine RegExp. Trifft die Regexp zu, so besteht kein Zugriff auf die Vorlage.';
     $Lang->{'Defines a one-line description for each template.'}
         = 'Legt einzeilige Beschreibungen für Vorlagen fest.';
 
@@ -613,8 +615,8 @@ sub Data {
         'Create new phone ticket from "default user support"-template'
         }
         = 'Erstellt neues Telefonticket von der Vorlage "default user support"';
-    $Lang->{'Defines whether the ticket type should be translated in the selection box.'}
-        = 'Definiert, ob der Tickettyp in der Auswahlbox übersetzt wird.';
+    $Lang->{'Defines whether the ticket type is translated in the selection box and ticket overviews (except in the admin area).'}
+        = 'Definiert, ob der Tickettyp in der Auswahlbox und Ticketübersichten übersetzt wird (ausgenommen im Adminbereich).';
     $Lang->{'Do you really want to delete this template?'}
         = 'Wollen Sie diese Vorlage wirklich löschen?';
     $Lang->{'Delete this template'}
@@ -4140,10 +4142,10 @@ sub Data {
     $Lang->{'ascending'}         = 'aufsteigend';
     $Lang->{'descending'}        = 'absteigend';
     $Lang->{'CustomerUserID'}    = 'KundennutzerID';
-    $Lang->{'Defines whether the service should be translated in the selection box.'}
-        = 'Legt fest, ob der Service in Auswahlfeldern übersetzt werden soll.';
-    $Lang->{'Defines whether the sla should be translated in the selection box.'}
-        = 'Legt fest, ob die SLA in Auswahlfeldern übersetzt werden soll.';
+    $Lang->{'Defines whether the service is translated in the selection box and ticket overviews (except in the admin area).'}
+        = 'Definiert, ob der Service in der Auswahlbox und Ticketübersichten übersetzt wird (ausgenommen im Adminbereich).';
+    $Lang->{'Defines whether the sla is translated in the selection box and ticket overviews (except in the admin area).'}
+        = 'Definiert, ob der SLA in der Auswahlbox und Ticketübersichten übersetzt wird (ausgenommen im Adminbereich).';
 
     $Lang->{'Alternative to'}        = 'Alternativ zu';
     $Lang->{'Availability'}          = 'Verfügbarkeit';
@@ -4711,6 +4713,13 @@ sub Data {
     # GenericInferface LinkObject SysConfig
     $Lang->{'Defines if operations of the linkobject can only be used by an agent in group "admin" with "rw" permission.'}
         = 'Bestimmt ob die Operationen des Link-Objektes nur von einem Agenten der Gruppe "admin" mit "rw"-Berechtigung verwendet werden können.';
+    # EO GenericInferface LinkObject SysConfig
+
+    # Richtext browser context menu
+    $Lang->{'Use browser context menu'} = 'Kontextmenü des Browser verweden';
+    $Lang->{'Select to decide whether richtext or browser context menu should be used.'}
+        = 'Wählen Sie, ob das Kontextmenü des Browsers im Richtext Editor genutzt werden sollen.';
+    # EO Richtext browser context menu
 
     return 0;
 }

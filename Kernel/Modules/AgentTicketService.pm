@@ -1082,9 +1082,10 @@ sub _MaskServiceViewDropDown {
         }
 
         $Param{ServiceStrg} .= $LayoutObject->BuildSelection(
-            Data       => \%ServiceLevelList,
-            SelectedID => $ServiceStrg{$ServiceLevel}->{SelectedID},
-            Name       => "ServiceID[$ServiceLevel]",
+            Data        => \%ServiceLevelList,
+            SelectedID  => $ServiceStrg{$ServiceLevel}->{SelectedID},
+            Name        => "ServiceID[$ServiceLevel]",
+            Translation => $ConfigObject->Get('Ticket::ServiceTranslation') || 0
         );
         $ParentFilter = $ServiceStrg{$ServiceLevel}->{Selected};
     }

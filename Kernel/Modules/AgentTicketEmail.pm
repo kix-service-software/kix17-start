@@ -2665,7 +2665,7 @@ sub Run {
                     Data            => $ListOptionJson->{Services}->{Data},
                     SelectedID      => $GetParam{ServiceID},
                     PossibleNone    => 1,
-                    Translation     => 0,
+                    Translation     => $ConfigObject->Get('Ticket::ServiceTranslation') || 0,
                     TreeView        => $TreeView,
                     DisabledOptions => $ListOptionJson->{Services}->{DisabledOptions} || 0,
                     Max             => 100,
@@ -2675,7 +2675,7 @@ sub Run {
                     Data         => $SLAs,
                     SelectedID   => $GetParam{SLAID},
                     PossibleNone => 1,
-                    Translation  => 0,
+                    Translation  => $ConfigObject->Get('Ticket::SLATranslation') || 0,
                     Max          => 100,
                 },
                 {
@@ -3423,7 +3423,7 @@ sub _MaskEmailNew {
                 TreeView        => $TreeView,
                 Sort            => 'TreeView',
                 DisabledOptions => $ListOptionJson->{Services}->{DisabledOptions} || 0,
-                Translation     => 0,
+                Translation     => $ConfigObject->Get('Ticket::ServiceTranslation') || 0,
                 Max             => 200,
             );
             $LayoutObject->Block(
@@ -3441,7 +3441,7 @@ sub _MaskEmailNew {
                 TreeView        => $TreeView,
                 Sort            => 'TreeView',
                 DisabledOptions => $ListOptionJson->{Services}->{DisabledOptions} || 0,
-                Translation     => 0,
+                Translation     => $ConfigObject->Get('Ticket::ServiceTranslation') || 0,
                 Max             => 200,
             );
             $LayoutObject->Block(
@@ -3458,7 +3458,7 @@ sub _MaskEmailNew {
                 Class        => 'Validate_Required Modernize ' . ( $Param{Errors}->{SLAInvalid} || ' ' ),
                 PossibleNone => 1,
                 Sort         => 'AlphanumericValue',
-                Translation  => 0,
+                Translation  => $ConfigObject->Get('Ticket::SLATranslation') || 0,
                 Max          => 200,
             );
             $LayoutObject->Block(
@@ -3474,7 +3474,7 @@ sub _MaskEmailNew {
                 Class        => 'Modernize',
                 PossibleNone => 1,
                 Sort         => 'AlphanumericValue',
-                Translation  => 0,
+                Translation  => $ConfigObject->Get('Ticket::SLATranslation') || 0,
                 Max          => 200,
             );
             $LayoutObject->Block(

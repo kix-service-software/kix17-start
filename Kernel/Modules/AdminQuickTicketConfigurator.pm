@@ -797,10 +797,11 @@ sub Run {
                 %UploadResult = %{
                     $TicketObject->TicketTemplateImport(
                         Content  => $UploadStuff{Content},
-                        DoNotAdd => $GetParam{XMLUploadDoNotAdd},
                         UserID   => $Self->{UserID},
                     )
                 };
+
+                $UploadResult{Filename} = $UploadFileName;
 
                 if ( $UploadResult{XMLResultString} ) {
                     my $DownloadFileName = $UploadFileName;
@@ -821,13 +822,15 @@ sub Run {
                     $Param{XMLResultFileName} = $DownloadFileName;
                     $Param{XMLResultFileSize} = length( $UploadStuff{Content} );
                 }
+
                 if ( !$UploadResult{UploadMessage} ) {
-                    $UploadResult{UploadMessage} = $UploadStuff{Filename} . ' successful loaded.<br /><br />';
+                    $UploadResult{UploadMessage} = 'successful loaded.';
                 }
             }
         }
         else {
-            $Param{UploadMessage} = 'Import failed - No file uploaded/received. <br /><br />';
+            $Param{UploadMessage} = 'Import failed - No file uploaded/received.';
+            $Param{UploadState}   = 'Error';
         }
 
         # output upload
@@ -841,7 +844,11 @@ sub Run {
         # output overview list
         $LayoutObject->Block(
             Name => 'UploadResult',
-            Data => { %GetParam, %Param, %UploadResult },
+            Data => {
+                %GetParam,
+                %Param,
+                %UploadResult
+            },
         );
     }
 

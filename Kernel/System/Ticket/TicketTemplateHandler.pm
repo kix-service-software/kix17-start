@@ -758,8 +758,7 @@ sub TicketTemplateDelete {
 
 Exports ticket templates as XML file
 
-    my $Result = $TicketTemplateObject->TicketTemplateExport(
-    );
+    my $Result = $TicketTemplateObject->TicketTemplateExport();
 
 =cut
 
@@ -773,8 +772,7 @@ sub TicketTemplateExport {
 
 Imports ticket templates as XML file
 
-    my $Result = $TicketTemplateObject->TicketTemplateImport(
-    );
+    my $Result = $TicketTemplateObject->TicketTemplateImport();
 
 =cut
 
@@ -793,28 +791,39 @@ Imports TicketTemplates from XML document.
 
     my $HashRef = $TicketTemplateObject->_ImportTicketTemplateXML(
         XMLString => '<xml><tag>...</tag>', #required
-        DoNotAdd => 0|1, #DO NOT create new entry if no existing id given
-        UserID   => 123, #required
+        UserID    => 123, #required
     );
 
 =cut
 
 sub _ImportTicketTemplateXML {
     my ( $Self, %Param ) = @_;
-    my %Result = ();
 
-    $Self->{XMLObject} = $Kernel::OM->Get('Kernel::System::XML');
+    # get needed objects
+    my $DynamicFieldObject = $Kernel::OM->Get('Kernel::System::DynamicField');
+    my $LogObject          = $Kernel::OM->Get('Kernel::System::Log');
+    my $PriorityObject     = $Kernel::OM->Get('Kernel::System::Priority');
+    my $QueueObject        = $Kernel::OM->Get('Kernel::System::Queue');
+    my $ServiceObject      = $Kernel::OM->Get('Kernel::System::Service');
+    my $SLAObject          = $Kernel::OM->Get('Kernel::System::SLA');
+    my $StateObject        = $Kernel::OM->Get('Kernel::System::State');
+    my $TypeObject         = $Kernel::OM->Get('Kernel::System::Type');
+    my $UserObject         = $Kernel::OM->Get('Kernel::System::User');
+    my $XMLObject          = $Kernel::OM->Get('Kernel::System::XML');
 
     #init counters...
-    $Result{CountUploaded}     = 0;
-    $Result{CountInsertFailed} = 0;
-    $Result{CountAdded}        = 0;
-    $Result{UploadMessage}     = '';
+    my %Result = (
+        CountUploaded => 0,
+        CountFailed   => 0,
+        CountAdded    => 0,
+        CountUpdated  => 0,
+        UploadMessage => '',
+    );
 
     # check required params...
     for (qw( XMLString UserID )) {
         if ( !defined( $Param{$_} ) ) {
-            $Kernel::OM->Get('Kernel::System::Log')->Log(
+            $LogObject->Log(
                 Priority => 'error',
                 Message  => "Need $_!"
             );
@@ -822,11 +831,9 @@ sub _ImportTicketTemplateXML {
         }
     }
 
-    my @XMLHash = $Self->{XMLObject}->XMLParse2XMLHash(
+    my @XMLHash = $XMLObject->XMLParse2XMLHash(
         String => $Param{XMLString}
     );
-
-    my $DynamicFieldObject = $Kernel::OM->Get('Kernel::System::DynamicField');
 
     if (
         $XMLHash[1]
@@ -853,38 +860,40 @@ sub _ImportTicketTemplateXML {
                     next if !$TMArrRef->{$Key}->[1]->{Content};
 
                     if ( $Key eq 'Queue' ) {
-                        $UpdateData{QueueID} = $Kernel::OM->Get('Kernel::System::Queue')->QueueLookup(
+                        $UpdateData{QueueID} = $QueueObject->QueueLookup(
                             Queue => $TMArrRef->{$Key}->[1]->{Content}
                         );
                     }
                     elsif ( $Key eq 'Type' ) {
-                        $UpdateData{TypeID} = $Kernel::OM->Get('Kernel::System::Type')->TypeLookup(
+                        $UpdateData{TypeID} = $TypeObject->TypeLookup(
                             Type => $TMArrRef->{$Key}->[1]->{Content}
                         );
                     }
                     elsif ( $Key eq 'State' ) {
-                        $UpdateData{StateID} = $Kernel::OM->Get('Kernel::System::State')->StateLookup(
+                        $UpdateData{StateID} = $StateObject->StateLookup(
                             State => $TMArrRef->{$Key}->[1]->{Content}
                         );
                     }
                     elsif ( $Key eq 'Priority' ) {
-                        $UpdateData{PriorityID}
-                            = $Kernel::OM->Get('Kernel::System::Priority')->PriorityLookup(
+                        $UpdateData{PriorityID} = $PriorityObject->PriorityLookup(
                             Priority => $TMArrRef->{$Key}->[1]->{Content}
                         );
                     }
-                    elsif ( ( $Key eq 'Owner' || $Key eq 'Responsible' ) ) {
-                        $UpdateData{ $Key . 'ID' } = $Kernel::OM->Get('Kernel::System::User')->UserLookup(
+                    elsif (
+                        $Key eq 'Owner'
+                        || $Key eq 'Responsible'
+                    ) {
+                        $UpdateData{ $Key . 'ID' } = $UserObject->UserLookup(
                             UserLogin => $TMArrRef->{$Key}->[1]->{Content}
                         );
                     }
                     elsif ( $Key eq 'Service' ) {
-                        $UpdateData{ServiceID} = $Kernel::OM->Get('Kernel::System::Service')->ServiceLookup(
+                        $UpdateData{ServiceID} = $ServiceObject->ServiceLookup(
                             Name => $TMArrRef->{$Key}->[1]->{Content}
                         );
                     }
                     elsif ( $Key eq 'SLA' ) {
-                        $UpdateData{SLAID} = $Kernel::OM->Get('Kernel::System::SLA')->SLALookup(
+                        $UpdateData{SLAID} = $SLAObject->SLALookup(
                             Name => $TMArrRef->{$Key}->[1]->{Content}
                         );
                     }
@@ -901,8 +910,7 @@ sub _ImportTicketTemplateXML {
                         if (
                             (
                                 defined $DynamicField->{FieldType}
-                                && $DynamicField->{FieldType}
-                                =~ /^(Multiselect|MultiselectGeneralCatalog)$/
+                                && $DynamicField->{FieldType} =~ /^(Multiselect|MultiselectGeneralCatalog)$/
                             )
                             || (
                                 defined $DynamicField->{Config}->{DisplayFieldType}
@@ -926,31 +934,51 @@ sub _ImportTicketTemplateXML {
             }
 
             $Result{CountUploaded}++;
-
-            my $UpdateResult = 0;
-            my $ErrorMessage = "";
-            my $Status       = "";
-
-            # insert ticket template
-            $UpdateData{ID} = $Self->TicketTemplateCreate(
-                Data   => \%UpdateData,
-                UserID => $Param{UserID},
-                Name   => $UpdateData{Name},
-            );
-
+            my $EntryExists = '';
             if ( $UpdateData{ID} ) {
-                $Result{CountAdded}++;
-                $Status = 'Insert OK';
+                $EntryExists = $Self->TicketTemplateLookup(
+                    ID  => $UpdateData{ID}
+                );
+            } elsif ( $UpdateData{Name} ) {
+                $EntryExists = $Self->TicketTemplateLookup(
+                    Name  => $UpdateData{Name}
+                );
+            }
+
+            my $Success = 0;
+            if ( $EntryExists ) {
+                $Success = $Self->TicketTemplateUpdate(
+                    Data   => \%UpdateData,
+                    UserID => $Param{UserID},
+                    Name   => $UpdateData{Name},
+                    ID     => $UpdateData{ID},
+                );
+
+                if ( $Success ) {
+                    $Result{CountUpdated}++;
+                }
+                else {
+                    $Result{CountFailed}++;
+                }
             }
             else {
-                $Result{CountInsertFailed}++;
-                $Status = 'Insert Failed';
-            }
+                $Success = $Self->TicketTemplateCreate(
+                    Data   => \%UpdateData,
+                    UserID => $Param{UserID},
+                    Name   => $UpdateData{Name},
+                );
 
+                if ( $Success ) {
+                    $Result{CountAdded}++;
+                }
+                else {
+                    $Result{CountFailed}++;
+                }
+            }
         }
     }
 
-    $Result{XMLResultString} = $Self->{XMLObject}->XMLHash2XML(@XMLHash);
+    $Result{XMLResultString} = $XMLObject->XMLHash2XML(@XMLHash);
 
     return \%Result;
 }

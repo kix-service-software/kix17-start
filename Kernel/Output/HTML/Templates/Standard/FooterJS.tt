@@ -38,6 +38,7 @@ Core.App.Ready(function () {
         UserID: '[% Env("UserID") | html %]',
         UserSkin: '[% Env("UserSkin") %]',
         RichTextSet: '[% Config("Frontend::RichText") | html %]',
+        RichTextBrowserContextMenu: '[% Env("UserBrowserContextMenu") %]',
         CheckEmailAddresses: parseInt('[% Config("CheckEmailAddresses") %]', 10),
         AnimationEnabled: parseInt('[% Config("Frontend::AnimationEnabled") %]', 10),
         MenuDragDropEnabled: parseInt('[% Config("Frontend::MenuDragDropEnabled") %]', 10),
