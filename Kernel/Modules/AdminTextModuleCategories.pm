@@ -438,8 +438,12 @@ sub Run {
     my $Output = $LayoutObject->Header();
     $Output .= $LayoutObject->NavigationBar();
 
+    my $CategoryName = '';
+    if ( $GetParam{Name} ) {
+        $CategoryName = '*' . $GetParam{Name} . '*';
+    }
     my %TextModuleCategoryData = $TextModuleObject->TextModuleCategoryList(
-        Name => $GetParam{Name} || '',
+        Name  => $CategoryName,
         Limit => $GetParam{Limit},
     );
 
