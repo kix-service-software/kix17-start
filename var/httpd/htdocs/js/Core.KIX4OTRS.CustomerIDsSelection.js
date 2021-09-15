@@ -31,7 +31,7 @@ Core.KIX4OTRS.CustomerIDsSelection = (function(TargetNS) {
             return;
 
         $CustomerIDs.on('click', function() {
-            $CustomerID.val($(this).val());
+            $CustomerID.val($(this).val()).trigger('change');
             if ($Form.length) {
                 Core.AJAX.FormUpdate($Form, 'AJAXUpdate', 'CustomerID', ['TypeID', 'Dest', 'NewUserID', 'NewResponsibleID', 'NextStateID', 'PriorityID', 'ServiceID', 'SLAID']);
                 Core.Agent.CustomerSearch.ReloadCustomerInfo($('#SelectedCustomerUser').val());

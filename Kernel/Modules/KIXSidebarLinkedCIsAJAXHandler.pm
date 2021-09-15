@@ -93,11 +93,11 @@ sub Run {
     }
 
     # get needed params
-    for my $Needed (qw(CustomerUserID CallingAction FormID ConfigItemClass TicketID)) {
+    for my $Needed (qw(CustomerUserID CustomerID CallingAction FormID ConfigItemClass TicketID)) {
         $Param{$Needed} = $ParamObject->GetParam( Param => $Needed ) || '';
-        if ( $Param{CallingAction} && $Param{CallingAction} =~ /Customer/ ) {
-            $Param{CustomerUserID} = $Self->{UserID} || '';
-        }
+    }
+    if ( $Param{CallingAction} && $Param{CallingAction} =~ /Customer/ ) {
+        $Param{CustomerUserID} = $Self->{UserID} || '';
     }
 
     # if no customer user id given on ticket create in agent frontend
@@ -125,6 +125,21 @@ sub Run {
         );
 
         $Param{CustomerUserID} = $Ticket{CustomerUserID};
+    }
+
+    # if no customer id given, lookup with ticket id
+    if (
+        !$Param{CustomerID}
+        && $Param{TicketID}
+    ) {
+        my %Ticket = $TicketObject->TicketGet(
+            TicketID      => $Param{TicketID},
+            DynamicFields => 0,
+            UserID        => $Self->{UserID},
+            Silent        => 0,
+        );
+
+        $Param{CustomerID} = $Ticket{CustomerID};
     }
 
     # reload attribute selection after removing attributes from filter dialog
@@ -243,6 +258,7 @@ sub Run {
             $LayoutObject->KIXSideBarAssignedConfigItemsTable(
             %GetParam,
             CustomerUserID => $Param{CustomerUserID} || '',
+            CustomerID     => $Param{CustomerID}     || '',
             CallingAction  => $Param{CallingAction}  || '',
             FormID         => $Param{FormID}         || '',
             UserID         => $Self->{UserID}        || '',

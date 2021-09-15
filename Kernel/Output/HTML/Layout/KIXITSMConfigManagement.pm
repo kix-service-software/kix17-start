@@ -74,6 +74,21 @@ sub KIXSideBarAssignedConfigItemsTable {
         return;
     }
 
+    # get customer id of ticket if not given
+    if (
+        !$Param{CustomerID}
+        && $Param{TicketID}
+    ) {
+        my %Ticket = $TicketObject->TicketGet(
+            TicketID      => $Param{TicketID},
+            DynamicFields => 0,
+            UserID        => $Self->{UserID},
+            Silent        => 0,
+        );
+
+        $Param{CustomerID} = $Ticket{CustomerID};
+    }
+
     my $CallingAction = $Param{CallingAction} || '';
 
     # check searchpattern
@@ -126,6 +141,9 @@ sub KIXSideBarAssignedConfigItemsTable {
             ) {
                 $Param{SearchPattern}
                     = $Customers{$Customer}->{$SearchAttribute} || '';
+                if ( $SearchAttribute eq 'CustomerID' ) {
+                    $Param{SearchPattern} = $Param{CustomerID} || $Customers{$Customer}->{UserCustomerID} || '';
+                }
                 next CUSTOMER if !$Param{SearchPattern};
 
                 my @SearchStrings = $Param{SearchPattern};
