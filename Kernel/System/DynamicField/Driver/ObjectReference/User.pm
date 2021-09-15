@@ -406,6 +406,28 @@ EOF
         );
     }
 
+    if ( $Param{AJAXUpdate} ) {
+
+        my $FieldSelector = '#' . $FieldName;
+
+        my $FieldsToUpdate = '';
+        if ( IsArrayRefWithData( $Param{UpdatableFields} ) ) {
+
+            # Remove current field from updatable fields list
+            my @FieldsToUpdate = grep { $_ ne $FieldName } @{ $Param{UpdatableFields} };
+
+            # quote all fields, put commas in between them
+            $FieldsToUpdate = join( ', ', map {"'$_'"} @FieldsToUpdate );
+        }
+
+        # add js to call FormUpdate()
+        $Param{LayoutObject}->AddJSOnDocumentComplete( Code => <<"EOF");
+\$('$FieldSelector').on('change', function (Event) {
+    Core.AJAX.FormUpdate(\$(this).parents('form'), 'AJAXUpdate', '$FieldName', [ $FieldsToUpdate ]);
+});
+EOF
+    }
+
     if ( $Param{ServerError} ) {
 
         my $ErrorMessage = $Param{ErrorMessage} || 'This field is required.';
