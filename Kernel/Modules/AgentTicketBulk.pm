@@ -81,10 +81,12 @@ sub Run {
 
         # check needed stuff
         if ( !@TicketIDs ) {
-            return $LayoutObject->ErrorScreen(
+            return $LayoutObject->ErrorPopup(
                 Message => $LayoutObject->{LanguageObject}->Translate('Can\'t lock Tickets, no TicketIDs are given!')
                     . ' - '
                     . $LayoutObject->{LanguageObject}->Translate('Please contact the administrator.'),
+                Title   => 'Ticket Bulk Action',
+                Link    => 'Action=AgentTicketBulk;Subaction=CancelAndClose;FormID=' . $Param{FormID}
             );
         }
 
@@ -143,8 +145,10 @@ sub Run {
         }
 
         if ( scalar @CancelErrorID ) {
-            return $LayoutObject->ErrorScreen(
+            return $LayoutObject->ErrorPopup(
                 Message => $LayoutObject->{LanguageObject}->Translate( "Ticket (%s) is not unlocked!", join(',',@CancelErrorID) ),
+                Title   => 'Ticket Bulk Action',
+                Link    => 'Action=AgentTicketBulk;Subaction=CancelAndClose;FormID=' . $Param{FormID}
             );
         }
         $UploadCacheObject->FormIDRemove( FormID => $Param{FormID}.'.'.$Self->{Action}.'.'.$Self->{UserID} );
@@ -268,8 +272,10 @@ sub Run {
 
     # check if bulk feature is enabled
     if ( !$ConfigObject->Get('Ticket::Frontend::BulkFeature') ) {
-        return $LayoutObject->ErrorScreen(
+        return $LayoutObject->ErrorPopup(
             Message => $LayoutObject->{LanguageObject}->Translate('Bulk feature is not enabled!'),
+            Title   => 'Ticket Bulk Action',
+            Link    => 'Action=AgentTicketBulk;Subaction=CancelAndClose;FormID=' . $Param{FormID}
         );
     }
 
@@ -328,17 +334,21 @@ sub Run {
         # check needed stuff
         if ( !@ValidTicketIDs ) {
             if ( $Config->{RequiredLock} ) {
-                return $LayoutObject->ErrorScreen(
+                return $LayoutObject->ErrorPopup(
                     Message => $LayoutObject->{LanguageObject}->Translate('No selectable TicketID is given!')
                         . ' - '
                         . $LayoutObject->{LanguageObject}->Translate('You either selected no ticket or only tickets which are locked by other agents.'),
+                    Title   => 'Ticket Bulk Action',
+                    Link    => 'Action=AgentTicketBulk;Subaction=CancelAndClose;FormID=' . $Param{FormID}
                 );
             }
             else {
-                return $LayoutObject->ErrorScreen(
+                return $LayoutObject->ErrorPopup(
                     Message => $LayoutObject->{LanguageObject}->Translate('No TicketID is given!')
                         . ' - '
                         . $LayoutObject->{LanguageObject}->Translate('You need to select at least one ticket.'),
+                    Title   => 'Ticket Bulk Action',
+                    Link    => 'Action=AgentTicketBulk;Subaction=CancelAndClose;FormID=' . $Param{FormID}
                 );
             }
         }
@@ -398,12 +408,13 @@ sub Run {
 
         # get all parameters
         for my $Key (
-            qw(OwnerID Owner ResponsibleID Responsible PriorityID Priority QueueID Queue Subject
-            Body ArticleTypeID ArticleType TypeID StateID State MergeToSelection MergeTo LinkTogether
-            EmailSubject EmailBody EmailTimeUnits
-            LinkTogetherParent Unlock MergeToChecked MergeToOldestChecked Watch)
+            qw(
+                OwnerID Owner ResponsibleID Responsible PriorityID Priority QueueID Queue Subject
+                Body ArticleTypeID ArticleType TypeID StateID State MergeToSelection MergeTo LinkTogether
+                EmailSubject EmailBody EmailTimeUnits
+                LinkTogetherParent Unlock MergeToChecked MergeToOldestChecked Watch
             )
-        {
+        ) {
             $GetParam{$Key} = $ParamObject->GetParam( Param => $Key ) || '';
         }
 
