@@ -166,6 +166,7 @@
                             <th></th>
                             <th>[% Translate("Type") | html %]</th>
                             <th>[% Translate("Subject") | html %]</th>
+                            <th>[% Translate("Filename") | html %]</th>
                             <th>[% Translate("Hash") | html %]</th>
                             <th>[% Translate("Fingerprint") | html %]</th>
                             <th>[% Translate("Create") | html %]</th>
@@ -208,6 +209,7 @@
                             </td>
                             <td>[% Data.Type | html %]</td>
                             <td>[% Data.Subject | html %]</td>
+                            <td>[% Data.Filename | html %]</td>
                             <td>
                                 <a class="AsBlock" href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=Download;Type=[% Data.Type | uri %];Filename=[% Data.Filename | uri %]" title="[% Data.Hash | html %]">[% Data.Hash | truncate(12) | html %]</a>
                             </td>
