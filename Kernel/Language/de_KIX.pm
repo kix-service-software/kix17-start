@@ -4717,8 +4717,8 @@ sub Data {
 
     # Richtext browser context menu
     $Lang->{'Use browser context menu'} = 'Kontextmenü des Browser verweden';
-    $Lang->{'Select to decide whether richtext or browser context menu should be used.'}
-        = 'Wählen Sie, ob das Kontextmenü des Browsers im Richtext Editor genutzt werden sollen.';
+    $Lang->{'Select to decide whether richtext or browser context menu should be used. Using the browser context menu, you can for example use its spell checker.'}
+        = 'Wählen Sie, ob das Kontextmenü des Browsers im Richtext Editor genutzt werden soll. Wird das Kontextmemü des Browsers verwendet, kann beispielsweise dessen Rechtschreibprüfung genutzt werden.';
     # EO Richtext browser context menu
 
     return 0;
