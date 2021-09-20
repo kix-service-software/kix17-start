@@ -1555,6 +1555,9 @@
     #GraphBody  {
         background-color: #FFFFFF;
     }
+    #GraphBody.TooManyNodes::before {
+        background-color: #111111;
+    }
     #GraphSaved  {
         border: 1px solid #0A7CB3;
         background-color: #FFFFFF;
