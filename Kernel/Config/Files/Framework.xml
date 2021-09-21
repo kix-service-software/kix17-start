@@ -13049,7 +13049,7 @@ via the Preferences button after logging in.
                 <Item Key="Module">Kernel::Output::HTML::Preferences::Generic</Item>
                 <Item Key="Column">Other Settings</Item>
                 <Item Key="Label" Translatable="1">Use browser context menu</Item>
-                <Item Key="Desc" Translatable="1">Select to decide whether richtext or browser context menu should be used.</Item>
+                <Item Key="Desc" Translatable="1">Select to decide whether richtext or browser context menu should be used. Using the browser context menu, you can for example use its spell checker.</Item>
                 <Item Key="Key" Translatable="1">Use browser context menu</Item>
                 <Item Key="Data">
                     <Hash>

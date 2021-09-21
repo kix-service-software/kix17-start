@@ -142,21 +142,18 @@ if applicable the created ArticleID.
                 ForceNotificationToUserID       => [1, 2, 3]                   # optional
                 ExcludeNotificationToUserID     => [1, 2, 3]                   # optional
                 ExcludeMuteNotificationToUserID => [1, 2, 3]                   # optional
+                TicketSubjectBuild              => 1,                          # optional
                 AppendQueueSignature            => 1,                          # optional
                 ArticleSend                     => 1,                          # optional
                 Sign                            => {                           # optional, only used if ArticleSend is set
-                    Type    => 'PGP',
-                    SubType => 'Inline|Detached',
-                    Key     => '81877F5E',
-                    Type    => 'SMIME',
-                    Key     => '3b630c80',
+                    Type    => 'PGP',                                          # (PGP|SMIME)
+                    SubType => 'Inline',                                       # (Detached|Inline). SMIME supports only Detached
+                    Key     => '81877F5E',                                     # SMIME uses the filename as key
                 },
                 Crypt                           => {                           # optional, only used if ArticleSend is set
-                    Type    => 'PGP',
-                    SubType => 'Inline|Detached',
-                    Key     => '81877F5E',
-                    Type    => 'SMIME',
-                    Key     => '3b630c80',
+                    Type    => 'PGP',                                          # (PGP|SMIME)
+                    SubType => 'Inline',                                       # (Detached|Inline)
+                    Key     => '81877F5E',                                     # SMIME uses the filename as key
                 },
             },
 
@@ -2105,6 +2102,16 @@ sub _TicketUpdate {
         else {
             $To = $Kernel::OM->Get('Kernel::System::Queue')->QueueLookup(
                 QueueID => $Ticket->{QueueID},
+            );
+        }
+
+        # check if subject should be build like outgoing email
+        if ( $Article->{TicketSubjectBuild} ) {
+            $Article->{Subject} = $TicketObject->TicketSubjectBuild(
+                TicketNumber => $TicketData{TicketNumber},
+                Subject      => $Article->{Subject} || '',
+                Type         => 'New',
+                NoCleanup    => 1,
             );
         }
 

@@ -1,0 +1,23 @@
+# --
+# Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file LICENSE for license information (AGPL). If you
+# did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
+# --
+
+
+<div class="LayoutPopup ARIARoleMain">
+    <div class="Header">
+        <h1>[% Translate(Data.Title) | html %]</h1>
+[% RenderBlockStart("CancelClose") %]
+        <p>
+            <a class="PopupCancelClose" href="[% Env("Baselink") %][% Data.Link %]">[% Translate("Cancel & close") | html %]</a>
+        </p>
+    </div>
+[% RenderBlockEnd("CancelClose") %]
+    <div class="Content">
+        [% Data.ErrorStrg %]
+    </div>
+    <div class="Footer"></div>
+</div>

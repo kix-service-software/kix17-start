@@ -654,9 +654,12 @@ sub Run {
 
             # check if attachment is an inline attachment
             my $Inline = 0;
+            if (
+                $Attachment->{Disposition}
 ### Patch licensed under the GPL-3.0, Copyright (C) 2001-2021 OTRS AG, https://otrs.com/ ###
-            if ( $Attachment->{Disposition} eq 'inline' ) {
+                && $Attachment->{Disposition} eq 'inline'
 ### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2021 OTRS AG, https://otrs.com/ ###
+            ) {
 
                 # remember that it is inline
                 $Inline = 1;

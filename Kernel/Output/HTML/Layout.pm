@@ -1043,6 +1043,35 @@ sub ErrorScreen {
     return $Output;
 }
 
+sub ErrorPopup {
+    my ( $Self, %Param ) = @_;
+
+    my $Output = $Self->Header(
+        Type  => 'Small',
+        Title => 'Error'
+    );
+
+    if ( $Param{Link} ) {
+        $Self->Block(
+            Name => 'CancelClose',
+            Data => \%Param
+        );
+    }
+
+    $Param{ErrorStrg} = $Self->Error( %Param );
+
+    $Output .= $Self->Output(
+        TemplateFile => 'ErrorPopup',
+        Data         => \%Param
+    );
+
+    $Output .= $Self->Footer(
+        Type => 'Small'
+    );
+
+    return $Output;
+}
+
 sub Error {
     my ( $Self, %Param ) = @_;
 
