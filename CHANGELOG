@@ -1,6 +1,16 @@
 # Change log of KIX
 * Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.17.0-RC7 (2021/09/21)
+ * (2021/09/20) - Bugfix: KIX17-2312 (fixed missing itsm linked graph menu after error message of too many nodes) (fjacquemin)
+ * (2021/09/14) - Bugfix: KIX17-2238 (fix text module catagory filter in administration) (millinger)
+ * (2021/09/14) - Bugfix: KIX17-947 (fix error message on call of ticket service overview without selected service) (millinger)
+ * (2021/09/14) - Bugfix: KIX17-2406 (fix log message on disposition check of faq attachments) (millinger)
+ * (2021/09/14) - Bugfix: KIX17-2524 (enabled dynamic field type 'ObjectReference' to trigger form update) (millinger)
+ * (2021/09/14) - Bugfix: KIX17-2489 (handle customer selection for linked config items) (millinger)
+ * (2021/09/14) - Bugfix: KIX17-2380 (changed fatal error display of AgentTicketBulk) (fjacquemin)
+ * (2021/09/14) - Bugfix: KIX17-2380 (changed translation of the dynamic fields RemoteDB and ObjectReference) (fjacquemin)
+
 # 17.17.0-RC6 (2021/09/14)
  * (2021/09/13) - Bugfix: KIX17-2380 (changed configuration description and translation of Service-,SLA-,TicketTranslation) (fjacquemin)
  * (2021/09/13) - CR: KIX17-2380 (fixed incorrect text size in the overlay of selected FAQ from KIXSidebar KIXSBSimiliarFAQ) (fjacquemin)
