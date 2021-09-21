@@ -148,12 +148,13 @@
     <input type="hidden" id="LoadGraphSubmit" value='[% Translate("Load") | html %]' />
     <input type="hidden" id="LoadGraphCancel" value='[% Translate("Cancel") | html %]' />
 </div>
-<div id="GraphBody">
-
+<div id="GraphBody" class="[% Data.GraphBodyClass %]"></div>
     <div id="Scale">
+[% IF Data.TooManyNodes == '0' %]
         [% Data.HTMLString %]
         <div id="ConnectionDummy"></div>
         <div id="ConnectionDummyShow" class="Hidden"></div>
+[% END %]
     </div>
 
     <input type="hidden" id="NoObjectsTitle" value='[% Translate("No Objects!") | html %]' />
@@ -349,156 +350,146 @@
 <script type="text/javascript">//<![CDATA[
     $('#AppWrapper').css("margin-top", "0px");
 
-    // check if there are too many nodes - just show notice
-    if ( '[% Data.TooManyNodes | html %]' != 0 ) {
-        $('body').html('<div style="margin:5px">'
-            + '[% Translate("Too many nodes") | html %]' + ' - '
-            + '[% Translate("More than 100 nodes not possible (currently number: %s)!", Data.TooManyNodes) | html %]'
-            + '</div>');
-        Core.UI.Dialog.ShowDialog({
-            Modal: false,
-            Title: '[% Translate("Too many nodes") | html %]',
-            HTML: '[% Translate("More than 100 nodes not possible (currently number: %s)!", Data.TooManyNodes) | html %]',
-            PositionTop: '10%',
-            PositionLeft: 'Center',
-            Buttons: [ {
-                Label: 'OK',
-                Type: 'Close'
-            } ]
-        });
-    } else {
-        var $Elements = {
-                Body:          $('body'),
-                GraphBody:     $('#GraphBody'),
-                Options:       $('#Options'),
-                Scale:         $('#Scale'),
-                PrintBox:      $('#PrintBox'),
-                PrintGraphBody:$('#PrintGraphBody'),
-                PrintScale:    $('#PrintScale'),
-                ZoomValue:     $('#ZoomValue'),
-                Context:       $('#Context'),
-                Shield:        $('#Shield'),
-                Dummy:         $('#ConnectionDummy'),
-                DummyShow:     $('#ConnectionDummyShow'),
-                ChooseBox:     $('#ChooseBox'),
-                SetTODL:       $('#SetTypeOrDeleteLink'),
-                ServicePopup:  $('#ServicePopup'),
-                ZoomArea:      $('#ZoomArea'),
-                MagnifierZoom: $('#ZoomSelection'),
-                SOGraph:       $('#SaveOverwriteGraph'),
-                Notice:        $('#Notice'),
-                GraphLoaded:   $('#GraphLoadedPopup')
-            },
-            GraphConfig = {
-                ObjectType:        '[% Data.ObjectType | html %]',
-                ObjectID:          '[% Data.ObjectID | html %]',
-                Template:          '[% Data.Template | html %]',
-                SubTypes:          '[% Data.RelevantObjectSubTypes | html %]',
-                LinkTypes:         '[% Data.RelevantLinkTypes | html %]',
-                SearchDepth:       '[% Data.MaxSearchDepth | html %]',
-                StartID:           '[% Data.StartID | html %]',
-                AdjustingStrength: '[% Data.AdjustingStrength | html %]',
-                OpenWindow:        '[% Data.OpenWindow | html %]'
-            },
-            UserRights = {
-                Ro:      '[% Data.UserClassRoRights %]',
-                Service: '[% Data.UserServiceRoRight %]'
-            };
+    var $Elements = {
+            Body:          $('body'),
+            GraphBody:     $('#GraphBody'),
+            Options:       $('#Options'),
+            Scale:         $('#Scale'),
+            PrintBox:      $('#PrintBox'),
+            PrintGraphBody:$('#PrintGraphBody'),
+            PrintScale:    $('#PrintScale'),
+            ZoomValue:     $('#ZoomValue'),
+            Context:       $('#Context'),
+            Shield:        $('#Shield'),
+            Dummy:         $('#ConnectionDummy'),
+            DummyShow:     $('#ConnectionDummyShow'),
+            ChooseBox:     $('#ChooseBox'),
+            SetTODL:       $('#SetTypeOrDeleteLink'),
+            ServicePopup:  $('#ServicePopup'),
+            ZoomArea:      $('#ZoomArea'),
+            MagnifierZoom: $('#ZoomSelection'),
+            SOGraph:       $('#SaveOverwriteGraph'),
+            Notice:        $('#Notice'),
+            GraphLoaded:   $('#GraphLoadedPopup')
+        },
+        GraphConfig = {
+            ObjectType:        '[% Data.ObjectType | html %]',
+            ObjectID:          '[% Data.ObjectID | html %]',
+            Template:          '[% Data.Template | html %]',
+            SubTypes:          '[% Data.RelevantObjectSubTypes | html %]',
+            LinkTypes:         '[% Data.RelevantLinkTypes | html %]',
+            SearchDepth:       '[% Data.MaxSearchDepth | html %]',
+            StartID:           '[% Data.StartID | html %]',
+            AdjustingStrength: '[% Data.AdjustingStrength | html %]',
+            OpenWindow:        '[% Data.OpenWindow | html %]'
+        },
+        UserRights = {
+            Ro:      '[% Data.UserClassRoRights %]',
+            Service: '[% Data.UserServiceRoRight %]'
+        };
 
-        // general context elements
-        $Elements.ContextNodeZoom       = $Elements.Context.find('#NodeZoom');
-        $Elements.ContextPresentNode    = $Elements.Context.find('#PresentNode');
-        $Elements.ContextNotPresentNode = $Elements.Context.find('#NotPresentNode');
-        $Elements.Service               = $Elements.Context.find('#Services');
-        $Elements.Zoom                  = $Elements.ContextNodeZoom;
-        $Elements.Present               = $Elements.ContextPresentNode;
-        $Elements.NotPresent            = $Elements.ContextNotPresentNode;
+    // general context elements
+    $Elements.ContextNodeZoom       = $Elements.Context.find('#NodeZoom');
+    $Elements.ContextPresentNode    = $Elements.Context.find('#PresentNode');
+    $Elements.ContextNotPresentNode = $Elements.Context.find('#NotPresentNode');
+    $Elements.Service               = $Elements.Context.find('#Services');
+    $Elements.Zoom                  = $Elements.ContextNodeZoom;
+    $Elements.Present               = $Elements.ContextPresentNode;
+    $Elements.NotPresent            = $Elements.ContextNotPresentNode;
 
-        // init graph
+    // init graph
+    if ( '[% Data.TooManyNodes | html %]' !== '0' ) {
+        Core.Config.Set('TooManyNodesTitle', '[% Translate("Too many nodes") | html %]');
+        Core.Config.Set('TooManyNodesBody', '[% Translate("More than 100 nodes not possible (currently number: %s)!", Data.TooManyNodes) | html %]');
+        ITSM.Agent.LinkGraph.InitTooManyNodes('[% Data.TooManyNodes | html %]', $Elements, GraphConfig);
+    }
+    else {
         ITSM.Agent.LinkGraph.InitGraph('[% Data.NodesString | html %]', '[% Data.Links | html %]', '[% Data.LinkColors %]', '[% Data.LinkTypes %]', $Elements, '[% Data.Layout | html %]', GraphConfig);
+    }
 
-        // init functions
-        $('#Template').on('change', function() {
-            ITSM.Agent.LinkGraph.TemplateLoad();
-        });
-        $('#TemplateEdit').on('click', function() {
-            ITSM.Agent.LinkGraph.TemplateEdit();
-        });
-        $('#ZoomFit').on('click', function() {
-            ITSM.Agent.LinkGraph.FitIn();
-        });
-        $('#ZoomOut').on('click', function() {
-            ITSM.Agent.LinkGraph.Zoom(1);
-        });
-        $('#ZoomIn').on('click', function() {
-            ITSM.Agent.LinkGraph.Zoom(2);
-        });
-        $('#ZoomDefault').on('click', function() {
-            ITSM.Agent.LinkGraph.Zoom(3);
-        });
-        $('#GraphLoad').on('click', function() {
-            ITSM.Agent.LinkGraph.LoadGraph();
-        });
-        $('#GraphSave').on('click', function() {
-            ITSM.Agent.LinkGraph.SaveGraph();
-        });
-        $('#GraphAdjust').on('click', function() {
-            ITSM.Agent.LinkGraph.Adjust();
-        });
-        $('#GraphPrint').on('click', function() {
-            ITSM.Agent.LinkGraph.PrintPre();
-        });
-        $('#GraphWindow').on('click', function () {
-            var URL = 'Action=AgentITSMConfigItemLinkGraphWindow;ConfigItemID=[% Data.ObjectID | html %];Template=[% Data.Template | html %]';
+    // init functions
+    $('#Template').on('change', function() {
+        ITSM.Agent.LinkGraph.TemplateLoad();
+    });
+    $('#TemplateEdit').on('click', function() {
+        ITSM.Agent.LinkGraph.TemplateEdit();
+    });
+    $('#ZoomFit').on('click', function() {
+        ITSM.Agent.LinkGraph.FitIn();
+    });
+    $('#ZoomOut').on('click', function() {
+        ITSM.Agent.LinkGraph.Zoom(1);
+    });
+    $('#ZoomIn').on('click', function() {
+        ITSM.Agent.LinkGraph.Zoom(2);
+    });
+    $('#ZoomDefault').on('click', function() {
+        ITSM.Agent.LinkGraph.Zoom(3);
+    });
+    $('#GraphLoad').on('click', function() {
+        ITSM.Agent.LinkGraph.LoadGraph();
+    });
+    $('#GraphSave').on('click', function() {
+        ITSM.Agent.LinkGraph.SaveGraph();
+    });
+    $('#GraphAdjust').on('click', function() {
+        ITSM.Agent.LinkGraph.Adjust();
+    });
+    $('#GraphPrint').on('click', function() {
+        ITSM.Agent.LinkGraph.PrintPre();
+    });
+    $('#GraphWindow').on('click', function () {
+        var URL = 'Action=AgentITSMConfigItemLinkGraphWindow;ConfigItemID=[% Data.ObjectID | html %];Template=[% Data.Template | html %]';
 
-            if (!Core.Config.Get('SessionIDCookie')) {
-                URL += ';' + Core.Config.Get('SessionName') + '=' + Core.Config.Get('SessionID');
-            }
+        if (!Core.Config.Get('SessionIDCookie')) {
+            URL += ';' + Core.Config.Get('SessionName') + '=' + Core.Config.Get('SessionID');
+        }
 
-            Core.UI.Popup.OpenPopup( Core.Config.Get('Baselink') + URL, 'Action');
-            return false;
-        });
+        Core.UI.Popup.OpenPopup( Core.Config.Get('Baselink') + URL, 'Action');
+        return false;
+    });
 
-        // context menu options
-        $Elements.ContextNodeZoom.on('mouseup', function(e) {
+    // context menu options
+    $Elements.ContextNodeZoom.on('mouseup', function(e) {
+        if (!e) {
+            e = window.event;
+        }
+        if ( e.which == 3 ) {
+            return;
+        }
+        if ( !$Elements.ContextNodeZoom.hasClass('ContextNoRights') ) {
+            HideContext();
+            ITSM.Agent.LinkGraph.OpenObject();
+        }
+    });
+    $Elements.ContextPresentNode.on('click', function(e) {
+        if ( !$Elements.ContextPresentNode.hasClass('ContextNoRights') ) {
+            HideContext();
+            ITSM.Agent.LinkGraph.PresentNode();
+        }
+    });
+    $Elements.ContextNotPresentNode.on('click', function(e) {
+        if ( !$Elements.ContextNotPresentNode.hasClass('ContextNoRights') ) {
             if (!e) {
                 e = window.event;
             }
-            if ( e.which == 3 ) {
-                return;
-            }
-            if ( !$Elements.ContextNodeZoom.hasClass('ContextNoRights') ) {
-                HideContext();
-                ITSM.Agent.LinkGraph.OpenObject();
-            }
-        });
-        $Elements.ContextPresentNode.on('click', function(e) {
-            if ( !$Elements.ContextPresentNode.hasClass('ContextNoRights') ) {
-                HideContext();
-                ITSM.Agent.LinkGraph.PresentNode();
-            }
-        });
-        $Elements.ContextNotPresentNode.on('click', function(e) {
-            if ( !$Elements.ContextNotPresentNode.hasClass('ContextNoRights') ) {
-                if (!e) {
-                    e = window.event;
-                }
-                HideContext();
-                ITSM.Agent.LinkGraph.NotPresentNode(e);
-            }
-        });
-
-        function HideContext() {
-            $Elements.Context.addClass('Hidden');
+            HideContext();
+            ITSM.Agent.LinkGraph.NotPresentNode(e);
         }
+    });
 
-        $Elements.Service.on('click', function() {
-            if ( !$Elements.Service.hasClass('ContextNoRights') ) {
-                HideContext();
-                ITSM.Agent.LinkGraph.ShowServices();
-            }
-        });
+    function HideContext() {
+        $Elements.Context.addClass('Hidden');
+    }
 
+    $Elements.Service.on('click', function() {
+        if ( !$Elements.Service.hasClass('ContextNoRights') ) {
+            HideContext();
+            ITSM.Agent.LinkGraph.ShowServices();
+        }
+    });
+
+    if ( '[% Data.TooManyNodes | html %]' === '0' ) {
         ITSM.Agent.LinkGraph.Init('[% Data.NodesString | html %]', UserRights);
     }
 //]]></script>
