@@ -475,6 +475,12 @@ sub _DynamicFieldImport {
         Message => 'Invalid data structure!',
     } if ( ref( $DynamicFieldData ) ne 'ARRAY' );
 
+    # get list of available object types
+    my $ObjectTypeList = $ConfigObject->Get('DynamicFields::ObjectType');
+
+    # get list of available field types
+    my $FieldTypeList = $ConfigObject->Get('DynamicFields::Driver');
+
     # get list of valid values and reverse it
     my %ValidList    = $ValidObject->ValidList();
     my %ValidListRev = reverse( %ValidList );
@@ -505,6 +511,22 @@ sub _DynamicFieldImport {
             !$OverwriteExistingEntities
             && IsHashRefWithData( $DynamicFieldLookup{ $DynamicFieldConfig->{Name} } )
         );
+
+        # check for available object type
+        if ( ref( $ObjectTypeList->{ $DynamicFieldConfig->{ObjectType} } ) ne 'HASH' ) {
+            return {
+                Success => 0,
+                Message => 'Object type "' . $DynamicFieldConfig->{ObjectType} . '" of dynamic field "' . $DynamicFieldConfig->{Name} . '" is not registered!',
+            } 
+        }
+
+        # check for available field type
+        if ( ref( $FieldTypeList->{ $DynamicFieldConfig->{FieldType} } ) ne 'HASH' ) {
+            return {
+                Success => 0,
+                Message => 'Field type "' . $DynamicFieldConfig->{FieldType} . '" of dynamic field "' . $DynamicFieldConfig->{Name} . '" is not registered!',
+            } 
+        }
 
         # special handling for some configurations
         if ( $DynamicFieldConfig->{Config}->{DeploymentStates}
