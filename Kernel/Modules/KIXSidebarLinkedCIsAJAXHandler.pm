@@ -59,6 +59,7 @@ sub Run {
             . ':</label>'
             . '<div class="Field" id="">'
             . '<input id="' . $Param{Name} . '" type="text" name="' . $Param{Name} . '" value="" />'
+        . ' '                                                                                               # whitespace between input field and remove button
             . '<button type="button" class="Remove" value="'
             . $LayoutObject->{LanguageObject}->Translate('Remove')
             . '" title="'
@@ -147,20 +148,18 @@ sub Run {
 
         # get class list
         my %ConfigItemClasses;
-        my %Classes = reverse %{
-            $GeneralCatalogObject->ItemList(
-                Class => 'ITSM::ConfigItem::Class',
-                )
-            };
+        my %Classes  = %{ $GeneralCatalogObject->ItemList( Class => 'ITSM::ConfigItem::Class' ) };
+        my %ClassIDs = reverse( %Classes );
 
         if ( !defined $Param{ConfigItemClass} || !$Param{ConfigItemClass} ) {
 
             # get defined classes for linked config items
-            my @CIClasses
-                = keys %{
-                $ConfigObject->Get('KIXSidebarConfigItemLink::CISearchInClasses')
-                };
-            %ConfigItemClasses = reverse map { $_ => $Classes{$_} } @CIClasses;
+            my @CIClasses = keys %{ $ConfigObject->Get('KIXSidebarConfigItemLink::CISearchInClasses') };
+            for my $CIClass ( @CIClasses ) {
+                if ( $ClassIDs{ $CIClass } ) {
+                    $ConfigItemClasses{ $ClassIDs{ $CIClass } } = $ClassIDs{ $CIClass };
+                }
+            }
         }
         else {
             $ConfigItemClasses{ $Param{ConfigItemClass} } = $Classes{ $Param{ConfigItemClass} };
@@ -257,14 +256,14 @@ sub Run {
         $Param{LinkConfigItemStrg} =
             $LayoutObject->KIXSideBarAssignedConfigItemsTable(
             %GetParam,
-            CustomerUserID => $Param{CustomerUserID} || '',
-            CustomerID     => $Param{CustomerID}     || '',
-            CallingAction  => $Param{CallingAction}  || '',
-            FormID         => $Param{FormID}         || '',
-            UserID         => $Self->{UserID}        || '',
-            AJAX           => $Param{Data}->{AJAX}   || 0,
-            Class          => $Param{ConfigItemClass},
-            TicketID       => $Param{TicketID}       || '',
+            CustomerUserID       => $Param{CustomerUserID} || '',
+            CustomerID           => $Param{CustomerID}     || '',
+            CallingAction        => $Param{CallingAction}  || '',
+            FormID               => $Param{FormID}         || '',
+            UserID               => $Self->{UserID}        || '',
+            AJAX                 => $Param{Data}->{AJAX}   || 0,
+            Class                => $Param{ConfigItemClass},
+            TicketID             => $Param{TicketID}       || '',
             SelectedSearchFields => \@SelectedSearchFields,
             );
     }

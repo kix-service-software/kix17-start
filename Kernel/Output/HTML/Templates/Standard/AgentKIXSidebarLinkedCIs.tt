@@ -8,6 +8,7 @@
 
 
 <div id="KIXSidebarLinkedConfigItemDialog" class="Hidden">
+    <div style="margin-bottom:5px">[% Translate("Choose the attribute of the config items to filter. Click on the plus next to the selection to add an attribute filter.") | html %]</div>
     <strong>
         <u>[% Translate("PLEASE NOTE") | html %]:</u>
     </strong>
@@ -17,11 +18,10 @@
     <form action="[% Env("CGIHandle") %]" method="post" id="KIXSidebarLinkedConfigItemDialogForm" name="KIXSidebarLinkedConfigItemDialogForm">
         <input type="hidden" value="KIXSidebarLinkedCIsAJAXHandler" name="Action"/>
         <input type="hidden" value="SetFilter" name="Subaction"/>
-        <input type="hidden" value="[% Data.TicketID | html %]" name="TicketID" id="TicketID"/>
+        <input type="hidden" value="[% Data.TicketID | html %]" name="TicketID" id="KIXSidebarTicketID"/>
         <input type="hidden" value="" name="SelectedSearchFields" id="SelectedSearchFields" />
-        <input type="hidden" value="" name="SelectedClass" id="SelectedClass" />
-        <input type="hidden" value="[% Data.CustomerUserID %]" name="KIXSidebarCustomerUserID" />
-        <input type="hidden" value="[% Data.CustomerID %]" name="KIXSidebarCustomerID" />
+        <input type="hidden" value="[% Data.CustomerUserID %]" name="KIXSidebarCustomerUserID" id="KIXSidebarCustomerUserID" />
+        <input type="hidden" value="[% Data.CustomerID %]" name="KIXSidebarCustomerID" id="KIXSidebarCustomerID" />
         <fieldset class="TableLike"  style="width:500px;" id="KIXSidebarLinkedConfigItemAttributes">
             <label for="KIXSidebarLinkedCIAttribute">[% Translate("Attribute") | html %]:</label>
             <div class="Field">
@@ -41,7 +41,6 @@
         <h2><span>[% Translate(Data.Title) | html %]</span></h2>
     </div>
     <div id="CIClassSelection" class="Content">
-        <input type="hidden" id="KIXSidebarCustomerUserID" value="[% Data.CustomerUserID %]">
         [% Data.ConfigItemClassSelectionStrg %]
             <a href="#" id="KIXSidebarLinkedConfigItemSetClassFilter" title="[% Translate("Add Filter") | html %]"><i class="fa fa-filter"></i></a>
             <a href="#" id="KIXSidebarLinkedConfigItemResetClassFilter" title="[% Translate("Reset Filter") | html %]" class="Hidden"><i class="fa fa-trash-o"></i></a>
@@ -95,6 +94,7 @@
     var CallingAction = '',
         CustomerUserID = $('#KIXSidebarCustomerUserID').val(),
         CustomerID = $('#KIXSidebarCustomerID').val(),
+        TicketID = $('#KIXSidebarTicketID').val(),
         FormID = $('input[name=FormID]').val();
 
     // get calling action
@@ -118,9 +118,6 @@
 
     // reload assigned config items if class changed
     $('#ConfigItemClass').on('change',function(){
-        // get ticket id
-        var TicketID = '';
-
         if ( $('#TicketID').length ) {
             TicketID = $('#TicketID').val();
         }
@@ -143,7 +140,7 @@
 
         // reload attribute selection for this class
         var Data = Core.AJAX.SerializeForm($('#KIXSidebarLinkedConfigItemDialogForm')),
-            URL = Core.Config.Get('CGIHandle') + '?Action=KIXSidebarLinkedCIsAJAXHandler;Subaction=AJAXUpdateSelection;CallingAction=' + CallingAction + ';CustomerUserID=' + CustomerUserID + ';CustomerID=' + CustomerID + ';FormID=' + FormID + ';ConfigItemClass=' + Class + ';' + Data + ';TicketID=' + TicketID;
+            URL = Core.Config.Get('CGIHandle') + '?Action=KIXSidebarLinkedCIsAJAXHandler;Subaction=AJAXUpdateSelection;CallingAction=' + CallingAction + ';CustomerUserID=' + CustomerUserID + ';CustomerID=' + CustomerID + ';FormID=' + FormID + ';ConfigItemClass=' + Class + ';TicketID=' + TicketID + ';' + Data;
         Core.AJAX.ContentUpdate($('#KIXSidebarLinkedCIAttribute'), URL , function () {
             $('#KIXSidebarLinkedConfigItemResetClassFilter').addClass('Hidden');
             initLinkedCICheckboxes();
@@ -159,7 +156,7 @@
                 Label: [% Translate("Apply") | JSON %],
                 Function: function () {
                     var Data = Core.AJAX.SerializeForm($('#KIXSidebarLinkedConfigItemDialogForm')),
-                        ExtendedData = 'CallingAction=' + CallingAction + ';CustomerUserID=' + CustomerUserID + ';CustomerID=' + CustomerID + ';FormID=' + FormID + ';ConfigItemClass=' + Class;
+                        ExtendedData = 'CallingAction=' + CallingAction + ';CustomerUserID=' + CustomerUserID + ';CustomerID=' + CustomerID + ';FormID=' + FormID + ';ConfigItemClass=' + Class + ';TicketID=' + TicketID;
 
                     Core.AJAX.ContentUpdate($('#LinkConfigItemStrgContainer'), Core.Config.Get('CGIHandle') + '?' + Data + ExtendedData , function () {
                         initLinkedCICheckboxes();
@@ -168,11 +165,6 @@
                     $('#KIXSidebarLinkedConfigItemResetClassFilter').removeClass('Hidden');
                 }
             },
-            {
-                Label: [% Translate("Reset") | JSON %],
-                Function: function () {
-                }
-            }
         ]);
         return false;
     });
@@ -180,7 +172,7 @@
     // reset filter
     $('#KIXSidebarLinkedConfigItemResetClassFilter').on('click', function (Event) {
             var Class = $('#ConfigItemClass').val(),
-                URL = Core.Config.Get('CGIHandle') + '?Action=KIXSidebarLinkedCIsAJAXHandler;CallingAction=' + CallingAction + ';CustomerUserID=' + CustomerUserID + ';CustomerID=' + CustomerID + ';FormID=' + FormID + ';ConfigItemClass=' + Class;
+                URL = Core.Config.Get('CGIHandle') + '?Action=KIXSidebarLinkedCIsAJAXHandler;CallingAction=' + CallingAction + ';CustomerUserID=' + CustomerUserID + ';CustomerID=' + CustomerID + ';FormID=' + FormID + ';ConfigItemClass=' + Class + ';TicketID=' + TicketID;
 
             Core.AJAX.ContentUpdate($('#LinkConfigItemStrgContainer'), URL , function () {
                 initLinkedCICheckboxes();
@@ -247,7 +239,7 @@
 
         // add option to selection again
         var Data = Core.AJAX.SerializeForm($('#KIXSidebarLinkedConfigItemDialogForm')),
-            URL = Core.Config.Get('CGIHandle') + '?Action=KIXSidebarLinkedCIsAJAXHandler;Subaction=AJAXUpdateSelection;CallingAction=' + CallingAction + ';CustomerUserID=' + CustomerUserID + ';CustomerID=' + CustomerID + ';FormID=' + FormID + ';ConfigItemClass=' + Class + ';' + Data;
+            URL = Core.Config.Get('CGIHandle') + '?Action=KIXSidebarLinkedCIsAJAXHandler;Subaction=AJAXUpdateSelection;CallingAction=' + CallingAction + ';CustomerUserID=' + CustomerUserID + ';CustomerID=' + CustomerID + ';FormID=' + FormID + ';ConfigItemClass=' + Class + ';TicketID=' + TicketID + ';' + Data;
         Core.AJAX.ContentUpdate($('#KIXSidebarLinkedCIAttribute'), URL , function () {
             initLinkedCICheckboxes();
         });

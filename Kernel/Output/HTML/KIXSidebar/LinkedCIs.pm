@@ -188,8 +188,8 @@ sub Run {
         Data         => {
             %Param,
             %{ $Self->{Config} },
-            CustomerUserID => $Param{CustomerData}->{UserID},
-            CustomerUserID => $Param{CustomerID},
+            CustomerUserID => $Param{CustomerUserID} || $Param{CustomerUser} || '',
+            CustomerID     => $Param{CustomerID},
         },
         KeepScriptTags => $Param{AJAX},
     );
