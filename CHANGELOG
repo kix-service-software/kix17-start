@@ -1,6 +1,9 @@
 # Change log of KIX
 * Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.17.0-RC8 (2021/09/23)
+ * (2021/09/22) - CR: KIX17-2518 (changed back- and whitlist regular expressions of the CustomerTicketTemplate) (fjacquemin)
+
 # 17.17.0-RC7 (2021/09/21)
  * (2021/09/20) - Bugfix: KIX17-2312 (fixed missing itsm linked graph menu after error message of too many nodes) (fjacquemin)
  * (2021/09/14) - Bugfix: KIX17-2238 (fix text module catagory filter in administration) (millinger)
