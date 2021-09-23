@@ -1401,6 +1401,9 @@ sub Data {
         }
         = 'Legt fest, welche Verwendungsstatus im Verknüpfungsgraph nicht mit angezeigt werden sollen. Mehrere Werte werden durch Komma getrennt.';
 
+    $Lang->{'Choose the attribute of the config items to filter. Click on the plus next to the selection to add an attribute filter.'}
+        = 'Wählen Sie hier die Attribute des CIs, nach denen Sie noch weiter einschränken möchten. Klicken Sie dafür auf das Plus neben der Auswahl.';
+
     $Lang->{'Only attributes of the following types are shown in the list'}
         = 'Nur Attribute folgender Typen werden in der Liste angezeigt';
 
