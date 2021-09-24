@@ -1717,19 +1717,24 @@ sub _GetUserInfoString {
         %CustomerUserData = %User;
         $CustomerUserData{Config}->{Map} = \@EmptyArray;
 
-        my $AgentConfig
-            = $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Frontend::KIXSidebarTicketInfo');
+        my $AgentConfig = $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Frontend::KIXSidebarTicketInfo');
         for my $Attribute ( sort keys %{ $AgentConfig->{DisplayAttributes} } ) {
             next if !$AgentConfig->{DisplayAttributes}->{$Attribute};
 
-            my $AttributeDisplay = $Attribute =~ m/^User(.*)$/;
+            my $AttributeDisplay = $Attribute;
+            if ( $Attribute =~ m/^User(.*)$/ ) {
+                $AttributeDisplay = $1;
+            }
             my @TempArray = ();
-            push @TempArray, $Attribute;
-            push @TempArray, $AttributeDisplay || $Attribute;
-            push @TempArray, '';
-            push @TempArray, 1;
-            push @TempArray, 0;
-            push @{ $CustomerUserData{Config}->{Map} }, \@TempArray;
+            push( @TempArray, $Attribute );
+            push( @TempArray, $AttributeDisplay );
+            push( @TempArray, '' );
+            push( @TempArray, 1 );
+            push( @TempArray, 0 );
+            push( @TempArray, 'var' );
+            push( @TempArray, '' );
+            push( @TempArray, 0 );
+            push( @{ $CustomerUserData{Config}->{Map} }, \@TempArray );
         }
     }
 
@@ -1742,22 +1747,19 @@ sub _GetUserInfoString {
             ->Get('Ticket::Frontend::CustomerInfoComposeMaxSize'),
     );
 
-    my $Title
-        = $Self->{LayoutObject}->{LanguageObject}
-        ->Translate( $Param{UserType} . ' Information' );
-    my $Output
-        = $User{UserFirstname} . ' '
-        . $User{UserLastname}
-        . '<span class="' . $Param{UserType} . 'DetailsMagnifier">'
-        . ' <i class="fa fa-search"></i>'
-        . '</span>'
-        . '<div class="WidgetPopup" id="' . $Param{UserType} . 'Details">'
-        . '<div class="Header"><h2>' . $Title . '</h2></div>'
-        . '<div class="Content"><div class="Spacing">'
-        . $DetailsTable
-        . '</div>'
-        . '</div>'
-        . '</div>';
+    my $Title  = $Self->{LayoutObject}->{LanguageObject}->Translate( $Param{UserType} . ' Information' );
+    my $Output = $User{UserFirstname} . ' '
+                . $User{UserLastname}
+                . '<span class="' . $Param{UserType} . 'DetailsMagnifier">'
+                . ' <i class="fa fa-search"></i>'
+                . '</span>'
+                . '<div class="WidgetPopup" id="' . $Param{UserType} . 'Details">'
+                . '<div class="Header"><h2>' . $Title . '</h2></div>'
+                . '<div class="Content"><div class="Spacing">'
+                . $DetailsTable
+                . '</div>'
+                . '</div>'
+                . '</div>';
 
     return $Output;
 }
