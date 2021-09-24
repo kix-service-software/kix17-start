@@ -515,6 +515,12 @@ sub ArticleMove {
         }
     }
 
+    # get article content
+    my %Article = $Self->ArticleGet(
+        ArticleID => $Param{ArticleID},
+    );
+    return if !%Article;
+
     # update article data
     return 'MoveFailed' if !$Kernel::OM->Get('Kernel::System::DB')->Do(
         SQL => "UPDATE article SET ticket_id = ?, "
@@ -536,7 +542,8 @@ sub ArticleMove {
     );
 
     # clear ticket cache
-    delete $Self->{ 'Cache::GetTicket' . $Param{TicketID} };
+    $Self->_TicketCacheClear( TicketID => $Article{TicketID} );
+    $Self->_TicketCacheClear( TicketID => $Param{TicketID} );
 
     # event
     $Self->EventHandler(
@@ -629,9 +636,6 @@ sub ArticleCopy {
         );
     }
 
-    # clear ticket cache
-    delete $Self->{ 'Cache::GetTicket' . $Param{TicketID} };
-
     # copy plain article if exists
     if ( $Article{ArticleType} =~ /email/i ) {
         my $Data = $Self->ArticlePlain(
@@ -697,7 +701,7 @@ sub ArticleFullDelete {
     return if !%Article;
 
     # clear ticket cache
-    delete $Self->{ 'Cache::GetTicket' . $Article{TicketID} };
+    $Self->_TicketCacheClear( TicketID => $Article{TicketID} );
 
     # delete article history
     return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
