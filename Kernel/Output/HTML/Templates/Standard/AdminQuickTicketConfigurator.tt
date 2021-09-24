@@ -224,7 +224,7 @@ $('.TicketTemplateDelete').on('click', function (Event) {
                                 <p>[% Translate("This field is required and its content can not be longer than %s characters.", "80") | html %]</p>
                             </div>
                             <div id="NameServerError" class="TooltipErrorMessage">
-                                <p>[% Translate("This field is required and its content can not be longer than %s characters.", "80") | html %]</p>
+                                <p>[% Data.NameErrorMessage | html %]</p>
                             </div>
                         </div>
                         <div class="Clear"></div>

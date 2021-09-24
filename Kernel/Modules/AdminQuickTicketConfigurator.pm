@@ -356,9 +356,16 @@ sub Run {
         $Output .= $LayoutObject->NavigationBar();
 
         # check required attributes...
-        for my $Key (qw(Name)) {
-            if ( !$GetParam{$Key} ) {
-                $Error{ $Key . 'Invalid' } = 'ServerError';
+        if ( !$GetParam{Name} ) {
+            $Error{ 'NameInvalid' } = 'ServerError';
+        }
+        else {
+            my $Exists =  $TicketObject->TicketTemplateGet(
+                Name => $GetParam{Name},
+            );
+
+            if ( $Exists ) {
+                $Error{ 'NameDuplicateInvalid' } = 'ServerError';
             }
         }
 
@@ -1438,14 +1445,31 @@ sub _MaskNew {
     # prepare errors!
     if ( $Param{Errors} ) {
         for my $KeyError ( keys %{ $Param{Errors} } ) {
-            $Param{$KeyError}
-                = '* '
-                . $LayoutObject->Ascii2Html( Text => $Param{Errors}->{$KeyError} );
+            $Param{$KeyError} = '* '
+                . $LayoutObject->Ascii2Html(
+                    Text => $Param{Errors}->{$KeyError}
+                );
+
+            if ( $KeyError eq 'NameDuplicateInvalid' ) {
+                $Param{NameErrorMessage} = $LayoutObject->{LanguageObject}->Translate(
+                    "A ticket template with this name already exists!"
+                );
+                $Param{NameInvalid} = $Param{$KeyError};
+            }
+            elsif ( $KeyError eq 'NameInvalid' ) {
+                $Param{NameErrorMessage} = $LayoutObject->{LanguageObject}->Translate(
+                    "This field is required and its content can not be longer than %s characters.",
+                    "80"
+                );
+            }
         }
     }
 
     # display server error msg according with the occurred email (from) error type
-    if ( $Param{Errors} && $Param{Errors}->{ErrorType} ) {
+    if (
+        $Param{Errors}
+        && $Param{Errors}->{ErrorType}
+    ) {
         $LayoutObject->Block( Name => 'Email' . $Param{Errors}->{ErrorType} );
     }
     else {

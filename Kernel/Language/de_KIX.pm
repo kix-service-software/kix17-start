@@ -297,6 +297,8 @@ sub Data {
     $Lang->{'Save new quick ticket template'} = 'Neue Ticket-Vorlage speichern';
     $Lang->{'Save changes'}                   = 'Änderungen speichern';
     $Lang->{'Change template'}                = 'Vorlage ändern';
+    $Lang->{'A ticket template with this name already exists!'}
+        = 'Eine Ticketvorlage mit diesem Namen existiert bereits!';
     $Lang->{'Save changes for this quick ticket template'} =
         'Änderungen für diese Ticket-Vorlage speichern';
     $Lang->{'Attachments cannot be part of a quick ticket template'}

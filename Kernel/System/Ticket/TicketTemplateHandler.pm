@@ -380,127 +380,83 @@ sub TicketTemplateCreate {
     my %Data = %{ $Param{Data} };
 
     # get template content
-    my %Template = $Self->TicketTemplateGet(
+    return if $Self->TicketTemplateGet(
         Name => $Param{Name},
     );
 
-    # update action for existing templates
-    if (%Template) {
-        for my $Key ( keys %Data ) {
+    return if !$Self->{DBObject}->Do(
+        SQL => <<'END',
+INSERT INTO kix_ticket_template
+(
+    name, valid_id, create_time, create_by, change_time,
+    change_by,f_agent, f_customer, customer_portal_group_id
+)
+VALUES (?, 1, current_timestamp, ?, current_timestamp, ?, ?, ?, ?)
+END
+        Bind => [
+            \$Param{Name}, \$Param{UserID}, \$Param{UserID},
+            \$Data{Agent}, \$Data{Customer}, \$Data{CustomerPortalGroupID}
+        ],
+    );
 
-            # ignore empty and core preferences
-            next
-                if !$Key
-                    || !defined $Data{$Key}
-                    || $Data{$Key} eq ''
-                    || $Key        eq 'DefaultSet'
-                    || $Key        eq 'Name'
-                    || $Key        eq 'ID';
+    my $TemplateID = $Self->TicketTemplateLookup(
+        Name => $Param{Name},
+    );
 
-            # handle for dynamic fields
-            if ( ref $Data{$Key} eq 'HASH' ) {
-                for my $HashKey ( keys %{ $Data{$Key} } ) {
+    # set keys
+    for my $Key ( keys %Data ) {
 
-                    # dump structures into a string to allow DFs with multiple values
-                    my $Value = $YAMLObject->Dump( Data => $Data{$Key}->{$HashKey} );
+        # ignore empty and core preferences
+        next
+            if !$Key
+                || !defined $Data{$Key}
+                || $Data{$Key} eq ''
+                || $Key        eq 'DefaultSet'
+                || $Key        eq 'Name'
+                || $Key        eq 'ID';
 
-                    # insert data
-                    return if !$Self->{DBObject}->Do(
-                        SQL =>
-                            'UPDATE kix_ticket_template_prefs SET preferences_value = ? ' .
-                            'WHERE preferences_key = ? AND template_id = ?',
-                        Bind => [ \$Value, \$HashKey, \$Template{ID} ],
-                    );
-                }
-            }
-            else {
+        # handle for dynamic fields
+        if ( ref $Data{$Key} eq 'HASH' ) {
+            for my $HashKey ( keys %{ $Data{$Key} } ) {
 
-                # no update needed
-                next if $Template{$Key} && $Template{$Key} eq $Data{$Key};
+                # dump structures into a string to allow DFs with multiple values
+                my $Value = $YAMLObject->Dump( Data => $Data{$Key}->{$HashKey} );
 
-                # do update data
+                # insert data
                 return if !$Self->{DBObject}->Do(
-                    SQL =>
-                        'UPDATE kix_ticket_template_prefs SET preferences_value = ? ' .
-                        'WHERE preferences_key = ? AND template_id = ?',
-                    Bind => [ \$Data{$Key}, \$Key, \$Template{ID} ],
+                    SQL => <<'END',
+INSERT INTO kix_ticket_template_prefs
+(
+    template_id, preferences_key, preferences_value
+)
+VALUES (?, ?, ?)
+END
+                    Bind => [ \$TemplateID, \$HashKey, \$Value ],
                 );
             }
         }
 
-        # do update meta data
-        return if !$Self->{DBObject}->Do(
-            SQL =>
-                'UPDATE kix_ticket_template SET name = ?, f_agent = ?, f_customer = ?, customer_portal_group_id = ? ' .
-                'WHERE id = ?',
-            Bind => [ \$Data{Name}, \$Data{Agent}, \$Data{Customer}, \$Data{CustomerPortalGroupID}, \$Param{ID} ],
-        );
-    }
+        else {
 
-    # insert action
-    else {
-        return if !$Self->{DBObject}->Do(
-            SQL => 'INSERT INTO kix_ticket_template '
-                . '(name, valid_id, '
-                . 'create_time, create_by, change_time, change_by, '
-                . 'f_agent, f_customer, customer_portal_group_id) '
-                . 'VALUES (?, 1, current_timestamp, ?, current_timestamp, ?, ?, ?, ?)',
-            Bind => [
-                \$Param{Name}, \$Param{UserID}, \$Param{UserID}, \$Data{Agent}, \$Data{Customer}, \$Data{CustomerPortalGroupID}
-            ],
-        );
-
-        $Template{ID} = $Self->TicketTemplateLookup(
-            Name => $Param{Name},
-        );
-
-        # set keys
-        for my $Key ( keys %Data ) {
-
-            # ignore empty and core preferences
-            next
-                if !$Key
-                    || !defined $Data{$Key}
-                    || $Data{$Key} eq ''
-                    || $Key        eq 'DefaultSet'
-                    || $Key        eq 'Name'
-                    || $Key        eq 'ID';
-
-            # handle for dynamic fields
-            if ( ref $Data{$Key} eq 'HASH' ) {
-                for my $HashKey ( keys %{ $Data{$Key} } ) {
-
-                    # dump structures into a string to allow DFs with multiple values
-                    my $Value = $YAMLObject->Dump( Data => $Data{$Key}->{$HashKey} );
-
-                    # insert data
-                    return if !$Self->{DBObject}->Do(
-                        SQL =>
-                            'INSERT INTO kix_ticket_template_prefs (template_id, preferences_key, preferences_value) '
-                            . 'VALUES (?, ?, ?)',
-                        Bind => [ \$Template{ID}, \$HashKey, \$Value ],
-                    );
-                }
-            }
-
-            else {
-
-                # insert data
-                return if !$Self->{DBObject}->Do(
-                    SQL =>
-                        'INSERT INTO kix_ticket_template_prefs (template_id, preferences_key, preferences_value) '
-                        . 'VALUES (?, ?, ?)',
-                    Bind => [ \$Template{ID}, \$Key, \$Data{$Key} ],
-                );
-            }
-
+            # insert data
+            return if !$Self->{DBObject}->Do(
+                SQL => <<'END',
+INSERT INTO kix_ticket_template_prefs
+(
+    template_id, preferences_key, preferences_value
+)
+VALUES (?, ?, ?)
+END
+                Bind => [ \$TemplateID, \$Key, \$Data{$Key} ],
+            );
         }
     }
 
     # create ticket template cache
-    %Template = $Self->TicketTemplateGet(
+    my %Template = $Self->TicketTemplateGet(
         Name => $Param{Name},
     );
+
     my $CacheKey = 'Cache::TicketTemplateGet::' . $Template{ID};
     $Self->{$CacheKey} = {
         %Template,
