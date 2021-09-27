@@ -1,6 +1,15 @@
 # Change log of KIX
 * Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.17.0-RC9 (2021/09/27)
+ * (2021/09/24) - Bugfix: KIX17-2545 (add check for existing ticket template name) (fjacquemin)
+ * (2021/09/24) - Bugfix: KIX17-552 (Add error message with undefined message size when checking incoming email with IMAP) (fjacquemin)
+ * (2021/09/24) - Bugfix: KIX17-1878 (cleanup article index cache after move and delete) (millinger)
+ * (2021/09/24) - Bugfix: KIX17-587 (fixed labels of owner and responsible details in ticket info sidebar) (millinger)
+ * (2021/09/24) - Bugfix: KIX17-2523 (unify template of AgentTicketZoomTabActionCommon) (millinger)
+ * (2021/09/23) - Bugfix: KIX17-2523 (fixed filter behavior of linked config item sidebar) (millinger)
+ * (2021/09/23) - Bugfix: KIX17-2546 (check object type and field type on dynamic field import) (millinger)
+
 # 17.17.0-RC8 (2021/09/23)
  * (2021/09/22) - CR: KIX17-2518 (changed back- and whitlist regular expressions of the CustomerTicketTemplate) (fjacquemin)
 
