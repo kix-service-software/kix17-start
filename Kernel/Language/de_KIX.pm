@@ -297,6 +297,8 @@ sub Data {
     $Lang->{'Save new quick ticket template'} = 'Neue Ticket-Vorlage speichern';
     $Lang->{'Save changes'}                   = 'Änderungen speichern';
     $Lang->{'Change template'}                = 'Vorlage ändern';
+    $Lang->{'A ticket template with this name already exists!'}
+        = 'Eine Ticketvorlage mit diesem Namen existiert bereits!';
     $Lang->{'Save changes for this quick ticket template'} =
         'Änderungen für diese Ticket-Vorlage speichern';
     $Lang->{'Attachments cannot be part of a quick ticket template'}
@@ -1400,6 +1402,9 @@ sub Data {
         'Defines which deployment states should not be shown in config item link graph. Separate different states by comma.'
         }
         = 'Legt fest, welche Verwendungsstatus im Verknüpfungsgraph nicht mit angezeigt werden sollen. Mehrere Werte werden durch Komma getrennt.';
+
+    $Lang->{'Choose the attribute of the config items to filter. Click on the plus next to the selection to add an attribute filter.'}
+        = 'Wählen Sie hier die Attribute des CIs, nach denen Sie noch weiter einschränken möchten. Klicken Sie dafür auf das Plus neben der Auswahl.';
 
     $Lang->{'Only attributes of the following types are shown in the list'}
         = 'Nur Attribute folgender Typen werden in der Liste angezeigt';
