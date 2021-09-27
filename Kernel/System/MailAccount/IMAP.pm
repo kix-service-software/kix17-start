@@ -177,7 +177,14 @@ sub _Fetch {
 
             # check message size
             my $MessageSize = $IMAPObject->list($Messageno);
-            if ( $MessageSize > ( $MaxEmailSize * 1024 ) ) {
+            if ( !$MessageSize ) {
+                $Kernel::OM->Get('Kernel::System::Log')->Log(
+                    Priority => 'error',
+                    Message  => "$AuthType: Can't process mail, email no $Messageno has undefined message size!",
+                );
+            }
+
+            elsif ( $MessageSize > ( $MaxEmailSize * 1024 ) ) {
 
                 # convert size to KB, log error
                 my $MessageSizeKB = int( $MessageSize / (1024) );
