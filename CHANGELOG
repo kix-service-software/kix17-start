@@ -1,6 +1,9 @@
 # Change log of KIX
 * Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.17.0-RC10 (2021/09/27)
+ * (2021/09/27) - Bugfix: KIX17-2552 (fixed template structure of AgentTicket(ZoomTab)ActionCommon) (fjacquemin)
+
 # 17.17.0-RC9 (2021/09/27)
  * (2021/09/24) - Bugfix: KIX17-2545 (add check for existing ticket template name) (fjacquemin)
  * (2021/09/24) - Bugfix: KIX17-552 (Add error message with undefined message size when checking incoming email with IMAP) (fjacquemin)
