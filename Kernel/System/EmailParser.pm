@@ -520,39 +520,61 @@ sub GetMessageBody {
         #   body MIME parts into just one attachment.
         my @Attachments = $Self->GetAttachments();
         if ( @Attachments > 0 ) {
-            $Self->{Charset}     = $Attachments[0]->{Charset};
-            $Self->{ContentType} = $Attachments[0]->{ContentType};
+
+            ATTACHMENT:
+            for my $Attachment ( @Attachments ) {
+                next ATTACHMENT if $Attachment->{Disposition} && $Attachment->{Disposition} eq 'Attachment';
+
+                $Self->{Charset}     = $Attachment->{Charset};
+                $Self->{ContentType} = $Attachment->{ContentType};
+                if ( $Self->{Debug} > 0 ) {
+                    $Kernel::OM->Get('Kernel::System::Log')->Log(
+                        Priority => 'debug',
+                        Message  => "First attachment ContentType: $Self->{ContentType}",
+                    );
+                }
+
+                # check if charset is given, set iso-8859-1 if content is text
+                if ( !$Self->{Charset} && $Attachment->{ContentType} =~ /\btext\b/) {
+                    $Self->{Charset} = 'iso-8859-1';
+                }
+
+                # check if charset exists
+                if ( $Self->GetCharset() ) {
+                    $Self->{MessageBody} = $EncodeObject->Convert2CharsetInternal(
+                        Text  => $Attachment->{Content},
+                        From  => $Self->GetCharset(),
+                        Check => 1,
+                    );
+                }
+                else {
+                    $Self->{Charset}     = 'us-ascii';
+                    $Self->{ContentType} = 'text/plain';
+                    $Self->{MessageBody} = '- no text message => see attachment -';
+                }
+
+                # check if it's a html-only email (store it as attachment and add text/plain)
+                $Self->CheckMessageBody();
+
+                # return message body
+                return $Self->{MessageBody};
+            }
+
             if ( $Self->{Debug} > 0 ) {
                 $Kernel::OM->Get('Kernel::System::Log')->Log(
                     Priority => 'debug',
-                    Message  => "First attachment ContentType: $Self->{ContentType}",
+                    Message  => "No attachments with ContentType: $Self->{ContentType}",
                 );
             }
 
-            # check if charset is given, set iso-8859-1 if content is text
-            if ( !$Self->{Charset} && $Self->{ContentType} =~ /\btext\b/ ) {
-                $Self->{Charset} = 'iso-8859-1';
-            }
-
-            # check if charset exists
-            if ( $Self->GetCharset() ) {
-                $Self->{MessageBody} = $EncodeObject->Convert2CharsetInternal(
-                    Text  => $Attachments[0]->{Content},
-                    From  => $Self->GetCharset(),
-                    Check => 1,
-                );
-            }
-            else {
-                $Self->{Charset}     = 'us-ascii';
-                $Self->{ContentType} = 'text/plain';
-                $Self->{MessageBody} = '- no text message => see attachment -';
-            }
-
-            # check if it's a html-only email (store it as attachment and add text/plain)
-            $Self->CheckMessageBody();
+            # return empty attachment
+            $Self->{Charset}     = 'iso-8859-1';
+            $Self->{ContentType} = 'text/plain';
+            $Self->{MessageBody} = '- no text message => see attachment -';
 
             # return message body
             return $Self->{MessageBody};
+
         }
         else {
             if ( $Self->{Debug} > 0 ) {
