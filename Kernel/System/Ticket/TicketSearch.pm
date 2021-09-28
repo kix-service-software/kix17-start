@@ -315,7 +315,7 @@ sub TicketSearch {
     my $Result  = $Param{Result}  || 'HASH';
     my $OrderBy = $Param{OrderBy} || 'Down';
     my $SortBy  = $Param{SortBy}  || 'Age';
-    my $Limit   = $Param{Limit}   || 10000;
+    my $Limit   = $Param{Limit}   // 10000;
 
     if ( !$Param{ContentSearch} ) {
         $Param{ContentSearch} = 'AND';
