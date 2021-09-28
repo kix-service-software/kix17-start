@@ -2115,28 +2115,38 @@ sub Run {
                                     UserID  => $Self->{UserID},
                                 );
 
-                                my $SourceObject = $TargetObjectOrg;
-                                my $SourceKey    = $TargetKeyOrg;
-                                my $TargetObject = 'Ticket';
-                                my $TargetKey    = $TicketID;
-
-                                if ( $Direction eq 'Target' ) {
-                                    $SourceObject = 'Ticket';
-                                    $SourceKey    = $TicketID;
-                                    $TargetObject = $TargetObjectOrg;
-                                    $TargetKey    = $TargetKeyOrg;
+                                if ($TargetObjectOrg eq 'Person') {
+                                     $Kernel::OM->Get('Kernel::System::AsynchronousExecutor::LinkedTicketPersonExecutor')->AsyncCall(
+                                         TicketID      => $TicketID,
+                                         PersonID      => $TargetKeyOrg,
+                                         PersonHistory => $TargetKeyOrg,
+                                         LinkType      => $Type,
+                                         UserID        => $Self->{UserID},
+                                     );
                                 }
-
-                                # add the permanently link
-                                my $Success = $Kernel::OM->Get('Kernel::System::LinkObject')->LinkAdd(
-                                    SourceObject => $SourceObject,
-                                    SourceKey    => $SourceKey,
-                                    TargetObject => $TargetObject,
-                                    TargetKey    => $TargetKey,
-                                    Type         => $Type,
-                                    State        => 'Valid',
-                                    UserID       => $Self->{UserID},
-                                );
+                                else {
+                                    if ($Direction eq 'Source') {
+                                        $LinkObject->LinkAdd(
+                                            SourceObject => $TargetObjectOrg,
+                                            SourceKey    => $TargetKeyOrg,
+                                            TargetObject => 'Ticket',
+                                            TargetKey    => $TicketID,
+                                            Type         => $Type,
+                                            State        => 'Valid',
+                                            UserID       => $Self->{UserID},
+                                        );
+                                    } else {
+                                        $LinkObject->LinkAdd(
+                                            SourceObject => 'Ticket',
+                                            SourceKey    => $TicketID,
+                                            TargetObject => $TargetObjectOrg,
+                                            TargetKey    => $TargetKeyOrg,
+                                            Type         => $Type,
+                                            State        => 'Valid',
+                                            UserID       => $Self->{UserID},
+                                        );
+                                    }
+                                }
                             }
                         }
                     }
