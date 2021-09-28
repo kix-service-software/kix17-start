@@ -30,6 +30,9 @@ local $Kernel::OM = Kernel::System::ObjectManager->new(
 
 use vars qw(%INC);
 
+# save configuration
+_SaveConfig();
+
 # switched configuration
 _SwitchConfig();
 
@@ -37,6 +40,28 @@ _SwitchConfig();
 _RemoveObsoleteFiles();
 
 exit 0;
+
+sub _SaveConfig {
+    my ( $Self, %Param ) = @_;
+
+    # get config values to save from config object
+    my %ConfigBackup = ();
+    for my $Key ( qw( Ticket::ACL-PossiblePropertiesSubsumption ) ) {
+        $ConfigBackup{ $Key } = $Kernel::OM->Get('Kernel::Config')->Get( $Key );
+    }
+
+    # update SysConfig
+    my $Result;
+    for my $Key ( keys( %ConfigBackup ) ) {
+        $Result = $Kernel::OM->Get('Kernel::System::SysConfig')->ConfigItemUpdate(
+            Key   => $Key,
+            Value => $ConfigBackup{ $Key },
+            Valid => 1,
+        );
+    }
+
+    return $Result;
+}
 
 sub _SwitchConfig {
     my ( $Self, %Param ) = @_;
