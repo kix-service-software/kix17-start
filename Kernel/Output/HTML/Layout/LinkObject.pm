@@ -1207,10 +1207,12 @@ sub _PreferencesLinkObject {
     my ( $Self, %Param ) = @_;
 
     # get needed objects
-    my $ConfigObject       = $Kernel::OM->Get('Kernel::Config');
-    my $ParamObject        = $Kernel::OM->Get('Kernel::System::Web::Request');
-    my $JSONObject         = $Kernel::OM->Get('Kernel::System::JSON');
-    my $DynamicFieldObject = $Kernel::OM->Get('Kernel::System::DynamicField');
+    my $ConfigObject         = $Kernel::OM->Get('Kernel::Config');
+    my $ParamObject          = $Kernel::OM->Get('Kernel::System::Web::Request');
+    my $JSONObject           = $Kernel::OM->Get('Kernel::System::JSON');
+    my $ConfigItemObject     = $Kernel::OM->Get('Kernel::System::ITSMConfigItem');
+    my $GeneralCatalogObject = $Kernel::OM->Get('Kernel::System::GeneralCatalog');
+    my $DynamicFieldObject   = $Kernel::OM->Get('Kernel::System::DynamicField');
 
     my @OutputData     = @{ $Param{OutputData} };
     my %EnabledColumns = %{ $Param{EnabledColumns} };
@@ -1264,8 +1266,9 @@ sub _PreferencesLinkObject {
                 !defined $EnabledColumns{ $Block->{Object} }
                 || !scalar @{ $EnabledColumns{ $Block->{Object} } }
             ) {
-                @{ $EnabledColumns{ $Block->{Object} } }
-                    = ( "TicketNumber", "Title", "Type", "Queue", "State", "Created" );
+                @{ $EnabledColumns{ $Block->{Object} } } = (
+                    "TicketNumber", "Title", "Type", "Queue", "State", "Created"
+                );
 
                 # add link type by default if no user enabled columns defined
                 push @{ $EnabledColumns{ $Block->{Object} } }, 'LinkType';
@@ -1318,8 +1321,7 @@ sub _PreferencesLinkObject {
 
         # for itsm-workorder object
         elsif ( $Block->{Object} eq 'ITSMWorkOrder' ) {
-            $ConfigHash
-                = $ConfigObject->Get('ITSMChange::Frontend::AgentITSMChangeMyWorkOrders');
+            $ConfigHash = $ConfigObject->Get('ITSMChange::Frontend::AgentITSMChangeMyWorkOrders');
 
             # check if user columns enabled
             if (
@@ -1365,6 +1367,20 @@ sub _PreferencesLinkObject {
             my $RealClass = $Class;
             $Class =~ s/[^A-Za-z0-9_-]/_/g;
 
+            my $ClassRef = $GeneralCatalogObject->ItemGet(
+                Class  => 'ITSM::ConfigItem::Class',
+                Name   => $Class,
+                Silent => 0,
+            );
+
+            my $DefinitionRef = $ConfigItemObject->DefinitionGet(
+                ClassID => $ClassRef->{ItemID},
+            );
+
+            my $XMLTranslated = $Self->_XML2Hash(
+                XMLDefinition => $DefinitionRef->{DefinitionRef}
+            );
+
             # check if user columns enabled
             if (
                 !defined $EnabledColumns{ $Block->{Object} . $Placeholder1 . $Class }
@@ -1384,6 +1400,9 @@ sub _PreferencesLinkObject {
                 if ( defined $TranslationHash{$Col} ) {
                     $DefaultColumnHash{$Col} = $LayoutObject->{LanguageObject}->Get( $TranslationHash{$Col} );
                 }
+                elsif ( $XMLTranslated->{$Col} ) {
+                    $DefaultColumnHash{$Col} = $XMLTranslated->{$Col};
+                }
                 else {
                     $DefaultColumnHash{$Col} = $LayoutObject->{LanguageObject}->Translate($Col);
                 }
@@ -1393,7 +1412,11 @@ sub _PreferencesLinkObject {
             my $ColumnConfig = $ConfigObject->Get('LinkObject::ITSMConfigItem::ShowColumnsByClass');
 
             # get the configered columns and reorganize them by class name
-            if ( $ColumnConfig && ref $ColumnConfig eq 'ARRAY' && @{$ColumnConfig} ) {
+            if (
+                $ColumnConfig
+                && ref $ColumnConfig eq 'ARRAY'
+                && @{$ColumnConfig}
+            ) {
                 for my $Name ( @{$ColumnConfig} ) {
 
                     # extract the class name and the column name
@@ -1402,21 +1425,7 @@ sub _PreferencesLinkObject {
 
                         # create new entry
                         if ( $DefinedClass eq $RealClass ) {
-                            my @SplitArray = split( /::/, $Col );
-                            my $Count = 0;
-                            for my $SplitItem (@SplitArray) {
-                                if ( defined $TranslationHash{$SplitItem} ) {
-                                    $SplitArray[$Count] = $LayoutObject->{LanguageObject}
-                                        ->Get( $TranslationHash{$SplitItem} );
-                                }
-                                else {
-                                    $SplitArray[$Count]
-                                        = $LayoutObject->{LanguageObject}->Translate($SplitItem);
-                                }
-                                $Count++;
-                            }
-                            my $TranslatedString = join( "::", @SplitArray );
-                            $DefaultColumnHash{$Col} = $TranslatedString;
+                            $DefaultColumnHash{$Col} = $XMLTranslated->{$Col};
                         }
                     }
                 }
@@ -1478,7 +1487,6 @@ sub _PreferencesLinkObject {
             if ( !$UserColumnsEnabled ) {
                 push @{ $EnabledColumns{ $Block->{Object} } }, 'LinkType';
             }
-
         }
 
         # for service object
@@ -1532,7 +1540,10 @@ sub _PreferencesLinkObject {
         if ( defined $RequestURL && $RequestURL ) {
             my $URLPattern = 'Agent(.*?)ZoomTabLinkedObjects;(.*?)DirectLinkAnchor=(.*?);?(.*)';
             $RequestURL =~ s/$URLPattern/Agent$1Zoom;$2$4/;
-            if ( defined $1 && $1 eq 'Ticket' ) {
+            if (
+                defined $1
+                && $1 eq 'Ticket'
+            ) {
                 $Param{RequestedURL} = $RequestURL . ';SelectedTab=2;';
             }
             else {
@@ -1910,6 +1921,71 @@ sub LinkObjectFilterContent {
         }
     }
     return $FilterContent{$Param{Object}};
+}
+
+=item _XML2Hash()
+
+returns a hash reference with all xml of a config item
+
+Return
+
+    $Data = {
+        'CPU::1'                   => 'CPU::1',
+        'HardDisk::2'              => 'Hard Disk::2',
+        'HardDisk::2::Capacity::1' => 'Hard Disk::2::Capacity::1'
+    };
+
+    my $Data = $LinkObject->_XMLData2Hash(
+        XMLDefinition => $Version->{XMLDefinition},
+        Data          => \%DataHashRef,                                 # optional
+        Prefix        => 'HardDisk::1',                                 # optional
+    );
+
+=cut
+
+sub _XML2Hash {
+    my ( $Self, %Param ) = @_;
+
+    # check needed stuff
+    return if !$Param{XMLDefinition};
+    return if ref $Param{XMLDefinition} ne 'ARRAY';
+
+    # to store the return data
+    my $Data = $Param{Data} || {};
+
+    ITEM:
+    for my $Item ( @{ $Param{XMLDefinition} } ) {
+        COUNTER:
+        for my $Counter ( 1 .. $Item->{CountMax} ) {
+
+            # add prefix
+            my $Prefix = $Item->{Key} . '::' . $Counter;
+            if ( $Param{Prefix} ) {
+                $Prefix = $Param{Prefix} . '::' . $Prefix;
+            }
+
+            my $Name = $Kernel::OM->Get('Kernel::Output::HTML::Layout')->{LanguageObject}->Translate($Item->{Name})
+                . '::'
+                . $Counter;
+            if ( $Param{Prefix} ) {
+                $Name = $Data->{$Param{Prefix}} . '::' . $Name;
+            }
+
+            # store the item in hash
+            $Data->{$Prefix} = $Name;
+
+            # start recursion, if "Sub" was found
+            if ( $Item->{Sub} ) {
+                $Data = $Self->_XML2Hash(
+                    XMLDefinition => $Item->{Sub},
+                    Prefix        => $Prefix,
+                    Data          => $Data,
+                );
+            }
+        }
+    }
+
+    return $Data;
 }
 
 =end Internal:
