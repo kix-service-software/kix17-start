@@ -360,11 +360,14 @@ sub Run {
             $Error{ 'NameInvalid' } = 'ServerError';
         }
         else {
-            my $Exists =  $TicketObject->TicketTemplateGet(
+            my %Exists = $TicketObject->TicketTemplateGet(
                 Name => $GetParam{Name},
             );
 
-            if ( $Exists ) {
+            if (
+                $Exists{ID}
+                && $Exists{ID} ne $GetParam{ID}
+            ) {
                 $Error{ 'NameDuplicateInvalid' } = 'ServerError';
             }
         }
