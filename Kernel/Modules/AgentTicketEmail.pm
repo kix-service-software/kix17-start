@@ -69,17 +69,14 @@ sub Run {
         );
     }
 
-    # get param object
-    my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
-
-    # get upload cache object
-    my $UploadCacheObject = $Kernel::OM->Get('Kernel::System::Web::UploadCache');
-
     # get needed objects
-    my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
-    my $QueueObject  = $Kernel::OM->Get('Kernel::System::Queue');
-    my $MainObject   = $Kernel::OM->Get('Kernel::System::Main');
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+    my $ParamObject       = $Kernel::OM->Get('Kernel::System::Web::Request');
+    my $UploadCacheObject = $Kernel::OM->Get('Kernel::System::Web::UploadCache');
+    my $TicketObject      = $Kernel::OM->Get('Kernel::System::Ticket');
+    my $QueueObject       = $Kernel::OM->Get('Kernel::System::Queue');
+    my $MainObject        = $Kernel::OM->Get('Kernel::System::Main');
+    my $ConfigObject      = $Kernel::OM->Get('Kernel::Config');
+    my $LinkObject        = $Kernel::OM->Get('Kernel::System::LinkObject');
 
     my $Debug = $Param{Debug} || 0;
     my $Config = $ConfigObject->Get("Ticket::Frontend::$Self->{Action}");
@@ -2056,7 +2053,7 @@ sub Run {
 # ITSMIncidentProblemManagement
 # ---
             # get the temporarily links
-            my $TempLinkList = $Kernel::OM->Get('Kernel::System::LinkObject')->LinkList(
+            my $TempLinkList = $LinkObject->LinkList(
                 Object => 'Ticket',
                 Key    => $Self->{FormID},
                 State  => 'Temporary',
@@ -2080,7 +2077,7 @@ sub Run {
                             for my $TargetKeyOrg ( sort keys %{ $DirectionList->{$Direction} } ) {
 
                                 # delete the temp link
-                                $Kernel::OM->Get('Kernel::System::LinkObject')->LinkDelete(
+                                $LinkObject->LinkDelete(
                                     Object1 => 'Ticket',
                                     Key1    => $Self->{FormID},
                                     Object2 => $TargetObjectOrg,
@@ -2144,7 +2141,7 @@ sub Run {
             }
 
             # link the tickets
-            $Kernel::OM->Get('Kernel::System::LinkObject')->LinkAdd(
+            $LinkObject->LinkAdd(
                 SourceObject => 'Ticket',
                 SourceKey    => $SourceKey,
                 TargetObject => 'Ticket',
@@ -2158,7 +2155,7 @@ sub Run {
         my $LinkType = $ConfigObject->Get('KIXSidebarConfigItemLink::LinkType')
             || 'Normal';
         for my $CurrKey (@SelectedCIIDs) {
-            $Kernel::OM->Get('Kernel::System::LinkObject')->LinkAdd(
+            $LinkObject->LinkAdd(
                 SourceObject => 'ITSMConfigItem',
                 SourceKey    => $CurrKey,
                 TargetObject => 'Ticket',
