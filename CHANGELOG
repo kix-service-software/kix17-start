@@ -1,6 +1,14 @@
 # Change log of KIX
 * Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.17.0-RC11 (2021/10/05)
+ * (2021/10/05) - Bugfix: KIX17-2545 (fixed check of existing ticket template) (fjacquemin)
+ * (2021/10/05) - Bugfix: KIX17-415 (fixed display of itsm config item xml-attributes as column headers) (fjacquemin)
+ * (2021/10/04) - Bugfix: KIX17-2576 (fixed missing data of the sidebar LinkedPersons) (fjacquemin)
+ * (2021/09/28) - CR: KIX17-575 (deactivate Ticket::ACL-PossiblePropertiesSubsumption by default) (millinger)
+ * (2021/09/28) - Bugfix: KIX17-2482 (link temporary persons async to created ticket) (millinger)
+ * (2021/09/28) - Bugfix: KIX17-1769 (fixed display of the wrong number of tickets in the queue view) (fjacquemin)
+
 # 17.17.0-RC10 (2021/09/27)
  * (2021/09/27) - Bugfix: KIX17-2552 (fixed template structure of AgentTicket(ZoomTab)ActionCommon) (fjacquemin)
 
