@@ -46,7 +46,7 @@ sub _SaveConfig {
 
     # get config values to save from config object
     my %ConfigBackup = ();
-    for my $Key ( qw( SystemID LostPassword CustomerPanelLostPassword CustomerPanelCreateAccount ) ) {
+    for my $Key ( qw( SystemID LostPassword CustomerPanelLostPassword CustomerPanelCreateAccount Ticket::ACL-PossiblePropertiesSubsumption ) ) {
         $ConfigBackup{ $Key } = $Kernel::OM->Get('Kernel::Config')->Get( $Key );
     }
 
