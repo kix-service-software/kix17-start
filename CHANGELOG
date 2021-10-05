@@ -1,6 +1,9 @@
 # Change log of KIX
 * Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.17.0-RC12 (2021/10/05)
+ * (2021/10/05) - release candidate
+
 # 17.17.0-RC11 (2021/10/05)
  * (2021/10/05) - Bugfix: KIX17-2545 (fixed check of existing ticket template) (fjacquemin)
  * (2021/10/05) - Bugfix: KIX17-415 (fixed display of itsm config item xml-attributes as column headers) (fjacquemin)
