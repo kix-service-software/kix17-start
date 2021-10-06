@@ -142,7 +142,13 @@ sub Run {
     my %UserPreferences = $UserObject->GetPreferences(
         UserID => $Self->{UserID},
     );
-    if ( !$GetParam{Template} ) {
+    if (
+        (
+            !$Self->{Subaction}
+            || $Self->{Subaction} ne 'LoadTemplate'
+        )
+        && !$GetParam{Template}
+    ) {
         $GetParam{Template} = $UserPreferences{CIGTemplate} || $Self->{Config}->{DefaultTemplate} || '';
     }
 

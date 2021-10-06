@@ -1115,6 +1115,7 @@ ITSM.Agent.LinkGraph = ( function (TargetNS) {
         }
 
         SourceURL = 'index.pl?Action=AgentLinkGraphITSMConfigItem;'
+              + 'Subaction=LoadTemplate;'
               + 'ObjectType=' + ObjectType + ';'
               + 'ObjectID='   + ObjectID + ';'
               + 'Template='   + Template + ';'
