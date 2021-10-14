@@ -65,7 +65,6 @@
         <div class="Content [% Data.AdditionalClasses | html %]">
 [% RenderBlockStart("InlineActionRow") %]
             <ul class="Actions InlineActions">
-                <li class="ResponsiveActionMenu"><a href="#" id="ResponsiveActionMenu[% Data.TicketID | html %]" title="[% Translate("Open / Close ticket action menu") | html %]"><i class="fa fa-bars"></i></a></li>
 [% RenderBlockStart("InlineActionRowItem") %]
                 <li><a id="[% Data.ID | html %][% Data.TicketID | html %]" class="[% Data.Class | html %]" href="[% Data.Link | Interpolate | html %]" title="[% Translate(Data.Description) | html %]">[% Translate(Data.Name) | html %]</a></li>
 [% RenderBlockEnd("InlineActionRowItem") %]
@@ -411,11 +410,6 @@
     if ($('body').hasClass('TouchDevice')) {
         $('ul.InlineActions li:not(.ResponsiveActionMenu)').hide();
     }
-    $('li.ResponsiveActionMenu').on('click.ToggleResponsiveActionMenu', function () {
-        $(this).siblings().toggle();
-        $(this).toggleClass('Opened')
-        return false;
-    });
 
     $('#SelectAllTickets').on('click', function (Event) {
         var $Element = $(this);
