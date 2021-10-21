@@ -2673,9 +2673,15 @@ sub _GenerateDynamicStats {
                     $ToYear, $ToMonth, $ToDay, $Hour, $Minute, $Second, 0, 0, 0,
                     -1
                 );
-                if ( $ToMonth eq $Month ) {
+                if ( 
+                    $ToYear eq $Year
+                    && $ToMonth eq $Month
+                ) {
                     my $TranslateMonth = $LanguageObject->Translate( $MonthArrayRef->[$Month] );
-                    push @HeaderLine, "$TranslateMonth $Month";
+                    push(
+                        @HeaderLine,
+                        sprintf( "$TranslateMonth $Month-%04d", $Year )
+                    );
                 }
                 else {
                     push(

@@ -13040,6 +13040,30 @@ via the Preferences button after logging in.
             </Hash>
         </Setting>
     </ConfigItem>
+    <ConfigItem Name="PreferencesGroups###BrowserContextMenu" Required="0" Valid="1">
+        <Description Translatable="1">Defines user preference to decide whether richtext or browser context menu should be used.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Frontend::Agent::Preferences</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::Output::HTML::Preferences::Generic</Item>
+                <Item Key="Column">Other Settings</Item>
+                <Item Key="Label" Translatable="1">Use browser context menu</Item>
+                <Item Key="Desc" Translatable="1">Select to decide whether richtext or browser context menu should be used. Using the browser context menu, you can for example use its spell checker.</Item>
+                <Item Key="Key" Translatable="1">Use browser context menu</Item>
+                <Item Key="Data">
+                    <Hash>
+                        <Item Key="1">Yes</Item>
+                        <Item Key="0">No</Item>
+                    </Hash>
+                </Item>
+                <Item Key="DataSelected">0</Item>
+                <Item Key="PrefKey">UserBrowserContextMenu</Item>
+                <Item Key="Prio">1320</Item>
+                <Item Key="Active">1</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
     <ConfigItem Name="CustomerCompany::PreferencesModule" Required="1" Valid="1" ConfigLevel="200">
         <Description Translatable="1">Defines the parameters for the customer company preferences module.</Description>
         <Group>Framework</Group>
@@ -14375,6 +14399,7 @@ via the Preferences button after logging in.
                 <Item>CustomerTicketTemplate</Item>
                 <Item>CustomerTicketMessage</Item>
                 <Item>CustomerTicketOverview</Item>
+                <Item>AgentDashboard</Item>
                 <Item>AgentTicketZoom</Item>
                 <Item>AgentTicketPhone</Item>
                 <Item>AgentTicketEmail</Item>

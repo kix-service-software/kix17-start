@@ -32,9 +32,13 @@ sub Run {
     my ( $Self, %Param ) = @_;
 
     # get needed object
-    my $ParamObject  = $Kernel::OM->Get('Kernel::System::Web::Request');
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $ConfigObject  = $Kernel::OM->Get('Kernel::Config');
+    my $LayoutObject  = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $SessionObject = $Kernel::OM->Get('Kernel::System::AuthSession');
+    my $JSONObject    = $Kernel::OM->Get('Kernel::System::JSON');
+    my $StateObject   = $Kernel::OM->Get('Kernel::System::State');
+    my $UserObject    = $Kernel::OM->Get('Kernel::System::User');
+    my $ParamObject   = $Kernel::OM->Get('Kernel::System::Web::Request');
 
     # get config
     my $Config = $ConfigObject->Get("Ticket::Frontend::$Self->{Action}");
@@ -55,22 +59,25 @@ sub Run {
         . ";StartHit="      . $LayoutObject->LinkEncode( $ParamObject->GetParam(Param => 'StartHit')    || '')
         . ";StartWindow="   . $LayoutObject->LinkEncode( $ParamObject->GetParam(Param => 'StartWindow') || 0);
 
-    # store last queue screen
-    $Kernel::OM->Get('Kernel::System::AuthSession')->UpdateSessionID(
+    # store last screen
+    $SessionObject->UpdateSessionID(
+        SessionID => $Self->{SessionID},
+        Key       => 'LastScreenView',
+        Value     => $URL,
+    );
+
+    # store last overview screen
+    $SessionObject->UpdateSessionID(
         SessionID => $Self->{SessionID},
         Key       => 'LastScreenOverview',
         Value     => $URL,
     );
-
-    # get user object
-    my $UserObject = $Kernel::OM->Get('Kernel::System::User');
 
     # get filters stored in the user preferences
     my %Preferences = $UserObject->GetPreferences(
         UserID => $Self->{UserID},
     );
     my $StoredFiltersKey = 'UserStoredFilterColumns-' . $Self->{Action};
-    my $JSONObject       = $Kernel::OM->Get('Kernel::System::JSON');
     my $StoredFilters    = $JSONObject->Decode(
         Data => $Preferences{$StoredFiltersKey},
     );
@@ -173,6 +180,17 @@ sub Run {
         $SortByS = 'Age';
     }
 
+    # get pending states
+    my @PendingAutoStateIDs = $StateObject->StateGetStatesByType(
+        Type   => 'PendingAuto',
+        Result => 'ID',
+    );
+    my @PendingReminderStateIDs = $StateObject->StateGetStatesByType(
+        Type   => 'PendingReminder',
+        Result => 'ID',
+    );
+    my @PendingsStateIDs = (@PendingAutoStateIDs, @PendingReminderStateIDs);
+
     # define filter
     my %Filters = (
         All => {
@@ -207,7 +225,7 @@ sub Run {
             Name   => Translatable('Pending'),
             Prio   => 1002,
             Search => {
-                StateType      => [ 'pending reminder', 'pending auto' ],
+                StateIDs       => \@PendingsStateIDs,
                 ResponsibleIDs => [ $Self->{UserID} ],
                 OrderBy        => $OrderBy,
                 SortBy         => $SortByS,
@@ -219,7 +237,7 @@ sub Run {
             Name   => Translatable('Reminder Reached'),
             Prio   => 1003,
             Search => {
-                StateType                     => ['pending reminder'],
+                StateIDs                      => \@PendingReminderStateIDs,
                 TicketPendingTimeOlderMinutes => 1,
                 ResponsibleIDs                => [ $Self->{UserID} ],
                 OrderBy                       => $OrderBy,

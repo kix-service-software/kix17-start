@@ -515,6 +515,12 @@ sub ArticleMove {
         }
     }
 
+    # get article content
+    my %Article = $Self->ArticleGet(
+        ArticleID => $Param{ArticleID},
+    );
+    return if !%Article;
+
     # update article data
     return 'MoveFailed' if !$Kernel::OM->Get('Kernel::System::DB')->Do(
         SQL => "UPDATE article SET ticket_id = ?, "
@@ -536,7 +542,8 @@ sub ArticleMove {
     );
 
     # clear ticket cache
-    delete $Self->{ 'Cache::GetTicket' . $Param{TicketID} };
+    $Self->_TicketCacheClear( TicketID => $Article{TicketID} );
+    $Self->_TicketCacheClear( TicketID => $Param{TicketID} );
 
     # event
     $Self->EventHandler(
@@ -629,9 +636,6 @@ sub ArticleCopy {
         );
     }
 
-    # clear ticket cache
-    delete $Self->{ 'Cache::GetTicket' . $Param{TicketID} };
-
     # copy plain article if exists
     if ( $Article{ArticleType} =~ /email/i ) {
         my $Data = $Self->ArticlePlain(
@@ -697,7 +701,7 @@ sub ArticleFullDelete {
     return if !%Article;
 
     # clear ticket cache
-    delete $Self->{ 'Cache::GetTicket' . $Article{TicketID} };
+    $Self->_TicketCacheClear( TicketID => $Article{TicketID} );
 
     # delete article history
     return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
@@ -1527,8 +1531,8 @@ sub TicketChecklistTaskCreate {
 
     # get inserted id
     return if !$Kernel::OM->Get('Kernel::System::DB')->Prepare(
-        SQL   => 'SELECT id FROM kix_ticket_checklist WHERE task = ?',
-        Bind  => [ \$Param{Task} ],
+        SQL   => 'SELECT id FROM kix_ticket_checklist WHERE ticket_id = ? AND task = ?',
+        Bind  => [ \$Param{TicketID}, \$Param{Task} ],
         Limit => 1,
     );
 
@@ -1578,6 +1582,7 @@ Returns a hash of task string and task data
 
     my $HashRef = $TicketObject->TicketChecklistGet(
         TicketID => 123,
+        Result   => 'Task',    # Task, Position, or ID
     );
 
 =cut
@@ -1716,19 +1721,24 @@ sub _GetUserInfoString {
         %CustomerUserData = %User;
         $CustomerUserData{Config}->{Map} = \@EmptyArray;
 
-        my $AgentConfig
-            = $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Frontend::KIXSidebarTicketInfo');
+        my $AgentConfig = $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Frontend::KIXSidebarTicketInfo');
         for my $Attribute ( sort keys %{ $AgentConfig->{DisplayAttributes} } ) {
             next if !$AgentConfig->{DisplayAttributes}->{$Attribute};
 
-            my $AttributeDisplay = $Attribute =~ m/^User(.*)$/;
+            my $AttributeDisplay = $Attribute;
+            if ( $Attribute =~ m/^User(.*)$/ ) {
+                $AttributeDisplay = $1;
+            }
             my @TempArray = ();
-            push @TempArray, $Attribute;
-            push @TempArray, $AttributeDisplay || $Attribute;
-            push @TempArray, '';
-            push @TempArray, 1;
-            push @TempArray, 0;
-            push @{ $CustomerUserData{Config}->{Map} }, \@TempArray;
+            push( @TempArray, $Attribute );
+            push( @TempArray, $AttributeDisplay );
+            push( @TempArray, '' );
+            push( @TempArray, 1 );
+            push( @TempArray, 0 );
+            push( @TempArray, 'var' );
+            push( @TempArray, '' );
+            push( @TempArray, 0 );
+            push( @{ $CustomerUserData{Config}->{Map} }, \@TempArray );
         }
     }
 
@@ -1741,22 +1751,19 @@ sub _GetUserInfoString {
             ->Get('Ticket::Frontend::CustomerInfoComposeMaxSize'),
     );
 
-    my $Title
-        = $Self->{LayoutObject}->{LanguageObject}
-        ->Translate( $Param{UserType} . ' Information' );
-    my $Output
-        = $User{UserFirstname} . ' '
-        . $User{UserLastname}
-        . '<span class="' . $Param{UserType} . 'DetailsMagnifier">'
-        . ' <i class="fa fa-search"></i>'
-        . '</span>'
-        . '<div class="WidgetPopup" id="' . $Param{UserType} . 'Details">'
-        . '<div class="Header"><h2>' . $Title . '</h2></div>'
-        . '<div class="Content"><div class="Spacing">'
-        . $DetailsTable
-        . '</div>'
-        . '</div>'
-        . '</div>';
+    my $Title  = $Self->{LayoutObject}->{LanguageObject}->Translate( $Param{UserType} . ' Information' );
+    my $Output = $User{UserFirstname} . ' '
+                . $User{UserLastname}
+                . '<span class="' . $Param{UserType} . 'DetailsMagnifier">'
+                . ' <i class="fa fa-search"></i>'
+                . '</span>'
+                . '<div class="WidgetPopup" id="' . $Param{UserType} . 'Details">'
+                . '<div class="Header"><h2>' . $Title . '</h2></div>'
+                . '<div class="Content"><div class="Spacing">'
+                . $DetailsTable
+                . '</div>'
+                . '</div>'
+                . '</div>';
 
     return $Output;
 }

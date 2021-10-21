@@ -33,6 +33,7 @@
         padding: 15px;
     }
 
+
     /*
     *   @subsection Tree
     */
@@ -157,45 +158,36 @@
     .Dialog fieldset {
         margin-bottom: 15px;
     }
-
     .Dialog .WidgetSettingsForm fieldset {
         margin-bottom: 0px;
     }
-
     .Dialog .Field.LayoutGrid {
         padding-top: 7px;
     }
-
     .Dialog .Field.LayoutGrid .Tablelike {
         width: 100%;
     }
-
     .Dialog .Field .FocusField {
         position: absolute;
         left: -9999px;
         top: -9999px;
         z-index: -1;
     }
-
     .Dialog .Buttons {
         margin: 15px -8px -8px;
         padding: 10px 10px 9px 10px;
         text-align: center;
     }
-
     .Dialog .Field.LayoutGrid .AllocationList {
         max-height: 192px;
         overflow: auto;
     }
-
     .Dialog .Field.LayoutGrid .AllocationList.AvailableFields {
         max-height: 155px;
     }
-
     .Dialog .Field.LayoutGrid .AllocationList.OrderNumbers {
         list-style: decimal inside;
     }
-
     #ContextSettingsDialog,
     #ContextSettingsDialogOverviewSmall {
         min-width: 450px;
@@ -203,8 +195,9 @@
         max-height: 100%;
     }
 
-    /* Pure continuous text dialogs */
-
+    /*
+    *   @subsection Pure continuous text dialogs
+    */
     .TextDialog {
         padding: 15px;
         line-height: 150%;
@@ -213,33 +206,29 @@
         max-height: 450px;
         overflow: scroll;
     }
-
     .TextDialog p,
     .TextDialog li,
     .TextDialog a {
         font-size: 12px;
     }
-
     .TextDialog ul {
         list-style-type: square;
         margin: 0px 0px 7px 20px;
     }
-
     .TextDialog ul li {
         margin-bottom: 5px;
         line-height: 130%;
     }
-
     .TextDialog h1 {
         margin-bottom: 4px;
         margin-top: 7px;
         font-size: 14px;
     }
-
     .TextDialog > p {
         margin-bottom: 12px;
         margin-left: 8px;
     }
+
 
     /**
     *   @subsection
@@ -287,6 +276,7 @@
         padding: 0 0 2.5em;
         margin-right: 10px;
     }
+
 
     /**
     *   @subsection ConfigItem
@@ -337,6 +327,7 @@
     .SystemMessageWidget {
         margin: 0 18px;
     }
+
 
     /**
      *  @subsection KIXSidebarTools Remote Popup
@@ -477,37 +468,4 @@
         display: block;
         margin: 5px 0px 5px 0px;
     }
-
-    /**
-    *   @subsection text modules bulk
-    */
-
-    #BulkTextModulesSelectionContainer > .Loader::after {
-        font-size: 4em;
-        line-height: 5em;
-    }
-    #BulkTextModulesSelectionContainer {
-        height: 250px;
-        background-color: #FFFFFF;
-        border: 1px solid #CCCCCC;
-        overflow: auto;
-        padding: 0px 10px 10px 10px;
-    }
-    .BulkTextModulesFocus {
-        padding: 5px 0;
-        display: block;
-        height: 14px;
-    }
-    .BulkTextModulesFocus * {
-        float:left;
-    }
-    .BulkTextModulesFocus > div {
-        font-weight: bold;
-        margin-left: 10px;
-    }
-
-    .BulkNotify, .WINotify {
-        box-sizing: border-box;
-    }
-
 }

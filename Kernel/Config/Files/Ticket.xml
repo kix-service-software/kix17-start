@@ -23,8 +23,18 @@
             </FrontendModuleReg>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="Ticket::Frontend::CustomerTicketTemplates###UserAttributeRestriction" Required="1" Valid="1">
-        <Description Translatable="1">Defines restrictions for the viewability of templates for contacts. Key contains the template key followed by double colon and a contact attribute, while value contains a regexp. Matching this regexp means no access to the template.</Description>
+    <ConfigItem Name="Ticket::Frontend::CustomerTicketTemplates###UserAttributeWhitelist" Required="1" Valid="1">
+        <Description Translatable="1">Defines restrictions (whitelist) for the viewability of templates for contacts. Key contains the template key followed by double colon and a contact attribute, while value contains a regexp. Matching this regexp means no access to the template.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Customer::TicketTemplates</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="GatherTemplate::UserLogin">(.*)</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::CustomerTicketTemplates###UserAttributeBlacklist" Required="1" Valid="1">
+        <Description Translatable="1">Defines restrictions (blacklist) for the viewability of templates for contacts. Key contains the template key followed by double colon and a contact attribute, while value contains a regexp. Matching this regexp means no access to the template.</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Customer::TicketTemplates</SubGroup>
         <Setting>
@@ -236,6 +246,18 @@
         <Setting>
             <Array>
             </Array>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::MergeChecklist" Required="1" Valid="1">
+        <Description Translatable="1">The handling of checklists when merged into the main ticket during a merge operation. "Target" keeps the checklist of the main ticket. "Source" inherits the checklist of the source ticket, but only if the main ticket has no own checklist. "Append" adds entries of the source ticket checklist to the main ticket checklist that not already exist. States of entries are always unchanged.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Core::Ticket</SubGroup>
+        <Setting>
+            <Option SelectedID="Target">
+                <Item Key="Target" Translatable="1">Target</Item>
+                <Item Key="Source" Translatable="1">Source</Item>
+                <Item Key="Append" Translatable="1">Append</Item>
+            </Option>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::CustomQueue" Required="1" Valid="1">
@@ -14195,7 +14217,7 @@ Thanks for your help!
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::ServiceTranslation" Required="1" Valid="1">
-        <Description Translatable="1">Defines whether the service should be translated in the selection box.</Description>
+        <Description Translatable="1">Defines whether the service is translated in the selection box and ticket overviews (except in the admin area).</Description>
         <Group>Ticket</Group>
         <SubGroup>Core::Ticket</SubGroup>
         <Setting>
@@ -14206,7 +14228,7 @@ Thanks for your help!
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::SLATranslation" Required="1" Valid="1">
-        <Description Translatable="1">Defines whether the sla should be translated in the selection box.</Description>
+        <Description Translatable="1">Defines whether the sla is translated in the selection box and ticket overviews (except in the admin area).</Description>
         <Group>Ticket</Group>
         <SubGroup>Core::Ticket</SubGroup>
         <Setting>
@@ -15172,7 +15194,6 @@ Thanks for your help!
         <SubGroup>Frontend::Agent::ModuleRegistration</SubGroup>
         <Setting>
             <FrontendModuleReg>
-                <Group>users</Group>
                 <Description>download all Attachments of selected article</Description>
                 <Title>Attachments download</Title>
                 <NavBarName></NavBarName>
@@ -17486,7 +17507,7 @@ Thanks for your help!
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::TypeTranslation" Required="1" Valid="1">
-        <Description Translatable="1">Defines whether the ticket type should be translated in the selection box.</Description>
+        <Description Translatable="1">Defines whether the ticket type is translated in the selection box and ticket overviews (except in the admin area).</Description>
         <Group>Ticket</Group>
         <SubGroup>Core::Ticket</SubGroup>
         <Setting>
@@ -17521,7 +17542,7 @@ Here you may define a default text for the forward function. You find this confi
         <Group>Ticket</Group>
         <SubGroup>Core::Ticket</SubGroup>
         <Setting>
-            <Option SelectedID="1">
+            <Option SelectedID="0">
                 <Item Key="0">No</Item>
                 <Item Key="1">Yes</Item>
             </Option>

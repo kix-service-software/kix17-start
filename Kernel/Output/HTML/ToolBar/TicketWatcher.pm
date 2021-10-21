@@ -17,8 +17,9 @@ use Kernel::Language qw(Translatable);
 
 our @ObjectDependencies = (
     'Kernel::Config',
+    'Kernel::System::Output::HTML::Layout',
     'Kernel::System::Log',
-    'Kernel::Output::HTML::Layout',
+    'Kernel::System::State',
     'Kernel::System::Ticket',
 );
 
@@ -38,12 +39,6 @@ sub new {
 sub Run {
     my ( $Self, %Param ) = @_;
 
-    # get config object
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-
-    # check if feature is active
-    return if !$ConfigObject->Get('Ticket::Watcher');
-
     # check needed stuff
     for (qw(Config)) {
         if ( !$Param{$_} ) {
@@ -55,8 +50,14 @@ sub Run {
         }
     }
 
-    # get layout object
+    # get needed objects
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $StateObject  = $Kernel::OM->Get('Kernel::System::State');
+    my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
+
+    # check watcher feature
+    return if !$ConfigObject->Get('Ticket::Watcher');
 
     # check access
     my @Groups;
@@ -78,8 +79,11 @@ sub Run {
         return if !$Access;
     }
 
-    # get ticket object
-    my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
+    # get pending states
+    my @PendingReminderStateIDs = $StateObject->StateGetStatesByType(
+        Type   => 'PendingReminder',
+        Result => 'ID',
+    );
 
     # find watched tickets
     my $Count = $TicketObject->TicketSearch(
@@ -102,8 +106,8 @@ sub Run {
 
     my $CountReached = $TicketObject->TicketSearch(
         Result                        => 'COUNT',
-        StateType                     => ['pending reminder'],
         WatchUserIDs                  => [ $Self->{UserID} ],
+        StateIDs                      => \@PendingReminderStateIDs,
         TicketPendingTimeOlderMinutes => 1,
         UserID                        => 1,
         Permission                    => 'ro',

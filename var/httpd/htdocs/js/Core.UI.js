@@ -79,6 +79,7 @@ Core.UI = (function (TargetNS) {
             }
 
             Event.preventDefault();
+            Event.stopPropagation();
         });
     };
 

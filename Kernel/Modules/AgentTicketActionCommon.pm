@@ -2050,7 +2050,7 @@ sub _Mask {
                 TreeView        => $TreeView,
                 DisabledOptions => $ListOptionJson->{Services}->{DisabledOptions} || 0,
                 Sort            => 'TreeView',
-                Translation     => 0,
+                Translation     => $ConfigObject->Get('Ticket::ServiceTranslation') || 0,
                 Max             => 200,
             );
 
@@ -2070,7 +2070,7 @@ sub _Mask {
                 TreeView        => $TreeView,
                 Sort            => 'TreeView',
                 DisabledOptions => $ListOptionJson->{Services}->{DisabledOptions} || 0,
-                Translation     => 0,
+                Translation     => $ConfigObject->Get('Ticket::ServiceTranslation') || 0,
                 Max             => 200,
             );
 
@@ -2095,7 +2095,7 @@ sub _Mask {
                 Class        => 'Validate_Required Modernize ' . ( $Param{SLAInvalid} || ' ' ),
                 PossibleNone => 1,
                 Sort         => 'AlphanumericValue',
-                Translation  => 0,
+                Translation  => $ConfigObject->Get('Ticket::SLATranslation') || 0,
                 Max          => 200,
             );
 
@@ -2113,7 +2113,7 @@ sub _Mask {
                 Class        => 'Modernize',
                 PossibleNone => 1,
                 Sort         => 'AlphanumericValue',
-                Translation  => 0,
+                Translation  => $ConfigObject->Get('Ticket::SLATranslation') || 0,
                 Max          => 200,
             );
 

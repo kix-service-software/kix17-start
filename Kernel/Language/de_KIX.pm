@@ -153,6 +153,8 @@ sub Data {
     $Lang->{'Defines the message to be displayed when a draft exists and can be loaded.'}
         = 'Legt die Meldung fest, die angezeigt wird, wenn ein Entwurf existiert und geladen werden kann.';
     $Lang->{'ObjectReference'}          = 'Objektreferenz';
+    $Lang->{'Object Reference'}         = 'Objektreferenz';
+    $Lang->{'Field Type'}               = 'Feldtyp';
     $Lang->{'Attachments Download'}     = 'Anlagen herunterladen';
     $Lang->{'Tickets New'}              = 'Tickets, neu';
     $Lang->{'Tickets Total'}            = 'Tickets insgesamt';
@@ -163,6 +165,8 @@ sub Data {
     $Lang->{'Contact Information'}      = 'Kontaktinformationen';
     $Lang->{'Link Type'}                = 'Linktyp';
     $Lang->{'Not set'}                  = 'Nicht gesetzt';
+    $Lang->{'Select a field type.'}        = 'Wählen Sie einen Feldtyp aus.';
+    $Lang->{'Select an object reference.'} = 'Wählen Sie eine Objektreferenz aus.';
     $Lang->{
         'Defines possible search criteria in the agents link interface for target object "Ticket". Order is important. Value is used as internal name.'
         }
@@ -281,8 +285,10 @@ sub Data {
     $Lang->{'Module Registration for TicketTemplate Base Module.'}
         = 'Modulregistrierung für das Ticketvorlagen Basismodul.';
     $Lang->{'TicketTemplate Base Module'} = 'Ticketvorlagen Basismodul';
-    $Lang->{'Defines restrictions for the viewability of templates for contacts. Key contains the template key followed by double colon and a contact attribute, while value contains a regexp. Matching this regexp means no access to the template.'} 
-        = 'Legt Einschränkungen für die Sichtbarkeit von Vorlagen für Kontakte fest. Der Schlüssel besteht aus dem Vorlagen-Schlüssel, gefolgt von zwei Doppelpunkten und einem Kontakt-Attribut. Der Wert enthält eine RegExp. Trifft die Regexp zu, so besteht kein Zugriff auf die Vorlage.';
+    $Lang->{'Defines restrictions (blacklist) for the viewability of templates for contacts. Key contains the template key followed by double colon and a contact attribute, while value contains a regexp. Matching this regexp means no access to the template.'}
+        = 'Legt Einschränkungen (Blacklist) für die Sichtbarkeit von Vorlagen für Kontakte fest. Der Schlüssel besteht aus dem Vorlagen-Schlüssel, gefolgt von zwei Doppelpunkten und einem Kontakt-Attribut. Der Wert enthält eine RegExp. Trifft die Regexp zu, so besteht kein Zugriff auf die Vorlage.';
+    $Lang->{'Defines restrictions (whitelist) for the viewability of templates for contacts. Key contains the template key followed by double colon and a contact attribute, while value contains a regexp. Matching this regexp means no access to the template.'}
+        = 'Legt Einschränkungen (Whitelist) für die Sichtbarkeit von Vorlagen für Kontakte fest. Der Schlüssel besteht aus dem Vorlagen-Schlüssel, gefolgt von zwei Doppelpunkten und einem Kontakt-Attribut. Der Wert enthält eine RegExp. Trifft die Regexp zu, so besteht kein Zugriff auf die Vorlage.';
     $Lang->{'Defines a one-line description for each template.'}
         = 'Legt einzeilige Beschreibungen für Vorlagen fest.';
 
@@ -291,6 +297,8 @@ sub Data {
     $Lang->{'Save new quick ticket template'} = 'Neue Ticket-Vorlage speichern';
     $Lang->{'Save changes'}                   = 'Änderungen speichern';
     $Lang->{'Change template'}                = 'Vorlage ändern';
+    $Lang->{'A ticket template with this name already exists!'}
+        = 'Eine Ticketvorlage mit diesem Namen existiert bereits!';
     $Lang->{'Save changes for this quick ticket template'} =
         'Änderungen für diese Ticket-Vorlage speichern';
     $Lang->{'Attachments cannot be part of a quick ticket template'}
@@ -613,8 +621,8 @@ sub Data {
         'Create new phone ticket from "default user support"-template'
         }
         = 'Erstellt neues Telefonticket von der Vorlage "default user support"';
-    $Lang->{'Defines whether the ticket type should be translated in the selection box.'}
-        = 'Definiert, ob der Tickettyp in der Auswahlbox übersetzt wird.';
+    $Lang->{'Defines whether the ticket type is translated in the selection box and ticket overviews (except in the admin area).'}
+        = 'Definiert, ob der Tickettyp in der Auswahlbox und Ticketübersichten übersetzt wird (ausgenommen im Adminbereich).';
     $Lang->{'Do you really want to delete this template?'}
         = 'Wollen Sie diese Vorlage wirklich löschen?';
     $Lang->{'Delete this template'}
@@ -1394,6 +1402,9 @@ sub Data {
         'Defines which deployment states should not be shown in config item link graph. Separate different states by comma.'
         }
         = 'Legt fest, welche Verwendungsstatus im Verknüpfungsgraph nicht mit angezeigt werden sollen. Mehrere Werte werden durch Komma getrennt.';
+
+    $Lang->{'Choose the attribute of the config items to filter. Click on the plus next to the selection to add an attribute filter.'}
+        = 'Wählen Sie hier die Attribute des CIs, nach denen Sie noch weiter einschränken möchten. Klicken Sie dafür auf das Plus neben der Auswahl.';
 
     $Lang->{'Only attributes of the following types are shown in the list'}
         = 'Nur Attribute folgender Typen werden in der Liste angezeigt';
@@ -3826,6 +3837,7 @@ sub Data {
 
     $Lang->{'DatabaseDSN'}         = 'Datenbank DSN';
     $Lang->{'DatabaseUser'}        = 'Datenbank Benutzer';
+    $Lang->{'DatabaseType'}        = 'Datenbank Typ';
     $Lang->{'DatabasePw'}          = 'Datenbank Passwort';
     $Lang->{'DatabaseTable'}       = 'Datenbank Tabelle';
     $Lang->{'DatabaseFieldKey'}    = 'Datenbank Schlüsselspalte';
@@ -3851,29 +3863,31 @@ sub Data {
     $Lang->{'MaxQueryResult'} = 'Maximale Queryergebnisse';
 
     # Descriptions...
-    $Lang->{'Specify the maximum number of entries.'}
-        = 'Gibt die maximale Anzahl möglicher Einträge an.';
+    $Lang->{'Specify the maximum number of entries.'}  = 'Gibt die maximale Anzahl möglicher Einträge an.';
     $Lang->{'Specify the DSN for used database.'}      = 'Gibt die DSN der Datenbank an.';
     $Lang->{'Specify the user for used database.'}     = 'Gibt den Benutzer der Datenbank an.';
     $Lang->{'Specify the password for used database.'} = 'Gibt das Passwort der Datenbank an.';
     $Lang->{'Specify the table for used database.'}    = 'Gibt die Tabelle der Datenbank an.';
-    $Lang->{'Specify the field containing key in used database.'}
-        = 'Gibt die Schlüsselspalte in der Datenbank an.';
-    $Lang->{'Uses DatabaseFieldKey if not specified.'}
-        = 'Nutzt die Schlüsselspalte wenn nichts angegeben ist.';
-    $Lang->{'Specify the field containing value in used database.'}
-        = 'Gibt die Wertspalte in der Datenbank an.';
-    $Lang->{
-        'Specify Constrictions for search-queries. [TableColumn]::[Object]::[Attribute/Value]::[Mandatory]'
-        }
+    $Lang->{'Specify the type of used database.'}      = 'Gibt den Typ der Datenbank an.';
+    $Lang->{'The key column of the database is the column which the data record identifies and from where the value to be stored can be obtained.'}
+        = 'Die Schlüsselspalte der Datenbank ist die Spalte, womit der Datensatz identifiziert und woher der zu speichernde Wert bezogen werden kann.';
+    $Lang->{'The value of the key column is used as an identifier of the selected data record.'}
+        = 'Der Wert des Schlüsselspalte wird als Kenner des gewählten Datensatzes genutzt.';
+    $Lang->{'The value column is the column of the database table that returns the value of the data record for display. If no value column has been specified, the key column is used as a fallback.'}
+        = 'Die Wertspalte ist die Spalte der verwendeten Tabelle, die den Wert des Datensatzes zur Anzeige zurück gibt. Ist keine Wertspalte festgelegt worden, wird die Schlüsselspalte als Fallback verwendet.';
+    $Lang->{'The search column is the column (or several columns separated by commas) of the database table in which a suitable data record can be searched for. If no search column has been specified, the key column is used as a fallback.'}
+        = 'Die Suchspalte ist die Spalte (oder kommasepariert mehrere Spalten) der verwendeten Tabelle, worin nach einen passenden Datensatz gesucht werden kann. Ist keine Suchspalte festgelegt worden, wird die Schlüsselspalte als Fallback verwendet.';
+    $Lang->{'Needed for ODBC connections.'}
+        = 'Wird für ODBC-Verbindungen benötigt.';
+    $Lang->{'Supported are mssql, mysql, oracle and postgresql.'}
+        = 'Unterstützt werden mssql, mysql, oracle und postgresql.';
+    $Lang->{'Specify constrictions for search-queries. [TableColumn]::[Object]::[Attribute/Value]::[Mandatory]'}
         = 'Gibt Einschränkungen für Suchanfragen an. [Tabellenspalte]::[Objekt]::[Attribut/Wert]::[Pflichtfeld]';
     $Lang->{'Cache any database queries for time in seconds.'}
         = 'Gibt die Zeit in Sekunden an, welche Datenbankanfragen gecached werden.';
     $Lang->{'Cache all possible values.'} = 'Mögliche Werte der Datenbank werden gecached.';
     $Lang->{'0 deactivates caching.'}     = '0 deaktiviert den Cache.';
-    $Lang->{
-        'If active, the usage of values which recently added to the database may cause an error.'
-        }
+    $Lang->{'If active, the usage of values which recently added to the database may cause an error.'}
         = 'Wenn aktiv, kann die Verwendung von Werten, welche kürzlich zur Datenbank hinzugefügt wurden, Fehler verursachen.';
     $Lang->{'Specify if key is added to HTML-attribute title.'}
         = 'Gibt an, ob der Schlüssel im HTML-Attribut title angefügt wird.';
@@ -4140,10 +4154,10 @@ sub Data {
     $Lang->{'ascending'}         = 'aufsteigend';
     $Lang->{'descending'}        = 'absteigend';
     $Lang->{'CustomerUserID'}    = 'KundennutzerID';
-    $Lang->{'Defines whether the service should be translated in the selection box.'}
-        = 'Legt fest, ob der Service in Auswahlfeldern übersetzt werden soll.';
-    $Lang->{'Defines whether the sla should be translated in the selection box.'}
-        = 'Legt fest, ob die SLA in Auswahlfeldern übersetzt werden soll.';
+    $Lang->{'Defines whether the service is translated in the selection box and ticket overviews (except in the admin area).'}
+        = 'Definiert, ob der Service in der Auswahlbox und Ticketübersichten übersetzt wird (ausgenommen im Adminbereich).';
+    $Lang->{'Defines whether the sla is translated in the selection box and ticket overviews (except in the admin area).'}
+        = 'Definiert, ob der SLA in der Auswahlbox und Ticketübersichten übersetzt wird (ausgenommen im Adminbereich).';
 
     $Lang->{'Alternative to'}        = 'Alternativ zu';
     $Lang->{'Availability'}          = 'Verfügbarkeit';
@@ -4699,6 +4713,25 @@ sub Data {
     $Lang->{'DynamicField attachments'} = 'Anlagen dynamischer Felder';
     $Lang->{'Dynamic fields shown in the AgentTicketZoomTab "Attachments". Possible settings: 0 = Disabled, 1 = Enabled.'}
         = 'Dynamische Felder, welche im Tab "Anlagen" der Agentenoberfläche angezeigt werden. Mögliche Einstellungen: 0 = deaktiviert, 1 = aktiviert.';
+    # EO Ticket Tab Attachments
+
+    # Ticket::MergeChecklist
+    $Lang->{'Source'} = 'Quelle';
+    $Lang->{'Append'} = 'Anfügen';
+    $Lang->{'The handling of checklists when merged into the main ticket during a merge operation. "Target" keeps the checklist of the main ticket. "Source" inherits the checklist of the source ticket, but only if the main ticket has no own checklist. "Append" adds entries of the source ticket checklist to the main ticket checklist that not already exist. States of entries are always unchanged.'}
+        = 'Handhabung von Checklisten beim Zusammenfassen in ein Hauptticket. "Ziel" behält die Checkliste des Haupttickets. "Quelle" übernimmt die Checkliste des Quelltickets, aber nur wenn keine Checkliste am Hauptticket hinterlegt ist. "Anfügen" fügt Einträge, welche noch nicht in der Checkliste des Haupttickets enthalten sind, ans Ende an. Status der Einträge werden immer unverändert gelassen.';
+    # EO Ticket::MergeChecklist
+
+    # GenericInferface LinkObject SysConfig
+    $Lang->{'Defines if operations of the linkobject can only be used by an agent in group "admin" with "rw" permission.'}
+        = 'Bestimmt ob die Operationen des Link-Objektes nur von einem Agenten der Gruppe "admin" mit "rw"-Berechtigung verwendet werden können.';
+    # EO GenericInferface LinkObject SysConfig
+
+    # Richtext browser context menu
+    $Lang->{'Use browser context menu'} = 'Kontextmenü des Browser verweden';
+    $Lang->{'Select to decide whether richtext or browser context menu should be used. Using the browser context menu, you can for example use its spell checker.'}
+        = 'Wählen Sie, ob das Kontextmenü des Browsers im Richtext Editor genutzt werden soll. Wird das Kontextmemü des Browsers verwendet, kann beispielsweise dessen Rechtschreibprüfung genutzt werden.';
+    # EO Richtext browser context menu
 
     return 0;
 }

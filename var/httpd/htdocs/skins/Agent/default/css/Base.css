@@ -478,16 +478,9 @@
     #LinkedPersonsTable > .Loader::after {
         font-size: 3em;
     }
-    #TextModulesSelectionContainer > .Loader::after {
-        font-size: 4em;
-        line-height: 5em;
-    }
     #ArticleAttachmentStrgContainer > .Loader::after {
         font-size: 3em;
         line-height: 2em;
-    }
-    .TextModule.Loader::after {
-        margin-left: 5px;
     }
 
 

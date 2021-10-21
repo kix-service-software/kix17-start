@@ -6382,6 +6382,12 @@ END
         UserID        => $Param{UserID},
     );
 
+    $Self->TicketMergeChecklist(
+        MergeTicketID => $Param{MergeTicketID},
+        MainTicketID  => $Param{MainTicketID},
+        UserID        => $Param{UserID},
+    );
+
     $Self->_TicketCacheClear( TicketID => $Param{MergeTicketID} );
     $Self->_TicketCacheClear( TicketID => $Param{MainTicketID} );
 
@@ -6491,6 +6497,97 @@ sub TicketMergeDynamicFields {
                 Value              => $MergeTicket{$Key},
             );
         }
+    }
+
+    return 1;
+}
+
+=item TicketMergeChecklist()
+
+merge checklist from one ticket into another, depending on sysconfig 'Ticket::MergeChecklist'.
+
+    my $Success = $TicketObject->TicketMergeChecklist(
+        MainTicketID  => 123,
+        MergeTicketID => 42,
+        UserID        => 1,
+    );
+
+=cut
+
+sub TicketMergeChecklist {
+    my ( $Self, %Param ) = @_;
+
+    for my $Needed (qw(MainTicketID MergeTicketID UserID)) {
+        if ( !$Param{$Needed} ) {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'error',
+                Message  => "Need $Needed!"
+            );
+            return;
+        }
+    }
+
+    # get configured merge handling
+    my $MergeMode = $Kernel::OM->Get('Kernel::Config')->Get('Ticket::MergeChecklist');
+
+    # check if checklist of target should be kept
+    return 1 if (
+        !$MergeMode
+        || $MergeMode eq 'Target'
+    );
+
+    # get checklist of merged ticket
+    my $MergeChecklist = $Self->TicketChecklistGet(
+        TicketID => $Param{MergeTicketID},
+        Result   => 'Position'
+    );
+
+    # check if merged ticket has no checklist to merge, then nothing to do
+    return 1 if (
+        $MergeChecklist->{String} eq ''
+    );
+
+    # get checklist of main ticket
+    my $MainChecklist = $Self->TicketChecklistGet(
+        TicketID => $Param{MainTicketID},
+        Result   => 'Task'
+    );
+
+    # check if main ticket has checklist and handling mode is 'Source', then nothing to do
+    return 1 if (
+        $MainChecklist->{String} ne ''
+        && $MergeMode eq 'Source'
+    );
+
+    # init next position
+    my $NextPosition = 1;
+    if ( ref( $MainChecklist->{Data} ) eq 'HASH' ) {
+        $NextPosition += keys( %{ $MainChecklist->{Data} } );
+    }
+
+    # process entries from merge ticket
+    ENTRY:
+    for my $ChecklistKey ( sort{ $a <=> $b }( keys( %{ $MergeChecklist->{Data} } ) ) ) {
+        # skip already existing entries
+        next ENTRY if ( $MainChecklist->{Data}->{ $MergeChecklist->{Data}->{ $ChecklistKey }->{Task} } );
+
+        # add new task
+        my $TaskID = $Self->TicketChecklistTaskCreate(
+            Task     => $MergeChecklist->{Data}->{ $ChecklistKey }->{Task},
+            State    => $MergeChecklist->{Data}->{ $ChecklistKey }->{State},
+            TicketID => $Param{MainTicketID},
+            Position => $NextPosition,
+        );
+        if ( !$TaskID ) {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'error',
+                Message  => 'Could not merge task "' . $MergeChecklist->{Data}->{ $ChecklistKey }->{Task} . '" with state "' . $MergeChecklist->{Data}->{ $ChecklistKey }->{State} . '" from ticket "' . $Param{MergeTicketID} . '" to ticket "' . $Param{MainTicketID} . '"!',
+            );
+            next ENTRY;
+        }
+
+        # increment position
+        $NextPosition += 1;
     }
 
     return 1;

@@ -77,23 +77,54 @@ sub Run {
     }
 
     # filter ticket templates
-    if (IsHashRefWithData($Self->{Config}->{UserAttributeRestriction})) {
-        foreach my $PortalGroupID ( keys %TemplateList ) {
-            foreach my $TemplateKey (keys %{$TemplateList{$PortalGroupID}}) {
-                my $UseTemplate = 1;
+    if (
+        IsHashRefWithData($Self->{Config}->{UserAttributeWhitelist})
+        || IsHashRefWithData($Self->{Config}->{UserAttributeBlacklist})
+    ) {
+        foreach my $PortalGroupID ( sort keys %TemplateList ) {
+            TEMPLATE:
+            foreach my $TemplateKey ( sort keys %{$TemplateList{$PortalGroupID}}) {
+                my $UseTemplate  = 1;
+                my $AttributeKey = $TemplateList{$PortalGroupID}->{$TemplateKey}->{Name};
 
-                for my $UserAttributeKey ( keys %{ $Self->{Config}->{UserAttributeRestriction} } ) {
-
-                    if ( $UserAttributeKey =~ /^(?:\Q$TemplateList{$PortalGroupID}->{$TemplateKey}->{Name}\E)\:\:(.*)/ ) {
-                        my $UserAttribute  = $1;
-                        my $RestrictionKey = $UserAttributeKey;
+                # process configured attributes to check blacklist
+                if ( IsHashRefWithData($Self->{Config}->{UserAttributeBlacklist}) ) {
+                    # check blacklist
+                    RESTRICTION:
+                    for my $UserAttributeKey ( sort keys %{ $Self->{Config}->{UserAttributeBlacklist} } ) {
+                        next RESTRICTION if ( $UserAttributeKey !~ /^(?:\Q$AttributeKey\E)\:\:(.*)/ );
+                        my $UserAttribute = $1;
 
                         if (
                             !$Self->{$UserAttribute}
-                            || $Self->{$UserAttribute} =~ /$Self->{Config}->{UserAttributeRestriction}->{$RestrictionKey}/
+                            || $Self->{$UserAttribute} =~ /$Self->{Config}->{UserAttributeBlacklist}->{$UserAttributeKey}/gm
                         ) {
                             $UseTemplate = 0;
-                            last;
+                            last RESTRICTION;
+                        }
+                    }
+                }
+
+                # process configured attributes to check whitelist
+                if (
+                    $UseTemplate
+                    && IsHashRefWithData($Self->{Config}->{UserAttributeWhitelist})
+                ) {
+                    # check whitelist
+                    RESTRICTION:
+                    for my $UserAttributeKey ( sort keys %{ $Self->{Config}->{UserAttributeWhitelist} } ) {
+                        next RESTRICTION if ( $UserAttributeKey !~ /^(?:\Q$AttributeKey\E)\:\:(.*)/ );
+                        my $UserAttribute  = $1;
+
+                        if (
+                            $Self->{$UserAttribute}
+                            && $Self->{$UserAttribute} =~ /$Self->{Config}->{UserAttributeWhitelist}->{$UserAttributeKey}/gm
+                        ) {
+                            $UseTemplate = 1;
+                            last RESTRICTION;
+                        }
+                        else {
+                            $UseTemplate = 0;
                         }
                     }
                 }

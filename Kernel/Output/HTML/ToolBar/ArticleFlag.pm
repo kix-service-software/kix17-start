@@ -14,6 +14,7 @@ use warnings;
 our @ObjectDependencies = (
     'Kernel::System::Output::HTML::Layout',
     'Kernel::System::Log',
+    'Kernel::System::State',
     'Kernel::System::Ticket',
 );
 
@@ -33,18 +34,24 @@ sub new {
 sub Run {
     my ( $Self, %Param ) = @_;
 
-    # get needed objects
-    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-    my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
-    my $LogObject    = $Kernel::OM->Get('Kernel::System::Log');
-
     # check needed stuff
     for (qw(Config)) {
         if ( !$Param{$_} ) {
-            $LogObject->Log( Priority => 'error', Message => "Need $_!" );
+            $Kernel::OM->Get('Kernel::System::Log')->Log( Priority => 'error', Message => "Need $_!" );
             return;
         }
     }
+
+    # get needed objects
+    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $StateObject  = $Kernel::OM->Get('Kernel::System::State');
+    my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
+
+    # get pending states
+    my @PendingReminderStateIDs = $StateObject->StateGetStatesByType(
+        Type   => 'PendingReminder',
+        Result => 'ID',
+    );
 
     # get user lock data
     my $Count = $TicketObject->TicketSearch(
@@ -57,7 +64,7 @@ sub Run {
         Result                        => 'COUNT',
         UserID                        => $Self->{UserID},
         ArticleFlag                   => $Param{Config}->{ArticleFlagKey},
-        StateType                     => ['pending reminder'],
+        StateIDs                      => \@PendingReminderStateIDs,
         TicketPendingTimeOlderMinutes => 1,
         Permission                    => 'ro',
     );

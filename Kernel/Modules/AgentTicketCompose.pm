@@ -1254,9 +1254,11 @@ sub Run {
             );
         }
 
-        # set OrigFrom and OrigTo for correct email quoting (xxxx wrote)
+        # set OrigFrom, OrigTo, OrigCc and OrigBcc for correct email quoting (xxxx wrote)
         $Data{OrigFrom} = $Data{From};
         $Data{OrigTo}   = $Data{To};
+        $Data{OrigCc}   = $Data{Cc};
+        $Data{OrigBcc}  = $Data{Bcc};
 
         # check article type and replace To with From (in case)
         my $SystemAddress  = $Kernel::OM->Get('Kernel::System::SystemAddress');
@@ -1415,7 +1417,11 @@ sub Run {
         ) {
 
             # check if customer is in recipient list
-            if ( $Customer{UserEmail} && $Data{ToEmail} !~ /^\Q$Customer{UserEmail}\E$/i ) {
+            if (
+                $Data{ToEmail}
+                && $Customer{UserEmail}
+                && $Data{ToEmail} !~ /^\Q$Customer{UserEmail}\E$/i
+            ) {
 
                 if ( $Data{SenderType} eq 'agent' && $DataArticleType !~ m{external} ) {
                     if ( $Data{To} ) {
@@ -1533,7 +1539,7 @@ sub Run {
                         ": $Data{Created}<br/>" . $Data{Body};
                 }
 
-                for my $Key (qw( Subject ReplyTo Reply-To Cc OrigTo OrigFrom )) {
+                for my $Key (qw( Subject ReplyTo Reply-To OrigCc OrigTo OrigFrom )) {
                     if ( $Data{$Key} ) {
                         my $KeyText;
                         if ($Key eq "OrigTo") {
@@ -1541,6 +1547,9 @@ sub Run {
                         }
                         elsif ($Key eq "OrigFrom") {
                             $KeyText = $LayoutObject->{LanguageObject}->Translate("From");
+                        }
+                        elsif ($Key eq "OrigCc") {
+                            $KeyText = $LayoutObject->{LanguageObject}->Translate("Cc");
                         }
                         else {
                             $KeyText = $LayoutObject->{LanguageObject}->Translate($Key);

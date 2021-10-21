@@ -66,7 +66,7 @@
 
 @media only screen and (min-width: 0px) and (max-width: 1024px) {
 
-    body, html {
+    body:not(.Visible-ScreenXL), html{
         font-size: 1em;
     }
     #ViewModeSwitch {
@@ -369,13 +369,13 @@
     .WidgetSimple .Buttons span {
         font-size: 14px;
     }
-    .WidgetSimple .Content form {
+    :not(.SidebarColumn) > .WidgetSimple .Content form {
         display: block;
         width: 100%;
         overflow-y: hidden;
         overflow-x: auto;
     }
-    .WidgetSimple .Content form table.DataTable {
+    :not(.SidebarColumn) > .WidgetSimple .Content form table.DataTable {
         min-width: 500px;
     }
     .WidgetSimple .ActionMenu {
@@ -414,8 +414,8 @@
     fieldset.TableLike.Hidden {
         display: none;
     }
-    fieldset.TableLike > label,
-    fieldset.TableLike > .Row > label {
+    body:not(.Visible-ScreenXL) fieldset.TableLike > label,
+    body:not(.Visible-ScreenXL) fieldset.TableLike > .Row > label {
         text-align: left;
         float: none;
         width: auto;
@@ -743,9 +743,6 @@
         float: none;
         font-size: 11px;
         display: inline-block;
-    }
-    .ui-tabs .ui-tabs-nav li a {
-        height: auto;
     }
     div.ui-tabs > div.ui-tabs-panel {
         padding: 0;

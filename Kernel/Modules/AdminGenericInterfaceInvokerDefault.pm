@@ -353,6 +353,18 @@ sub _ChangeAction {
         # OK, remove old Invoker. New one will be added below.
         if ( !%Errors ) {
             delete $WebserviceData->{Config}->{Requester}->{Invoker}->{ $GetParam{OldInvoker} };
+
+            # rename transport configuration
+            if (
+                ref( $WebserviceData->{Config}->{Requester}->{Transport} ) eq 'HASH'
+                && ref( $WebserviceData->{Config}->{Requester}->{Transport}->{Config} ) eq 'HASH'
+                && ref( $WebserviceData->{Config}->{Requester}->{Transport}->{Config}->{InvokerControllerMapping} ) eq 'HASH'
+                && ref( $WebserviceData->{Config}->{Requester}->{Transport}->{Config}->{InvokerControllerMapping}->{ $GetParam{OldInvoker} } ) eq 'HASH'
+            ) {
+                $WebserviceData->{Config}->{Requester}->{Transport}->{Config}->{InvokerControllerMapping}->{ $GetParam{Invoker} }
+                    = \%{ $WebserviceData->{Config}->{Requester}->{Transport}->{Config}->{InvokerControllerMapping}->{ $GetParam{OldInvoker} } };
+                delete( $WebserviceData->{Config}->{Requester}->{Transport}->{Config}->{InvokerControllerMapping}->{ $GetParam{OldInvoker} } );
+            }
         }
     }
 

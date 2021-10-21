@@ -71,7 +71,9 @@ Core.UI.RichTextEditor = (function (TargetNS) {
         var EditorID = '',
             Editor,
             UserLanguage,
-            UploadURL = '';
+            UploadURL = '',
+            ExtraPlugins,
+            RemovePlugins;
 
         if (isJQueryObject($EditorArea) && $EditorArea.hasClass('HasCKEInstance')) {
             return false;
@@ -83,6 +85,15 @@ Core.UI.RichTextEditor = (function (TargetNS) {
 
         if (EditorID === '') {
             Core.Exception.Throw('RichTextEditor: Need exactly one EditorArea!', 'TypeError');
+        }
+
+        if (Core.Config.Get('RichTextBrowserContextMenu') === '1') {
+            ExtraPlugins  = 'splitquote,preventimagepaste';
+            RemovePlugins = 'contextmenu,liststyle,tabletools,tableselection';
+        }
+        else {
+            ExtraPlugins  = 'splitquote,contextmenu_linkopen,preventimagepaste';
+            RemovePlugins = '';
         }
 
         // mark the editor textarea as linked with an RTE instance to avoid multiple instances
@@ -122,6 +133,12 @@ Core.UI.RichTextEditor = (function (TargetNS) {
                     + '&' + Core.Config.Get('SessionName')
                     + '=' + Core.Config.Get('SessionID');
         }
+        else {
+            if (RemovePlugins) {
+                RemovePlugins += ',';
+            }
+            RemovePlugins += 'image2,uploadimage';
+        }
 
         /*eslint-disable camelcase */
         Editor = CKEDITOR.replace(EditorID,
@@ -134,7 +151,6 @@ Core.UI.RichTextEditor = (function (TargetNS) {
             resize_dir: 'both',
             resize_minWidth: 320,
             height: Core.Config.Get('RichText.Height', 320),
-            removePlugins: CheckFormID($EditorArea).length ? '' : 'image2,uploadimage',
             forcePasteAsPlainText: false,
             format_tags: 'p;h1;h2;h3;h4;h5;h6;pre',
             fontSize_sizes: '8px;10px;12px;16px;18px;20px;22px;24px;26px;28px;30px;',
@@ -146,7 +162,8 @@ Core.UI.RichTextEditor = (function (TargetNS) {
             toolbar: CheckFormID($EditorArea).length ? Core.Config.Get('RichText.Toolbar') : Core.Config.Get('RichText.ToolbarWithoutImage'),
             filebrowserBrowseUrl: '',
             filebrowserUploadUrl: UploadURL,
-            extraPlugins: 'splitquote,contextmenu_linkopen,preventimagepaste',
+            extraPlugins: ExtraPlugins,
+            removePlugins: RemovePlugins,
             entities: false,
             skin: 'bootstrapck' + (Core.Config.Get('UserSkin') == 'dark' ? '_dark' : '')
         });

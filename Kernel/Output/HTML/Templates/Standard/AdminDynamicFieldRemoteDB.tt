@@ -71,7 +71,7 @@ $('#DatabaseTable').on('change', function (Event) {
                             <input id="DatabaseFieldKey" class="W25pc Validate_Required [% Data.DatabaseFieldKeyServerError | html %]" type="text"  value="[% Data.DatabaseFieldKey | html %]" name="DatabaseFieldKey">
                             <div id="DatabaseFieldKeyError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
                             <div id="DatabaseFieldKeyServerError" class="TooltipErrorMessage"><p>[% Translate(Data.DatabaseFieldKeyServerErrorMessage) | html %]</p></div>
-                            <p class="FieldExplanation">[% Translate("Specify the field containing key in used database.") | html %]</p>
+                            <p class="FieldExplanation">[% Translate("The key column of the database is the column which the data record identifies and from where the value to be stored can be obtained.") | html %]</p>
                         </div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
@@ -84,13 +84,13 @@ $('#DatabaseFieldKey').on('change', function (Event) {
                         <label for="DatabaseFieldValue">[% Translate("DatabaseFieldValue") | html %]:</label>
                         <div class="Field">
                             <input id="DatabaseFieldValue" class="W25pc [% Data.DatabaseFieldValueServerError | html %]" type="text"  value="[% Data.DatabaseFieldValue | html %]" name="DatabaseFieldValue">
-                            <p class="FieldExplanation">[% Translate("Specify the field containing value in used database.") | html %] [% Translate("Uses DatabaseFieldKey if not specified.") | html %]</p>
+                            <p class="FieldExplanation">[% Translate("The value column is the column of the table used that returns the value of the data record for display. If no value column has been specified, the key column is used as a fallback.") | html %]</p>
                         </div>
                         <div class="Clear"></div>
                         <label for="DatabaseFieldSearch">[% Translate("DatabaseFieldSearch") | html %]:</label>
                         <div class="Field">
                             <input id="DatabaseFieldSearch" class="W25pc [% Data.DatabaseFieldSearchServerError | html %]" type="text" value="[% Data.DatabaseFieldSearch | html %]" name="DatabaseFieldSearch"/>
-                            <p class="FieldExplanation">[% Translate("Specify the field for search.") | html %] [% Translate("Multiple columns to search can be configured comma separated.") | html %] [% Translate("Uses DatabaseFieldKey if not specified.") | html %]</p>
+                            <p class="FieldExplanation">[% Translate("The search column is the column (or several columns separated by commas) of the table used in which a suitable data record can be searched for. If no search column has been specified, the key column is used as a fallback.") | html %]</p>
                         </div>
                         <div class="Clear"></div>
                         <label for="SearchPrefix">[% Translate("SearchPrefix") | html %]:</label>

@@ -40,25 +40,28 @@ sub Run {
     my $Content;
 
     # create needed objects
+    my $ConfigObject         = $Kernel::OM->Get('Kernel::Config');
+    my $LayoutObject         = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my $GeneralCatalogObject = $Kernel::OM->Get('Kernel::System::GeneralCatalog');
     my $ConfigItemObject     = $Kernel::OM->Get('Kernel::System::ITSMConfigItem');
-    my $LayoutObject         = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-    my $ConfigObject         = $Kernel::OM->Get('Kernel::Config');
+    my $ParamObject          = $Kernel::OM->Get('Kernel::System::Web::Request');
 
     # some special handling for AgentTicketPhone and AgentTicketEmail
     if ( $Param{Action} =~ /^AgentTicket(Phone|Email)$/g && $Param{Subaction} eq 'Created' ) {
         $Self->{TicketID} = '';
-        $Param{TicketID} = '';
+        $Param{TicketID}  = '';
     }
 
     if ( $Param{Action} && $Param{Action} =~ /Customer/ ) {
         $Param{CustomerUserID} = $Self->{UserID} || '';
+        $Param{CustomerID}     = $ParamObject->GetParam( Param => 'SelectedCustomerID' ) || '';
     }
 
     # generate output...
     $Param{LinkConfigItemStrg} = $LayoutObject->KIXSideBarAssignedConfigItemsTable(
         CustomerData   => $Param{CustomerData}   || '',
         CustomerUserID => $Param{CustomerUserID} || $Param{CustomerUser} || '',
+        CustomerID     => $Param{CustomerID}     || '',
         CallingAction  => $Param{Data}->{CallingAction} || $Param{CallingAction} || '',
         TicketID       => $Self->{TicketID}             || '',
         UserID         => $Self->{UserID}               || '',
@@ -185,7 +188,8 @@ sub Run {
         Data         => {
             %Param,
             %{ $Self->{Config} },
-            CustomerUserID => $Param{CustomerData}->{UserID},
+            CustomerUserID => $Param{CustomerUserID} || $Param{CustomerUser} || '',
+            CustomerID     => $Param{CustomerID},
         },
         KeepScriptTags => $Param{AJAX},
     );

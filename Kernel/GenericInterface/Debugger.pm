@@ -13,7 +13,7 @@ package Kernel::GenericInterface::Debugger;
 use strict;
 use warnings;
 
-use Kernel::System::VariableCheck qw(IsString IsStringWithData IsHashRefWithData);
+use Kernel::System::VariableCheck qw(IsString IsStringWithData IsHashRefWithData IsArrayRefWithData);
 
 our $ObjectManagerDisabled = 1;
 
@@ -181,7 +181,10 @@ sub DebugLog {
 
     # create log message
     my $DataString = '';
-    if ( IsHashRefWithData( $Param{Data} ) ) {
+    if (
+        IsHashRefWithData( $Param{Data} )
+        || IsArrayRefWithData( $Param{Data} )
+    ) {
         $DataString = $Kernel::OM->Get('Kernel::System::Main')->Dump( $Param{Data} );
     }
     elsif ( IsStringWithData( $Param{Data} ) ) {

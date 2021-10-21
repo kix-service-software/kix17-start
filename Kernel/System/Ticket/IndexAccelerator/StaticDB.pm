@@ -37,6 +37,20 @@ sub TicketAcceleratorUpdate {
         }
     }
 
+    my $IsViewable = $Self->TicketSearch(
+        TicketID => $Param{TicketID},
+        Result     => 'COUNT',
+        Permission => 'ro',
+        UserID     => 1,
+        Limit      => 1,
+    );
+
+    # delete index entry if ticket not viewable
+    if ( !$IsViewable ) {
+        $Self->TicketAcceleratorDelete(%Param);
+        $Self->TicketLockAcceleratorDelete(%Param);
+    }
+
     # check if ticket is shown or not
     my $IndexUpdateNeeded = 0;
     my $IndexSelected     = 0;
@@ -197,10 +211,15 @@ sub TicketAcceleratorDelete {
 sub TicketAcceleratorAdd {
     my ( $Self, %Param ) = @_;
 
+    # get database object
+    my $DBObject    = $Kernel::OM->Get('Kernel::System::DB');
+    my $LogObject   = $Kernel::OM->Get('Kernel::System::Log');
+    my $StateObject = $Kernel::OM->Get('Kernel::System::State');
+
     # check needed stuff
     for (qw(TicketID)) {
         if ( !$Param{$_} ) {
-            $Kernel::OM->Get('Kernel::System::Log')->Log(
+            $LogObject->Log(
                 Priority => 'error',
                 Message  => "Need $_!"
             );
@@ -208,14 +227,45 @@ sub TicketAcceleratorAdd {
         }
     }
 
-    # get ticket data
-    my %TicketData = $Self->TicketGet(
-        %Param,
-        DynamicFields => 0,
+    my $IsRebuild = $Param{Rebuild} || 0;
+
+    if ( !$IsRebuild ) {
+        # return true, if ticket not viewable
+        return 1 if !$Self->TicketSearch(
+            TicketID   => $Param{TicketID},
+            Result     => 'COUNT',
+            UserID     => 1,
+            Permission => 'ro',
+            Limit      => 1,
+        );
+    }
+
+    # get all viewable tickets
+    return if !$DBObject->Prepare(
+        SQL => <<'END',
+SELECT st.queue_id, sq.name, sq.group_id, slt.name, tsd.name, st.create_time_unix, st.archive_flag
+FROM ticket st
+    JOIN queue sq ON st.queue_id = sq.id
+    JOIN ticket_state tsd ON st.ticket_state_id = tsd.id
+    JOIN ticket_lock_type slt ON st.ticket_lock_id = slt.id
+WHERE st.id = ?
+END
+        Bind => [ \$Param{TicketID} ]
     );
 
+    my %TicketData;
+    while ( my @Row = $DBObject->FetchrowArray() ) {
+        $TicketData{QueueID}        = $Row[0];
+        $TicketData{Queue}          = $Row[1];
+        $TicketData{GroupID}        = $Row[2];
+        $TicketData{Lock}           = $Row[3];
+        $TicketData{State}          = $Row[4];
+        $TicketData{CreateTimeUnix} = $Row[5];
+        $TicketData{ArchiveFlag}    = $Row[6];
+    }
+
     # check if this ticket is still viewable
-    my @ViewableStates = $Kernel::OM->Get('Kernel::System::State')->StateGetStatesByType(
+    my @ViewableStates = $StateObject->StateGetStatesByType(
         Type   => 'Viewable',
         Result => 'Name',
     );
@@ -234,11 +284,11 @@ sub TicketAcceleratorAdd {
     }
 
     # do nothing if ticket is archived
-    if ( $TicketData{ArchiveFlag} eq 'y' ) {
+    if ( $TicketData{ArchiveFlag} ) {
         return 1;
     }
 
-    return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
+    return if !$DBObject->Do(
         SQL  => 'INSERT INTO ticket_index (ticket_id, queue_id, queue, group_id, s_lock, s_state, create_time_unix)'
               . ' VALUES (?, ?, ?, ?, ?, ?, ?)',
         Bind => [
@@ -287,12 +337,6 @@ sub TicketLockAcceleratorAdd {
             return;
         }
     }
-
-    # get ticket data
-    my %TicketData = $Self->TicketGet(
-        %Param,
-        DynamicFields => 0,
-    );
 
     return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
         SQL  => 'INSERT INTO ticket_lock_index (ticket_id) VALUES (?)',
@@ -512,75 +556,50 @@ sub TicketAcceleratorIndex {
 sub TicketAcceleratorRebuild {
     my ( $Self, %Param ) = @_;
 
-    my @ViewableStateIDs = $Kernel::OM->Get('Kernel::System::State')->StateGetStatesByType(
-        Type   => 'Viewable',
-        Result => 'ID',
-    );
+    # get needed object
+    my $DBObject   = $Kernel::OM->Get('Kernel::System::DB');
+    my $LockObject = $Kernel::OM->Get('Kernel::System::Lock');
 
-    my @ViewableLockIDs = $Kernel::OM->Get('Kernel::System::Lock')->LockViewableLock( Type => 'ID' );
+    my %LockIDs            = $LockObject->LockList( UserID => 1 );
+    my %ViewableLockIDs    = map { $_ => 1 } $LockObject->LockViewableLock( Type => 'ID' );
+    my @NotViewableLockIDs;
 
-    # get database object
-    my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
-
-    # get all viewable tickets
-    my $SQL = "SELECT st.id, st.queue_id, sq.name, sq.group_id, slt.name, tsd.name, st.create_time_unix"
-            . " FROM ticket st"
-            . "  JOIN queue sq             ON st.queue_id = sq.id"
-            . "  JOIN ticket_state tsd     ON st.ticket_state_id = tsd.id"
-            . "  JOIN ticket_lock_type slt ON st.ticket_lock_id = slt.id"
-            . " WHERE st.ticket_state_id IN ( ${\(join ', ', @ViewableStateIDs)} )"
-            . "  AND st.archive_flag = 0";
-
-    return if !$DBObject->Prepare( SQL => $SQL );
-
-    my @RowBuffer;
-    while ( my @Row = $DBObject->FetchrowArray() ) {
-
-        my %Data;
-        $Data{TicketID}       = $Row[0];
-        $Data{QueueID}        = $Row[1];
-        $Data{Queue}          = $Row[2];
-        $Data{GroupID}        = $Row[3];
-        $Data{Lock}           = $Row[4];
-        $Data{State}          = $Row[5];
-        $Data{CreateTimeUnix} = $Row[6];
-
-        push @RowBuffer, \%Data;
+    for ( sort keys %LockIDs ) {
+        next if $ViewableLockIDs{$_};
+        push( @NotViewableLockIDs, $_ );
     }
+
+    my @ViewableTicketIDs = $Self->TicketSearch(
+        Result       => 'ARRAY',
+        Permission   => 'ro',
+        ArchiveFlags => ['n'],
+        UserID       => 1,
+        Limit        => 0
+    );
 
     # write index
     return if !$DBObject->Do( SQL => 'DELETE FROM ticket_index' );
 
-    for (@RowBuffer) {
-
-        my %Data = %{$_};
-
-        $DBObject->Do(
-            SQL  => 'INSERT INTO ticket_index (ticket_id, queue_id, queue, group_id, s_lock, s_state, create_time_unix)'
-                  . ' VALUES (?, ?, ?, ?, ?, ?, ?)',
-            Bind => [
-                \$Data{TicketID}, \$Data{QueueID}, \$Data{Queue}, \$Data{GroupID},
-                \$Data{Lock}, \$Data{State}, \$Data{CreateTimeUnix},
-            ],
+    for (@ViewableTicketIDs) {
+        $Self->TicketAcceleratorAdd(
+            TicketID => $_,
+            Rebuild  => 1
         );
     }
 
     # write lock index
-    return if !$DBObject->Prepare(
-        SQL => "SELECT ti.id"
-             . " FROM ticket ti"
-             . " WHERE ti.ticket_lock_id not IN ( ${\(join ', ', @ViewableLockIDs)} ) ",
+    my @ViewableLockTicketIDs = $Self->TicketSearch(
+        Result       => 'ARRAY',
+        Permission   => 'ro',
+        LockIDs      => \@NotViewableLockIDs,
+        UserID       => 1,
+        Limit        => 0
     );
-
-    my @LockRowBuffer;
-    while ( my @Row = $DBObject->FetchrowArray() ) {
-        push @LockRowBuffer, $Row[0];
-    }
 
     # add lock index entry
     return if !$DBObject->Do( SQL => 'DELETE FROM ticket_lock_index' );
 
-    for (@LockRowBuffer) {
+    for (@ViewableLockTicketIDs) {
         $Self->TicketLockAcceleratorAdd( TicketID => $_ );
     }
 

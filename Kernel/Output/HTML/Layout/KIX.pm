@@ -317,6 +317,9 @@ sub AgentCustomerDetailsViewTable {
                 Key   => $Field->[1],
                 Value => $Param{Data}->{ $Field->[0] },
             );
+            if ( ref( $Record{Value} ) eq 'ARRAY' ) {
+                $Record{Value} = join( ', ', @{ $Record{Value} } );
+            }
             if ( $Field->[6] ) {
                 $Record{LinkStart} = "<a href=\"$Field->[6]\"";
                 if ( $Field->[8] ) {

@@ -2043,7 +2043,7 @@ sub Run {
                 Sort        => 'TreeView',
                 Size        => 5,
                 Multiple    => 1,
-                Translation => 0,
+                Translation => $ConfigObject->Get('Ticket::ServiceTranslation') || 0,
                 Max         => 200,
                 Class       => 'Modernize',
             );
@@ -2057,7 +2057,7 @@ sub Run {
                 Sort        => 'AlphanumericValue',
                 Size        => 5,
                 Multiple    => 1,
-                Translation => 0,
+                Translation => $ConfigObject->Get('Ticket::SLATranslation') || 0,
                 Max         => 200,
                 Class       => 'Modernize',
             );

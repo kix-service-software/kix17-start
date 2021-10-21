@@ -152,13 +152,6 @@ sub ProcessAdd {
         );
         return;
     }
-    if ( !$Param{Config}->{Description} ) {
-        $Kernel::OM->Get('Kernel::System::Log')->Log(
-            Priority => 'error',
-            Message  => "Need Description in Config!",
-        );
-        return;
-    }
 
     # get yaml object
     my $YAMLObject = $Kernel::OM->Get('Kernel::System::YAML');
@@ -619,13 +612,6 @@ sub ProcessUpdate {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => "Config needs to be a valid Hash reference!",
-        );
-        return;
-    }
-    if ( !$Param{Config}->{Description} ) {
-        $Kernel::OM->Get('Kernel::System::Log')->Log(
-            Priority => 'error',
-            Message  => "Need Description in Config!",
         );
         return;
     }

@@ -91,6 +91,12 @@ sub Run {
                 %Ticket
                 && $Ticket{QueueID} eq $QueueID
             ) {
+                my $MessageID = $GetParam{'Message-ID'};
+
+                $Kernel::OM->Get('Kernel::System::Log')->Log(
+                    Priority => 'notice',
+                    Message  => "New ticket, but message id already exists in queue ($MessageID). New ticket is skipped."
+                );
                 return ( 6, $TicketID );
             }
         }

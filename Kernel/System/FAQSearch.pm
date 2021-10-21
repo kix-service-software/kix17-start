@@ -405,15 +405,15 @@ sub FAQSearch {
         $Param{Number} =~ s/%%/%/g;
         $Param{Number} = $DBObject->Quote( $Param{Number}, 'Like' );
         if ($Ext) {
-            $Ext .= ' AND';
+            $Ext .= ' AND ';
         }
-        $Ext .= " LOWER(i.f_number) LIKE LOWER('" . $Param{Number} . "') $Self->{LikeEscapeString}";
+        $Ext .= "LOWER(i.f_number) LIKE LOWER('" . $Param{Number} . "') $Self->{LikeEscapeString}";
     }
 
     # search for the title
     if ( $Param{Title} ) {
         if ($Ext) {
-            $Ext .= ' AND';
+            $Ext .= ' AND ';
         }
 
         # add the SQL for the title search
@@ -435,7 +435,7 @@ sub FAQSearch {
         );
 
         if ($Ext) {
-            $Ext .= ' AND';
+            $Ext .= ' AND ';
         }
         $Ext .= $InString;
     }
@@ -449,7 +449,7 @@ sub FAQSearch {
         );
 
         if ($Ext) {
-            $Ext .= ' AND';
+            $Ext .= ' AND ';
         }
         $Ext .= $InString;
     }
@@ -472,7 +472,7 @@ sub FAQSearch {
         );
 
         if ($Ext) {
-            $Ext .= ' AND';
+            $Ext .= ' AND ';
         }
         $Ext .= $InString;
     }
@@ -490,7 +490,7 @@ sub FAQSearch {
         );
 
         if ($Ext) {
-            $Ext .= ' AND';
+            $Ext .= ' AND ';
         }
         $Ext .= $InString;
     }
@@ -498,7 +498,7 @@ sub FAQSearch {
     # search for keywords
     if ( $Param{Keyword} ) {
         if ($Ext) {
-            $Ext .= ' AND';
+            $Ext .= ' AND ';
         }
 
         # add the SQL for the title search
@@ -514,18 +514,18 @@ sub FAQSearch {
     # show only approved FAQ articles for public and customer interface
     if ( $Param{Interface}->{Name} eq 'public' || $Param{Interface}->{Name} eq 'external' ) {
         if ($Ext) {
-            $Ext .= ' AND';
+            $Ext .= ' AND ';
         }
-        $Ext .= ' i.approved = 1';
+        $Ext .= 'i.approved = 1';
     }
 
     # otherwise check if need to search for approved status
     elsif ( defined $Param{Approved} ) {
         my $ApprovedValue = $Param{Approved} ? 1 : 0;
         if ($Ext) {
-            $Ext .= ' AND';
+            $Ext .= ' AND ';
         }
-        $Ext .= " i.approved = $ApprovedValue";
+        $Ext .= "i.approved = $ApprovedValue";
     }
 
     # search for create users
@@ -541,7 +541,7 @@ sub FAQSearch {
         );
 
         if ($Ext) {
-            $Ext .= ' AND';
+            $Ext .= ' AND ';
         }
         $Ext .= $InString;
     }
@@ -559,7 +559,7 @@ sub FAQSearch {
         );
 
         if ($Ext) {
-            $Ext .= ' AND';
+            $Ext .= ' AND ';
         }
         $Ext .= $InString;
     }
@@ -625,7 +625,10 @@ sub FAQSearch {
         }
         $CompareCreateTimeOlderNewerDate = $Time;
 
-        $Ext .= " AND i.created <= '"
+        if ($Ext) {
+            $Ext .= ' AND ';
+        }
+        $Ext .= "i.created <= '"
             . $DBObject->Quote( $Param{ItemCreateTimeOlderDate} ) . "'";
     }
 
@@ -659,7 +662,10 @@ sub FAQSearch {
         # don't execute queries if older/newer date restriction show now valid time frame
         return if $CompareCreateTimeOlderNewerDate && $Time > $CompareCreateTimeOlderNewerDate;
 
-        $Ext .= " AND i.created >= '"
+        if ($Ext) {
+            $Ext .= ' AND ';
+        }
+        $Ext .= "i.created >= '"
             . $DBObject->Quote( $Param{ItemCreateTimeNewerDate} ) . "'";
     }
 
@@ -717,7 +723,10 @@ sub FAQSearch {
         }
         $CompareChangeTimeOlderNewerDate = $Time;
 
-        $Ext .= " AND i.changed <= '"
+        if ($Ext) {
+            $Ext .= ' AND ';
+        }
+        $Ext .= "i.changed <= '"
             . $DBObject->Quote( $Param{ItemChangeTimeOlderDate} ) . "'";
     }
 
@@ -751,7 +760,10 @@ sub FAQSearch {
         # don't execute queries if older/newer date restriction show now valid time frame
         return if $CompareChangeTimeOlderNewerDate && $Time > $CompareChangeTimeOlderNewerDate;
 
-        $Ext .= " AND i.changed >= '"
+        if ($Ext) {
+            $Ext .= ' AND ';
+        }
+        $Ext .= "i.changed >= '"
             . $DBObject->Quote( $Param{ItemChangeTimeNewerDate} ) . "'";
     }
 
@@ -1067,11 +1079,11 @@ sub _InConditionGet {
 
         my $IDString = join ', ', @SortedIDsPart;
 
-        push @SQLStrings, " $Param{TableColumn} IN ($IDString) ";
+        push @SQLStrings, "$Param{TableColumn} IN ($IDString)";
     }
 
     my $SQL = join ' OR ', @SQLStrings;
-    $SQL = ' ( ' . $SQL . ' ) ';
+    $SQL = '(' . $SQL . ')';
 
     return $SQL;
 }

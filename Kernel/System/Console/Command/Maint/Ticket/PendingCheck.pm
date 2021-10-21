@@ -37,13 +37,20 @@ sub Run {
     $Self->Print("<yellow>Process pending tickets...</yellow>\n");
 
     # get needed objects
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
     my $StateObject  = $Kernel::OM->Get('Kernel::System::State');
     my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
+    my $TimeObject   = $Kernel::OM->Get('Kernel::System::Time');
 
     my @TicketIDs;
 
+    # get pending states
     my @PendingAutoStateIDs = $StateObject->StateGetStatesByType(
         Type   => 'PendingAuto',
+        Result => 'ID',
+    );
+    my @PendingReminderStateIDs = $StateObject->StateGetStatesByType(
+        Type   => 'PendingReminder',
         Result => 'ID',
     );
 
@@ -52,11 +59,11 @@ sub Run {
         # do ticket auto jobs
         @TicketIDs = $TicketObject->TicketSearch(
             Result   => 'ARRAY',
-            StateIDs => [@PendingAutoStateIDs],
+            StateIDs => \@PendingAutoStateIDs,
             UserID   => 1,
         );
 
-        my %States = %{ $Kernel::OM->Get('Kernel::Config')->Get('Ticket::StateAfterPending') };
+        my %States = %{ $ConfigObject->Get('Ticket::StateAfterPending') };
 
         TICKETID:
         for my $TicketID (@TicketIDs) {
@@ -112,60 +119,61 @@ sub Run {
         }
     }
     else {
-
         $Self->Print(" No pending auto StateIDs found!\n");
     }
 
-    # do ticket reminder notification jobs
-    @TicketIDs = $TicketObject->TicketSearch(
-        Result    => 'ARRAY',
-        StateType => 'pending reminder',
-        UserID    => 1,
-    );
-
-    TICKETID:
-    for my $TicketID (@TicketIDs) {
-
-        # get ticket data
-        my %Ticket = $TicketObject->TicketGet(
-            TicketID      => $TicketID,
-            UserID        => 1,
-            DynamicFields => 0,
+    if (@PendingReminderStateIDs) {
+        # do ticket reminder notification jobs
+        @TicketIDs = $TicketObject->TicketSearch(
+            Result   => 'ARRAY',
+            StateIDs => \@PendingReminderStateIDs,
+            UserID   => 1,
         );
 
-        next TICKETID if $Ticket{UntilTime} >= 1;
+        TICKETID:
+        for my $TicketID (@TicketIDs) {
 
-        # get used calendar
-        my $Calendar = $TicketObject->TicketCalendarGet(
-            %Ticket,
-        );
+            # get ticket data
+            my %Ticket = $TicketObject->TicketGet(
+                TicketID      => $TicketID,
+                UserID        => 1,
+                DynamicFields => 0,
+            );
 
-        # get time object
-        my $TimeObject = $Kernel::OM->Get('Kernel::System::Time');
+            next TICKETID if $Ticket{UntilTime} >= 1;
 
-        # check if it is during business hours, then send reminder
-        my $CountedTime = $TimeObject->WorkingTime(
-            StartTime => $TimeObject->SystemTime() - ( 10 * 60 ),
-            StopTime  => $TimeObject->SystemTime(),
-            Calendar  => $Calendar,
-        );
+            # get used calendar
+            my $Calendar = $TicketObject->TicketCalendarGet(
+                %Ticket,
+            );
 
-        # error handling
-        if ( !$CountedTime ) {
-            next TICKETID;
-        }
+            # check if it is during business hours, then send reminder
+            my $CountedTime = $TimeObject->WorkingTime(
+                StartTime => $TimeObject->SystemTime() - ( 10 * 60 ),
+                StopTime  => $TimeObject->SystemTime(),
+                Calendar  => $Calendar,
+            );
 
-        # trigger notification event
-        $TicketObject->EventHandler(
-            Event => 'NotificationPendingReminder',
-            Data  => {
-                TicketID              => $Ticket{TicketID},
-                CustomerMessageParams => {
-                    TicketNumber => $Ticket{TicketNumber},
+            # error handling
+            if ( !$CountedTime ) {
+                next TICKETID;
+            }
+
+            # trigger notification event
+            $TicketObject->EventHandler(
+                Event => 'NotificationPendingReminder',
+                Data  => {
+                    TicketID              => $Ticket{TicketID},
+                    CustomerMessageParams => {
+                        TicketNumber => $Ticket{TicketNumber},
+                    },
                 },
-            },
-            UserID => 1,
-        );
+                UserID => 1,
+            );
+        }
+    }
+    else {
+        $Self->Print(" No pending reminder StateIDs found!\n");
     }
 
     $Self->Print("<green>Done.</green>\n");

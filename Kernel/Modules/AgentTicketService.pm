@@ -72,7 +72,7 @@ sub Run {
 
     # create URL to store last screen
     my $URL = "Action=AgentTicketService"
-        . ";ServiceID="     . $LayoutObject->LinkEncode( $Self->{ServiceID} || $ParamObject->GetParam( Param => 'ServiceID' ) )
+        . ";ServiceID="     . $LayoutObject->LinkEncode( $Self->{ServiceID} || $ParamObject->GetParam( Param => 'ServiceID' ) || '' )
         . ";View="          . $LayoutObject->LinkEncode( $ParamObject->GetParam( Param => 'View')        || '' )
         . ";Filter="        . $LayoutObject->LinkEncode( $ParamObject->GetParam( Param => 'Filter')      || '' )
         . ";SortBy="        . $LayoutObject->LinkEncode( $SortBy )
@@ -1082,9 +1082,10 @@ sub _MaskServiceViewDropDown {
         }
 
         $Param{ServiceStrg} .= $LayoutObject->BuildSelection(
-            Data       => \%ServiceLevelList,
-            SelectedID => $ServiceStrg{$ServiceLevel}->{SelectedID},
-            Name       => "ServiceID[$ServiceLevel]",
+            Data        => \%ServiceLevelList,
+            SelectedID  => $ServiceStrg{$ServiceLevel}->{SelectedID},
+            Name        => "ServiceID[$ServiceLevel]",
+            Translation => $ConfigObject->Get('Ticket::ServiceTranslation') || 0
         );
         $ParentFilter = $ServiceStrg{$ServiceLevel}->{Selected};
     }

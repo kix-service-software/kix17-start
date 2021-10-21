@@ -871,6 +871,37 @@ sub ValidateFrom {
     return 1;
 }
 
+=item ValidateEmail()
+
+checks if the given email is valid.
+
+    my $Success = $CommonObject->ValidateEmail(
+        Email => 'user@domain.com',
+    );
+
+    returns
+    $Success = 1            # or 0
+
+=cut
+
+sub ValidateEmail {
+    my ( $Self, %Param ) = @_;
+
+    # check needed stuff
+    return if !$Param{Email};
+
+    # check email address
+    for my $Email ( Mail::Address->parse( $Param{Email} ) ) {
+        if (
+            !$Kernel::OM->Get('Kernel::System::CheckItem')->CheckEmail( Address => $Email->address() )
+        ) {
+            return;
+        }
+    }
+
+    return 1;
+}
+
 =item ValidateSenderType()
 
 checks if the given SenderType or SenderType ID is valid.
@@ -1338,6 +1369,50 @@ sub CreateAttachment {
 
     return {
         Success => $Success,
+    };
+}
+
+=item PrepareAttachment()
+
+prepares an attachment to be proceed by ArticleCreate or ArticleSend
+
+    my $Result = $CommonObject->PrepareAttachment(
+        Content     => $Data,                   # file content (Base64 encoded)
+        ContentType => 'some content type',
+        Filename    => 'some filename',
+        UserID      => 123.
+    );
+
+    returns
+    $Result = {
+        Success => 1,                        # if everything is ok
+    }
+
+    $Result = {
+        Success      => 0,
+        ErrorMessage => 'Error description'
+    }
+
+=cut
+
+sub PrepareAttachment {
+    my ( $Self, %Param ) = @_;
+
+    # check needed stuff
+    for my $Needed (qw(Attachment)) {
+        if ( !$Param{$Needed} ) {
+            return {
+                Success      => 0,
+                ErrorMessage => "PrepareAttachment() Got no $Needed!"
+            };
+        }
+    }
+
+    # decode attachment
+    $Param{Attachment}->{Content} = MIME::Base64::decode_base64( $Param{Attachment}->{Content} );
+
+    return {
+        Success => 1,
     };
 }
 

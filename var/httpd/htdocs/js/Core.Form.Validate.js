@@ -820,6 +820,9 @@ Core.Form.Validate = (function (TargetNS) {
 
         $Form
             .find("input:not([type='hidden']), textarea, select")
+            .filter(function() {
+                return $(this).closest(".hiddenFormField").length < 1
+            })
             .removeClass(Options.IgnoreClass);
     };
 

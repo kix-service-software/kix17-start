@@ -315,7 +315,7 @@ sub TicketSearch {
     my $Result  = $Param{Result}  || 'HASH';
     my $OrderBy = $Param{OrderBy} || 'Down';
     my $SortBy  = $Param{SortBy}  || 'Age';
-    my $Limit   = $Param{Limit}   || 10000;
+    my $Limit   = $Param{Limit}   // 10000;
 
     if ( !$Param{ContentSearch} ) {
         $Param{ContentSearch} = 'AND';
@@ -1985,14 +1985,19 @@ sub TicketSearch {
         || $Param{TicketPendingTimeOlderDate}
         || $Param{TicketPendingTimeNewerDate}
     ) {
-
-        # get close state ids
-        my @List = $Kernel::OM->Get('Kernel::System::State')->StateGetStatesByType(
-            StateType => [ 'pending reminder', 'pending auto' ],
-            Result    => 'ID',
+        # get pending states
+        my @PendingAutoStateIDs = $Kernel::OM->Get('Kernel::System::State')->StateGetStatesByType(
+            Type   => 'PendingAuto',
+            Result => 'ID',
         );
-        if (@List) {
-            $SQLExt .= " AND st.ticket_state_id IN (${\(join ', ', sort @List)}) ";
+        my @PendingReminderStateIDs = $Kernel::OM->Get('Kernel::System::State')->StateGetStatesByType(
+            Type   => 'PendingReminder',
+            Result => 'ID',
+        );
+        my @PendingsStateIDs = (@PendingAutoStateIDs, @PendingReminderStateIDs);
+
+        if (@PendingsStateIDs) {
+            $SQLExt .= " AND st.ticket_state_id IN (${\(join ', ', sort @PendingsStateIDs)}) ";
         }
     }
 
@@ -4078,14 +4083,19 @@ sub TicketSearchOR {
         || $Param{TicketPendingTimeOlderDate}
         || $Param{TicketPendingTimeNewerDate}
     ) {
-
-        # get close state ids
-        my @List = $Kernel::OM->Get('Kernel::System::State')->StateGetStatesByType(
-            StateType => [ 'pending reminder', 'pending auto' ],
-            Result    => 'ID',
+        # get pending states
+        my @PendingAutoStateIDs = $Kernel::OM->Get('Kernel::System::State')->StateGetStatesByType(
+            Type   => 'PendingAuto',
+            Result => 'ID',
         );
-        if (@List) {
-            $SQLExt .= " AND st.ticket_state_id IN (${\(join ', ', sort @List)}) ";
+        my @PendingReminderStateIDs = $Kernel::OM->Get('Kernel::System::State')->StateGetStatesByType(
+            Type   => 'PendingReminder',
+            Result => 'ID',
+        );
+        my @PendingsStateIDs = (@PendingAutoStateIDs, @PendingReminderStateIDs);
+
+        if (@PendingsStateIDs) {
+            $SQLExt .= " AND st.ticket_state_id IN (${\(join ', ', sort @PendingsStateIDs)}) ";
         }
     }
 

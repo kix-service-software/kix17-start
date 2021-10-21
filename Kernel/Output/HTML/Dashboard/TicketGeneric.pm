@@ -3048,6 +3048,18 @@ sub Run {
                     $Column eq 'State'
                     || $Column eq 'Lock'
                     || $Column eq 'Priority'
+                    || (
+                        $Column eq 'Type'
+                        && $ConfigObject->Get('Ticket::TypeTranslation')
+                    )
+                    || (
+                        $Column eq 'Service'
+                        && $ConfigObject->Get('Ticket::ServiceTranslation')
+                    )
+                    || (
+                        $Column eq 'SLA'
+                        && $ConfigObject->Get('Ticket::SLATranslation')
+                    )
                 ) {
                     $BlockType = 'Translatable';
                     $DataValue = $Ticket{$Column};
@@ -3235,6 +3247,7 @@ sub _InitialColumnFilter {
     return if !$Self->{ValidFilterableColumns}->{ $Param{ColumnName} };
 
     # get layout object
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
     my $Label = $Param{Label} || $Param{ColumnName};
@@ -3255,6 +3268,18 @@ sub _InitialColumnFilter {
         $Param{ColumnName} eq 'State'
         || $Param{ColumnName} eq 'Lock'
         || $Param{ColumnName} eq 'Priority'
+        || (
+            $Param{ColumnName} eq 'Type'
+            && $ConfigObject->Get('Ticket::TypeTranslation')
+        )
+        || (
+            $Param{ColumnName} eq 'Service'
+            && $ConfigObject->Get('Ticket::ServiceTranslation')
+        )
+        || (
+            $Param{ColumnName} eq 'SLA'
+            && $ConfigObject->Get('Ticket::SLATranslation')
+        )
     ) {
         $TranslationOption = 1;
     }
@@ -3369,6 +3394,7 @@ sub _ColumnFilterJSON {
     return if !$Self->{ValidFilterableColumns}->{ $Param{ColumnName} };
 
     # get layout object
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
     my $Label = $Param{Label};
@@ -3408,6 +3434,18 @@ sub _ColumnFilterJSON {
         $Param{ColumnName} eq 'State'
         || $Param{ColumnName} eq 'Lock'
         || $Param{ColumnName} eq 'Priority'
+        || (
+            $Param{ColumnName} eq 'Type'
+            && $ConfigObject->Get('Ticket::TypeTranslation')
+        )
+        || (
+            $Param{ColumnName} eq 'Service'
+            && $ConfigObject->Get('Ticket::ServiceTranslation')
+        )
+        || (
+            $Param{ColumnName} eq 'SLA'
+            && $ConfigObject->Get('Ticket::SLATranslation')
+        )
     ) {
         $TranslationOption = 1;
     }
