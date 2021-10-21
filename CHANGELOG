@@ -1,6 +1,15 @@
 # Change log of KIX
 * Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.17.0 (2021/10/21)
+ * (2021/10/21) - productive release
+ * (2021/09/16) - CR: KIX17-2090 (option to build subject with ticket number for ticket operations) (millinger)
+ * (2021/09/16) - CR: KIX17-2258 (changed description) (millinger)
+ * (2021/09/09) - Bugfix: KIX17-2493 (fixed missing operation) (millinger)
+ * (2021/08/18) - Bugfix: KIX17-2188 (fixed syntax) (millinger)
+ * (2021/08/18) - Bugfix: KIX17-2140 (fixed syntax) (millinger)
+ * (2021/07/19) - CR: KIX17-2283 (cleanup smtp auth with oauth2) (millinger)
+
 # 17.17.0-RC12 (2021/10/05)
  * (2021/10/05) - release candidate
 
