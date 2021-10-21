@@ -474,11 +474,6 @@ END
                 $ColumnSortBy = $Column;
             }
 
-            my $LastColumnNamePart = $ColumnName;
-            if ( $ColumnName =~ m/.*::(.*?)$/ ) {
-                $ColumnName = $1;
-            }
-
             if ( $Column ne 'BulkAction' ) {
                 $LayoutObject->Block(
                     Name => 'RecordCustomHeader',

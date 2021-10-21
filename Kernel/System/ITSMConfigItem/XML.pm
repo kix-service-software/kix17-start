@@ -54,10 +54,18 @@ sub XMLValueLookup {
         return;
     }
 
+    # check if backend exists
+    my $BackendModule = 'Kernel::System::ITSMConfigItem::XML::Type::' . $Param{Item}->{Input}->{Type};
+    if ( !$Kernel::OM->Get('Kernel::System::Main')->Require($BackendModule) ) {
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
+            Priority => 'error',
+            Message  => 'Can not load config item xml type module for type ' . $Param{Item}->{Input}->{Type} . '!',
+        );
+        return;
+    }
+
     # load backend
-    my $BackendObject = $Kernel::OM->Get(
-        'Kernel::System::ITSMConfigItem::XML::Type::' . $Param{Item}->{Input}->{Type}
-    );
+    my $BackendObject = $Kernel::OM->Get( $BackendModule );
 
     return '' if !$BackendObject;
 
@@ -89,10 +97,18 @@ sub XMLStatsAttributeCreate {
         return;
     }
 
+    # check if backend exists
+    my $BackendModule = 'Kernel::System::ITSMConfigItem::XML::Type::' . $Param{Item}->{Input}->{Type};
+    if ( !$Kernel::OM->Get('Kernel::System::Main')->Require($BackendModule) ) {
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
+            Priority => 'error',
+            Message  => 'Can not load config item xml type module for type ' . $Param{Item}->{Input}->{Type} . '!',
+        );
+        return;
+    }
+
     # load backend
-    my $BackendObject = $Kernel::OM->Get(
-        'Kernel::System::ITSMConfigItem::XML::Type::' . $Param{Item}->{Input}->{Type}
-    );
+    my $BackendObject = $Kernel::OM->Get( $BackendModule );
 
     return if !$BackendObject;
 
@@ -125,10 +141,18 @@ sub XMLExportSearchValuePrepare {
         return;
     }
 
+    # check if backend exists
+    my $BackendModule = 'Kernel::System::ITSMConfigItem::XML::Type::' . $Param{Item}->{Input}->{Type};
+    if ( !$Kernel::OM->Get('Kernel::System::Main')->Require($BackendModule) ) {
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
+            Priority => 'error',
+            Message  => 'Can not load config item xml type module for type ' . $Param{Item}->{Input}->{Type} . '!',
+        );
+        return;
+    }
+
     # load backend
-    my $BackendObject = $Kernel::OM->Get(
-        'Kernel::System::ITSMConfigItem::XML::Type::' . $Param{Item}->{Input}->{Type}
-    );
+    my $BackendObject = $Kernel::OM->Get( $BackendModule );
 
     return if !$BackendObject;
 
@@ -161,10 +185,18 @@ sub XMLExportValuePrepare {
         return;
     }
 
+    # check if backend exists
+    my $BackendModule = 'Kernel::System::ITSMConfigItem::XML::Type::' . $Param{Item}->{Input}->{Type};
+    if ( !$Kernel::OM->Get('Kernel::System::Main')->Require($BackendModule) ) {
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
+            Priority => 'error',
+            Message  => 'Can not load config item xml type module for type ' . $Param{Item}->{Input}->{Type} . '!',
+        );
+        return;
+    }
+
     # load backend
-    my $BackendObject = $Kernel::OM->Get(
-        'Kernel::System::ITSMConfigItem::XML::Type::' . $Param{Item}->{Input}->{Type}
-    );
+    my $BackendObject = $Kernel::OM->Get( $BackendModule );
 
     return if !$BackendObject;
 
@@ -197,10 +229,18 @@ sub XMLImportSearchValuePrepare {
         return;
     }
 
+    # check if backend exists
+    my $BackendModule = 'Kernel::System::ITSMConfigItem::XML::Type::' . $Param{Item}->{Input}->{Type};
+    if ( !$Kernel::OM->Get('Kernel::System::Main')->Require($BackendModule) ) {
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
+            Priority => 'error',
+            Message  => 'Can not load config item xml type module for type ' . $Param{Item}->{Input}->{Type} . '!',
+        );
+        return;
+    }
+
     # load backend
-    my $BackendObject = $Kernel::OM->Get(
-        'Kernel::System::ITSMConfigItem::XML::Type::' . $Param{Item}->{Input}->{Type}
-    );
+    my $BackendObject = $Kernel::OM->Get( $BackendModule );
 
     return if !$BackendObject;
 
@@ -233,10 +273,18 @@ sub XMLImportValuePrepare {
         return;
     }
 
+    # check if backend exists
+    my $BackendModule = 'Kernel::System::ITSMConfigItem::XML::Type::' . $Param{Item}->{Input}->{Type};
+    if ( !$Kernel::OM->Get('Kernel::System::Main')->Require($BackendModule) ) {
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
+            Priority => 'error',
+            Message  => 'Can not load config item xml type module for type ' . $Param{Item}->{Input}->{Type} . '!',
+        );
+        return;
+    }
+
     # load backend
-    my $BackendObject = $Kernel::OM->Get(
-        'Kernel::System::ITSMConfigItem::XML::Type::' . $Param{Item}->{Input}->{Type}
-    );
+    my $BackendObject = $Kernel::OM->Get( $BackendModule );
 
     return if !$BackendObject;
 

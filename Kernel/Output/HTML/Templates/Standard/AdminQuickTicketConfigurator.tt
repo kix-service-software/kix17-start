@@ -94,28 +94,39 @@
                     </button>
                 </form>
 [% RenderBlockStart("UploadResult") %]
-                <br /><br />
-                 <h2><span>[% Translate("Result of the upload") | html %]:</span></h2>
-                <div>[% Data.UploadMessage %]</div>
+                <h2 class="SpacingTop"><span>[% Translate("Result of the upload") | html %]:</span></h2>
+[% IF Data.Filename %]
+                <fieldset class="Separated">
+                    [% Data.Filename %]
+                </fieldset>
+[% END %]
                 <fieldset class="TableLike FixedLabel">
+[% IF Data.UploadMessage %]
+                    <div class="MessageBox Center [% Data.UploadState %]">
+                        <p>[% Translate(Data.UploadMessage) %]</p>
+                    </div>
+                    <div class="Clear"></div>
+[% END %]
                     <label>[% Translate("entries uploaded") | html %]:</label>
                     <p class="Value">
                         [% Data.CountUploaded %]
                     </p>
-                    <div class="Clear">
-                    </div>
+                    <div class="Clear"></div>
                     <label>[% Translate("added") | html %]:</label>
                     <p class="Value">
                         [% Data.CountAdded %]
                     </p>
-                    <div class="Clear">
-                    </div>
-                    <label>[% Translate("insert failed") | html %]:</label>
+                    <div class="Clear"></div>
+                    <label>[% Translate("updated") | html %]:</label>
                     <p class="Value">
-                        [% Data.CountInsertFailed %]
+                        [% Data.CountUpdated %]
                     </p>
-                    <div class="Clear">
-                    </div>
+                    <div class="Clear"></div>
+                    <label>[% Translate("failed") | html %]:</label>
+                    <p class="Value">
+                        [% Data.CountFailed %]
+                    </p>
+                    <div class="Clear"></div>
                 </fieldset>
 [% RenderBlockEnd("UploadResult") %]
             </div>
@@ -213,7 +224,7 @@ $('.TicketTemplateDelete').on('click', function (Event) {
                                 <p>[% Translate("This field is required and its content can not be longer than %s characters.", "80") | html %]</p>
                             </div>
                             <div id="NameServerError" class="TooltipErrorMessage">
-                                <p>[% Translate("This field is required and its content can not be longer than %s characters.", "80") | html %]</p>
+                                <p>[% Data.NameErrorMessage | html %]</p>
                             </div>
                         </div>
                         <div class="Clear"></div>

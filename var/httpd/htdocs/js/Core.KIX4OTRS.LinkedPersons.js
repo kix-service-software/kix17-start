@@ -95,6 +95,9 @@ Core.KIX4OTRS.LinkedPersons = (function(TargetNS) {
         if ($('#LinkedPersons').closest('form').find('input[name=TicketID]').length) {
             TicketID = $('#LinkedPersons').closest('form').find('input[name=TicketID]').val();
         }
+        else if ( $('#LinkedPersons').closest('.LayoutFixedSidebar').children('.ContentColumn').find('input[name=TicketID]').length ) {
+            TicketID = $('#LinkedPersons').closest('.LayoutFixedSidebar').children('.ContentColumn').find('input[name=TicketID]').val();
+        }
 
         // determine Frontend
         if ($(location).attr('href').search(/customer\.pl/) > 0) {

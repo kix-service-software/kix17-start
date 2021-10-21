@@ -43,16 +43,17 @@ sub new {
 sub Run {
     my ( $Self, %Param ) = @_;
 
-    # get param object
-    my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
+    # get needed object
+    my $ParamObject  = $Kernel::OM->Get('Kernel::System::Web::Request');
+    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
     # get params
     my %GetParam;
     $GetParam{ItemID} = $ParamObject->GetParam( Param => 'ItemID' );
     $GetParam{Rate}   = $ParamObject->GetParam( Param => 'Rate' );
 
-    # get layout object
-    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    # get navigation bar option
+    my $Nav = $ParamObject->GetParam( Param => 'Nav' ) || '';
 
     # save, if browser link message was closed
     if ( $Self->{Subaction} eq 'BrowserLinkMessage' ) {
@@ -74,7 +75,8 @@ sub Run {
     # check needed stuff
     if ( !$GetParam{ItemID} ) {
         return $LayoutObject->CustomerFatalError(
-            Message => 'Need ItemID!',
+            Message => 'No ItemID is given!',
+            Comment => 'Please contact the admin.',
         );
     }
 
@@ -130,7 +132,7 @@ sub Run {
     );
 
     # ---------------------------------------------------------- #
-    # HTMLView Subaction
+    # HTMLView Sub-action
     # ---------------------------------------------------------- #
     if ( $Self->{Subaction} eq 'HTMLView' ) {
 
@@ -232,12 +234,13 @@ sub Run {
     }
 
     # ---------------------------------------------------------- #
-    # DownloadAttachment Subaction
+    # DownloadAttachment Sub-action
     # ---------------------------------------------------------- #
     if ( $Self->{Subaction} eq 'DownloadAttachment' ) {
 
         # manage parameters
         $GetParam{FileID} = $ParamObject->GetParam( Param => 'FileID' );
+
         if ( !defined $GetParam{FileID} ) {
             return $LayoutObject->CustomerFatalError( Message => 'Need FileID' );
         }
@@ -260,11 +263,21 @@ sub Run {
         }
     }
 
-    # output header
-    my $Output = $LayoutObject->CustomerHeader(
-        Value => $FAQData{Title},
-    );
-    $Output .= $LayoutObject->CustomerNavigationBar();
+    # ---------------------------------------------------------- #
+    # other sub-actions continues here
+    # ---------------------------------------------------------- #
+    my $Output;
+    if ( $Nav eq 'None' ) {
+        # output header small and no Navbar
+        $Output = $LayoutObject->CustomerHeader( Type => 'Small' );
+    }
+    else {
+        # output header and navigation bar
+        $Output = $LayoutObject->CustomerHeader(
+            Value => $FAQData{Title},
+        );
+        $Output .= $LayoutObject->CustomerNavigationBar();
+    }
 
     # set default interface settings
     my $Interface = $FAQObject->StateTypeGet(
@@ -301,17 +314,18 @@ sub Run {
         my $VoteCreatedSystemTime = $TimeObject->TimeStamp2SystemTime(
             String => $VoteData->{Created} || '',
         );
+
         if ( $ItemChangedSystemTime <= $VoteCreatedSystemTime ) {
             $AlreadyVoted = 1;
         }
     }
 
     # ---------------------------------------------------------- #
-    # Vote Subaction
+    # Vote Sub-action
     # ---------------------------------------------------------- #
     if ( $Self->{Subaction} eq 'Vote' ) {
 
-        # customer can't use this subaction if is not enabled
+        # customer can't use this sub-action if is not enabled
         if ( !$Voting ) {
             $LayoutObject->CustomerFatalError(
                 Message => "The voting mechanism is not enabled!",
@@ -415,11 +429,13 @@ sub Run {
         $Param{VotingResultColor} = 'Gray';
     }
 
-    # show back link
-    $LayoutObject->Block(
-        Name => 'Back',
-        Data => \%Param,
-    );
+    if ( $Nav ne 'None' ) {
+        # show back link
+        $LayoutObject->Block(
+            Name => 'Back',
+            Data => \%Param,
+         );
+    }
 
     # get multi-language default option
     my $MultiLanguage = $ConfigObject->Get('FAQ::MultiLanguage');
@@ -446,13 +462,15 @@ sub Run {
     my $ShowFAQPath = $LayoutObject->FAQPathShow(
         FAQObject   => $FAQObject,
         CategoryID  => $FAQData{CategoryID},
-        PathForItem => 1,
         UserID      => $Self->{UserID},
+        PathForItem => 1,
+        Nav         => $Nav,
     );
     if ($ShowFAQPath) {
         $LayoutObject->Block(
             Name => 'FAQPathItemElement',
             Data => {%FAQData},
+            Nav  => $Nav,
         );
     }
 
@@ -482,14 +500,14 @@ sub Run {
         );
     }
 
-    # output attachments if any
+    # output existing attachments
     my @AttachmentIndex = $FAQObject->AttachmentIndex(
         ItemID     => $GetParam{ItemID},
         ShowInline => 0,
         UserID     => $Self->{UserID},
     );
 
-    # output attachments
+    # output header and all attachments
     if (@AttachmentIndex) {
         $LayoutObject->Block(
             Name => 'AttachmentHeader',
@@ -608,7 +626,12 @@ sub Run {
     );
 
     # add footer
-    $Output .= $LayoutObject->CustomerFooter();
+    if ( $Nav && $Nav eq 'None' ) {
+        $Output .= $LayoutObject->CustomerFooter( Type => 'Small' );
+    }
+    else {
+        $Output .= $LayoutObject->CustomerFooter();
+    }
 
     return $Output;
 }

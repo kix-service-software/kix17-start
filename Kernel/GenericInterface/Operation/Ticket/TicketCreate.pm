@@ -13,7 +13,7 @@ package Kernel::GenericInterface::Operation::Ticket::TicketCreate;
 use strict;
 use warnings;
 
-use Kernel::System::VariableCheck qw(IsArrayRefWithData IsHashRefWithData IsString IsStringWithData);
+use Kernel::System::VariableCheck qw( :all );
 
 use base qw(
     Kernel::GenericInterface::Operation::Common
@@ -79,7 +79,7 @@ perform TicketCreate Operation. This will return the created ticket number.
                                                                                 #   Password is required
 
             Ticket => {
-                Title      => 'some ticket title',
+                Title         => 'some ticket title',
 
                 QueueID       => 123,                                           # QueueID or Queue is required
                 Queue         => 'some queue name',
@@ -124,10 +124,14 @@ perform TicketCreate Operation. This will return the created ticket number.
                 SenderType                      => 'some sender type name',    # optional
                 AutoResponseType                => 'some auto response type',  # optional
                 From                            => 'some from string',         # optional
+                To                              => 'some to string',           # optional
+                Cc                              => 'some cc string',           # optional
+                Bcc                             => 'some bcc string',          # optional
+                ReplyTo                         => 'some reply to string',     # optional
                 Subject                         => 'some subject',
-                Body                            => 'some body'
+                Body                            => 'some body',
 
-                ContentType                     => 'some content type',        # ContentType or MimeType and Charset is requieed
+                ContentType                     => 'some content type',        # ContentType or MimeType and Charset is required
                 MimeType                        => 'some mime type',
                 Charset                         => 'some charset',
 
@@ -138,6 +142,19 @@ perform TicketCreate Operation. This will return the created ticket number.
                 ForceNotificationToUserID       => [1, 2, 3]                   # optional
                 ExcludeNotificationToUserID     => [1, 2, 3]                   # optional
                 ExcludeMuteNotificationToUserID => [1, 2, 3]                   # optional
+                TicketSubjectBuild              => 1,                          # optional
+                AppendQueueSignature            => 1,                          # optional
+                ArticleSend                     => 1,                          # optional
+                Sign                            => {                           # optional, only used if ArticleSend is set
+                    Type    => 'PGP',                                          # (PGP|SMIME)
+                    SubType => 'Inline',                                       # (Detached|Inline). SMIME supports only Detached
+                    Key     => '81877F5E',                                     # SMIME uses the filename as key
+                },
+                Crypt                           => {                           # optional, only used if ArticleSend is set
+                    Type    => 'PGP',                                          # (PGP|SMIME)
+                    SubType => 'Inline',                                       # (Detached|Inline)
+                    Key     => '81877F5E',                                     # SMIME uses the filename as key
+                },
             },
 
             DynamicField => [                                                  # optional
@@ -375,7 +392,6 @@ sub Run {
 
     my $DynamicField;
     my @DynamicFieldList;
-
     if ( defined $Param{Data}->{DynamicField} ) {
 
         # isolate DynamicField parameter
@@ -412,7 +428,10 @@ sub Run {
             }
 
             # check DynamicField attribute values
-            my $DynamicFieldCheck = $Self->_CheckDynamicField( DynamicField => $DynamicFieldItem );
+            my $DynamicFieldCheck = $Self->_CheckDynamicField(
+                DynamicField => $DynamicFieldItem,
+                Article      => $Article,
+            );
 
             if ( !$DynamicFieldCheck->{Success} ) {
                 return $Self->ReturnError( %{$DynamicFieldCheck} );
@@ -422,7 +441,6 @@ sub Run {
 
     my $Attachment;
     my @AttachmentList;
-
     if ( defined $Param{Data}->{Attachment} ) {
 
         # isolate Attachment parameter
@@ -459,7 +477,10 @@ sub Run {
             }
 
             # check Attachment attribute values
-            my $AttachmentCheck = $Self->_CheckAttachment( Attachment => $AttachmentItem );
+            my $AttachmentCheck = $Self->_CheckAttachment(
+                Attachment => $AttachmentItem,
+                Article    => $Article,
+            );
 
             if ( !$AttachmentCheck->{Success} ) {
                 return $Self->ReturnError( %{$AttachmentCheck} );
@@ -473,6 +494,7 @@ sub Run {
         DynamicFieldList => \@DynamicFieldList,
         AttachmentList   => \@AttachmentList,
         UserID           => $UserID,
+        UserType         => $UserType,
     );
 }
 
@@ -672,7 +694,7 @@ checks if the given article parameter is valid.
     returns:
 
     $ArticleCheck = {
-        Success => 1,                               # if everething is OK
+        Success => 1,                               # if everything is OK
     }
 
     $ArticleCheck = {
@@ -754,6 +776,111 @@ sub _CheckArticle {
             return {
                 ErrorCode    => 'TicketCreate.InvalidParameter',
                 ErrorMessage => "TicketCreate: Article->From parameter is invalid!",
+            };
+        }
+    }
+
+    if ( $Article->{ArticleSend} ) {
+        if (
+            !$Article->{To}
+            && !$Article->{Cc}
+            && !$Article->{Bcc}
+        ) {
+            return {
+                ErrorCode    => 'TicketCreate.MissingParameter',
+                ErrorMessage => 'TicketCreate: Article->To or Article->Cc or Article->Bcc parameter is required when Article->ArticleSend is set!',
+            };
+        }
+
+        # check address params
+        for my $AddressParam ( qw( To Cc Bcc ReplyTo ) ) {
+            if (
+                $Article->{ $AddressParam }
+                && !$Self->ValidateEmail( Email => $Article->{ $AddressParam } )
+            ) {
+                return {
+                    ErrorCode    => 'TicketCreate.InvalidParameter',
+                    ErrorMessage => 'TicketCreate: Article->' . $AddressParam . ' parameter is invalid!',
+                };
+            }
+        }
+
+        # check sign parameter
+        if ( ref( $Article->{Sign} ) eq 'HASH' ) {
+            for my $SignParam ( qw(Type SubType Key) ) {
+                if ( !$Article->{Sign}->{ $SignParam } ) {
+                    return {
+                        ErrorCode    => 'TicketCreate.MissingParameter',
+                        ErrorMessage => 'TicketCreate: Article->Sign->' . $SignParam . ' is required in Sign hash!',
+                    };
+                }
+            }
+
+            if ( $Article->{Sign}->{Type} !~ m/^(?:PGP|SMIME)$/ ) {
+                return {
+                    ErrorCode    => 'TicketCreate.InvalidParameter',
+                    ErrorMessage => 'TicketCreate: Article->Sign->Type parameter is invalid! Only "PGP" and "SMIME" are allowed.',
+                };
+            }
+
+            if (
+                $Article->{Sign}->{Type} eq 'PGP'
+                && $Article->{Sign}->{SubType} !~ m/^(?:Detached|Inline)$/
+            ) {
+                return {
+                    ErrorCode    => 'TicketCreate.InvalidParameter',
+                    ErrorMessage => 'TicketCreate: Article->Sign->SubType parameter is invalid! Only "Detached" and "Inline" are allowed for type "PGP".',
+                };
+            }
+            elsif (
+                $Article->{Sign}->{Type} eq 'SMIME'
+                && $Article->{Sign}->{SubType} ne 'Detached'
+            ) {
+                return {
+                    ErrorCode    => 'TicketCreate.InvalidParameter',
+                    ErrorMessage => 'TicketCreate: Article->Sign->SubType parameter is invalid! Only "Detached" is allowed for type "SMIME".',
+                };
+            }
+        }
+        elsif ( defined( $Article->{Sign} ) ) {
+            return {
+                ErrorCode    => 'TicketCreate.InvalidParameter',
+                ErrorMessage => 'TicketCreate: Article->Sign parameter has to be hash if defined!',
+            };
+        }
+
+        # check crypt parameter
+        if ( ref( $Article->{Crypt} ) eq 'HASH' ) {
+            for my $SignParam ( qw(Type Key) ) {
+                if ( !$Article->{Crypt}->{ $SignParam } ) {
+                    return {
+                        ErrorCode    => 'TicketCreate.MissingParameter',
+                        ErrorMessage => 'TicketCreate: Article->Crypt->' . $SignParam . ' is required in Crypt hash!',
+                    };
+                }
+            }
+
+            if ( $Article->{Crypt}->{Type} !~ m/^(?:PGP|SMIME)$/ ) {
+                return {
+                    ErrorCode    => 'TicketCreate.InvalidParameter',
+                    ErrorMessage => 'TicketCreate: Article->Crypt->Type parameter is invalid! Only "PGP" and "SMIME" are allowed.',
+                };
+            }
+
+            if (
+                $Article->{Crypt}->{Type} eq 'PGP'
+                && $Article->{Crypt}->{SubType} !~ m/^(?:Detached|Inline)$/
+            ) {
+                return {
+                    ErrorCode    => 'TicketCreate.InvalidParameter',
+                    ErrorMessage => 'TicketCreate: Article->Crypt->SubType parameter is invalid! Only "Detached" and "Inline" are allowed for type "PGP".',
+                };
+            }
+        }
+        elsif ( defined( $Article->{Crypt} ) ) {
+            return {
+                ErrorCode    => 'TicketCreate.InvalidParameter',
+                ErrorMessage => 'TicketCreate: Article->Crypt parameter has to be hash if defined!',
             };
         }
     }
@@ -948,7 +1075,7 @@ checks if the given dynamic field parameter is valid.
     returns:
 
     $DynamicFieldCheck = {
-        Success => 1,                               # if everething is OK
+        Success => 1,                               # if everything is OK
     }
 
     $DynamicFieldCheck = {
@@ -962,6 +1089,12 @@ sub _CheckDynamicField {
     my ( $Self, %Param ) = @_;
 
     my $DynamicField = $Param{DynamicField};
+    my $ArticleData  = $Param{Article};
+
+    my $Article;
+    if ( IsHashRefWithData($ArticleData) ) {
+        $Article = 1;
+    }
 
     # check DynamicField item internally
     for my $Needed (qw(Name Value)) {
@@ -981,6 +1114,20 @@ sub _CheckDynamicField {
         return {
             ErrorCode    => 'TicketCreate.InvalidParameter',
             ErrorMessage => "TicketCreate: DynamicField->Name parameter is invalid!",
+        };
+    }
+
+    # check objectType for dynamic field
+    if (
+        !$Self->ValidateDynamicFieldObjectType(
+            %{$DynamicField},
+            Article => $Article,
+        )
+    ) {
+        return {
+            ErrorCode => 'TicketCreate.MissingParameter',
+            ErrorMessage =>
+                "TicketCreate: To create an article DynamicField an article is required!",
         };
     }
 
@@ -1009,7 +1156,7 @@ checks if the given attachment parameter is valid.
     returns:
 
     $AttachmentCheck = {
-        Success => 1,                               # if everething is OK
+        Success => 1,                               # if everything is OK
     }
 
     $AttachmentCheck = {
@@ -1023,6 +1170,15 @@ sub _CheckAttachment {
     my ( $Self, %Param ) = @_;
 
     my $Attachment = $Param{Attachment};
+    my $Article    = $Param{Article};
+
+    # check if article is going to be created
+    if ( !IsHashRefWithData($Article) ) {
+        return {
+            ErrorCode    => 'TicketCreate.MissingParameter',
+            ErrorMessage => "TicketCreate: To create an attachment an article is needed!",
+        };
+    }
 
     # check attachment item internally
     for my $Needed (qw(Content ContentType Filename)) {
@@ -1084,14 +1240,14 @@ creates a ticket with its article and sets dynamic fields and attachments if spe
         Ticket       => $Ticket,                  # all ticket parameters
         Article      => $Article,                 # all attachment parameters
         DynamicField => $DynamicField,            # all dynamic field parameters
-        Attachment   => $Attachment,             # all attachment parameters
+        Attachment   => $Attachment,              # all attachment parameters
         UserID       => 123,
     );
 
     returns:
 
     $Response = {
-        Success => 1,                               # if everething is OK
+        Success => 1,                               # if everything is OK
         Data => {
             TicketID     => 123,
             TicketNumber => 'TN3422332',
@@ -1280,6 +1436,24 @@ sub _TicketCreate {
         $From = $Article->{From};
     }
 
+    # use data from queue if article should be send
+    elsif ( $Article->{ArticleSend} ) {
+        my $QueueID;
+        if ( $Ticket->{QueueID} ) {
+            $QueueID = $Ticket->{QueueID};
+        }
+        else {
+            $QueueID = $Kernel::OM->Get('Kernel::System::Queue')->QueueLookup(
+                Queue => $Ticket->{Queue},
+            );
+        }
+
+        my %SystemAddress = $Kernel::OM->Get('Kernel::System::Queue')->GetSystemAddress(
+            QueueID => $QueueID,
+        );
+        $From = '"' . $SystemAddress{RealName} . '" <' . $SystemAddress{Email} . '>';
+    }
+
     # use data from customer user (if customer user is in database)
     elsif ( IsHashRefWithData( \%CustomerUserData ) ) {
         $From = '"' . $CustomerUserData{UserFirstname} . ' ' . $CustomerUserData{UserLastname} . '"'
@@ -1293,7 +1467,10 @@ sub _TicketCreate {
 
     # set Article To
     my $To;
-    if ( $Ticket->{Queue} ) {
+    if ( $Article->{To} ) {
+        $To = $Article->{To};
+    }
+    elsif ( $Ticket->{Queue} ) {
         $To = $Ticket->{Queue};
     }
     else {
@@ -1302,42 +1479,125 @@ sub _TicketCreate {
         );
     }
 
+    # check if subject should be build like outgoing email
+    if ( $Article->{TicketSubjectBuild} ) {
+        my $TicketNumber = $TicketObject->TicketNumberLookup(
+            TicketID => $TicketID,
+            UserID   => $Param{UserID},
+        );
+        $Article->{Subject} = $TicketObject->TicketSubjectBuild(
+            TicketNumber => $TicketNumber,
+            Subject      => $Article->{Subject} || '',
+            Type         => 'New',
+            NoCleanup    => 1,
+        );
+    }
+
+    # check if signature of queue should be appended to body
+    if ( $Article->{AppendQueueSignature} ) {
+        # get signature
+        my $Signature = $Kernel::OM->Get('Kernel::System::TemplateGenerator')->Signature(
+            Data     => { TicketID => $TicketID },
+            UserID   => $Param{UserID},
+            TicketID => $TicketID,
+        );
+
+        # check mimetype
+        if (
+            (
+                $Article->{ContentType}
+                && $Article->{ContentType} =~ /text\/html/i
+            )
+            || (
+                $Article->{MimeType}
+                && $Article->{MimeType} =~ /text\/html/i
+            )
+        ) {
+            $Article->{Body} .= '<br/><br/>' . $Signature;
+        }
+        else {
+            $Article->{Body} .= "\n\n" . $Signature;
+        }
+    }
+
     my $PlainBody = $Article->{Body};
 
     # Convert article body to plain text, if HTML content was supplied. This is necessary since auto response code
     #   expects plain text content. Please see bug#13397 for more information.
-    if ( $Article->{ContentType} =~ /text\/html/i || $Article->{MimeType} =~ /text\/html/i ) {
+    if (
+        (
+            $Article->{ContentType}
+            && $Article->{ContentType} =~ /text\/html/i
+        )
+        || (
+            $Article->{MimeType}
+            && $Article->{MimeType} =~ /text\/html/i
+        )
+    ) {
         $PlainBody = $Kernel::OM->Get('Kernel::System::HTMLUtils')->ToAscii(
             String => $Article->{Body},
         );
     }
 
+    # init default values
+    $Article->{NoAgentNotify}  ||= 0;
+    $Article->{HistoryComment} ||= '%%';
+    for my $InitParam ( qw(ArticleTypeID ArticleType SenderTypeID SenderType Cc Bcc ReplyTo MimeType Charset ContentType) ) {
+        $Article->{ $InitParam }  ||= '';
+    }
+
+    # set attachments
+    if ( IsArrayRefWithData($AttachmentList) ) {
+        for my $Attachment ( @{ $AttachmentList } ) {
+            my $Result = $Self->PrepareAttachment(
+                Attachment => $Attachment,
+            );
+
+            if ( !$Result->{Success} ) {
+                my $ErrorMessage = $Result->{ErrorMessage} || "Attachment could not be prepared, please contact the system administrator";
+
+                return {
+                    Success      => 0,
+                    ErrorMessage => $ErrorMessage,
+                };
+            }
+        }
+
+        $Article->{Attachment} = $AttachmentList;
+    }
+
     # create article
-    my $ArticleID = $TicketObject->ArticleCreate(
-        NoAgentNotify    => $Article->{NoAgentNotify} || 0,
-        TicketID         => $TicketID,
-        ArticleTypeID    => $Article->{ArticleTypeID} || '',
-        ArticleType      => $Article->{ArticleType} || '',
-        SenderTypeID     => $Article->{SenderTypeID} || '',
-        SenderType       => $Article->{SenderType} || '',
-        From             => $From,
-        To               => $To,
-        Subject          => $Article->{Subject},
-        Body             => $Article->{Body},
-        MimeType         => $Article->{MimeType} || '',
-        Charset          => $Article->{Charset} || '',
-        ContentType      => $Article->{ContentType} || '',
-        UserID           => $Param{UserID},
-        HistoryType      => $Article->{HistoryType},
-        HistoryComment   => $Article->{HistoryComment} || '%%',
-        AutoResponseType => $Article->{AutoResponseType},
-        OrigHeader       => {
-            From    => $From,
-            To      => $To,
-            Subject => $Article->{Subject},
-            Body    => $PlainBody,
-        },
-    );
+    my $ArticleID;
+    if ( $Article->{ArticleSend} ) {
+        $ArticleID = $TicketObject->ArticleSend(
+            %{ $Article },
+            TicketID   => $TicketID,
+            From       => $From,
+            To         => $To,
+            UserID     => $Param{UserID},
+            OrigHeader => {
+                From    => $From,
+                To      => $To,
+                Subject => $Article->{Subject},
+                Body    => $PlainBody,
+            },
+        );
+    }
+    else {
+        $ArticleID = $TicketObject->ArticleCreate(
+            %{ $Article },
+            TicketID   => $TicketID,
+            From       => $From,
+            To         => $To,
+            UserID     => $Param{UserID},
+            OrigHeader => {
+                From    => $From,
+                To      => $To,
+                Subject => $Article->{Subject},
+                Body    => $PlainBody,
+            },
+        );
+    }
 
     if ( !$ArticleID ) {
         return {
@@ -1416,29 +1676,6 @@ sub _TicketCreate {
                 my $ErrorMessage =
                     $Result->{ErrorMessage} || "Dynamic Field $DynamicField->{Name} could not be"
                     . " set, please contact the system administrator";
-
-                return {
-                    Success      => 0,
-                    ErrorMessage => $ErrorMessage,
-                };
-            }
-        }
-    }
-
-    # set attachments
-    if ( IsArrayRefWithData($AttachmentList) ) {
-
-        for my $Attachment ( @{$AttachmentList} ) {
-            my $Result = $Self->CreateAttachment(
-                Attachment => $Attachment,
-                ArticleID  => $ArticleID,
-                UserID     => $Param{UserID}
-            );
-
-            if ( !$Result->{Success} ) {
-                my $ErrorMessage =
-                    $Result->{ErrorMessage} || "Attachment could not be created, please contact"
-                    . " the system administrator";
 
                 return {
                     Success      => 0,

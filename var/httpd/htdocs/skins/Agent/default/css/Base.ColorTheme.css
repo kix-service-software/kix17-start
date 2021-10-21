@@ -1376,7 +1376,7 @@
         background-color: #EEEEEE;
         border: 1px solid #CCCCCC;
     }
-    .WidgetSimple > .Content.ProcessInfo fieldset .FieldContainer p  {
+    .WidgetSimple > .Content.ProcessInfo fieldset .FieldContainer > div  {
         background-color: #FFFFFF;
     }
     .WidgetSimple > .Content.ProcessInfo fieldset .FieldContainer label {
@@ -1554,6 +1554,9 @@
     }
     #GraphBody  {
         background-color: #FFFFFF;
+    }
+    #GraphBody.TooManyNodes::before {
+        background-color: #111111;
     }
     #GraphSaved  {
         border: 1px solid #78BE5A;
@@ -1757,16 +1760,20 @@
 
 
     /**
-    * @subsection TextModules
+    * @subsection TextModules/BulkTextModules
     */
+    #BulkTextModulesSelectionContainer,
     #TextModulesSelectionContainer {
         background-color: #FFFFFF;
         border-color: #CCCCCC;
     }
+    #BulkTextModulesSelectionContainer > .TextModule:nth-child(2n+1),
     #TextModulesSelectionContainer > .TextModule:nth-child(2n+1) {
         background-color: #F5F5F5;
     }
+    #BulkTextModulesSelectionContainer > .TextModule:hover,
     #TextModulesSelectionContainer > .TextModule:hover,
+    #BulkTextModulesSelectionContainer > .TextModule.Selected,
     #TextModulesSelectionContainer > .TextModule.Selected {
         background-color: #78BE5A;
         color: #FFFFFF;

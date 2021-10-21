@@ -380,127 +380,83 @@ sub TicketTemplateCreate {
     my %Data = %{ $Param{Data} };
 
     # get template content
-    my %Template = $Self->TicketTemplateGet(
+    return if $Self->TicketTemplateGet(
         Name => $Param{Name},
     );
 
-    # update action for existing templates
-    if (%Template) {
-        for my $Key ( keys %Data ) {
+    return if !$Self->{DBObject}->Do(
+        SQL => <<'END',
+INSERT INTO kix_ticket_template
+(
+    name, valid_id, create_time, create_by, change_time,
+    change_by,f_agent, f_customer, customer_portal_group_id
+)
+VALUES (?, 1, current_timestamp, ?, current_timestamp, ?, ?, ?, ?)
+END
+        Bind => [
+            \$Param{Name}, \$Param{UserID}, \$Param{UserID},
+            \$Data{Agent}, \$Data{Customer}, \$Data{CustomerPortalGroupID}
+        ],
+    );
 
-            # ignore empty and core preferences
-            next
-                if !$Key
-                    || !defined $Data{$Key}
-                    || $Data{$Key} eq ''
-                    || $Key        eq 'DefaultSet'
-                    || $Key        eq 'Name'
-                    || $Key        eq 'ID';
+    my $TemplateID = $Self->TicketTemplateLookup(
+        Name => $Param{Name},
+    );
 
-            # handle for dynamic fields
-            if ( ref $Data{$Key} eq 'HASH' ) {
-                for my $HashKey ( keys %{ $Data{$Key} } ) {
+    # set keys
+    for my $Key ( keys %Data ) {
 
-                    # dump structures into a string to allow DFs with multiple values
-                    my $Value = $YAMLObject->Dump( Data => $Data{$Key}->{$HashKey} );
+        # ignore empty and core preferences
+        next
+            if !$Key
+                || !defined $Data{$Key}
+                || $Data{$Key} eq ''
+                || $Key        eq 'DefaultSet'
+                || $Key        eq 'Name'
+                || $Key        eq 'ID';
 
-                    # insert data
-                    return if !$Self->{DBObject}->Do(
-                        SQL =>
-                            'UPDATE kix_ticket_template_prefs SET preferences_value = ? ' .
-                            'WHERE preferences_key = ? AND template_id = ?',
-                        Bind => [ \$Value, \$HashKey, \$Template{ID} ],
-                    );
-                }
-            }
-            else {
+        # handle for dynamic fields
+        if ( ref $Data{$Key} eq 'HASH' ) {
+            for my $HashKey ( keys %{ $Data{$Key} } ) {
 
-                # no update needed
-                next if $Template{$Key} && $Template{$Key} eq $Data{$Key};
+                # dump structures into a string to allow DFs with multiple values
+                my $Value = $YAMLObject->Dump( Data => $Data{$Key}->{$HashKey} );
 
-                # do update data
+                # insert data
                 return if !$Self->{DBObject}->Do(
-                    SQL =>
-                        'UPDATE kix_ticket_template_prefs SET preferences_value = ? ' .
-                        'WHERE preferences_key = ? AND template_id = ?',
-                    Bind => [ \$Data{$Key}, \$Key, \$Template{ID} ],
+                    SQL => <<'END',
+INSERT INTO kix_ticket_template_prefs
+(
+    template_id, preferences_key, preferences_value
+)
+VALUES (?, ?, ?)
+END
+                    Bind => [ \$TemplateID, \$HashKey, \$Value ],
                 );
             }
         }
 
-        # do update meta data
-        return if !$Self->{DBObject}->Do(
-            SQL =>
-                'UPDATE kix_ticket_template SET name = ?, f_agent = ?, f_customer = ?, customer_portal_group_id = ? ' .
-                'WHERE id = ?',
-            Bind => [ \$Data{Name}, \$Data{Agent}, \$Data{Customer}, \$Data{CustomerPortalGroupID}, \$Param{ID} ],
-        );
-    }
+        else {
 
-    # insert action
-    else {
-        return if !$Self->{DBObject}->Do(
-            SQL => 'INSERT INTO kix_ticket_template '
-                . '(name, valid_id, '
-                . 'create_time, create_by, change_time, change_by, '
-                . 'f_agent, f_customer, customer_portal_group_id) '
-                . 'VALUES (?, 1, current_timestamp, ?, current_timestamp, ?, ?, ?, ?)',
-            Bind => [
-                \$Param{Name}, \$Param{UserID}, \$Param{UserID}, \$Data{Agent}, \$Data{Customer}, \$Data{CustomerPortalGroupID}
-            ],
-        );
-
-        $Template{ID} = $Self->TicketTemplateLookup(
-            Name => $Param{Name},
-        );
-
-        # set keys
-        for my $Key ( keys %Data ) {
-
-            # ignore empty and core preferences
-            next
-                if !$Key
-                    || !defined $Data{$Key}
-                    || $Data{$Key} eq ''
-                    || $Key        eq 'DefaultSet'
-                    || $Key        eq 'Name'
-                    || $Key        eq 'ID';
-
-            # handle for dynamic fields
-            if ( ref $Data{$Key} eq 'HASH' ) {
-                for my $HashKey ( keys %{ $Data{$Key} } ) {
-
-                    # dump structures into a string to allow DFs with multiple values
-                    my $Value = $YAMLObject->Dump( Data => $Data{$Key}->{$HashKey} );
-
-                    # insert data
-                    return if !$Self->{DBObject}->Do(
-                        SQL =>
-                            'INSERT INTO kix_ticket_template_prefs (template_id, preferences_key, preferences_value) '
-                            . 'VALUES (?, ?, ?)',
-                        Bind => [ \$Template{ID}, \$HashKey, \$Value ],
-                    );
-                }
-            }
-
-            else {
-
-                # insert data
-                return if !$Self->{DBObject}->Do(
-                    SQL =>
-                        'INSERT INTO kix_ticket_template_prefs (template_id, preferences_key, preferences_value) '
-                        . 'VALUES (?, ?, ?)',
-                    Bind => [ \$Template{ID}, \$Key, \$Data{$Key} ],
-                );
-            }
-
+            # insert data
+            return if !$Self->{DBObject}->Do(
+                SQL => <<'END',
+INSERT INTO kix_ticket_template_prefs
+(
+    template_id, preferences_key, preferences_value
+)
+VALUES (?, ?, ?)
+END
+                Bind => [ \$TemplateID, \$Key, \$Data{$Key} ],
+            );
         }
     }
 
     # create ticket template cache
-    %Template = $Self->TicketTemplateGet(
+    my %Template = $Self->TicketTemplateGet(
         Name => $Param{Name},
     );
+
     my $CacheKey = 'Cache::TicketTemplateGet::' . $Template{ID};
     $Self->{$CacheKey} = {
         %Template,
@@ -758,8 +714,7 @@ sub TicketTemplateDelete {
 
 Exports ticket templates as XML file
 
-    my $Result = $TicketTemplateObject->TicketTemplateExport(
-    );
+    my $Result = $TicketTemplateObject->TicketTemplateExport();
 
 =cut
 
@@ -773,8 +728,7 @@ sub TicketTemplateExport {
 
 Imports ticket templates as XML file
 
-    my $Result = $TicketTemplateObject->TicketTemplateImport(
-    );
+    my $Result = $TicketTemplateObject->TicketTemplateImport();
 
 =cut
 
@@ -793,28 +747,39 @@ Imports TicketTemplates from XML document.
 
     my $HashRef = $TicketTemplateObject->_ImportTicketTemplateXML(
         XMLString => '<xml><tag>...</tag>', #required
-        DoNotAdd => 0|1, #DO NOT create new entry if no existing id given
-        UserID   => 123, #required
+        UserID    => 123, #required
     );
 
 =cut
 
 sub _ImportTicketTemplateXML {
     my ( $Self, %Param ) = @_;
-    my %Result = ();
 
-    $Self->{XMLObject} = $Kernel::OM->Get('Kernel::System::XML');
+    # get needed objects
+    my $DynamicFieldObject = $Kernel::OM->Get('Kernel::System::DynamicField');
+    my $LogObject          = $Kernel::OM->Get('Kernel::System::Log');
+    my $PriorityObject     = $Kernel::OM->Get('Kernel::System::Priority');
+    my $QueueObject        = $Kernel::OM->Get('Kernel::System::Queue');
+    my $ServiceObject      = $Kernel::OM->Get('Kernel::System::Service');
+    my $SLAObject          = $Kernel::OM->Get('Kernel::System::SLA');
+    my $StateObject        = $Kernel::OM->Get('Kernel::System::State');
+    my $TypeObject         = $Kernel::OM->Get('Kernel::System::Type');
+    my $UserObject         = $Kernel::OM->Get('Kernel::System::User');
+    my $XMLObject          = $Kernel::OM->Get('Kernel::System::XML');
 
     #init counters...
-    $Result{CountUploaded}     = 0;
-    $Result{CountInsertFailed} = 0;
-    $Result{CountAdded}        = 0;
-    $Result{UploadMessage}     = '';
+    my %Result = (
+        CountUploaded => 0,
+        CountFailed   => 0,
+        CountAdded    => 0,
+        CountUpdated  => 0,
+        UploadMessage => '',
+    );
 
     # check required params...
     for (qw( XMLString UserID )) {
         if ( !defined( $Param{$_} ) ) {
-            $Kernel::OM->Get('Kernel::System::Log')->Log(
+            $LogObject->Log(
                 Priority => 'error',
                 Message  => "Need $_!"
             );
@@ -822,11 +787,9 @@ sub _ImportTicketTemplateXML {
         }
     }
 
-    my @XMLHash = $Self->{XMLObject}->XMLParse2XMLHash(
+    my @XMLHash = $XMLObject->XMLParse2XMLHash(
         String => $Param{XMLString}
     );
-
-    my $DynamicFieldObject = $Kernel::OM->Get('Kernel::System::DynamicField');
 
     if (
         $XMLHash[1]
@@ -853,38 +816,40 @@ sub _ImportTicketTemplateXML {
                     next if !$TMArrRef->{$Key}->[1]->{Content};
 
                     if ( $Key eq 'Queue' ) {
-                        $UpdateData{QueueID} = $Kernel::OM->Get('Kernel::System::Queue')->QueueLookup(
+                        $UpdateData{QueueID} = $QueueObject->QueueLookup(
                             Queue => $TMArrRef->{$Key}->[1]->{Content}
                         );
                     }
                     elsif ( $Key eq 'Type' ) {
-                        $UpdateData{TypeID} = $Kernel::OM->Get('Kernel::System::Type')->TypeLookup(
+                        $UpdateData{TypeID} = $TypeObject->TypeLookup(
                             Type => $TMArrRef->{$Key}->[1]->{Content}
                         );
                     }
                     elsif ( $Key eq 'State' ) {
-                        $UpdateData{StateID} = $Kernel::OM->Get('Kernel::System::State')->StateLookup(
+                        $UpdateData{StateID} = $StateObject->StateLookup(
                             State => $TMArrRef->{$Key}->[1]->{Content}
                         );
                     }
                     elsif ( $Key eq 'Priority' ) {
-                        $UpdateData{PriorityID}
-                            = $Kernel::OM->Get('Kernel::System::Priority')->PriorityLookup(
+                        $UpdateData{PriorityID} = $PriorityObject->PriorityLookup(
                             Priority => $TMArrRef->{$Key}->[1]->{Content}
                         );
                     }
-                    elsif ( ( $Key eq 'Owner' || $Key eq 'Responsible' ) ) {
-                        $UpdateData{ $Key . 'ID' } = $Kernel::OM->Get('Kernel::System::User')->UserLookup(
+                    elsif (
+                        $Key eq 'Owner'
+                        || $Key eq 'Responsible'
+                    ) {
+                        $UpdateData{ $Key . 'ID' } = $UserObject->UserLookup(
                             UserLogin => $TMArrRef->{$Key}->[1]->{Content}
                         );
                     }
                     elsif ( $Key eq 'Service' ) {
-                        $UpdateData{ServiceID} = $Kernel::OM->Get('Kernel::System::Service')->ServiceLookup(
+                        $UpdateData{ServiceID} = $ServiceObject->ServiceLookup(
                             Name => $TMArrRef->{$Key}->[1]->{Content}
                         );
                     }
                     elsif ( $Key eq 'SLA' ) {
-                        $UpdateData{SLAID} = $Kernel::OM->Get('Kernel::System::SLA')->SLALookup(
+                        $UpdateData{SLAID} = $SLAObject->SLALookup(
                             Name => $TMArrRef->{$Key}->[1]->{Content}
                         );
                     }
@@ -901,8 +866,7 @@ sub _ImportTicketTemplateXML {
                         if (
                             (
                                 defined $DynamicField->{FieldType}
-                                && $DynamicField->{FieldType}
-                                =~ /^(Multiselect|MultiselectGeneralCatalog)$/
+                                && $DynamicField->{FieldType} =~ /^(Multiselect|MultiselectGeneralCatalog)$/
                             )
                             || (
                                 defined $DynamicField->{Config}->{DisplayFieldType}
@@ -926,31 +890,51 @@ sub _ImportTicketTemplateXML {
             }
 
             $Result{CountUploaded}++;
-
-            my $UpdateResult = 0;
-            my $ErrorMessage = "";
-            my $Status       = "";
-
-            # insert ticket template
-            $UpdateData{ID} = $Self->TicketTemplateCreate(
-                Data   => \%UpdateData,
-                UserID => $Param{UserID},
-                Name   => $UpdateData{Name},
-            );
-
+            my $EntryExists = '';
             if ( $UpdateData{ID} ) {
-                $Result{CountAdded}++;
-                $Status = 'Insert OK';
+                $EntryExists = $Self->TicketTemplateLookup(
+                    ID  => $UpdateData{ID}
+                );
+            } elsif ( $UpdateData{Name} ) {
+                $EntryExists = $Self->TicketTemplateLookup(
+                    Name  => $UpdateData{Name}
+                );
+            }
+
+            my $Success = 0;
+            if ( $EntryExists ) {
+                $Success = $Self->TicketTemplateUpdate(
+                    Data   => \%UpdateData,
+                    UserID => $Param{UserID},
+                    Name   => $UpdateData{Name},
+                    ID     => $UpdateData{ID},
+                );
+
+                if ( $Success ) {
+                    $Result{CountUpdated}++;
+                }
+                else {
+                    $Result{CountFailed}++;
+                }
             }
             else {
-                $Result{CountInsertFailed}++;
-                $Status = 'Insert Failed';
-            }
+                $Success = $Self->TicketTemplateCreate(
+                    Data   => \%UpdateData,
+                    UserID => $Param{UserID},
+                    Name   => $UpdateData{Name},
+                );
 
+                if ( $Success ) {
+                    $Result{CountAdded}++;
+                }
+                else {
+                    $Result{CountFailed}++;
+                }
+            }
         }
     }
 
-    $Result{XMLResultString} = $Self->{XMLObject}->XMLHash2XML(@XMLHash);
+    $Result{XMLResultString} = $XMLObject->XMLHash2XML(@XMLHash);
 
     return \%Result;
 }

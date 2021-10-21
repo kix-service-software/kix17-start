@@ -21,7 +21,7 @@
         <tr>
             <td>
                 <p class="UserRow" title="[% Data.UserEmail | html %]">
-                    <span>[% Data.UserFullname | html %] [% Translate("until") | html %] [% Data.OutOfOfficeUntil | Localize("Date") %]</span>
+                    <span>[% Data.UserFullname | html %] [% Translate("until") | html %] [% Data.OutOfOfficeUntil | Localize("Date") | html %]</span>
                 </p>
             </td>
         </tr>

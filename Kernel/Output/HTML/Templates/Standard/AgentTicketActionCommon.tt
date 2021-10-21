@@ -10,21 +10,9 @@
 
 
 [% RenderBlockStart("Properties") %]
-
-<form action="[% Env("CGIHandle") %]" method="post" enctype="multipart/form-data" name="compose" id="Compose" class="Validate PreventMultipleSubmits">
-    <input type="hidden" name="Action" value="[% Env("Action") %]"/>
-    <input type="hidden" name="Subaction" value="Store"/>
-    <input type="hidden" name="TicketID" value="[% Data.TicketID | html %]"/>
-    <input type="hidden" name="ReplyToArticle" value="[% Data.ReplyToArticle | html %]"/>
-    <input type="hidden" name="Expand" id="Expand" value=""/>
-    <input type="hidden" name="FormID" value="[% Data.FormID | html %]"/>
-    <input type="hidden" name="PretendAction" value="[% Data.PretendAction | html %]"/>
-    <input type="hidden" name="ImpactRC" id="ImpactRC" value="0"/>
-    <input type="hidden" name="PriorityRC" id="PriorityRC" value="0"/>
-
-    <div class="LayoutPopup ARIARoleMain">
-        <div class="Header">
-            <h1>
+<div class="LayoutPopup ARIARoleMain">
+    <div class="Header">
+        <h1>
 [% RenderBlockStart("HeaderAgentTicketFreeText") %]
 [% Translate("Change Free Text of %s%s%s", Config('Ticket::Hook'), Config('Ticket::HookDivider'), Data.TicketNumber) | html %]
 [% RenderBlockEnd("HeaderAgentTicketFreeText") %]
@@ -48,41 +36,51 @@
 [% RenderBlockEnd("HeaderAgentTicketResponsible") %]
 
 [% RenderBlockStart("HeaderPretendAction") %]
-                [% Translate(Data.Text) | html %]
+            [% Translate(Data.Text) | html %]
 [% RenderBlockEnd("HeaderPretendAction") %]
 [% RenderBlockStart("HeaderAgentTicketDecision") %]
-                [% Translate("Change Decision of Ticket") | html %]
+            [% Translate("Change Decision of Ticket") | html %]
 [% RenderBlockEnd("HeaderAgentTicketDecision") %]
 [% RenderBlockStart("HeaderAgentTicketAddtlITSMField") %]
-                [% Translate("Change ITSM fields of ticket") | html %]
+            [% Translate("Change ITSM fields of ticket") | html %]
 [% RenderBlockEnd("HeaderAgentTicketAddtlITSMField") %]
-                 &mdash; [% Data.Title | html %]
-            </h1>
-            <p class="AsteriskExplanation">[% Translate("All fields marked with an asterisk (*) are mandatory.") | html %]</p>
+             &mdash; [% Data.Title | html %]
+        </h1>
+        <p class="AsteriskExplanation">[% Translate("All fields marked with an asterisk (*) are mandatory.") | html %]</p>
 
 [% RenderBlockStart("TicketBack") %]
-            <p>
-                <a class="CancelClosePopup" href="#">[% Translate("Cancel & close") | html %]</a>
-            </p>
+        <p>
+            <a class="CancelClosePopup" href="#">[% Translate("Cancel & close") | html %]</a>
+        </p>
 [% RenderBlockEnd("TicketBack") %]
 [% RenderBlockStart("PropertiesLock") %]
-            <p class="TicketLockMessage">
-                [% Translate("The ticket has been locked") | html %].
-                <a class="UndoClosePopup" href="[% Env("Baselink") %]Action=AgentTicketLock;Subaction=Unlock;TicketID=[% Data.TicketID %];[% Env("ChallengeTokenParam") | html %]">
-                    [% Translate("Undo & close") | html %]
-                </a>
-            </p>
+        <p class="TicketLockMessage">
+            [% Translate("The ticket has been locked") | html %].
+            <a class="UndoClosePopup" href="[% Env("Baselink") %]Action=AgentTicketLock;Subaction=Unlock;TicketID=[% Data.TicketID %];[% Env("ChallengeTokenParam") | html %]">
+                [% Translate("Undo & close") | html %]
+            </a>
+        </p>
 [% RenderBlockEnd("PropertiesLock") %]
 
-        </div>
-        <div class="Content">
-            <div class="LayoutFixedSidebar SidebarLast">
+    </div>
+    <div class="Content">
+        <div class="LayoutFixedSidebar SidebarLast">
 [% RenderBlockStart("KIXSidebar") %]
-                <div class="SidebarColumn">
-                    [% Data.KIXSidebarContent %]
-                </div>
+            <div class="SidebarColumn">
+                [% Data.KIXSidebarContent %]
+            </div>
 [% RenderBlockEnd("KIXSidebar") %]
-                <div class="ContentColumn">
+            <div class="ContentColumn">
+                <form action="[% Env("CGIHandle") %]" method="post" enctype="multipart/form-data" name="compose" id="Compose" class="Validate PreventMultipleSubmits">
+                    <input type="hidden" name="Action" value="[% Env("Action") %]"/>
+                    <input type="hidden" name="Subaction" value="Store"/>
+                    <input type="hidden" name="TicketID" value="[% Data.TicketID | html %]"/>
+                    <input type="hidden" name="ReplyToArticle" value="[% Data.ReplyToArticle | html %]"/>
+                    <input type="hidden" name="Expand" id="Expand" value=""/>
+                    <input type="hidden" name="FormID" value="[% Data.FormID | html %]"/>
+                    <input type="hidden" name="PretendAction" value="[% Data.PretendAction | html %]"/>
+                    <input type="hidden" name="ImpactRC" id="ImpactRC" value="0"/>
+                    <input type="hidden" name="PriorityRC" id="PriorityRC" value="0"/>
 [% RenderBlockStart("WidgetTicketActions") %]
                     <div class="WidgetSimple Expanded">
                         <div class="Header">
@@ -542,16 +540,15 @@ $('#FileUpload').on('change', function (Event) {
                             </fieldset>
                         </div>
                     </div>
-                </div>
 [% RenderBlockEnd("WidgetArticle") %]
-
-                <div class="Footer">
-                    <button class="CallForAction Primary" id="submitRichText" accesskey="g" title="[% Translate("Submit") | html %] (g)" type="submit" value="[% Translate("Submit") | html %]"><span><i class="fa fa-check-square-o"></i> [% Translate("Submit") | html %]</span></button>
-                </div>
+                    <div class="Footer">
+                        <button class="CallForAction Primary" id="submitRichText" accesskey="g" title="[% Translate("Submit") | html %] (g)" type="submit" value="[% Translate("Submit") | html %]"><span><i class="fa fa-check-square-o"></i> [% Translate("Submit") | html %]</span></button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
-</form>
+</div>
 [% RenderBlockEnd("Properties") %]
 
 #Layers

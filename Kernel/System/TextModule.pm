@@ -595,7 +595,12 @@ sub TextModuleCategoryList {
     if ( $Param{Name} ) {
         my $Name = $Param{Name};
         $Name =~ s/\*/%/g;
-        $WHEREClauseExt .= " AND name like \'$Name\'";
+        if ( $Self->{DBObject}->{Backend}->{'DB::CaseSensitive'} ) {
+            $WHEREClauseExt .= " AND LOWER(name) like LOWER(\'$Name\')";
+        }
+        else {
+            $WHEREClauseExt .= " AND name like \'$Name\'";
+        }
     }
 
     my $SQL = "SELECT id, name FROM kix_text_module_category WHERE 1=1";

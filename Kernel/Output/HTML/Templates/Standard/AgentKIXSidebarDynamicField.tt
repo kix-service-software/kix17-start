@@ -99,7 +99,7 @@
             </p>
 [% RenderBlockEnd("DynamicFieldContentCheckbox") %]
 [% RenderBlockStart("DynamicFieldContentTime") %]
-            <p class="Value" title="[% Data.Title | html %]">[% Data.Value | Localize("TimeLong") %]</p>
+            <p class="Value" title="[% Data.Title | html %]">[% Data.Value | Localize("TimeLong") | html %]</p>
 [% RenderBlockEnd("DynamicFieldContentTime") %]
             <div class="Clear">
                 &nbsp;

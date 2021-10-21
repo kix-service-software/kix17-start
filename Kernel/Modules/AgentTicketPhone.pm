@@ -175,6 +175,7 @@ sub Run {
     my $TicketObject              = $Kernel::OM->Get('Kernel::System::Ticket');
     my $QueueObject               = $Kernel::OM->Get('Kernel::System::Queue');
     my $DynamicFieldObject        = $Kernel::OM->Get('Kernel::System::DynamicField');
+    my $LinkObject                = $Kernel::OM->Get('Kernel::System::LinkObject');
 
     my $Config = $ConfigObject->Get("Ticket::Frontend::$Self->{Action}");
 
@@ -2030,7 +2031,7 @@ sub Run {
             }
 
             # link the tickets
-            $Kernel::OM->Get('Kernel::System::LinkObject')->LinkAdd(
+            $LinkObject->LinkAdd(
                 SourceObject => 'Ticket',
                 SourceKey    => $SourceKey,
                 TargetObject => 'Ticket',
@@ -2045,7 +2046,7 @@ sub Run {
             || 'Normal';
 
         for my $CurrKey (@SelectedCIIDs) {
-            $Kernel::OM->Get('Kernel::System::LinkObject')->LinkAdd(
+            $LinkObject->LinkAdd(
                 SourceObject => 'ITSMConfigItem',
                 SourceKey    => $CurrKey,
                 TargetObject => 'Ticket',
@@ -2082,7 +2083,7 @@ sub Run {
 # ITSMIncidentProblemManagement
 # ---
             # get the temporarily links
-            my $TempLinkList = $Kernel::OM->Get('Kernel::System::LinkObject')->LinkList(
+            my $TempLinkList = $LinkObject->LinkList(
                 Object => 'Ticket',
                 Key    => $Self->{FormID},
                 State  => 'Temporary',
@@ -2106,7 +2107,7 @@ sub Run {
                             for my $TargetKeyOrg ( sort keys %{ $DirectionList->{$Direction} } ) {
 
                                 # delete the temp link
-                                $Kernel::OM->Get('Kernel::System::LinkObject')->LinkDelete(
+                                $LinkObject->LinkDelete(
                                     Object1 => 'Ticket',
                                     Key1    => $Self->{FormID},
                                     Object2 => $TargetObjectOrg,
@@ -2115,28 +2116,38 @@ sub Run {
                                     UserID  => $Self->{UserID},
                                 );
 
-                                my $SourceObject = $TargetObjectOrg;
-                                my $SourceKey    = $TargetKeyOrg;
-                                my $TargetObject = 'Ticket';
-                                my $TargetKey    = $TicketID;
-
-                                if ( $Direction eq 'Target' ) {
-                                    $SourceObject = 'Ticket';
-                                    $SourceKey    = $TicketID;
-                                    $TargetObject = $TargetObjectOrg;
-                                    $TargetKey    = $TargetKeyOrg;
+                                if ($TargetObjectOrg eq 'Person') {
+                                     $Kernel::OM->Get('Kernel::System::AsynchronousExecutor::LinkedTicketPersonExecutor')->AsyncCall(
+                                         TicketID      => $TicketID,
+                                         PersonID      => $TargetKeyOrg,
+                                         PersonHistory => $TargetKeyOrg,
+                                         LinkType      => $Type,
+                                         UserID        => $Self->{UserID},
+                                     );
                                 }
-
-                                # add the permanently link
-                                my $Success = $Kernel::OM->Get('Kernel::System::LinkObject')->LinkAdd(
-                                    SourceObject => $SourceObject,
-                                    SourceKey    => $SourceKey,
-                                    TargetObject => $TargetObject,
-                                    TargetKey    => $TargetKey,
-                                    Type         => $Type,
-                                    State        => 'Valid',
-                                    UserID       => $Self->{UserID},
-                                );
+                                else {
+                                    if ($Direction eq 'Source') {
+                                        $LinkObject->LinkAdd(
+                                            SourceObject => $TargetObjectOrg,
+                                            SourceKey    => $TargetKeyOrg,
+                                            TargetObject => 'Ticket',
+                                            TargetKey    => $TicketID,
+                                            Type         => $Type,
+                                            State        => 'Valid',
+                                            UserID       => $Self->{UserID},
+                                        );
+                                    } else {
+                                        $LinkObject->LinkAdd(
+                                            SourceObject => 'Ticket',
+                                            SourceKey    => $TicketID,
+                                            TargetObject => $TargetObjectOrg,
+                                            TargetKey    => $TargetKeyOrg,
+                                            Type         => $Type,
+                                            State        => 'Valid',
+                                            UserID       => $Self->{UserID},
+                                        );
+                                    }
+                                }
                             }
                         }
                     }
@@ -2582,7 +2593,7 @@ sub Run {
                     Data            => $ListOptionJson->{Services}->{Data},
                     SelectedID      => $GetParam{ServiceID},
                     PossibleNone    => 1,
-                    Translation     => 0,
+                    Translation     => $ConfigObject->Get('Ticket::ServiceTranslation') || 0,
                     TreeView        => $TreeView,
                     DisabledOptions => $ListOptionJson->{Services}->{DisabledOptions} || 0,
                     Max             => 100,
@@ -2592,7 +2603,7 @@ sub Run {
                     Data         => $SLAs,
                     SelectedID   => $GetParam{SLAID},
                     PossibleNone => 1,
-                    Translation  => 0,
+                    Translation  => $ConfigObject->Get('Ticket::SLATranslation') || 0,
                     Max          => 100,
                 },
                 {
@@ -3222,7 +3233,7 @@ sub _MaskPhoneNew {
                 TreeView        => $TreeView,
                 Sort            => 'TreeView',
                 DisabledOptions => $ListOptionJson->{Services}->{DisabledOptions} || 0,
-                Translation     => 0,
+                Translation     => $ConfigObject->Get('Ticket::ServiceTranslation') || 0,
                 Max             => 200,
             );
             $LayoutObject->Block(
@@ -3240,7 +3251,7 @@ sub _MaskPhoneNew {
                 TreeView        => $TreeView,
                 Sort            => 'TreeView',
                 DisabledOptions => $ListOptionJson->{Services}->{DisabledOptions} || 0,
-                Translation     => 0,
+                Translation     => $ConfigObject->Get('Ticket::ServiceTranslation') || 0,
                 Max             => 200,
             );
             $LayoutObject->Block(
@@ -3257,7 +3268,7 @@ sub _MaskPhoneNew {
                 Class        => 'Validate_Required Modernize ' . ( $Param{Errors}->{SLAInvalid} || ' ' ),
                 PossibleNone => 1,
                 Sort         => 'AlphanumericValue',
-                Translation  => 0,
+                Translation  => $ConfigObject->Get('Ticket::SLATranslation') || 0,
                 Max          => 200,
             );
             $LayoutObject->Block(
@@ -3273,7 +3284,7 @@ sub _MaskPhoneNew {
                 Class        => 'Modernize',
                 PossibleNone => 1,
                 Sort         => 'AlphanumericValue',
-                Translation  => 0,
+                Translation  => $ConfigObject->Get('Ticket::SLATranslation') || 0,
                 Max          => 200,
             );
             $LayoutObject->Block(

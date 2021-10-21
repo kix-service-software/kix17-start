@@ -68,7 +68,7 @@ sub Run {
     # get user preferences
     my %UserPreferences       = $UserObject->GetPreferences( UserID => $Self->{UserID} );
     my $View                  = $UserPreferences{UserKIXSidebarDynamicFieldView} || 'Collapsed';
-    my $DynamicFieldSelected  = $UserPreferences{UserKIXSidebarDynamicFieldSelection};
+    my $DynamicFieldSelected  = $UserPreferences{UserKIXSidebarDynamicFieldSelection} || '';
     my @DynamicFieldSelection = split( /,/, $DynamicFieldSelected );
 
     if ( $Self->{Subaction} eq 'SelectDynamicFields' ) {

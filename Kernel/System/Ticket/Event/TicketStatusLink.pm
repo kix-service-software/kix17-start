@@ -139,7 +139,7 @@ sub Run {
     # check if ticket state is relevant
     my $OldTicketStateRelevant;
     my $NewTicketStateRelevant;
-    my @OpenStateTypes = ( 'new', 'open', 'pending reminder', 'pending auto' );
+    my @OpenStateTypes = @{ $ConfigObject->Get('Ticket::ViewableStateType') };
     if ( $Param{Event} eq 'TicketStateUpdate' ) {
         if ( !$Param{Data}->{OldTicketData} ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
@@ -542,10 +542,11 @@ sub _CheckConfigItemLinks {
     return if !IsHashRefWithData( \%LinkKeyList );
 
     # list of relevant state types
-    my @OpenStateTypes = ( 'new', 'open', 'pending reminder', 'pending auto' );
+    my $ConfigObject   = $Kernel::OM->Get('Kernel::Config');
+    my @OpenStateTypes = @{ $ConfigObject->Get('Ticket::ViewableStateType') };
 
     # use ticket type check?
-    my $TicketTypes = $Kernel::OM->Get('Kernel::Config')->Get('ITSMConfigItem::LinkStatus::TicketTypes');
+    my $TicketTypes = $ConfigObject->Get('ITSMConfigItem::LinkStatus::TicketTypes');
     my $CheckTicketTypes;
     $CheckTicketTypes = 1 if IsArrayRefWithData($TicketTypes);
 

@@ -1003,6 +1003,52 @@ ITSM.Agent.LinkGraph = ( function (TargetNS) {
         });
     };
 
+    TargetNS.InitTooManyNodes = function(NodeCount, Elements, Config) {
+        $Elements = Elements;
+        $Elements.Shield.addClass('Hidden');
+
+        GraphConfig = Config;
+        GraphConfig.StartFullID = GraphConfig.StartID;
+
+        var RegEx = /\d+/.exec(GraphConfig.StartFullID);
+
+        GraphConfig.StartID = RegEx[0];
+        if ( !GraphConfig.AdjustingStrength ) {
+            GraphConfig.AdjustingStrength = 1;
+        }
+
+        if ( GraphConfig.OpenWindow === undefined ) {
+            GraphConfig.OpenWindow = '0';
+        }
+
+        // prepare print-window
+        Core.UI.Popup.ProfileAdd('LinkGraph', {
+            WindowURLParams: "dependent=yes,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no",
+            Left:   100,
+            Top:    100,
+            Width:  $Elements.PrintBox.width() + 20,
+            Height: 750
+        });
+
+        $Elements.GraphBody.height($Elements.Body.height() - $Elements.Options.height());
+
+        Core.UI.Dialog.ShowDialog({
+            Modal: false,
+            Title: Core.Config.Get('TooManyNodesTitle'),
+            HTML: Core.Config.Get('TooManyNodesBody'),
+            PositionTop: '10%',
+            PositionLeft: 'Center',
+            Buttons: [ {
+                Label: 'OK',
+                Type: 'Close'
+            } ]
+        });
+
+        $(window).resize(function () {
+            $Elements.GraphBody.height($Elements.Body.height() - $Elements.Options.height());
+        });
+    };
+
     TargetNS.Init = function(nodesString, userRights) {
         // get rights
         var RoRights = userRights.Ro.split('_-_');

@@ -363,7 +363,7 @@ Core.Customer = (function (TargetNS) {
                     if (
                         (
                             $(this).is(':input')
-                            || $(this).hasClass('InputField_InputContainer')
+                            || $(this).hasClass('InputField_Container')
                             || $(this).find('#AttachmentUpload').length
                         )
                         && $(this).css('display') != 'none'

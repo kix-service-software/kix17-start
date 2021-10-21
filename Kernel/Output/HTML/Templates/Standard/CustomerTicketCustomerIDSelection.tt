@@ -23,7 +23,7 @@
 <a href="[% Data.Link %]" title="[% Translate(Data.Title) | html %]" class="[% Data.Css | html %]">[% Data.Content | truncate(Data.MaxLength) | html %]</a>
 [% RenderBlockEnd("Link") %]
 [% RenderBlockStart("TimeLong") %]
-[% Data.Content | Localize("TimeLong") %]
+[% Data.Content | Localize("TimeLong") | html %]
 [% RenderBlockEnd("TimeLong") %]
 [% RenderBlockStart("Checkbox") %]
 <input type="checkbox" name="[% Data.Name | html %]" id="[% Data.ID | html %]" value="[% Data.Content | html %]" title="[% Translate(Data.Title, Data.TitleContent) | html %]" class="[% Data.Css | html %]"/>

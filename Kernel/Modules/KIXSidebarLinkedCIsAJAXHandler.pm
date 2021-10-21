@@ -41,6 +41,7 @@ sub Run {
     my $LayoutObject         = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my $ConfigItemObject     = $Kernel::OM->Get('Kernel::System::ITSMConfigItem');
     my $GeneralCatalogObject = $Kernel::OM->Get('Kernel::System::GeneralCatalog');
+    my $TicketObject         = $Kernel::OM->Get('Kernel::System::Ticket');
     my $ParamObject          = $Kernel::OM->Get('Kernel::System::Web::Request');
     my $UserObject           = $Kernel::OM->Get('Kernel::System::User');
 
@@ -58,6 +59,7 @@ sub Run {
             . ':</label>'
             . '<div class="Field" id="">'
             . '<input id="' . $Param{Name} . '" type="text" name="' . $Param{Name} . '" value="" />'
+        . ' '                                                                                               # whitespace between input field and remove button
             . '<button type="button" class="Remove" value="'
             . $LayoutObject->{LanguageObject}->Translate('Remove')
             . '" title="'
@@ -92,11 +94,11 @@ sub Run {
     }
 
     # get needed params
-    for my $Needed (qw(CustomerUserID CallingAction FormID ConfigItemClass TicketID)) {
+    for my $Needed (qw(CustomerUserID CustomerID CallingAction FormID ConfigItemClass TicketID)) {
         $Param{$Needed} = $ParamObject->GetParam( Param => $Needed ) || '';
-        if ( $Param{CallingAction} && $Param{CallingAction} =~ /Customer/ ) {
-            $Param{CustomerUserID} = $Self->{UserID} || '';
-        }
+    }
+    if ( $Param{CallingAction} && $Param{CallingAction} =~ /Customer/ ) {
+        $Param{CustomerUserID} = $Self->{UserID} || '';
     }
 
     # if no customer user id given on ticket create in agent frontend
@@ -111,25 +113,53 @@ sub Run {
         $Param{CustomerUserID} = $UserData{UserLogin};
     }
 
+    # if no customer user id given, lookup with ticket id
+    if (
+        !$Param{CustomerUserID}
+        && $Param{TicketID}
+    ) {
+        my %Ticket = $TicketObject->TicketGet(
+            TicketID      => $Param{TicketID},
+            DynamicFields => 0,
+            UserID        => $Self->{UserID},
+            Silent        => 0,
+        );
+
+        $Param{CustomerUserID} = $Ticket{CustomerUserID};
+    }
+
+    # if no customer id given, lookup with ticket id
+    if (
+        !$Param{CustomerID}
+        && $Param{TicketID}
+    ) {
+        my %Ticket = $TicketObject->TicketGet(
+            TicketID      => $Param{TicketID},
+            DynamicFields => 0,
+            UserID        => $Self->{UserID},
+            Silent        => 0,
+        );
+
+        $Param{CustomerID} = $Ticket{CustomerID};
+    }
+
     # reload attribute selection after removing attributes from filter dialog
     if ( $Self->{Subaction} eq 'AJAXUpdateSelection' ) {
 
         # get class list
         my %ConfigItemClasses;
-        my %Classes = reverse %{
-            $GeneralCatalogObject->ItemList(
-                Class => 'ITSM::ConfigItem::Class',
-                )
-            };
+        my %Classes  = %{ $GeneralCatalogObject->ItemList( Class => 'ITSM::ConfigItem::Class' ) };
+        my %ClassIDs = reverse( %Classes );
 
         if ( !defined $Param{ConfigItemClass} || !$Param{ConfigItemClass} ) {
 
             # get defined classes for linked config items
-            my @CIClasses
-                = keys %{
-                $ConfigObject->Get('KIXSidebarConfigItemLink::CISearchInClasses')
-                };
-            %ConfigItemClasses = reverse map { $_ => $Classes{$_} } @CIClasses;
+            my @CIClasses = keys %{ $ConfigObject->Get('KIXSidebarConfigItemLink::CISearchInClasses') };
+            for my $CIClass ( @CIClasses ) {
+                if ( $ClassIDs{ $CIClass } ) {
+                    $ConfigItemClasses{ $ClassIDs{ $CIClass } } = $ClassIDs{ $CIClass };
+                }
+            }
         }
         else {
             $ConfigItemClasses{ $Param{ConfigItemClass} } = $Classes{ $Param{ConfigItemClass} };
@@ -215,17 +245,25 @@ sub Run {
     }
 
     # generate output
-    if ( $Param{CustomerUserID} && $Param{CallingAction} && $Param{FormID} ) {
+    if (
+        $Param{CustomerUserID}
+        && $Param{CallingAction}
+        && (
+            $Param{FormID}
+            || $Param{TicketID}
+        )
+    ) {
         $Param{LinkConfigItemStrg} =
             $LayoutObject->KIXSideBarAssignedConfigItemsTable(
             %GetParam,
-            CustomerUserID => $Param{CustomerUserID} || '',
-            CallingAction  => $Param{CallingAction}  || '',
-            FormID         => $Param{FormID}         || '',
-            UserID         => $Self->{UserID}        || '',
-            AJAX           => $Param{Data}->{AJAX}   || 0,
-            Class          => $Param{ConfigItemClass},
-            TicketID       => $Param{TicketID}       || '',
+            CustomerUserID       => $Param{CustomerUserID} || '',
+            CustomerID           => $Param{CustomerID}     || '',
+            CallingAction        => $Param{CallingAction}  || '',
+            FormID               => $Param{FormID}         || '',
+            UserID               => $Self->{UserID}        || '',
+            AJAX                 => $Param{Data}->{AJAX}   || 0,
+            Class                => $Param{ConfigItemClass},
+            TicketID             => $Param{TicketID}       || '',
             SelectedSearchFields => \@SelectedSearchFields,
             );
     }

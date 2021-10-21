@@ -258,7 +258,10 @@ sub CustomerSearch {
         $SQL .= ' ';
     }
     elsif ( $Param{PostMasterSearch} ) {
-        if ( $Self->{CustomerUserMap}->{CustomerUserPostMasterSearchFields} ) {
+        if (
+            ref( $Self->{CustomerUserMap}->{CustomerUserPostMasterSearchFields} ) eq 'ARRAY'
+            && @{ $Self->{CustomerUserMap}->{CustomerUserPostMasterSearchFields} }
+        ) {
             my $SQLExt = '';
             for my $Field ( @{ $Self->{CustomerUserMap}->{CustomerUserPostMasterSearchFields} } ) {
                 if ($SQLExt) {
@@ -274,7 +277,7 @@ sub CustomerSearch {
                     $SQLExt .= " LOWER($Field) = LOWER(?) ";
                 }
             }
-            $SQL .= $SQLExt;
+            $SQL .= '(' . $SQLExt . ')';
         }
     }
     elsif ( $Param{UserLogin} ) {
@@ -307,6 +310,8 @@ sub CustomerSearch {
         my $CustomerID = $Self->{DBObject}->Quote( $Param{CustomerID}, 'Like' );
         $CustomerID =~ s/\*/%/g;
         push @Bind, \$CustomerID;
+
+        $SQL .= '(';
 
         if ( $Self->{CaseSensitive} ) {
             $SQL .= "$Self->{CustomerID} LIKE ? $LikeEscapeString";
@@ -348,6 +353,8 @@ sub CustomerSearch {
                 }
             }
         }
+
+        $SQL .= ')';
     }
     elsif ( $Param{CustomerIDRaw} ) {
 

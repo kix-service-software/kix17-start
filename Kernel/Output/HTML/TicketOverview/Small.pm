@@ -1687,7 +1687,11 @@ sub Run {
                         );
                         next TICKETCOLUMN;
                     }
-                    else {
+                    elsif (
+                        $TicketEscalation->{'FirstResponse'}
+                        || $TicketEscalation->{'Update'}
+                        || $TicketEscalation->{'Solution'}
+                    ) {
                         $EscalationData{EscalationTime}            = $Article{EscalationTime}            || 0;
                         $EscalationData{EscalationDestinationDate} = $Article{EscalationDestinationDate} || 0;
 
@@ -1711,6 +1715,16 @@ sub Run {
                         );
                         next TICKETCOLUMN;
                     }
+                    else {
+                        $LayoutObject->Block(
+                            Name => "RecordTicketColumnTranslatable",
+                            Data => {
+                                GenericValue => 'none',
+                                Class        => '',
+                            },
+                        );
+                        next TICKETCOLUMN;
+                    }
                 }
 
                 my $BlockType = '';
@@ -1723,7 +1737,7 @@ sub Run {
                         $BlockType = 'Translatable';
                         $DataValue = 'suspended';
                     }
-                    else {
+                    elsif ( $TicketEscalation->{'Solution'} ) {
                         $BlockType = 'Escalation';
                         $DataValue = $LayoutObject->CustomerAgeInHours(
                             Age => $Article{SolutionTime} || 0,
@@ -1732,6 +1746,10 @@ sub Run {
                         if ( defined $Article{SolutionTime} && $Article{SolutionTime} < 60 * 60 * 1 ) {
                             $CSSClass = 'Warning';
                         }
+                    }
+                    else {
+                        $BlockType = 'Translatable';
+                        $DataValue = 'none';
                     }
                 }
                 elsif ( $TicketColumn eq 'EscalationResponseTime' ) {
@@ -1742,7 +1760,7 @@ sub Run {
                         $BlockType = 'Translatable';
                         $DataValue = 'suspended';
                     }
-                    else {
+                    elsif ( $TicketEscalation->{'FirstResponse'} ) {
                         $BlockType = 'Escalation';
                         $DataValue = $LayoutObject->CustomerAgeInHours(
                             Age => $Article{FirstResponseTime} || 0,
@@ -1755,6 +1773,10 @@ sub Run {
                             $CSSClass = 'Warning';
                         }
                     }
+                    else {
+                        $BlockType = 'Translatable';
+                        $DataValue = 'none';
+                    }
                 }
                 elsif ( $TicketColumn eq 'EscalationUpdateTime' ) {
                     if (
@@ -1764,7 +1786,7 @@ sub Run {
                         $BlockType = 'Translatable';
                         $DataValue = 'suspended';
                     }
-                    else {
+                    elsif ( $TicketEscalation->{'Update'} ) {
                         $BlockType = 'Escalation';
                         $DataValue = $LayoutObject->CustomerAgeInHours(
                             Age => $Article{UpdateTime} || 0,
@@ -1773,6 +1795,10 @@ sub Run {
                         if ( defined $Article{UpdateTime} && $Article{UpdateTime} < 60 * 60 * 1 ) {
                             $CSSClass = 'Warning';
                         }
+                    }
+                    else {
+                        $BlockType = 'Translatable';
+                        $DataValue = 'none';
                     }
                 }
                 elsif ( $TicketColumn eq 'PendingTime' ) {
@@ -1805,6 +1831,18 @@ sub Run {
                     $TicketColumn eq 'State'
                     || $TicketColumn eq 'Lock'
                     || $TicketColumn eq 'Priority'
+                    || (
+                        $TicketColumn eq 'Type'
+                        && $ConfigObject->Get('Ticket::TypeTranslation')
+                    )
+                    || (
+                        $TicketColumn eq 'Service'
+                        && $ConfigObject->Get('Ticket::ServiceTranslation')
+                    )
+                    || (
+                        $TicketColumn eq 'SLA'
+                        && $ConfigObject->Get('Ticket::SLATranslation')
+                    )
                 ) {
                     $BlockType = 'Translatable';
                     $DataValue = $Article{$TicketColumn} || $UserInfo{$TicketColumn};
@@ -2041,6 +2079,7 @@ sub _InitialColumnFilter {
     return if !$Self->{ValidFilterableColumns}->{ $Param{ColumnName} };
 
     # get layout object
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
     my $Label = $Param{Label} || $Param{ColumnName};
@@ -2061,6 +2100,18 @@ sub _InitialColumnFilter {
         $Param{ColumnName} eq 'State'
         || $Param{ColumnName} eq 'Lock'
         || $Param{ColumnName} eq 'Priority'
+        || (
+            $Param{ColumnName} eq 'Type'
+            && $ConfigObject->Get('Ticket::TypeTranslation')
+        )
+        || (
+            $Param{ColumnName} eq 'Service'
+            && $ConfigObject->Get('Ticket::ServiceTranslation')
+        )
+        || (
+            $Param{ColumnName} eq 'SLA'
+            && $ConfigObject->Get('Ticket::SLATranslation')
+        )
     ) {
         $TranslationOption = 1;
     }
@@ -2175,6 +2226,7 @@ sub _ColumnFilterJSON {
     }
 
     # get layout object
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
     my $Label = $Param{Label};
@@ -2214,6 +2266,18 @@ sub _ColumnFilterJSON {
         $Param{ColumnName} eq 'State'
         || $Param{ColumnName} eq 'Lock'
         || $Param{ColumnName} eq 'Priority'
+        || (
+            $Param{ColumnName} eq 'Type'
+            && $ConfigObject->Get('Ticket::TypeTranslation')
+        )
+        || (
+            $Param{ColumnName} eq 'Service'
+            && $ConfigObject->Get('Ticket::ServiceTranslation')
+        )
+        || (
+            $Param{ColumnName} eq 'SLA'
+            && $ConfigObject->Get('Ticket::SLATranslation')
+        )
     ) {
         $TranslationOption = 1;
     }

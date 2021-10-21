@@ -331,6 +331,18 @@ sub _ChangeAction {
         # OK, remove old Operation. New one will be added below.
         if ( !%Errors ) {
             delete $WebserviceData->{Config}->{Provider}->{Operation}->{ $GetParam{OldOperation} };
+
+            # rename transport configuration
+            if (
+                ref( $WebserviceData->{Config}->{Provider}->{Transport} ) eq 'HASH'
+                && ref( $WebserviceData->{Config}->{Provider}->{Transport}->{Config} ) eq 'HASH'
+                && ref( $WebserviceData->{Config}->{Provider}->{Transport}->{Config}->{RouteOperationMapping} ) eq 'HASH'
+                && ref( $WebserviceData->{Config}->{Provider}->{Transport}->{Config}->{RouteOperationMapping}->{ $GetParam{OldOperation} } ) eq 'HASH'
+            ) {
+                $WebserviceData->{Config}->{Provider}->{Transport}->{Config}->{RouteOperationMapping}->{ $GetParam{Operation} }
+                    = \%{ $WebserviceData->{Config}->{Provider}->{Transport}->{Config}->{RouteOperationMapping}->{ $GetParam{OldOperation} } };
+                delete( $WebserviceData->{Config}->{Provider}->{Transport}->{Config}->{RouteOperationMapping}->{ $GetParam{OldOperation} } );
+            }
         }
     }
 

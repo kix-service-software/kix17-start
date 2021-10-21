@@ -14,8 +14,8 @@ use strict;
 use warnings;
 
 our @ObjectDependencies = (
-    'Kernel::Config',
     'Kernel::System::Log',
+    'Kernel::System::State',
     'Kernel::System::Ticket',
 );
 
@@ -52,23 +52,37 @@ sub Run {
         }
     }
 
-    # get config object
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-
-    # read pending state types from config
-    my $PendingReminderStateType =
-        $ConfigObject->Get('Ticket::PendingReminderStateType:') || 'pending reminder';
-
-    my $PendingAutoStateType =
-        $ConfigObject->Get('Ticket::PendingAutoStateType:') || 'pending auto';
-
-    # get ticket object
+    # get needed objects
+    my $StateObject  = $Kernel::OM->Get('Kernel::System::State');
     my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
+
+    # get pending states
+    my @PendingAutoStateIDs = $StateObject->StateGetStatesByType(
+        Type   => 'PendingAuto',
+        Result => 'ID',
+    );
+    my @PendingReminderStateIDs = $StateObject->StateGetStatesByType(
+        Type   => 'PendingReminder',
+        Result => 'ID',
+    );
+    my @PendingsStateIDs = (@PendingAutoStateIDs, @PendingReminderStateIDs);
+
+    # get user lock data
+    my $TicketFilter = $TicketObject->TicketSearch(
+        Result     => 'COUNT',
+        TicketID   => $Param{Data}->{TicketID},
+        StateIDs   => \@PendingsStateIDs,
+        UserID     => 1,
+        Permission => 'ro',
+    );
+
+    # only set the pending time to 0 if the new state is NOT a pending state
+    return 1 if $TicketFilter;
 
     # get ticket
     my %Ticket = $TicketObject->TicketGet(
         TicketID      => $Param{Data}->{TicketID},
-        DynamicFields => 1,
+        DynamicFields => 0,
         Silent        => 1,
         UserID        => 1,
     );
@@ -76,10 +90,6 @@ sub Run {
 
     # only set the pending time to 0 if it's actually set
     return 1 if !$Ticket{UntilTime};
-
-    # only set the pending time to 0 if the new state is NOT a pending state
-    return 1 if $Ticket{StateType} eq $PendingReminderStateType;
-    return 1 if $Ticket{StateType} eq $PendingAutoStateType;
 
     # reset pending date/time
     return if !$TicketObject->TicketPendingTimeSet(

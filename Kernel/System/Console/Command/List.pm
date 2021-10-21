@@ -19,6 +19,7 @@ use base qw(Kernel::System::Console::BaseCommand);
 
 our @ObjectDependencies = (
     'Kernel::Config',
+    'Kernel::System::KIXUtils',
     'Kernel::System::Main',
 );
 
@@ -94,13 +95,20 @@ sub ListAllCommands {
     my ( $Self, %Param ) = @_;
 
     my $Home = $Kernel::OM->Get('Kernel::Config')->Get('Home');
+    if ( $Home !~ m{^.*\/$}x ) {
+        $Home .= '/';
+    }
 
-    my @KIXFolders = ( $Home . '/Kernel/System/Console/Command' );
-    foreach my $TmpDir (@INC) {
-        last if $TmpDir =~ /\/Custom$/;
-        my $NewDir = $TmpDir."/Kernel/System/Console/Command";
+    my @KIXFolders = (
+        $Home . 'Kernel/System/Console/Command',
+        $Home . 'Custom/Kernel/System/Console/Command',
+    );
+
+    my @KIXPackages = $Kernel::OM->Get('Kernel::System::KIXUtils')->GetRegisteredCustomPackages( Result => 'ARRAY' );
+    for my $Package ( @KIXPackages ) {
+        my $NewDir = $Home . $Package . '/Kernel/System/Console/Command';
         next if !( -e $NewDir );
-        push @KIXFolders, $NewDir;
+        push( @KIXFolders, $NewDir );
     }
 
     my @CommandFiles = ();

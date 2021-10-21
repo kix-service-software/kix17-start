@@ -304,54 +304,44 @@ sub Run {
         my %CurrentUserData = $Kernel::OM->Get('Kernel::System::User')->GetUserData(
             UserID => $Self->{UserID},
         );
-        my @XMLAttributes = ();
+        my %XMLAttributes = ();
         if (
             defined $CurrentUserData{UserConfigItemSearchAllBehavior}
             && $CurrentUserData{UserConfigItemSearchAllBehavior} eq 'EqualAttributes'
         ) {
             my $ListSize = scalar @ClassIDArray;
-            for my $Attribute (
-                sort {
-                    $LayoutObject->{LanguageObject}->Translate($a)
-                        cmp $LayoutObject->{LanguageObject}->Translate($b)
-                } keys %{ $AttributesHash{Key} }
-            ) {
+            for my $Attribute ( keys %{ $AttributesHash{Key} } ) {
                 next if $AttributesHash{Key}->{$Attribute} < $ListSize;
-                my %TmpHash = ();
-                $TmpHash{Key}   = $Attribute;
-                $TmpHash{Value} = $AttributesHash{Value}->{$Attribute};
-                push @XMLAttributes, \%TmpHash;
+
+                $XMLAttributes{ $Attribute } = $AttributesHash{Value}->{ $Attribute };
             }
         }
         else {
-            for my $Attribute (
-                sort {
-                    $LayoutObject->{LanguageObject}->Translate($a)
-                        cmp $LayoutObject->{LanguageObject}->Translate($b)
-                } keys %{ $AttributesHash{Key} }
-            ) {
+            for my $Attribute ( keys %{ $AttributesHash{Key} } ) {
                 next if ( !$AttributesHash{Key}->{ $Attribute } );
-                my %TmpHash = ();
-                $TmpHash{Key}   = $Attribute;
-                $TmpHash{Value} = $AttributesHash{Value}->{$Attribute};
-                push @XMLAttributes, \%TmpHash;
+
+                $XMLAttributes{ $Attribute } = $AttributesHash{Value}->{ $Attribute };
             }
         }
 
         # build attributes string for attributes list
         $Param{AttributesStrg} = $LayoutObject->BuildSelection(
-            Data     => \@XMLAttributes,
-            Name     => 'Attribute',
-            Multiple => 0,
-            Class    => 'Modernize',
+            Data        => \%XMLAttributes,
+            Name        => 'Attribute',
+            Multiple    => 0,
+            Class       => 'Modernize',
+            Sort        => 'AlphanumericValue',
+            Translation => 1,
         );
 
         # build attributes string for recovery on add or subtract search fields
         $Param{AttributesOrigStrg} = $LayoutObject->BuildSelection(
-            Data     => \@XMLAttributes,
-            Name     => 'AttributeOrig',
-            Multiple => 0,
-            Class    => 'Modernize',
+            Data        => \%XMLAttributes,
+            Name        => 'AttributeOrig',
+            Multiple    => 0,
+            Class       => 'Modernize',
+            Sort        => 'AlphanumericValue',
+            Translation => 1,
         );
 
         my %Profiles = $SearchProfileObject->SearchProfileList(
@@ -452,7 +442,7 @@ sub Run {
 
         $Self->_XMLSearchFormOutput(
             XMLDefinition => $XMLDefinition,
-            XMLAttributes => \@XMLAttributes,
+            XMLAttributes => \%XMLAttributes,
             GetParam      => \%GetParam,
         );
 
@@ -636,15 +626,20 @@ sub Run {
                 if ( ref( $GetParam{What} ) eq 'ARRAY' ) {
                     for my $FormData ( @{ $XMLFormData } ) {
                         for my $FormKey ( keys( %{ $FormData } ) ) {
+                            my $KeyFound = 0;
                             for my $WhatData ( @{ $GetParam{What} } ) {
                                 for my $WhatKey ( keys( %{ $WhatData } ) ) {
-                                    if (
-                                        $FormKey eq $WhatKey
-                                        && ref( $WhatData->{ $WhatKey } ) eq 'ARRAY'
-                                    ) {
-                                        push( @{ $WhatData->{ $WhatKey } }, @{ $FormData->{ $FormKey } } );
+                                    if ( $FormKey eq $WhatKey ) {
+                                        $KeyFound = 1;
+
+                                        if ( ref( $WhatData->{ $WhatKey } ) eq 'ARRAY' ) {
+                                            push( @{ $WhatData->{ $WhatKey } }, @{ $FormData->{ $FormKey } } );
+                                        }
                                     }
                                 }
+                            }
+                            if ( !$KeyFound ) {
+                                push( @{ $GetParam{What} }, $FormData );
                             }
                         }
                     }
@@ -1209,7 +1204,7 @@ sub _XMLSearchFormOutput {
     # check needed stuff
     return if !$Param{XMLDefinition};
     return if ref $Param{XMLDefinition} ne 'ARRAY';
-    return if ref $Param{XMLAttributes} ne 'ARRAY';
+    return if ref $Param{XMLAttributes} ne 'HASH';
 
     # isolate params
     my %GetParam = %{ $Param{GetParam} };
@@ -1233,13 +1228,9 @@ sub _XMLSearchFormOutput {
 
         # check if attribute is in xml attribute array and remove it if found
         my $Found = 0;
-        my $Position = -1;
-        for my $AttributeHash ( @{ $Param{XMLAttributes} } ) {
-            $Position++;
-            next if $AttributeHash->{Key} ne $InputKey;
+        if ( $Param{XMLAttributes}->{ $InputKey } ) {
             $Found = 1;
-            splice(@{ $Param{XMLAttributes} },$Position,1);
-            last;
+            delete( $Param{XMLAttributes}->{ $InputKey } );
         }
 
         # output attribute, if marked as searchable

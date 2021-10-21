@@ -402,7 +402,7 @@ sub ExportDataGet {
     if ( !$ObjectData || ref $ObjectData ne 'HASH' ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
-            Message  => "No object data found for the template id $Param{TemplateID}",
+            Message  => "No valid object data found for the template id $Param{TemplateID}",
         );
         return;
     }
@@ -1515,17 +1515,16 @@ sub _ExportXMLDataPrepare {
         COUNTER:
         for my $Counter ( 1 .. $Item->{CountMax} ) {
 
-            # stop loop, if no content was given
-            last COUNTER if !defined $Param{XMLData}->{ $Item->{Key} }->[$Counter]->{Content};
-
             # create key
             my $Key = $Param{Prefix} . $Item->{Key} . '::' . $Counter;
 
             # prepare value
-            $Param{XMLData2D}->{$Key} = $Kernel::OM->Get('Kernel::System::ITSMConfigItem')->XMLExportValuePrepare(
-                Item  => $Item,
-                Value => $Param{XMLData}->{ $Item->{Key} }->[$Counter]->{Content},
-            );
+            if ( defined( $Param{XMLData}->{ $Item->{Key} }->[$Counter]->{Content} ) ) {
+                $Param{XMLData2D}->{$Key} = $Kernel::OM->Get('Kernel::System::ITSMConfigItem')->XMLExportValuePrepare(
+                    Item  => $Item,
+                    Value => $Param{XMLData}->{ $Item->{Key} }->[$Counter]->{Content},
+                );
+            }
 
             next COUNTER if !$Item->{Sub};
 
@@ -1661,8 +1660,10 @@ sub _ImportXMLDataMerge {
 
     ITEM:
     for my $Item ( @{ $Param{XMLDefinition} } ) {
-        # init offset
+
+        # init offset, to add values on "next" free/empty array element
         my $Offset = 0;
+
         COUNTER:
         for my $Counter ( 1 .. $Item->{CountMax} ) {
 
@@ -1684,17 +1685,97 @@ sub _ImportXMLDataMerge {
                 return if !$MergeOk;
             }
 
-            # When the data point is not part of the input definition,
+            # when the data point is not part of the input definition,
             # then do not overwrite the previous setting.
-            # False values are OK.
-            next COUNTER if !exists $Param{XMLData2D}->{$Key};
+            if ( !exists( $Param{XMLData2D}->{$Key} ) ) {
+                if ( $Item->{Sub} ) {
 
-            if ( $Param{EmptyFieldsLeaveTheOldValues} ) {
+                    # if there is no (old) value and neither children - remove it and use position for next
+                    if (
+                        !IsArrayRefWithData( $XMLData->{ $Item->{Key} } )
+                        || !IsHashRefWithData( $XMLData->{ $Item->{Key} }->[ $Counter - $Offset ] )
+                    ) {
+                        # empty container added during sub-handling above - remove it
+                        splice( @{ $XMLData->{ $Item->{Key} } }, ($Counter - $Offset), 1 );
+                        $Offset += 1;
+                    }
 
-                # do not override old value with an empty field is imported
-                next COUNTER if !defined $Param{XMLData2D}->{$Key};
-                next COUNTER if $Param{XMLData2D}->{$Key} eq '';
+                    # if last counter and only positon 0 with "undef" is contained, remove it
+                    if (
+                        $Counter == $Item->{CountMax}
+                        && $XMLData->{ $Item->{Key} }
+                        && scalar( @{ $XMLData->{ $Item->{Key} } } ) == 1
+                    ) {
+                        delete( $XMLData->{ $Item->{Key} } );
+                    }
+                }
+                next COUNTER;
             }
+
+            # handling if an empty field is imported
+            if (
+                !defined( $Param{XMLData2D}->{$Key} )
+                || $Param{XMLData2D}->{$Key} eq ''
+            ) {
+
+                # if current is "leaf"-attribute (has no children)
+                if ( !$Item->{Sub} ) {
+
+                    # if there is no old value - use position for next
+                    if (
+                        !IsArrayRefWithData( $XMLData->{ $Item->{Key} } )
+                        || !IsHashRefWithData( $XMLData->{ $Item->{Key} }->[ $Counter - $Offset ] )
+                    ) {
+                        $Offset += 1;
+                    }
+
+                    # there is an old value, but it should be removed, do it and use position for next
+                    elsif ( !$Param{EmptyFieldsLeaveTheOldValues} ) {
+                        splice( @{ $XMLData->{ $Item->{Key} } }, ($Counter - $Offset), 1 );
+                        $Offset += 1;
+                    }
+                    # else do nothing (keep value and its postion for itself)
+
+                }
+                # if current has children)
+                else {
+
+                    # remove old value if requested (remove content and tagkey (old value))
+                    if ( !$Param{EmptyFieldsLeaveTheOldValues} ) {
+                        delete( $XMLData->{ $Item->{Key} }->[ $Counter - $Offset ]->{Content} );
+                        delete( $XMLData->{ $Item->{Key} }->[ $Counter - $Offset ]->{TagKey} );
+                    }
+
+                    # if there is no (old) value and neither children - remove it and use position for next
+                    if (
+                        !IsArrayRefWithData( $XMLData->{ $Item->{Key} } )
+                        || !IsHashRefWithData( $XMLData->{ $Item->{Key} }->[ $Counter - $Offset ] )
+                    ) {
+                        # empty container added during sub-handling above - remove it
+                        splice( @{ $XMLData->{ $Item->{Key} } }, ($Counter - $Offset), 1 );
+                        $Offset += 1;
+                    }
+                }
+
+                # if last counter and only positon 0 with "undef" is contained, remove it
+                if (
+                    $Counter == $Item->{CountMax}
+                    && $XMLData->{ $Item->{Key} }
+                    && scalar( @{ $XMLData->{ $Item->{Key} } } ) == 1
+                ) {
+                    delete( $XMLData->{ $Item->{Key} } );
+                }
+
+                # do next, no value handling needed
+                next COUNTER;
+            }
+
+            # dummy attribute does not need any value
+            next COUNTER if (
+                IsHashRefWithData($Item->{Input})
+                && $Item->{Input}->{Type}
+                && $Item->{Input}->{Type} eq 'Dummy'
+            );
 
             # prepare value
             my $Value = $Kernel::OM->Get('Kernel::System::ITSMConfigItem')->XMLImportValuePrepare(
@@ -1703,11 +1784,14 @@ sub _ImportXMLDataMerge {
             );
 
             # let merge fail, when a value cannot be prepared
-            return if !defined $Value;
+            return if ( !defined( $Value ) );
 
-            # do not set value if empty but required in CI-class...
-            if ( !$Value && $Item->{Input}->{Required} ) {
-                splice(@{$XMLData->{ $Item->{Key} }}, ($Counter - $Offset), 1);
+            # do not set value if empty but required in CI-class... (try with next imported value)
+            if (
+                !$Value
+                && $Item->{Input}->{Required}
+            ) {
+                splice( @{ $XMLData->{ $Item->{Key} } }, ($Counter - $Offset), 1 );
                 $Offset += 1;
                 next COUNTER;
             }

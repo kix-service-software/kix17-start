@@ -10,30 +10,28 @@
 
 
 [% RenderBlockStart("Properties") %]
-
-<form action="[% Env("CGIHandle") %]" method="post" enctype="multipart/form-data" name="compose" id="Compose" class="Validate PreventMultipleSubmits">
-    <input type="hidden" name="Action" value="[% Env("Action") %]"/>
-    <input type="hidden" name="Subaction" value="Store"/>
-    <input type="hidden" name="TicketID" value="[% Data.TicketID | html %]"/>
-    <input type="hidden" name="ReplyToArticle" value="[% Data.ReplyToArticle | html %]"/>
-    <input type="hidden" name="Expand" id="Expand" value=""/>
-    <input type="hidden" name="FormID" value="[% Data.FormID | html %]"/>
-    <input type="hidden" name="PretendAction" value="[% Data.PretendAction | html %]"/>
-    <input type="hidden" name="ImpactRC" id="ImpactRC" value="0"/>
-    <input type="hidden" name="PriorityRC" id="PriorityRC" value="0"/>
-
-    <div class="LayoutPopup ARIARoleMain">
-        <div class="Header">
-            <p class="AsteriskExplanation">[% Translate("All fields marked with an asterisk (*) are mandatory.") | html %]</p>
-        </div>
-        <div class="Content">
-            <div class="LayoutFixedSidebar SidebarLast">
+<div class="LayoutPopup ARIARoleMain">
+    <div class="Header">
+        <p class="AsteriskExplanation">[% Translate("All fields marked with an asterisk (*) are mandatory.") | html %]</p>
+    </div>
+    <div class="Content">
+        <div class="LayoutFixedSidebar SidebarLast">
 [% RenderBlockStart("KIXSidebar") %]
-                <div class="SidebarColumn SidebarColumnTab">
-                    [% Data.KIXSidebarContent %]
-                </div>
+            <div class="SidebarColumn SidebarColumnTab">
+                [% Data.KIXSidebarContent %]
+            </div>
 [% RenderBlockEnd("KIXSidebar") %]
-                <div class="ContentColumn">
+            <div class="ContentColumn">
+                <form action="[% Env("CGIHandle") %]" method="post" enctype="multipart/form-data" name="compose" id="Compose" class="Validate PreventMultipleSubmits">
+                    <input type="hidden" name="Action" value="[% Env("Action") %]"/>
+                    <input type="hidden" name="Subaction" value="Store"/>
+                    <input type="hidden" name="TicketID" value="[% Data.TicketID | html %]"/>
+                    <input type="hidden" name="ReplyToArticle" value="[% Data.ReplyToArticle | html %]"/>
+                    <input type="hidden" name="Expand" id="Expand" value=""/>
+                    <input type="hidden" name="FormID" value="[% Data.FormID | html %]"/>
+                    <input type="hidden" name="PretendAction" value="[% Data.PretendAction | html %]"/>
+                    <input type="hidden" name="ImpactRC" id="ImpactRC" value="0"/>
+                    <input type="hidden" name="PriorityRC" id="PriorityRC" value="0"/>
 [% RenderBlockStart("WidgetTicketActions") %]
                     <div class="WidgetSimple Expanded">
                         <div class="Content">
@@ -97,6 +95,7 @@ $('#ServiceID').on('change', function (Event) {
     // show service incident state and signal for the selected service
     ITSM.Agent.IncidentState.ShowIncidentState({
         Action: '[% Env("Action") %]',
+        PretendAction: '[% Data.PretendAction | html %]',
         TicketID: [% Data.TicketID | html %],
         ServiceID: $('#ServiceID').val()
     });
@@ -131,6 +130,7 @@ $('#ServiceID').on('change', function (Event) {
     // show service incident state and signal for the selected service
     ITSM.Agent.IncidentState.ShowIncidentState({
         Action: '[% Env("Action") %]',
+        PretendAction: '[% Data.PretendAction | html %]',
         TicketID: [% Data.TicketID | html %],
         ServiceID: $('#ServiceID').val()
     });
@@ -537,16 +537,15 @@ $('#UploadFinish').on('change', function (Event) {
                             </fieldset>
                         </div>
                     </div>
-                </div>
 [% RenderBlockEnd("WidgetArticle") %]
-
-                <div class="Footer">
-                    <button class="CallForAction Primary" id="submitRichText" accesskey="g" title="[% Translate("Submit") | html %] (g)" type="submit" value="[% Translate("Submit") | html %]"><span><i class="fa fa-check-square-o"></i> [% Translate("Submit") | html %]</span></button>
-                </div>
+                    <div class="Footer">
+                        <button class="CallForAction Primary" id="submitRichText" accesskey="g" title="[% Translate("Submit") | html %] (g)" type="submit" value="[% Translate("Submit") | html %]"><span><i class="fa fa-check-square-o"></i> [% Translate("Submit") | html %]</span></button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
- </form>
+</div>
 [% RenderBlockEnd("Properties") %]
 
 #Layers
@@ -562,6 +561,7 @@ if ( Core.Agent.TicketAction && Core.KIX4OTRS.TicketZoomTabs && Core.KIX4OTRS.KI
 // show service incident state and signal for the selected service (this part here is important if the page is reloaded due to e.g. attachment upload)
 ITSM.Agent.IncidentState.ShowIncidentState({
     Action: '[% Env("Action") %]',
+    PretendAction: '[% Data.PretendAction | html %]',
     TicketID: [% Data.TicketID | html %],
     ServiceID: $('#ServiceID').val()
 });

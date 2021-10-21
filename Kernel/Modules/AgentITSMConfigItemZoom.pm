@@ -47,13 +47,10 @@ sub Run {
     $Param{ImageID}      = $ParamObject->GetParam( Param => 'ImageID' ) || '';
     $Param{FileUploaded} = $ParamObject->GetParam( Param => 'FileUploaded' ) || 0;
 
-    # possible params for graph
-    # not enabled yet...
-    $Param{RelevantObjectSubTypes} =
-        $ParamObject->GetParam( Param => 'RelevantObjectSubTypes' );
-    $Param{RelevantLinkTypes} = $ParamObject->GetParam( Param => 'RelevantLinkTypes' );
-    $Param{MaxSearchDepth}    = $ParamObject->GetParam( Param => 'MaxSearchDepth' );
-    $Param{UsedStrength}      = $ParamObject->GetParam( Param => 'UsedStrength' );
+    # possible params for graph (not enabled yet...)
+    for my $GraphParam ( qw(RelevantObjectSubTypes RelevantLinkTypes MaxSearchDepth AdjustingStrength) ) {
+        $Param{ $GraphParam } = $ParamObject->GetParam( Param => $GraphParam ) || '';
+    }
 
     # check needed stuff
     if ( !$ConfigItemID ) {
@@ -251,12 +248,12 @@ sub Run {
                 # graph tab
                 if (
                     $Link =~ m/(.*?)ZoomTabLinkGraph(.*)/
-                    && defined $Param{RelevantObjectSubTypes}
+                    && $Param{RelevantObjectSubTypes}
                 ) {
-                    $Link .= ";RelevantObjectSubTypes=" . $Param{RelevantObjectSubTypes};
-                    $Link .= ";RelevantLinkTypes=" . $Param{RelevantLinkTypes};
-                    $Link .= ";MaxSearchDepth=" . $Param{MaxSearchDepth};
-                    $Link .= ";UsedStrength=" . $Param{UsedStrength};
+                    $Link .= ';RelevantObjectSubTypes=' . $Param{RelevantObjectSubTypes}
+                           . ';RelevantLinkTypes=' . $Param{RelevantLinkTypes}
+                           . ';MaxSearchDepth=' . $Param{MaxSearchDepth}
+                           . ';AdjustingStrength=' . $Param{AdjustingStrength};
                 }
 
                 $LayoutObject->Block(

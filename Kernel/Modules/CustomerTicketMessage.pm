@@ -1146,7 +1146,7 @@ sub Run {
                     Data         => $Services,
                     SelectedID   => $GetParam{ServiceID},
                     PossibleNone => 1,
-                    Translation  => 0,
+                    Translation  => $ConfigObject->Get('Ticket::ServiceTranslation') || 0,
                     TreeView     => $TreeView,
                     Max          => 100,
                 },
@@ -1155,7 +1155,7 @@ sub Run {
                     Data         => $SLAs,
                     SelectedID   => $GetParam{SLAID},
                     PossibleNone => 1,
-                    Translation  => 0,
+                    Translation  => $ConfigObject->Get('Ticket::SLATranslation') || 0,
                     Max          => 100,
                 },
                 {
@@ -1557,7 +1557,7 @@ sub _MaskNew {
                 PossibleNone => 1,
                 TreeView     => $TreeView,
                 Sort         => 'TreeView',
-                Translation  => 0,
+                Translation  => $ConfigObject->Get('Ticket::ServiceTranslation') || 0,
                 Max          => 200,
             );
 
@@ -1575,7 +1575,7 @@ sub _MaskNew {
                 PossibleNone => 1,
                 TreeView     => $TreeView,
                 Sort         => 'TreeView',
-                Translation  => 0,
+                Translation  => $ConfigObject->Get('Ticket::ServiceTranslation') || 0,
                 Max          => 200,
             );
             $LayoutObject->Block(
@@ -1607,7 +1607,7 @@ sub _MaskNew {
                     Class        => "Validate_Required Modernize " . ( $Param{Errors}->{SLAIDInvalid} || '' ),
                     PossibleNone => 1,
                     Sort         => 'AlphanumericValue',
-                    Translation  => 0,
+                    Translation  => $ConfigObject->Get('Ticket::SLATranslation') || 0,
                     Max          => 200,
                 );
 
@@ -1624,7 +1624,7 @@ sub _MaskNew {
                     Class        => 'Modernize',
                     PossibleNone => 1,
                     Sort         => 'AlphanumericValue',
-                    Translation  => 0,
+                    Translation  => $ConfigObject->Get('Ticket::SLATranslation') || 0,
                     Max          => 200,
                 );
 

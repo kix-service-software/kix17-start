@@ -600,15 +600,15 @@ Return
     $Data = {
         'HardDisk::2' => {
             Value => 'HD2',
-            Name  => 'Hard Disk',
+            Name  => Hard Disk::2'
          },
         'CPU::1' => {
             Value => '',
-            Name  => 'CPU',
+            Name  => 'CPU::1',
         },
         'HardDisk::2::Capacity::1' => {
             Value => '780 GB',
-            Name  => 'Capacity',
+            Name  => 'Hard Disk::2::Capacity::1',
         },
     };
 
@@ -662,9 +662,16 @@ sub _XMLData2Hash {
                 $Prefix = $Param{Prefix} . '::' . $Prefix;
             }
 
+            my $Name = $Kernel::OM->Get('Kernel::Output::HTML::Layout')->{LanguageObject}->Translate($Item->{Name})
+                . '::'
+                . $Counter;
+            if ( $Param{Prefix} ) {
+                $Name = $Data->{$Param{Prefix}}->{Name} . '::' . $Name;
+            }
+
             # store the item in hash
             $Data->{$Prefix} = {
-                Name  => $Item->{Name},
+                Name  => $Name,
                 Value => $Value,
             };
 
