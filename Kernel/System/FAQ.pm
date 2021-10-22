@@ -465,6 +465,11 @@ END
         $Field = $Row[0] || '';
     }
 
+    # COMPAT: replace otrs path with kix path
+    my $Search  = 'src="/otrs/index.pl';
+    my $Replace = 'src="/' . $Kernel::OM->Get('Kernel::Config')->Get('ScriptAlias') . 'index.pl';
+    $Field =~ s/\Q$Search\E/$Replace/g;
+
     if ( ref $Cache eq 'HASH' ) {
 
         # Cache file for ItemID already exists, add field data.

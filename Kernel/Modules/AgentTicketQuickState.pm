@@ -268,6 +268,13 @@ sub Run {
             $StateData{TypeName}
             && $StateData{TypeName} =~ /^close/i
         ) {
+            # set unlock on close state
+            $TicketObject->TicketLockSet(
+                TicketID => $Self->{TicketID},
+                Lock     => 'unlock',
+                UserID   => $Self->{UserID},
+            );
+
             # get agent preferences
             my %Preferences         = $UserObject->GetPreferences( UserID => $Self->{UserID} );
             my $RedirectDestination = $Preferences{RedirectAfterTicketClose} || '0';

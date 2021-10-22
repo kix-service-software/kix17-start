@@ -241,6 +241,7 @@ $('#AddDynamicField').on('click',function(){
                             [% Data.TreeNameString %]
                             <div id="TreeNameError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
                             <div id="TreeNameServerError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
+                            <p class="FieldExplanation">[% Translate("You may not use '::' within the name") | html %]</p>
                         </div>
                         <div class="Clear"></div>
                         <label for="DynamicField">[% Translate("Valid") | html %]:</label>

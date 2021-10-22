@@ -1311,6 +1311,9 @@ sub VersionDelete {
 return a config item list as an array reference
 
     my $ConfigItemIDs = $ConfigItemObject->VersionSearch(
+        # Use VersionSearch as a config item filter on a predefined config item list
+        ConfigItemID => [1234, 1235],    # (optional)
+
         Name         => 'The Name',      # (optional)
         ClassIDs     => [ 9, 8, 7, 6 ],  # (optional)
         DeplStateIDs => [ 321, 123 ],    # (optional)
@@ -1483,6 +1486,7 @@ sub VersionSearch {
 
     # set array params
     my %ArrayParams = (
+        ConfigItemID => 'vr.configitem_id',
         ClassIDs     => 'ci.id = vr.configitem_id AND ci.class_id',
         DeplStateIDs => 'vr.depl_state_id',
         InciStateIDs => 'vr.inci_state_id',

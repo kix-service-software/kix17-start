@@ -1034,23 +1034,20 @@ sub ServiceSearch {
     $Param{Limit} ||= 1000;
 
     # create sql query
-    my $SQL
-        = "SELECT id FROM service WHERE valid_id IN ( ${\(join ', ', $Kernel::OM->Get('Kernel::System::Valid')->ValidIDsGet())} )";
-
-    my @Bind;
+    my $SQL  = "SELECT id FROM service WHERE valid_id IN ( ${\(join ', ', $Kernel::OM->Get('Kernel::System::Valid')->ValidIDsGet())} )";
+    my @Bind = ();
 
     if ( $Param{Name} ) {
+        my %QueryCondition = $Self->{DBObject}->QueryCondition(
+            Key          => 'name',
+            Value        => $Param{Name},
+            SearchPrefix => '%',
+            SearchSuffix => '%',
+            BindMode     => 1,
+        );
 
-        # quote
-        $Param{Name} = $Self->{DBObject}->Quote( $Param{Name}, 'Like' );
-
-        # replace * with % and clean the string
-        $Param{Name} =~ s{ \*+ }{%}xmsg;
-        $Param{Name} =~ s{ %+ }{%}xmsg;
-        my $LikeString = '%' . $Param{Name} . '%';
-        push @Bind, \$LikeString;
-
-        $SQL .= " AND name LIKE ?";
+        $SQL .= ' AND ' . $QueryCondition{SQL};
+        push( @Bind, @{ $QueryCondition{Values} } );
     }
 # ---
 # GeneralCatalog

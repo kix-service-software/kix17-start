@@ -5905,29 +5905,42 @@ sub _LookupValue {
 sub _GetResponsibles {
     my ( $Self, %Param ) = @_;
 
-    # get users
-    my %ShownUsers;
-    my %AllGroupsMembers = $Kernel::OM->Get('Kernel::System::User')->UserList(
-        Type  => 'Long',
+    # get needed objects
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+    my $GroupObject  = $Kernel::OM->Get('Kernel::System::Group');
+    my $QueueObject  = $Kernel::OM->Get('Kernel::System::Queue');
+    my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
+    my $UserObject   = $Kernel::OM->Get('Kernel::System::User');
+
+    # get available permissions and set permission group type accordingly.
+    my $ConfigPermissions   = $ConfigObject->Get('System::Permission');
+    my $PermissionGroupType = ( grep { $_ eq 'responsible' } @{$ConfigPermissions} ) ? 'responsible' : 'rw';
+
+    # get login list of users
+    my %UserLoginList = $UserObject->UserList(
+        Type  => 'Short',
         Valid => 1,
     );
 
-    # get needed objects
-    my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
-    my $QueueObject  = $Kernel::OM->Get('Kernel::System::Queue');
-    my $GroupObject  = $Kernel::OM->Get('Kernel::System::Group');
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-
-    # if we are updating a ticket show the full list of possible responsibles
+    # if we are updating a ticket show the full list of possible owners
     if ( $Param{TicketID} ) {
-        if ( $Param{QueueID} && !$Param{AllUsers} ) {
-            my $GID = $QueueObject->GetQueueGroupID( QueueID => $Param{QueueID} );
+        if (
+            $Param{QueueID}
+            && !$Param{AllUsers}
+        ) {
+            my $GID = $QueueObject->GetQueueGroupID(
+                QueueID => $Param{QueueID}
+            );
+
             my %MemberList = $GroupObject->PermissionGroupGet(
                 GroupID => $GID,
-                Type    => 'rw',
+                Type    => $PermissionGroupType,
             );
-            for my $UserID ( sort keys %MemberList ) {
-                $ShownUsers{$UserID} = $AllGroupsMembers{$UserID};
+
+            for my $MemberKey ( keys( %MemberList ) ) {
+                if ( $UserLoginList{ $MemberKey } ) {
+                    $ACLUsers{ $MemberKey } = $UserLoginList{ $MemberKey };
+                }
             }
         }
     }
@@ -5936,60 +5949,78 @@ sub _GetResponsibles {
         # the StartActivityDialog does not provide a TicketID and it could be that also there
         # is no QueueID information. Get the default QueueID for this matters.
         if ( !$Param{QueueID} ) {
-            my $Queue = $ConfigObject->Get("Process::DefaultQueue");
+            my $Queue   = $ConfigObject->Get("Process::DefaultQueue");
             my $QueueID = $QueueObject->QueueLookup( Queue => $Queue );
-            if ($QueueID) {
+            if ( $QueueID ) {
                 $Param{QueueID} = $QueueID;
             }
         }
 
         # just show only users with selected custom queue
-        if ( $Param{QueueID} && !$Param{ResponsibleAll} ) {
-            my @UserIDs = $TicketObject->GetSubscribedUserIDsByQueueID(%Param);
-            for my $KeyGroupMember ( sort keys %AllGroupsMembers ) {
+        if (
+            $Param{QueueID}
+            && !$Param{OwnerAll}
+        ) {
+            my @UserIDs = $TicketObject->GetSubscribedUserIDsByQueueID( %Param );
+            for my $GroupMemberKey ( keys( %UserLoginList ) ) {
                 my $Hit = 0;
+                USERID:
                 for my $UID (@UserIDs) {
-                    if ( $UID eq $KeyGroupMember ) {
+                    if ( $UID eq $GroupMemberKey ) {
                         $Hit = 1;
+    
+                        last USERID;
                     }
                 }
                 if ( !$Hit ) {
-                    delete $AllGroupsMembers{$KeyGroupMember};
+                    delete( $UserLoginList{ $GroupMemberKey } );
                 }
             }
         }
 
         # show all system users
         if ( $ConfigObject->Get('Ticket::ChangeOwnerToEveryone') ) {
-            %ShownUsers = %AllGroupsMembers;
+            %ACLUsers = %UserLoginList;
         }
 
         # show all subscribed users who have the appropriate permission in the queue group
         elsif ( $Param{QueueID} ) {
-            my $GID = $QueueObject->GetQueueGroupID( QueueID => $Param{QueueID} );
+            my $GID = $QueueObject->GetQueueGroupID(
+                QueueID => $Param{QueueID}
+            );
+
             my %MemberList = $GroupObject->PermissionGroupGet(
                 GroupID => $GID,
-                Type    => 'rw',
+                Type    => $PermissionGroupType,
             );
-            for my $KeyMember ( sort keys %MemberList ) {
-                if ( $AllGroupsMembers{$KeyMember} ) {
-                    $ShownUsers{$KeyMember} = $AllGroupsMembers{$KeyMember};
+
+            for my $MemberKey ( keys( %MemberList ) ) {
+                if ( $UserLoginList{ $MemberKey } ) {
+                    $ACLUsers{ $MemberKey } = $UserLoginList{ $MemberKey };
                 }
             }
         }
     }
 
-    # workflow
+    # apply acl
     my $ACL = $TicketObject->TicketAcl(
         %Param,
         Action        => $Self->{Action},
         ReturnType    => 'Ticket',
         ReturnSubType => 'Responsible',
-        Data          => \%ShownUsers,
+        Data          => \%ACLUsers,
         UserID        => $Self->{UserID},
     );
+    if ( $ACL ) {
+        %ACLUsers = $TicketObject->TicketAclData();
+    }
 
-    return { $TicketObject->TicketAclData() } if $ACL;
+    # prepare display data
+    my %UserNameList = $UserObject->UserList(
+        Type  => 'Long',
+        Valid => 1,
+    );
+    my %ShownUsers = map( { $_ => $UserNameList{$_} } keys( %ACLUsers ) );
 
     return \%ShownUsers;
 }
@@ -5997,33 +6028,42 @@ sub _GetResponsibles {
 sub _GetOwners {
     my ( $Self, %Param ) = @_;
 
-    # get users
-    my %ShownUsers;
-    my %AllGroupsMembers = $Kernel::OM->Get('Kernel::System::User')->UserList(
-        Type  => 'Long',
+    # get needed objects
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+    my $GroupObject  = $Kernel::OM->Get('Kernel::System::Group');
+    my $QueueObject  = $Kernel::OM->Get('Kernel::System::Queue');
+    my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
+    my $UserObject   = $Kernel::OM->Get('Kernel::System::User');
+
+    # get available permissions and set permission group type accordingly.
+    my $ConfigPermissions   = $ConfigObject->Get('System::Permission');
+    my $PermissionGroupType = ( grep { $_ eq 'owner' } @{$ConfigPermissions} ) ? 'owner' : 'rw';
+
+    # get login list of users
+    my %UserLoginList = $UserObject->UserList(
+        Type  => 'Short',
         Valid => 1,
     );
 
-    # get needed objects
-    my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
-    my $QueueObject  = $Kernel::OM->Get('Kernel::System::Queue');
-    my $GroupObject  = $Kernel::OM->Get('Kernel::System::Group');
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-
-    # Get available permissions and set permission group type accordingly.
-    my $ConfigPermissions = $ConfigObject->Get('System::Permission');
-    my $PermissionGroupType = ( grep { $_ eq 'owner' } @{$ConfigPermissions} ) ? 'owner' : 'rw';
-
     # if we are updating a ticket show the full list of possible owners
     if ( $Param{TicketID} ) {
-        if ( $Param{QueueID} && !$Param{AllUsers} ) {
-            my $GID = $QueueObject->GetQueueGroupID( QueueID => $Param{QueueID} );
+        if (
+            $Param{QueueID}
+            && !$Param{AllUsers}
+        ) {
+            my $GID = $QueueObject->GetQueueGroupID(
+                QueueID => $Param{QueueID}
+            );
+
             my %MemberList = $GroupObject->PermissionGroupGet(
                 GroupID => $GID,
                 Type    => $PermissionGroupType,
             );
-            for my $UserID ( sort keys %MemberList ) {
-                $ShownUsers{$UserID} = $AllGroupsMembers{$UserID};
+
+            for my $MemberKey ( keys( %MemberList ) ) {
+                if ( $UserLoginList{ $MemberKey } ) {
+                    $ACLUsers{ $MemberKey } = $UserLoginList{ $MemberKey };
+                }
             }
         }
     }
@@ -6032,60 +6072,78 @@ sub _GetOwners {
         # the StartActivityDialog does not provide a TicketID and it could be that also there
         # is no QueueID information. Get the default QueueID for this matters.
         if ( !$Param{QueueID} ) {
-            my $Queue = $ConfigObject->Get("Process::DefaultQueue");
+            my $Queue   = $ConfigObject->Get("Process::DefaultQueue");
             my $QueueID = $QueueObject->QueueLookup( Queue => $Queue );
-            if ($QueueID) {
+            if ( $QueueID ) {
                 $Param{QueueID} = $QueueID;
             }
         }
 
         # just show only users with selected custom queue
-        if ( $Param{QueueID} && !$Param{OwnerAll} ) {
-            my @UserIDs = $TicketObject->GetSubscribedUserIDsByQueueID(%Param);
-            for my $KeyGroupMember ( sort keys %AllGroupsMembers ) {
+        if (
+            $Param{QueueID}
+            && !$Param{OwnerAll}
+        ) {
+            my @UserIDs = $TicketObject->GetSubscribedUserIDsByQueueID( %Param );
+            for my $GroupMemberKey ( keys( %UserLoginList ) ) {
                 my $Hit = 0;
+                USERID:
                 for my $UID (@UserIDs) {
-                    if ( $UID eq $KeyGroupMember ) {
+                    if ( $UID eq $GroupMemberKey ) {
                         $Hit = 1;
+    
+                        last USERID;
                     }
                 }
                 if ( !$Hit ) {
-                    delete $AllGroupsMembers{$KeyGroupMember};
+                    delete( $UserLoginList{ $GroupMemberKey } );
                 }
             }
         }
 
         # show all system users
         if ( $ConfigObject->Get('Ticket::ChangeOwnerToEveryone') ) {
-            %ShownUsers = %AllGroupsMembers;
+            %ACLUsers = %UserLoginList;
         }
 
         # show all subscribed users who have the appropriate permission in the queue group
         elsif ( $Param{QueueID} ) {
-            my $GID = $QueueObject->GetQueueGroupID( QueueID => $Param{QueueID} );
+            my $GID = $QueueObject->GetQueueGroupID(
+                QueueID => $Param{QueueID}
+            );
+
             my %MemberList = $GroupObject->PermissionGroupGet(
                 GroupID => $GID,
                 Type    => $PermissionGroupType,
             );
-            for my $KeyMember ( sort keys %MemberList ) {
-                if ( $AllGroupsMembers{$KeyMember} ) {
-                    $ShownUsers{$KeyMember} = $AllGroupsMembers{$KeyMember};
+
+            for my $MemberKey ( keys( %MemberList ) ) {
+                if ( $UserLoginList{ $MemberKey } ) {
+                    $ACLUsers{ $MemberKey } = $UserLoginList{ $MemberKey };
                 }
             }
         }
     }
 
-    # workflow
+    # apply acl
     my $ACL = $TicketObject->TicketAcl(
         %Param,
         Action        => $Self->{Action},
         ReturnType    => 'Ticket',
         ReturnSubType => 'Owner',
-        Data          => \%ShownUsers,
+        Data          => \%ACLUsers,
         UserID        => $Self->{UserID},
     );
+    if ( $ACL ) {
+        %ACLUsers = $TicketObject->TicketAclData();
+    }
 
-    return { $TicketObject->TicketAclData() } if $ACL;
+    # prepare display data
+    my %UserNameList = $UserObject->UserList(
+        Type  => 'Long',
+        Valid => 1,
+    );
+    my %ShownUsers = map( { $_ => $UserNameList{$_} } keys( %ACLUsers ) );
 
     return \%ShownUsers;
 }

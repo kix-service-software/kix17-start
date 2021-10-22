@@ -4733,6 +4733,9 @@ sub Data {
         = 'Wählen Sie, ob das Kontextmenü des Browsers im Richtext Editor genutzt werden soll. Wird das Kontextmemü des Browsers verwendet, kann beispielsweise dessen Rechtschreibprüfung genutzt werden.';
     # EO Richtext browser context menu
 
+    # AdminDependingDynamicField field explanation
+    $Lang->{'You may not use \'::\' within the name'} = 'Im Namen darf \'::\' nicht verwendet werden';
+
     return 0;
 }
 

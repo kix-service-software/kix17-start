@@ -207,6 +207,9 @@ one or more ticket entries in one call.
                             MimeType
                             IncomingTime
 
+                            # if SysConfig 'Ticket::Frontend::AccountTime' is activated, accounted time is provided
+                            TimeUnit
+
                             # If DynamicFields => 1 was passed, you'll get an entry like this for each dynamic field:
                             DynamicField => [
                                 {

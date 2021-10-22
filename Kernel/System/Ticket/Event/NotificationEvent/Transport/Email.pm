@@ -128,6 +128,7 @@ sub SendNotification {
             next FIELDRECIPIENT if !$FieldRecipient;
 
             my $AddressLine = '';
+            my $UserLogin   = '';
             # handle dynamic field by type
             if ($Recipient{DynamicFieldType} eq 'User') {
                 my %UserData = $UserObject->GetUserData(
@@ -136,6 +137,9 @@ sub SendNotification {
                 );
                 next FIELDRECIPIENT if !$UserData{UserEmail};
                 $AddressLine = $UserData{UserEmail};
+                if ( $Recipient{Type} eq 'Agent' ) {
+                    $UserLogin = $UserData{UserLogin};
+                }
             } elsif ($Recipient{DynamicFieldType} eq 'CustomerUser') {
                 my %CustomerUser = $CustomerUserObject->CustomerUserDataGet(
                     User => $FieldRecipient,
@@ -150,6 +154,7 @@ sub SendNotification {
             my %DFRecipient = (
                 Realname  => '',
                 UserEmail => $AddressLine,
+                UserLogin => $UserLogin,
                 Type      => $Recipient{Type},
             );
 
@@ -161,7 +166,7 @@ sub SendNotification {
 
         # handle recipients
         for my $DFRecipient (@DFRecipients) {
-            $Self->SendNotification(
+            my $Success = $Self->SendNotification(
                 TicketID              => $Param{TicketID},
                 UserID                => $Param{UserID},
                 Notification          => $Param{Notification},
@@ -170,6 +175,21 @@ sub SendNotification {
                 Event                 => $Param{Event},
                 Attachments           => $Param{Attachments},
             );
+
+            if (
+                $Success
+                && $DFRecipient->{Type} eq 'Agent'
+                && $DFRecipient->{UserLogin}
+            ) {
+
+                # write history
+                $TicketObject->HistoryAdd(
+                    TicketID     => $Param{TicketID},
+                    HistoryType  => 'SendAgentNotification',
+                    Name         => "\%\%$Param{Notification}->{Name}\%\%$DFRecipient->{UserLogin}\%\%Email",
+                    CreateUserID => $Param{UserID},
+                );
+            }
         }
 
         # done
