@@ -1437,8 +1437,10 @@ sub _TicketCacheClear {
         Key  => 'ArticleIndex::' . $Param{TicketID} . '::ALL'
     );
 
-    # TicketSearch - enclosed in 'try' to catch error messages from bulk action
+    # TicketSearch - enclosed in 'try' to catch error messages from bulk action and ignore warnings
     try {
+        local $SIG{__WARN__} = sub {};
+
         $CacheObject->CleanUp(
             Type => 'TicketSearch',
         );
