@@ -41,30 +41,26 @@ sub Run {
     # get needed params
     my $Search = $Self->{ParamObject}->GetParam( Param => 'Term' ) || '';
 
-    $Search =~ s/\_/\./g;
-    $Search =~ s/\%/\.\*/g;
-    $Search =~ s/\*/\.\*/g;
-
     # get service list
-    my %ServiceList = $Self->{ServiceObject}->ServiceList(
-        Valid  => 1,
+    my @ServiceList = $Self->{ServiceObject}->ServiceSearch(
+        Name   => $Search,
         UserID => 1,
     );
 
     # build data
     my @Data;
-    for my $ServiceID ( keys( %ServiceList ) ) {
-        my $ServiceName = $ServiceList{$ServiceID};
+    for my $ServiceID ( @ServiceList ) {
+        my $ServiceName = $Self->{ServiceObject}->ServiceLookup(
+            ServiceID => $ServiceID,
+        );
         if ( $Self->{ConfigObject}->Get('Ticket::ServiceTranslation') ) {
             $ServiceName = $Self->{LayoutObject}->{LanguageObject}->Translate( $ServiceName );
         }
 
-        if ( $ServiceName =~ /$Search/i ) {
-            push @Data, {
-                ServiceKey   => $ServiceID,
-                ServiceValue => $ServiceName,
-            };
-        }
+        push @Data, {
+            ServiceKey   => $ServiceID,
+            ServiceValue => $ServiceName,
+        };
     }
 
     @Data = sort{ $a->{ServiceValue} cmp $b->{ServiceValue} } ( @Data );
