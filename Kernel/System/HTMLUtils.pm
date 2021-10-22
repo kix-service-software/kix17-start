@@ -1147,7 +1147,7 @@ sub _TagStartHandler {
 
                     return;
                 }
-                else {
+                elsif ( lc($TagName) eq 'style' ) {
                     # flag check for style expression
                     $Self->{Flag}->{StyleExpression} = 1;
                 }
