@@ -616,7 +616,10 @@ sub _Show {
     );
 
     # if "Actions per Ticket" (Inline Action Row) is active
-    if ( $Param{Config}->{TicketActionsPerTicket} ) {
+    if (
+        $Param{Config}->{TicketActionsPerTicket}
+        && scalar( @ActionItems )
+    ) {
         $LayoutObject->Block(
             Name => 'InlineActionRow',
             Data => \%Param,
