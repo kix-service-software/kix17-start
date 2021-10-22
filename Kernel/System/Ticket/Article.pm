@@ -1320,6 +1320,9 @@ Article:
     MimeType
     IncomingTime
 
+    # if SysConfig 'Ticket::Frontend::AccountTime' is activated, accounted time is provided
+    TimeUnit
+
     # If DynamicFields => 1 was passed, you'll get an entry like this for each dynamic field:
     DynamicField_X     => 'value_x',
 
@@ -1626,6 +1629,16 @@ sub ArticleGet {
         }
 
         push @Content, { %Ticket, %Data };
+    }
+
+    # get accounted time if activated
+    my $AccountTime = $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Frontend::AccountTime');
+    if ( $AccountTime ) {
+        for my $Article (@Content) {
+            $Article->{TimeUnit} = $Self->ArticleAccountedTimeGet(
+                ArticleID => $Article->{ArticleID}
+            );
+        }
     }
 
     # check if need to return dynamic fields
