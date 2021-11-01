@@ -63,6 +63,7 @@ sub new {
         'IsFiltrable'                  => 1,
         'IsStatsCondition'             => 1,
         'IsCustomerInterfaceCapable'   => 1,
+        'CanRandomize'                 => 1,
     };
 
     # get the Dynamic Field Backend custom extensions
@@ -767,6 +768,7 @@ sub TemplateValueTypeGet {
 sub RandomValueSet {
     my ( $Self, %Param ) = @_;
 
+    # get random value
     my $Value = int( rand(2) );
 
     my $Success = $Self->ValueSet(

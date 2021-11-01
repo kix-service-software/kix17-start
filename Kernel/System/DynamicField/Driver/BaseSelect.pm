@@ -746,7 +746,10 @@ sub TemplateValueTypeGet {
 sub RandomValueSet {
     my ( $Self, %Param ) = @_;
 
-    my $Value = int( rand(500) );
+    # get random value
+    my $PossibleValues = $Self->PossibleValuesGet( %Param );
+    my @PossibleKeys   = keys( %{ $PossibleValues } );
+    my $Value          = $PossibleKeys[ rand( @PossibleKeys ) ];
 
     my $Success = $Self->ValueSet(
         %Param,
