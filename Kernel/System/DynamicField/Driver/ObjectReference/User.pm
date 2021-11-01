@@ -63,6 +63,7 @@ sub new {
         'IsFiltrable'                  => 0,
         'IsStatsCondition'             => 1,
         'IsCustomerInterfaceCapable'   => 1,
+        'CanRandomize'                 => 1,
     };
 
     # get the Dynamic Field Driver custmom extensions
@@ -1030,6 +1031,37 @@ sub TemplateValueTypeGet {
             'Search_' . $FieldName => $SearchValueType,
             }
     }
+}
+
+sub RandomValueSet {
+    my ( $Self, %Param ) = @_;
+
+    # get random value
+    my %PossibleValues = $Self->{UserObject}->UserList(
+        NoOutOfOffice => 1,
+        Valid         => 1,
+    );
+    # set none value if defined on field config
+    if ( $Param{DynamicFieldConfig}->{Config}->{PossibleNone} ) {
+        $PossibleValues{''} = '-';
+    }
+    my @PossibleKeys   = keys( %PossibleValues );
+    my $Value          = $PossibleKeys[ rand( @PossibleKeys ) ];
+
+    my $Success = $Self->ValueSet(
+        %Param,
+        Value => $Value,
+    );
+
+    if ( !$Success ) {
+        return {
+            Success => 0,
+        };
+    }
+    return {
+        Success => 1,
+        Value   => $Value,
+    };
 }
 
 sub ObjectMatch {

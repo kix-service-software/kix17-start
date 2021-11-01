@@ -21,6 +21,7 @@ our @ObjectDependencies = (
     'Kernel::System::DB',
     'Kernel::System::DynamicFieldValue',
     'Kernel::System::Log',
+    'Kernel::System::Main',
 );
 
 =head1 NAME
@@ -574,7 +575,8 @@ sub TemplateValueTypeGet {
 sub RandomValueSet {
     my ( $Self, %Param ) = @_;
 
-    my $Value = int( rand(500) );
+    # get random value
+    my $Value = $Kernel::OM->Get('Kernel::System::Main')->GenerateRandomString();
 
     my $Success = $Self->ValueSet(
         %Param,

@@ -41,8 +41,9 @@ sub Run {
     my $JSON = '';
 
     # get needed params
-    my $Search  = $Self->{ParamObject}->GetParam( Param => 'Term' )    || '';
-    my $ClassID = $Self->{ParamObject}->GetParam( Param => 'ClassID' ) || 0;
+    my $Search  = $Self->{ParamObject}->GetParam( Param => 'Term' )       || '';
+    my $ClassID = $Self->{ParamObject}->GetParam( Param => 'ClassID' )    || 0;
+    my $Limit   = $Self->{ParamObject}->GetParam( Param => 'MaxResults' ) || 0;
 
     # get class list
     my $ClassList = $Self->{GeneralCatalogObject}->ItemList(
@@ -72,6 +73,7 @@ sub Run {
     my $CISearchListRef = $Self->{ConfigItemObject}->ConfigItemSearchExtended(
         Name     => '*' . $Search . '*',
         ClassIDs => \@ClassIDArray,
+        Limit    => $Limit,
     );
     my %FoundCIHash = ();
 
@@ -97,34 +99,46 @@ sub Run {
         }
     }
 
-    # search for number....
-    $CISearchListRef = $Self->{ConfigItemObject}->ConfigItemSearchExtended(
-        Number   => '*' . $Search . '*',
-        ClassIDs => \@ClassIDArray,
-    );
+    if (
+        !$Limit
+        || $Limit < scalar( @Data )
+    ) {
 
-    for my $SearchResult ( @{$CISearchListRef} ) {
-
-        # prevent double hits...
-        next if ( $FoundCIHash{$SearchResult} );
-
-        my $CurrVersionData = $Self->{ConfigItemObject}->VersionGet(
-            ConfigItemID => $SearchResult,
-            XMLDataGet   => 0,
+        # search for number....
+        $CISearchListRef = $Self->{ConfigItemObject}->ConfigItemSearchExtended(
+            Number   => '*' . $Search . '*',
+            ClassIDs => \@ClassIDArray,
+            Limit    => $Limit,
         );
-        if (
-            $CurrVersionData
-            &&
-            ( ref($CurrVersionData) eq 'HASH' ) &&
-            $CurrVersionData->{Name} &&
-            $CurrVersionData->{Number}
-        ) {
-            push @Data, {
-                CIClassKey   => $SearchResult,
-                CIClassValue => $CurrVersionData->{Name} . ' (' . $CurrVersionData->{Number} . ')',
-            };
 
-            $FoundCIHash{$SearchResult} = 1;
+        for my $SearchResult ( @{$CISearchListRef} ) {
+
+            # prevent double hits...
+            next if ( $FoundCIHash{$SearchResult} );
+
+            my $CurrVersionData = $Self->{ConfigItemObject}->VersionGet(
+                ConfigItemID => $SearchResult,
+                XMLDataGet   => 0,
+            );
+            if (
+                $CurrVersionData
+                &&
+                ( ref($CurrVersionData) eq 'HASH' ) &&
+                $CurrVersionData->{Name} &&
+                $CurrVersionData->{Number}
+            ) {
+                push @Data, {
+                    CIClassKey   => $SearchResult,
+                    CIClassValue => $CurrVersionData->{Name} . ' (' . $CurrVersionData->{Number} . ')',
+                };
+
+                $FoundCIHash{$SearchResult} = 1;
+
+                last if (
+                    $Limit
+                    && $Limit == scalar( @Data )
+                );
+            }
         }
     }
 
