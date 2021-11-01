@@ -65,6 +65,7 @@ sub new {
         'IsFiltrable'                  => 0,
         'IsStatsCondition'             => 1,
         'IsCustomerInterfaceCapable'   => 1,
+        'CanRandomize'                 => 1,
     };
 
     # get the Dynamic Field Backend custom extensions
@@ -1339,11 +1340,11 @@ sub StatsSearchFieldParameterBuild {
 sub RandomValueSet {
     my ( $Self, %Param ) = @_;
 
-    my $YearValue  = int( rand(40) ) + 1_990;
-    my $MonthValue = int( rand(9) ) + 1;
-    my $DayValue   = int( rand(10) ) + 10;
-
-    my $Value = $YearValue . '-0' . $MonthValue . '-' . $DayValue . ' 00:00:00';
+    # get random value
+    my $Year  = int( rand(40) ) + 2000;
+    my $Month = sprintf( "%02d", int( rand(12) ) + 1 );
+    my $Day   = sprintf( "%02d", int( rand(28) ) + 1 );
+    my $Value = $Year . '-' . $Month . '-' . $Day . ' 00:00:00';
 
     my $Success = $Self->ValueSet(
         %Param,

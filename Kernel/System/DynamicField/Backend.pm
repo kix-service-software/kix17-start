@@ -1811,6 +1811,18 @@ sub RandomValueSet {
         return;
     }
 
+    # check if backend supports RandomValueSet
+    if (
+        !$Self->HasBehavior(
+            DynamicFieldConfig => $Param{DynamicFieldConfig},
+            Behavior           => 'CanRandomize'
+        )
+    ) {
+        return {
+            Success => 0,
+        };
+    }
+
     # call RandomValueSet on the specific backend
     my $Result = $Self->{$DynamicFieldBackend}->RandomValueSet(%Param);
 
