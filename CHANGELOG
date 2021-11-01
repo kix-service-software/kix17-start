@@ -1,6 +1,22 @@
 # Change log of KIX
 * Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.18.0-RC1 (2021/11/01)
+ * (2021/10/27) - Bugfix: KIX17-2106 (unified handling of RandomValueSet for dynamic fields) (millinger)
+ * (2021/10/25) - Bugfix: KIX17-2539 (consider MaxResults parameter for config item autocomplete search) (millinger)
+ * (2021/10/15) - Bugfix: KIX17-2594 (silence warning from cache cleanup for ticket bulk action) (millinger)
+ * (2021/10/14) - Bugfix: KIX17-1625 (remove menu toggle from ticket view 'preview') (millinger)
+ * (2021/10/14) - Bugfix: KIX17-2237 (added field explanation for depending dynamic field tree name) (millinger)
+ * (2021/10/14) - Bugfix: KIX17-1453 (compatibility for otrs faq inline images) (millinger)
+ * (2021/10/14) - Bugfix: KIX17-2570 (keep opening style-tag after link-tag) (millinger)
+ * (2021/10/13) - Bugfix: KIX17-2558 (fixed AgentServiceSearch using regex) (millinger)
+ * (2021/10/13) - Bugfix: KIX17-2076 (escape selector for modernized fields on error highlight) (millinger)
+ * (2021/10/12) - Bugfix: KIX17-1396 (implemented history entry for dynamic field recipients) (millinger)
+ * (2021/10/08) - Bugfix: KIX17-1043 (fix sorting of config item search) (millinger)
+ * (2021/10/07) - Bugfix: KIX17-609 (handle acl for owner and responsible by login, not by name) (millinger)
+ * (2021/10/06) - Bugfix: KIX17-2577 (provide TimeUnit with article data) (millinger)
+ * (2021/10/06) - Bugfix: KIX17-2225 (template in config item link graph can not be cleared) (millinger)
+
 # 17.17.0 (2021/10/21)
  * (2021/10/21) - productive release
  * (2021/09/16) - CR: KIX17-2090 (option to build subject with ticket number for ticket operations) (millinger)
