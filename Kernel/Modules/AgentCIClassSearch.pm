@@ -101,7 +101,7 @@ sub Run {
 
     if (
         !$Limit
-        || $Limit < scalar( @Data )
+        || $Limit > scalar( @Data )
     ) {
 
         # search for number....
