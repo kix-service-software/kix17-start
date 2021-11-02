@@ -97,7 +97,7 @@ sub Run {
 
                         if (
                             !$Self->{$UserAttribute}
-                            || $Self->{$UserAttribute} =~ /$Self->{Config}->{UserAttributeBlacklist}->{$UserAttributeKey}/gm
+                            || $Self->{$UserAttribute} =~ /$Self->{Config}->{UserAttributeBlacklist}->{$UserAttributeKey}/sm
                         ) {
                             $UseTemplate = 0;
                             last RESTRICTION;
@@ -118,7 +118,7 @@ sub Run {
 
                         if (
                             $Self->{$UserAttribute}
-                            && $Self->{$UserAttribute} =~ /$Self->{Config}->{UserAttributeWhitelist}->{$UserAttributeKey}/gm
+                            && $Self->{$UserAttribute} =~ /$Self->{Config}->{UserAttributeWhitelist}->{$UserAttributeKey}/sm
                         ) {
                             $UseTemplate = 1;
                             last RESTRICTION;
