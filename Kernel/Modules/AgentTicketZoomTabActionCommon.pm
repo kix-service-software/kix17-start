@@ -577,6 +577,39 @@ sub Run {
                     $Error{'NewOwnerInvalid'} = 'ServerError';
                 }
             }
+            if (
+                $Config->{Owner}
+                && $GetParam{NewOwnerID}
+            ) {
+                my $PossibleOwners = $Self->_GetOwners(
+                    %GetParam,
+                    %ACLCompatGetParam,
+                    QueueID  => $QueueID,
+                    StateID  => $StateID,
+                    AllUsers => $GetParam{OwnerAll},
+                );
+                if ( !$PossbileOwners->{ $GetParam{NewOwnerID} } ) {
+                    $Error{'NewOwnerInvalid'} = 'ServerError';
+                }
+            }
+
+            # check responsible
+            if (
+                $ConfigObject->Get('Ticket::Responsible')
+                && $Config->{Responsible}
+                && $GetParam{NewResponsibleID}
+            ) {
+                my $PossibleResponsibles = $Self->_GetResponsibles(
+                    %GetParam,
+                    %ACLCompatGetParam,
+                    QueueID  => $QueueID,
+                    StateID  => $StateID,
+                    AllUsers => $GetParam{OwnerAll},
+                );
+                if ( !$PossibleResponsibles->{ $GetParam{NewResponsibleID} } ) {
+                    $Error{'NewResponsibleInvalid'} = 'ServerError';
+                }
+            }
 
             # check title
             if ( $Config->{Title} && !$GetParam{Title} ) {
@@ -2388,7 +2421,7 @@ sub _Mask {
             Data         => \%ShownUsers,
             SelectedID   => $Param{NewResponsibleID} || $InitialSelected{ResponsibleID},
             Name         => 'NewResponsibleID',
-            Class        => 'Modernize',
+            Class        => 'Modernize ' . ( $Param{NewResponsibleInvalid} || '' ),
             PossibleNone => 1,
             Size         => 1,
         );

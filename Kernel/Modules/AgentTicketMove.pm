@@ -741,6 +741,19 @@ sub Run {
             }
         }
 
+        # check owner
+        if ( $GetParam{NewUserID} ) {
+            my $PossibleOwners = $Self->_GetOwners(
+                %GetParam,
+                %ACLCompatGetParam,
+                QueueID  => $GetParam{DestQueueID},
+                AllUsers => $GetParam{OwnerAll},
+            );
+            if ( !$PossbileOwners->{ $GetParam{NewUserID} } ) {
+                $Error{'NewUserInvalid'} = 'ServerError';
+            }
+        }
+
         if ( !$IsUpload ) {
             if ( $Config->{Note} && $Config->{NoteMandatory} ) {
 
@@ -1257,7 +1270,7 @@ sub AgentMove {
         SelectedID   => $Param{NewUserID},
         Translation  => 0,
         PossibleNone => 1,
-        Class        => 'Modernize',
+        Class        => 'Modernize ' . ( $Param{NewUserInvalid} || '' ),
         Filters      => {
             OldOwners => {
                 Name   => $LayoutObject->{LanguageObject}->Translate('Previous Owner'),

@@ -1629,6 +1629,39 @@ sub Run {
             ) {
                 $Error{'TimeUnitsInvalid'} = ' ServerError';
             }
+
+            # check owner
+            if (
+                $ConfigObject->Get('Ticket::Frontend::NewOwnerSelection')
+                && $GetParam{NewUserID}
+            ) {
+                my $PossibleOwners = $Self->_GetOwners(
+                    %GetParam,
+                    %ACLCompatGetParam,
+                    QueueID  => $QueueID,
+                    AllUsers => $GetParam{OwnerAll},
+                );
+                if ( !$PossbileOwners->{ $GetParam{NewUserID} } ) {
+                    $Error{'NewUserInvalid'} = 'ServerError';
+                }
+            }
+
+            # check responsible
+            if (
+                $ConfigObject->Get('Ticket::Responsible')
+                && $ConfigObject->Get('Ticket::Frontend::NewResponsibleSelection')
+                && $GetParam{NewResponsibleID}
+            ) {
+                my $PossibleResponsibles = $Self->_GetResponsibles(
+                    %GetParam,
+                    %ACLCompatGetParam,
+                    QueueID  => $QueueID,
+                    AllUsers => $GetParam{ResponsibleAll},
+                );
+                if ( !$PossibleResponsibles->{ $GetParam{NewResponsibleID} } ) {
+                    $Error{'NewResponsibleInvalid'} = 'ServerError';
+                }
+            }
         }
 
         if (%Error) {
@@ -1946,7 +1979,10 @@ sub Run {
         }
 
         # set owner (if new user id is given)
-        if ( $GetParam{NewUserID} ) {
+        if (
+            $ConfigObject->Get('Ticket::Frontend::NewOwnerSelection')
+            && $GetParam{NewUserID}
+        ) {
             $TicketObject->TicketOwnerSet(
                 TicketID  => $TicketID,
                 NewUserID => $GetParam{NewUserID},
@@ -1972,7 +2008,11 @@ sub Run {
         }
 
         # set responsible (if new user id is given)
-        if ( $GetParam{NewResponsibleID} ) {
+        if (
+            $ConfigObject->Get('Ticket::Responsible')
+            && $ConfigObject->Get('Ticket::Frontend::NewResponsibleSelection')
+            && $GetParam{NewResponsibleID}
+        ) {
             $TicketObject->TicketResponsibleSet(
                 TicketID  => $TicketID,
                 NewUserID => $GetParam{NewResponsibleID},
@@ -3115,7 +3155,7 @@ sub _MaskPhoneNew {
     $Param{OptionStrg} = $LayoutObject->BuildSelection(
         Data         => $Param{Users},
         SelectedID   => $Param{UserSelected},
-        Class        => 'Modernize',
+        Class        => 'Modernize ' . ( $Param{Errors}->{NewUserInvalid} || '' ),
         Translation  => 0,
         Name         => 'NewUserID',
         PossibleNone => 1,
@@ -3426,7 +3466,7 @@ sub _MaskPhoneNew {
             Data       => $Param{ResponsibleUsers},
             SelectedID => $Param{ResponsibleUserSelected},
             Name       => 'NewResponsibleID',
-            Class      => 'Modernize',
+            Class      => 'Modernize ' . ( $Param{Errors}->{NewResponsibleInvalid} || '' ),
         );
         $LayoutObject->Block(
             Name => 'ResponsibleSelection',
