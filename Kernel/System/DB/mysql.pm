@@ -142,7 +142,7 @@ sub Quote {
                 # you must double any \ that you use in LIKE strings. For example, to search for \n, specify it as \\n.
                 # To search for \, specify it as \\\\; this is because the backslashes are stripped once by the parser
                 # and again when the pattern match is made, leaving a single backslash to be matched against.
-                ${$Text} =~ s/\\/$Self->{'DB::LikeQuoteBack'}\\/g;
+                ${$Text} =~ s/\\\\/$Self->{'DB::LikeQuoteBack'}\\$Self->{'DB::LikeQuoteBack'}\\/g;
             }
             if ( $Self->{'DB::QuoteUnderscoreStart'} || $Self->{'DB::QuoteUnderscoreEnd'} ) {
                 ${$Text} =~ s/_/$Self->{'DB::QuoteUnderscoreStart'}_$Self->{'DB::QuoteUnderscoreEnd'}/g;
