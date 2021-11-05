@@ -210,7 +210,7 @@ sub _GetConfigItemXMLData {
         # get the data from xml_storage
         return _GetData(
             ObjectType => 'xml_storage',
-            Where      => $Where,
+            Where      => 'xml_key = \'' . $Param{ObjectID} . '\' AND xml_type = \'ITSM::ConfigItem::%\'',
             OrderBy    => $OrderBy,
         );
     }

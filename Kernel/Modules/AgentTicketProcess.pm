@@ -5529,13 +5529,13 @@ sub _DisplayProcessList {
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
     $Param{ProcessList} = $LayoutObject->BuildSelection(
-        Class => 'Modernize Validate_Required' . ( $Param{Errors}->{ProcessEntityIDInvalid} || ' ' ),
-        Data  => $Param{ProcessList},
-        Name  => 'ProcessEntityID',
+        Class        => 'Modernize Validate_Required' . ( $Param{Errors}->{ProcessEntityIDInvalid} || ' ' ),
+        Data         => $Param{ProcessList},
+        Name         => 'ProcessEntityID',
         SelectedID   => $Param{ProcessEntityID},
         PossibleNone => 1,
         Sort         => 'AlphanumericValue',
-        Translation  => 0,
+        Translation  => 1,
         AutoComplete => 'off',
     );
 
@@ -5922,6 +5922,9 @@ sub _GetResponsibles {
         Valid => 1,
     );
 
+    # prepare acl data
+    my %ACLUsers;
+
     # if we are updating a ticket show the full list of possible owners
     if ( $Param{TicketID} ) {
         if (
@@ -6044,6 +6047,9 @@ sub _GetOwners {
         Type  => 'Short',
         Valid => 1,
     );
+
+    # prepare acl data
+    my %ACLUsers;
 
     # if we are updating a ticket show the full list of possible owners
     if ( $Param{TicketID} ) {

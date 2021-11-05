@@ -159,18 +159,78 @@ sub _BulkDo {
 
     # set owner
     if ( $Config->{Owner} && ( $GetParam{'OwnerID'} || $GetParam{'Owner'} ) ) {
-        $Self->{TicketObject}->TicketOwnerSet(
-            TicketID  => $Param{TicketID},
-            UserID    => $Param{UserID},
-            NewUser   => $GetParam{'Owner'},
-            NewUserID => $GetParam{'OwnerID'},
+        my %AllGroupsMembers = $Self->{UserObject}->UserList(
+            Type  => 'Long',
+            Valid => 1
         );
-        if ( !$Config->{RequiredLock} && $Ticket{StateType} !~ /^close/i ) {
-            $Self->{TicketObject}->TicketLockSet(
-                TicketID => $Param{TicketID},
-                Lock     => 'lock',
-                UserID   => $Param{UserID},
+
+        # only put possible rw agents to possible owner list
+        if ( !$Self->{ConfigObject}->Get('Ticket::ChangeOwnerToEveryone') ) {
+            my %AllGroupsMembersNew;
+            if (
+                $GetParam{'QueueID'}
+                || $GetParam{'Queue'}
+            ) {
+                if ( !$GetParam{'QueueID'} ) {
+                    $GetParam{'QueueID'} = $Kernel::OM->Get('Kernel::System::Queue')->QueueLookup(
+                        Queue => $GetParam{'Queue'},
+                        Valid => 1,
+                    );
+                }
+
+                my $GroupID = $Kernel::OM->Get('Kernel::System::Queue')->GetQueueGroupID( QueueID => $GetParam{'QueueID'} );
+                my %GroupMember = $Kernel::OM->Get('Kernel::System::Group')->PermissionGroupGet(
+                    GroupID => $GroupID,
+                    Type    => 'rw',
+                );
+
+                USER_ID:
+                for my $UserID ( sort keys %GroupMember ) {
+                    next USER_ID if !$AllGroupsMembers{$UserID};
+                    $AllGroupsMembersNew{$UserID} = $AllGroupsMembers{$UserID};
+                }
+                %AllGroupsMembers = %AllGroupsMembersNew;
+            }
+            else {
+                for my $TicketID ( @TicketIDs ) {
+                    my %Ticket = $Self->{TicketObject}->TicketGet(
+                        TicketID      => $TicketID,
+                        DynamicFields => 0,
+                    );
+                    my $GroupID = $Kernel::OM->Get('Kernel::System::Queue')->GetQueueGroupID( QueueID => $Ticket{QueueID} );
+                    my %GroupMember = $Kernel::OM->Get('Kernel::System::Group')->PermissionGroupGet(
+                        GroupID => $GroupID,
+                        Type    => 'rw',
+                    );
+
+                    USER_ID:
+                    for my $UserID ( sort keys %GroupMember ) {
+                        next USER_ID if !$AllGroupsMembers{$UserID};
+                        $AllGroupsMembersNew{$UserID} = $AllGroupsMembers{$UserID};
+                    }
+                    %AllGroupsMembers = %AllGroupsMembersNew;
+                }
+            }
+        }
+        if ( !$GetParam{'OwnerID'} ) {
+            $GetParam{'OwnerID'} = $Self->{UserObject}->UserLookup(
+                UserLogin => $GetParam{'Owner'},
             );
+        }
+        if ( $AllGroupsMembers{ $GetParam{'OwnerID'} } ) {
+            $Self->{TicketObject}->TicketOwnerSet(
+                TicketID  => $Param{TicketID},
+                UserID    => $Param{UserID},
+                NewUser   => $GetParam{'Owner'},
+                NewUserID => $GetParam{'OwnerID'},
+            );
+            if ( !$Config->{RequiredLock} && $Ticket{StateType} !~ /^close/i ) {
+                $Self->{TicketObject}->TicketLockSet(
+                    TicketID => $Param{TicketID},
+                    Lock     => 'lock',
+                    UserID   => $Param{UserID},
+                );
+            }
         }
     }
 
@@ -180,12 +240,72 @@ sub _BulkDo {
         && $Config->{Responsible}
         && ( $GetParam{'ResponsibleID'} || $GetParam{'Responsible'} )
     ) {
-        $Self->{TicketObject}->TicketResponsibleSet(
-            TicketID  => $Param{TicketID},
-            UserID    => $Param{UserID},
-            NewUser   => $GetParam{'Responsible'},
-            NewUserID => $GetParam{'ResponsibleID'},
+        my %AllGroupsMembers = $Self->{UserObject}->UserList(
+            Type  => 'Long',
+            Valid => 1
         );
+
+        # only put possible rw agents to possible responsible list
+        if ( !$Self->{ConfigObject}->Get('Ticket::ChangeOwnerToEveryone') ) {
+            my %AllGroupsMembersNew;
+            if (
+                $GetParam{'QueueID'}
+                || $GetParam{'Queue'}
+            ) {
+                if ( !$GetParam{'QueueID'} ) {
+                    $GetParam{'QueueID'} = $Kernel::OM->Get('Kernel::System::Queue')->QueueLookup(
+                        Queue => $GetParam{'Queue'},
+                        Valid => 1,
+                    );
+                }
+
+                my $GroupID = $Kernel::OM->Get('Kernel::System::Queue')->GetQueueGroupID( QueueID => $GetParam{'QueueID'} );
+                my %GroupMember = $Kernel::OM->Get('Kernel::System::Group')->PermissionGroupGet(
+                    GroupID => $GroupID,
+                    Type    => 'rw',
+                );
+
+                USER_ID:
+                for my $UserID ( sort keys %GroupMember ) {
+                    next USER_ID if !$AllGroupsMembers{$UserID};
+                    $AllGroupsMembersNew{$UserID} = $AllGroupsMembers{$UserID};
+                }
+                %AllGroupsMembers = %AllGroupsMembersNew;
+            }
+            else {
+                for my $TicketID ( @TicketIDs ) {
+                    my %Ticket = $Self->{TicketObject}->TicketGet(
+                        TicketID      => $TicketID,
+                        DynamicFields => 0,
+                    );
+                    my $GroupID = $Kernel::OM->Get('Kernel::System::Queue')->GetQueueGroupID( QueueID => $Ticket{QueueID} );
+                    my %GroupMember = $Kernel::OM->Get('Kernel::System::Group')->PermissionGroupGet(
+                        GroupID => $GroupID,
+                        Type    => 'rw',
+                    );
+
+                    USER_ID:
+                    for my $UserID ( sort keys %GroupMember ) {
+                        next USER_ID if !$AllGroupsMembers{$UserID};
+                        $AllGroupsMembersNew{$UserID} = $AllGroupsMembers{$UserID};
+                    }
+                    %AllGroupsMembers = %AllGroupsMembersNew;
+                }
+            }
+        }
+        if ( !$GetParam{'ResponsibleID'} ) {
+            $GetParam{'ResponsibleID'} = $Self->{UserObject}->UserLookup(
+                UserLogin => $GetParam{'Responsible'},
+            );
+        }
+        if ( $AllGroupsMembers{ $GetParam{'ResponsibleID'} } ) {
+            $Self->{TicketObject}->TicketResponsibleSet(
+                TicketID  => $Param{TicketID},
+                UserID    => $Param{UserID},
+                NewUser   => $GetParam{'Responsible'},
+                NewUserID => $GetParam{'ResponsibleID'},
+            );
+        }
     }
 
     # set priority
