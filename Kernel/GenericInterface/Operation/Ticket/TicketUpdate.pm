@@ -1966,6 +1966,69 @@ sub _TicketUpdate {
 
     # update Ticket->Owner
     if ( $Ticket->{Owner} || $Ticket->{OwnerID} ) {
+        # get available permissions and set permission group type accordingly.
+        my $ConfigPermissions   = $Kernel::OM->Get('Kernel::Config')->Get('System::Permission');
+        my $PermissionGroupType = ( grep { $_ eq 'owner' } @{$ConfigPermissions} ) ? 'owner' : 'rw';
+
+        # get login list of users
+        my %UserLoginList = $UserObject->UserList(
+            Type  => 'Short',
+            Valid => 1,
+        );
+
+        if (
+            !$Ticket->{QueueID}
+            && $Ticket->{Queue}
+        ) {
+            $Ticket->{QueueID} = $Kernel::OM->Get('Kernel::System::Queue')->QueueLookup(
+                Queue => $Ticket->{Queue},
+                Valid => 1,
+            );
+        }
+
+        if (
+            !$Ticket->{OwnerID}
+            && $Ticket->{Owner}
+        ) {
+            $Ticket->{OwnerID} = $Kernel::OM->Get('Kernel::System::User')->UserLookup(
+                UserLogin => $Ticket->{Owner},
+            );
+        }
+
+        # prepare data
+        my %PossibleUsers;
+
+        # allow all system users
+        if ( $Kernel::OM->Get('Kernel::Config')->Get('Ticket::ChangeOwnerToEveryone') ) {
+            %PossibleUser = %UserLoginList;
+        }
+
+        # allow all users who have the appropriate permission in the queue group
+        else {
+            my $GID = $Kernel::OM->Get('Kernel::Systen::Queue')->GetQueueGroupID(
+                QueueID => $Ticket->{QueueID} || $TicketData{QueueID}
+            );
+
+            my %MemberList = $Kernel::OM->Get('Kernel::Systen::Group')->PermissionGroupGet(
+                GroupID => $GID,
+                Type    => $PermissionGroupType,
+            );
+
+            for my $MemberKey ( keys( %MemberList ) ) {
+                if ( $UserLoginList{ $MemberKey } ) {
+                    $PossibleUser{ $MemberKey } = $UserLoginList{ $MemberKey };
+                }
+            }
+        }
+
+        if ( !$PossibleUsers{ $Ticket->{OwnerID} } ) {
+            return {
+                Success => 0,
+                Errormessage =>
+                    'Ticket owner is not valid!',
+            };
+        }
+
         my $Success;
         if (
             defined $Ticket->{Owner}
@@ -2006,6 +2069,69 @@ sub _TicketUpdate {
 
     # update Ticket->Responsible
     if ( $Ticket->{Responsible} || $Ticket->{ResponsibleID} ) {
+        # get available permissions and set permission group type accordingly.
+        my $ConfigPermissions   = $Kernel::OM->Get('Kernel::Config')->Get('System::Permission');
+        my $PermissionGroupType = ( grep { $_ eq 'responsible' } @{$ConfigPermissions} ) ? 'responsible' : 'rw';
+
+        # get login list of users
+        my %UserLoginList = $UserObject->UserList(
+            Type  => 'Short',
+            Valid => 1,
+        );
+
+        if (
+            !$Ticket->{QueueID}
+            && $Ticket->{Queue}
+        ) {
+            $Ticket->{QueueID} = $Kernel::OM->Get('Kernel::System::Queue')->QueueLookup(
+                Queue => $Ticket->{Queue},
+                Valid => 1,
+            );
+        }
+
+        if (
+            !$Ticket->{ResponsibleID}
+            && $Ticket->{Responsible}
+        ) {
+            $Ticket->{ResponsibleID} = $Kernel::OM->Get('Kernel::System::User')->UserLookup(
+                UserLogin => $Ticket->{Responsible},
+            );
+        }
+
+        # prepare data
+        my %PossibleUsers;
+
+        # allow all system users
+        if ( $Kernel::OM->Get('Kernel::Config')->Get('Ticket::ChangeOwnerToEveryone') ) {
+            %PossibleUser = %UserLoginList;
+        }
+
+        # allow all users who have the appropriate permission in the queue group
+        else {
+            my $GID = $Kernel::OM->Get('Kernel::Systen::Queue')->GetQueueGroupID(
+                QueueID => $Ticket->{QueueID} || $TicketData{QueueID}
+            );
+
+            my %MemberList = $Kernel::OM->Get('Kernel::Systen::Group')->PermissionGroupGet(
+                GroupID => $GID,
+                Type    => $PermissionGroupType,
+            );
+
+            for my $MemberKey ( keys( %MemberList ) ) {
+                if ( $UserLoginList{ $MemberKey } ) {
+                    $PossibleUser{ $MemberKey } = $UserLoginList{ $MemberKey };
+                }
+            }
+        }
+
+        if ( !$PossibleUsers{ $Ticket->{ResponsibleID} } ) {
+            return {
+                Success => 0,
+                Errormessage =>
+                    'Ticket responsible is not valid!',
+            };
+        }
+
         my $Success;
         if (
             defined $Ticket->{Responsible}
