@@ -1038,6 +1038,7 @@ sub RandomValueSet {
 
     # get random value
     my %PossibleValues = $Self->{UserObject}->UserList(
+        Type          => 'Short',
         NoOutOfOffice => 1,
         Valid         => 1,
     );
@@ -1045,8 +1046,8 @@ sub RandomValueSet {
     if ( $Param{DynamicFieldConfig}->{Config}->{PossibleNone} ) {
         $PossibleValues{''} = '-';
     }
-    my @PossibleKeys   = keys( %PossibleValues );
-    my $Value          = $PossibleKeys[ rand( @PossibleKeys ) ];
+    my @PossibleLogins = values( %PossibleValues );
+    my $Value          = $PossibleLogins[ rand( @PossibleLogins ) ];
 
     my $Success = $Self->ValueSet(
         %Param,
