@@ -233,6 +233,9 @@ Core.KIX4OTRS.TextModules = (function(TargetNS) {
         if ($('#TextModulesSelectionContainer').closest('form').find('input[name=TicketID]').length) {
             TicketID = $('#TextModulesSelectionContainer').closest('form').find('input[name=TicketID]').val();
         }
+        else if ($('#Compose').find('input[name=TicketID]').length) {
+             TicketID = $('#Compose').find('input[name=TicketID]').val();
+        }
 
         // determine TypeID
         if ($('#TypeID').length) {
@@ -289,6 +292,9 @@ Core.KIX4OTRS.TextModules = (function(TargetNS) {
         // determine TicketID
         if ($('#TextModulesSelectionContainer').closest('form').find('input[name=TicketID]').length) {
             TicketID = $('#TextModulesSelectionContainer').closest('form').find('input[name=TicketID]').val();
+        }
+        else if ($('#Compose').find('input[name=TicketID]').length) {
+             TicketID = $('#Compose').find('input[name=TicketID]').val();
         }
 
         // determine TypeID
