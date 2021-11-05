@@ -584,11 +584,11 @@ sub Run {
                 my $PossibleOwners = $Self->_GetOwners(
                     %GetParam,
                     %ACLCompatGetParam,
-                    QueueID  => $QueueID,
-                    StateID  => $StateID,
+                    QueueID  => $GetParam{NewQueueID} || $Ticket{QueueID},
+                    StateID  => $GetParam{NewStateID} || $Ticket{StateID},
                     AllUsers => $GetParam{OwnerAll},
                 );
-                if ( !$PossbileOwners->{ $GetParam{NewOwnerID} } ) {
+                if ( !$PossibleOwners->{ $GetParam{NewOwnerID} } ) {
                     $Error{'NewOwnerInvalid'} = 'ServerError';
                 }
             }
@@ -602,8 +602,8 @@ sub Run {
                 my $PossibleResponsibles = $Self->_GetResponsibles(
                     %GetParam,
                     %ACLCompatGetParam,
-                    QueueID  => $QueueID,
-                    StateID  => $StateID,
+                    QueueID  => $GetParam{NewQueueID} || $Ticket{QueueID},
+                    StateID  => $GetParam{NewStateID} || $Ticket{StateID},
                     AllUsers => $GetParam{OwnerAll},
                 );
                 if ( !$PossibleResponsibles->{ $GetParam{NewResponsibleID} } ) {

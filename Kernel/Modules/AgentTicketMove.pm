@@ -749,7 +749,7 @@ sub Run {
                 QueueID  => $GetParam{DestQueueID},
                 AllUsers => $GetParam{OwnerAll},
             );
-            if ( !$PossbileOwners->{ $GetParam{NewUserID} } ) {
+            if ( !$PossibleOwners->{ $GetParam{NewUserID} } ) {
                 $Error{'NewUserInvalid'} = 'ServerError';
             }
         }
