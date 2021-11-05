@@ -1,6 +1,17 @@
 # Change log of KIX
 * Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.18.0-RC2 (2021/11/05)
+ * (2021/11/05) - Bugfix: KIX17-2637 (fixed incorrect replacement of placeholders when using text modules) (fjacquemin)
+ * (2021/11/05) - Bugfix: KIX17-2106 (fix random value set of object reference field user) (millinger)
+ * (2021/11/04) - Bugfix: KIX17-609 (fixed global symbol in AgentTicketProcess) (millinger)
+ * (2021/11/04) - Bugfix: KIX17-2262 (changed handling of backslash quotation for mysql) (millinger)
+ * (2021/11/03) - Bugfix: KIX17-2604 (validate provided ticket owner and responsible) (millinger)
+ * (2021/11/03) - Bugfix: KIX17-589 (translate process selection in agent frontend) (millinger)
+ * (2021/11/02) - Bugfix: KIX17-2539 (optimized handling of autocomplete config item reference field) (millinger)
+ * (2021/11/02) - Bugfix: KIX17-2627 (fixed flag for regular expressions of the black and whitelist check of CustomerTicketTemplate) (fjacquemin)
+ * (2021/11/01) - Bugfix: KIX17-2623 (fix autocomplete config item reference search by number) (millinger)
+
 # 17.18.0-RC1 (2021/11/01)
  * (2021/10/27) - Bugfix: KIX17-2106 (unified handling of RandomValueSet for dynamic fields) (millinger)
  * (2021/10/25) - Bugfix: KIX17-2539 (consider MaxResults parameter for config item autocomplete search) (millinger)
