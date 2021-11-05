@@ -5922,6 +5922,9 @@ sub _GetResponsibles {
         Valid => 1,
     );
 
+    # prepare acl data
+    my %ACLUsers;
+
     # if we are updating a ticket show the full list of possible owners
     if ( $Param{TicketID} ) {
         if (
@@ -6044,6 +6047,9 @@ sub _GetOwners {
         Type  => 'Short',
         Valid => 1,
     );
+
+    # prepare acl data
+    my %ACLUsers;
 
     # if we are updating a ticket show the full list of possible owners
     if ( $Param{TicketID} ) {
