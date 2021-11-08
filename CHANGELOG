@@ -1,6 +1,10 @@
 # Change log of KIX
 * Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.18.0-RC3 (2021/11/08)
+ * (2021/11/05) - Bugfix: KIX17-2604 (fix global symbols) (millinger)
+ * (2021/10/07) - Bugfix: KIX17-2583 (unlock ticket when setting close state with AgentTicketQuickState) (millinger)
+
 # 17.18.0-RC2 (2021/11/05)
  * (2021/11/05) - Bugfix: KIX17-2637 (fixed incorrect replacement of placeholders when using text modules) (fjacquemin)
  * (2021/11/05) - Bugfix: KIX17-2106 (fix random value set of object reference field user) (millinger)
