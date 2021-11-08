@@ -2000,7 +2000,7 @@ sub _TicketUpdate {
 
         # allow all system users
         if ( $Kernel::OM->Get('Kernel::Config')->Get('Ticket::ChangeOwnerToEveryone') ) {
-            %PossibleUser = %UserLoginList;
+            %PossibleUsers = %UserLoginList;
         }
 
         # allow all users who have the appropriate permission in the queue group
@@ -2016,7 +2016,7 @@ sub _TicketUpdate {
 
             for my $MemberKey ( keys( %MemberList ) ) {
                 if ( $UserLoginList{ $MemberKey } ) {
-                    $PossibleUser{ $MemberKey } = $UserLoginList{ $MemberKey };
+                    $PossibleUsers{ $MemberKey } = $UserLoginList{ $MemberKey };
                 }
             }
         }
@@ -2103,7 +2103,7 @@ sub _TicketUpdate {
 
         # allow all system users
         if ( $Kernel::OM->Get('Kernel::Config')->Get('Ticket::ChangeOwnerToEveryone') ) {
-            %PossibleUser = %UserLoginList;
+            %PossibleUsers = %UserLoginList;
         }
 
         # allow all users who have the appropriate permission in the queue group
@@ -2119,7 +2119,7 @@ sub _TicketUpdate {
 
             for my $MemberKey ( keys( %MemberList ) ) {
                 if ( $UserLoginList{ $MemberKey } ) {
-                    $PossibleUser{ $MemberKey } = $UserLoginList{ $MemberKey };
+                    $PossibleUsers{ $MemberKey } = $UserLoginList{ $MemberKey };
                 }
             }
         }

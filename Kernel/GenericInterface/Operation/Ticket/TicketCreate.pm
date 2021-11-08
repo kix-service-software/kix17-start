@@ -1633,7 +1633,7 @@ sub _TicketCreate {
 
         # allow all system users
         if ( $Kernel::OM->Get('Kernel::Config')->Get('Ticket::ChangeOwnerToEveryone') ) {
-            %PossibleUser = %UserLoginList;
+            %PossibleUsers = %UserLoginList;
         }
 
         # allow all users who have the appropriate permission in the queue group
@@ -1649,12 +1649,12 @@ sub _TicketCreate {
 
             for my $MemberKey ( keys( %MemberList ) ) {
                 if ( $UserLoginList{ $MemberKey } ) {
-                    $PossibleUser{ $MemberKey } = $UserLoginList{ $MemberKey };
+                    $PossibleUsers{ $MemberKey } = $UserLoginList{ $MemberKey };
                 }
             }
         }
 
-        if ( $PossibleUser{ $OwnerID } ) {
+        if ( $PossibleUsers{ $OwnerID } ) {
             $TicketObject->TicketOwnerSet(
                 TicketID  => $TicketID,
                 NewUserID => $OwnerID,
@@ -1717,7 +1717,7 @@ sub _TicketCreate {
 
         # allow all system users
         if ( $Kernel::OM->Get('Kernel::Config')->Get('Ticket::ChangeOwnerToEveryone') ) {
-            %PossibleUser = %UserLoginList;
+            %PossibleUsers = %UserLoginList;
         }
 
         # allow all users who have the appropriate permission in the queue group
@@ -1733,12 +1733,12 @@ sub _TicketCreate {
 
             for my $MemberKey ( keys( %MemberList ) ) {
                 if ( $UserLoginList{ $MemberKey } ) {
-                    $PossibleUser{ $MemberKey } = $UserLoginList{ $MemberKey };
+                    $PossibleUsers{ $MemberKey } = $UserLoginList{ $MemberKey };
                 }
             }
         }
 
-        if ( $PossibleUser{ $ResponsibleID } ) {
+        if ( $PossibleUsers{ $ResponsibleID } ) {
             $TicketObject->TicketResponsibleSet(
                 TicketID  => $TicketID,
                 NewUserID => $ResponsibleID,

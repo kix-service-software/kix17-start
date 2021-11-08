@@ -588,11 +588,11 @@ sub Run {
                 my $PossibleOwners = $Self->_GetOwners(
                     %GetParam,
                     %ACLCompatGetParam,
-                    QueueID  => $QueueID,
-                    StateID  => $StateID,
+                    QueueID  => $GetParam{NewQueueID} || $Ticket{QueueID},
+                    StateID  => $GetParam{NewStateID} || $Ticket{StateID},
                     AllUsers => $GetParam{OwnerAll},
                 );
-                if ( !$PossbileOwners->{ $GetParam{NewOwnerID} } ) {
+                if ( !$PossibleOwners->{ $GetParam{NewOwnerID} } ) {
                     $Error{'NewOwnerInvalid'} = 'ServerError';
                 }
             }
@@ -606,8 +606,8 @@ sub Run {
                 my $PossibleResponsibles = $Self->_GetResponsibles(
                     %GetParam,
                     %ACLCompatGetParam,
-                    QueueID  => $QueueID,
-                    StateID  => $StateID,
+                    QueueID  => $GetParam{NewQueueID} || $Ticket{QueueID},
+                    StateID  => $GetParam{NewStateID} || $Ticket{StateID},
                     AllUsers => $GetParam{OwnerAll},
                 );
                 if ( !$PossibleResponsibles->{ $GetParam{NewResponsibleID} } ) {
@@ -1662,7 +1662,7 @@ sub Run {
                     Data            => $ListOptionJson->{Services}->{Data},
                     SelectedID      => $GetParam{ServiceID},
                     PossibleNone    => 1,
-                    Translation     => 0,
+                    Translation     => $ConfigObject->Get('Ticket::ServiceTranslation') || 0,
                     TreeView        => $TreeView,
                     DisabledOptions => $ListOptionJson->{Services}->{DisabledOptions} || 0,
                     Max             => 100,
@@ -1672,7 +1672,7 @@ sub Run {
                     Data         => $SLAs,
                     SelectedID   => $GetParam{SLAID},
                     PossibleNone => 1,
-                    Translation  => 0,
+                    Translation  => $ConfigObject->Get('Ticket::SLATranslation') || 0,
                     Max          => 100,
                 },
                 {
