@@ -1588,10 +1588,10 @@ sub Run {
                 my $PossibleOwners = $Self->_GetOwners(
                     %GetParam,
                     %ACLCompatGetParam,
-                    QueueID  => $QueueID,
+                    QueueID  => $NewQueueID,
                     AllUsers => $GetParam{OwnerAll},
                 );
-                if ( !$PossbileOwners->{ $NewUserID } ) {
+                if ( !$PossibleOwners->{ $NewUserID } ) {
                     $Error{'NewUserInvalid'} = 'ServerError';
                 }
             }
@@ -1605,7 +1605,7 @@ sub Run {
                 my $PossibleResponsibles = $Self->_GetResponsibles(
                     %GetParam,
                     %ACLCompatGetParam,
-                    QueueID  => $QueueID,
+                    QueueID  => $NewQueueID,
                     AllUsers => $GetParam{ResponsibleAll},
                 );
                 if ( !$PossibleResponsibles->{ $NewResponsibleID } ) {

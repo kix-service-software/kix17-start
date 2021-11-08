@@ -1099,10 +1099,10 @@ sub Run {
             UserSelected            => $GetParam{QuickTicketOwnerID}           || '',
             ResponsibleUserSelected => $GetParam{QuickTicketResponsibleUserID} || '',
             TimeUnits               => $GetParam{QuickTicketTimeUnits}         || '',
-            ServiceID => $Article{ServiceID} || $GetParam{QuickTicketServiceID},
-            SLAID     => $Article{SLAID}     || $GetParam{QuickTicketSLAID},
-            TypeID    => $GetParam{TypeID}   || '',
-            Priorities => $Self->_GetPriorities(
+            ServiceID               => $Article{ServiceID}                     || $GetParam{QuickTicketServiceID},
+            SLAID                   => $Article{SLAID}                         || $GetParam{QuickTicketSLAID},
+            TypeID                  => $GetParam{TypeID}                       || '',
+            Priorities              => $Self->_GetPriorities(
                 %GetParam,
                 %ACLCompatGetParam,
                 %SplitTicketParam,
@@ -1141,22 +1141,19 @@ sub Run {
                 %ACLCompatGetParam,
                 %SplitTicketParam,
                 CustomerUserID => $CustomerData{UserLogin} || '',
-                QueueID => $Self->{QueueID},
-                TypeID  => $GetParam{TypeID} || $GetParam{DefaultTypeID},
+                QueueID        => $Self->{QueueID},
+                TypeID         => $GetParam{TypeID} || $GetParam{DefaultTypeID},
             ),
             From         => $Article{From},
             Subject      => $Subject,
             Body         => $Body,
-
-            CustomerID => $GetParam{CustomerID} || $Article{CustomerID},
+            CustomerID   => $GetParam{CustomerID} || $Article{CustomerID},
             CustomerUser => $GetParam{QuickTicketCustomer}
                 || $Article{CustomerUserID}
                 || $ParamObject->GetParam( Param => 'SelectedCustomerUser' ),
-
             CustomerData => \%CustomerData,
             Attachments  => \@Attachments,
             LinkTicketID => $GetParam{LinkTicketID} || '',
-
             %SplitTicketParam,
             DynamicFieldHTML => \%DynamicFieldHTML,
             MultipleCustomer => \@MultipleCustomer,
@@ -1638,10 +1635,10 @@ sub Run {
                 my $PossibleOwners = $Self->_GetOwners(
                     %GetParam,
                     %ACLCompatGetParam,
-                    QueueID  => $QueueID,
+                    QueueID  => $NewQueueID || $Self->{QueueID} || 1,
                     AllUsers => $GetParam{OwnerAll},
                 );
-                if ( !$PossbileOwners->{ $GetParam{NewUserID} } ) {
+                if ( !$PossibleOwners->{ $GetParam{NewUserID} } ) {
                     $Error{'NewUserInvalid'} = 'ServerError';
                 }
             }
@@ -1655,7 +1652,7 @@ sub Run {
                 my $PossibleResponsibles = $Self->_GetResponsibles(
                     %GetParam,
                     %ACLCompatGetParam,
-                    QueueID  => $QueueID,
+                    QueueID  => $NewQueueID || $Self->{QueueID} || 1,
                     AllUsers => $GetParam{ResponsibleAll},
                 );
                 if ( !$PossibleResponsibles->{ $GetParam{NewResponsibleID} } ) {
@@ -1777,8 +1774,8 @@ sub Run {
                 CustomerID   => $LayoutObject->Ascii2Html( Text => $CustomerID ),
                 CustomerUser => $CustomerUser,
                 CustomerData => \%CustomerData,
-                FromOptions => $Param{FromOptions},
-                To => $Self->_GetTos(
+                FromOptions  => $Param{FromOptions},
+                To           => $Self->_GetTos(
                     %GetParam,
                     %ACLCompatGetParam,
                     QueueID => $NewQueueID || $Self->{QueueID} || 1,
@@ -1788,9 +1785,9 @@ sub Run {
                 Errors      => \%Error,
                 Attachments => \@Attachments,
                 %GetParam,
-                DynamicFieldHTML     => \%DynamicFieldHTML,
-                MultipleCustomer     => \@MultipleCustomer,
-                FromExternalCustomer => \%FromExternalCustomer,
+                DynamicFieldHTML      => \%DynamicFieldHTML,
+                MultipleCustomer      => \@MultipleCustomer,
+                FromExternalCustomer  => \%FromExternalCustomer,
                 SelectedConfigItemIDs => $GetParam{SelectedConfigItemIDs},
                 PriorityID            => $GetParam{PriorityID} || $GetParam{QuickTicketPriorityID},
                 Priority              => $GetParam{Priority} || $GetParam{QuickTicketPriority},
@@ -2122,78 +2119,79 @@ sub Run {
 # ---
 # ITSMIncidentProblemManagement
 # ---
-            # get the temporarily links
-            my $TempLinkList = $LinkObject->LinkList(
-                Object => 'Ticket',
-                Key    => $Self->{FormID},
-                State  => 'Temporary',
-                UserID => $Self->{UserID},
-            );
+        # get the temporarily links
+        my $TempLinkList = $LinkObject->LinkList(
+            Object => 'Ticket',
+            Key    => $Self->{FormID},
+            State  => 'Temporary',
+            UserID => $Self->{UserID},
+        );
 
-            if ( $TempLinkList && ref $TempLinkList eq 'HASH' && %{$TempLinkList} ) {
+        if ( $TempLinkList && ref $TempLinkList eq 'HASH' && %{$TempLinkList} ) {
 
-                for my $TargetObjectOrg ( sort keys %{$TempLinkList} ) {
+            for my $TargetObjectOrg ( sort keys %{$TempLinkList} ) {
 
-                    # extract typelist
-                    my $TypeList = $TempLinkList->{$TargetObjectOrg};
+                # extract typelist
+                my $TypeList = $TempLinkList->{$TargetObjectOrg};
 
-                    for my $Type ( sort keys %{$TypeList} ) {
+                for my $Type ( sort keys %{$TypeList} ) {
 
-                        # extract direction list
-                        my $DirectionList = $TypeList->{$Type};
+                    # extract direction list
+                    my $DirectionList = $TypeList->{$Type};
 
-                        for my $Direction ( sort keys %{$DirectionList} ) {
+                    for my $Direction ( sort keys %{$DirectionList} ) {
 
-                            for my $TargetKeyOrg ( sort keys %{ $DirectionList->{$Direction} } ) {
+                        for my $TargetKeyOrg ( sort keys %{ $DirectionList->{$Direction} } ) {
 
-                                # delete the temp link
-                                $LinkObject->LinkDelete(
-                                    Object1 => 'Ticket',
-                                    Key1    => $Self->{FormID},
-                                    Object2 => $TargetObjectOrg,
-                                    Key2    => $TargetKeyOrg,
-                                    Type    => $Type,
-                                    UserID  => $Self->{UserID},
-                                );
+                            # delete the temp link
+                            $LinkObject->LinkDelete(
+                                Object1 => 'Ticket',
+                                Key1    => $Self->{FormID},
+                                Object2 => $TargetObjectOrg,
+                                Key2    => $TargetKeyOrg,
+                                Type    => $Type,
+                                UserID  => $Self->{UserID},
+                            );
 
-                                if ($TargetObjectOrg eq 'Person') {
-                                     $Kernel::OM->Get('Kernel::System::AsynchronousExecutor::LinkedTicketPersonExecutor')->AsyncCall(
-                                         TicketID      => $TicketID,
-                                         PersonID      => $TargetKeyOrg,
-                                         PersonHistory => $TargetKeyOrg,
-                                         LinkType      => $Type,
-                                         UserID        => $Self->{UserID},
-                                     );
-                                }
-                                else {
-                                    if ($Direction eq 'Source') {
-                                        $LinkObject->LinkAdd(
-                                            SourceObject => $TargetObjectOrg,
-                                            SourceKey    => $TargetKeyOrg,
-                                            TargetObject => 'Ticket',
-                                            TargetKey    => $TicketID,
-                                            Type         => $Type,
-                                            State        => 'Valid',
-                                            UserID       => $Self->{UserID},
-                                        );
-                                    } else {
-                                        $LinkObject->LinkAdd(
-                                            SourceObject => 'Ticket',
-                                            SourceKey    => $TicketID,
-                                            TargetObject => $TargetObjectOrg,
-                                            TargetKey    => $TargetKeyOrg,
-                                            Type         => $Type,
-                                            State        => 'Valid',
-                                            UserID       => $Self->{UserID},
-                                        );
-                                    }
+                            if ($TargetObjectOrg eq 'Person') {
+                                 $Kernel::OM->Get('Kernel::System::AsynchronousExecutor::LinkedTicketPersonExecutor')->AsyncCall(
+                                     TicketID      => $TicketID,
+                                     PersonID      => $TargetKeyOrg,
+                                     PersonHistory => $TargetKeyOrg,
+                                     LinkType      => $Type,
+                                     UserID        => $Self->{UserID},
+                                 );
+                            }
+                            else {
+                                if ($Direction eq 'Source') {
+                                    $LinkObject->LinkAdd(
+                                        SourceObject => $TargetObjectOrg,
+                                        SourceKey    => $TargetKeyOrg,
+                                        TargetObject => 'Ticket',
+                                        TargetKey    => $TicketID,
+                                        Type         => $Type,
+                                        State        => 'Valid',
+                                        UserID       => $Self->{UserID},
+                                    );
+                                } else {
+                                    $LinkObject->LinkAdd(
+                                        SourceObject => 'Ticket',
+                                        SourceKey    => $TicketID,
+                                        TargetObject => $TargetObjectOrg,
+                                        TargetKey    => $TargetKeyOrg,
+                                        Type         => $Type,
+                                        State        => 'Valid',
+                                        UserID       => $Self->{UserID},
+                                    );
                                 }
                             }
                         }
                     }
                 }
             }
+        }
 # ---
+
         # get redirect screen
         my $NextScreen = $Self->{UserCreateNextMask} || $Self->{ActionReal};
 
