@@ -1284,7 +1284,7 @@ sub _TicketCreate {
         $CustomerID = $Ticket->{CustomerID};
     }
 
-    # get database object
+    # get user object
     my $UserObject = $Kernel::OM->Get('Kernel::System::User');
 
     my $OwnerID;
