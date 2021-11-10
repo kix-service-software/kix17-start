@@ -55,8 +55,8 @@ sub Run {
         . ";ArticleFlag="   . $LayoutObject->LinkEncode( $ArticleFlag )
         . ";View="          . $LayoutObject->LinkEncode( $ParamObject->GetParam(Param => 'View')        || '' )
         . ";Filter="        . $LayoutObject->LinkEncode( $ParamObject->GetParam(Param => 'Filter')      || '' )
-        . ";SortBy="        . $LayoutObject->LinkEncode( $Self->{SortBy} )
-        . ";OrderBy="       . $LayoutObject->LinkEncode( $Self->{OrderBy} )
+        . ";SortBy="        . $LayoutObject->LinkEncode( $SortBy )
+        . ";OrderBy="       . $LayoutObject->LinkEncode( $OrderBy )
         . ";StartHit="      . $LayoutObject->LinkEncode( $ParamObject->GetParam(Param => 'StartHit')    || '')
         . ";StartWindow="   . $LayoutObject->LinkEncode( $ParamObject->GetParam(Param => 'StartWindow') || 0);
 
