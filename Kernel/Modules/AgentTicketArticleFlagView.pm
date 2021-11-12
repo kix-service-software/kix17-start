@@ -275,18 +275,23 @@ sub Run {
             )
         )
     ) {
-        @OriginalViewableTickets = $TicketObject->TicketSearch(
-            %{ $Filters{$Filter}->{Search} },
-            Limit  => $Limit,
-            Result => 'ARRAY',
-        );
+        if (
+            !defined( $Filters{ $Filter }->{Search}->{StateIDs} )
+            || IsArrayRefWithData( $Filters{ $Filter }->{Search}->{StateIDs} )
+        ) {
+            @OriginalViewableTickets = $TicketObject->TicketSearch(
+                %{ $Filters{$Filter}->{Search} },
+                Limit  => $Limit,
+                Result => 'ARRAY',
+            );
 
-        @ViewableTickets = $TicketObject->TicketSearch(
-            %{ $Filters{$Filter}->{Search} },
-            %ColumnFilter,
-            Result => 'ARRAY',
-            Limit  => 1_000,
-        );
+            @ViewableTickets = $TicketObject->TicketSearch(
+                %{ $Filters{$Filter}->{Search} },
+                %ColumnFilter,
+                Result => 'ARRAY',
+                Limit  => 1_000,
+            );
+        }
     }
 
     my $View = $ParamObject->GetParam( Param => 'View' ) || '';
@@ -334,11 +339,17 @@ sub Run {
 
     my %NavBarFilter;
     for my $Filter ( sort keys %Filters ) {
-        my $Count = $TicketObject->TicketSearch(
-            %{ $Filters{$Filter}->{Search} },
-            %ColumnFilter,
-            Result => 'COUNT',
-        );
+        my $Count = 0;
+        if (
+            !defined( $Filters{ $Filter }->{Search}->{StateIDs} )
+            || IsArrayRefWithData( $Filters{ $Filter }->{Search}->{StateIDs} )
+        ) {
+            $Count = $TicketObject->TicketSearch(
+                %{ $Filters{$Filter}->{Search} },
+                %ColumnFilter,
+                Result => 'COUNT',
+            );
+        }
 
         $NavBarFilter{ $Filters{$Filter}->{Prio} } = {
             Count  => $Count,

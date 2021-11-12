@@ -309,19 +309,23 @@ sub Run {
             )
         )
     ) {
+        if (
+            !defined( $Filters{ $Filter }->{Search}->{StateIDs} )
+            || IsArrayRefWithData( $Filters{ $Filter }->{Search}->{StateIDs} )
+        ) {
+            @OriginalViewableTickets = $TicketObject->TicketSearch(
+                %{ $Filters{$Filter}->{Search} },
+                Limit  => $Limit,
+                Result => 'ARRAY',
+            );
 
-        @OriginalViewableTickets = $TicketObject->TicketSearch(
-            %{ $Filters{$Filter}->{Search} },
-            Limit  => $Limit,
-            Result => 'ARRAY',
-        );
-
-        @ViewableTickets = $TicketObject->TicketSearch(
-            %{ $Filters{$Filter}->{Search} },
-            %ColumnFilter,
-            Result => 'ARRAY',
-            Limit  => 1_000,
-        );
+            @ViewableTickets = $TicketObject->TicketSearch(
+                %{ $Filters{$Filter}->{Search} },
+                %ColumnFilter,
+                Result => 'ARRAY',
+                Limit  => 1_000,
+            );
+        }
     }
 
     # prepare shown tickets for new article tickets
@@ -409,11 +413,17 @@ sub Run {
 
     my %NavBarFilter;
     for my $FilterColumn ( sort keys %Filters ) {
-        my $Count = $TicketObject->TicketSearch(
-            %{ $Filters{$FilterColumn}->{Search} },
-            %ColumnFilter,
-            Result => 'COUNT',
-        );
+        my $Count = 0;
+        if (
+            !defined( $Filters{ $FilterColumn }->{Search}->{StateIDs} )
+            || IsArrayRefWithData( $Filters{ $FilterColumn }->{Search}->{StateIDs} )
+        ) {
+            $Count = $TicketObject->TicketSearch(
+                %{ $Filters{$FilterColumn}->{Search} },
+                %ColumnFilter,
+                Result => 'COUNT',
+            );
+        }
 
         # prepare count for new article tickets
         if ( $FilterColumn eq 'New' ) {

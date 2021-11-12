@@ -60,14 +60,17 @@ sub Run {
         ArticleFlag => $Param{Config}->{ArticleFlagKey},
         Permission  => 'ro',
     );
-    my $CountReached = $TicketObject->TicketSearch(
-        Result                        => 'COUNT',
-        UserID                        => $Self->{UserID},
-        ArticleFlag                   => $Param{Config}->{ArticleFlagKey},
-        StateIDs                      => \@PendingReminderStateIDs,
-        TicketPendingTimeOlderMinutes => 1,
-        Permission                    => 'ro',
-    );
+    my $CountReached = 0;
+    if ( @PendingReminderStateIDs ) {
+        $CountReached = $TicketObject->TicketSearch(
+            Result                        => 'COUNT',
+            UserID                        => $Self->{UserID},
+            ArticleFlag                   => $Param{Config}->{ArticleFlagKey},
+            StateIDs                      => \@PendingReminderStateIDs,
+            TicketPendingTimeOlderMinutes => 1,
+            Permission                    => 'ro',
+        );
+    }
     my $CountNew = $TicketObject->TicketSearch(
         Result        => 'COUNT',
         UserID        => $Self->{UserID},
