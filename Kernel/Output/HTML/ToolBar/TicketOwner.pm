@@ -78,14 +78,17 @@ sub Run {
         Permission       => 'ro',
     );
     $CountNew = $Count - $CountNew;
-    my $CountReached = $TicketObject->TicketSearch(
-        Result                        => 'COUNT',
-        StateIDs                      => \@PendingReminderStateIDs,
-        TicketPendingTimeOlderMinutes => 1,
-        OwnerIDs                      => [ $Self->{UserID} ],
-        UserID                        => 1,
-        Permission                    => 'ro',
-    );
+    my $CountReached = 0;
+    if ( @PendingReminderStateIDs ) {
+        $CountReached = $TicketObject->TicketSearch(
+            Result                        => 'COUNT',
+            StateIDs                      => \@PendingReminderStateIDs,
+            TicketPendingTimeOlderMinutes => 1,
+            OwnerIDs                      => [ $Self->{UserID} ],
+            UserID                        => 1,
+            Permission                    => 'ro',
+        );
+    }
 
     my $Class        = $Param{Config}->{CssClass};
     my $ClassNew     = $Param{Config}->{CssClassNew};
