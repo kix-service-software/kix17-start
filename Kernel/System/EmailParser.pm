@@ -523,7 +523,7 @@ sub GetMessageBody {
 
             ATTACHMENT:
             for my $Attachment ( @Attachments ) {
-                next ATTACHMENT if $Attachment->{Disposition} && $Attachment->{Disposition} eq 'Attachment';
+                next ATTACHMENT if $Attachment->{Disposition} && $Attachment->{Disposition} =~ m/^attachment/i;
 
                 $Self->{Charset}     = $Attachment->{Charset};
                 $Self->{ContentType} = $Attachment->{ContentType};
