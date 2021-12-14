@@ -1971,7 +1971,7 @@ sub _TicketUpdate {
         my $PermissionGroupType = ( grep { $_ eq 'owner' } @{$ConfigPermissions} ) ? 'owner' : 'rw';
 
         # get login list of users
-        my %UserLoginList = $UserObject->UserList(
+        my %UserLoginList = $Kernel::OM->Get('Kernel::System::User')->UserList(
             Type  => 'Short',
             Valid => 1,
         );
@@ -2074,7 +2074,7 @@ sub _TicketUpdate {
         my $PermissionGroupType = ( grep { $_ eq 'responsible' } @{$ConfigPermissions} ) ? 'responsible' : 'rw';
 
         # get login list of users
-        my %UserLoginList = $UserObject->UserList(
+        my %UserLoginList = $Kernel::OM->Get('Kernel::System::User')->UserList(
             Type  => 'Short',
             Valid => 1,
         );

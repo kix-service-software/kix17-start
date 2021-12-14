@@ -68,13 +68,16 @@ sub Run {
     my @PendingsStateIDs = (@PendingAutoStateIDs, @PendingReminderStateIDs);
 
     # get user lock data
-    my $TicketFilter = $TicketObject->TicketSearch(
-        Result     => 'COUNT',
-        TicketID   => $Param{Data}->{TicketID},
-        StateIDs   => \@PendingsStateIDs,
-        UserID     => 1,
-        Permission => 'ro',
-    );
+    my $TicketFilter = 0;
+    if ( @PendingsStateIDs ) {
+        $TicketFilter = $TicketObject->TicketSearch(
+            Result     => 'COUNT',
+            TicketID   => $Param{Data}->{TicketID},
+            StateIDs   => \@PendingsStateIDs,
+            UserID     => 1,
+            Permission => 'ro',
+        );
+    }
 
     # only set the pending time to 0 if the new state is NOT a pending state
     return 1 if $TicketFilter;

@@ -48,6 +48,7 @@ my %Special = (
     'configitem_attachment' => \&_GetConfigItemAttachments,
     'article_attachment'    => \&_GetArticleAttachments,
     'article_plain'         => \&_GetArticlePlain,
+    'faq_attachment'        => \&_GetFAQAttachments,
 );
 
 # get all table names from DB
@@ -294,6 +295,25 @@ sub _GetArticlePlain {
     }
 
     return \%Result;
+}
+
+sub _GetFAQAttachments {
+    my %Param = @_;
+
+    my $Data = _GetData(
+        ObjectType => $Param{ObjectType},
+        Where      => 'faq_id = ' . $Param{ObjectID},
+    );
+
+    if ( IsArrayRefWithData($Data) && $Kernel::OM->Get('Kernel::System::DB')->GetDatabaseFunction('DirectBlob') ) {
+        # encode content to base64
+        foreach my $Item (@{$Data}) {
+            $Kernel::OM->Get('Kernel::System::Encode')->EncodeOutput(\$Item->{content});
+            $Item->{content} = MIME::Base64::encode_base64($Item->{content});
+        }
+    }
+
+    return $Data;
 }
 
 =back
