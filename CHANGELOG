@@ -1,6 +1,14 @@
 # Change log of KIX
 * Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.18.0-RC4 (2021/12/14)
+ * (2021/12/13) - Bugfix: KIX17-2725 (missing uri encoding for multiple customer id selection) (millinger)
+ * (2021/12/10) - Bugfix: KIX17-2307 (prevent attachment 'unknown' for emails without text content) (millinger)
+ * (2021/12/06) - CR: KIX17-2701 (added generic interface ticket operation TicketHistoryGet) (millinger)
+ * (2021/11/15) - Bugfix: KIX2018-6057 (added special handling for FAQ attachments to migration.pl) (rbo)
+ * (2021/11/12) - Bugfix: KIX17-2661 (fix log messages when no valid pending reminder state is available) (millinger)
+ * (2021/11/12) - Bugfix: KIX17-2654 (fix OutOfSLA calculation) (millinger)
+
 # 17.18.0-RC3 (2021/11/08)
  * (2021/11/05) - Bugfix: KIX17-2604 (fix global symbols) (millinger)
  * (2021/10/07) - Bugfix: KIX17-2583 (unlock ticket when setting close state with AgentTicketQuickState) (millinger)
