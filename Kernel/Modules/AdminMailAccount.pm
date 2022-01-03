@@ -1,8 +1,8 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2021 OTRS AG, https://otrs.com/
-# Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/
+# Copyright (C) 2001-2022 OTRS AG, https://otrs.com/
+# Copyright (C) 2019-2022 Rother OSS GmbH, https://otobo.de/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. This program is
 # licensed under the AGPL-3.0 with code licensed under the GPL-3.0.
@@ -41,10 +41,10 @@ sub Run {
 
     my %GetParam = ();
     my @Params   = (
-### Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
+### Code licensed under the GPL-3.0, Copyright (C) 2019-2022 Rother OSS GmbH, https://otobo.de/ ###
 #        qw(ID Login Password Host Type TypeAdd Comment ValidID QueueID IMAPFolder Trusted DispatchingBy)
         qw(ID Login Password Host Type TypeAdd Comment ValidID QueueID IMAPFolder Trusted DispatchingBy OAuth2_ProfileID)
-### EO Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
+### EO Code licensed under the GPL-3.0, Copyright (C) 2019-2022 Rother OSS GmbH, https://otobo.de/ ###
     );
     for my $Parameter (@Params) {
         $GetParam{$Parameter} = $ParamObject->GetParam( Param => $Parameter );
@@ -116,23 +116,23 @@ sub Run {
         $LayoutObject->ChallengeTokenCheck();
 
         my %Errors;
-### Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
+### Code licensed under the GPL-3.0, Copyright (C) 2019-2022 Rother OSS GmbH, https://otobo.de/ ###
         my $OAuth2 = ( $GetParam{TypeAdd} && $GetParam{TypeAdd} =~ /_OAuth2$/ ) ? 1 : 0;
-### EO Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
+### EO Code licensed under the GPL-3.0, Copyright (C) 2019-2022 Rother OSS GmbH, https://otobo.de/ ###
 
        # check needed data
-### Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
+### Code licensed under the GPL-3.0, Copyright (C) 2019-2022 Rother OSS GmbH, https://otobo.de/ ###
 #        for my $Needed (qw(Login Password Host)) {
         for my $Needed ( qw(Login Host), ( $OAuth2 ? qw() : qw(Password) ) ) {
-### EO Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
+### EO Code licensed under the GPL-3.0, Copyright (C) 2019-2022 Rother OSS GmbH, https://otobo.de/ ###
             if ( !$GetParam{$Needed} ) {
                 $Errors{ $Needed . 'AddInvalid' } = 'ServerError';
             }
         }
-### Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
+### Code licensed under the GPL-3.0, Copyright (C) 2019-2022 Rother OSS GmbH, https://otobo.de/ ###
 #        for my $Needed (qw(TypeAdd ValidID)) {
         for my $Needed ( qw(TypeAdd ValidID), ( $OAuth2 ? qw(OAuth2_ProfileID) : qw() ) ) {
-### EO Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
+### EO Code licensed under the GPL-3.0, Copyright (C) 2019-2022 Rother OSS GmbH, https://otobo.de/ ###
             if ( !$GetParam{$Needed} ) {
                 $Errors{ $Needed . 'Invalid' } = 'ServerError';
             }
@@ -206,23 +206,23 @@ sub Run {
         $LayoutObject->ChallengeTokenCheck();
 
         my %Errors;
-### Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
+### Code licensed under the GPL-3.0, Copyright (C) 2019-2022 Rother OSS GmbH, https://otobo.de/ ###
         my $OAuth2 = ( $GetParam{TypeAdd} && $GetParam{TypeAdd} =~ /_OAuth2$/ ) ? 1 : 0;
-### EO Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
+### EO Code licensed under the GPL-3.0, Copyright (C) 2019-2022 Rother OSS GmbH, https://otobo.de/ ###
 
         # check needed data
-### Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
+### Code licensed under the GPL-3.0, Copyright (C) 2019-2022 Rother OSS GmbH, https://otobo.de/ ###
 #        for my $Needed (qw(Login Password Host)) {
         for my $Needed ( qw(Login Host), ( $OAuth2 ? qw() : qw(Password) ) ) {
-### EO Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
+### EO Code licensed under the GPL-3.0, Copyright (C) 2019-2022 Rother OSS GmbH, https://otobo.de/ ###
             if ( !$GetParam{$Needed} ) {
                 $Errors{ $Needed . 'EditInvalid' } = 'ServerError';
             }
         }
-### Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
+### Code licensed under the GPL-3.0, Copyright (C) 2019-2022 Rother OSS GmbH, https://otobo.de/ ###
 #        for my $Needed (qw(Type ValidID DispatchingBy QueueID)) {
         for my $Needed ( qw(Type ValidID DispatchingBy QueueID), ( $OAuth2 ? qw(OAuth2_ProfileID) : qw() ) ) {
-### EO Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
+### EO Code licensed under the GPL-3.0, Copyright (C) 2019-2022 Rother OSS GmbH, https://otobo.de/ ###
             if ( !$GetParam{$Needed} ) {
                 $Errors{ $Needed . 'Invalid' } = 'ServerError';
             }
@@ -398,7 +398,7 @@ sub _MaskUpdateMailAccount {
         Class => 'Modernize Validate_Required ' . ( $Param{Errors}->{'QueueIDInvalid'} || '' ),
     );
 
-### Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
+### Code licensed under the GPL-3.0, Copyright (C) 2019-2022 Rother OSS GmbH, https://otobo.de/ ###
     $Param{OAuth2_ProfileOption} = $LayoutObject->BuildSelection(
         Data        => { $Kernel::OM->Get('Kernel::System::OAuth2')->ProfileList( Valid => 1 ) },
         Name        => 'OAuth2_ProfileID',
@@ -406,7 +406,7 @@ sub _MaskUpdateMailAccount {
         Class       => 'Modernize',
         PossibleNone => 1
     );
-### EO Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
+### EO Code licensed under the GPL-3.0, Copyright (C) 2019-2022 Rother OSS GmbH, https://otobo.de/ ###
     $LayoutObject->Block(
         Name => 'Overview',
         Data => { %Param, },
@@ -477,7 +477,7 @@ sub _MaskAddMailAccount {
         Class => 'Modernize Validate_Required ' . ( $Param{Errors}->{'QueueIDInvalid'} || '' ),
     );
 
-### Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
+### Code licensed under the GPL-3.0, Copyright (C) 2019-2022 Rother OSS GmbH, https://otobo.de/ ###
     $Param{OAuth2_ProfileOption} = $LayoutObject->BuildSelection(
         Data        => { $Kernel::OM->Get('Kernel::System::OAuth2')->ProfileList( Valid => 1 ) },
         Name        => 'OAuth2_ProfileID',
@@ -485,7 +485,7 @@ sub _MaskAddMailAccount {
         Class       => 'Modernize',
         PossibleNone => 1
     );
-### EO Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
+### EO Code licensed under the GPL-3.0, Copyright (C) 2019-2022 Rother OSS GmbH, https://otobo.de/ ###
     $LayoutObject->Block(
         Name => 'Overview',
         Data => { %Param, },
