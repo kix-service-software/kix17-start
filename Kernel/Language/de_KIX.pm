@@ -257,7 +257,7 @@ sub Data {
     $Lang->{'All agents who are linked with this ticket and have been selected (Linked Persons)'}
         = 'Alle Agenten die mit dem Ticket verlinkt sind und auswählt wurden (Verlinkte Personen)';
     $Lang->{
-        'All customer constacts who are linked with this ticket and have been selected (Linked Persons)'
+        'All customer contacts who are linked with this ticket and have been selected (Linked Persons)'
         }
         = 'Alle Ansprechpartner, die mit dem Ticket verlinkt sind und auswählt wurden (Verlinkte Personen)';
     $Lang->{
@@ -1271,6 +1271,8 @@ sub Data {
         = 'Anzahl der verknüpften ConfigItems pro Seite';
     $Lang->{'Defines parameters for the AgentITSMWorkOrderZoomTab "Linked Objects".'}
         = 'Legt Parameter fest für das AgentITSMWorkOrderZoomTab "Linked Objects".';
+    $Lang->{'Defines the shown columns of CIs in the link table complex view, depending on the CI class. Each entry must be prefixed with the class name and double colons (i.e. Computer::). There are a few CI-Attributes that common to all CIs (example for the class Computer: Computer::Name, Computer::CurDeplState, Computer::CreateTime). To show individual CI-Attributes as defined in the CI-Definition, the following scheme must be used (example for the class Computer): Computer::HardDisk::1, Computer::HardDisk::1::Capacity::1, Computer::HardDisk::2, Computer::HardDisk::2::Capacity::1. If there is no entry for a CI class, then the default columns are shown.'}
+		= 'Legt die angezeigten Spalten der CIs in der Komplexansicht der Tabelle "Verlinkte Objekte" fest. Jeder Eintrag muss mit einem Klassennamen gefolgt von Doppelpunkten beginnen (z.B. Computer::). Es gibt einige CI-Attribute, die alle CIs gemeinsam haben (Beispiel für die Klasse Computer: Computer::Name, Computer::CurDeplState, Computer::CreateTime). Um individuelle CI-Attribute anzuzeigen, wie sie in der CI-Definition festgelegt sind, muss das folgende Schema genutzt werden (Beispiel für die Klasse Computer): Computer::HardDisk::1, Computer::HardDisk::1::Capacity::1, Computer::HardDisk::2, Computer::HardDisk::2::Capacity::1. Wenn kein Eintrag für eine CI-Klasse hinterlegt ist, werden die Standardspalten angezeigt.';        
     $Lang->{'Defines the image types.'} = 'Legt die Bildtype fest, die geladen werden können.';
     $Lang->{'Parameters for the pages (in which the configuration items are shown).'}
         = 'Parameter für die Seiten, auf denen ConfigItems angezeigt werden.';
@@ -3871,6 +3873,10 @@ sub Data {
     $Lang->{'Specify the type of used database.'}      = 'Gibt den Typ der Datenbank an.';
     $Lang->{'The key column of the database is the column which the data record identifies and from where the value to be stored can be obtained.'}
         = 'Die Schlüsselspalte der Datenbank ist die Spalte, womit der Datensatz identifiziert und woher der zu speichernde Wert bezogen werden kann.';
+    $Lang->{'The value column is the column of the table used that returns the value of the data record for display. If no value column has been specified, the key column is used as a fallback.'}      
+    	= 'Die Wertespalte ist die Spalte der Tabelle, die genutzt wird, um den Wert des Datensatzes für die Anzeige zurückzugeben. Wenn keine Wertespalte angegeben wurde,wird die Schlüsselspalte genutzt.';
+    $Lang->{'The search column is the column (or several columns separated by commas) of the table used in which a suitable data record can be searched for. If no search column has been specified, the key column is used as a fallback.'}      
+    	= 'Die Suchspalte ist die Spalte (oder mehrere Spalten getrennt mit Kommas) der Tabelle, die genutzt wird, um dort nach einem passenden Datensatz zu suchen. Wenn keine Wertespalte angegeben wurde,wird die Schlüsselspalte genutzt.';
     $Lang->{'The value of the key column is used as an identifier of the selected data record.'}
         = 'Der Wert des Schlüsselspalte wird als Kenner des gewählten Datensatzes genutzt.';
     $Lang->{'The value column is the column of the database table that returns the value of the data record for display. If no value column has been specified, the key column is used as a fallback.'}
@@ -4260,10 +4266,10 @@ sub Data {
     $Lang->{'Service Print.'}                                             = '';
     $Lang->{'Service Zoom.'}                                              = '';
     $Lang->{
-        'Set the type and direction of links to be used to calculate the incident state. The key is the name of the link type (as defined in LinkObject::Type), and the value is the direction of the IncidentLinkType that should be followed to calculate the incident state. For example if the IncidentLinkType is set to \'DependsOn\', and the Direction is \'Source\', only \'Depends on\' links will be followed (and not the opposite link \'Required for\') to calculate the incident state. You can add more link types ad directions as you like, e.g. \'Includes\' with the direction \'Target\'. All link types defined in the sysconfig options LinkObject::Type are possible and the direction can be \'Source\', \'Target\', or \'Both\'. IMPORTANT: AFTER YOU MAKE CHANGES TO THIS SYSCONFIG OPTION YOU NEED TO RUN THE SCRIPT bin/kix.ITSMConfigItemIncidentStateRecalculate.pl SO THAT ALL INCIDENT STATES WILL BE RECALCULATED BASED ON THE NEW SETTINGS!'
+        'Set the type and direction of links to be used to calculate the incident state. The key is the name of the link type (as defined in LinkObject::Type), and the value is the direction of the IncidentLinkType that should be followed to calculate the incident state. For example if the IncidentLinkType is set to "DependsOn", and the Direction is "Source"", only "Depends on" links will be followed (and not the opposite link "Required for") to calculate the incident state. You can add more link types and directions as you like, e.g. "Includes" with the direction "Target". All link types defined in the sysconfig options LinkObject::Type are possible and the direction can be "Source", "Target", or "Both". IMPORTANT: AFTER YOU MAKE CHANGES TO THIS SYSCONFIG OPTION YOU NEED TO RUN THE SCRIPT kix.Console.pl Admin::ITSM::IncidentState::Recalculate SO THAT ALL INCIDENT STATES WILL BE RECALCULATED BASED ON THE NEW SETTINGS!'
         }
         =
-        '';
+        'Setzt den Typ und die Richtung von Verknüpfungen, die genutzt werden, um den Vorfallsstatus zu berechnen. Der Schlüssel ist der Name des Verknüpfungstyps (so wie er in LinkObject::Type festgelegt wurde), und der Wert ist die Richtung des IncidentLinkType, welchem gefolgt werden soll, wenn der Vorfallsstatus berechnet wird. Wenn zum Beispiel der IncidentLinkType auf "Hängt ab von" gesetzt wird, und die Richtung ist "Source", wird nur "Hängt ab von" Verknüpfungen gefolgt (und nicht dem zugehörigen gegensätzlichen Verknüpfungstyp "Benötigt für"). Sie können weitere Verknüpfungstypen und Richtungen ergänzen, z.B. "Beinhaltet" mit der Richtung "Target". Alle Verknüpfungstypen, welche in der SysConfig Option LinkObject::Type festgelegt sind, können verwendet werden. Richtungen sind "Source", "Target", oder "Both". Achtung! Sobald Änderungen an diesem Schlüssel gemacht wurden, muss das Script kix.Console.pl Admin::ITSM::IncidentState::Recalculate ausgeführt werden, so dass alle Vorfallsstatus basierend auf den neuen Einstellungen neu berechnet werden.';
     $Lang->{
         'This setting defines that a \'ITSMChange\' object can be linked with \'Ticket\' objects using the \'Normal\' link type.'
         }
