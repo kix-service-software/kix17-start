@@ -1,8 +1,8 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
 # Copyright (C) 2019–2021 Efflux GmbH, https://efflux.de/
-# Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/
+# Copyright (C) 2019-2022 Rother OSS GmbH, https://otobo.de/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. This program is
 # licensed under the AGPL-3.0 with code licensed under the GPL-3.0.
@@ -42,7 +42,7 @@ sub Connect {
 
     my $Type = 'IMAPTLS_OAuth2';
 
-### Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
+### Code licensed under the GPL-3.0, Copyright (C) 2019-2022 Rother OSS GmbH, https://otobo.de/ ###
     # check needed stuff
     for (qw(OAuth2_ProfileID Login Password Host Timeout Debug)) {
         if ( !defined $Param{$_} ) {
@@ -75,14 +75,14 @@ sub Connect {
         Ignoresizeerrors => 1,
     );
 
-# KIX-capeIT, Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
+# KIX-capeIT, Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
     if ( !$IMAPObject ) {
         return (
             Successful => 0,
             Message    => "$Type: Can't connect to $Param{Host}: $!!"
         );
     }
-# EO KIX-capeIT, Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
+# EO KIX-capeIT, Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
 
     # auth via SASL XOAUTH2
     my $SASLXOAUTH2 = encode_base64( 'user=' . $Param{Login} . "\x01auth=Bearer " . $AccessToken . "\x01\x01" );
@@ -98,11 +98,11 @@ sub Connect {
     return (
         Successful => 1,
         IMAPObject => $IMAPObject,
-# KIX-capeIT, Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
+# KIX-capeIT, Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
         Type       => $Type,
-# EO KIX-capeIT, Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
+# EO KIX-capeIT, Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
     );
-### EO Code licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
+### EO Code licensed under the GPL-3.0, Copyright (C) 2019-2022 Rother OSS GmbH, https://otobo.de/ ###
 }
 
 1;
