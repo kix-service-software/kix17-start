@@ -41,9 +41,13 @@ sub Run {
     # get needed params
     my $Search = $Self->{ParamObject}->GetParam( Param => 'Term' ) || '';
 
+    $Search =~ s/\_/\./g;
+    $Search =~ s/\%/\.\*/g;
+    $Search =~ s/\*/\.\*/g;
+
     # get service list
     my @ServiceList = $Self->{ServiceObject}->ServiceSearch(
-        Name   => $Search,
+        Name   => '*',
         UserID => 1,
     );
 
@@ -54,8 +58,15 @@ sub Run {
             ServiceID => $ServiceID,
         );
         if ( $Self->{ConfigObject}->Get('Ticket::ServiceTranslation') ) {
-            $ServiceName = $Self->{LayoutObject}->{LanguageObject}->Translate( $ServiceName );
+            my @Names = split(/::/, $ServiceName);
+            for my $Name ( @Names ) {
+                $Name = $Self->{LayoutObject}->{LanguageObject}->Translate( $Name );
+            }
+
+            $ServiceName = join('::', @Names);
         }
+
+        next if ( $ServiceName !~ /$Search/i );
 
         push @Data, {
             ServiceKey   => $ServiceID,
