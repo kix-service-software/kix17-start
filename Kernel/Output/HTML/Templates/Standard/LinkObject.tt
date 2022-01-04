@@ -1,8 +1,8 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2021 OTRS AG, https://otrs.com/
-# Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/
+# Copyright (C) 2001-2022 OTRS AG, https://otrs.com/
+# Copyright (C) 2019-2022 Rother OSS GmbH, https://otobo.de/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. This program is
 # licensed under the AGPL-3.0 with patches licensed under the GPL-3.0.
@@ -40,17 +40,17 @@ if (Core.UI.Popup.CurrentIsPopupWindow()) {
 
 
 [% RenderBlockStart("TimeLong") %]
-### Patch licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
+### Patch licensed under the GPL-3.0, Copyright (C) 2019-2022 Rother OSS GmbH, https://otobo.de/ ###
 #<label for="Checkbox[% Data.Key | html %]" title="[% Data.Content | Localize("TimeLong") %]" class="[% Data.Class | html %]" [% Data.CssStyle %]>[% Data.Content | Localize("TimeLong") %]</label>
 <label for="Checkbox[% Data.Key | html %]" title="[% Data.Content | Localize("TimeLong") | html %]" class="[% Data.Class | html %]" [% Data.CssStyle %]>[% Data.Content | Localize("TimeLong") | html %]</label>
-### EO Patch licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2019-2022 Rother OSS GmbH, https://otobo.de/ ###
 [% RenderBlockEnd("TimeLong") %]
 
 [% RenderBlockStart("Date") %]
-### Patch licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
+### Patch licensed under the GPL-3.0, Copyright (C) 2019-2022 Rother OSS GmbH, https://otobo.de/ ###
 #[% Data.Content | Localize("Date") %]
 [% Data.Content | Localize("Date") | html %]
-### EO Patch licensed under the GPL-3.0, Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/ ###
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2019-2022 Rother OSS GmbH, https://otobo.de/ ###
 [% RenderBlockEnd("Date") %]
 
 [% RenderBlockStart("Checkbox") %]

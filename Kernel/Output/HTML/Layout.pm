@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2021 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2022 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -2303,17 +2303,20 @@ sub BuildSelection {
     }
 
     if (
-        (
-            $Kernel::OM->Get('Kernel::Config')->Get('Ticket::TypeTranslation')
-            && ( $Param{Name} eq 'TypeID' || $Param{Name} eq 'TypeIDs' )
-        )
-        || (
-            $Kernel::OM->Get('Kernel::Config')->Get('Ticket::ServiceTranslation')
-            && ( $Param{Name} eq 'ServiceID' || $Param{Name} eq 'ServiceIDs' )
-        )
-        || (
-            $Kernel::OM->Get('Kernel::Config')->Get('Ticket::SLATranslation')
-            && ( $Param{Name} eq 'SLAID' || $Param{Name} eq 'SLAIDs' )
+        $Self->{Action} !~ /^Admin/
+        && (
+            (
+                $Kernel::OM->Get('Kernel::Config')->Get('Ticket::TypeTranslation')
+                && ( $Param{Name} eq 'TypeID' || $Param{Name} eq 'TypeIDs' )
+            )
+            || (
+                $Kernel::OM->Get('Kernel::Config')->Get('Ticket::ServiceTranslation')
+                && ( $Param{Name} eq 'ServiceID' || $Param{Name} eq 'ServiceIDs' )
+            )
+            || (
+                $Kernel::OM->Get('Kernel::Config')->Get('Ticket::SLATranslation')
+                && ( $Param{Name} eq 'SLAID' || $Param{Name} eq 'SLAIDs' )
+            )
         )
     ) {
         $Param{Translation} = 1;
@@ -5299,7 +5302,12 @@ sub _BuildSelectionOptionRefCreate {
     ) {
         my %SelectedValueNew;
         for my $OriginalKey ( sort keys %{ $OptionRef->{SelectedValue} } ) {
-            my $TranslatedKey = $Self->{LanguageObject}->Translate($OriginalKey);
+            my @Values = split('::', $OriginalKey);
+            for my $Value ( @Values ) {
+                $Value = $Self->{LanguageObject}->Translate($Value);
+            }
+            my $TranslatedKey = join('::', @Values);
+
             $SelectedValueNew{$TranslatedKey} = 1;
         }
         $OptionRef->{SelectedValue} = \%SelectedValueNew;
@@ -5482,7 +5490,13 @@ sub _BuildSelectionDataRefCreate {
         # translate value
         if ( $OptionRef->{Translation} ) {
             for my $Row ( sort keys %{$DataLocal} ) {
-                $DataLocal->{$Row} = $Self->{LanguageObject}->Translate( $DataLocal->{$Row} );
+                # try to split its parents (e.g. Queue or Service) GrandParent::Parent::Son
+                my @Elements = split /::/, $DataLocal->{$Row};
+                for my $Value ( @Elements ) {
+                    $Value = $Self->{LanguageObject}->Translate( $Value )
+                }
+
+                $DataLocal->{$Row} = join('::', @Elements );
             }
         }
 
@@ -5597,7 +5611,13 @@ sub _BuildSelectionDataRefCreate {
 
                 # translate value
                 if ( $OptionRef->{Translation} ) {
-                    $DataRef->[$Counter]->{Value} = $Self->{LanguageObject}->Translate( $DataRef->[$Counter]->{Value} );
+                    # try to split its parents (e.g. Queue or Service) GrandParent::Parent::Son
+                    my @Elements = split /::/, $DataRef->[$Counter]->{Value};
+                    for my $Value ( @Elements ) {
+                        $Value = $Self->{LanguageObject}->Translate( $Value )
+                    }
+
+                    $DataRef->[$Counter]->{Value} = join('::', @Elements );
                 }
 
                 # set Selected and Disabled options
@@ -5664,7 +5684,14 @@ sub _BuildSelectionDataRefCreate {
         if ( $OptionRef->{Translation} ) {
             my @TranslateArray;
             for my $Row ( @{$DataLocal} ) {
-                my $TranslateString = $Self->{LanguageObject}->Translate($Row);
+                # try to split its parents (e.g. Queue or Service) GrandParent::Parent::Son
+                my @Elements = split /::/, $Row;
+                for my $Value ( @Elements ) {
+                    $Value = $Self->{LanguageObject}->Translate( $Value )
+                }
+
+                my $TranslateString = join('::', @Elements );
+
                 push @TranslateArray, $TranslateString;
                 $ReverseHash{$TranslateString} = $Row;
             }

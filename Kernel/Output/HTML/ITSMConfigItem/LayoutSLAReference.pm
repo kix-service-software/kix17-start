@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -84,7 +84,7 @@ sub OutputStringCreate {
 
     #transform ascii to html...
     $Param{Value} = $Self->{LayoutObject}->Ascii2Html(
-        Text => $Param{Value} || '',
+        Text           => $Param{Value} || '',
         HTMLResultMode => 1,
     );
 
@@ -202,8 +202,8 @@ sub InputCreate {
     my $StringSelect = '';
     my $Class        = 'W50pc SLASearch';
     my $Required     = $Param{Required} || '';
-    my $Invalid      = $Param{Invalid} || '';
-    my $ItemId       = $Param{ItemId} || '';
+    my $Invalid      = $Param{Invalid}  || '';
+    my $ItemId       = $Param{ItemId}   || '';
 
     if ($Required) {
         $Class .= ' Validate_Required';
@@ -212,6 +212,9 @@ sub InputCreate {
     if ($Invalid) {
         $Class .= ' ServerError';
     }
+
+    # AutoComplete CIClass
+    my $AutoCompleteConfig = $Self->{ConfigObject}->Get('ITSMCIAttributeCollection::Frontend::CommonSearchAutoComplete');
 
     # SLAReference search...
     if ( $Param{Item}->{Form}->{ $Param{Key} }->{Search} ) {
@@ -227,7 +230,10 @@ sub InputCreate {
 
         #-----------------------------------------------------------------------
         # build search result presentation....
-        if ( %SLAList && scalar( keys %SLAList ) > 1 ) {
+        if (
+            %SLAList
+            && scalar( keys %SLAList ) > 1
+        ) {
 
             #create option list...
             $StringOption = $Self->{LayoutObject}->BuildSelection(
@@ -256,17 +262,19 @@ sub InputCreate {
             );
             my $SLAName = "";
 
-            if ( %SLAData && $SLAData{Name} ) {
+            if (
+                %SLAData
+                && $SLAData{Name}
+            ) {
                 $SLAName = $SLAData{Name};
             }
 
             #transform ascii to html...
             $Search = $Self->{LayoutObject}->Ascii2Html(
-                Text => $SLAName || '',
+                Text           => $SLAName || '',
                 HTMLResultMode => 1,
             );
         }
-
     }
 
     #create CIClassReference string...
@@ -284,14 +292,10 @@ sub InputCreate {
 
         #transform ascii to html...
         $Search = $Self->{LayoutObject}->Ascii2Html(
-            Text => $SLAName || '',
+            Text           => $SLAName || '',
             HTMLResultMode => 1,
         );
     }
-
-    # AutoComplete CIClass
-    my $AutoCompleteConfig
-        = $Self->{ConfigObject}->Get('ITSMCIAttributeCollection::Frontend::CommonSearchAutoComplete');
 
     #create string...
     my $String = '';
@@ -318,7 +322,8 @@ sub InputCreate {
             . 'CustomerCompanyData"/>';
     }
 
-    if (   $AutoCompleteConfig
+    if (
+        $AutoCompleteConfig
         && ref($AutoCompleteConfig) eq 'HASH'
         && $AutoCompleteConfig->{Active}
     ) {
@@ -348,8 +353,8 @@ sub InputCreate {
         $Self->{LayoutObject}->Output(
             TemplateFile => 'AgentSLASearch',
         );
-        $String
-            .= '<input type="hidden" name="'
+
+        $String .= '<input type="hidden" name="'
             . $Param{Key}
             . '" value="'
             . $Value
@@ -380,8 +385,8 @@ sub InputCreate {
         $Self->{LayoutObject}->Output(
             TemplateFile => 'AgentSLASearch',
         );
-        $String
-            .= '<input type="hidden" name="'
+
+        $String .= '<input type="hidden" name="'
             . $Param{Key}
             . '" value="'
             . $Value

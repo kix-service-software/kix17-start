@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 # --
-# Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -211,8 +211,8 @@ sub _GetConfigItemXMLData {
         # get the data from xml_storage
         return _GetData(
             ObjectType => 'xml_storage',
-            Where      => 'xml_key = \'' . $Param{ObjectID} . '\' AND xml_type = \'ITSM::ConfigItem::%\'',
-            OrderBy    => $OrderBy,
+            Where      => 'xml_key = \'' . $Param{ObjectID} . '\' AND xml_type LIKE \'ITSM::ConfigItem::%\'',
+            OrderBy    => 'xml_key',
         );
     }
 

@@ -350,7 +350,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="ITSM::Core::IncidentLinkTypeDirection" Required="1" Valid="1">
-        <Description Translatable="1">Set the type and direction of links to be used to calculate the incident state. The key is the name of the link type (as defined in LinkObject::Type), and the value is the direction of the IncidentLinkType that should be followed to calculate the incident state. For example if the IncidentLinkType is set to 'DependsOn', and the Direction is 'Source', only 'Depends on' links will be followed (and not the opposite link 'Required for') to calculate the incident state. You can add more link types ad directions as you like, e.g. 'Includes' with the direction 'Target'. All link types defined in the sysconfig options LinkObject::Type are possible and the direction can be 'Source', 'Target', or 'Both'. IMPORTANT: AFTER YOU MAKE CHANGES TO THIS SYSCONFIG OPTION YOU NEED TO RUN THE SCRIPT bin/kix.ITSMConfigItemIncidentStateRecalculate.pl SO THAT ALL INCIDENT STATES WILL BE RECALCULATED BASED ON THE NEW SETTINGS!</Description>
+        <Description Translatable="1">Set the type and direction of links to be used to calculate the incident state. The key is the name of the link type (as defined in LinkObject::Type), and the value is the direction of the IncidentLinkType that should be followed to calculate the incident state. For example if the IncidentLinkType is set to "DependsOn", and the Direction is "Source", only "Depends on" links will be followed (and not the opposite link "Required for") to calculate the incident state. You can add more link types and directions as you like, e.g. "Includes" with the direction "Target". All link types defined in the sysconfig options LinkObject::Type are possible and the direction can be "Source", "Target", or "Both". IMPORTANT: AFTER YOU MAKE CHANGES TO THIS SYSCONFIG OPTION YOU NEED TO RUN THE SCRIPT kix.Console.pl Admin::ITSM::IncidentState::Recalculate SO THAT ALL INCIDENT STATES WILL BE RECALCULATED BASED ON THE NEW SETTINGS!</Description>
         <Group>ITSM</Group>
         <SubGroup>Core::ITSMCore</SubGroup>
         <Setting>
@@ -652,7 +652,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="ITSMCIAttributeCollection::CompanyBackendMapping" Required="1" Valid="1">
-        <Description Translatable="1">Defines information shown for CIACCustomerCompany (CustomerCompany before ITSM 3.1.7) attributes.</Description>
+        <Description Translatable="1">Defines information shown for CIACCustomerCompany attributes.</Description>
         <Group>ITSM</Group>
         <SubGroup>CIACCustomerCompany</SubGroup>
         <Setting>
@@ -665,7 +665,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="ITSMCIAttributeCollection::CustomerCompany::Content" Required="1" Valid="1">
-        <Description Translatable="1">Defines information imported/exported as CIACCustomerCompany (CustomerCompany before ITSM 3.1.7) attribute.</Description>
+        <Description Translatable="1">Defines information imported/exported as CIACCustomerCompany attribute.</Description>
         <Group>ITSM</Group>
         <SubGroup>CIACCustomerCompany</SubGroup>
         <Setting>
@@ -2166,7 +2166,7 @@
     <ConfigItem Name="KIXSidebarConfigItemLink::ShownAttributes" Required="1" Valid="1">
         <Description Translatable="1">Defines which attributes are shown in customer table.</Description>
         <Group>ITSM</Group>
-        <SubGroup>Frontend::Customer</SubGroup>
+        <SubGroup>Frontend::Agent::KIXSidebarBackend</SubGroup>
         <Setting>
             <Hash>
                 <Item Key="0100::Class">Class</Item>
@@ -2259,7 +2259,7 @@
     <ConfigItem Name="KIXSidebarConfigItemLink::KIXSidebarLinkedCIsParams" Required="1" Valid="1">
         <Description Translatable="1">Common Parameters for the KIXSidebarLinkedCIs backend. You can use CI class specific contact attributes (SearchAttribute:::&lt;CIClass&gt;) as well as multiple customer user attributes, separated by comma.</Description>
         <Group>ITSM</Group>
-        <SubGroup>Frontend::Customer</SubGroup>
+        <SubGroup>Frontend::Agent::KIXSidebarBackend</SubGroup>
         <Setting>
             <Hash>
                 <Item Key="SearchAttribute">UserLogin</Item>
@@ -2271,7 +2271,7 @@
     <ConfigItem Name="KIXSidebarConfigItemLink::CISearchInClasses" Required="1" Valid="1">
         <Description Translatable="1">Defines in which CI-classes (keys) which attributes need to match the search pattern (values, comma separated if more than one attribute should be searched). For use with sub-attributes try this, key: attribute::sub-attribute, value: owner</Description>
         <Group>ITSM</Group>
-        <SubGroup>Frontend::Customer</SubGroup>
+        <SubGroup>Frontend::Agent::KIXSidebarBackend</SubGroup>
         <Setting>
             <Hash>
                 <Item Key="Computer">Owner</Item>
@@ -2283,7 +2283,7 @@
     <ConfigItem Name="KIXSidebarConfigItemLink::CIExcludeDeploymentStates" Required="1" Valid="1">
         <Description Translatable="1">Defined DeploymentStates to hide ConfigItems.</Description>
         <Group>ITSM</Group>
-        <SubGroup>Frontend::Customer</SubGroup>
+        <SubGroup>Frontend::Agent::KIXSidebarBackend</SubGroup>
         <Setting>
             <Array>
                 <Item>Inactive</Item>
@@ -2293,7 +2293,7 @@
     <ConfigItem Name="KIXSidebarConfigItemLink::CIExcludeIncidentStates" Required="1" Valid="1">
         <Description Translatable="1">Defined IncidentStates to hide ConfigItems.</Description>
         <Group>ITSM</Group>
-        <SubGroup>Frontend::Customer</SubGroup>
+        <SubGroup>Frontend::Agent::KIXSidebarBackend</SubGroup>
         <Setting>
             <Array>
             </Array>
@@ -2302,7 +2302,7 @@
     <ConfigItem Name="KIXSidebarConfigItemLink::LinkType" Required="1" Valid="1">
         <Description Translatable="1">Defines the link type which is used for the link creation between ticket and config item.</Description>
         <Group>ITSM</Group>
-        <SubGroup>Frontend::Customer</SubGroup>
+        <SubGroup>Frontend::Agent::KIXSidebarBackend</SubGroup>
         <Setting>
             <String Regex="">RelevantTo</String>
         </Setting>
