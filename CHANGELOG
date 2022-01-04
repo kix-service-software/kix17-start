@@ -1,6 +1,13 @@
 # Change log of KIX
 * Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.18.0-RC5 (2022/01/04)
+ * (2022/01/04) - Bugfix: KIX17-2699 (fixed incomplete service translations and remove service translation in admin masks) (fjacquemin)
+ * (2022/01/03) - CR: KIX17-2731 (updated copyright) (fjacquemin)
+ * (2021/12/21) - CR: KIX17-2733 (added image for kix database scheme) (ddoerffel)
+ * (2021/12/17) - Bugfix: KIX17-2536 (added some translations) (ddoerffel)
+ * (2021/12/16) - Bugfix: KIX17-2738 (Fixed WHERE clause and ORDER BY when getting XML data for CI) (rbo)
+
 # 17.18.0-RC4 (2021/12/14)
  * (2021/12/13) - Bugfix: KIX17-2725 (missing uri encoding for multiple customer id selection) (millinger)
  * (2021/12/10) - Bugfix: KIX17-2307 (prevent attachment 'unknown' for emails without text content) (millinger)
