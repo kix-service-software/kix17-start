@@ -72,22 +72,27 @@ sub Run {
 
     # get needed objects
     my $LayoutObject       = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $ConfigObject       = $Kernel::OM->Get('Kernel::Config');
+    my $CustomerUserObject = $Kernel::OM->Get('Kernel::System::CustomerUser');
+    my $ServiceObject      = $Kernel::OM->Get('Kernel::System::Service');
 
     my $Content = '';
     my %AssignedServices;
 
-    if ( $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Service') ) {
+    if ( $ConfigObject->Get('Ticket::Service') ) {
 
         # get assigned services
         if ( defined $Param{CustomerID} && $Param{CustomerID} ) {
 
-            my $CustomerIDs
-                = {
-                $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerSearch( CustomerID => $Param{CustomerID} ) };
+            my $CustomerIDs = {
+                $CustomerUserObject->CustomerSearch(
+                    CustomerID => $Param{CustomerID}
+                )
+            };
 
             if ( ref $CustomerIDs eq 'HASH' && $CustomerIDs ) {
                 for my $ID ( keys %{$CustomerIDs} ) {
-                    my %AssignedServicesTmp = $Kernel::OM->Get('Kernel::System::Service')->CustomerUserServiceMemberList(
+                    my %AssignedServicesTmp = $ServiceObject->CustomerUserServiceMemberList(
                         CustomerUserLogin => $ID,
                         Result            => 'HASH',
                         DefaultServices   => 1,
@@ -101,7 +106,7 @@ sub Run {
             }
         }
         elsif ( defined $Param{CustomerUserLogin} && $Param{CustomerUserLogin} ) {
-            my %AssignedServicesTmp = $Kernel::OM->Get('Kernel::System::Service')->CustomerUserServiceMemberList(
+            my %AssignedServicesTmp = $ServiceObject->CustomerUserServiceMemberList(
                 CustomerUserLogin => $Param{CustomerUserLogin},
                 Result            => 'HASH',
                 DefaultServices   => 1,
@@ -117,8 +122,17 @@ sub Run {
         $LayoutObject->Block(
             Name => 'ServiceList',
         );
+
         if (%AssignedServices) {
             for my $CurrentService ( sort { $a cmp $b } values %AssignedServices ) {
+                if ( $ConfigObject->Get('Ticket::ServiceTranslation') ) {
+                    my @Services = split(/::/, $CurrentService);
+                    for my $ServiceName ( @Services ) {
+                        $ServiceName = $LayoutObject->{LanguageObject}->Translate($ServiceName);
+                    }
+                    $CurrentService = join('::', @Services);
+                }
+
                 $CurrentService =~ s/::/ => /g;
                 $LayoutObject->Block(
                     Name => 'ServiceItem',

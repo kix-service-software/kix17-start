@@ -23,7 +23,7 @@
 [% RenderBlockStart("KeyContent") %]
             <label>[% Translate(Data.Label) | html %]:</label>
 [% RenderBlockStart("KeyContentTranslated") %]
-            <p class="Value">[% Translate(Data.Content) | html %]</p>
+            <p class="Value">[% Data.Content | html %]</p>
 [% RenderBlockEnd("KeyContentTranslated") %]
 [% RenderBlockStart("KeyContentQuoted") %]
             <p class="Value" title="[% Translate(Data.Content) | html %]">[% Data.Content | html %]</p>

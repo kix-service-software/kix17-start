@@ -9,7 +9,10 @@
 # --
 
 
-<div class="WidgetSimple QueueOverview">
+<div class="WidgetSimple QueueOverview SpacingLeft SpacingRight">
+    <div class="Header">
+        <h2><span>[% Translate("Queues") | html %]</span></h2>
+    </div>
     <div class="Content">
         [% Data.MainContent %]
     </div>
