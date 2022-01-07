@@ -235,6 +235,17 @@ sub Run {
         );
 
         if ( $TicketKey =~ /\d+Translated$/ ) {
+            if ( $ShortRef =~ /^(?:Service|Queue)$/ ) {
+                my @Items = split(/::/, $Ticket{$ShortRef});
+                for my $Name ( @Items ) {
+                    $Name = $LayoutObject->{LanguageObject}->Translate($Name);
+                }
+                $Ticket{$ShortRef} = join('::', @Items);
+            }
+            else {
+                $Ticket{$ShortRef} = $LayoutObject->{LanguageObject}->Translate($Ticket{$ShortRef});
+            }
+
             $LayoutObject->Block(
                 Name => 'KeyContentTranslated',
                 Data => {

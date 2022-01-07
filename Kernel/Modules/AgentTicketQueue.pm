@@ -2728,6 +2728,7 @@ sub _MaskQueueViewDropDown {
             Data       => \%QueueLevelList,
             SelectedID => $QueueStrg{$QueueLevel}->{SelectedID},
             Name       => "QueueID[$QueueLevel]",
+            Class      => 'Modernize'
         );
         $ParentFilter = $QueueStrg{$QueueLevel}->{Selected};
     }

@@ -290,6 +290,15 @@ sub InputCreate {
             $SLAName = $SLAData{Name};
         }
 
+        if ( $Self->{ConfigObject}->Get('Ticket::SLATranslation') ) {
+            my @Names = split(/::/, $SLAName);
+            for my $Name ( @Names ) {
+                $Name = $Self->{LayoutObject}->{LanguageObject}->Translate( $Name );
+            }
+
+            $SLAName = join('::', @Names);
+        }
+
         #transform ascii to html...
         $Search = $Self->{LayoutObject}->Ascii2Html(
             Text           => $SLAName || '',

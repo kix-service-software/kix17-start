@@ -312,6 +312,15 @@ sub InputCreate {
             $ServiceName = $ServiceData{Name};
         }
 
+        if ( $Self->{ConfigObject}->Get('Ticket::ServiceTranslation') ) {
+            my @Names = split(/::/, $ServiceName);
+            for my $Name ( @Names ) {
+                $Name = $Self->{LayoutObject}->{LanguageObject}->Translate( $Name );
+            }
+
+            $ServiceName = join('::', @Names);
+        }
+
         #transform ascii to html...
         $Search = $Self->{LayoutObject}->Ascii2Html(
             Text           => $ServiceName || '',

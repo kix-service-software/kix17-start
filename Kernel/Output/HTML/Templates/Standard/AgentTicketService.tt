@@ -9,7 +9,10 @@
 # --
 
 
-<div class="WidgetSimple ServiceOverview">
+<div class="WidgetSimple ServiceOverview SpacingLeft SpacingRight">
+    <div class="Header">
+        <h2><span>[% Translate("Services") | html %]</span></h2>
+    </div>
     <div class="Content">
         [% Data.MainContent %]
     </div>
