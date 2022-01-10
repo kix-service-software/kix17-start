@@ -1,6 +1,12 @@
 # Change log of KIX
 * Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.18.0-RC6 (2022/01/10)
+ * (2022/01/07) - Bugfix: KIX17-2699 (addition of sla / service translation execution in several places) (fjacquemin)
+ * (2022/01/07) - Bugfix: KIX17-2743 (fixed data handling for generic interface config item operation) (millinger)
+ * (2022/01/06) - Bugfix: KIX17-2751 (LostPassword takes PasswordMinSize into account) (fjacquemin)
+ * (2022/01/06) - Bugfix: KIX17-2718 (fixed notification to linked persons) (millinger)
+
 # 17.18.0-RC5 (2022/01/04)
  * (2022/01/04) - Bugfix: KIX17-2699 (fixed incomplete service translations and remove service translation in admin masks) (fjacquemin)
  * (2022/01/03) - CR: KIX17-2731 (updated copyright) (fjacquemin)
