@@ -844,17 +844,33 @@ sub CheckXMLData {
 
             if ( ref( $XMLData->{$ItemKey} ) eq 'ARRAY' ) {
                 my $Counter = 0;
+                # process recursion for each array item
                 for my $ArrayItem ( @{ $XMLData->{$ItemKey} } ) {
+                    if ( ref( $ArrayItem ) eq 'HASH' ) {
 
-                    # start recursion for each array item
-                    my $XMLDataCheck = $Self->CheckXMLData(
-                        Definition => $DefItem->{Sub},
-                        XMLData    => $ArrayItem,
-                        Parent     => $Parent . $ItemKey . "[$Counter]->",
-                    );
-                    if ( !$XMLDataCheck->{Success} ) {
-                        return $XMLDataCheck;
+                        # start recursion
+                        my $XMLDataCheck = $Self->CheckXMLData(
+                            Definition => $DefItem->{Sub},
+                            XMLData    => $ArrayItem,
+                            Parent     => $Parent . $ItemKey . "[$Counter]->",
+                        );
+                        if ( !$XMLDataCheck->{Success} ) {
+                            return $XMLDataCheck;
+                        }
                     }
+                    elsif ( defined( $ArrayItem ) ) {
+
+                        # start recusrsion
+                        my $XMLDataCheck = $Self->CheckXMLData(
+                            Definition => $DefItem->{Sub},
+                            XMLData    => {},
+                            Parent     => $Parent . $ItemKey . "[$Counter]->",
+                        );
+                        if ( !$XMLDataCheck->{Success} ) {
+                            return $XMLDataCheck;
+                        }
+                    }
+
                     $Counter++;
                 }
             }
@@ -987,15 +1003,19 @@ sub ReplaceXMLData {
 
             if ( ref( $XMLData->{$ItemKey} ) eq 'ARRAY' ) {
                 my $Counter = 0;
+                # process recursion for each array item
                 for my $ArrayItem ( @{ $XMLData->{$ItemKey} } ) {
+                    if ( ref( $ArrayItem ) eq 'HASH' ) {
 
-                    # start recursion for each array item
-                    my $NewXMLDataPart = $Self->ReplaceXMLData(
-                        Definition => $DefItem->{Sub},
-                        XMLData    => $ArrayItem,
-                        Parent     => $Parent . $ItemKey . "[$Counter]->",
-                    );
-                    $NewXMLData->{$ItemKey}->[$Counter] = $NewXMLDataPart;
+                        # start recursion
+                        my $NewXMLDataPart = $Self->ReplaceXMLData(
+                            Definition => $DefItem->{Sub},
+                            XMLData    => $ArrayItem,
+                            Parent     => $Parent . $ItemKey . "[$Counter]->",
+                        );
+                        $NewXMLData->{$ItemKey}->[$Counter] = $NewXMLDataPart;
+                    }
+
                     $Counter++;
                 }
             }

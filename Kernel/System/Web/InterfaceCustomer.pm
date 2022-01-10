@@ -649,8 +649,12 @@ sub Run {
                 return;
             }
 
+            my $PreferencesGroups = $ConfigObject->Get('CustomerPreferencesGroups');
+
             # get new password
-            $UserData{NewPW} = $UserObject->GenerateRandomPassword();
+            $UserData{NewPW} = $UserObject->GenerateRandomPassword(
+                Size => $PreferencesGroups->{Password}->{PasswordMinSize}
+            );
 
             # update new password
             my $Success = $UserObject->SetPassword(
@@ -761,7 +765,7 @@ sub Run {
                     return;
                 }
             }
-    
+
             # Security: Always pretend that password reset instructions were sent to
             # make sure that requester cannot find out valid usernames by checking the result message
             $LayoutObject->Print(

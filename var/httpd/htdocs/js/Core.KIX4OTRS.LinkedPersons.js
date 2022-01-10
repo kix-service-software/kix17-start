@@ -153,6 +153,19 @@ Core.KIX4OTRS.LinkedPersons = (function(TargetNS) {
                 RefreshLinkedPersons();
         });
 
+        if ( !$('#LinkedPersons').closest('form').length ) {
+            if ( $('#LinkedPersons').closest('.LayoutFixedSidebar').children('.ContentColumn').find('input[name=TicketID]').length ) {
+                $('#LinkedPersons').closest('.LayoutFixedSidebar').children('.ContentColumn').find('form').on('submit', function(Event) {
+                    $('#LinkedPersons').find('input[name=LinkedPersonToInform]:checked').each(function() {
+                        $('<input />').attr('type', 'hidden')
+                                      .attr('name', 'LinkedPersonToInform')
+                                      .attr('value', $(this).val())
+                                      .appendTo(Event.target);
+                    });
+                });
+            }
+        }
+
         return true;
     }
 

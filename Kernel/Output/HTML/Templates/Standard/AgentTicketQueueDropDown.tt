@@ -8,7 +8,9 @@
 
 
 <div class="WidgetSimple SpacingTop SpacingLeft SpacingRight SpacingBottom">
-    <div class="Header">[% Translate("Change Queue") | html %]</div>
+    <div class="Header">
+        <h2><span>[% Translate("Change Queue") | html %]</span></h2>
+    </div>
     <div id="QueueDropDownContent" class="Content">
         [% Data.MainContent %]
     </div>
