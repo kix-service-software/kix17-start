@@ -34,6 +34,8 @@
 [% RenderBlockEnd("MetaLink") %]
     <link rel="shortcut icon" href="[% Config("Frontend::ImagePath") %][% Config("ProductIcon") %]" type="image/ico" />
     <link rel="apple-touch-icon" href="[% Config("Frontend::ImagePath") %][% Config("ProductIcon") %]" />
+    <link rel="stylesheet" type="text/css" href="[% Config("Frontend::WebPath") %]skins/Customer/default/css/thirdparty/jquery-ui-1.12.1/jquery-ui.min.css" />
+
 [% RenderBlockStart("CommonCSS") %]
     <link rel="stylesheet" type="text/css" href="[% Config("Frontend::WebPath") %]skins/Customer/[% Data.Skin | uri %]/[% Data.CSSDirectory | html %]/[% Data.Filename | html %]" />
 [% RenderBlockEnd("CommonCSS") %]
@@ -41,8 +43,6 @@
 [% RenderBlockStart("ModuleCSS") %]
     <link rel="stylesheet" type="text/css" href="[% Config("Frontend::WebPath") %]skins/Customer/[% Data.Skin | uri %]/[% Data.CSSDirectory | html %]/[% Data.Filename | html %]" />
 [% RenderBlockEnd("ModuleCSS") %]
-
-    <link rel="stylesheet" type="text/css" href="[% Config("Frontend::WebPath") %]skins/Customer/default/css/thirdparty/jquery-ui-1.12.1/jquery-ui.min.css" />
 
     <style type="text/css">
 [% RenderBlockStart("LogoCSS") %]
