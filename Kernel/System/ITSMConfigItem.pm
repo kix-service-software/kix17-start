@@ -1101,7 +1101,10 @@ sub ConfigItemSearchExtended {
     }
 
     # sort results
-    if ( ref( $Param{OrderBy} ) eq 'ARRAY' ) {
+    if (
+        scalar( @ResultList )
+        && ref( $Param{OrderBy} ) eq 'ARRAY'
+    ) {
         my $SortedResultList = $Self->VersionSearch(
             ConfigItemID     => \@ResultList,
             OrderBy          => $Param{OrderBy},
