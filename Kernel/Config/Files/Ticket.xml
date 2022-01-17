@@ -13020,7 +13020,7 @@ Thanks for your help!
                 <Item Key="Title">Text Modules</Item>
                 <Item Key="Description">Show or hide the text modules</Item>
                 <Item Key="Prio">0200</Item>
-                <Item Key="Actions">CustomerTicket(Message|MessageQuick|Zoom)</Item>
+                <Item Key="Actions">CustomerTicket(Message|MessageQuick|ZoomFollowUp)</Item>
             </Hash>
         </Setting>
     </ConfigItem>
