@@ -1,6 +1,10 @@
 # Change log of KIX
 * Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.18.0 (2022/01/19)
+ * (2022/01/19) - productive release
+ * (2021/11/08) - Bugfix: KIX17-2604 (fix missing user object in ticket update operation) (millinger)
+
 # 17.18.0-RC7 (2022/01/14)
  * (2022/01/13) - Bugfix: KIX17-2767 (fix config item search with empty sorted result) (millinger)
 
