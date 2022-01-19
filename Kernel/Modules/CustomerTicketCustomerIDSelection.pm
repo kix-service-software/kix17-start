@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -10,6 +10,8 @@ package Kernel::Modules::CustomerTicketCustomerIDSelection;
 
 use strict;
 use warnings;
+
+use URI::Escape qw();
 
 our $ObjectManagerDisabled = 1;
 
@@ -96,7 +98,7 @@ sub Run {
         if ( scalar(@CustomerIDArray) < 2 ) {
             return $LayoutObject->Redirect(
                 OP => "Action=CustomerTicketMessage"
-                    . ";SelectedCustomerID=" . $Self->{UserCustomerID}
+                    . ";SelectedCustomerID=" . URI::Escape::uri_escape_utf8( $Self->{UserCustomerID} )
                     . ";DefaultSet=" . $GetParam{DefaultSet}
             );
         }
@@ -112,7 +114,7 @@ sub Run {
         # pass selected CustomerID and product and redirect to ticket creation mask...
         return $LayoutObject->Redirect(
             OP => "Action=CustomerTicketMessage"
-                . ";SelectedCustomerID=" . $GetParam{SelectedCustomerID}
+                . ";SelectedCustomerID=" . URI::Escape::uri_escape_utf8( $GetParam{SelectedCustomerID} )
                 . ";DefaultSet=" . $GetParam{DefaultSet}
         );
 

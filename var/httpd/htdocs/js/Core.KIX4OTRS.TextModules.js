@@ -1,5 +1,5 @@
 // --
-// Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
+// Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
 // --
 // This software comes with ABSOLUTELY NO WARRANTY. For details, see
 // the enclosed file LICENSE for license information (AGPL). If you
@@ -233,6 +233,9 @@ Core.KIX4OTRS.TextModules = (function(TargetNS) {
         if ($('#TextModulesSelectionContainer').closest('form').find('input[name=TicketID]').length) {
             TicketID = $('#TextModulesSelectionContainer').closest('form').find('input[name=TicketID]').val();
         }
+        else if ($('#Compose').find('input[name=TicketID]').length) {
+             TicketID = $('#Compose').find('input[name=TicketID]').val();
+        }
 
         // determine TypeID
         if ($('#TypeID').length) {
@@ -289,6 +292,9 @@ Core.KIX4OTRS.TextModules = (function(TargetNS) {
         // determine TicketID
         if ($('#TextModulesSelectionContainer').closest('form').find('input[name=TicketID]').length) {
             TicketID = $('#TextModulesSelectionContainer').closest('form').find('input[name=TicketID]').val();
+        }
+        else if ($('#Compose').find('input[name=TicketID]').length) {
+             TicketID = $('#Compose').find('input[name=TicketID]').val();
         }
 
         // determine TypeID

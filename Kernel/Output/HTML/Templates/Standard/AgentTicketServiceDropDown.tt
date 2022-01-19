@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -8,7 +8,9 @@
 
 
 <div class="WidgetSimple SpacingTop SpacingLeft SpacingRight SpacingBottom">
-    <div class="Header">[% Translate("Change Service") | html %]</div>
+    <div class="Header">
+        <h2><span>[% Translate("Change Service") | html %]</span></h2>
+    </div>
     <div id="ServiceDropDownContent" class="Content">
         [% Data.MainContent %]
     </div>

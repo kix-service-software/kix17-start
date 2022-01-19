@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2021 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2022 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -80,15 +80,18 @@ sub Run {
         Permission       => 'ro',
     );
     $CountNew = $Count - $CountNew;
-    my $CountReached = $TicketObject->TicketSearch(
-        Result                        => 'COUNT',
-        Locks                         => [ 'lock', 'tmp_lock' ],
-        StateIDs                      => \@PendingReminderStateIDs,
-        TicketPendingTimeOlderMinutes => 1,
-        OwnerIDs                      => [ $Self->{UserID} ],
-        UserID                        => 1,
-        Permission                    => 'ro',
-    );
+    my $CountReached = 0;
+    if ( @PendingReminderStateIDs ) {
+        $CountReached = $TicketObject->TicketSearch(
+            Result                        => 'COUNT',
+            Locks                         => [ 'lock', 'tmp_lock' ],
+            StateIDs                      => \@PendingReminderStateIDs,
+            TicketPendingTimeOlderMinutes => 1,
+            OwnerIDs                      => [ $Self->{UserID} ],
+            UserID                        => 1,
+            Permission                    => 'ro',
+        );
+    }
 
     my $Class        = $Param{Config}->{CssClass};
     my $ClassNew     = $Param{Config}->{CssClassNew};

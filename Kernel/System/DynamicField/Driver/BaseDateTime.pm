@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2021 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2022 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -1148,15 +1148,14 @@ sub TemplateValueTypeGet {
 sub RandomValueSet {
     my ( $Self, %Param ) = @_;
 
-    my $YearValue   = int( rand(40) ) + 1_990;
-    my $MonthValue  = int( rand(9) ) + 1;
-    my $DayValue    = int( rand(10) ) + 10;
-    my $HourValue   = int( rand(12) ) + 10;
-    my $MinuteValue = int( rand(30) ) + 10;
-    my $SecondValue = int( rand(30) ) + 10;
-
-    my $Value = $YearValue . '-0' . $MonthValue . '-' . $DayValue . ' '
-        . $HourValue . ':' . $MinuteValue . ':' . $SecondValue;
+    # get random value
+    my $Year  = int( rand(40) ) + 2000;
+    my $Month = sprintf( "%02d", int( rand(12) ) + 1 );
+    my $Day   = sprintf( "%02d", int( rand(28) ) + 1 );
+    my $Hour  = sprintf( "%02d", int( rand(24) ) );
+    my $Min   = sprintf( "%02d", int( rand(60) ) );
+    my $Sec   = sprintf( "%02d", int( rand(60) ) );
+    my $Value = $Year . '-' . $Month . '-' . $Day . ' ' . $Hour . ':' . $Min . ':' . $Sec;
 
     my $Success = $Self->ValueSet(
         %Param,

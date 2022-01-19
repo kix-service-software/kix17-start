@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2021 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2022 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -1014,15 +1014,6 @@ sub ConfigItemSearchExtended {
         $RequiredSearch{Version} = 1;
     }
 
-    # version search is also required if sorting by name (fix for bug #7072)
-    ORDERBY:
-    for my $OrderBy ( @{ $Param{OrderBy} } ) {
-        if ( $OrderBy eq 'Name' ) {
-            $RequiredSearch{Version} = 1;
-            last ORDERBY;
-        }
-    }
-
     # xml version search is required if What is given
     if ( IsArrayRefWithData( $Param{What} ) ) {
         $RequiredSearch{XMLVersion} = 1;
@@ -1107,6 +1098,20 @@ sub ConfigItemSearchExtended {
     # consider the XML result
     if ( $RequiredSearch{XMLVersion} ) {
         @ResultList = grep { $ConfigItemLists{XMLVersion}->{$_} } @ResultList;
+    }
+
+    # sort results
+    if (
+        scalar( @ResultList )
+        && ref( $Param{OrderBy} ) eq 'ARRAY'
+    ) {
+        my $SortedResultList = $Self->VersionSearch(
+            ConfigItemID     => \@ResultList,
+            OrderBy          => $Param{OrderBy},
+            OrderByDirection => $Param{OrderByDirection},
+        );
+
+        @ResultList = @{ $SortedResultList };
     }
 
     # consider limit

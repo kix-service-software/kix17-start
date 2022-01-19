@@ -1,5 +1,5 @@
 // --
-// Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
+// Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
 // --
 // This software comes with ABSOLUTELY NO WARRANTY. For details, see
 // the enclosed file LICENSE for license information (AGPL). If you
@@ -152,6 +152,19 @@ Core.KIX4OTRS.LinkedPersons = (function(TargetNS) {
             if ($('#LinkedPersons').hasClass('Collapsed') && $('#LinkedPersons').find('#LinkedPersonsTable tbody').length == 0)
                 RefreshLinkedPersons();
         });
+
+        if ( !$('#LinkedPersons').closest('form').length ) {
+            if ( $('#LinkedPersons').closest('.LayoutFixedSidebar').children('.ContentColumn').find('input[name=TicketID]').length ) {
+                $('#LinkedPersons').closest('.LayoutFixedSidebar').children('.ContentColumn').find('form').on('submit', function(Event) {
+                    $('#LinkedPersons').find('input[name=LinkedPersonToInform]:checked').each(function() {
+                        $('<input />').attr('type', 'hidden')
+                                      .attr('name', 'LinkedPersonToInform')
+                                      .attr('value', $(this).val())
+                                      .appendTo(Event.target);
+                    });
+                });
+            }
+        }
 
         return true;
     }

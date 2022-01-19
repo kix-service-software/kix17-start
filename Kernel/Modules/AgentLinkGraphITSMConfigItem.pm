@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -142,7 +142,13 @@ sub Run {
     my %UserPreferences = $UserObject->GetPreferences(
         UserID => $Self->{UserID},
     );
-    if ( !$GetParam{Template} ) {
+    if (
+        (
+            !$Self->{Subaction}
+            || $Self->{Subaction} ne 'LoadTemplate'
+        )
+        && !$GetParam{Template}
+    ) {
         $GetParam{Template} = $UserPreferences{CIGTemplate} || $Self->{Config}->{DefaultTemplate} || '';
     }
 

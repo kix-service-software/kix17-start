@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2021 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2022 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -309,19 +309,23 @@ sub Run {
             )
         )
     ) {
+        if (
+            !defined( $Filters{ $Filter }->{Search}->{StateIDs} )
+            || IsArrayRefWithData( $Filters{ $Filter }->{Search}->{StateIDs} )
+        ) {
+            @OriginalViewableTickets = $TicketObject->TicketSearch(
+                %{ $Filters{$Filter}->{Search} },
+                Limit  => $Limit,
+                Result => 'ARRAY',
+            );
 
-        @OriginalViewableTickets = $TicketObject->TicketSearch(
-            %{ $Filters{$Filter}->{Search} },
-            Limit  => $Limit,
-            Result => 'ARRAY',
-        );
-
-        @ViewableTickets = $TicketObject->TicketSearch(
-            %{ $Filters{$Filter}->{Search} },
-            %ColumnFilter,
-            Result => 'ARRAY',
-            Limit  => 1_000,
-        );
+            @ViewableTickets = $TicketObject->TicketSearch(
+                %{ $Filters{$Filter}->{Search} },
+                %ColumnFilter,
+                Result => 'ARRAY',
+                Limit  => 1_000,
+            );
+        }
     }
 
     # prepare shown tickets for new article tickets
@@ -409,11 +413,17 @@ sub Run {
 
     my %NavBarFilter;
     for my $FilterColumn ( sort keys %Filters ) {
-        my $Count = $TicketObject->TicketSearch(
-            %{ $Filters{$FilterColumn}->{Search} },
-            %ColumnFilter,
-            Result => 'COUNT',
-        );
+        my $Count = 0;
+        if (
+            !defined( $Filters{ $FilterColumn }->{Search}->{StateIDs} )
+            || IsArrayRefWithData( $Filters{ $FilterColumn }->{Search}->{StateIDs} )
+        ) {
+            $Count = $TicketObject->TicketSearch(
+                %{ $Filters{$FilterColumn}->{Search} },
+                %ColumnFilter,
+                Result => 'COUNT',
+            );
+        }
 
         # prepare count for new article tickets
         if ( $FilterColumn eq 'New' ) {

@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2021 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2022 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -65,6 +65,7 @@ sub new {
         'IsFiltrable'                  => 0,
         'IsStatsCondition'             => 1,
         'IsCustomerInterfaceCapable'   => 1,
+        'CanRandomize'                 => 1,
     };
 
     # get the Dynamic Field Backend custom extensions
@@ -1339,11 +1340,11 @@ sub StatsSearchFieldParameterBuild {
 sub RandomValueSet {
     my ( $Self, %Param ) = @_;
 
-    my $YearValue  = int( rand(40) ) + 1_990;
-    my $MonthValue = int( rand(9) ) + 1;
-    my $DayValue   = int( rand(10) ) + 10;
-
-    my $Value = $YearValue . '-0' . $MonthValue . '-' . $DayValue . ' 00:00:00';
+    # get random value
+    my $Year  = int( rand(40) ) + 2000;
+    my $Month = sprintf( "%02d", int( rand(12) ) + 1 );
+    my $Day   = sprintf( "%02d", int( rand(28) ) + 1 );
+    my $Value = $Year . '-' . $Month . '-' . $Day . ' 00:00:00';
 
     my $Success = $Self->ValueSet(
         %Param,

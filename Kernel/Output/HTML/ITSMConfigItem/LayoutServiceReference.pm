@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -73,12 +73,17 @@ sub OutputStringCreate {
     my ( $Self, %Param ) = @_;
 
     if ( $Self->{ConfigObject}->Get('Ticket::ServiceTranslation') ) {
-        $Param{Value} = $Self->{LayoutObject}->{LanguageObject}->Translate( $Param{Value} );
+        my @Names = split(/::/, $Param{Value});
+        for my $Name ( @Names ) {
+            $Name = $Self->{LayoutObject}->{LanguageObject}->Translate( $Name );
+        }
+
+        $Param{Value} = join('::', @Names);
     }
 
     #transform ascii to html...
     $Param{Value} = $Self->{LayoutObject}->Ascii2Html(
-        Text => $Param{Value} || '',
+        Text           => $Param{Value} || '',
         HTMLResultMode => 1,
     );
 
@@ -99,7 +104,7 @@ get form data as hash reference
 sub FormDataGet {
     my ( $Self, %Param ) = @_;
 
-    #check needed stuff...
+    # check needed stuff...
     for my $Argument (qw(Key Item)) {
         if ( !$Param{$Argument} ) {
             $Self->{LogObject}->Log(
@@ -112,27 +117,27 @@ sub FormDataGet {
 
     my %FormData;
 
-    #get selected CIClassReference...
+    # get selected CIClassReference...
     $FormData{Value} = $Self->{ParamObject}->GetParam( Param => $Param{Key} );
 
-    #check search button..
+    # check search button..
     if ( $Self->{ParamObject}->GetParam( Param => $Param{Key} . '::ButtonSearch' ) ) {
         $Param{Item}->{Form}->{ $Param{Key} }->{Search}
             = $Self->{ParamObject}->GetParam( Param => $Param{Key} . '::Search' );
     }
 
-    #check select button...
+    # check select button...
     elsif ( $Self->{ParamObject}->GetParam( Param => $Param{Key} . '::ButtonSelect' ) ) {
         $FormData{Value} = $Self->{ParamObject}->GetParam( Param => $Param{Key} . '::Select' );
     }
 
-    #check clear button...
+    # check clear button...
     elsif ( $Self->{ParamObject}->GetParam( Param => $Param{Key} . '::ButtonClear' ) ) {
         $FormData{Value} = '';
     }
     else {
 
-        #reset value if search field is empty...
+        # reset value if search field is empty...
         if (
             !$Self->{ParamObject}->GetParam( Param => $Param{Key} . '::Search' )
             && defined $FormData{Value}
@@ -140,7 +145,7 @@ sub FormDataGet {
             $FormData{Value} = '';
         }
 
-        #check required option...
+        # check required option...
         if ( $Param{Item}->{Input}->{Required} && !$FormData{Value} ) {
             $Param{Item}->{Form}->{ $Param{Key} }->{Invalid} = 1;
             $FormData{Invalid} = 1;
@@ -190,8 +195,8 @@ sub InputCreate {
     my $StringSelect = '';
     my $Class        = 'W50pc ServiceSearch';
     my $Required     = $Param{Required} || '';
-    my $Invalid      = $Param{Invalid} || '';
-    my $ItemId       = $Param{ItemId} || '';
+    my $Invalid      = $Param{Invalid}  || '';
+    my $ItemId       = $Param{ItemId}   || '';
 
     if ($Required) {
         $Class .= ' Validate_Required';
@@ -201,24 +206,41 @@ sub InputCreate {
         $Class .= ' ServerError';
     }
 
+    # AutoComplete CIClass
+    my $AutoCompleteConfig = $Self->{ConfigObject}->Get('ITSMCIAttributeCollection::Frontend::CommonSearchAutoComplete');
     # ServiceReference search...
     if ( $Param{Item}->{Form}->{ $Param{Key} }->{Search} ) {
 
         #-----------------------------------------------------------------------
         # search for name....
         my @ServiceIDs = $Self->{ServiceObject}->ServiceSearch(
-            Name   => '*' . $Param{Item}->{Form}->{ $Param{Key} }->{Search} . '*',
+            Name   => '*',
             UserID => 1,
         );
+
+        my $SearchTerm = $Param{Item}->{Form}->{ $Param{Key} }->{Search};
+        $SearchTerm =~ s/\_/\./g;
+        $SearchTerm =~ s/\%/\.\*/g;
+        $SearchTerm =~ s/\*/\.\*/g;
+
         my %ServiceList = ();
         for my $CurrKey (@ServiceIDs) {
-            my %ServiceData = $Self->{ServiceObject}->ServiceGet(
+            my $ServiceName = $Self->{ServiceObject}->ServiceLookup(
                 ServiceID => $CurrKey,
-                UserID    => 1,
             );
-            next if ( !%ServiceData );
-            $ServiceList{$CurrKey}
-                = $ServiceData{Name}
+
+            if ( $Self->{ConfigObject}->Get('Ticket::ServiceTranslation') ) {
+                my @Names = split(/::/, $ServiceName);
+                for my $Name ( @Names ) {
+                    $Name = $Self->{LayoutObject}->{LanguageObject}->Translate( $Name );
+                }
+
+                $ServiceName = join('::', @Names);
+            }
+
+            next if ( $ServiceName !~ /$SearchTerm/i );
+
+            $ServiceList{$CurrKey} = $ServiceName
                 . " ("
                 . $CurrKey
                 . ")";
@@ -226,13 +248,17 @@ sub InputCreate {
 
         #-----------------------------------------------------------------------
         # build search result presentation....
-        if ( %ServiceList && scalar( keys %ServiceList ) > 1 ) {
+        if (
+            %ServiceList
+            && scalar( keys %ServiceList ) > 1
+        ) {
 
             #create option list...
             $StringOption = $Self->{LayoutObject}->BuildSelection(
-                Name        => $Param{Key} . '::Select',
-                Data        => \%ServiceList,
-                Translation => $Self->{ConfigObject}->Get('Ticket::ServiceTranslation'),
+                Name           => $Param{Key} . '::Select',
+                Data           => \%ServiceList,
+                Translation    => $Self->{ConfigObject}->Get('Ticket::ServiceTranslation'),
+
             );
             $StringOption .= '<br>';
 
@@ -255,17 +281,19 @@ sub InputCreate {
             );
             my $ServiceName = "";
 
-            if ( %ServiceData && $ServiceData{Name} ) {
+            if (
+                %ServiceData
+                && $ServiceData{Name}
+            ) {
                 $ServiceName = $ServiceData{Name};
             }
 
             #transform ascii to html...
             $Search = $Self->{LayoutObject}->Ascii2Html(
-                Text => $ServiceName || '',
+                Text           => $ServiceName || '',
                 HTMLResultMode => 1,
             );
         }
-
     }
 
     #create CIClassReference string...
@@ -277,24 +305,33 @@ sub InputCreate {
         );
         my $ServiceName = "";
 
-        if ( %ServiceData && $ServiceData{Name} ) {
+        if (
+            %ServiceData
+            && $ServiceData{Name}
+        ) {
             $ServiceName = $ServiceData{Name};
+        }
+
+        if ( $Self->{ConfigObject}->Get('Ticket::ServiceTranslation') ) {
+            my @Names = split(/::/, $ServiceName);
+            for my $Name ( @Names ) {
+                $Name = $Self->{LayoutObject}->{LanguageObject}->Translate( $Name );
+            }
+
+            $ServiceName = join('::', @Names);
         }
 
         #transform ascii to html...
         $Search = $Self->{LayoutObject}->Ascii2Html(
-            Text => $ServiceName || '',
+            Text           => $ServiceName || '',
             HTMLResultMode => 1,
         );
     }
 
-    # AutoComplete CIClass
-    my $AutoCompleteConfig
-        = $Self->{ConfigObject}->Get('ITSMCIAttributeCollection::Frontend::CommonSearchAutoComplete');
-
     #create string...
     my $String = '';
-    if (   $AutoCompleteConfig
+    if (
+        $AutoCompleteConfig
         && ref($AutoCompleteConfig) eq 'HASH'
         && $AutoCompleteConfig->{Active}
     ) {
@@ -313,14 +350,13 @@ sub InputCreate {
             Data => {
                 ItemID             => $ItemId,
                 ActiveAutoComplete => 'true',
-                }
+            }
         );
 
         $String = $Self->{LayoutObject}->Output(
             TemplateFile => 'AgentServiceSearch',
         );
-        $String
-            = '<input type="hidden" name="'
+        $String = '<input type="hidden" name="'
             . $Param{Key}
             . '" value="'
             . $Value
@@ -339,8 +375,7 @@ sub InputCreate {
             . $Search . '"/>';
     }
     else {
-        $String
-            = '<input type="hidden" name="'
+        $String = '<input type="hidden" name="'
             . $Param{Key}
             . '" value="'
             . $Value . '">'
@@ -446,7 +481,6 @@ sub SearchInputCreate {
 }
 
 1;
-
 
 =head1 VERSION
 

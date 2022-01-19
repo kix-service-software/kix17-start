@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2021 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2022 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -325,7 +325,7 @@ sub Run {
     if ( $Self->{Subaction} eq 'AJAXUpdate' ) {
         my $ElementChanged = $ParamObject->GetParam( Param => 'ElementChanged' ) || '';
 
-        my $NewUsers = $Self->_GetUsers(
+        my $NewUsers = $Self->_GetOwners(
             %GetParam,
             %ACLCompatGetParam,
             QueueID  => $GetParam{DestQueueID},
@@ -738,6 +738,19 @@ sub Run {
                 ) {
                     $Error{'DateInvalid'} = 'ServerError';
                 }
+            }
+        }
+
+        # check owner
+        if ( $GetParam{NewUserID} ) {
+            my $PossibleOwners = $Self->_GetOwners(
+                %GetParam,
+                %ACLCompatGetParam,
+                QueueID  => $GetParam{DestQueueID},
+                AllUsers => $GetParam{OwnerAll},
+            );
+            if ( !$PossibleOwners->{ $GetParam{NewUserID} } ) {
+                $Error{'NewUserInvalid'} = 'ServerError';
             }
         }
 
@@ -1249,7 +1262,7 @@ sub AgentMove {
 
     # build owner string
     $Param{OwnerStrg} = $LayoutObject->BuildSelection(
-        Data => $Self->_GetUsers(
+        Data => $Self->_GetOwners(
             QueueID  => $Param{DestQueueID},
             AllUsers => $Param{OwnerAll},
         ),
@@ -1257,7 +1270,7 @@ sub AgentMove {
         SelectedID   => $Param{NewUserID},
         Translation  => 0,
         PossibleNone => 1,
-        Class        => 'Modernize',
+        Class        => 'Modernize ' . ( $Param{NewUserInvalid} || '' ),
         Filters      => {
             OldOwners => {
                 Name   => $LayoutObject->{LanguageObject}->Translate('Previous Owner'),
@@ -1565,65 +1578,93 @@ END
     );
 }
 
-sub _GetUsers {
+sub _GetOwners {
     my ( $Self, %Param ) = @_;
 
-    # get users
-    my %ShownUsers;
-    my %AllGroupsMembers = $Kernel::OM->Get('Kernel::System::User')->UserList(
-        Type  => 'Long',
+    # get needed objects
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+    my $GroupObject  = $Kernel::OM->Get('Kernel::System::Group');
+    my $QueueObject  = $Kernel::OM->Get('Kernel::System::Queue');
+    my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
+    my $UserObject   = $Kernel::OM->Get('Kernel::System::User');
+
+    # get available permissions and set permission group type accordingly.
+    my $ConfigPermissions   = $ConfigObject->Get('System::Permission');
+    my $PermissionGroupType = ( grep { $_ eq 'owner' } @{$ConfigPermissions} ) ? 'owner' : 'rw';
+
+    # get login list of users
+    my %UserLoginList = $UserObject->UserList(
+        Type  => 'Short',
         Valid => 1,
     );
 
-    # get ticket object
-    my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
-
     # just show only users with selected custom queue
-    if ( $Param{QueueID} && !$Param{AllUsers} ) {
-        my @UserIDs = $TicketObject->GetSubscribedUserIDsByQueueID(%Param);
-        for my $UserGroupMember ( sort keys %AllGroupsMembers ) {
+    if (
+        $Param{QueueID}
+        && !$Param{AllUsers}
+    ) {
+        my @UserIDs = $TicketObject->GetSubscribedUserIDsByQueueID( %Param );
+        for my $GroupMemberKey ( keys( %UserLoginList ) ) {
             my $Hit = 0;
+            USERID:
             for my $UID (@UserIDs) {
-                if ( $UID eq $UserGroupMember ) {
+                if ( $UID eq $GroupMemberKey ) {
                     $Hit = 1;
+
+                    last USERID;
                 }
             }
             if ( !$Hit ) {
-                delete $AllGroupsMembers{$UserGroupMember};
+                delete( $UserLoginList{ $GroupMemberKey } );
             }
         }
     }
 
-    # check show users
-    if ( $Kernel::OM->Get('Kernel::Config')->Get('Ticket::ChangeOwnerToEveryone') ) {
-        %ShownUsers = %AllGroupsMembers;
+    # prepare acl data
+    my %ACLUsers;
+
+    # show all system users
+    if ( $ConfigObject->Get('Ticket::ChangeOwnerToEveryone') ) {
+        %ACLUsers = %UserLoginList;
     }
 
-    # show all users who are rw in the queue group
+    # show all subscribed users who have the appropriate permission in the queue group
     elsif ( $Param{QueueID} ) {
-        my $GID = $Kernel::OM->Get('Kernel::System::Queue')->GetQueueGroupID( QueueID => $Param{QueueID} );
-        my %MemberList = $Kernel::OM->Get('Kernel::System::Group')->PermissionGroupGet(
-            GroupID => $GID,
-            Type    => 'owner',
+        my $GID = $QueueObject->GetQueueGroupID(
+            QueueID => $Param{QueueID}
         );
-        for my $MemberUsers ( sort keys %MemberList ) {
-            if ( $AllGroupsMembers{$MemberUsers} ) {
-                $ShownUsers{$MemberUsers} = $AllGroupsMembers{$MemberUsers};
+
+        my %MemberList = $GroupObject->PermissionGroupGet(
+            GroupID => $GID,
+            Type    => $PermissionGroupType,
+        );
+
+        for my $MemberKey ( keys( %MemberList ) ) {
+            if ( $UserLoginList{ $MemberKey } ) {
+                $ACLUsers{ $MemberKey } = $UserLoginList{ $MemberKey };
             }
         }
     }
 
-    # workflow
+    # apply acl
     my $ACL = $TicketObject->TicketAcl(
         %Param,
         Action        => $Self->{Action},
         ReturnType    => 'Ticket',
-        ReturnSubType => 'NewOwner',
-        Data          => \%ShownUsers,
+        ReturnSubType => 'Owner',
+        Data          => \%ACLUsers,
         UserID        => $Self->{UserID},
     );
+    if ( $ACL ) {
+        %ACLUsers = $TicketObject->TicketAclData();
+    }
 
-    return { $TicketObject->TicketAclData() } if $ACL;
+    # prepare display data
+    my %UserNameList = $UserObject->UserList(
+        Type  => 'Long',
+        Valid => 1,
+    );
+    my %ShownUsers = map( { $_ => $UserNameList{$_} } keys( %ACLUsers ) );
 
     return \%ShownUsers;
 }
@@ -1631,34 +1672,45 @@ sub _GetUsers {
 sub _GetOldOwners {
     my ( $Self, %Param ) = @_;
 
-    # get ticket object
+    # get needed objects
     my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
 
-    my @OldUserInfo = $TicketObject->TicketOwnerList( TicketID => $Self->{TicketID} );
-    my %UserHash;
+    # get previous ticket owner
+    my %UserNameList;
+    my %ACLUsers;
+    my @OldUserInfo = $TicketObject->TicketOwnerList(
+        TicketID => $Self->{TicketID}
+    );
     if (@OldUserInfo) {
         my $Counter = 1;
         USER:
         for my $User ( reverse @OldUserInfo ) {
-            next USER if $UserHash{ $User->{UserID} };
-            $UserHash{ $User->{UserID} } = "$Counter: $User->{UserFullname}";
+            next USER if $ACLUsers{ $User->{UserID} };
+
+            $ACLUsers{ $User->{UserID} } = $User->{UserLogin};
+
+            $UserNameList{ $User->{UserID} } = "$Counter: $User->{UserFullname}";
             $Counter++;
         }
     }
 
-    # workflow
+    # apply acl
     my $ACL = $TicketObject->TicketAcl(
         %Param,
         Action        => $Self->{Action},
         ReturnType    => 'Ticket',
         ReturnSubType => 'OldOwner',
-        Data          => \%UserHash,
+        Data          => \%ACLUsers,
         UserID        => $Self->{UserID},
     );
+    if ( $ACL ) {
+        %ACLUsers = $TicketObject->TicketAclData();
+    }
+ 
+    # prepare display data
+    my %ShownUsers = map( { $_ => $UserNameList{$_} } keys( %ACLUsers ) );
 
-    return { $TicketObject->TicketAclData() } if $ACL;
-
-    return \%UserHash;
+    return \%ShownUsers;
 }
 
 sub _GetPriorities {

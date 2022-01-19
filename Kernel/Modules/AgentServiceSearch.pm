@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -46,25 +46,32 @@ sub Run {
     $Search =~ s/\*/\.\*/g;
 
     # get service list
-    my %ServiceList = $Self->{ServiceObject}->ServiceList(
-        Valid  => 1,
+    my @ServiceList = $Self->{ServiceObject}->ServiceSearch(
+        Name   => '*',
         UserID => 1,
     );
 
     # build data
     my @Data;
-    for my $ServiceID ( keys( %ServiceList ) ) {
-        my $ServiceName = $ServiceList{$ServiceID};
+    for my $ServiceID ( @ServiceList ) {
+        my $ServiceName = $Self->{ServiceObject}->ServiceLookup(
+            ServiceID => $ServiceID,
+        );
         if ( $Self->{ConfigObject}->Get('Ticket::ServiceTranslation') ) {
-            $ServiceName = $Self->{LayoutObject}->{LanguageObject}->Translate( $ServiceName );
+            my @Names = split(/::/, $ServiceName);
+            for my $Name ( @Names ) {
+                $Name = $Self->{LayoutObject}->{LanguageObject}->Translate( $Name );
+            }
+
+            $ServiceName = join('::', @Names);
         }
 
-        if ( $ServiceName =~ /$Search/i ) {
-            push @Data, {
-                ServiceKey   => $ServiceID,
-                ServiceValue => $ServiceName,
-            };
-        }
+        next if ( $ServiceName !~ /$Search/i );
+
+        push @Data, {
+            ServiceKey   => $ServiceID,
+            ServiceValue => $ServiceName,
+        };
     }
 
     @Data = sort{ $a->{ServiceValue} cmp $b->{ServiceValue} } ( @Data );

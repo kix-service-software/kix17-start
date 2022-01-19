@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2021 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2022 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -1099,10 +1099,10 @@ sub Run {
             UserSelected            => $GetParam{QuickTicketOwnerID}           || '',
             ResponsibleUserSelected => $GetParam{QuickTicketResponsibleUserID} || '',
             TimeUnits               => $GetParam{QuickTicketTimeUnits}         || '',
-            ServiceID => $Article{ServiceID} || $GetParam{QuickTicketServiceID},
-            SLAID     => $Article{SLAID}     || $GetParam{QuickTicketSLAID},
-            TypeID    => $GetParam{TypeID}   || '',
-            Priorities => $Self->_GetPriorities(
+            ServiceID               => $Article{ServiceID}                     || $GetParam{QuickTicketServiceID},
+            SLAID                   => $Article{SLAID}                         || $GetParam{QuickTicketSLAID},
+            TypeID                  => $GetParam{TypeID}                       || '',
+            Priorities              => $Self->_GetPriorities(
                 %GetParam,
                 %ACLCompatGetParam,
                 %SplitTicketParam,
@@ -1124,7 +1124,7 @@ sub Run {
                 %SplitTicketParam,
                 QueueID => $Self->{QueueID} || '',
             ),
-            Users => $Self->_GetUsers(
+            Users => $Self->_GetOwners(
                 %GetParam,
                 %ACLCompatGetParam,
                 QueueID => $Self->{QueueID},
@@ -1141,22 +1141,19 @@ sub Run {
                 %ACLCompatGetParam,
                 %SplitTicketParam,
                 CustomerUserID => $CustomerData{UserLogin} || '',
-                QueueID => $Self->{QueueID},
-                TypeID  => $GetParam{TypeID} || $GetParam{DefaultTypeID},
+                QueueID        => $Self->{QueueID},
+                TypeID         => $GetParam{TypeID} || $GetParam{DefaultTypeID},
             ),
             From         => $Article{From},
             Subject      => $Subject,
             Body         => $Body,
-
-            CustomerID => $GetParam{CustomerID} || $Article{CustomerID},
+            CustomerID   => $GetParam{CustomerID} || $Article{CustomerID},
             CustomerUser => $GetParam{QuickTicketCustomer}
                 || $Article{CustomerUserID}
                 || $ParamObject->GetParam( Param => 'SelectedCustomerUser' ),
-
             CustomerData => \%CustomerData,
             Attachments  => \@Attachments,
             LinkTicketID => $GetParam{LinkTicketID} || '',
-
             %SplitTicketParam,
             DynamicFieldHTML => \%DynamicFieldHTML,
             MultipleCustomer => \@MultipleCustomer,
@@ -1629,6 +1626,39 @@ sub Run {
             ) {
                 $Error{'TimeUnitsInvalid'} = ' ServerError';
             }
+
+            # check owner
+            if (
+                $ConfigObject->Get('Ticket::Frontend::NewOwnerSelection')
+                && $GetParam{NewUserID}
+            ) {
+                my $PossibleOwners = $Self->_GetOwners(
+                    %GetParam,
+                    %ACLCompatGetParam,
+                    QueueID  => $NewQueueID || $Self->{QueueID} || 1,
+                    AllUsers => $GetParam{OwnerAll},
+                );
+                if ( !$PossibleOwners->{ $GetParam{NewUserID} } ) {
+                    $Error{'NewUserInvalid'} = 'ServerError';
+                }
+            }
+
+            # check responsible
+            if (
+                $ConfigObject->Get('Ticket::Responsible')
+                && $ConfigObject->Get('Ticket::Frontend::NewResponsibleSelection')
+                && $GetParam{NewResponsibleID}
+            ) {
+                my $PossibleResponsibles = $Self->_GetResponsibles(
+                    %GetParam,
+                    %ACLCompatGetParam,
+                    QueueID  => $NewQueueID || $Self->{QueueID} || 1,
+                    AllUsers => $GetParam{ResponsibleAll},
+                );
+                if ( !$PossibleResponsibles->{ $GetParam{NewResponsibleID} } ) {
+                    $Error{'NewResponsibleInvalid'} = 'ServerError';
+                }
+            }
         }
 
         if (%Error) {
@@ -1698,7 +1728,7 @@ sub Run {
             # html output
             $Output .= $Self->_MaskPhoneNew(
                 QueueID => $Self->{QueueID},
-                Users   => $Self->_GetUsers(
+                Users   => $Self->_GetOwners(
                     %GetParam,
                     %ACLCompatGetParam,
                     QueueID  => $NewQueueID || $Self->{QueueID} || 1,
@@ -1744,8 +1774,8 @@ sub Run {
                 CustomerID   => $LayoutObject->Ascii2Html( Text => $CustomerID ),
                 CustomerUser => $CustomerUser,
                 CustomerData => \%CustomerData,
-                FromOptions => $Param{FromOptions},
-                To => $Self->_GetTos(
+                FromOptions  => $Param{FromOptions},
+                To           => $Self->_GetTos(
                     %GetParam,
                     %ACLCompatGetParam,
                     QueueID => $NewQueueID || $Self->{QueueID} || 1,
@@ -1755,9 +1785,9 @@ sub Run {
                 Errors      => \%Error,
                 Attachments => \@Attachments,
                 %GetParam,
-                DynamicFieldHTML     => \%DynamicFieldHTML,
-                MultipleCustomer     => \@MultipleCustomer,
-                FromExternalCustomer => \%FromExternalCustomer,
+                DynamicFieldHTML      => \%DynamicFieldHTML,
+                MultipleCustomer      => \@MultipleCustomer,
+                FromExternalCustomer  => \%FromExternalCustomer,
                 SelectedConfigItemIDs => $GetParam{SelectedConfigItemIDs},
                 PriorityID            => $GetParam{PriorityID} || $GetParam{QuickTicketPriorityID},
                 Priority              => $GetParam{Priority} || $GetParam{QuickTicketPriority},
@@ -1946,7 +1976,10 @@ sub Run {
         }
 
         # set owner (if new user id is given)
-        if ( $GetParam{NewUserID} ) {
+        if (
+            $ConfigObject->Get('Ticket::Frontend::NewOwnerSelection')
+            && $GetParam{NewUserID}
+        ) {
             $TicketObject->TicketOwnerSet(
                 TicketID  => $TicketID,
                 NewUserID => $GetParam{NewUserID},
@@ -1972,7 +2005,11 @@ sub Run {
         }
 
         # set responsible (if new user id is given)
-        if ( $GetParam{NewResponsibleID} ) {
+        if (
+            $ConfigObject->Get('Ticket::Responsible')
+            && $ConfigObject->Get('Ticket::Frontend::NewResponsibleSelection')
+            && $GetParam{NewResponsibleID}
+        ) {
             $TicketObject->TicketResponsibleSet(
                 TicketID  => $TicketID,
                 NewUserID => $GetParam{NewResponsibleID},
@@ -2082,78 +2119,79 @@ sub Run {
 # ---
 # ITSMIncidentProblemManagement
 # ---
-            # get the temporarily links
-            my $TempLinkList = $LinkObject->LinkList(
-                Object => 'Ticket',
-                Key    => $Self->{FormID},
-                State  => 'Temporary',
-                UserID => $Self->{UserID},
-            );
+        # get the temporarily links
+        my $TempLinkList = $LinkObject->LinkList(
+            Object => 'Ticket',
+            Key    => $Self->{FormID},
+            State  => 'Temporary',
+            UserID => $Self->{UserID},
+        );
 
-            if ( $TempLinkList && ref $TempLinkList eq 'HASH' && %{$TempLinkList} ) {
+        if ( $TempLinkList && ref $TempLinkList eq 'HASH' && %{$TempLinkList} ) {
 
-                for my $TargetObjectOrg ( sort keys %{$TempLinkList} ) {
+            for my $TargetObjectOrg ( sort keys %{$TempLinkList} ) {
 
-                    # extract typelist
-                    my $TypeList = $TempLinkList->{$TargetObjectOrg};
+                # extract typelist
+                my $TypeList = $TempLinkList->{$TargetObjectOrg};
 
-                    for my $Type ( sort keys %{$TypeList} ) {
+                for my $Type ( sort keys %{$TypeList} ) {
 
-                        # extract direction list
-                        my $DirectionList = $TypeList->{$Type};
+                    # extract direction list
+                    my $DirectionList = $TypeList->{$Type};
 
-                        for my $Direction ( sort keys %{$DirectionList} ) {
+                    for my $Direction ( sort keys %{$DirectionList} ) {
 
-                            for my $TargetKeyOrg ( sort keys %{ $DirectionList->{$Direction} } ) {
+                        for my $TargetKeyOrg ( sort keys %{ $DirectionList->{$Direction} } ) {
 
-                                # delete the temp link
-                                $LinkObject->LinkDelete(
-                                    Object1 => 'Ticket',
-                                    Key1    => $Self->{FormID},
-                                    Object2 => $TargetObjectOrg,
-                                    Key2    => $TargetKeyOrg,
-                                    Type    => $Type,
-                                    UserID  => $Self->{UserID},
-                                );
+                            # delete the temp link
+                            $LinkObject->LinkDelete(
+                                Object1 => 'Ticket',
+                                Key1    => $Self->{FormID},
+                                Object2 => $TargetObjectOrg,
+                                Key2    => $TargetKeyOrg,
+                                Type    => $Type,
+                                UserID  => $Self->{UserID},
+                            );
 
-                                if ($TargetObjectOrg eq 'Person') {
-                                     $Kernel::OM->Get('Kernel::System::AsynchronousExecutor::LinkedTicketPersonExecutor')->AsyncCall(
-                                         TicketID      => $TicketID,
-                                         PersonID      => $TargetKeyOrg,
-                                         PersonHistory => $TargetKeyOrg,
-                                         LinkType      => $Type,
-                                         UserID        => $Self->{UserID},
-                                     );
-                                }
-                                else {
-                                    if ($Direction eq 'Source') {
-                                        $LinkObject->LinkAdd(
-                                            SourceObject => $TargetObjectOrg,
-                                            SourceKey    => $TargetKeyOrg,
-                                            TargetObject => 'Ticket',
-                                            TargetKey    => $TicketID,
-                                            Type         => $Type,
-                                            State        => 'Valid',
-                                            UserID       => $Self->{UserID},
-                                        );
-                                    } else {
-                                        $LinkObject->LinkAdd(
-                                            SourceObject => 'Ticket',
-                                            SourceKey    => $TicketID,
-                                            TargetObject => $TargetObjectOrg,
-                                            TargetKey    => $TargetKeyOrg,
-                                            Type         => $Type,
-                                            State        => 'Valid',
-                                            UserID       => $Self->{UserID},
-                                        );
-                                    }
+                            if ($TargetObjectOrg eq 'Person') {
+                                 $Kernel::OM->Get('Kernel::System::AsynchronousExecutor::LinkedTicketPersonExecutor')->AsyncCall(
+                                     TicketID      => $TicketID,
+                                     PersonID      => $TargetKeyOrg,
+                                     PersonHistory => $TargetKeyOrg,
+                                     LinkType      => $Type,
+                                     UserID        => $Self->{UserID},
+                                 );
+                            }
+                            else {
+                                if ($Direction eq 'Source') {
+                                    $LinkObject->LinkAdd(
+                                        SourceObject => $TargetObjectOrg,
+                                        SourceKey    => $TargetKeyOrg,
+                                        TargetObject => 'Ticket',
+                                        TargetKey    => $TicketID,
+                                        Type         => $Type,
+                                        State        => 'Valid',
+                                        UserID       => $Self->{UserID},
+                                    );
+                                } else {
+                                    $LinkObject->LinkAdd(
+                                        SourceObject => 'Ticket',
+                                        SourceKey    => $TicketID,
+                                        TargetObject => $TargetObjectOrg,
+                                        TargetKey    => $TargetKeyOrg,
+                                        Type         => $Type,
+                                        State        => 'Valid',
+                                        UserID       => $Self->{UserID},
+                                    );
                                 }
                             }
                         }
                     }
                 }
             }
+        }
 # ---
+
         # get redirect screen
         my $NextScreen = $Self->{UserCreateNextMask} || $Self->{ActionReal};
 
@@ -2272,7 +2310,7 @@ sub Run {
                 $NewTos->{"$KeyTo||$Tos->{$KeyTo}"} = $Tos->{$KeyTo};
             }
         }
-        my $Users = $Self->_GetUsers(
+        my $Users = $Self->_GetOwners(
             %GetParam,
             %ACLCompatGetParam,
             QueueID  => $QueueID,
@@ -2696,65 +2734,93 @@ sub _GetNextStates {
     return \%NextStates;
 }
 
-sub _GetUsers {
+sub _GetOwners {
     my ( $Self, %Param ) = @_;
 
-    # get users
-    my %ShownUsers;
-    my %AllGroupsMembers = $Kernel::OM->Get('Kernel::System::User')->UserList(
-        Type  => 'Long',
+    # get needed objects
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+    my $GroupObject  = $Kernel::OM->Get('Kernel::System::Group');
+    my $QueueObject  = $Kernel::OM->Get('Kernel::System::Queue');
+    my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
+    my $UserObject   = $Kernel::OM->Get('Kernel::System::User');
+
+    # get available permissions and set permission group type accordingly.
+    my $ConfigPermissions   = $ConfigObject->Get('System::Permission');
+    my $PermissionGroupType = ( grep { $_ eq 'owner' } @{$ConfigPermissions} ) ? 'owner' : 'rw';
+
+    # get login list of users
+    my %UserLoginList = $UserObject->UserList(
+        Type  => 'Short',
         Valid => 1,
     );
 
-    # get ticket object
-    my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
-
     # just show only users with selected custom queue
-    if ( $Param{QueueID} && !$Param{AllUsers} ) {
-        my @UserIDs = $TicketObject->GetSubscribedUserIDsByQueueID(%Param);
-        for my $KeyGroupMember ( sort keys %AllGroupsMembers ) {
+    if (
+        $Param{QueueID}
+        && !$Param{AllUsers}
+    ) {
+        my @UserIDs = $TicketObject->GetSubscribedUserIDsByQueueID( %Param );
+        for my $GroupMemberKey ( keys( %UserLoginList ) ) {
             my $Hit = 0;
+            USERID:
             for my $UID (@UserIDs) {
-                if ( $UID eq $KeyGroupMember ) {
+                if ( $UID eq $GroupMemberKey ) {
                     $Hit = 1;
+
+                    last USERID;
                 }
             }
             if ( !$Hit ) {
-                delete $AllGroupsMembers{$KeyGroupMember};
+                delete( $UserLoginList{ $GroupMemberKey } );
             }
         }
     }
+
+    # prepare acl data
+    my %ACLUsers;
 
     # show all system users
-    if ( $Kernel::OM->Get('Kernel::Config')->Get('Ticket::ChangeOwnerToEveryone') ) {
-        %ShownUsers = %AllGroupsMembers;
+    if ( $ConfigObject->Get('Ticket::ChangeOwnerToEveryone') ) {
+        %ACLUsers = %UserLoginList;
     }
 
-    # show all users who are owner or rw in the queue group
+    # show all subscribed users who have the appropriate permission in the queue group
     elsif ( $Param{QueueID} ) {
-        my $GID = $Kernel::OM->Get('Kernel::System::Queue')->GetQueueGroupID( QueueID => $Param{QueueID} );
-        my %MemberList = $Kernel::OM->Get('Kernel::System::Group')->PermissionGroupGet(
-            GroupID => $GID,
-            Type    => 'owner',
+        my $GID = $QueueObject->GetQueueGroupID(
+            QueueID => $Param{QueueID}
         );
-        for my $KeyMember ( sort keys %MemberList ) {
-            if ( $AllGroupsMembers{$KeyMember} ) {
-                $ShownUsers{$KeyMember} = $AllGroupsMembers{$KeyMember};
+
+        my %MemberList = $GroupObject->PermissionGroupGet(
+            GroupID => $GID,
+            Type    => $PermissionGroupType,
+        );
+
+        for my $MemberKey ( keys( %MemberList ) ) {
+            if ( $UserLoginList{ $MemberKey } ) {
+                $ACLUsers{ $MemberKey } = $UserLoginList{ $MemberKey };
             }
         }
     }
 
-    # workflow
+    # apply acl
     my $ACL = $TicketObject->TicketAcl(
         %Param,
         Action        => $Self->{Action},
         ReturnType    => 'Ticket',
         ReturnSubType => 'Owner',
-        Data          => \%ShownUsers,
+        Data          => \%ACLUsers,
         UserID        => $Self->{UserID},
     );
+    if ( $ACL ) {
+        %ACLUsers = $TicketObject->TicketAclData();
+    }
 
-    return { $TicketObject->TicketAclData() } if $ACL;
+    # prepare display data
+    my %UserNameList = $UserObject->UserList(
+        Type  => 'Long',
+        Valid => 1,
+    );
+    my %ShownUsers = map( { $_ => $UserNameList{$_} } keys( %ACLUsers ) );
 
     return \%ShownUsers;
 }
@@ -2762,62 +2828,90 @@ sub _GetUsers {
 sub _GetResponsibles {
     my ( $Self, %Param ) = @_;
 
-    # get users
-    my %ShownUsers;
-    my %AllGroupsMembers = $Kernel::OM->Get('Kernel::System::User')->UserList(
-        Type  => 'Long',
+    # get needed objects
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+    my $GroupObject  = $Kernel::OM->Get('Kernel::System::Group');
+    my $QueueObject  = $Kernel::OM->Get('Kernel::System::Queue');
+    my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
+    my $UserObject   = $Kernel::OM->Get('Kernel::System::User');
+
+    # get available permissions and set permission group type accordingly.
+    my $ConfigPermissions   = $ConfigObject->Get('System::Permission');
+    my $PermissionGroupType = ( grep { $_ eq 'responsible' } @{$ConfigPermissions} ) ? 'responsible' : 'rw';
+
+    # get login list of users
+    my %UserLoginList = $UserObject->UserList(
+        Type  => 'Short',
         Valid => 1,
     );
 
-    # get ticket object
-    my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
-
     # just show only users with selected custom queue
-    if ( $Param{QueueID} && !$Param{AllUsers} ) {
-        my @UserIDs = $TicketObject->GetSubscribedUserIDsByQueueID(%Param);
-        for my $KeyGroupMember ( sort keys %AllGroupsMembers ) {
+    if (
+        $Param{QueueID}
+        && !$Param{AllUsers}
+    ) {
+        my @UserIDs = $TicketObject->GetSubscribedUserIDsByQueueID( %Param );
+        for my $GroupMemberKey ( keys( %UserLoginList ) ) {
             my $Hit = 0;
+            USERID:
             for my $UID (@UserIDs) {
-                if ( $UID eq $KeyGroupMember ) {
+                if ( $UID eq $GroupMemberKey ) {
                     $Hit = 1;
+
+                    last USERID;
                 }
             }
             if ( !$Hit ) {
-                delete $AllGroupsMembers{$KeyGroupMember};
+                delete( $UserLoginList{ $GroupMemberKey } );
             }
         }
     }
+
+    # prepare acl data
+    my %ACLUsers;
 
     # show all system users
-    if ( $Kernel::OM->Get('Kernel::Config')->Get('Ticket::ChangeOwnerToEveryone') ) {
-        %ShownUsers = %AllGroupsMembers;
+    if ( $ConfigObject->Get('Ticket::ChangeOwnerToEveryone') ) {
+        %ACLUsers = %UserLoginList;
     }
 
-    # show all users who are responsible or rw in the queue group
+    # show all subscribed users who have the appropriate permission in the queue group
     elsif ( $Param{QueueID} ) {
-        my $GID = $Kernel::OM->Get('Kernel::System::Queue')->GetQueueGroupID( QueueID => $Param{QueueID} );
-        my %MemberList = $Kernel::OM->Get('Kernel::System::Group')->PermissionGroupGet(
-            GroupID => $GID,
-            Type    => 'rw',
+        my $GID = $QueueObject->GetQueueGroupID(
+            QueueID => $Param{QueueID}
         );
-        for my $KeyMember ( sort keys %MemberList ) {
-            if ( $AllGroupsMembers{$KeyMember} ) {
-                $ShownUsers{$KeyMember} = $AllGroupsMembers{$KeyMember};
+
+        my %MemberList = $GroupObject->PermissionGroupGet(
+            GroupID => $GID,
+            Type    => $PermissionGroupType,
+        );
+
+        for my $MemberKey ( keys( %MemberList ) ) {
+            if ( $UserLoginList{ $MemberKey } ) {
+                $ACLUsers{ $MemberKey } = $UserLoginList{ $MemberKey };
             }
         }
     }
 
-    # workflow
+    # apply acl
     my $ACL = $TicketObject->TicketAcl(
         %Param,
         Action        => $Self->{Action},
         ReturnType    => 'Ticket',
         ReturnSubType => 'Responsible',
-        Data          => \%ShownUsers,
+        Data          => \%ACLUsers,
         UserID        => $Self->{UserID},
     );
+    if ( $ACL ) {
+        %ACLUsers = $TicketObject->TicketAclData();
+    }
 
-    return { $TicketObject->TicketAclData() } if $ACL;
+    # prepare display data
+    my %UserNameList = $UserObject->UserList(
+        Type  => 'Long',
+        Valid => 1,
+    );
+    my %ShownUsers = map( { $_ => $UserNameList{$_} } keys( %ACLUsers ) );
 
     return \%ShownUsers;
 }
@@ -3059,7 +3153,7 @@ sub _MaskPhoneNew {
     $Param{OptionStrg} = $LayoutObject->BuildSelection(
         Data         => $Param{Users},
         SelectedID   => $Param{UserSelected},
-        Class        => 'Modernize',
+        Class        => 'Modernize ' . ( $Param{Errors}->{NewUserInvalid} || '' ),
         Translation  => 0,
         Name         => 'NewUserID',
         PossibleNone => 1,
@@ -3370,7 +3464,7 @@ sub _MaskPhoneNew {
             Data       => $Param{ResponsibleUsers},
             SelectedID => $Param{ResponsibleUserSelected},
             Name       => 'NewResponsibleID',
-            Class      => 'Modernize',
+            Class      => 'Modernize ' . ( $Param{Errors}->{NewResponsibleInvalid} || '' ),
         );
         $LayoutObject->Block(
             Name => 'ResponsibleSelection',
