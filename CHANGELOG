@@ -1,6 +1,65 @@
 # Change log of KIX
 * Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.18.0 (2022/01/19)
+ * (2022/01/19) - productive release
+ * (2021/11/08) - Bugfix: KIX17-2604 (fix missing user object in ticket update operation) (millinger)
+
+# 17.18.0-RC7 (2022/01/14)
+ * (2022/01/13) - Bugfix: KIX17-2767 (fix config item search with empty sorted result) (millinger)
+
+# 17.18.0-RC6 (2022/01/10)
+ * (2022/01/07) - Bugfix: KIX17-2699 (addition of sla / service translation execution in several places) (fjacquemin)
+ * (2022/01/07) - Bugfix: KIX17-2743 (fixed data handling for generic interface config item operation) (millinger)
+ * (2022/01/06) - Bugfix: KIX17-2751 (LostPassword takes PasswordMinSize into account) (fjacquemin)
+ * (2022/01/06) - Bugfix: KIX17-2718 (fixed notification to linked persons) (millinger)
+
+# 17.18.0-RC5 (2022/01/04)
+ * (2022/01/04) - Bugfix: KIX17-2699 (fixed incomplete service translations and remove service translation in admin masks) (fjacquemin)
+ * (2022/01/03) - CR: KIX17-2731 (updated copyright) (fjacquemin)
+ * (2021/12/21) - CR: KIX17-2733 (added image for kix database scheme) (ddoerffel)
+ * (2021/12/17) - Bugfix: KIX17-2536 (added some translations) (ddoerffel)
+ * (2021/12/16) - Bugfix: KIX17-2738 (Fixed WHERE clause and ORDER BY when getting XML data for CI) (rbo)
+
+# 17.18.0-RC4 (2021/12/14)
+ * (2021/12/13) - Bugfix: KIX17-2725 (missing uri encoding for multiple customer id selection) (millinger)
+ * (2021/12/10) - Bugfix: KIX17-2307 (prevent attachment 'unknown' for emails without text content) (millinger)
+ * (2021/12/06) - CR: KIX17-2701 (added generic interface ticket operation TicketHistoryGet) (millinger)
+ * (2021/11/15) - Bugfix: KIX2018-6057 (added special handling for FAQ attachments to migration.pl) (rbo)
+ * (2021/11/12) - Bugfix: KIX17-2661 (fix log messages when no valid pending reminder state is available) (millinger)
+ * (2021/11/12) - Bugfix: KIX17-2654 (fix OutOfSLA calculation) (millinger)
+
+# 17.18.0-RC3 (2021/11/08)
+ * (2021/11/05) - Bugfix: KIX17-2604 (fix global symbols) (millinger)
+ * (2021/10/07) - Bugfix: KIX17-2583 (unlock ticket when setting close state with AgentTicketQuickState) (millinger)
+
+# 17.18.0-RC2 (2021/11/05)
+ * (2021/11/05) - Bugfix: KIX17-2637 (fixed incorrect replacement of placeholders when using text modules) (fjacquemin)
+ * (2021/11/05) - Bugfix: KIX17-2106 (fix random value set of object reference field user) (millinger)
+ * (2021/11/04) - Bugfix: KIX17-609 (fixed global symbol in AgentTicketProcess) (millinger)
+ * (2021/11/04) - Bugfix: KIX17-2262 (changed handling of backslash quotation for mysql) (millinger)
+ * (2021/11/03) - Bugfix: KIX17-2604 (validate provided ticket owner and responsible) (millinger)
+ * (2021/11/03) - Bugfix: KIX17-589 (translate process selection in agent frontend) (millinger)
+ * (2021/11/02) - Bugfix: KIX17-2539 (optimized handling of autocomplete config item reference field) (millinger)
+ * (2021/11/02) - Bugfix: KIX17-2627 (fixed flag for regular expressions of the black and whitelist check of CustomerTicketTemplate) (fjacquemin)
+ * (2021/11/01) - Bugfix: KIX17-2623 (fix autocomplete config item reference search by number) (millinger)
+
+# 17.18.0-RC1 (2021/11/01)
+ * (2021/10/27) - Bugfix: KIX17-2106 (unified handling of RandomValueSet for dynamic fields) (millinger)
+ * (2021/10/25) - Bugfix: KIX17-2539 (consider MaxResults parameter for config item autocomplete search) (millinger)
+ * (2021/10/15) - Bugfix: KIX17-2594 (silence warning from cache cleanup for ticket bulk action) (millinger)
+ * (2021/10/14) - Bugfix: KIX17-1625 (remove menu toggle from ticket view 'preview') (millinger)
+ * (2021/10/14) - Bugfix: KIX17-2237 (added field explanation for depending dynamic field tree name) (millinger)
+ * (2021/10/14) - Bugfix: KIX17-1453 (compatibility for otrs faq inline images) (millinger)
+ * (2021/10/14) - Bugfix: KIX17-2570 (keep opening style-tag after link-tag) (millinger)
+ * (2021/10/13) - Bugfix: KIX17-2558 (fixed AgentServiceSearch using regex) (millinger)
+ * (2021/10/13) - Bugfix: KIX17-2076 (escape selector for modernized fields on error highlight) (millinger)
+ * (2021/10/12) - Bugfix: KIX17-1396 (implemented history entry for dynamic field recipients) (millinger)
+ * (2021/10/08) - Bugfix: KIX17-1043 (fix sorting of config item search) (millinger)
+ * (2021/10/07) - Bugfix: KIX17-609 (handle acl for owner and responsible by login, not by name) (millinger)
+ * (2021/10/06) - Bugfix: KIX17-2577 (provide TimeUnit with article data) (millinger)
+ * (2021/10/06) - Bugfix: KIX17-2225 (template in config item link graph can not be cleared) (millinger)
+
 # 17.17.0 (2021/10/21)
  * (2021/10/21) - productive release
  * (2021/09/16) - CR: KIX17-2090 (option to build subject with ticket number for ticket operations) (millinger)
