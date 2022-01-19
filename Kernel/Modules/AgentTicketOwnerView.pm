@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -277,18 +277,23 @@ sub Run {
             )
         )
     ) {
-        @OriginalViewableTickets = $TicketObject->TicketSearch(
-            %{ $Filters{$Filter}->{Search} },
-            Limit  => $Limit,
-            Result => 'ARRAY',
-        );
+        if (
+            !defined( $Filters{ $Filter }->{Search}->{StateIDs} )
+            || IsArrayRefWithData( $Filters{ $Filter }->{Search}->{StateIDs} )
+        ) {
+            @OriginalViewableTickets = $TicketObject->TicketSearch(
+                %{ $Filters{$Filter}->{Search} },
+                Limit  => $Limit,
+                Result => 'ARRAY',
+            );
 
-        @ViewableTickets = $TicketObject->TicketSearch(
-            %{ $Filters{$Filter}->{Search} },
-            %ColumnFilter,
-            Result => 'ARRAY',
-            Limit  => 1_000,
-        );
+            @ViewableTickets = $TicketObject->TicketSearch(
+                %{ $Filters{$Filter}->{Search} },
+                %ColumnFilter,
+                Result => 'ARRAY',
+                Limit  => 1_000,
+            );
+        }
     }
 
     my $View = $ParamObject->GetParam( Param => 'View' ) || '';
@@ -338,11 +343,17 @@ sub Run {
 
     my %NavBarFilter;
     for my $Filter ( sort keys %Filters ) {
-        my $Count = $TicketObject->TicketSearch(
-            %{ $Filters{$Filter}->{Search} },
-            %ColumnFilter,
-            Result => 'COUNT',
-        );
+        my $Count = 0;
+        if (
+            !defined( $Filters{ $Filter }->{Search}->{StateIDs} )
+            || IsArrayRefWithData( $Filters{ $Filter }->{Search}->{StateIDs} )
+        ) {
+            $Count = $TicketObject->TicketSearch(
+                %{ $Filters{$Filter}->{Search} },
+                %ColumnFilter,
+                Result => 'COUNT',
+            );
+        }
 
         $NavBarFilter{ $Filters{$Filter}->{Prio} } = {
             Count  => $Count,

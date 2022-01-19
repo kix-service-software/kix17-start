@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -283,8 +283,11 @@ sub CountLinkedObjects {
 Calculate non relevant time for escalation.
 
     my $Result = $TicketObject->GetTotalNonEscalationRelevantBusinessTime(
-        TicketID => 123,  # required
-        Type     => "",   # optional ( Response | Solution )
+        TicketID       => 123,                      # required
+        StartTimestamp => "yyyy-mm-dd 23:59:59",    # optional, will override StartTime
+        StartTime      => "123456",                 # optional
+        StopTimestamp  => "yyyy-mm-dd 23:59:59",    # optional, will override StopTime
+        StopTime       => "123456",                 # optional
     );
 
 =cut
@@ -292,33 +295,33 @@ Calculate non relevant time for escalation.
 sub GetTotalNonEscalationRelevantBusinessTime {
     my ( $Self, %Param ) = @_;
 
-    $Self->{StateObject} = $Kernel::OM->Get('Kernel::System::State');
-    $Self->{TimeObject}  = $Kernel::OM->Get('Kernel::System::Time');
+    # get needed objects
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+    my $StateObject  = $Kernel::OM->Get('Kernel::System::State');
+    my $TimeObject   = $Kernel::OM->Get('Kernel::System::Time');
 
     return if !$Param{TicketID};
 
     # get optional parameter
-    $Param{Type} ||= '';
     if ( $Param{StartTimestamp} ) {
-        $Param{StartTime} = $Self->{TimeObject}->TimeStamp2SystemTime(
+        $Param{StartTime} = $TimeObject->TimeStamp2SystemTime(
             String => $Param{StartTimestamp},
         );
     }
     if ( $Param{StopTimestamp} ) {
-        $Param{StopTime} = $Self->{TimeObject}->TimeStamp2SystemTime(
+        $Param{StopTime} = $TimeObject->TimeStamp2SystemTime(
             String => $Param{StopTimestamp},
         );
     }
 
     # get some config values if required...
     if ( !$Param{RelevantStates} ) {
-        my $RelevantStateNamesArrRef =
-            $Kernel::OM->Get('Kernel::Config')->Get('Ticket::EscalationDisabled::RelevantStates');
-        if ( ref($RelevantStateNamesArrRef) eq 'ARRAY' ) {
-            my $RelevantStateNamesArrStrg = join( ',', @{$RelevantStateNamesArrRef} );
-            my %StateListHash = $Self->{StateObject}->StateList( UserID => 1 );
+        my $RelevantStateNamesArrRef = $ConfigObject->Get('Ticket::EscalationDisabled::RelevantStates');
+        if ( ref( $RelevantStateNamesArrRef ) eq 'ARRAY' ) {
+            my $RelevantStateNamesArrStrg = join( ',', @{ $RelevantStateNamesArrRef } );
+            my %StateListHash = $StateObject->StateList( UserID => 1 );
             for my $CurrStateID ( keys(%StateListHash) ) {
-                if ( grep { $_ eq $StateListHash{$CurrStateID} } @{$RelevantStateNamesArrRef} ) {
+                if ( grep { $_ eq $StateListHash{$CurrStateID} } @{ $RelevantStateNamesArrRef } ) {
                     $Param{RelevantStates}->{$CurrStateID} = $StateListHash{$CurrStateID};
                 }
             }
@@ -347,81 +350,54 @@ sub GetTotalNonEscalationRelevantBusinessTime {
 
     my $PendStartTime = 0;
     my $PendTotalTime = 0;
-    my $Solution      = 0;
 
-    my %ClosedStateList = $Self->{StateObject}->StateGetStatesByType(
-        StateType => ['closed'],
-        Result    => 'HASH',
-    );
     for my $HistoryHash (@HistoryLines) {
-        my $CreateTime = $Self->{TimeObject}->TimeStamp2SystemTime(
+        my $CreateTime = $TimeObject->TimeStamp2SystemTime(
             String => $HistoryHash->{CreateTime},
         );
 
         # skip not relevant history information
         next if ( $Param{StartTime} && $Param{StartTime} > $CreateTime );
-        next if ( $Param{StopTime}  && $Param{StopTime} < $CreateTime );
+        last if ( $Param{StopTime}  && $Param{StopTime} < $CreateTime );
 
         # proceed history information
         if (
             $HistoryHash->{HistoryType} eq 'StateUpdate'
             || $HistoryHash->{HistoryType} eq 'NewTicket'
         ) {
-            if ( $RelevantStates{ $HistoryHash->{StateID} } && $PendStartTime == 0 ) {
+            if (
+                $RelevantStates{ $HistoryHash->{StateID} }
+                && $PendStartTime == 0
+            ) {
 
                 # datetime to unixtime
                 $PendStartTime = $CreateTime;
                 next;
             }
-            elsif ( $PendStartTime != 0 && !$RelevantStates{ $HistoryHash->{StateID} } ) {
+            elsif (
+                $PendStartTime != 0
+                && !$RelevantStates{ $HistoryHash->{StateID} }
+            ) {
                 my $UnixEndTime = $CreateTime;
-                my $WorkingTime = $Self->{TimeObject}->WorkingTime(
+                my $WorkingTime = $TimeObject->WorkingTime(
                     StartTime => $PendStartTime,
                     StopTime  => $UnixEndTime,
                     Calendar  => $Escalation{Calendar},
                 );
                 $PendTotalTime += $WorkingTime;
                 $PendStartTime = 0;
-            }
-        }
-        if (
-            (
-                $HistoryHash->{HistoryType}    eq 'SendAnswer'
-                || $HistoryHash->{HistoryType} eq 'PhoneCallAgent'
-                || $HistoryHash->{HistoryType} eq 'EmailAgent'
-            )
-            && $Param{Type} eq 'Response'
-        ) {
-            if ( $PendStartTime != 0 ) {
-                my $UnixEndTime = $CreateTime;
-                my $WorkingTime = $Self->{TimeObject}->WorkingTime(
-                    StartTime => $PendStartTime,
-                    StopTime  => $UnixEndTime,
-                    Calendar  => $Escalation{Calendar},
-                );
-                $PendTotalTime += $WorkingTime;
-                $PendStartTime = 0;
-            }
-            return $PendTotalTime;
-        }
-        if ( $HistoryHash->{HistoryType} eq 'StateUpdate' && $Param{Type} eq 'Solution' ) {
-            for my $State ( keys %ClosedStateList ) {
-                if ( $HistoryHash->{StateID} == $State ) {
-                    if ( $PendStartTime != 0 ) {
-                        my $UnixEndTime = $CreateTime;
-                        my $WorkingTime = $Self->{TimeObject}->WorkingTime(
-                            StartTime => $PendStartTime,
-                            StopTime  => $UnixEndTime,
-                            Calendar  => $Escalation{Calendar},
-                        );
-                        $PendTotalTime += $WorkingTime;
-                        $PendStartTime = 0;
-                    }
-                    return $PendTotalTime;
-                }
             }
         }
     }
+    if ( $PendStartTime ) {
+        my $WorkingTime = $TimeObject->WorkingTime(
+            StartTime => $PendStartTime,
+            StopTime  => $TimeObject->CurrentTimestamp(),
+            Calendar  => $Escalation{Calendar},
+        );
+        $PendTotalTime += $WorkingTime;
+    }
+
     return $PendTotalTime;
 }
 

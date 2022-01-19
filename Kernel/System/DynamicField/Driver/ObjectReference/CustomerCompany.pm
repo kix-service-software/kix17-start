@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2021 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2022 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -63,6 +63,7 @@ sub new {
         'IsFiltrable'                  => 0,
         'IsStatsCondition'             => 1,
         'IsCustomerInterfaceCapable'   => 1,
+        'CanRandomize'                 => 1,
     };
 
     # get the Dynamic Field Driver custmom extensions
@@ -1023,6 +1024,36 @@ sub TemplateValueTypeGet {
             'Search_' . $FieldName => $SearchValueType,
             }
     }
+}
+
+sub RandomValueSet {
+    my ( $Self, %Param ) = @_;
+
+    # get random value
+    my %PossibleValues = $Self->{CustomerCompanyObject}->CustomerCompanyList(
+        Valid => 1,
+    );
+    # set none value if defined on field config
+    if ( $Param{DynamicFieldConfig}->{Config}->{PossibleNone} ) {
+        $PossibleValues{''} = '-';
+    }
+    my @PossibleKeys   = keys( %PossibleValues );
+    my $Value          = $PossibleKeys[ rand( @PossibleKeys ) ];
+
+    my $Success = $Self->ValueSet(
+        %Param,
+        Value => $Value,
+    );
+
+    if ( !$Success ) {
+        return {
+            Success => 0,
+        };
+    }
+    return {
+        Success => 1,
+        Value   => $Value,
+    };
 }
 
 sub ObjectMatch {

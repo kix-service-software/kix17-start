@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2021 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2022 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -1311,6 +1311,9 @@ sub VersionDelete {
 return a config item list as an array reference
 
     my $ConfigItemIDs = $ConfigItemObject->VersionSearch(
+        # Use VersionSearch as a config item filter on a predefined config item list
+        ConfigItemID => [1234, 1235],    # (optional)
+
         Name         => 'The Name',      # (optional)
         ClassIDs     => [ 9, 8, 7, 6 ],  # (optional)
         DeplStateIDs => [ 321, 123 ],    # (optional)
@@ -1483,6 +1486,7 @@ sub VersionSearch {
 
     # set array params
     my %ArrayParams = (
+        ConfigItemID => 'vr.configitem_id',
         ClassIDs     => 'ci.id = vr.configitem_id AND ci.class_id',
         DeplStateIDs => 'vr.depl_state_id',
         InciStateIDs => 'vr.inci_state_id',

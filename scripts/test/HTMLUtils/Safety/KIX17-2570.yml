@@ -1,0 +1,25 @@
+---
+0001:
+  StepName: 'Keep opening style-Tag after non-javascript link-Tag'
+  InputData:
+    String: |-
+      <LINK rel=stylesheet type=text/css href="https://fonts.googleapis.com/css?family=Open+Sans:400,400italic&amp;subset=latin,cyrillic">
+      <STYLE type=text/css media=all>
+        *
+        {
+                -webkit-text-size-adjust:none;
+                -ms-text-size-adjust:none
+        }
+      </STYLE>
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400italic&amp;subset=latin,cyrillic" />
+      <style type="text/css" media="all">
+        *
+        {
+                -webkit-text-size-adjust:none;
+                -ms-text-size-adjust:none
+        }
+      </style>
+    Replace: 0

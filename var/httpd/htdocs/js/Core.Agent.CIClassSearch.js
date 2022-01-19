@@ -1,5 +1,5 @@
 // --
-// Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
+// Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
 // --
 // This software comes with ABSOLUTELY NO WARRANTY. For details, see
 // the enclosed file LICENSE for license information (AGPL). If you
@@ -50,16 +50,27 @@ Core.Agent.CIClassSearch = (function (TargetNS) {
                         Term: Request.term,
                         MaxResults: Core.Config.Get('Autocomplete.MaxResultsDisplayed')
                     };
-                    Core.AJAX.FunctionCall(URL, Data, function (Result) {
-                        var Data = [];
-                        $.each(Result, function () {
-                            Data.push({
-                                label: this.CIClassValue,
-                                value: this.CIClassKey
+
+                    if ($Element.data('AutoCompleteXHR')) {
+                        $Element.data('AutoCompleteXHR').abort();
+                        $Element.removeData('AutoCompleteXHR');
+                    }
+                    $Element.data('AutoCompleteXHR', Core.AJAX.FunctionCall(URL, Data,
+                        function (Result) {
+                            var Data = [];
+                            $.each(Result, function () {
+                                Data.push({
+                                    label: this.CIClassValue,
+                                    value: this.CIClassKey
+                                });
                             });
-                        });
-                        Response(Data);
-                    });
+                            $Element.data('AutoCompleteData', Data);
+                            $Element.removeData('AutoCompleteXHR');
+                            Response(Data);
+                        }).fail(function() {
+                            Response($Element.data('AutoCompleteData'));
+                        })
+                    );
                 },
                 select: function (Event, UI) {
                     var CIClassKey = UI.item.value;
@@ -80,6 +91,13 @@ Core.Agent.CIClassSearch = (function (TargetNS) {
                     $Element.autocomplete("option", "minLength", 0);
                     $Element.autocomplete("search");
                     $Element.autocomplete("option", "minLength", 500);
+                });
+            }
+            else {
+                $Element.on('blur', function() {
+                    if ( $Element.val().length === 0 ) {
+                        $('#' + Core.App.EscapeSelector($Element.attr('id')) + 'Selected').val('');
+                    }
                 });
             }
         }

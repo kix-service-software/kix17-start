@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2021 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2022 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -142,7 +142,7 @@ sub Quote {
                 # you must double any \ that you use in LIKE strings. For example, to search for \n, specify it as \\n.
                 # To search for \, specify it as \\\\; this is because the backslashes are stripped once by the parser
                 # and again when the pattern match is made, leaving a single backslash to be matched against.
-                ${$Text} =~ s/\\/$Self->{'DB::LikeQuoteBack'}\\/g;
+                ${$Text} =~ s/\\\\/$Self->{'DB::LikeQuoteBack'}\\$Self->{'DB::LikeQuoteBack'}\\/g;
             }
             if ( $Self->{'DB::QuoteUnderscoreStart'} || $Self->{'DB::QuoteUnderscoreEnd'} ) {
                 ${$Text} =~ s/_/$Self->{'DB::QuoteUnderscoreStart'}_$Self->{'DB::QuoteUnderscoreEnd'}/g;

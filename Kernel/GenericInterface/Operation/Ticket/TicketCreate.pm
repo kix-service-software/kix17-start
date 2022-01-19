@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2021 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2022 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -1284,7 +1284,7 @@ sub _TicketCreate {
         $CustomerID = $Ticket->{CustomerID};
     }
 
-    # get database object
+    # get user object
     my $UserObject = $Kernel::OM->Get('Kernel::System::User');
 
     my $OwnerID;
@@ -1608,18 +1608,74 @@ sub _TicketCreate {
 
     # set owner (if owner or owner id is given)
     if ($OwnerID) {
-        $TicketObject->TicketOwnerSet(
-            TicketID  => $TicketID,
-            NewUserID => $OwnerID,
-            UserID    => $Param{UserID},
+        # get available permissions and set permission group type accordingly.
+        my $ConfigPermissions   = $Kernel::OM->Get('Kernel::Config')->Get('System::Permission');
+        my $PermissionGroupType = ( grep { $_ eq 'owner' } @{$ConfigPermissions} ) ? 'owner' : 'rw';
+
+        # get login list of users
+        my %UserLoginList = $UserObject->UserList(
+            Type  => 'Short',
+            Valid => 1,
         );
 
-        # set lock if no lock was defined
-        if ( !$Ticket->{Lock} && !$Ticket->{LockID} ) {
-            $TicketObject->TicketLockSet(
-                TicketID => $TicketID,
-                Lock     => 'lock',
-                UserID   => $Param{UserID},
+        if (
+            !$Ticket->{QueueID}
+            && $Ticket->{Queue}
+        ) {
+            $Ticket->{QueueID} = $Kernel::OM->Get('Kernel::System::Queue')->QueueLookup(
+                Queue => $Ticket->{Queue},
+                Valid => 1,
+            );
+        }
+
+        # prepare data
+        my %PossibleUsers;
+
+        # allow all system users
+        if ( $Kernel::OM->Get('Kernel::Config')->Get('Ticket::ChangeOwnerToEveryone') ) {
+            %PossibleUsers = %UserLoginList;
+        }
+
+        # allow all users who have the appropriate permission in the queue group
+        elsif ( $Ticket->{QueueID} ) {
+            my $GID = $Kernel::OM->Get('Kernel::Systen::Queue')->GetQueueGroupID(
+                QueueID => $Ticket->{QueueID}
+            );
+
+            my %MemberList = $Kernel::OM->Get('Kernel::Systen::Group')->PermissionGroupGet(
+                GroupID => $GID,
+                Type    => $PermissionGroupType,
+            );
+
+            for my $MemberKey ( keys( %MemberList ) ) {
+                if ( $UserLoginList{ $MemberKey } ) {
+                    $PossibleUsers{ $MemberKey } = $UserLoginList{ $MemberKey };
+                }
+            }
+        }
+
+        if ( $PossibleUsers{ $OwnerID } ) {
+            $TicketObject->TicketOwnerSet(
+                TicketID  => $TicketID,
+                NewUserID => $OwnerID,
+                UserID    => $Param{UserID},
+            );
+
+            # set lock if no lock was defined
+            if ( !$Ticket->{Lock} && !$Ticket->{LockID} ) {
+                $TicketObject->TicketLockSet(
+                    TicketID => $TicketID,
+                    Lock     => 'lock',
+                    UserID   => $Param{UserID},
+                );
+            }
+        }
+        else {
+            $TicketObject->TicketOwnerSet(
+                TicketID           => $TicketID,
+                NewUserID          => $Param{UserID},
+                SendNoNotification => 1,
+                UserID             => $Param{UserID},
             );
         }
     }
@@ -1636,11 +1692,59 @@ sub _TicketCreate {
 
     # set responsible
     if ($ResponsibleID) {
-        $TicketObject->TicketResponsibleSet(
-            TicketID  => $TicketID,
-            NewUserID => $ResponsibleID,
-            UserID    => $Param{UserID},
+        # get available permissions and set permission group type accordingly.
+        my $ConfigPermissions   = $Kernel::OM->Get('Kernel::Config')->Get('System::Permission');
+        my $PermissionGroupType = ( grep { $_ eq 'responsible' } @{$ConfigPermissions} ) ? 'responsible' : 'rw';
+
+        # get login list of users
+        my %UserLoginList = $UserObject->UserList(
+            Type  => 'Short',
+            Valid => 1,
         );
+
+        if (
+            !$Ticket->{QueueID}
+            && $Ticket->{Queue}
+        ) {
+            $Ticket->{QueueID} = $Kernel::OM->Get('Kernel::System::Queue')->QueueLookup(
+                Queue => $Ticket->{Queue},
+                Valid => 1,
+            );
+        }
+
+        # prepare data
+        my %PossibleUsers;
+
+        # allow all system users
+        if ( $Kernel::OM->Get('Kernel::Config')->Get('Ticket::ChangeOwnerToEveryone') ) {
+            %PossibleUsers = %UserLoginList;
+        }
+
+        # allow all users who have the appropriate permission in the queue group
+        elsif ( $Ticket->{QueueID} ) {
+            my $GID = $Kernel::OM->Get('Kernel::Systen::Queue')->GetQueueGroupID(
+                QueueID => $Ticket->{QueueID}
+            );
+
+            my %MemberList = $Kernel::OM->Get('Kernel::Systen::Group')->PermissionGroupGet(
+                GroupID => $GID,
+                Type    => $PermissionGroupType,
+            );
+
+            for my $MemberKey ( keys( %MemberList ) ) {
+                if ( $UserLoginList{ $MemberKey } ) {
+                    $PossibleUsers{ $MemberKey } = $UserLoginList{ $MemberKey };
+                }
+            }
+        }
+
+        if ( $PossibleUsers{ $ResponsibleID } ) {
+            $TicketObject->TicketResponsibleSet(
+                TicketID  => $TicketID,
+                NewUserID => $ResponsibleID,
+                UserID    => $Param{UserID},
+            );
+        }
     }
 
     # time accounting

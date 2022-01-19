@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2021 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2022 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -750,6 +750,14 @@ sub _MaskServiceView {
             $Param{AllSubTickets}   = $Counter{ $Service{Service} };
         }
 
+        if ( $ConfigObject->Get('Ticket::ServiceTranslation') ) {
+            my @Names = split(/::/, $ShortServiceName);
+            for my $Name ( @Names ) {
+                $Name = $LayoutObject->{LanguageObject}->Translate($Name);
+            }
+            $ShortServiceName = join('::', @Names);
+        }
+
         # ServiceStrg
         $ServiceStrg .= $LayoutObject->Ascii2Html( Text => $ShortServiceName )
             . " ($Counter{$Service{Service}})"
@@ -888,6 +896,10 @@ sub _MaskServiceViewTree {
         my @ServiceName = split /::/, $Service{Service};
         my $ShortServiceName = $ServiceName[-1];
         $Service{ServiceID} = 0 if ( !$Service{ServiceID} );
+
+        if ( $ConfigObject->Get('Ticket::ServiceTranslation') ) {
+            $ShortServiceName = $LayoutObject->{LanguageObject}->Translate($ShortServiceName);
+        }
 
         $ServiceStrg .= "<a href=\"$LayoutObject->{Baselink}Action=AgentTicketService;ServiceID=$Service{ServiceID}"
             . ';Filter=' . $LayoutObject->Ascii2Html( Text => $Self->{Filter} )
@@ -1041,10 +1053,15 @@ sub _MaskServiceViewDropDown {
         }
 
         # should I focus and expand this Service
-        if ( $Param{SelectedService} =~ /^\Q$ServiceName[0]\E/ && $Level - 1 >= $#ServiceName ) {
+        if (
+            $Param{SelectedService} =~ /^\Q$ServiceName[0]\E/
+            && $Level - 1 >= $#ServiceName
+        ) {
             if ( $#MetaService >= $#ServiceName ) {
                 my $CompareString = $MetaService[0];
-                for ( 1 .. $#ServiceName ) { $CompareString .= "::" . $MetaService[$_]; }
+                for ( 1 .. $#ServiceName ) {
+                    $CompareString .= "::" . $MetaService[$_];
+                }
                 if ( $Service{Service} =~ /^\Q$CompareString\E$/ ) {
                     $ServiceStrg{$#ServiceName}->{Selected}   = $CompareString;
                     $ServiceStrg{$#ServiceName}->{SelectedID} = $ServiceStrg;
@@ -1052,8 +1069,12 @@ sub _MaskServiceViewDropDown {
             }
         }
 
+        if ( $ConfigObject->Get('Ticket::ServiceTranslation') ) {
+            $ShortServiceName = $LayoutObject->{LanguageObject}->Translate($ShortServiceName);
+        }
+
         $ServiceStrg{$#ServiceName}->{Data}->{ $Service{Service} }->{Label}
-            = "$ServiceName[-1] ($Service{Count})";
+            = "$ShortServiceName ($Service{Count})";
         $ServiceStrg{$#ServiceName}->{Data}->{ $Service{Service} }->{Link} = $ServiceStrg;
     }
 
@@ -1061,7 +1082,13 @@ sub _MaskServiceViewDropDown {
     foreach my $ServiceLevel ( sort keys %ServiceStrg ) {
         my %ServiceLevelList;
         foreach my $Key ( sort keys %{ $ServiceStrg{$ServiceLevel}->{Data} } ) {
-            if ( !$ServiceLevel || $ParentFilter && $Key =~ /^\Q$ParentFilter\E::/ ) {
+            if (
+                !$ServiceLevel
+                || (
+                    $ParentFilter
+                    && $Key =~ /^\Q$ParentFilter\E::/
+                )
+            ) {
                 $ServiceLevelList{ $ServiceStrg{$ServiceLevel}->{Data}->{$Key}->{Link} }
                     = $ServiceStrg{$ServiceLevel}->{Data}->{$Key}->{Label};
             }
@@ -1071,10 +1098,8 @@ sub _MaskServiceViewDropDown {
         if ($ServiceLevel) {
             my $SelectedParentKey = $ServiceStrg{ $ServiceLevel - 1 }->{Selected};
             $ServiceLevelList{
-                $ServiceStrg{ $ServiceLevel - 1 }->{Data}->{$SelectedParentKey}
-                    ->{Link}
-                }
-                = '-';
+                $ServiceStrg{ $ServiceLevel - 1 }->{Data}->{$SelectedParentKey}->{Link}
+            } = '-';
         }
 
         if ( $Param{ServiceStrg} ) {
@@ -1085,7 +1110,7 @@ sub _MaskServiceViewDropDown {
             Data        => \%ServiceLevelList,
             SelectedID  => $ServiceStrg{$ServiceLevel}->{SelectedID},
             Name        => "ServiceID[$ServiceLevel]",
-            Translation => $ConfigObject->Get('Ticket::ServiceTranslation') || 0
+            Class       => 'Modernize'
         );
         $ParentFilter = $ServiceStrg{$ServiceLevel}->{Selected};
     }

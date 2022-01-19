@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2021 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2021 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2022 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -673,8 +673,12 @@ sub Run {
                 return;
             }
 
+            my $PreferencesGroups = $ConfigObject->Get('PreferencesGroups');
+
             # get new password
-            $UserData{NewPW} = $UserObject->GenerateRandomPassword();
+            $UserData{NewPW} = $UserObject->GenerateRandomPassword(
+                Size => $PreferencesGroups->{Password}->{PasswordMinSize}
+            );
 
             # update new password
             my $Success = $UserObject->SetPassword(
@@ -785,7 +789,7 @@ sub Run {
                     return;
                 }
             }
-    
+
             # Security: Always pretend that password reset instructions were sent to
             # make sure that requester cannot find out valid usernames by checking the result message
             $LayoutObject->Print(
