@@ -6014,7 +6014,6 @@
         <Description Translatable="1">Defines which states should be set automatically (Content), after the pending time of state (Key) has been reached.</Description>
         <Group>Ticket</Group>
         <SubGroup>Core::Ticket</SubGroup>
-        <ValidateModule>Kernel::System::SysConfig::StateValidate</ValidateModule>
         <Setting>
             <Hash>
                 <Item Key="pending auto close+" Translatable="1">closed successful</Item>
