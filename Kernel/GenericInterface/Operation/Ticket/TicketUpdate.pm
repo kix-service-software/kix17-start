@@ -2005,11 +2005,11 @@ sub _TicketUpdate {
 
         # allow all users who have the appropriate permission in the queue group
         else {
-            my $GID = $Kernel::OM->Get('Kernel::Systen::Queue')->GetQueueGroupID(
+            my $GID = $Kernel::OM->Get('Kernel::System::Queue')->GetQueueGroupID(
                 QueueID => $Ticket->{QueueID} || $TicketData{QueueID}
             );
 
-            my %MemberList = $Kernel::OM->Get('Kernel::Systen::Group')->PermissionGroupGet(
+            my %MemberList = $Kernel::OM->Get('Kernel::System::Group')->PermissionGroupGet(
                 GroupID => $GID,
                 Type    => $PermissionGroupType,
             );
@@ -2108,11 +2108,11 @@ sub _TicketUpdate {
 
         # allow all users who have the appropriate permission in the queue group
         else {
-            my $GID = $Kernel::OM->Get('Kernel::Systen::Queue')->GetQueueGroupID(
+            my $GID = $Kernel::OM->Get('Kernel::System::Queue')->GetQueueGroupID(
                 QueueID => $Ticket->{QueueID} || $TicketData{QueueID}
             );
 
-            my %MemberList = $Kernel::OM->Get('Kernel::Systen::Group')->PermissionGroupGet(
+            my %MemberList = $Kernel::OM->Get('Kernel::System::Group')->PermissionGroupGet(
                 GroupID => $GID,
                 Type    => $PermissionGroupType,
             );
