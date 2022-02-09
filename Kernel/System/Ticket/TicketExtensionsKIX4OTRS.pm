@@ -392,7 +392,7 @@ sub GetTotalNonEscalationRelevantBusinessTime {
     if ( $PendStartTime ) {
         my $WorkingTime = $TimeObject->WorkingTime(
             StartTime => $PendStartTime,
-            StopTime  => $TimeObject->CurrentTimestamp(),
+            StopTime  => $TimeObject->SystemTime(),
             Calendar  => $Escalation{Calendar},
         );
         $PendTotalTime += $WorkingTime;
