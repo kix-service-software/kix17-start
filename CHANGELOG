@@ -1,6 +1,14 @@
 # Change log of KIX
 * Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.19.0-RC1 (2022/02/16)
+ * (2022/02/09) - Bugfix: KIX17-2821 (fix calculation of non-escalation relevant business time) (millinger)
+ * (2022/01/27) - Bugfix: KIX17-2626 (cleanup cache for group list and role list after add and update) (millinger)
+ * (2022/01/26) - Bugfix: KIX17-2791 (fixed typo in module name) (millinger)
+ * (2022/01/25) - Bugfix: KIX17-2789 (fix behaviour of _PREVIOUS_ as 'Ticket::StateAfterPending') (millinger)
+ * (2022/01/24) - Bugfix: KIX17-2788 (html quotation for cmdb custom overview) (millinger)
+ * (2022/01/17) - CR: KIX17-2834 (Changed the sidebar assignment between CustomerTicketZoom and CustomerTicketZoomFollowUp) (fjacquemin)
+
 # 17.18.0 (2022/01/19)
  * (2022/01/19) - productive release
  * (2021/11/08) - Bugfix: KIX17-2604 (fix missing user object in ticket update operation) (millinger)
