@@ -6014,7 +6014,6 @@
         <Description Translatable="1">Defines which states should be set automatically (Content), after the pending time of state (Key) has been reached.</Description>
         <Group>Ticket</Group>
         <SubGroup>Core::Ticket</SubGroup>
-        <ValidateModule>Kernel::System::SysConfig::StateValidate</ValidateModule>
         <Setting>
             <Hash>
                 <Item Key="pending auto close+" Translatable="1">closed successful</Item>
@@ -13020,7 +13019,7 @@ Thanks for your help!
                 <Item Key="Title">Text Modules</Item>
                 <Item Key="Description">Show or hide the text modules</Item>
                 <Item Key="Prio">0200</Item>
-                <Item Key="Actions">CustomerTicket(Message|MessageQuick|Zoom)</Item>
+                <Item Key="Actions">CustomerTicket(Message|MessageQuick|ZoomFollowUp)</Item>
             </Hash>
         </Setting>
     </ConfigItem>
