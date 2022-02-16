@@ -225,6 +225,13 @@ EOF
     if ( $Param{ServerError} ) {
 
         my $ErrorMessage = $Param{ErrorMessage} || 'This field is required.';
+        $ErrorMessage = $Param{LayoutObject}->Ascii2Html(
+            Text            => $ErrorMessage,
+            HTMLResultMode  => 1,
+            StripEmptyLines => 0,
+            Type            => 'Normal',
+            LinkFeature     => 0,
+        );
         $ErrorMessage = $Param{LayoutObject}->{LanguageObject}->Translate($ErrorMessage);
         my $DivID = $FieldName . 'ServerError';
 
