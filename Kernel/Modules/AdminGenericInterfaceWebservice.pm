@@ -470,6 +470,102 @@ sub Run {
         );
     }
 
+    # -------------------------------------------------------------- #
+    # sub-action CopyAction: copy action and return value to dialog
+    # -------------------------------------------------------------- #
+    elsif ( $Self->{Subaction} eq 'CopyAction' ) {
+
+        # challenge token check for write action
+        $LayoutObject->ChallengeTokenCheck();
+
+        # check for WebserviceID
+        if ( !$WebserviceID ) {
+            return $LayoutObject->ErrorScreen(
+                Message => Translatable('Need WebserviceID!'),
+            );
+        }
+
+        # get web service configuration
+        my $WebserviceData = $WebserviceObject->WebserviceGet(
+            ID => $WebserviceID,
+        );
+
+        # check for valid web service configuration
+        if ( !IsHashRefWithData($WebserviceData) ) {
+            return $LayoutObject->ErrorScreen(
+                Message => $LayoutObject->{LanguageObject}
+                    ->Translate( 'Could not get data for WebserviceID %s', $WebserviceID ),
+            );
+        }
+
+        # get action type copy
+        my $ActionType = $ParamObject->GetParam( Param => 'ActionType' );
+        if ( !$ActionType ) {
+            return $LayoutObject->ErrorScreen(
+                Message => Translatable('Need ActionType!'),
+            );
+        }
+
+        # get action name copy
+        my $ActionName = $ParamObject->GetParam( Param => 'ActionName' );
+        if ( !$ActionName ) {
+            return $LayoutObject->ErrorScreen(
+                Message => Translatable('Need ActionName!'),
+            );
+        }
+
+        # set the communication type to Provider or Requester
+        my $CommunicationType = $ActionType eq 'Operation' ? 'Provider' : 'Requester';
+        if (
+            !$WebserviceData->{Config}->{$CommunicationType}->{$ActionType}
+            || !$WebserviceData->{Config}->{$CommunicationType}->{$ActionType}->{$ActionName}
+        ) {
+            return $LayoutObject->ErrorScreen(
+                Message => Translatable('Got invalid ' . $ActionType - '!'),
+            );
+        }
+
+        my $NewActionName = $ActionName
+            . ' ('
+            . $LayoutObject->{LanguageObject}->Translate('Copy')
+            . ')';
+        if ( $WebserviceData->{Config}->{$CommunicationType}->{$ActionType}->{$NewActionName} ) {
+            return $LayoutObject->ErrorScreen(
+                Message => Translatable($ActionType . ' with copy name already exists!'),
+            );
+        }
+
+        # copy action config
+        $WebserviceData->{Config}->{$CommunicationType}->{$ActionType}->{$NewActionName} = $WebserviceData->{Config}->{$CommunicationType}->{$ActionType}->{$ActionName};
+
+        # update web service
+        my $Success = $WebserviceObject->WebserviceUpdate(
+            %{$WebserviceData},
+            UserID => $Self->{UserID},
+        );
+        if ( !$Success ) {
+            return $LayoutObject->ErrorScreen(
+                Message => Translatable('There was an error updating the web service.'),
+            );
+        }
+
+        # define notification
+        my $Notify = $LayoutObject->{LanguageObject}->Translate(
+            '%s "%s" created',
+            $ActionType,
+            $NewActionName
+        );
+
+        # return to edit to continue changing the configuration
+        return $Self->_ShowEdit(
+            %Param,
+            Notify         => $Notify,
+            WebserviceID   => $WebserviceID,
+            WebserviceData => $WebserviceData,
+            Action         => 'Change',
+        );
+    }
+
     # ------------------------------------------------------------ #
     # sub-action Import: parse the file and return to overview
     #                    if name errors return to add screen

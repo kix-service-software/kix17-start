@@ -1438,6 +1438,13 @@ sub Data {
         'Delete invoker' => 'Invoker löschen',
         'Clone webservice' => 'Webservice klonen',
         'Import webservice' => 'Webservice importieren',
+        'Need ActionName!' => 'Benötige ActionName!',
+        'Need ActionType!' => 'Benötige ActionType!',
+        'Got invalid Invoker!' => 'Ungültiger Invoker angegeben!',
+        'Got invalid Operation!' => 'Ungültige Operation angegeben!',
+        'Invoker with copy name already exists!' => 'Invoker mit Kopienamen existiert bereits!',
+        'Operation with copy name already exists!' => 'Operation mit Kopienamen existiert bereits!',
+        '%s "%s" created' => '%s "%s" erstellt',
 
         # Template: AdminGenericInterfaceWebserviceHistory
         'GenericInterface Configuration History for Web Service %s' => 'GenericInterface-Konfigurations-Historie für Webservice %s',
