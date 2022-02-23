@@ -29,14 +29,13 @@ sub new {
     my $Self = {%Param};
     bless( $Self, $Type );
 
-    #get config object
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+    my $Config = $Kernel::OM->Get('Kernel::Config')->Get("Ticket::Frontend::$Self->{Action}");
 
     # get the dynamic fields for this screen
     $Self->{DynamicField} = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
         Valid       => 1,
         ObjectType  => [ 'Ticket', 'Article' ],
-        FieldFilter => $ConfigObject->Get("Ticket::Frontend::$Self->{Action}")->{DynamicField} || {},
+        FieldFilter => $Config->{DynamicField} || {},
     );
 
     # get form id
@@ -49,10 +48,9 @@ sub new {
 
     # handle for quick ticket templates
     my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
-    $Self->{DefaultSet} = $ParamObject->GetParam( Param => 'DefaultSet' ) || 0;
-    $Self->{DefaultSetTypeChanged} =
-        $ParamObject->GetParam( Param => 'DefaultSetTypeChanged' ) || 0;
-    $Self->{ActionReal} = $Self->{Action};
+    $Self->{DefaultSet}            = $ParamObject->GetParam( Param => 'DefaultSet' ) || 0;
+    $Self->{DefaultSetTypeChanged} = $ParamObject->GetParam( Param => 'DefaultSetTypeChanged' ) || 0;
+    $Self->{ActionReal}            = $Self->{Action};
 
     return $Self;
 }
@@ -63,8 +61,17 @@ sub Run {
     # get params
     my %GetParam;
 
-    # get param object
-    my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
+    # get needed objects
+    my $ConfigObject              = $Kernel::OM->Get('Kernel::Config');
+    my $LayoutObject              = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $CustomerUserObject        = $Kernel::OM->Get('Kernel::System::CustomerUser');
+    my $DynamicFieldObject        = $Kernel::OM->Get('Kernel::System::DynamicField');
+    my $DynamicFieldBackendObject = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
+    my $LinkObject                = $Kernel::OM->Get('Kernel::System::LinkObject');
+    my $QueueObject               = $Kernel::OM->Get('Kernel::System::Queue');
+    my $TicketObject              = $Kernel::OM->Get('Kernel::System::Ticket');
+    my $ParamObject               = $Kernel::OM->Get('Kernel::System::Web::Request');
+    my $UploadCacheObject         = $Kernel::OM->Get('Kernel::System::Web::UploadCache');
 
     for my $Key (
         qw(ArticleID LinkTicketID PriorityID NewUserID
@@ -76,6 +83,11 @@ sub Run {
         )
     ) {
         $GetParam{$Key} = $ParamObject->GetParam( Param => $Key );
+    }
+
+    if ( $ConfigObject->Get('Frontend::Agent::CreateOptions::ViewAllOwner') ) {
+        $GetParam{OwnerAll}       = 1;
+        $GetParam{ResponsibleAll} = 1;
     }
 
     my @SelectedCIIDs;
@@ -165,17 +177,6 @@ sub Run {
     # to store the reference to the dynamic field for the impact
     my $ImpactDynamicFieldConfig;
 # ---
-
-    # get needed objects
-    my $LayoutObject              = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-    my $DynamicFieldBackendObject = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
-    my $ConfigObject              = $Kernel::OM->Get('Kernel::Config');
-    my $CustomerUserObject        = $Kernel::OM->Get('Kernel::System::CustomerUser');
-    my $UploadCacheObject         = $Kernel::OM->Get('Kernel::System::Web::UploadCache');
-    my $TicketObject              = $Kernel::OM->Get('Kernel::System::Ticket');
-    my $QueueObject               = $Kernel::OM->Get('Kernel::System::Queue');
-    my $DynamicFieldObject        = $Kernel::OM->Get('Kernel::System::DynamicField');
-    my $LinkObject                = $Kernel::OM->Get('Kernel::System::LinkObject');
 
     my $Config = $ConfigObject->Get("Ticket::Frontend::$Self->{Action}");
 
@@ -2252,10 +2253,6 @@ sub Run {
             $QueueID = $1;
         }
 
-        if ( $ConfigObject->Get('Frontend::Agent::CreateOptions::ViewAllOwner') ) {
-            $GetParam{OwnerAll}       = 1;
-            $GetParam{ResponsibleAll} = 1;
-        }
         my $ElementChanged
             = $GetParam{ElementChanged}
             || $ParamObject->GetParam( Param => 'ElementChanged' )
