@@ -3,7 +3,7 @@ package HTTP::Message;
 use strict;
 use warnings;
 
-our $VERSION = "6.11";
+our $VERSION = '6.36';
 
 require HTTP::Headers;
 require Carp;
@@ -143,11 +143,11 @@ sub _set_content {
     my $self = $_[0];
     _utf8_downgrade($_[1]);
     if (!ref($_[1]) && ref($self->{_content}) eq "SCALAR") {
-	${$self->{_content}} = $_[1];
+	${$self->{_content}} = defined( $_[1] ) ? $_[1] : '';
     }
     else {
 	die "Can't set content to be a scalar reference" if ref($_[1]) eq "SCALAR";
-	$self->{_content} = $_[1];
+	$self->{_content} = defined( $_[1] ) ? $_[1] : '';
 	delete $self->{_content_ref};
     }
     delete $self->{_parts} unless $_[2];
@@ -417,6 +417,7 @@ sub decodable
     # should match the Content-Encoding values that decoded_content can deal with
     my $self = shift;
     my @enc;
+    local $@;
     # XXX preferably we should determine if the modules are available without loading
     # them here
     eval {
@@ -430,7 +431,7 @@ sub decodable
     };
     eval {
         require IO::Uncompress::Bunzip2;
-        push(@enc, "x-bzip2");
+        push(@enc, "x-bzip2", "bzip2");
     };
     # we don't care about announcing the 'identity', 'base64' and
     # 'quoted-printable' stuff
@@ -462,7 +463,7 @@ sub encode
 
     my $content = $self->content;
     for my $encoding (@enc) {
-	if ($encoding eq "identity") {
+	if ($encoding eq "identity" || $encoding eq "none") {
 	    # nothing to do
 	}
 	elsif ($encoding eq "base64") {
@@ -483,7 +484,7 @@ sub encode
 		or die "Can't deflate content: $IO::Compress::Deflate::DeflateError";
 	    $content = $output;
 	}
-	elsif ($encoding eq "x-bzip2") {
+	elsif ($encoding eq "x-bzip2" || $encoding eq "bzip2") {
 	    require IO::Compress::Bzip2;
 	    my $output;
 	    IO::Compress::Bzip2::bzip2(\$content, \$output)
@@ -639,23 +640,42 @@ sub _stale_content {
     }
 }
 
-
 # delegate all other method calls to the headers object.
 our $AUTOLOAD;
-sub AUTOLOAD
-{
-    my $method = substr($AUTOLOAD, rindex($AUTOLOAD, '::')+2);
 
-    # We create the function here so that it will not need to be
-    # autoloaded the next time.
-    no strict 'refs';
-    *$method = sub { local $Carp::Internal{+__PACKAGE__} = 1; shift->headers->$method(@_) };
-    goto &$method;
+sub AUTOLOAD {
+    my ( $package, $method ) = $AUTOLOAD =~ m/\A(.+)::([^:]*)\z/;
+    my $code = $_[0]->can($method);
+    Carp::croak(
+        qq(Can't locate object method "$method" via package "$package"))
+        unless $code;
+    goto &$code;
 }
 
+sub can {
+    my ( $self, $method ) = @_;
 
-sub DESTROY {}  # avoid AUTOLOADing it
+    if ( my $own_method = $self->SUPER::can($method) ) {
+        return $own_method;
+    }
 
+    my $headers = ref($self) ? $self->headers : 'HTTP::Headers';
+    if ( $headers->can($method) ) {
+
+        # We create the function here so that it will not need to be
+        # autoloaded or recreated the next time.
+        no strict 'refs';
+        *$method = sub {
+            local $Carp::Internal{ +__PACKAGE__ } = 1;
+            shift->headers->$method(@_);
+        };
+        return \&$method;
+    }
+
+    return undef;
+}
+
+sub DESTROY { }    # avoid AUTOLOADing it
 
 # Private method to access members in %$self
 sub _elem
@@ -771,12 +791,17 @@ sub _boundary
 
 1;
 
+=pod
 
-__END__
+=encoding UTF-8
 
 =head1 NAME
 
 HTTP::Message - HTTP style message (base class)
+
+=head1 VERSION
+
+version 6.36
 
 =head1 SYNOPSIS
 
@@ -833,6 +858,9 @@ The content() method sets the raw content if an argument is given.  If no
 argument is given the content is not touched.  In either case the
 original raw content is returned.
 
+If the C<undef> argument is given, the content is reset to its default value,
+which is an empty string.
+
 Note that the content should be a string of bytes.  Strings in perl
 can contain characters outside the range of a byte.  The C<Encode>
 module can be used to turn such strings into a string of bytes.
@@ -877,9 +905,14 @@ for details about how charset is determined.
 
 =item $mess->decoded_content( %options )
 
-Returns the content with any C<Content-Encoding> undone and for textual content
-the raw content encoded to Perl's Unicode strings.  If the C<Content-Encoding>
-or C<charset> of the message is unknown this method will fail by returning
+Returns the content with any C<Content-Encoding> undone and, for textual content
+(C<Content-Type> values starting with C<text/>, exactly matching
+C<application/xml>, or ending with C<+xml>), the raw content's character set
+decoded into Perl's Unicode string format. Note that this
+L<does not currently|https://github.com/libwww-perl/HTTP-Message/pull/99>
+attempt to decode declared character sets for any other content types like
+C<application/json> or C<application/javascript>.  If the C<Content-Encoding>
+or C<charset> of the message is unknown, this method will fail by returning
 C<undef>.
 
 The following options can be specified.
@@ -1105,10 +1138,21 @@ details of these methods:
     $mess->authorization_basic
     $mess->proxy_authorization_basic
 
-=head1 COPYRIGHT
+=head1 AUTHOR
 
-Copyright 1995-2004 Gisle Aas.
+Gisle Aas <gisle@activestate.com>
 
-This library is free software; you can redistribute it and/or
-modify it under the same terms as Perl itself.
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 1994 by Gisle Aas.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
+=cut
+
+__END__
+
+
+#ABSTRACT: HTTP style message (base class)
 

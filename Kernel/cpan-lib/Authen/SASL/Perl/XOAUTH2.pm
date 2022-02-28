@@ -8,8 +8,9 @@
 
 package Authen::SASL::Perl::XOAUTH2 ;
 
-use strict ;
-use warnings ;
+use strict;
+use warnings;
+
 use vars qw($VERSION @ISA);
 
 $VERSION = "1.00";

@@ -3,9 +3,9 @@ package HTTP::Headers;
 use strict;
 use warnings;
 
-use Carp ();
+our $VERSION = '6.36';
 
-our $VERSION = "6.11";
+use Carp ();
 
 # The $TRANSLATE_UNDERSCORE variable controls whether '_' can be used
 # as a replacement for '-' in header field names.
@@ -299,8 +299,8 @@ sub _process_newline {
 
 
 
-if (eval { require Storable; 1 }) {
-    *clone = \&Storable::dclone;
+if (eval { require Clone; 1 }) {
+    *clone = \&Clone::clone;
 } else {
     *clone = sub {
 	my $self = shift;
@@ -465,11 +465,17 @@ sub _basic_auth {
 
 1;
 
-__END__
+=pod
+
+=encoding UTF-8
 
 =head1 NAME
 
 HTTP::Headers - Class encapsulating HTTP Message headers
+
+=head1 VERSION
+
+version 6.36
 
 =head1 SYNOPSIS
 
@@ -529,7 +535,8 @@ means that you can update several fields with a single invocation.
 The $value argument may be a plain string or a reference to an array
 of strings for a multi-valued field. If the $value is provided as
 C<undef> then the field is removed.  If the $value is not given, then
-that header field will remain unchanged.
+that header field will remain unchanged. In addition to being a string,
+$value may be something that stringifies.
 
 The old value (or values) of the last of the header fields is returned.
 If no such field exists C<undef> will be returned.
@@ -864,10 +871,21 @@ These field names are returned with the ':' intact for
 $h->header_field_names and the $h->scan callback, but the colons do
 not show in $h->as_string.
 
-=head1 COPYRIGHT
+=head1 AUTHOR
 
-Copyright 1995-2005 Gisle Aas.
+Gisle Aas <gisle@activestate.com>
 
-This library is free software; you can redistribute it and/or
-modify it under the same terms as Perl itself.
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 1994 by Gisle Aas.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
+=cut
+
+__END__
+
+
+#ABSTRACT: Class encapsulating HTTP Message headers
 
