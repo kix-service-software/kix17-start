@@ -2200,7 +2200,6 @@ sub TicketSearch {
                 $SQLExt .= " u.first_name $OrderBySuffix, u.last_name ";
             }
             else {
-
                 # regular sort
                 $SQLSelect .= ', ' . $SortOptions{ $SortByArray[$Count] };
                 $SQLExt    .= ' ' . $SortOptions{ $SortByArray[$Count] };
@@ -2253,8 +2252,8 @@ sub TicketSearch {
         );
     while ( my @Row = $DBObject->FetchrowArray() ) {
         $Count = $Row[0];
+        push @TicketIDs, $Row[0] if ( !$Tickets{ $Row[0] } );
         $Tickets{ $Row[0] } = $Row[1];
-        push @TicketIDs, $Row[0];
     }
 
     # return COUNT
@@ -4278,12 +4277,10 @@ sub TicketSearchOR {
                     DynamicFieldConfig => $DynamicField,
                     TableAlias         => $DynamicFieldJoinTables{$DynamicFieldName},
                 );
-
                 $SQLSelect .= ", $SQLOrderField ";
                 $SQLExt    .= " $SQLOrderField ";
             }
             else {
-
                 # regular sort
                 $SQLSelect .= ', ' . $SortOptions{ $SortByArray[$Count] };
                 $SQLExt    .= ' ' . $SortOptions{ $SortByArray[$Count] };
@@ -4336,8 +4333,8 @@ sub TicketSearchOR {
         );
     while ( my @Row = $DBObject->FetchrowArray() ) {
         $Count = $Row[0];
+        push( @TicketIDs, $Row[0] ) if ( !$Tickets{ $Row[0] } );
         $Tickets{ $Row[0] } = $Row[1];
-        push @TicketIDs, $Row[0];
     }
 
     # return COUNT
