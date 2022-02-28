@@ -335,6 +335,7 @@
                                 <th>[% Translate("Controller") | html %]</th>
                                 <th>[% Translate("Inbound mapping") | html %]</th>
                                 <th>[% Translate("Outbound mapping") | html %]</th>
+                                <th>[% Translate("Copy") | html %]</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -369,6 +370,7 @@
                                 <td class="[% Data.ControllerClass | html %]">[% Data.Controller | html %]</td>
                                 <td>[% Translate(Data.MappingInbound) | html %]</td>
                                 <td>[% Translate(Data.MappingOutbound) | html %]</td>
+                                <td class="Center"><a href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=CopyAction;WebserviceID=[% Data.WebserviceID | uri %];ActionType=[% Data.ActionType | uri %];ActionName=[% Data.Name | uri %];[% Env("ChallengeTokenParam") | html %]"><i class="fa fa-copy"></i><span class="InvisibleText">[% Translate("Copy") | html %]</span></a></td>
                             </tr>
 [% RenderBlockEnd("DetailsActionsRow") %]
 [% RenderBlockStart("DetailsActionsNoDataFoundMsg") %]
