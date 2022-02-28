@@ -7,6 +7,8 @@ use YAML::Dumper::Base;
 use YAML::Node;
 use YAML::Types;
 use Scalar::Util qw();
+use B ();
+use Carp ();
 
 # Context constants
 use constant KEY       => 3;
@@ -504,6 +506,7 @@ sub is_valid_plain {
     return 0 if $_[0] =~ /\:(\s|$)/;
     return 0 if $_[0] =~ /[\s\|\>]$/;
     return 0 if $_[0] eq '-';
+    return 0 if $_[0] eq '=';
     return 1;
 }
 

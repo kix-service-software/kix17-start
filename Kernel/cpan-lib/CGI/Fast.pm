@@ -1,21 +1,12 @@
 package CGI::Fast;
 use strict;
+use warnings;
 use if $] >= 5.019, 'deprecate';
 
-# A way to say "use warnings" that's compatible with even older perls.
-# making it local will not affect the code that loads this module
-# and since we're not in a BLOCK, warnings are enabled until the EOF
-local $^W = 1;
-
-# Copyright 1995,1996, Lincoln D. Stein.  All rights reserved.
-# It may be used and modified freely, but I do request that this copyright
-# notice remain attached to the file.  You may modify this module as you
-# wish, but if you redistribute a modified version, please attach a note
-# listing the modifications you have made.
-
-$CGI::Fast::VERSION='2.02';
+$CGI::Fast::VERSION='2.16';
 
 use CGI;
+use CGI::Carp;
 use FCGI;
 # use vars works like "our", but is compatible with older Perls.
 use vars qw(
@@ -35,7 +26,7 @@ sub save_request {
 
 # If ENV{FCGI_SOCKET_PATH} is specified, we maintain a FCGI Request handle
 # in this package variable.
-use vars qw($Ext_Request $socket $queue);
+use vars qw($Ext_Request $socket $socket_perm $queue);
 
 sub import {
     my ($package,@import) = @_;
@@ -44,6 +35,8 @@ sub import {
     for (my $i = 0; $i < scalar( @import ); $i++) {
         if ( $import[$i] eq 'socket_path' ) {
             $socket = $import[$i+1];
+        } elsif ( $import[$i] eq 'socket_perm' ) {
+            $socket_perm = $import[$i+1];
         } elsif ( $import[$i] eq 'listen_queue' ) {
             $queue = $import[$i+1];
         }
@@ -56,8 +49,12 @@ sub _create_fcgi_request {
     # If we have a socket set, explicitly open it
     if ($ENV{FCGI_SOCKET_PATH} or $socket) {
         my $path    = $ENV{FCGI_SOCKET_PATH}  || $socket;
+        my $perm    = $ENV{FCGI_SOCKET_PERM}  || $socket_perm;
         my $backlog = $ENV{FCGI_LISTEN_QUEUE} || $queue || 100;
         my $socket  = FCGI::OpenSocket( $path, $backlog );
+        if ($path !~ /^:/ && defined $perm) {
+            chmod $perm, $path or croak( "Couldn't chmod($path): $!" );
+        }
         return FCGI::Request(
             ( $in_fh  || \*STDIN ),
             ( $out_fh || \*STDOUT ),
@@ -90,15 +87,35 @@ sub _create_fcgi_request {
     }
 
     sub new {
-        my ($self, $initializer, @param) = @_;
 
-        if ( ! defined $initializer ) {
+		#
+		# the interface to the ->new method is unfortunately somewhat
+		# overloaded as it can be passed:
+		#
+		#         nothing
+		#         an upload hook, "something", 0
+		#         an initializer, an upload hook, "something", 0
+		#
+		# these then get passed through to the SUPER class (CGI.pm) that
+		# also has a constructor that can take various order of args
+		#
+        my ($self, @args) = @_;
+
+        if (
+			! $args[0]
+			|| (
+				ref( $args[0] )
+				&& UNIVERSAL::isa( $args[0],'CODE' )
+				&& ! $args[3]
+			)
+		) {
             $Ext_Request ||= _create_fcgi_request( $in_fh,$out_fh,$err_fh );
-            return undef unless $Ext_Request->Accept >= 0;
+			my $accept = $Ext_Request->Accept;
+            return undef unless ( defined $accept && $accept >= 0 );
         }
         CGI->_reset_globals;
         $self->_setup_symbols(@CGI::SAVED_SYMBOLS) if @CGI::SAVED_SYMBOLS;
-        return $CGI::Q = $self->SUPER::new($initializer, @param);
+        return $CGI::Q = $self->SUPER::new(@args);
     }
 }
 
@@ -108,30 +125,29 @@ sub _create_fcgi_request {
 
 CGI::Fast - CGI Interface for Fast CGI
 
+=for html
+<a href='https://travis-ci.org/leejo/cgi-fast?branch=master'><img src='https://travis-ci.org/leejo/cgi-fast.svg?branch=master' alt='Build Status' /></a>
+<a href='https://coveralls.io/r/leejo/cgi-fast?branch=master'><img src='https://coveralls.io/repos/leejo/cgi-fast/badge.png?branch=master' alt='Coverage Status' /></a>
+
 =head1 SYNOPSIS
 
     use CGI::Fast
         socket_path  => '9000',
+        socket_perm  => 0777,
         listen_queue => 50;
+
+    use CGI qw/ :standard /;
 
     $COUNTER = 0;
 
-    # optional, will default to STDOUT, STDIN, STDERR
+    # optional, will default to STDOUT, STDERR
     CGI::Fast->file_handles({
-        fcgi_input_file_handle  => IO::Handle->new,
         fcgi_output_file_handle => IO::Handle->new,
         fcgi_error_file_handle  => IO::Handle->new,
     });
 
-    while (new CGI::Fast) {
-        print header;
-        print start_html("Fast CGI Rocks");
-        print
-        h1("Fast CGI Rocks"),
-        "Invocation number ",b($COUNTER++),
-            " PID ",b($$),".",
-        hr;
-        print end_html;
+    while ($q = CGI::Fast->new) {
+        process_request($q);
     }
 
 =head1 DESCRIPTION
@@ -142,6 +158,10 @@ scripts by turning them into persistently running server processes.
 Scripts that perform time-consuming initialization processes, such as
 loading large modules or opening persistent database connections, will
 see large performance improvements.
+
+Note that as CGI::Fast is based on CGI.pm it is no longer advised as
+a way to write Perl web apps. See L<https://metacpan.org/pod/CGI#CGI.pm-HAS-BEEN-REMOVED-FROM-THE-PERL-CORE>
+for more information about this
 
 =head1 OTHER PIECES OF THE PUZZLE
 
@@ -162,7 +182,7 @@ A typical FastCGI script will look like this:
     #!perl
     use CGI::Fast;
     do_some_initialization();
-    while ($q = new CGI::Fast) {
+    while ($q = CGI::Fast->new) {
         process_request($q);
     }
 
@@ -178,7 +198,7 @@ scripts).
 CGI.pm's default CGI object mode also works.  Just modify the loop
 this way:
 
-    while (new CGI::Fast) {
+    while (CGI::Fast->new) {
         process_request();
     }
 
@@ -230,6 +250,10 @@ the import statements on the command line, etc.
 The address (TCP/IP) or path (UNIX Domain) of the socket the external FastCGI
 script to which bind an listen for incoming connections from the web server.
 
+=item FCGI_SOCKET_PERM / socket_perm
+
+Permissions for UNIX Domain socket.
+
 =item FCGI_LISTEN_QUEUE / listen_queue
 
 Maximum length of the queue of pending connections, defaults to 100.
@@ -243,9 +267,11 @@ For example:
         listen_queue => "50"
     ;
 
+    use CGI qw/ :standard /;
+
     do_some_initialization();
 
-    while ($q = new CGI::Fast) {
+    while ($q = CGI::Fast->new) {
         process_request($q);
     }
 
@@ -253,39 +279,48 @@ For example:
 Or:
 
     use CGI::Fast;
+    use CGI qw/ :standard /;
 
     do_some_initialization();
 
     $ENV{FCGI_SOCKET_PATH} = "sputnik:8888";
     $ENV{FCGI_LISTEN_QUEUE} = 50;
 
-    while ($q = new CGI::Fast) {
+    while ($q = CGI::Fast->new) {
         process_request($q);
     }
 
+Note the importance of having use CGI after use CGI::Fast as this will
+prevent any CGI import pragmas being overwritten by CGI::Fast. You can
+use CGI::Fast as a drop in replacement like so:
+
+    use CGI::Fast qw/ :standard /
+
 =head1 FILE HANDLES
 
-FCGI defaults to using STDIN, STDOUT, and STDERR as its filehandles - this
+FCGI defaults to using STDOUT and STDERR as its output filehandles - this
 may lead to unexpected redirect of output if you migrate scripts from CGI.pm
 to CGI::Fast. To get around this you can use the file_handles method, which
 you must do B<before> the first call to CGI::Fast->new. For example using
 IO::Handle:
 
     CGI::Fast->file_handles({
-        fcgi_input_file_handle  => IO::Handle->new,
         fcgi_output_file_handle => IO::Handle->new,
         fcgi_error_file_handle  => IO::Handle->new,
     });
 
-    while (new CGI::Fast) {
+    while (CGI::Fast->new) {
         ..
     }
+
+Overriding STDIN using the C<fcgi_input_file_handle> key is also possible,
+however doing so is likely to break at least POST requests.
 
 =head1 CAVEATS
 
 I haven't tested this very much.
 
-=head1 AUTHOR INFORMATION
+=head1 LICENSE
 
 Copyright 1996-1998, Lincoln D. Stein.  All rights reserved. Currently
 maintained by Lee Johnson

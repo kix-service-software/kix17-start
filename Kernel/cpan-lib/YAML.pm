@@ -1,5 +1,5 @@
 package YAML;
-our $VERSION = '1.15';
+our $VERSION = '1.30';
 
 use YAML::Mo;
 
@@ -7,8 +7,18 @@ use Exporter;
 push @YAML::ISA, 'Exporter';
 our @EXPORT = qw{ Dump Load };
 our @EXPORT_OK = qw{ freeze thaw DumpFile LoadFile Bless Blessed };
+our (
+    $UseCode, $DumpCode, $LoadCode,
+    $SpecVersion,
+    $UseHeader, $UseVersion, $UseBlock, $UseFold, $UseAliases,
+    $Indent, $SortKeys, $Preserve,
+    $AnchorPrefix, $CompressSeries, $InlineSeries, $Purity,
+    $Stringify, $Numify, $LoadBlessed, $QuoteNumericStrings,
+    $DumperClass, $LoaderClass
+);
 
 use YAML::Node; # XXX This is a temp fix for Module::Build
+use Scalar::Util qw/ openhandle /;
 
 # XXX This VALUE nonsense needs to go.
 use constant VALUE => "\x07YAML\x07VALUE\x07";
@@ -44,7 +54,7 @@ sub Load {
 sub DumpFile {
     my $OUT;
     my $filename = shift;
-    if (ref $filename eq 'GLOB') {
+    if (openhandle $filename) {
         $OUT = $filename;
     }
     else {
@@ -53,22 +63,29 @@ sub DumpFile {
             ($mode, $filename) = ($1, $2);
         }
         open $OUT, $mode, $filename
-          or YAML::Mo::Object->die('YAML_DUMP_ERR_FILE_OUTPUT', $filename, $!);
+          or YAML::Mo::Object->die('YAML_DUMP_ERR_FILE_OUTPUT', $filename, "$!");
     }
     binmode $OUT, ':utf8';  # if $Config{useperlio} eq 'define';
     local $/ = "\n"; # reset special to "sane"
     print $OUT Dump(@_);
+    unless (ref $filename eq 'GLOB') {
+        close $OUT
+          or do {
+              my $errsav = $!;
+              YAML::Mo::Object->die('YAML_DUMP_ERR_FILE_OUTPUT_CLOSE', $filename, $errsav);
+          }
+    }
 }
 
 sub LoadFile {
     my $IN;
     my $filename = shift;
-    if (ref $filename eq 'GLOB') {
+    if (openhandle $filename) {
         $IN = $filename;
     }
     else {
         open $IN, '<', $filename
-          or YAML::Mo::Object->die('YAML_LOAD_ERR_FILE_INPUT', $filename, $!);
+          or YAML::Mo::Object->die('YAML_LOAD_ERR_FILE_INPUT', $filename, "$!");
     }
     binmode $IN, ':utf8';  # if $Config{useperlio} eq 'define';
     return Load(do { local $/; <$IN> });

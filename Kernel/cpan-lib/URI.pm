@@ -3,7 +3,7 @@ package URI;
 use strict;
 use warnings;
 
-our $VERSION = "1.69";
+our $VERSION = '5.10';
 
 our ($ABS_REMOTE_LEADING_DOTS, $ABS_ALLOW_RELATIVE_SCHEME, $DEFAULT_QUERY_FORM_DELIMITER);
 
@@ -94,6 +94,7 @@ sub _uric_escape
     return $str;
 }
 
+my %require_attempted;
 
 sub implementor
 {
@@ -128,9 +129,13 @@ sub implementor
     no strict 'refs';
     # check we actually have one for the scheme:
     unless (@{"${ic}::ISA"}) {
-        # Try to load it
-        eval "require $ic";
-        die $@ if $@ && $@ !~ /Can\'t locate.*in \@INC/;
+        if (not exists $require_attempted{$ic}) {
+            # Try to load it
+            my $_old_error = $@;
+            eval "require $ic";
+            die $@ if $@ && $@ !~ /Can\'t locate.*in \@INC/;
+            $@ = $_old_error;
+        }
         return undef unless @{"${ic}::ISA"};
     }
 
@@ -352,11 +357,13 @@ URI - Uniform Resource Identifiers (absolute and relative)
 
 =head1 SYNOPSIS
 
- $u1 = URI->new("http://www.perl.com");
+ use URI ();
+
+ $u1 = URI->new("http://www.example.com");
  $u2 = URI->new("foo", "http");
  $u3 = $u2->abs($u1);
  $u4 = $u3->clone;
- $u5 = URI->new("HTTP://WWW.perl.com:80")->canonical;
+ $u5 = URI->new("HTTP://WWW.example.com:80")->canonical;
 
  $str = $u->as_string;
  $str = "$u";
@@ -367,7 +374,7 @@ URI - Uniform Resource Identifiers (absolute and relative)
  $frag   = $u->fragment;
 
  $u->scheme("ftp");
- $u->host("ftp.perl.com");
+ $u->host("ftp.example.com");
  $u->path("cpan/");
 
 =head1 DESCRIPTION
@@ -909,7 +916,8 @@ query-related sub-components.
 
 The I<news>, I<nntp> and I<snews> URI schemes are specified in
 <draft-gilman-news-url-01> and will hopefully be available as an RFC
-2396 based specification soon.
+2396 based specification soon. (Update: as of April 2010, they are in
+L<RFC 5538|https://tools.ietf.org/html/rfc5538>.
 
 C<URI> objects belonging to the news scheme support the common,
 generic and server methods.  In addition, they provide some methods to
@@ -918,6 +926,10 @@ access the path: $uri->group and $uri->message.
 =item B<nntp>:
 
 See I<news> scheme.
+
+=item B<nntps>:
+
+See I<news> scheme and L<RFC 5538|https://tools.ietf.org/html/rfc5538>.
 
 =item B<pop>:
 

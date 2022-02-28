@@ -155,7 +155,7 @@ sub DocumentNew {
 
     # add font directory
     my $FontDir = $ConfigObject->Get('Home') . '/var/fonts';
-    $Self->{PDF}->addFontDirs($FontDir);
+    $Self->{PDF}->add_to_font_path($FontDir);
 
     if ( !$Param{Testfonts} ) {
 
@@ -164,8 +164,9 @@ sub DocumentNew {
 
         # set fonts
         for my $FontType ( sort keys %FontFiles ) {
-            $Self->{Font}->{$FontType} = $Self->{PDF}->ttfont(
+            $Self->{Font}->{$FontType} = $Self->{PDF}->font(
                 $FontFiles{$FontType},
+                format      => 'truetype',
                 -encode     => $Self->{Document}->{Encode},
                 -unicodemap => 1,
             );
@@ -174,13 +175,14 @@ sub DocumentNew {
     else {
 
         # set testfont (only used in unitests)
-        $Self->{Font}->{Testfont1} = $Self->{PDF}->corefont(
+        $Self->{Font}->{Testfont1} = $Self->{PDF}->font(
             'Helvetica',
             -encode     => $Self->{Document}->{Encode},
             -unicodemap => 1,
         );
-        $Self->{Font}->{Testfont2} = $Self->{PDF}->ttfont(
+        $Self->{Font}->{Testfont2} = $Self->{PDF}->font(
             'DejaVuSans.ttf',
+            format      => 'truetype',
             -encode     => $Self->{Document}->{Encode},
             -unicodemap => 1,
         );
@@ -583,8 +585,8 @@ sub DocumentOutput {
     }
 
     # return the document as string
-    my $DocumentString = $Self->{PDF}->stringify();
-    $Self->{PDF}->end();
+    my $DocumentString = $Self->{PDF}->to_string();
+    $Self->{PDF}->close();
 
     return $DocumentString;
 }
@@ -1283,7 +1285,7 @@ sub Image {
     $Param{Width}  = $Param{Width} /  ( 300 / 72 );
     $Param{Height} = $Param{Height} / ( 300 / 72 );
 
-    my $Image = $Self->{Page}->gfx();
+    my $Image = $Self->{Page}->graphics();
     my $ImageFile;
 
     # if image already used, use the existing image object
@@ -1291,19 +1293,12 @@ sub Image {
         $ImageFile = $Self->{CacheImageObject}->{ $Param{File} };
     }
     else {
-        if ( $Param{File} =~ /^.*\.gif$/i ) {
-            $ImageFile = $Self->{PDF}->image_gif( $Param{File} );
-        }
-        elsif ( $Param{File} =~ /^.*\.jpg$/i ) {
-            $ImageFile = $Self->{PDF}->image_jpeg( $Param{File} );
-        }
-        elsif ( $Param{File} =~ /^.*\.png$/i ) {
-            $ImageFile = $Self->{PDF}->image_png( $Param{File} );
-        }
-        else {
+        $ImageFile = $Self->{PDF}->image( $Param{File} );
+
+        if ( !$ImageFile ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
-                Message  => "Imagetype of File $Param{File} not supported"
+                Message  => "Image type of File $Param{File} not supported"
             );
             return;
         }
@@ -1342,7 +1337,7 @@ sub Image {
     else {
 
         # output the image
-        $Image->image(
+        $Image->object(
             $ImageFile, $Position{X}, $Position{Y} - $Param{Height},
             $Param{Width}, $Param{Height},
         );
@@ -1431,7 +1426,7 @@ sub HLine {
     }
 
     # output the lines in top and bottom of the page
-    my $Line = $Self->{Page}->gfx();
+    my $Line = $Self->{Page}->graphics();
     $Line->fillcolor( $Param{Color} );
 
     # check values
@@ -2431,7 +2426,7 @@ sub _TableCellOutput {
 
     # output background
     if ( $Param{BackgroundColor} ne 'NULL' ) {
-        my $Background = $Self->{Page}->gfx();
+        my $Background = $Self->{Page}->graphics();
         $Background->fillcolor( $Param{BackgroundColor} );
         $Background->rect( $Position{X}, $Position{Y}, $Param{Width}, -( $Param{Height} ) );
         $Background->fill();
@@ -2439,7 +2434,7 @@ sub _TableCellOutput {
 
     # output top border
     if ( $Param{Border} > 0 ) {
-        my $BorderTop = $Self->{Page}->gfx();
+        my $BorderTop = $Self->{Page}->graphics();
         $BorderTop->fillcolor( $Param{BorderColor} );
         $BorderTop->rect( $Position{X}, $Position{Y}, $Param{Width}, -( $Param{Border} ) );
         $BorderTop->fill();
@@ -2447,7 +2442,7 @@ sub _TableCellOutput {
 
     # output right border
     if ( $Param{Border} > 0 ) {
-        my $BorderRight = $Self->{Page}->gfx();
+        my $BorderRight = $Self->{Page}->graphics();
         $BorderRight->fillcolor( $Param{BorderColor} );
         $BorderRight->rect(
             ( $Position{X} + $Param{Width} - $Param{Border} ),
@@ -2458,7 +2453,7 @@ sub _TableCellOutput {
 
     # output bottom border
     if ( $Param{Border} > 0 ) {
-        my $BorderBottom = $Self->{Page}->gfx();
+        my $BorderBottom = $Self->{Page}->graphics();
         $BorderBottom->fillcolor( $Param{BorderColor} );
         $BorderBottom->rect(
             $Position{X}, ( $Position{Y} - $Param{Height} + $Param{Border} ),
@@ -2469,7 +2464,7 @@ sub _TableCellOutput {
 
     # output left border
     if ( $Param{Border} > 0 ) {
-        my $BorderLeft = $Self->{Page}->gfx();
+        my $BorderLeft = $Self->{Page}->graphics();
         $BorderLeft->fillcolor( $Param{BorderColor} );
         $BorderLeft->rect( $Position{X}, $Position{Y}, $Param{Border}, -( $Param{Height} ) );
         $BorderLeft->fill();
@@ -2876,7 +2871,7 @@ sub _StringWidth {
     $Self->{TextWidthObject}->font( $Self->{Font}->{ $Param{Font} }, $Param{FontSize} );
 
     # calculate width of given text
-    my $StringWidth = $Self->{TextWidthObject}->advancewidth( $Param{Text} );
+    my $StringWidth = $Self->{TextWidthObject}->text_width( $Param{Text} );
 
     return $StringWidth if length $Param{Text} > 20;
 

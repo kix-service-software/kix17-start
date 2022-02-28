@@ -1,19 +1,18 @@
 package CGI::Util;
-use base 'Exporter';
+use parent 'Exporter';
 require 5.008001;
 use strict;
-use if $] >= 5.019, 'deprecate';
 our @EXPORT_OK = qw(rearrange rearrange_header make_attributes unescape escape
         expires ebcdic2ascii ascii2ebcdic);
 
-our $VERSION = '4.21';
+our $VERSION = '4.54';
 
 our $_EBCDIC = "\t" ne "\011";
 
-# This option is not documented and may change or go away.
-# The HTML spec does not require attributes to be sorted,
-# but it's useful for testing to get a predictable order back.
-our $SORT_ATTRIBUTES;
+my $appease_cpants_kwalitee = q/
+use strict;
+use warnings;
+#/;
 
 # (ord('^') == 95) for codepage 1047 as on os390, vmesa
 our @A2E = (
@@ -150,10 +149,7 @@ sub make_attributes {
 
     my $quote = $do_not_quote ? '' : '"';
 
-    my @attr_keys= keys %$attr;
-    if ($SORT_ATTRIBUTES) {
-        @attr_keys= sort @attr_keys;
-    }
+    my @attr_keys= sort keys %$attr;
     my(@att);
     foreach (@attr_keys) {
     my($key) = $_;
@@ -335,7 +331,7 @@ no public subroutines
 =head1 AUTHOR INFORMATION
 
 The CGI.pm distribution is copyright 1995-2007, Lincoln D. Stein. It is
-distributed under GPL and the Artistic License 2.0. It is currently
+distributed under the Artistic License 2.0. It is currently
 maintained by Lee Johnson with help from many contributors.
 
 Address bug reports and comments to: https://github.com/leejo/CGI.pm/issues
