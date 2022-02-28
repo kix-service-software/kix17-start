@@ -5936,7 +5936,10 @@ Ihr Helpdesk-Team
         'Portuguese' => 'Portugiesisch',
         'Portuguese (Brasil)' => 'Portugiesisch (Brasilien)',
         'PostMaster Filters' => 'PostMaster-Filter',
+        'Postmaster handles followups and new tickets based on the system address assigned queues. The queue, the system address has assigned for new tickets, is also considered.'
+            => 'PostMaster behandelt FollowUps und neue Tickets basierend auf den Queues, welche die relevante Systemadresse ausgewählt haben. Die Queue, welche die Systemadresse für neue Tickets zugewiesen hat, wird ebenfalls berücksichtigt.',
         'PostMaster Mail Accounts' => 'PostMaster-E-Mail-Konten',
+        'Postmaster skips notifications of rejected followups.' => 'PostMaster versendet keine FollowUp-Benachrichtigungen bei Ablehnung.',
         'Process Management Activity Dialog GUI' => 'Prozess-Management Aktivität-Dialog GUI',
         'Process Management Activity GUI' => 'Prozess-Management-Aktivitäten GUI',
         'Process Management Path GUI' => 'Prozess-Management-Pfad GUI',
