@@ -90,7 +90,7 @@ sub _RemoveObsoleteFiles {
         'Kernel/cpan-lib/CGI/Apache.pm',
         'Kernel/cpan-lib/CGI/Switch.pm',
         'Kernel/cpan-lib/Font/TTF/Changes_old.txt',
-        'Kernel/cpan-lib/Font/TTF/Manual.pod'
+        'Kernel/cpan-lib/Font/TTF/Manual.pod',
         'Kernel/cpan-lib/HTML/TokeParser.pm'
     );
 
