@@ -11,6 +11,9 @@ package Kernel::System::ITSMConfigItem::XML::Type::CustomerUserCompany;
 use strict;
 use warnings;
 
+# prevent 'Used once' warning for Kernel::OM
+use Kernel::System::ObjectManager;
+
 our @ObjectDependencies = (
     'Kernel::System::Log'
 );

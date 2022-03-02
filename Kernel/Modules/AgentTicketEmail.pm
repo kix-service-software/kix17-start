@@ -77,7 +77,6 @@ sub Run {
     my $TicketObject      = $Kernel::OM->Get('Kernel::System::Ticket');
     my $ParamObject       = $Kernel::OM->Get('Kernel::System::Web::Request');
     my $UploadCacheObject = $Kernel::OM->Get('Kernel::System::Web::UploadCache');
-    my $LinkObject        = $Kernel::OM->Get('Kernel::System::LinkObject');
 
     my $Debug = $Param{Debug} || 0;
     my $Config = $ConfigObject->Get("Ticket::Frontend::$Self->{Action}");

@@ -267,7 +267,6 @@ sub PerlInfoGet {
                 Excel::Writer::XLSX
                 Font::TTF
                 HTML::Tagset
-                HTML::TokeParser
                 HTML::Truncate
                 HTTP::Date
                 HTTP::Message
