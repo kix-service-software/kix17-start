@@ -1,6 +1,22 @@
 # Change log of KIX
 * Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.19.0-RC2 (2022/03/03)
+ * (2022/03/02) - Bugfix: KIX17-2830 (generic agent disables notification not triggered by job) (millinger)
+ * (2022/03/02) - CR: KIX17-2823 (updated LICENCE-Third-Party) (fjacquemin)
+ * (2022/03/01) - Bugfix: KIX17-2823 (removed HTML::Parser from cpan-lib and minor fixes) (millinger)
+ * (2022/02/28) - CR: KIX17-2709 (configuration to skip notifications for rejected followups) (millinger)
+ * (2022/02/28) - CR: KIX17-2823 (update distributed CPAN modules) (millinger)
+ * (2022/02/28) - CR: KIX17-2800 (updated JavaScript libraries) (fjacquemin)
+ * (2022/02/23) - Bugfix: KIX17-2842 (fixed ticket search when sorting dynamic fields with multiple values) (millinger)
+ * (2022/02/23) - Bugfix: KIX17-2844 (fix ticket creation with activated sysconfig 'Frontend::Agent::CreateOptions::ViewAllOwner') (millinger)
+ * (2022/02/23) - CR: KIX17-1831 (copy function for webservice actions) (millinger)
+ * (2022/02/22) - Bugfix: KIX17-2744 (show article attachments with leading dot) (millinger)
+ * (2022/02/21) - Bugfix: KIX17-2459 (fix inline attachments for faq suggestions) (millinger)
+ * (2022/02/21) - Bugfix: KIX17-2848 (show name when editing assigned activity dialog field) (millinger)
+ * (2022/02/16) - Bugfix: KIX17-2827 (filter preparation for dynamic fields) (millinger)
+ * (2022/02/16) - Bugfix: KIX17-2820 (html quotation for regex validation error messages) (millinger)
+
 # 17.19.0-RC1 (2022/02/16)
  * (2022/02/09) - Bugfix: KIX17-2821 (fix calculation of non-escalation relevant business time) (millinger)
  * (2022/01/27) - Bugfix: KIX17-2626 (cleanup cache for group list and role list after add and update) (millinger)
