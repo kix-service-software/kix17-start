@@ -184,11 +184,11 @@ sub new {
   $new->item_limit( 0 );
   $new->retention( 32 * 24 * 60 * 60 ); # 32 days
 
-#  (-e "rss.css") ? $new->css("./rss.css")
-#    : $new->css("http://www.interglacial.com/rss/rss.css");
+  (-e "rss.css") ? $new->css("./rss.css")
+    : $new->css("http://www.interglacial.com/rss/rss.css");
 
-#  (-e "about_rss.html") ? $new->docs("./about_rss.html")
-#    : $new->docs("http://www.interglacial.com/rss/about.html");
+  (-e "about_rss.html") ? $new->docs("./about_rss.html")
+    : $new->docs("http://www.interglacial.com/rss/about.html");
 
   return $new;
 }

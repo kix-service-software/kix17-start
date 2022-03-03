@@ -7,7 +7,7 @@ package Excel::Writer::XLSX::Workbook;
 #
 # Used in conjunction with Excel::Writer::XLSX
 #
-# Copyright 2000-2015, John McNamara, jmcnamara@cpan.org
+# Copyright 2000-2021, John McNamara, jmcnamara@cpan.org
 #
 # Documentation after __END__
 #
@@ -23,6 +23,7 @@ use File::Find;
 use File::Temp qw(tempfile);
 use File::Basename 'fileparse';
 use Archive::Zip;
+use Digest::MD5 qw(md5_hex);
 use Excel::Writer::XLSX::Worksheet;
 use Excel::Writer::XLSX::Chartsheet;
 use Excel::Writer::XLSX::Format;
@@ -33,7 +34,7 @@ use Excel::Writer::XLSX::Package::XMLwriter;
 use Excel::Writer::XLSX::Utility qw(xl_cell_to_rowcol xl_rowcol_to_cell);
 
 our @ISA     = qw(Excel::Writer::XLSX::Package::XMLwriter);
-our $VERSION = '0.85';
+our $VERSION = '1.09';
 
 
 ###############################################################################
@@ -72,7 +73,7 @@ sub new {
     $self->{_worksheets}         = [];
     $self->{_charts}             = [];
     $self->{_drawings}           = [];
-    $self->{_sheetnames}         = [];
+    $self->{_sheetnames}         = {};
     $self->{_formats}            = [];
     $self->{_xf_formats}         = [];
     $self->{_xf_format_indices}  = {};
@@ -85,7 +86,8 @@ sub new {
     $self->{_named_ranges}       = [];
     $self->{_custom_colors}      = [];
     $self->{_doc_properties}     = {};
-    $self->{_localtime}          = [ localtime() ];
+    $self->{_custom_properties}  = [];
+    $self->{_createtime}         = [ gmtime() ];
     $self->{_num_vml_files}      = 0;
     $self->{_num_comment_files}  = 0;
     $self->{_optimization}       = 0;
@@ -93,8 +95,12 @@ sub new {
     $self->{_y_window}           = 15;
     $self->{_window_width}       = 16095;
     $self->{_window_height}      = 9660;
-    $self->{_tab_ratio}          = 500;
+    $self->{_tab_ratio}          = 600;
     $self->{_excel2003_style}    = 0;
+    $self->{_max_url_length}     = 2079;
+    $self->{_has_comments}       = 0;
+    $self->{_read_only}          = 0;
+    $self->{_has_metadata}       = 0;
 
     $self->{_default_format_properties} = {};
 
@@ -119,6 +125,14 @@ sub new {
         $self->{_excel2003_style} = 1;
     }
 
+    if ( exists $options->{max_url_length} ) {
+        $self->{_max_url_length} = $options->{max_url_length};
+
+        if ($self->{_max_url_length} < 255) {
+            $self->{_max_url_length} = 2079;
+        }
+    }
+
     # Structures for the shared strings data.
     $self->{_str_total}  = 0;
     $self->{_str_unique} = 0;
@@ -140,6 +154,9 @@ sub new {
     else {
         $self->add_format( xf_index => 0 );
     }
+
+    # Add a default URL format.
+    $self->{_default_url_format} = $self->add_format( hyperlink => 1 );
 
     # Check for a filename unless it is an existing filehandle
     if ( not ref $self->{_filename} and $self->{_filename} eq '' ) {
@@ -198,6 +215,9 @@ sub _assemble_xml_file {
 
     # Write the XLSX file version.
     $self->_write_file_version();
+
+    # Write the fileSharing element.
+    $self->_write_file_sharing();
 
     # Write the workbook properties.
     $self->_write_workbook_pr();
@@ -298,6 +318,23 @@ sub sheets {
 
 ###############################################################################
 #
+# get_worksheet_by_name(name)
+#
+# Return a worksheet object in the workbook using the sheetname.
+#
+sub get_worksheet_by_name {
+
+    my $self      = shift;
+    my $sheetname = shift;
+
+    return undef if not defined $sheetname;
+
+    return $self->{_sheetnames}->{$sheetname};
+}
+
+
+###############################################################################
+#
 # worksheets()
 #
 # An accessor for the _worksheets[] array.
@@ -351,12 +388,13 @@ sub add_worksheet {
         $self->{_optimization},
         $self->{_tempdir},
         $self->{_excel2003_style},
-
+        $self->{_default_url_format},
+        $self->{_max_url_length},
     );
 
     my $worksheet = Excel::Writer::XLSX::Worksheet->new( @init_data );
     $self->{_worksheets}->[$index] = $worksheet;
-    $self->{_sheetnames}->[$index] = $name;
+    $self->{_sheetnames}->{$name} = $worksheet;
 
     return $worksheet;
 }
@@ -424,7 +462,7 @@ sub add_chart {
         $chartsheet->{_drawing} = $drawing;
 
         $self->{_worksheets}->[$index] = $chartsheet;
-        $self->{_sheetnames}->[$index] = $name;
+        $self->{_sheetnames}->{$name} = $chartsheet;
 
         push @{ $self->{_charts} }, $chart;
 
@@ -487,6 +525,11 @@ sub _check_sheetname {
     # Check that sheetname doesn't contain any invalid characters
     if ( $name =~ $invalid_char ) {
         croak 'Invalid character []:*?/\\ in worksheet name: ' . $name;
+    }
+
+    # Check that sheetname doesn't start or end with an apostrophe.
+    if ( $name =~ /^'/ || $name =~ /'$/) {
+        croak "Worksheet name $name cannot start or end with an apostrophe";
     }
 
     # Check that the worksheet name doesn't already exist since this is a fatal
@@ -763,29 +806,83 @@ sub define_name {
 
     # Warn if the sheet index wasn't found.
     if ( !defined $sheet_index ) {
-        carp "Unknown sheet name $sheetname in defined_name()\n";
+        carp "Unknown sheet name $sheetname in defined_name()";
         return -1;
     }
 
     # Warn if the name contains invalid chars as defined by Excel help.
-    if ( $name !~ m/^[\w\\][\w.]*$/ || $name =~ m/^\d/ ) {
-        carp "Invalid characters in name '$name' used in defined_name()\n";
+    if ( $name !~ m/^[\w\\][\w\\.]*$/ || $name =~ m/^\d/ ) {
+        carp "Invalid character in name '$name' used in defined_name()";
         return -1;
     }
 
     # Warn if the name looks like a cell name.
     if ( $name =~ m/^[a-zA-Z][a-zA-Z]?[a-dA-D]?[0-9]+$/ ) {
-        carp "Invalid name '$name' looks like a cell name in defined_name()\n";
+        carp "Invalid name '$name' looks like a cell name in defined_name()";
         return -1;
     }
 
     # Warn if the name looks like a R1C1.
     if ( $name =~ m/^[rcRC]$/ || $name =~ m/^[rcRC]\d+[rcRC]\d+$/ ) {
-        carp "Invalid name '$name' like a RC cell ref in defined_name()\n";
+        carp "Invalid name '$name' like a RC cell ref in defined_name()";
         return -1;
     }
 
     push @{ $self->{_defined_names} }, [ $name, $sheet_index, $formula ];
+}
+
+
+###############################################################################
+#
+# set_size()
+#
+# Set the workbook size.
+#
+sub set_size {
+
+    my $self   = shift;
+    my $width  = shift;
+    my $height = shift;
+
+    if ( !$width ) {
+        $self->{_window_width} = 16095;
+    }
+    else {
+        # Convert to twips at 96 dpi.
+        $self->{_window_width} = int( $width * 1440 / 96 );
+    }
+
+    if ( !$height ) {
+        $self->{_window_height} = 9660;
+    }
+    else {
+        # Convert to twips at 96 dpi.
+        $self->{_window_height} = int( $height * 1440 / 96 );
+    }
+}
+
+
+###############################################################################
+#
+# set_tab_ratio()
+#
+# Set the ratio of space for worksheet tabs.
+#
+sub set_tab_ratio {
+
+    my $self  = shift;
+    my $tab_ratio = shift;
+
+    if (!defined $tab_ratio) {
+        return;
+    }
+
+    if ( $tab_ratio < 0 or $tab_ratio > 100 ) {
+        carp "Tab ratio outside range: 0 <= zoom <= 100";
+    }
+    else {
+        $self->{_tab_ratio} = int( $tab_ratio * 10 );
+    }
 }
 
 
@@ -806,17 +903,18 @@ sub set_properties {
 
     # List of valid input parameters.
     my %valid = (
-        title       => 1,
-        subject     => 1,
-        author      => 1,
-        keywords    => 1,
-        comments    => 1,
-        last_author => 1,
-        created     => 1,
-        category    => 1,
-        manager     => 1,
-        company     => 1,
-        status      => 1,
+        title          => 1,
+        subject        => 1,
+        author         => 1,
+        keywords       => 1,
+        comments       => 1,
+        last_author    => 1,
+        created        => 1,
+        category       => 1,
+        manager        => 1,
+        company        => 1,
+        status         => 1,
+        hyperlink_base => 1,
     );
 
     # Check for valid input parameters.
@@ -829,12 +927,80 @@ sub set_properties {
 
     # Set the creation time unless specified by the user.
     if ( !exists $param{created} ) {
-        $param{created} = $self->{_localtime};
+        $param{created} = $self->{_createtime};
     }
 
 
     $self->{_doc_properties} = \%param;
 }
+
+
+###############################################################################
+#
+# set_custom_property()
+#
+# Set a user defined custom document property.
+#
+sub set_custom_property {
+
+    my $self  = shift;
+    my $name  = shift;
+    my $value = shift;
+    my $type  = shift;
+
+
+    # Valid types.
+    my %valid_type = (
+        'text'       => 1,
+        'date'       => 1,
+        'number'     => 1,
+        'number_int' => 1,
+        'bool'       => 1,
+    );
+
+    if ( !defined $name || !defined $value ) {
+        carp "The name and value parameters must be defined "
+          . "in set_custom_property()";
+
+        return -1;
+    }
+
+    # Determine the type for strings and numbers if it hasn't been specified.
+    if ( !$type ) {
+        if ( $value =~ /^\d+$/ ) {
+            $type = 'number_int';
+        }
+        elsif ( $value =~
+            /^([+-]?)(?=[0-9]|\.[0-9])[0-9]*(\.[0-9]*)?([Ee]([+-]?[0-9]+))?$/ )
+        {
+            $type = 'number';
+        }
+        else {
+            $type = 'text';
+        }
+    }
+
+    # Check for valid validation types.
+    if ( !exists $valid_type{$type} ) {
+        carp "Unknown custom type '$type' in set_custom_property()";
+        return -1;
+    }
+
+    #  Check for strings longer than Excel's limit of 255 chars.
+    if ( $type eq 'text' and length $value > 255 ) {
+        carp "Length of text custom value '$value' exceeds "
+          . "Excel's limit of 255 in set_custom_property()";
+        return -1;
+    }
+    if ( length $value > 255 ) {
+        carp "Length of custom name '$name' exceeds "
+          . "Excel's limit of 255 in set_custom_property()";
+        return -1;
+    }
+
+    push @{ $self->{_custom_properties} }, [ $name, $value, $type ];
+}
+
 
 
 ###############################################################################
@@ -853,6 +1019,10 @@ sub add_vba_project {
 
     croak "Couldn't locate $vba_project in add_vba_project(): $!"
       unless -e $vba_project;
+
+    if ( !$self->{_vba_codemame} ) {
+        $self->{_vba_codename} = 'ThisWorkbook';
+    }
 
     $self->{_vba_project} = $vba_project;
 }
@@ -880,6 +1050,20 @@ sub set_vba_name {
 
 ###############################################################################
 #
+# read_only_recommended()
+#
+# Set the Excel "Read-only recommended" save option.
+#
+sub read_only_recommended {
+
+    my $self = shift;
+
+    $self->{_read_only} = 2;
+}
+
+
+###############################################################################
+#
 # set_calc_mode()
 #
 # Set the Excel caclcuation mode for the workbook.
@@ -901,6 +1085,23 @@ sub set_calc_mode {
     }
 
     $self->{_calc_id} = $calc_id if defined $calc_id;
+}
+
+
+
+###############################################################################
+#
+# get_default_url_format()
+#
+# Get the default url format used when a user defined format isn't specified
+# with write_url(). The format is the hyperlink style defined by Excel for the
+# default theme.
+#
+sub get_default_url_format {
+
+    my $self    = shift;
+
+    return $self->{_default_url_format};
 }
 
 
@@ -932,6 +1133,15 @@ sub _store_workbook {
         $sheet->{_active} = 1 if $sheet->{_index} == $self->{_activesheet};
     }
 
+    # Set the sheet vba_codename if the workbook has a vbaProject binary.
+    if ( $self->{_vba_project} ) {
+        for my $sheet ( @{ $self->{_worksheets} } ) {
+            if ( !$sheet->{_vba_codename} ) {
+                $sheet->set_vba_name();
+            }
+        }
+    }
+
     # Convert the SST strings data structure.
     $self->_prepare_sst_string_data();
 
@@ -949,6 +1159,9 @@ sub _store_workbook {
 
     # Prepare the worksheet tables.
     $self->_prepare_tables();
+
+    # Prepare the metadata file links.
+    $self->_prepare_metadata();
 
     # Package the workbook.
     $packager->_add_workbook( $self );
@@ -974,13 +1187,41 @@ sub _store_workbook {
         $tempdir
     );
 
+    # Re-order the XML files before adding them to the Zip container to match
+    # (mainly) the order used by Excel and thus satisfy mime-type heuristics
+    # such as file(1) and magic.
+    my @tmp     = grep {  m{/xl/} } @xlsx_files;
+    @xlsx_files = grep { !m{/xl/} } @xlsx_files;
+    @xlsx_files = ( @tmp, @xlsx_files );
+
+    @tmp        = grep {  m{workbook\.xml$} } @xlsx_files;
+    @xlsx_files = grep { !m{workbook\.xml$} } @xlsx_files;
+    @xlsx_files = ( @tmp, @xlsx_files );
+
+    @tmp        = grep {  m{_rels/workbook\.xml\.rels$} } @xlsx_files;
+    @xlsx_files = grep { !m{_rels/workbook\.xml\.rels$} } @xlsx_files;
+    @xlsx_files = ( @tmp, @xlsx_files );
+
+    @tmp        = grep {  m{_rels/\.rels$} } @xlsx_files;
+    @xlsx_files = grep { !m{_rels/\.rels$} } @xlsx_files;
+    @xlsx_files = ( @tmp, @xlsx_files );
+
+    @tmp        = grep {  m{\[Content_Types\]\.xml$} } @xlsx_files;
+    @xlsx_files = grep { !m{\[Content_Types\]\.xml$} } @xlsx_files;
+    @xlsx_files = ( @tmp, @xlsx_files );
+
     # Store the xlsx component files with the temp dir name removed.
     for my $filename ( @xlsx_files ) {
         my $short_name = $filename;
         $short_name =~ s{^\Q$tempdir\E/?}{};
-        $zip->addFile( $filename, $short_name );
-    }
+        my $member = $zip->addFile( $filename, $short_name );
 
+        # Set the file member datetime to 1980-01-01 00:00:00 like Excel so
+        # that apps can produce a consistent binary file. Note, we don't use
+        # the Archive::Zip::setLastModFileDateTimeFromUnix() function directly
+        # since it doesn't allow the time 00:00:00 for this date.
+        $member->{'lastModFileDateTime'} = 2162688;
+    }
 
     if ( $self->{_internal_fh} ) {
 
@@ -1101,6 +1342,9 @@ sub _set_default_xf_indices {
 
     my $self = shift;
 
+    # Delete the default url format.
+    splice @{ $self->{_formats} }, 1, 1;
+
     for my $format ( @{ $self->{_formats} } ) {
         $format->get_xf_index();
     }
@@ -1179,14 +1423,25 @@ sub _prepare_num_formats {
     for my $format ( @{ $self->{_xf_formats} }, @{ $self->{_dxf_formats} } ) {
         my $num_format = $format->{_num_format};
 
+
         # Check if $num_format is an index to a built-in number format.
         # Also check for a string of zeros, which is a valid number format
         # string but would evaluate to zero.
         #
         if ( $num_format =~ m/^\d+$/ && $num_format !~ m/^0+\d/ ) {
 
+            # Number format '0' is indexed as 1 in Excel.
+            if ($num_format == 0) {
+                $num_format = 1;
+            }
+
             # Index to a built-in number format.
             $format->{_num_format_index} = $num_format;
+            next;
+        }
+        elsif ( $num_format  eq 'General' ) {
+            # The 'General' format has an number format index of 0.
+            $format->{_num_format_index} = 0;
             next;
         }
 
@@ -1526,10 +1781,14 @@ sub _extract_named_ranges {
 #
 sub _prepare_drawings {
 
-    my $self         = shift;
-    my $chart_ref_id = 0;
-    my $image_ref_id = 0;
-    my $drawing_id   = 0;
+    my $self             = shift;
+    my $chart_ref_id     = 0;
+    my $image_ref_id     = 0;
+    my $drawing_id       = 0;
+    my $ref_id           = 0;
+    my %image_ids        = ();
+    my %header_image_ids = ();
+    my %background_ids   = ();
 
     for my $sheet ( @{ $self->{_worksheets} } ) {
 
@@ -1539,6 +1798,7 @@ sub _prepare_drawings {
 
         my $header_image_count = scalar @{ $sheet->{_header_images} };
         my $footer_image_count = scalar @{ $sheet->{_footer_images} };
+        my $has_background     = $sheet->{_background_image};
         my $has_drawing        = 0;
 
 
@@ -1547,7 +1807,8 @@ sub _prepare_drawings {
             && !$image_count
             && !$shape_count
             && !$header_image_count
-            && !$footer_image_count )
+            && !$footer_image_count
+            && !$has_background )
         {
             next;
         }
@@ -1558,10 +1819,24 @@ sub _prepare_drawings {
             $has_drawing = 1;
         }
 
-        # Prepare the worksheet charts.
-        for my $index ( 0 .. $chart_count - 1 ) {
-            $chart_ref_id++;
-            $sheet->_prepare_chart( $index, $chart_ref_id, $drawing_id );
+        # Prepare the background images.
+        if ( $has_background ) {
+
+            my $filename = $sheet->{_background_image};
+
+            my ( $type, $width, $height, $name, $x_dpi, $y_dpi, $md5 ) =
+              $self->_get_image_properties( $filename );
+
+            if ( exists $background_ids{$md5} ) {
+                $ref_id = $background_ids{$md5};
+            }
+            else {
+                $ref_id = ++$image_ref_id;
+                $background_ids{$md5} = $ref_id;
+                push @{ $self->{_images} }, [ $filename, $type ];
+            }
+
+            $sheet->_prepare_background($ref_id, $type);
         }
 
         # Prepare the worksheet images.
@@ -1569,16 +1844,28 @@ sub _prepare_drawings {
 
             my $filename = $sheet->{_images}->[$index]->[2];
 
-            my ( $type, $width, $height, $name, $x_dpi, $y_dpi ) =
+            my ( $type, $width, $height, $name, $x_dpi, $y_dpi, $md5 ) =
               $self->_get_image_properties( $filename );
 
-            $image_ref_id++;
+            if ( exists $image_ids{$md5} ) {
+                $ref_id = $image_ids{$md5};
+            }
+            else {
+                $ref_id = ++$image_ref_id;
+                $image_ids{$md5} = $ref_id;
+                push @{ $self->{_images} }, [ $filename, $type ];
+            }
 
             $sheet->_prepare_image(
-                $index, $image_ref_id, $drawing_id,
-                $width, $height,       $name,
-                $type,  $x_dpi,        $y_dpi
+                $index, $ref_id, $drawing_id, $width, $height,
+                $name,  $type,   $x_dpi,      $y_dpi, $md5
             );
+        }
+
+        # Prepare the worksheet charts.
+        for my $index ( 0 .. $chart_count - 1 ) {
+            $chart_ref_id++;
+            $sheet->_prepare_chart( $index, $chart_ref_id, $drawing_id );
         }
 
         # Prepare the worksheet shapes.
@@ -1592,13 +1879,22 @@ sub _prepare_drawings {
             my $filename = $sheet->{_header_images}->[$index]->[0];
             my $position = $sheet->{_header_images}->[$index]->[1];
 
-            my ( $type, $width, $height, $name, $x_dpi, $y_dpi ) =
+            my ( $type, $width, $height, $name, $x_dpi, $y_dpi, $md5 ) =
               $self->_get_image_properties( $filename );
 
-            $image_ref_id++;
+            if ( exists $header_image_ids{$md5} ) {
+                $ref_id = $header_image_ids{$md5};
+            }
+            else {
+                $ref_id = ++$image_ref_id;
+                $header_image_ids{$md5} = $ref_id;
+                push @{ $self->{_images} }, [ $filename, $type ];
+            }
 
-            $sheet->_prepare_header_image( $image_ref_id, $width, $height,
-                $name, $type, $position, $x_dpi, $y_dpi );
+            $sheet->_prepare_header_image(
+                $ref_id,   $width, $height, $name, $type,
+                $position, $x_dpi, $y_dpi,  $md5
+            );
         }
 
         # Prepare the footer images.
@@ -1607,13 +1903,22 @@ sub _prepare_drawings {
             my $filename = $sheet->{_footer_images}->[$index]->[0];
             my $position = $sheet->{_footer_images}->[$index]->[1];
 
-            my ( $type, $width, $height, $name, $x_dpi, $y_dpi ) =
+            my ( $type, $width, $height, $name, $x_dpi, $y_dpi, $md5 ) =
               $self->_get_image_properties( $filename );
 
-            $image_ref_id++;
+            if ( exists $header_image_ids{$md5} ) {
+                $ref_id = $header_image_ids{$md5};
+            }
+            else {
+                $ref_id = ++$image_ref_id;
+                $header_image_ids{$md5} = $ref_id;
+                push @{ $self->{_images} }, [ $filename, $type ];
+            }
 
-            $sheet->_prepare_header_image( $image_ref_id, $width, $height,
-                $name, $type, $position, $x_dpi, $y_dpi );
+            $sheet->_prepare_header_image(
+                $ref_id,   $width, $height, $name, $type,
+                $position, $x_dpi, $y_dpi,  $md5
+            );
         }
 
 
@@ -1637,7 +1942,7 @@ sub _prepare_drawings {
     # written from the worksheets above.
     @chart_data = sort { $a->{_id} <=> $b->{_id} } @chart_data;
 
-    $self->{_charts} = \@chart_data;
+    $self->{_charts}        = \@chart_data;
     $self->{_drawing_count} = $drawing_id;
 }
 
@@ -1658,7 +1963,6 @@ sub _prepare_vml_objects {
     my $vml_shape_id   = 1024;
     my $vml_files      = 0;
     my $comment_files  = 0;
-    my $has_button     = 0;
 
     for my $sheet ( @{ $self->{_worksheets} } ) {
 
@@ -1668,8 +1972,12 @@ sub _prepare_vml_objects {
 
         if ( $sheet->{_has_vml} ) {
 
-            $comment_files++ if $sheet->{_has_comments};
-            $comment_id++    if $sheet->{_has_comments};
+            if ( $sheet->{_has_comments} ) {
+                $comment_files++;
+                $comment_id++;
+                $self->{_has_comments} = 1;
+            }
+
             $vml_drawing_id++;
 
             my $count =
@@ -1689,42 +1997,11 @@ sub _prepare_vml_objects {
                 $vml_drawing_id );
         }
 
-        # Set the sheet vba_codename if it has a button and the workbook
-        # has a vbaProject binary.
-        if ( $sheet->{_buttons_array} ) {
-            $has_button = 1;
-
-            if ( $self->{_vba_project} && !$sheet->{_vba_codename} ) {
-                $sheet->set_vba_name();
-            }
-        }
-
     }
 
     $self->{_num_vml_files}     = $vml_files;
     $self->{_num_comment_files} = $comment_files;
 
-    # Add a font format for cell comments.
-    if ( $comment_files > 0 ) {
-        my $format = Excel::Writer::XLSX::Format->new(
-            \$self->{_xf_format_indices},
-            \$self->{_dxf_format_indices},
-            font          => 'Tahoma',
-            size          => 8,
-            color_indexed => 81,
-            font_only     => 1,
-        );
-
-        $format->get_xf_index();
-
-        push @{ $self->{_formats} }, $format;
-    }
-
-    # Set the workbook vba_codename if one of the sheets has a button and
-    # the workbook has a vbaProject binary.
-    if ( $has_button && $self->{_vba_project} && !$self->{_vba_codename} ) {
-        $self->set_vba_name();
-    }
 }
 
 
@@ -1738,6 +2015,7 @@ sub _prepare_tables {
 
     my $self     = shift;
     my $table_id = 0;
+    my $seen     = {};
 
     for my $sheet ( @{ $self->{_worksheets} } ) {
 
@@ -1745,9 +2023,27 @@ sub _prepare_tables {
 
         next unless $table_count;
 
-        $sheet->_prepare_tables( $table_id + 1 );
+        $sheet->_prepare_tables( $table_id + 1, $seen );
 
         $table_id += $table_count;
+    }
+}
+
+
+###############################################################################
+#
+# _prepare_metadata()
+#
+# Set the metadata rel link.
+#
+sub _prepare_metadata {
+
+    my $self = shift;
+
+    for my $sheet ( @{ $self->{_worksheets} } ) {
+        if ($sheet->{_has_dynamic_arrays}) {
+            $self->{_has_metadata} = 1;
+        }
     }
 }
 
@@ -1984,7 +2280,7 @@ sub _get_image_properties {
     # Slurp the file into a string and do some size calcs.
     my $data = do { local $/; <$fh> };
     my $size = length $data;
-
+    my $md5  = md5_hex($data);
 
     if ( unpack( 'x A3', $data ) eq 'PNG' ) {
 
@@ -2002,6 +2298,14 @@ sub _get_image_properties {
 
         $self->{_image_types}->{jpeg} = 1;
     }
+    elsif ( unpack( 'A4', $data ) eq 'GIF8' ) {
+
+        # Test for GIFs.
+        ( $type, $width, $height, $x_dpi, $y_dpi ) =
+          $self->_process_gif( $data, $filename );
+
+        $self->{_image_types}->{gif} = 1;
+    }
     elsif ( unpack( 'A2', $data ) eq 'BM' ) {
 
         # Test for BMPs.
@@ -2013,12 +2317,13 @@ sub _get_image_properties {
         croak "Unsupported image format for file: $filename\n";
     }
 
-    push @{ $self->{_images} }, [ $filename, $type ];
-
+    # Set a default dpi for images with 0 dpi.
+    $x_dpi = 96 if $x_dpi == 0;
+    $y_dpi = 96 if $y_dpi == 0;
 
     $fh->close;
 
-    return ( $type, $width, $height, $image_name, $x_dpi, $y_dpi );
+    return ( $type, $width, $height, $image_name, $x_dpi, $y_dpi, $md5 );
 }
 
 
@@ -2155,18 +2460,23 @@ sub _process_jpg {
     my $offset      = 2;
     my $data_length = length $data;
 
-    # Search through the image data to read the height and width in the
-    # 0xFFC0/C2 element. Also read the DPI in the 0xFFE0 element.
+    # Search through the image data to read the JPEG markers.
     while ( $offset < $data_length ) {
 
         my $marker = unpack "n", substr $data, $offset + 0, 2;
         my $length = unpack "n", substr $data, $offset + 2, 2;
 
-        if ( $marker == 0xFFC0 || $marker == 0xFFC2 ) {
+        # Read the height and width in the 0xFFCn elements (except C4, C8 and
+        # CC which aren't SOF markers).
+        if (   ( $marker & 0xFFF0 ) == 0xFFC0
+            && $marker != 0xFFC4
+            && $marker != 0xFFCC )
+        {
             $height = unpack "n", substr $data, $offset + 5, 2;
             $width  = unpack "n", substr $data, $offset + 7, 2;
         }
 
+        # Read the DPI in the 0xFFE0 element.
         if ( $marker == 0xFFE0 ) {
             my $units     = unpack "C", substr $data, $offset + 11, 1;
             my $x_density = unpack "n", substr $data, $offset + 12, 2;
@@ -2197,6 +2507,34 @@ sub _process_jpg {
 
 ###############################################################################
 #
+# _process_gif()
+#
+# Extract width and height information from a GIF file.
+#
+sub _process_gif {
+
+    my $self     = shift;
+    my $data     = $_[0];
+    my $filename = $_[1];
+
+    my $type   = 'gif';
+    my $x_dpi  = 96;
+    my $y_dpi  = 96;
+
+    my $width  = unpack "v", substr $data, 6, 2;
+    my $height = unpack "v", substr $data, 8, 2;
+    print join ", ", ( $type, $width, $height, $x_dpi, $y_dpi, "\n" );
+
+    if ( not defined $height ) {
+        croak "$filename: no size data found in gif image.\n";
+    }
+
+    return ( $type, $width, $height, $x_dpi, $y_dpi );
+}
+
+
+###############################################################################
+#
 # _get_sheet_index()
 #
 # Convert a sheet name to its index. Return undef otherwise.
@@ -2205,19 +2543,17 @@ sub _get_sheet_index {
 
     my $self        = shift;
     my $sheetname   = shift;
-    my $sheet_count = @{ $self->{_sheetnames} };
     my $sheet_index = undef;
 
     $sheetname =~ s/^'//;
     $sheetname =~ s/'$//;
 
-    for my $i ( 0 .. $sheet_count - 1 ) {
-        if ( $sheetname eq $self->{_sheetnames}->[$i] ) {
-            $sheet_index = $i;
-        }
+    if ( exists $self->{_sheetnames}->{$sheetname} ) {
+        return $self->{_sheetnames}->{$sheetname}->{_index};
     }
-
-    return $sheet_index;
+    else {
+        return undef;
+    }
 }
 
 
@@ -2308,6 +2644,24 @@ sub _write_file_version {
 }
 
 
+##############################################################################
+#
+# _write_file_sharing()
+#
+# Write the <fileSharing> element.
+#
+sub _write_file_sharing {
+
+    my $self = shift;
+
+    return if !$self->{_read_only};
+
+    my @attributes = ( 'readOnlyRecommended' => 1, );
+
+    $self->xml_empty_tag( 'fileSharing', @attributes );
+}
+
+
 ###############################################################################
 #
 # _write_workbook_pr()
@@ -2372,7 +2726,7 @@ sub _write_workbook_view {
     );
 
     # Store the tabRatio attribute when it isn't the default.
-    push @attributes, ( tabRatio => $tab_ratio ) if $tab_ratio != 500;
+    push @attributes, ( tabRatio => $tab_ratio ) if $tab_ratio != 600;
 
     # Store the firstSheet attribute when it isn't the default.
     push @attributes, ( firstSheet => $first_sheet + 1 ) if $first_sheet > 0;
@@ -2589,6 +2943,6 @@ John McNamara jmcnamara@cpan.org
 
 =head1 COPYRIGHT
 
-(c) MM-MMXV, John McNamara.
+(c) MM-MMXXI, John McNamara.
 
 All Rights Reserved. This module is free software. It may be used, redistributed and/or modified under the same terms as Perl itself.

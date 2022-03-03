@@ -1,22 +1,36 @@
 package Crypt::SSLeay;
 
 use strict;
-use vars qw( @ISA $VERSION $XS_VERSION );
-$XS_VERSION = $VERSION = '0.73_07';
+use vars '$VERSION';
+$VERSION = '0.72';
 $VERSION = eval $VERSION;
-
-use Bytes::Random::Secure;
 
 eval {
     require XSLoader;
-    XSLoader::load('Crypt::SSLeay', $XS_VERSION);
+    XSLoader::load('Crypt::SSLeay', $VERSION);
     1;
 }
 or do {
     require DynaLoader;
+    use vars '@ISA'; # not really locally scoped, it just looks that way
     @ISA = qw(DynaLoader);
-    bootstrap Crypt::SSLeay;
+    bootstrap Crypt::SSLeay $VERSION;
 };
+
+use vars qw(%CIPHERS);
+%CIPHERS = (
+   'NULL-MD5'     => "No encryption with a MD5 MAC",
+   'RC4-MD5'      => "128 bit RC4 encryption with a MD5 MAC",
+   'EXP-RC4-MD5'  => "40 bit RC4 encryption with a MD5 MAC",
+   'RC2-CBC-MD5'  => "128 bit RC2 encryption with a MD5 MAC",
+   'EXP-RC2-CBC-MD5' => "40 bit RC2 encryption with a MD5 MAC",
+   'IDEA-CBC-MD5' => "128 bit IDEA encryption with a MD5 MAC",
+   'DES-CBC-MD5'  => "56 bit DES encryption with a MD5 MAC",
+   'DES-CBC-SHA'  => "56 bit DES encryption with a SHA MAC",
+   'DES-CBC3-MD5' => "192 bit EDE3 DES encryption with a MD5 MAC",
+   'DES-CBC3-SHA' => "192 bit EDE3 DES encryption with a SHA MAC",
+   'DES-CFB-M1'   => "56 bit CFB64 DES encryption with a one byte MD5 MAC",
+);
 
 use Crypt::SSLeay::X509;
 
@@ -247,11 +261,6 @@ use
 If you would like to use C<cpanm> with such custom locations, you can do
 
     $ OPENSSL_INCLUDE=... OPENSSL_LIB=... cpanm Crypt::SSLeay
-
-For example, on OS X (Mac) with Homebrew:
-
-    $ brew install openssl
-    $ OPENSSL_INCLUDE=$(brew --prefix openssl)/include OPENSSL_LIB=$(brew --prefix openssl)/lib cpanm Crypt::SSLeay
 
 or, on Windows,
 

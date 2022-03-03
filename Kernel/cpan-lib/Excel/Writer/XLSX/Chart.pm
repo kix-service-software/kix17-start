@@ -7,7 +7,7 @@ package Excel::Writer::XLSX::Chart;
 #
 # Used in conjunction with Excel::Writer::XLSX.
 #
-# Copyright 2000-2015, John McNamara, jmcnamara@cpan.org
+# Copyright 2000-2021, John McNamara, jmcnamara@cpan.org
 #
 # Documentation after __END__
 #
@@ -22,12 +22,12 @@ use Excel::Writer::XLSX::Format;
 use Excel::Writer::XLSX::Package::XMLwriter;
 use Excel::Writer::XLSX::Utility qw(xl_cell_to_rowcol
   xl_rowcol_to_cell
-  xl_col_to_name xl_range
+  xl_col_to_name
   xl_range_formula
   quote_sheetname );
 
 our @ISA     = qw(Excel::Writer::XLSX::Package::XMLwriter);
-our $VERSION = '0.85';
+our $VERSION = '1.09';
 
 
 ###############################################################################
@@ -79,7 +79,7 @@ sub new {
     $self->{_axis2_ids}         = [];
     $self->{_cat_has_num_fmt}   = 0;
     $self->{_requires_category} = 0;
-    $self->{_legend_position}   = 'right';
+    $self->{_legend}            = {};
     $self->{_cat_axis_position} = 'b';
     $self->{_val_axis_position} = 'l';
     $self->{_formula_ids}       = {};
@@ -188,6 +188,12 @@ sub add_series {
         croak "Must specify 'categories' in add_series() for this chart type";
     }
 
+    if ( @{ $self->{_series} } == 255 ) {
+        carp "The maximum number of series that can be added to an "
+          . "Excel Chart is 255";
+        return
+    }
+
     # Convert aref params into a formula string.
     my $values     = $self->_aref_to_formula( $arg{values} );
     my $categories = $self->_aref_to_formula( $arg{categories} );
@@ -212,12 +218,21 @@ sub add_series {
     # Set the fill properties for the series.
     my $fill = $self->_get_fill_properties( $arg{fill} );
 
+    # Set the pattern properties for the series.
+    my $pattern = $self->_get_pattern_properties( $arg{pattern} );
+
     # Set the gradient fill properties for the series.
     my $gradient = $self->_get_gradient_properties( $arg{gradient} );
 
-    # Gradient fill overrides solid fill.
-    if ( $gradient ) {
+    # Pattern fill overrides solid fill.
+    if ( $pattern ) {
         $fill = undef;
+    }
+
+    # Gradient fill overrides solid and pattern fills.
+    if ( $gradient ) {
+        $pattern = undef;
+        $fill    = undef;
     }
 
     # Set the marker properties for the series.
@@ -282,6 +297,7 @@ sub add_series {
         _cat_data_id   => $cat_id,
         _line          => $line,
         _fill          => $fill,
+        _pattern       => $pattern,
         _gradient      => $gradient,
         _marker        => $marker,
         _trendline     => $trendline,
@@ -407,19 +423,9 @@ sub set_title {
 sub set_legend {
 
     my $self = shift;
-    my %arg  = @_;
 
-    $self->{_legend_position}      = $arg{position} || 'right';
-    $self->{_legend_delete_series} = $arg{delete_series};
-    $self->{_legend_font}          = $self->_convert_font_args( $arg{font} );
-
-    # Set the legend layout.
-    $self->{_legend_layout} = $self->_get_layout_properties( $arg{layout} );
-
-    # Turn off the legend.
-    if ( $arg{none} ) {
-        $self->{_legend_position} = 'none';
-    }
+    # Convert the user defined properties to internal properties.
+    $self->{_legend} = $self->_get_legend_properties( @_ );
 }
 
 
@@ -561,6 +567,7 @@ sub set_table {
     $table{_vertical}   = $args{vertical}   if defined $args{vertical};
     $table{_outline}    = $args{outline}    if defined $args{outline};
     $table{_show_keys}  = $args{show_keys}  if defined $args{show_keys};
+    $table{_font}       = $self->_convert_font_args( $args{font} );
 
     $self->{_table} = \%table;
 }
@@ -697,9 +704,11 @@ sub _convert_axis_args {
         _position_axis     => $arg{position_axis},
         _position          => $arg{position},
         _label_position    => $arg{label_position},
+        _label_align       => $arg{label_align},
         _num_format        => $arg{num_format},
         _num_format_linked => $arg{num_format_linked},
         _interval_unit     => $arg{interval_unit},
+        _interval_tick     => $arg{interval_tick},
         _visible           => defined $arg{visible} ? $arg{visible} : 1,
         _text_axis         => 0,
     };
@@ -769,6 +778,11 @@ sub _convert_axis_args {
 
     # Set the fill properties for the axis.
     $axis->{_fill} = $self->_get_fill_properties( $arg{fill} );
+
+    # Set the tick marker types.
+    $axis->{_minor_tick_mark} = $self->_get_tick_type($arg{minor_tick_mark});
+    $axis->{_major_tick_mark} = $self->_get_tick_type($arg{major_tick_mark});
+
 
     return $axis;
 }
@@ -1149,6 +1163,115 @@ sub _get_fill_properties {
 
 ###############################################################################
 #
+# _get_pattern_properties()
+#
+# Convert user defined pattern properties to the structure required internally.
+#
+sub _get_pattern_properties {
+
+    my $self    = shift;
+    my $args    = shift;
+    my $pattern = {};
+
+    return unless $args;
+
+    # Check the pattern type is present.
+    if ( !$args->{pattern} ) {
+        carp "Pattern must include 'pattern'";
+        return;
+    }
+
+    # Check the foreground color is present.
+    if ( !$args->{fg_color} ) {
+        carp "Pattern must include 'fg_color'";
+        return;
+    }
+
+    my %types = (
+        'percent_5'                 => 'pct5',
+        'percent_10'                => 'pct10',
+        'percent_20'                => 'pct20',
+        'percent_25'                => 'pct25',
+        'percent_30'                => 'pct30',
+        'percent_40'                => 'pct40',
+
+        'percent_50'                => 'pct50',
+        'percent_60'                => 'pct60',
+        'percent_70'                => 'pct70',
+        'percent_75'                => 'pct75',
+        'percent_80'                => 'pct80',
+        'percent_90'                => 'pct90',
+
+        'light_downward_diagonal'   => 'ltDnDiag',
+        'light_upward_diagonal'     => 'ltUpDiag',
+        'dark_downward_diagonal'    => 'dkDnDiag',
+        'dark_upward_diagonal'      => 'dkUpDiag',
+        'wide_downward_diagonal'    => 'wdDnDiag',
+        'wide_upward_diagonal'      => 'wdUpDiag',
+
+        'light_vertical'            => 'ltVert',
+        'light_horizontal'          => 'ltHorz',
+        'narrow_vertical'           => 'narVert',
+        'narrow_horizontal'         => 'narHorz',
+        'dark_vertical'             => 'dkVert',
+        'dark_horizontal'           => 'dkHorz',
+
+        'dashed_downward_diagonal'  => 'dashDnDiag',
+        'dashed_upward_diagonal'    => 'dashUpDiag',
+        'dashed_horizontal'         => 'dashHorz',
+        'dashed_vertical'           => 'dashVert',
+        'small_confetti'            => 'smConfetti',
+        'large_confetti'            => 'lgConfetti',
+
+        'zigzag'                    => 'zigZag',
+        'wave'                      => 'wave',
+        'diagonal_brick'            => 'diagBrick',
+        'horizontal_brick'          => 'horzBrick',
+        'weave'                     => 'weave',
+        'plaid'                     => 'plaid',
+
+        'divot'                     => 'divot',
+        'dotted_grid'               => 'dotGrid',
+        'dotted_diamond'            => 'dotDmnd',
+        'shingle'                   => 'shingle',
+        'trellis'                   => 'trellis',
+        'sphere'                    => 'sphere',
+
+        'small_grid'                => 'smGrid',
+        'large_grid'                => 'lgGrid',
+        'small_check'               => 'smCheck',
+        'large_check'               => 'lgCheck',
+        'outlined_diamond'          => 'openDmnd',
+        'solid_diamond'             => 'solidDmnd',
+    );
+
+    # Check for valid types.
+    my $pattern_type = $args->{pattern};
+
+    if ( exists $types{$pattern_type} ) {
+        $pattern->{pattern} = $types{$pattern_type};
+    }
+    else {
+        carp "Unknown pattern type '$pattern_type'";
+        return;
+    }
+
+    # Specify a default background color.
+    if ( !$args->{bg_color} ) {
+        $pattern->{bg_color} = '#FFFFFF';
+    }
+    else {
+        $pattern->{bg_color} = $args->{bg_color};
+    }
+
+    $pattern->{fg_color} = $args->{fg_color};
+
+    return $pattern;
+}
+
+
+###############################################################################
+#
 # _get_gradient_properties()
 #
 # Convert user defined gradient to the structure required internally.
@@ -1158,6 +1281,7 @@ sub _get_gradient_properties {
     my $self     = shift;
     my $args     = shift;
     my $gradient = {};
+
     my %types    = (
         linear      => 'linear',
         radial      => 'circle',
@@ -1237,7 +1361,7 @@ sub _get_gradient_properties {
         my $type = $args->{type};
 
         if ( !exists $types{$type} ) {
-            carp "Unknow gradient type '", $type, "'";
+            carp "Unknown gradient type '", $type, "'";
             return;
         }
         $gradient->{_type} = $types{$type};
@@ -1311,16 +1435,26 @@ sub _get_marker_properties {
     # Set the fill properties for the marker.
     my $fill = $self->_get_fill_properties( $marker->{fill} );
 
+    # Set the pattern properties for the series.
+    my $pattern = $self->_get_pattern_properties( $marker->{pattern} );
+
     # Set the gradient fill properties for the series.
     my $gradient = $self->_get_gradient_properties( $marker->{gradient} );
 
-    # Gradient fill overrides solid fill.
-    if ( $gradient ) {
+    # Pattern fill overrides solid fill.
+    if ( $pattern ) {
         $fill = undef;
+    }
+
+    # Gradient fill overrides solid and pattern fills.
+    if ( $gradient ) {
+        $pattern = undef;
+        $fill    = undef;
     }
 
     $marker->{_line}     = $line;
     $marker->{_fill}     = $fill;
+    $marker->{_pattern}  = $pattern;
     $marker->{_gradient} = $gradient;
 
     return $marker;
@@ -1375,16 +1509,26 @@ sub _get_trendline_properties {
     # Set the fill properties for the trendline.
     my $fill = $self->_get_fill_properties( $trendline->{fill} );
 
+    # Set the pattern properties for the series.
+    my $pattern = $self->_get_pattern_properties( $trendline->{pattern} );
+
     # Set the gradient fill properties for the series.
     my $gradient = $self->_get_gradient_properties( $trendline->{gradient} );
 
-    # Gradient fill overrides solid fill.
-    if ( $gradient ) {
+    # Pattern fill overrides solid fill.
+    if ( $pattern ) {
         $fill = undef;
+    }
+
+    # Gradient fill overrides solid and pattern fills.
+    if ( $gradient ) {
+        $pattern = undef;
+        $fill    = undef;
     }
 
     $trendline->{_line}     = $line;
     $trendline->{_fill}     = $fill;
+    $trendline->{_pattern}  = $pattern;
     $trendline->{_gradient} = $gradient;
 
     return $trendline;
@@ -1558,8 +1702,111 @@ sub _get_labels_properties {
         }
     }
 
+    # Set the line properties for the data labels.
+    my $line = $self->_get_line_properties( $labels->{line} );
+
+    # Allow 'border' as a synonym for 'line'.
+    if ( $labels->{border} ) {
+        $line = $self->_get_line_properties( $labels->{border} );
+    }
+
+    # Set the fill properties for the labels.
+    my $fill = $self->_get_fill_properties( $labels->{fill} );
+
+    # Set the pattern properties for the labels.
+    my $pattern = $self->_get_pattern_properties( $labels->{pattern} );
+
+    # Set the gradient fill properties for the labels.
+    my $gradient = $self->_get_gradient_properties( $labels->{gradient} );
+
+    # Pattern fill overrides solid fill.
+    if ( $pattern ) {
+        $fill = undef;
+    }
+
+    # Gradient fill overrides solid and pattern fills.
+    if ( $gradient ) {
+        $pattern = undef;
+        $fill    = undef;
+    }
+
+    $labels->{_line}     = $line;
+    $labels->{_fill}     = $fill;
+    $labels->{_pattern}  = $pattern;
+    $labels->{_gradient} = $gradient;
+
+
     if ($labels->{font}) {
         $labels->{font} = $self->_convert_font_args( $labels->{font} );
+    }
+
+    if ( $labels->{custom} ) {
+
+        # Duplicate, and modify, the custom label properties.
+        my @custom = ();
+
+        for my $label ( @{ $labels->{custom} } ) {
+            if (! defined $label) {
+                push @custom, undef;
+                next;
+            }
+
+            my %property = %{$label};
+
+            # Convert formula.
+            if ( $property{value} && $property{value} =~ m/^=[^!]+!\$/) {
+                $property{formula} = $property{value};
+            }
+
+            if ( $property{formula} ) {
+                $property{formula} =~ s/^=//;
+
+                my $data_id = $self->_get_data_id( $property{formula},
+                                                   $property{data} );
+                $property{data_id} = $data_id;
+            }
+
+            if ($property{font}) {
+                $property{font} = $self->_convert_font_args( $property{font} );
+            }
+
+            # Set the line properties for the data labels.
+            my $line = $self->_get_line_properties( $property{line} );
+
+            # Allow 'border' as a synonym for 'line'.
+            if ( $property{border} ) {
+                $line = $self->_get_line_properties( $property{border} );
+            }
+
+            # Set the fill properties for the labels.
+            my $fill = $self->_get_fill_properties( $property{fill} );
+
+            # Set the pattern properties for the labels.
+            my $pattern = $self->_get_pattern_properties( $property{pattern} );
+
+            # Set the gradient fill properties for the labels.
+            my $gradient = $self->_get_gradient_properties( $property{gradient} );
+
+            # Pattern fill overrides solid fill.
+            if ( $pattern ) {
+                $fill = undef;
+            }
+
+            # Gradient fill overrides solid and pattern fills.
+            if ( $gradient ) {
+                $pattern = undef;
+                $fill    = undef;
+            }
+
+            $property{_line}     = $line;
+            $property{_fill}     = $fill;
+            $property{_pattern}  = $pattern;
+            $property{_gradient} = $gradient;
+
+            push @custom, \%property;
+        }
+
+        $labels->{custom} = \@custom;
     }
 
     return $labels;
@@ -1621,12 +1868,21 @@ sub _get_area_properties {
     # Set the fill properties for the chartarea.
     my $fill = $self->_get_fill_properties( $arg{fill} );
 
+    # Set the pattern properties for the series.
+    my $pattern = $self->_get_pattern_properties( $arg{pattern} );
+
     # Set the gradient fill properties for the series.
     my $gradient = $self->_get_gradient_properties( $arg{gradient} );
 
-    # Gradient fill overrides solid fill.
-    if ( $gradient ) {
+    # Pattern fill overrides solid fill.
+    if ( $pattern ) {
         $fill = undef;
+    }
+
+    # Gradient fill overrides solid and pattern fills.
+    if ( $gradient ) {
+        $pattern = undef;
+        $fill    = undef;
     }
 
     # Set the plotarea layout.
@@ -1634,10 +1890,76 @@ sub _get_area_properties {
 
     $area->{_line}     = $line;
     $area->{_fill}     = $fill;
+    $area->{_pattern}  = $pattern;
     $area->{_gradient} = $gradient;
     $area->{_layout}   = $layout;
 
     return $area;
+}
+
+
+###############################################################################
+#
+# _get_legend_properties()
+#
+# Convert user defined legend properties to the structure required internally.
+#
+sub _get_legend_properties {
+
+    my $self = shift;
+    my %arg  = @_;
+    my $legend = {};
+
+    $legend->{_position}      = $arg{position} || 'right';
+    $legend->{_delete_series} = $arg{delete_series};
+    $legend->{_font}          = $self->_convert_font_args( $arg{font} );
+
+    # Set the legend layout.
+    $legend->{_layout} = $self->_get_layout_properties( $arg{layout} );
+
+    # Turn off the legend.
+    if ( $arg{none} ) {
+        $legend->{_position} = 'none';
+    }
+
+    # Set the line properties for the legend.
+    my $line = $self->_get_line_properties( $arg{line} );
+
+    # Allow 'border' as a synonym for 'line'.
+    if ( $arg{border} ) {
+        $line = $self->_get_line_properties( $arg{border} );
+    }
+
+    # Set the fill properties for the legend.
+    my $fill = $self->_get_fill_properties( $arg{fill} );
+
+    # Set the pattern properties for the legend.
+    my $pattern = $self->_get_pattern_properties( $arg{pattern} );
+
+    # Set the gradient fill properties for the legend.
+    my $gradient = $self->_get_gradient_properties( $arg{gradient} );
+
+    # Pattern fill overrides solid fill.
+    if ( $pattern ) {
+        $fill = undef;
+    }
+
+    # Gradient fill overrides solid and pattern fills.
+    if ( $gradient ) {
+        $pattern = undef;
+        $fill    = undef;
+    }
+
+    # Set the legend layout.
+    my $layout = $self->_get_layout_properties( $arg{layout} );
+
+    $legend->{_line}     = $line;
+    $legend->{_fill}     = $fill;
+    $legend->{_pattern}  = $pattern;
+    $legend->{_gradient} = $gradient;
+    $legend->{_layout}   = $layout;
+
+    return $legend;
 }
 
 
@@ -1737,17 +2059,33 @@ sub _get_points_properties {
             # Set the fill properties for the chartarea.
             my $fill = $self->_get_fill_properties( $user_point->{fill} );
 
+
+            # Set the pattern properties for the series.
+            my $pattern =
+              $self->_get_pattern_properties( $user_point->{pattern} );
+
             # Set the gradient fill properties for the series.
             my $gradient =
               $self->_get_gradient_properties( $user_point->{gradient} );
 
-            # Gradient fill overrides solid fill.
+            # Pattern fill overrides solid fill.
+            if ( $pattern ) {
+                $fill = undef;
+            }
+
+            # Gradient fill overrides solid and pattern fills.
+            if ( $gradient ) {
+                $pattern = undef;
+                $fill    = undef;
+            }
+                        # Gradient fill overrides solid fill.
             if ( $gradient ) {
                 $fill = undef;
             }
 
             $point->{_line}     = $line;
             $point->{_fill}     = $fill;
+            $point->{_pattern}  = $pattern;
             $point->{_gradient} = $gradient;
         }
 
@@ -1755,6 +2093,28 @@ sub _get_points_properties {
     }
 
     return \@points;
+}
+
+##############################################################################
+#
+# _has_fill_formatting()
+#
+# Check if a chart element has line, fill or gradient formatting.
+#
+sub _has_fill_formatting {
+
+    my $element = shift;
+
+    if (    !$element->{_line}->{_defined}
+        and !$element->{_fill}->{_defined}
+        and !$element->{_pattern}
+        and !$element->{_gradient} )
+    {
+        return 0;
+    }
+    else {
+        return 1;
+    }
 }
 
 
@@ -1792,6 +2152,39 @@ sub _get_display_units {
     }
 
     return $display_units;
+}
+
+
+
+###############################################################################
+#
+# _get_tick_type()
+#
+# Convert user tick types to internal units.
+#
+sub _get_tick_type {
+
+    my $self      = shift;
+    my $tick_type = shift;
+
+    return if !$tick_type;
+
+    my %types = (
+        'outside' => 'out',
+        'inside'  => 'in',
+        'none'    => 'none',
+        'cross'   => 'cross',
+    );
+
+    if ( exists $types{$tick_type} ) {
+        $tick_type = $types{$tick_type};
+    }
+    else {
+        warn "Unknown tick_type type '$tick_type'\n";
+        return;
+    }
+
+    return $tick_type;
 }
 
 
@@ -2704,8 +3097,8 @@ sub _write_cat_axis {
     return unless $axis_ids;
     return unless scalar @$axis_ids;
 
-    my $position = $self->{_cat_axis_position};
-    my $horiz    = $self->{_horiz_cat_axis};
+    my $position  = $self->{_cat_axis_position};
+    my $is_y_axis = $self->{_horiz_cat_axis};
 
     # Overwrite the default axis position with a user supplied value.
     $position = $x_axis->{_position} || $position;
@@ -2732,11 +3125,11 @@ sub _write_cat_axis {
     my $title;
     if ( $title = $x_axis->{_formula} ) {
 
-        $self->_write_title_formula( $title, $x_axis->{_data_id}, $horiz,
+        $self->_write_title_formula( $title, $x_axis->{_data_id}, $is_y_axis,
             $x_axis->{_name_font}, $x_axis->{_layout} );
     }
     elsif ( $title = $x_axis->{_name} ) {
-        $self->_write_title_rich( $title, $horiz, $x_axis->{_name_font},
+        $self->_write_title_rich( $title, $is_y_axis, $x_axis->{_name_font},
             $x_axis->{_layout} );
     }
 
@@ -2745,6 +3138,9 @@ sub _write_cat_axis {
 
     # Write the c:majorTickMark element.
     $self->_write_major_tick_mark( $x_axis->{_major_tick_mark} );
+
+    # Write the c:minorTickMark element.
+    $self->_write_minor_tick_mark( $x_axis->{_minor_tick_mark} );
 
     # Write the c:tickLblPos element.
     $self->_write_tick_label_pos( $x_axis->{_label_position} );
@@ -2761,8 +3157,10 @@ sub _write_cat_axis {
     if ( $self->{_show_crosses} || $x_axis->{_visible} ) {
 
         # Note, the category crossing comes from the value axis.
-        if ( !defined $y_axis->{_crossing} || $y_axis->{_crossing} eq 'max' ) {
-
+        if (   !defined $y_axis->{_crossing}
+            || $y_axis->{_crossing} eq 'max'
+            || $y_axis->{_crossing} eq 'min' )
+        {
             # Write the c:crosses element.
             $self->_write_crosses( $y_axis->{_crossing} );
         }
@@ -2779,13 +3177,16 @@ sub _write_cat_axis {
     }
 
     # Write the c:labelAlign element.
-    $self->_write_label_align( 'ctr' );
+    $self->_write_label_align( $x_axis->{_label_align} );
 
     # Write the c:labelOffset element.
     $self->_write_label_offset( 100 );
 
     # Write the c:tickLblSkip element.
     $self->_write_tick_lbl_skip( $x_axis->{_interval_unit} );
+
+    # Write the c:tickMarkSkip element.
+    $self->_write_tick_mark_skip( $x_axis->{_interval_tick} );
 
     $self->xml_end_tag( 'c:catAx' );
 }
@@ -2801,13 +3202,13 @@ sub _write_cat_axis {
 #
 sub _write_val_axis {
 
-    my $self     = shift;
-    my %args     = @_;
-    my $x_axis   = $args{x_axis};
-    my $y_axis   = $args{y_axis};
-    my $axis_ids = $args{axis_ids};
-    my $position = $args{position} || $self->{_val_axis_position};
-    my $horiz    = $self->{_horiz_val_axis};
+    my $self      = shift;
+    my %args      = @_;
+    my $x_axis    = $args{x_axis};
+    my $y_axis    = $args{y_axis};
+    my $axis_ids  = $args{axis_ids};
+    my $position  = $args{position} || $self->{_val_axis_position};
+    my $is_y_axis = $self->{_horiz_val_axis};
 
     return unless $axis_ids && scalar @$axis_ids;
 
@@ -2838,11 +3239,11 @@ sub _write_val_axis {
     # Write the axis title elements.
     my $title;
     if ( $title = $y_axis->{_formula} ) {
-        $self->_write_title_formula( $title, $y_axis->{_data_id}, $horiz,
+        $self->_write_title_formula( $title, $y_axis->{_data_id}, $is_y_axis,
             $y_axis->{_name_font}, $y_axis->{_layout} );
     }
     elsif ( $title = $y_axis->{_name} ) {
-        $self->_write_title_rich( $title, $horiz, $y_axis->{_name_font},
+        $self->_write_title_rich( $title, $is_y_axis, $y_axis->{_name_font},
             $y_axis->{_layout} );
     }
 
@@ -2851,6 +3252,9 @@ sub _write_val_axis {
 
     # Write the c:majorTickMark element.
     $self->_write_major_tick_mark( $y_axis->{_major_tick_mark} );
+
+    # Write the c:minorTickMark element.
+    $self->_write_minor_tick_mark( $y_axis->{_minor_tick_mark} );
 
     # Write the c:tickLblPos element.
     $self->_write_tick_label_pos( $y_axis->{_label_position} );
@@ -2865,8 +3269,10 @@ sub _write_val_axis {
     $self->_write_cross_axis( $axis_ids->[0] );
 
     # Note, the category crossing comes from the value axis.
-    if ( !defined $x_axis->{_crossing} || $x_axis->{_crossing} eq 'max' ) {
-
+    if (   !defined $x_axis->{_crossing}
+        || $x_axis->{_crossing} eq 'max'
+        || $x_axis->{_crossing} eq 'min' )
+    {
         # Write the c:crosses element.
         $self->_write_crosses( $x_axis->{_crossing} );
     }
@@ -2902,13 +3308,13 @@ sub _write_val_axis {
 #
 sub _write_cat_val_axis {
 
-    my $self     = shift;
-    my %args     = @_;
-    my $x_axis   = $args{x_axis};
-    my $y_axis   = $args{y_axis};
-    my $axis_ids = $args{axis_ids};
-    my $position = $args{position} || $self->{_val_axis_position};
-    my $horiz    = $self->{_horiz_val_axis};
+    my $self      = shift;
+    my %args      = @_;
+    my $x_axis    = $args{x_axis};
+    my $y_axis    = $args{y_axis};
+    my $axis_ids  = $args{axis_ids};
+    my $position  = $args{position} || $self->{_val_axis_position};
+    my $is_y_axis = $self->{_horiz_val_axis};
 
     return unless $axis_ids && scalar @$axis_ids;
 
@@ -2939,11 +3345,11 @@ sub _write_cat_val_axis {
     # Write the axis title elements.
     my $title;
     if ( $title = $x_axis->{_formula} ) {
-        $self->_write_title_formula( $title, $x_axis->{_data_id}, $horiz,
+        $self->_write_title_formula( $title, $x_axis->{_data_id}, $is_y_axis,
             $x_axis->{_name_font}, $x_axis->{_layout} );
     }
     elsif ( $title = $x_axis->{_name} ) {
-        $self->_write_title_rich( $title, $horiz, $x_axis->{_name_font},
+        $self->_write_title_rich( $title, $is_y_axis, $x_axis->{_name_font},
             $x_axis->{_layout} );
     }
 
@@ -2952,6 +3358,9 @@ sub _write_cat_val_axis {
 
     # Write the c:majorTickMark element.
     $self->_write_major_tick_mark( $x_axis->{_major_tick_mark} );
+
+    # Write the c:minorTickMark element.
+    $self->_write_minor_tick_mark( $x_axis->{_minor_tick_mark} );
 
     # Write the c:tickLblPos element.
     $self->_write_tick_label_pos( $x_axis->{_label_position} );
@@ -2966,8 +3375,10 @@ sub _write_cat_val_axis {
     $self->_write_cross_axis( $axis_ids->[1] );
 
     # Note, the category crossing comes from the value axis.
-    if ( !defined $y_axis->{_crossing} || $y_axis->{_crossing} eq 'max' ) {
-
+    if (   !defined $y_axis->{_crossing}
+        || $y_axis->{_crossing} eq 'max'
+        || $y_axis->{_crossing} eq 'min' )
+    {
         # Write the c:crosses element.
         $self->_write_crosses( $y_axis->{_crossing} );
     }
@@ -3053,6 +3464,9 @@ sub _write_date_axis {
     # Write the c:majorTickMark element.
     $self->_write_major_tick_mark( $x_axis->{_major_tick_mark} );
 
+    # Write the c:minorTickMark element.
+    $self->_write_minor_tick_mark( $x_axis->{_minor_tick_mark} );
+
     # Write the c:tickLblPos element.
     $self->_write_tick_label_pos( $x_axis->{_label_position} );
 
@@ -3068,8 +3482,10 @@ sub _write_date_axis {
     if ( $self->{_show_crosses} || $x_axis->{_visible} ) {
 
         # Note, the category crossing comes from the value axis.
-        if ( !defined $y_axis->{_crossing} || $y_axis->{_crossing} eq 'max' ) {
-
+        if (   !defined $y_axis->{_crossing}
+            || $y_axis->{_crossing} eq 'max'
+            || $y_axis->{_crossing} eq 'min' )
+        {
             # Write the c:crosses element.
             $self->_write_crosses( $y_axis->{_crossing} );
         }
@@ -3088,6 +3504,9 @@ sub _write_date_axis {
 
     # Write the c:tickLblSkip element.
     $self->_write_tick_lbl_skip( $x_axis->{_interval_unit} );
+
+    # Write the c:tickMarkSkip element.
+    $self->_write_tick_mark_skip( $x_axis->{_interval_tick} );
 
     # Write the c:majorUnit element.
     $self->_write_c_major_unit( $x_axis->{_major_unit} );
@@ -3357,6 +3776,25 @@ sub _write_major_tick_mark {
 
 ##############################################################################
 #
+# _write_minor_tick_mark()
+#
+# Write the <c:minorTickMark> element.
+#
+sub _write_minor_tick_mark {
+
+    my $self = shift;
+    my $val  = shift;
+
+    return unless $val;
+
+    my @attributes = ( 'val' => $val );
+
+    $self->xml_empty_tag( 'c:minorTickMark', @attributes );
+}
+
+
+##############################################################################
+#
 # _write_tick_label_pos()
 #
 # Write the <c:tickLblPos> element.
@@ -3453,7 +3891,15 @@ sub _write_auto {
 sub _write_label_align {
 
     my $self = shift;
-    my $val  = 'ctr';
+    my $val  = shift || 'ctr';
+
+    if ( $val eq 'right' ) {
+        $val = 'r';
+    }
+
+    if ( $val eq 'left' ) {
+        $val = 'l';
+    }
 
     my @attributes = ( 'val' => $val );
 
@@ -3494,6 +3940,25 @@ sub _write_tick_lbl_skip {
     my @attributes = ( 'val' => $val );
 
     $self->xml_empty_tag( 'c:tickLblSkip', @attributes );
+}
+
+
+##############################################################################
+#
+# _write_tick_mark_skip()
+#
+# Write the <c:tickMarkSkip> element.
+#
+sub _write_tick_mark_skip {
+
+    my $self = shift;
+    my $val  = shift;
+
+    return unless $val;
+
+    my @attributes = ( 'val' => $val );
+
+    $self->xml_empty_tag( 'c:tickMarkSkip', @attributes );
 }
 
 
@@ -3652,15 +4117,16 @@ sub _write_c_minor_time_unit {
 sub _write_legend {
 
     my $self          = shift;
-    my $position      = $self->{_legend_position};
-    my $font          = $self->{_legend_font};
+    my $legend        = $self->{_legend};
+    my $position      = $legend->{_position} || 'right';
+    my $font          = $legend->{_font};
     my @delete_series = ();
     my $overlay       = 0;
 
-    if ( defined $self->{_legend_delete_series}
-        && ref $self->{_legend_delete_series} eq 'ARRAY' )
+    if ( defined $legend->{_delete_series}
+        && ref $legend->{_delete_series} eq 'ARRAY' )
     {
-        @delete_series = @{ $self->{_legend_delete_series} };
+        @delete_series = @{ $legend->{_delete_series} };
     }
 
     if ( $position =~ s/^overlay_// ) {
@@ -3668,10 +4134,11 @@ sub _write_legend {
     }
 
     my %allowed = (
-        right  => 'r',
-        left   => 'l',
-        top    => 't',
-        bottom => 'b',
+        right     => 'r',
+        left      => 'l',
+        top       => 't',
+        bottom    => 'b',
+        top_right => 'tr',
     );
 
     return if $position eq 'none';
@@ -3692,15 +4159,18 @@ sub _write_legend {
     }
 
     # Write the c:layout element.
-    $self->_write_layout( $self->{_legend_layout}, 'legend' );
-
-    # Write the c:txPr element.
-    if ( $font ) {
-        $self->_write_tx_pr( undef, $font );
-    }
+    $self->_write_layout( $legend->{_layout}, 'legend' );
 
     # Write the c:overlay element.
     $self->_write_overlay() if $overlay;
+
+    # Write the c:spPr element.
+    $self->_write_sp_pr( $legend );
+
+    # Write the c:txPr element.
+    if ( $font ) {
+        $self->_write_tx_pr( $font );
+    }
 
     $self->xml_end_tag( 'c:legend' );
 }
@@ -3889,17 +4359,17 @@ sub _write_auto_title_deleted {
 #
 sub _write_title_rich {
 
-    my $self    = shift;
-    my $title   = shift;
-    my $horiz   = shift;
-    my $font    = shift;
-    my $layout  = shift;
-    my $overlay = shift;
+    my $self      = shift;
+    my $title     = shift;
+    my $is_y_axis = shift;
+    my $font      = shift;
+    my $layout    = shift;
+    my $overlay   = shift;
 
     $self->xml_start_tag( 'c:title' );
 
     # Write the c:tx element.
-    $self->_write_tx_rich( $title, $horiz, $font );
+    $self->_write_tx_rich( $title, $is_y_axis, $font );
 
     # Write the c:layout element.
     $self->_write_layout( $layout, 'text' );
@@ -3919,13 +4389,13 @@ sub _write_title_rich {
 #
 sub _write_title_formula {
 
-    my $self    = shift;
-    my $title   = shift;
-    my $data_id = shift;
-    my $horiz   = shift;
-    my $font    = shift;
-    my $layout  = shift;
-    my $overlay = shift;
+    my $self      = shift;
+    my $title     = shift;
+    my $data_id   = shift;
+    my $is_y_axis = shift;
+    my $font      = shift;
+    my $layout    = shift;
+    my $overlay   = shift;
 
     $self->xml_start_tag( 'c:title' );
 
@@ -3939,7 +4409,7 @@ sub _write_title_formula {
     $self->_write_overlay() if $overlay;
 
     # Write the c:txPr element.
-    $self->_write_tx_pr( $horiz, $font );
+    $self->_write_tx_pr( $font, $is_y_axis );
 
     $self->xml_end_tag( 'c:title' );
 }
@@ -3953,15 +4423,15 @@ sub _write_title_formula {
 #
 sub _write_tx_rich {
 
-    my $self  = shift;
-    my $title = shift;
-    my $horiz = shift;
-    my $font  = shift;
+    my $self          = shift;
+    my $title         = shift;
+    my $is_y_axis     = shift;
+    my $font          = shift;
 
     $self->xml_start_tag( 'c:tx' );
 
     # Write the c:rich element.
-    $self->_write_rich( $title, $horiz, $font );
+    $self->_write_rich( $title, $font, $is_y_axis );
 
     $self->xml_end_tag( 'c:tx' );
 }
@@ -4021,11 +4491,13 @@ sub _write_tx_formula {
 #
 sub _write_rich {
 
-    my $self     = shift;
-    my $title    = shift;
-    my $horiz    = shift;
+    my $self           = shift;
+    my $title          = shift;
+    my $font           = shift;
+    my $is_y_axis      = shift;
+    my $ignore_rich_pr = shift;
+
     my $rotation = undef;
-    my $font     = shift;
 
     if ( $font && exists $font->{_rotation} ) {
         $rotation = $font->{_rotation};
@@ -4034,13 +4506,13 @@ sub _write_rich {
     $self->xml_start_tag( 'c:rich' );
 
     # Write the a:bodyPr element.
-    $self->_write_a_body_pr( $rotation, $horiz );
+    $self->_write_a_body_pr( $rotation, $is_y_axis );
 
     # Write the a:lstStyle element.
     $self->_write_a_lst_style();
 
     # Write the a:p element.
-    $self->_write_a_p_rich( $title, $font );
+    $self->_write_a_p_rich( $title, $font, $ignore_rich_pr );
 
     $self->xml_end_tag( 'c:rich' );
 }
@@ -4053,18 +4525,34 @@ sub _write_rich {
 # Write the <a:bodyPr> element.
 sub _write_a_body_pr {
 
-    my $self  = shift;
-    my $rot   = shift;
-    my $horiz = shift;
+    my $self      = shift;
+    my $rot       = shift;
+    my $is_y_axis = shift;
 
     my @attributes = ();
 
-    if ( !defined $rot && $horiz ) {
+    if ( !defined $rot && $is_y_axis ) {
         $rot = -5400000;
     }
 
-    push @attributes, ( 'rot' => $rot ) if defined $rot;
-    push @attributes, ( 'vert' => 'horz' ) if $horiz;
+    if (defined $rot) {
+        if ($rot == 16_200_000) {
+            # 270 deg/stacked angle.
+            push @attributes, ( 'rot' => 0 );
+            push @attributes, ( 'vert' => 'wordArtVert' );
+
+        }
+        elsif ($rot == 16_260_000) {
+            # 271 deg/East Asian vertical.
+            push @attributes, ( 'rot' => 0 );
+            push @attributes, ( 'vert' => 'eaVert' );
+
+        }
+        else {
+            push @attributes, ( 'rot' => $rot );
+            push @attributes, ( 'vert' => 'horz' );
+        }
+    }
 
     $self->xml_empty_tag( 'a:bodyPr', @attributes );
 }
@@ -4092,14 +4580,17 @@ sub _write_a_lst_style {
 #
 sub _write_a_p_rich {
 
-    my $self  = shift;
-    my $title = shift;
-    my $font  = shift;
+    my $self           = shift;
+    my $title          = shift;
+    my $font           = shift;
+    my $ignore_rich_pr = shift;
 
     $self->xml_start_tag( 'a:p' );
 
     # Write the a:pPr element.
-    $self->_write_a_p_pr_rich( $font );
+    if ( !$ignore_rich_pr ) {
+        $self->_write_a_p_pr_rich( $font );
+    }
 
     # Write the a:r element.
     $self->_write_a_r( $title, $font );
@@ -4316,10 +4807,10 @@ sub _write_a_t {
 #
 sub _write_tx_pr {
 
-    my $self     = shift;
-    my $horiz    = shift;
-    my $font     = shift;
-    my $rotation = undef;
+    my $self      = shift;
+    my $font      = shift;
+    my $is_y_axis = shift;
+    my $rotation  = undef;
 
     if ( $font && exists $font->{_rotation} ) {
         $rotation = $font->{_rotation};
@@ -4328,7 +4819,7 @@ sub _write_tx_pr {
     $self->xml_start_tag( 'c:txPr' );
 
     # Write the a:bodyPr element.
-    $self->_write_a_body_pr( $rotation, $horiz );
+    $self->_write_a_body_pr( $rotation, $is_y_axis );
 
     # Write the a:lstStyle element.
     $self->_write_a_lst_style();
@@ -4367,25 +4858,6 @@ sub _write_marker {
     $self->_write_sp_pr( $marker );
 
     $self->xml_end_tag( 'c:marker' );
-}
-
-
-##############################################################################
-#
-# _write_marker_value()
-#
-# Write the <c:marker> element without a sub-element.
-#
-sub _write_marker_value {
-
-    my $self  = shift;
-    my $style = $self->{_default_marker};
-
-    return unless $style;
-
-    my @attributes = ( 'val' => 1 );
-
-    $self->xml_empty_tag( 'c:marker', @attributes );
 }
 
 
@@ -4434,12 +4906,7 @@ sub _write_sp_pr {
     my $self   = shift;
     my $series = shift;
 
-    if (    !$series->{_line}->{_defined}
-        and !$series->{_fill}->{_defined}
-        and !$series->{_gradient} )
-    {
-        return;
-    }
+    return if !_has_fill_formatting($series);
 
     $self->xml_start_tag( 'c:spPr' );
 
@@ -4457,11 +4924,18 @@ sub _write_sp_pr {
         }
     }
 
+    if ( $series->{_pattern} ) {
+
+        # Write the a:pattFill element.
+        $self->_write_a_patt_fill( $series->{_pattern} );
+    }
+
     if ( $series->{_gradient} ) {
 
         # Write the a:gradFill element.
         $self->_write_a_grad_fill( $series->{_gradient} );
     }
+
 
     # Write the a:ln element.
     if ( $series->{_line}->{_defined} ) {
@@ -4544,16 +5018,16 @@ sub _write_a_no_fill {
 sub _write_a_solid_fill {
 
     my $self = shift;
-    my $line = shift;
+    my $fill = shift;
 
     $self->xml_start_tag( 'a:solidFill' );
 
-    if ( $line->{color} ) {
+    if ( $fill->{color} ) {
 
-        my $color = $self->_get_color( $line->{color} );
+        my $color = $self->_get_color( $fill->{color} );
 
         # Write the a:srgbClr element.
-        $self->_write_a_srgb_clr( $color );
+        $self->_write_a_srgb_clr( $color, $fill->{transparency} );
     }
 
     $self->xml_end_tag( 'a:solidFill' );
@@ -4568,12 +5042,42 @@ sub _write_a_solid_fill {
 #
 sub _write_a_srgb_clr {
 
+    my $self         = shift;
+    my $color        = shift;
+    my $transparency = shift;
+
+    my @attributes = ( 'val' => $color );
+
+    if ( $transparency ) {
+        $self->xml_start_tag( 'a:srgbClr', @attributes );
+
+        # Write the a:alpha element.
+        $self->_write_a_alpha( $transparency );
+
+        $self->xml_end_tag( 'a:srgbClr' );
+    }
+    else {
+        $self->xml_empty_tag( 'a:srgbClr', @attributes );
+    }
+}
+
+
+##############################################################################
+#
+# _write_a_alpha()
+#
+# Write the <a:alpha> element.
+#
+sub _write_a_alpha {
+
     my $self = shift;
     my $val  = shift;
 
+    $val = ( 100 - int( $val ) ) * 1000;
+
     my @attributes = ( 'val' => $val );
 
-    $self->xml_empty_tag( 'a:srgbClr', @attributes );
+    $self->xml_empty_tag( 'a:alpha', @attributes );
 }
 
 
@@ -4633,6 +5137,24 @@ sub _write_trendline {
 
     # Write the c:backward element.
     $self->_write_backward( $trendline->{backward} );
+
+    if ( defined $trendline->{intercept} ) {
+        # Write the c:intercept element.
+        $self->_write_intercept( $trendline->{intercept} );
+    }
+
+    if ($trendline->{display_r_squared}) {
+        # Write the c:dispRSqr element.
+        $self->_write_disp_rsqr();
+    }
+
+    if ($trendline->{display_equation}) {
+        # Write the c:dispEq element.
+        $self->_write_disp_eq();
+
+        # Write the c:trendlineLbl element.
+        $self->_write_trendline_lbl();
+    }
 
     $self->xml_end_tag( 'c:trendline' );
 }
@@ -4746,6 +5268,95 @@ sub _write_backward {
 
 ##############################################################################
 #
+# _write_intercept()
+#
+# Write the <c:intercept> element.
+#
+sub _write_intercept {
+
+    my $self = shift;
+    my $val  = shift;
+
+    my @attributes = ( 'val' => $val );
+
+    $self->xml_empty_tag( 'c:intercept', @attributes );
+}
+
+
+##############################################################################
+#
+# _write_disp_eq()
+#
+# Write the <c:dispEq> element.
+#
+sub _write_disp_eq {
+
+    my $self = shift;
+
+    my @attributes = ( 'val' => 1 );
+
+    $self->xml_empty_tag( 'c:dispEq', @attributes );
+}
+
+
+##############################################################################
+#
+# _write_disp_rsqr()
+#
+# Write the <c:dispRSqr> element.
+#
+sub _write_disp_rsqr {
+
+    my $self = shift;
+
+    my @attributes = ( 'val' => 1 );
+
+    $self->xml_empty_tag( 'c:dispRSqr', @attributes );
+}
+
+##############################################################################
+#
+# _write_trendline_lbl()
+#
+# Write the <c:trendlineLbl> element.
+#
+sub _write_trendline_lbl {
+
+    my $self = shift;
+
+    $self->xml_start_tag( 'c:trendlineLbl' );
+
+    # Write the c:layout element.
+    $self->_write_layout();
+
+    # Write the c:numFmt element.
+    $self->_write_trendline_num_fmt();
+
+    $self->xml_end_tag( 'c:trendlineLbl' );
+}
+
+##############################################################################
+#
+# _write_trendline_num_fmt()
+#
+# Write the <c:numFmt> element.
+#
+sub _write_trendline_num_fmt {
+
+    my $self          = shift;
+    my $format_code   = 'General';
+    my $source_linked = 0;
+
+    my @attributes = (
+        'formatCode'   => $format_code,
+        'sourceLinked' => $source_linked,
+    );
+
+    $self->xml_empty_tag( 'c:numFmt', @attributes );
+}
+
+##############################################################################
+#
 # _write_hi_low_lines()
 #
 # Write the <c:hiLowLines> element.
@@ -4831,7 +5442,11 @@ sub _write_num_cache {
 
     my $self  = shift;
     my $data  = shift;
-    my $count = @$data;
+    my $count = 0;
+
+    if (defined $data) {
+        $count = @$data;
+    }
 
     $self->xml_start_tag( 'c:numCache' );
 
@@ -5038,10 +5653,18 @@ sub _write_d_lbls {
 
     $self->xml_start_tag( 'c:dLbls' );
 
+    # Write the custom c:dLbl elements.
+    if ( $labels->{custom} ) {
+        $self->_write_custom_labels( $labels, $labels->{custom} );
+    }
+
     # Write the c:numFmt element.
     if ( $labels->{num_format} ) {
         $self->_write_data_label_number_format( $labels->{num_format} );
     }
+
+    # Write the c:spPr element.
+    $self->_write_sp_pr( $labels );
 
     # Write the data label font elements.
     if ($labels->{font} ) {
@@ -5074,6 +5697,153 @@ sub _write_d_lbls {
 
     $self->xml_end_tag( 'c:dLbls' );
 }
+
+
+##############################################################################
+#
+# _write_custom_labels()
+#
+# Write the <c:dLbl> element.
+#
+sub _write_custom_labels {
+
+    my $self   = shift;
+    my $parent = shift;
+    my $labels = shift;
+    my $index  = 0;
+
+    for my $label ( @$labels ) {
+        $index++;
+        next if !defined $label;
+
+        $self->xml_start_tag( 'c:dLbl' );
+
+        # Write the c:idx element.
+        $self->_write_idx( $index - 1 );
+
+        if ( defined $label->{delete} && $label->{delete} ) {
+            $self->_write_delete( 1 );
+        }
+        elsif ( defined $label->{formula} ) {
+            $self->_write_custom_label_formula( $label );
+
+            if ( $parent->{position} ) {
+                $self->_write_d_lbl_pos( $parent->{position} );
+            }
+
+            $self->_write_show_val()      if $parent->{value};
+            $self->_write_show_cat_name() if $parent->{category};
+            $self->_write_show_ser_name() if $parent->{series_name};
+        }
+        elsif ( defined $label->{value} ) {
+            $self->_write_custom_label_str( $label );
+
+            if ( $parent->{position} ) {
+                $self->_write_d_lbl_pos( $parent->{position} );
+            }
+
+            $self->_write_show_val()      if $parent->{value};
+            $self->_write_show_cat_name() if $parent->{category};
+            $self->_write_show_ser_name() if $parent->{series_name};
+        }
+        else {
+            $self->_write_custom_label_format_only( $label );
+        }
+
+        $self->xml_end_tag( 'c:dLbl' );
+    }
+}
+
+
+##############################################################################
+#
+# _write_custom_label_str()
+#
+# Write parts of the <c:dLbl> element for strings.
+#
+sub _write_custom_label_str {
+
+    my $self           = shift;
+    my $label          = shift;
+    my $value          = $label->{value};
+    my $font           = $label->{font};
+    my $is_y_axis      = 0;
+    my $has_formatting = _has_fill_formatting($label);
+
+    # Write the c:layout element.
+    $self->_write_layout();
+
+    $self->xml_start_tag( 'c:tx' );
+
+    # Write the c:rich element.
+    $self->_write_rich( $value, $font, $is_y_axis, !$has_formatting );
+
+    $self->xml_end_tag( 'c:tx' );
+
+    # Write the c:spPr element.
+    $self->_write_sp_pr( $label );
+}
+
+##############################################################################
+#
+# _write_custom_label_formula()
+#
+# Write parts of the <c:dLbl> element for formulas.
+#
+sub _write_custom_label_formula {
+
+    my $self           = shift;
+    my $label          = shift;
+    my $formula        = $label->{formula};
+    my $data_id        = $label->{data_id};
+    my $font           = $label->{font};
+    my $has_formatting = _has_fill_formatting($label);
+    my $data;
+
+    if ( defined $data_id ) {
+        $data = $self->{_formula_data}->[$data_id];
+    }
+
+    # Write the c:layout element.
+    $self->_write_layout();
+
+    $self->xml_start_tag( 'c:tx' );
+
+    # Write the c:strRef element.
+    $self->_write_str_ref( $formula, $data, 'str' );
+
+    $self->xml_end_tag( 'c:tx' );
+
+    # Write the data label formating, if any.
+    $self->_write_custom_label_format_only($label);
+}
+
+##############################################################################
+#
+# _write_custom_label_format_only()
+#
+# Write parts of the <c:dLbl> element for labels where only the formatting has
+# changed.
+#
+sub _write_custom_label_format_only {
+
+    my $self           = shift;
+    my $label          = shift;
+    my $font           = $label->{font};
+    my $has_formatting = _has_fill_formatting($label);
+
+    if ( $has_formatting ) {
+
+        # Write the c:spPr element.
+        $self->_write_sp_pr( $label );
+        $self->_write_tx_pr( $font );
+    }
+    elsif ( $font ) {
+        $self->xml_empty_tag( 'c:spPr' );
+        $self->_write_tx_pr( $font );
+    }
+}
+
 
 ##############################################################################
 #
@@ -5321,6 +6091,11 @@ sub _write_d_table {
 
         # Write the c:showKeys element.
         $self->_write_show_keys();
+    }
+
+    if ( $table->{_font} ) {
+        # Write the table font.
+        $self->_write_tx_pr( $table->{_font} );
     }
 
     $self->xml_end_tag( 'c:dTable' );
@@ -5966,6 +6741,76 @@ sub _write_a_tile_rect {
 }
 
 
+##############################################################################
+#
+# _write_a_patt_fill()
+#
+# Write the <a:pattFill> element.
+#
+sub _write_a_patt_fill {
+
+    my $self     = shift;
+    my $pattern  = shift;
+
+    my @attributes = ( 'prst' => $pattern->{pattern} );
+
+    $self->xml_start_tag( 'a:pattFill', @attributes );
+
+    # Write the a:fgClr element.
+    $self->_write_a_fg_clr( $pattern->{fg_color} );
+
+    # Write the a:bgClr element.
+    $self->_write_a_bg_clr( $pattern->{bg_color} );
+
+    $self->xml_end_tag( 'a:pattFill' );
+}
+
+
+##############################################################################
+#
+# _write_a_fg_clr()
+#
+# Write the <a:fgClr> element.
+#
+sub _write_a_fg_clr {
+
+    my $self  = shift;
+    my $color = shift;
+
+    $color = $self->_get_color( $color );
+
+    $self->xml_start_tag( 'a:fgClr' );
+
+    # Write the a:srgbClr element.
+    $self->_write_a_srgb_clr( $color );
+
+    $self->xml_end_tag( 'a:fgClr' );
+}
+
+
+
+##############################################################################
+#
+# _write_a_bg_clr()
+#
+# Write the <a:bgClr> element.
+#
+sub _write_a_bg_clr {
+
+    my $self  = shift;
+    my $color = shift;
+
+    $color = $self->_get_color( $color );
+
+    $self->xml_start_tag( 'a:bgClr' );
+
+    # Write the a:srgbClr element.
+    $self->_write_a_srgb_clr( $color );
+
+    $self->xml_end_tag( 'a:bgClr' );
+}
+
+
 1;
 
 __END__
@@ -6005,6 +6850,8 @@ To create a simple Excel file with a chart using Excel::Writer::XLSX:
         categories => '=Sheet1!$A$2:$A$7',
         values     => '=Sheet1!$B$2:$B$7',
     );
+
+    $workbook->close();
 
     __END__
 
@@ -6083,11 +6930,13 @@ The currently available subtypes are:
         smooth_with_markers
         smooth
 
+    line
+        stacked
+        percent_stacked
+
     radar
         with_markers
         filled
-
-More charts and sub-types will be supported in time. See the L</TODO> section.
 
 
 =head1 CHART METHODS
@@ -6133,6 +6982,14 @@ Set the border properties of the series such as colour and style. See the L</CHA
 =item * C<fill>
 
 Set the fill properties of the series such as colour. See the L</CHART FORMATTING> section below.
+
+=item * C<pattern>
+
+Set the pattern properties of the series. See the L</CHART FORMATTING> section below.
+
+=item * C<gradient>
+
+Set the gradient properties of the series. See the L</CHART FORMATTING> section below.
 
 =item * C<marker>
 
@@ -6232,11 +7089,14 @@ The properties that can be set are:
     num_format
     line
     fill
+    pattern
+    gradient
     min
     max
     minor_unit
     major_unit
     interval_unit
+    interval_tick
     crossing
     reverse
     position_axis
@@ -6249,6 +7109,8 @@ The properties that can be set are:
     text_axis
     minor_unit_type
     major_unit_type
+    minor_tick_mark
+    major_tick_mark
     display_units
     display_units_visible
 
@@ -6313,6 +7175,13 @@ Set the properties of the axis line type such as colour and width. See the L</CH
 
 Set the fill properties of the axis such as colour. See the L</CHART FORMATTING> section below. Note, in Excel the axis fill is applied to the area of the numbers of the axis and not to the area of the axis bounding box. That background is set from the chartarea fill.
 
+=item * C<pattern>
+
+Set the pattern properties of the axis such as colour. See the L</CHART FORMATTING> section below.
+
+=item * C<gradient>
+
+Set the gradient properties of the axis such as colour. See the L</CHART FORMATTING> section below.
 
 =item * C<min>
 
@@ -6344,11 +7213,17 @@ Set the interval unit for a category axis. (Applicable to category axes only.)
 
     $chart->set_x_axis( interval_unit => 2 );
 
+=item * C<interval_tick>
+
+Set the tick interval for a category axis. (Applicable to category axes only.)
+
+    $chart->set_x_axis( interval_tick => 4 );
+
 =item * C<crossing>
 
 Set the position where the y axis will cross the x axis. (Applicable to category and value axes.)
 
-The C<crossing> value can either be the string C<'max'> to set the crossing at the maximum axis value or a numeric value.
+The C<crossing> value can either be a numeric value or the strings C<'max'> or C<'min'> to set the crossing at the maximum/minimum axis value.
 
     $chart->set_x_axis( crossing => 3 );
     # or
@@ -6462,6 +7337,24 @@ More than one property can be set in a call to C<set_x_axis()>:
         max  => 80,
     );
 
+=item * C<major_tick_mark>
+
+Set the axis major tick mark type to one of the following values:
+
+    none
+    inside
+    outside
+    cross   (inside and outside)
+
+For example:
+
+    $chart->set_x_axis( major_tick_mark => 'none',
+                        minor_tick_mark => 'inside' );
+
+=item * C<minor_tick_mark>
+
+Set the axis minor tick mark type. Same as C<major_tick_mark>, see above.
+
 =item * C<display_units>
 
 Set the display units for the axis. This can be useful if the axis numbers are very large but you don't want to represent them in scientific notation. (Applicable to value axes only.) The available display units are:
@@ -6562,7 +7455,8 @@ The C<x_offset> and C<y_offset> position the top left corner of the chart in the
 
 Note: the C<x_scale>, C<y_scale>, C<x_offset> and C<y_offset> parameters can also be set via the C<insert_chart()> method:
 
-    $worksheet->insert_chart( 'E2', $chart, 2, 4, 1.5, 2 );
+    $worksheet->insert_chart( 'E2', $chart, { x_offset =>2,    y_offset => 4,
+                                              x_scale  => 1.5, y_scale  => 2 } );
 
 
 =head2 set_title()
@@ -6642,9 +7536,43 @@ The default legend position is C<right>. The available positions are:
     bottom
     left
     right
+    top_right
     overlay_left
     overlay_right
+    overlay_top_right
     none
+
+=item * C<border>
+
+Set the border properties of the legend such as colour and style. See the L</CHART FORMATTING> section below.
+
+=item * C<fill>
+
+Set the fill properties of the legend such as colour. See the L</CHART FORMATTING> section below.
+
+=item * C<pattern>
+
+Set the pattern fill properties of the legend. See the L</CHART FORMATTING> section below.
+
+=item * C<gradient>
+
+Set the gradient fill properties of the legend. See the L</CHART FORMATTING> section below.
+
+
+=item * C<font>
+
+Set the font properties of the chart legend:
+
+    $chart->set_legend( font => { bold => 1, italic => 1 } );
+
+See the L</CHART FONTS> section below.
+
+=item * C<delete_series>
+
+This allows you to remove 1 or more series from the legend (the series will still display on the chart). This property takes an array ref as an argument and the series are zero indexed:
+
+    # Delete/hide series index 0 and 2 from the legend.
+    $chart->set_legend( delete_series => [0, 2] );
 
 =item * C<layout>
 
@@ -6660,23 +7588,6 @@ Set the C<(x, y)> position of the legend in chart relative units:
     );
 
 See the L</CHART LAYOUT> section below.
-
-
-=item * C<delete_series>
-
-This allows you to remove 1 or more series from the legend (the series will still display on the chart). This property takes an array ref as an argument and the series are zero indexed:
-
-    # Delete/hide series index 0 and 2 from the legend.
-    $chart->set_legend( delete_series => [0, 2] );
-
-=item * C<font>
-
-Set the font properties of the chart legend:
-
-    $chart->set_legend( font => { bold => 1, italic => 1 } );
-
-See the L</CHART FONTS> section below.
-
 
 =back
 
@@ -6702,6 +7613,15 @@ Set the border properties of the chartarea such as colour and style. See the L</
 
 Set the fill properties of the chartarea such as colour. See the L</CHART FORMATTING> section below.
 
+=item * C<pattern>
+
+Set the pattern fill properties of the chartarea. See the L</CHART FORMATTING> section below.
+
+=item * C<gradient>
+
+Set the gradient fill properties of the chartarea. See the L</CHART FORMATTING> section below.
+
+
 =back
 
 =head2 set_plotarea()
@@ -6724,6 +7644,15 @@ Set the border properties of the plotarea such as colour and style. See the L</C
 =item * C<fill>
 
 Set the fill properties of the plotarea such as colour. See the L</CHART FORMATTING> section below.
+
+
+=item * C<pattern>
+
+Set the pattern fill properties of the plotarea. See the L</CHART FORMATTING> section below.
+
+=item * C<gradient>
+
+Set the gradient fill properties of the plotarea. See the L</CHART FORMATTING> section below.
 
 =item * C<layout>
 
@@ -6760,12 +7689,13 @@ The C<set_table()> method adds a data table below the horizontal axis with the d
 
 The available options, with default values are:
 
-    vertical   => 1,    # Display vertical lines in the table.
-    horizontal => 1,    # Display horizontal lines in the table.
-    outline    => 1,    # Display an outline in the table.
-    show_keys  => 0     # Show the legend keys with the table data.
+    vertical   => 1    # Display vertical lines in the table.
+    horizontal => 1    # Display horizontal lines in the table.
+    outline    => 1    # Display an outline in the table.
+    show_keys  => 0    # Show the legend keys with the table data.
+    font       => {}   # Standard chart font properties.
 
-The data table can only be shown with Bar, Column, Line, Area and stock charts.
+The data table can only be shown with Bar, Column, Line, Area and stock charts. For font properties see the L</CHART FONTS> section below.
 
 
 =head2 set_up_down_bars
@@ -6774,7 +7704,7 @@ The C<set_up_down_bars()> method adds Up-Down bars to Line charts to indicate th
 
     $chart->set_up_down_bars();
 
-It is possible to format the up and down bars to add C<fill> and C<border> properties if required. See the L</CHART FORMATTING> section below.
+It is possible to format the up and down bars to add C<fill>, C<pattern>, C<gradient> and C<border> properties if required. See the L</CHART FORMATTING> section below.
 
     $chart->set_up_down_bars(
         up   => { fill => { color => 'green' } },
@@ -6852,6 +7782,8 @@ The following properties can be set for C<marker> formats in a chart.
     size
     border
     fill
+    pattern
+    gradient
 
 The C<type> property sets the type of marker that is used with a series.
 
@@ -6910,12 +7842,16 @@ A trendline can be added to a chart series to indicate trends in the data such a
 The following properties can be set for trendlines in a chart series.
 
     type
-    order       (for polynomial trends)
-    period      (for moving average)
-    forward     (for all except moving average)
-    backward    (for all except moving average)
+    order               (for polynomial trends)
+    period              (for moving average)
+    forward             (for all except moving average)
+    backward            (for all except moving average)
     name
     line
+    intercept           (for exponential, linear and polynomial only)
+    display_equation    (for all except moving average)
+    display_r_squared   (for all except moving average)
+
 
 The C<type> property sets the type of trendline in the series.
 
@@ -6974,20 +7910,56 @@ The C<name> property sets an optional name for the trendline that will appear in
         },
     );
 
+The C<intercept> property sets the point where the trendline crosses the Y (value) axis:
+
+    $chart->add_series(
+        values    => '=Sheet1!$B$1:$B$5',
+        trendline => {
+            type      => 'linear',
+            intercept => 0.8,
+        },
+    );
+
+
+The C<display_equation> property displays the trendline equation on the chart.
+
+    $chart->add_series(
+        values    => '=Sheet1!$B$1:$B$5',
+        trendline => {
+            type             => 'linear',
+            display_equation => 1,
+        },
+    );
+
+The C<display_r_squared> property displays the R squared value of the trendline on the chart.
+
+    $chart->add_series(
+        values    => '=Sheet1!$B$1:$B$5',
+        trendline => {
+            type              => 'linear',
+            display_r_squared => 1
+        },
+    );
+
+
 Several of these properties can be set in one go:
 
     $chart->add_series(
         values     => '=Sheet1!$B$1:$B$5',
         trendline  => {
-            type     => 'linear',
-            name     => 'My trend name',
-            forward  => 0.5,
-            backward => 0.5,
-            line     => {
+            type              => 'polynomial',
+            name              => 'My trend name',
+            order             => 2,
+            forward           => 0.5,
+            backward          => 0.5,
+            intercept         => 1.5,
+            display_equation  => 1,
+            display_r_squared => 1,
+            line              => {
                 color     => 'red',
                 width     => 1,
                 dash_type => 'long_dash',
-            },
+            }
         },
     );
 
@@ -7096,6 +8068,11 @@ The following properties can be set for C<data_labels> formats in a chart.
     legend_key
     num_format
     font
+    border
+    fill
+    pattern
+    gradient
+    custom
 
 The C<value> property turns on the I<Value> data label for a series.
 
@@ -7203,7 +8180,130 @@ The C<font> property is used to set the font properties of the data labels in a 
         },
     );
 
+The C<font> property is also used to rotate the data labels in a series:
+
+    $chart->add_series(
+        values      => '=Sheet1!$A$1:$A$5',
+        data_labels => {
+            value => 1,
+            font  => { rotation => 45 }
+        },
+    );
+
 See the L</CHART FONTS> section below.
+
+The C<border> property sets the border properties of the data labels such as colour and style. See the L</CHART FORMATTING> section below.
+
+The C<fill> property sets the fill properties of the data labels such as colour. See the L</CHART FORMATTING> section below.
+
+Example of setting data label formatting:
+
+    $chart->add_series(
+        categories => '=Sheet1!$A$2:$A$7',
+        values     => '=Sheet1!$B$2:$B$7',
+        data_labels => { value  => 1,
+                         border => {color => 'red'},
+                         fill   => {color => 'yellow'} },
+    );
+
+The C<pattern> property sets the pattern properties of the data labels. See the L</CHART FORMATTING> section below.
+
+The C<gradient> property sets the gradient properties of the data labels. See the L</CHART FORMATTING> section below.
+
+The C<custom> property is used to set the properties of individual data labels, see below.
+
+
+=head2 Custom Data Labels
+
+The C<custom> property data label property is used to set the properties of individual data labels in a series. The most common use for this is to set custom text or number labels:
+
+    my $custom_labels = [
+        { value => 'Jan' },
+        { value => 'Feb' },
+        { value => 'Mar' },
+        { value => 'Apr' },
+        { value => 'May' },
+        { value => 'Jun' },
+    ];
+
+    $chart->add_series(
+        categories => '=Sheet1!$A$2:$A$7',
+        values     => '=Sheet1!$B$2:$B$7',
+        data_labels => { value => 1, custom => $custom_labels },
+    );
+
+As shown in the previous examples th C<custom> property should be a list of dicts. Any property dict that is set to C<undef> or not included in the list will be assigned the default data label value:
+
+    my $custom_labels = [
+        undef,
+        { value => 'Feb' },
+        { value => 'Mar' },
+        { value => 'Apr' },
+    ];
+
+The property elements of the C<custom> lists should be dicts with the following allowable keys/sub-properties:
+
+    value
+    font
+    border
+    fill
+    pattern
+    gradient
+    delete
+
+The C<value> property should be a string, number or formula string that refers to a cell from which the value will be taken:
+
+    $custom_labels = [
+        { value => '=Sheet1!$C$2' },
+        { value => '=Sheet1!$C$3' },
+        { value => '=Sheet1!$C$4' },
+        { value => '=Sheet1!$C$5' },
+        { value => '=Sheet1!$C$6' },
+        { value => '=Sheet1!$C$7' },
+    ];
+
+The C<font> property is used to set the font of the custom data label of a series (See the L</CHART FONTS> section below):
+
+    $custom_labels = [
+        { value => '=Sheet1!$C$1', font => { color => 'red' } },
+        { value => '=Sheet1!$C$2', font => { color => 'red' } },
+        { value => '=Sheet1!$C$2', font => { color => 'red' } },
+        { value => '=Sheet1!$C$4', font => { color => 'red' } },
+        { value => '=Sheet1!$C$5', font => { color => 'red' } },
+        { value => '=Sheet1!$C$6', font => { color => 'red' } },
+    ];
+
+The C<border> property sets the border properties of the data labels such as colour and style. See the L</CHART FORMATTING> section below.
+
+The C<fill> property sets the fill properties of the data labels such as colour. See the L</CHART FORMATTING> section below.
+
+Example of setting custom data label formatting:
+
+    $custom_labels = [
+        { value => 'Jan', border => {color => 'blue'} },
+        { value => 'Feb' },
+        { value => 'Mar' },
+        { value => 'Apr' },
+        { value => 'May' },
+        { value => 'Jun', fill   => {color => 'green'} },
+    ];
+
+The C<pattern> property sets the pattern properties of the data labels. See the L</CHART FORMATTING> section below.
+
+The C<gradient> property sets the gradient properties of the data labels. See the L</CHART FORMATTING> section below.
+
+The C<delete> property can be used to delete labels in a series. This can be
+useful if you want to highlight one or more cells in the series, for example
+the maximum and the minimum:
+
+    $custom_labels = [
+        undef,
+        { delete => 1 },
+        { delete => 1 },
+        { delete => 1 },
+        { delete => 1 },
+        undef,
+    ];
 
 
 =head2 Points
@@ -7254,6 +8354,8 @@ The following chart formatting properties can be set for any chart object that t
     line
     border
     fill
+    pattern
+    gradient
 
 Chart formatting properties are generally set using hash refs.
 
@@ -7285,6 +8387,7 @@ The following properties can be set for C<line> formats in a chart.
     color
     width
     dash_type
+    transparency
 
 
 The C<none> property is uses to turn the C<line> off (it is always on by default except in Scatter charts). This is useful if you wish to plot a series with markers but without a line.
@@ -7336,6 +8439,13 @@ The following C<dash_type> values are available. They are shown in the order tha
 
 The default line style is C<solid>.
 
+The C<transparency> property sets the transparency of the C<line> color in the integer range 1 - 100. The color must be set for transparency to work, it doesn't work with an automatic/default color:
+
+    $chart->add_series(
+        values     => '=Sheet1!$B$1:$B$5',
+        line       => { color => 'yellow', transparency => 50 },
+    );
+
 More than one C<line> property can be specified at a time:
 
     $chart->add_series(
@@ -7354,7 +8464,7 @@ The C<border> property is a synonym for C<line>.
 It can be used as a descriptive substitute for C<line> in chart types such as Bar and Column that have a border and fill style rather than a line style. In general chart objects with a C<border> property will also have a fill property.
 
 
-=head2 Fill
+=head2 Solid Fill
 
 The fill format is used to specify filled areas of chart objects such as the interior of a column or the background of the chart itself.
 
@@ -7362,6 +8472,7 @@ The following properties can be set for C<fill> formats in a chart.
 
     none
     color
+    transparency
 
 The C<none> property is used to turn the C<fill> property off (it is generally on by default).
 
@@ -7384,6 +8495,10 @@ The available colours are shown in the main L<Excel::Writer::XLSX> documentation
         fill       => { color => '#FF0000' },
     );
 
+The C<transparency> property sets the transparency of the solid fill color in the integer range 1 - 100. The color must be set for transparency to work, it doesn't work with an automatic/default color:
+
+    $chart->set_chartarea( fill => { color => 'yellow', transparency => 75 } );
+
 The C<fill> format is generally used in conjunction with a C<border> format which has the same properties as a C<line> format.
 
     $chart->add_series(
@@ -7391,6 +8506,160 @@ The C<fill> format is generally used in conjunction with a C<border> format whic
         border     => { color => 'red' },
         fill       => { color => 'yellow' },
     );
+
+
+
+=head2 Pattern Fill
+
+The pattern fill format is used to specify pattern filled areas of chart objects such as the interior of a column or the background of the chart itself.
+
+The following properties can be set for C<pattern> fill formats in a chart:
+
+    pattern:   the pattern to be applied (required)
+    fg_color:  the foreground color of the pattern (required)
+    bg_color:  the background color (optional, defaults to white)
+
+
+For example:
+
+    $chart->set_plotarea(
+        pattern => {
+            pattern  => 'percent_5',
+            fg_color => 'red',
+            bg_color => 'yellow',
+        }
+    );
+
+The following patterns can be applied:
+
+    percent_5
+    percent_10
+    percent_20
+    percent_25
+    percent_30
+    percent_40
+    percent_50
+    percent_60
+    percent_70
+    percent_75
+    percent_80
+    percent_90
+    light_downward_diagonal
+    light_upward_diagonal
+    dark_downward_diagonal
+    dark_upward_diagonal
+    wide_downward_diagonal
+    wide_upward_diagonal
+    light_vertical
+    light_horizontal
+    narrow_vertical
+    narrow_horizontal
+    dark_vertical
+    dark_horizontal
+    dashed_downward_diagonal
+    dashed_upward_diagonal
+    dashed_horizontal
+    dashed_vertical
+    small_confetti
+    large_confetti
+    zigzag
+    wave
+    diagonal_brick
+    horizontal_brick
+    weave
+    plaid
+    divot
+    dotted_grid
+    dotted_diamond
+    shingle
+    trellis
+    sphere
+    small_grid
+    large_grid
+    small_check
+    large_check
+    outlined_diamond
+    solid_diamond
+
+
+The foreground color, C<fg_color>, is a required parameter and can be a Html style C<#RRGGBB> string or a limited number of named colors. The available colours are shown in the main L<Excel::Writer::XLSX> documentation.
+
+The background color, C<bg_color>, is optional and defaults to black.
+
+If a pattern fill is used on a chart object it overrides the solid fill properties of the object.
+
+
+=head2 Gradient Fill
+
+The gradient fill format is used to specify gradient filled areas of chart objects such as the interior of a column or the background of the chart itself.
+
+
+The following properties can be set for C<gradient> fill formats in a chart:
+
+    colors:    a list of colors
+    positions: an optional list of positions for the colors
+    type:      the optional type of gradient fill
+    angle:     the optional angle of the linear fill
+
+The C<colors> property sets a list of colors that define the C<gradient>:
+
+    $chart->set_plotarea(
+        gradient => { colors => [ '#DDEBCF', '#9CB86E', '#156B13' ] }
+    );
+
+Excel allows between 2 and 10 colors in a gradient but it is unlikely that you will require more than 2 or 3.
+
+As with solid or pattern fill it is also possible to set the colors of a gradient with a Html style C<#RRGGBB> string or a limited number of named colors. The available colours are shown in the main L<Excel::Writer::XLSX> documentation:
+
+    $chart->add_series(
+        values   => '=Sheet1!$A$1:$A$5',
+        gradient => { colors => [ 'red', 'green' ] }
+    );
+
+The C<positions> defines an optional list of positions, between 0 and 100, of
+where the colors in the gradient are located. Default values are provided for
+C<colors> lists of between 2 and 4 but they can be specified if required:
+
+    $chart->add_series(
+        values   => '=Sheet1!$A$1:$A$5',
+        gradient => {
+            colors    => [ '#DDEBCF', '#156B13' ],
+            positions => [ 10,        90 ],
+        }
+    );
+
+The C<type> property can have one of the following values:
+
+    linear        (the default)
+    radial
+    rectangular
+    path
+
+For example:
+
+    $chart->add_series(
+        values   => '=Sheet1!$A$1:$A$5',
+        gradient => {
+            colors => [ '#DDEBCF', '#9CB86E', '#156B13' ],
+            type   => 'radial'
+        }
+    );
+
+If C<type> isn't specified it defaults to C<linear>.
+
+For a C<linear> fill the angle of the gradient can also be specified:
+
+    $chart->add_series(
+        values   => '=Sheet1!$A$1:$A$5',
+        gradient => { colors => [ '#DDEBCF', '#9CB86E', '#156B13' ],
+                      angle => 30 }
+    );
+
+The default angle is 90 degrees.
+
+If gradient fill is used on a chart object it overrides the solid fill and pattern fill properties of the object.
+
+
 
 
 =head1 CHART FONTS
@@ -7441,11 +8710,21 @@ Set the font underline property, should be 0 or 1:
 
 =item * C<rotation>
 
-Set the font rotation in the range -90 to 90:
+Set the font rotation in the integer range -90 to 90, and 270-271:
 
     $chart->set_x_axis( num_font => { rotation => 45 } );
 
 This is useful for displaying large axis data such as dates in a more compact format.
+
+There are 2 special case angles outside the range -90 to 90:
+
+=over
+
+=item * 270: Stacked text, where the text runs from top to bottom.
+
+=item * 271: A special variant of stacked text for East Asian fonts.
+
+=back
 
 =item * C<color>
 
@@ -7647,7 +8926,9 @@ Here is a complete example that demonstrates some of the available features when
     $chart->set_style( 11 );
 
     # Insert the chart into the worksheet (with an offset).
-    $worksheet->insert_chart( 'D2', $chart, 25, 10 );
+    $worksheet->insert_chart( 'D2', $chart, { x_offset => 25, y_offset => 10 } );
+
+    $workbook->close();
 
     __END__
 
@@ -7749,6 +9030,8 @@ It is possible to add a secondary axis of the same type to a chart by setting th
     # Insert the chart into the worksheet.
     $worksheet->insert_chart( 'D2', $chart );
 
+    $workbook->close();
+
     __END__
 
 It is also possible to have a secondary, combined, chart either with a shared or secondary axis, see below.
@@ -7825,6 +9108,8 @@ Here is a simpler example:
     # Insert the chart into the worksheet
     $worksheet->insert_chart( 'E2', $column_chart );
 
+    $workbook->close();
+
 =begin html
 
 <p><center><img src="https://raw.githubusercontent.com/jmcnamara/XlsxWriter/master/dev/docs/source/_images/chart_combined1.png" alt="Chart image." /></center></p>
@@ -7835,7 +9120,7 @@ Here is a simpler example:
 
 The secondary chart can also be placed on a secondary axis using the methods shown in the previous section.
 
-In this case it is just necessary to add a C<y2_axis> parameter to the series and, if required, add a title using C<set_y2_axis()>. The following are the additions to the previous example to place the secondary chart on the secondary axis:
+In this case it is just necessary to add a C<y2_axis> parameter to the series and, if required, add a title using C<set_y2_axis()> B<of the secondary chart>. The following are the additions to the previous example to place the secondary chart on the secondary axis:
 
     ...
 
@@ -7848,7 +9133,8 @@ In this case it is just necessary to add a C<y2_axis> parameter to the series an
 
     ...
 
-    $column_chart->set_y2_axis( name => 'Target length (mm)' );
+    # Note: the y2 properites are on the secondary chart.
+    $line_chart2->set_y2_axis( name => 'Target length (mm)' );
 
 
 =begin html
@@ -7858,7 +9144,7 @@ In this case it is just necessary to add a C<y2_axis> parameter to the series an
 =end html
 
 
-The examples above use the concept of a I<primary> and I<secondary> chart. The primary chart is the chart that defines the primary X and Y axis. It is also used for setting all chart properties apart from the secondary data series. For example the chart title and axes properties should be set via the primary chart.
+The examples above use the concept of a I<primary> and I<secondary> chart. The primary chart is the chart that defines the primary X and Y axis. It is also used for setting all chart properties apart from the secondary data series. For example the chart title and axes properties should be set via the primary chart (except for the the secondary C<y2> axis properties which should be applied to the secondary chart).
 
 See also C<chart_combined.pl> and C<chart_pareto.pl> examples in the distro for more detailed
 examples.
@@ -7876,34 +9162,12 @@ There are some limitations on combined charts:
 =back
 
 
-
-=head1 TODO
-
-Chart features that are on the TODO list and will hopefully be added are:
-
-=over
-
-=item * Add more chart sub-types.
-
-=item * Additional formatting options.
-
-=item * More axis controls.
-
-=item * 3D charts.
-
-=item * Additional chart types.
-
-=back
-
-If you are interested in sponsoring a feature to have it implemented or expedited let me know.
-
-
 =head1 AUTHOR
 
 John McNamara jmcnamara@cpan.org
 
 =head1 COPYRIGHT
 
-Copyright MM-MMXV, John McNamara.
+Copyright MM-MMXXI, John McNamara.
 
 All Rights Reserved. This module is free software. It may be used, redistributed and/or modified under the same terms as Perl itself.

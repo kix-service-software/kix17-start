@@ -1,6 +1,6 @@
 # This is a version of Algorithm::Diff that uses only a comparison function,
 # like versions <= 0.59 used to.
-# $Revision$
+# $Revision: 1.3 $
 
 package # don't index
     Algorithm::DiffOld;
@@ -12,7 +12,7 @@ require Exporter;
 @ISA = qw(Exporter);
 @EXPORT = qw();
 @EXPORT_OK = qw(LCS diff traverse_sequences);
-$VERSION = 1.10;	# manually tracking Algorithm::Diff
+$VERSION = '1.201';	# manually tracking Algorithm::Diff
 
 # McIlroy-Hunt diff algorithm
 # Adapted from the Smalltalk code of Mario I. Wolczko, <mario@wolczko.com>

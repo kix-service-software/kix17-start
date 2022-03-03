@@ -10978,6 +10978,17 @@
             </Array>
         </Setting>
     </ConfigItem>
+    <ConfigItem Name="PostMaster::Reject::NoAgentNotify" Required="1" Valid="1">
+        <Description Translatable="1">Postmaster skips notifications of rejected followups.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Core::PostMaster</SubGroup>
+        <Setting>
+            <Option SelectedID="0">
+                <Item Key="0" Translatable="1">No</Item>
+                <Item Key="1" Translatable="1">Yes</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
     <ConfigItem Name="PostMaster::StrictFollowUp" Required="1" Valid="1">
         <Description Translatable="1">Postmaster handles followups and new tickets based on the system address assigned queues. The queue, the system address has assigned for new tickets, is also considered.</Description>
         <Group>Ticket</Group>

@@ -6,7 +6,7 @@ package Excel::Writer::XLSX::Drawing;
 #
 # Used in conjunction with Excel::Writer::XLSX
 #
-# Copyright 2000-2015, John McNamara, jmcnamara@cpan.org
+# Copyright 2000-2021, John McNamara, jmcnamara@cpan.org
 #
 # Documentation after __END__
 #
@@ -21,7 +21,7 @@ use Excel::Writer::XLSX::Package::XMLwriter;
 use Excel::Writer::XLSX::Worksheet;
 
 our @ISA     = qw(Excel::Writer::XLSX::Package::XMLwriter);
-our $VERSION = '0.85';
+our $VERSION = '1.09';
 
 
 ###############################################################################
@@ -71,12 +71,10 @@ sub _assemble_xml_file {
     if ( $self->{_embedded} ) {
 
         my $index = 0;
-        for my $dimensions ( @{ $self->{_drawings} } ) {
-
+        for my $drawing_object ( @{ $self->{_drawings} } ) {
             # Write the xdr:twoCellAnchor element.
-            $self->_write_two_cell_anchor( ++$index, @$dimensions );
+            $self->_write_two_cell_anchor( ++$index, $drawing_object );
         }
-
     }
     else {
         my $index = 0;
@@ -102,7 +100,23 @@ sub _add_drawing_object {
 
     my $self = shift;
 
-    push @{ $self->{_drawings} }, [@_];
+    my $drawing_object = {
+        _type          => undef,
+        _dimensions    => [],
+        _width         => 0,
+        _height        => 0,
+        _description   => undef,
+        _shape         => undef,
+        _anchor        => undef,
+        _rel_index     => 0,
+        _url_rel_index => 0,
+        _tip           => undef,
+        _decorative    => undef,
+    };
+
+    push @{ $self->{_drawings} }, $drawing_object;
+
+    return $drawing_object;
 }
 
 
@@ -152,28 +166,38 @@ sub _write_two_cell_anchor {
 
     my $self            = shift;
     my $index           = shift;
-    my $type            = shift;
-    my $col_from        = shift;
-    my $row_from        = shift;
-    my $col_from_offset = shift;
-    my $row_from_offset = shift;
-    my $col_to          = shift;
-    my $row_to          = shift;
-    my $col_to_offset   = shift;
-    my $row_to_offset   = shift;
-    my $col_absolute    = shift;
-    my $row_absolute    = shift;
-    my $width           = shift;
-    my $height          = shift;
-    my $description     = shift;
-    my $shape           = shift;
+    my $drawing_object  = shift;
+
+    my $type            = $drawing_object->{_type};
+    my $dimensions      = $drawing_object->{_dimensions};
+    my $col_from        = $dimensions->[0];
+    my $row_from        = $dimensions->[1];
+    my $col_from_offset = $dimensions->[2];
+    my $row_from_offset = $dimensions->[3];
+    my $col_to          = $dimensions->[4];
+    my $row_to          = $dimensions->[5];
+    my $col_to_offset   = $dimensions->[6];
+    my $row_to_offset   = $dimensions->[7];
+    my $col_absolute    = $dimensions->[8];
+    my $row_absolute    = $dimensions->[9];
+    my $width           = $drawing_object->{_width};
+    my $height          = $drawing_object->{_height};
+    my $description     = $drawing_object->{_description};
+    my $shape           = $drawing_object->{_shape};
+    my $anchor          = $drawing_object->{_anchor};
+    my $rel_index       = $drawing_object->{_rel_index};
+    my $url_rel_index   = $drawing_object->{_url_rel_index};
+    my $tip             = $drawing_object->{_tip};
+    my $decorative      = $drawing_object->{_decorative};
 
     my @attributes = ();
 
-
     # Add attribute for images.
-    if ( $type == 2 ) {
+    if ( $anchor == 2 ) {
         push @attributes, ( editAs => 'oneCell' );
+    }
+    elsif ( $anchor == 3 ) {
+        push @attributes, ( editAs => 'absolute' );
     }
 
     # Add editAs attribute for shapes.
@@ -204,13 +228,16 @@ sub _write_two_cell_anchor {
         # Graphic frame.
 
         # Write the xdr:graphicFrame element for charts.
-        $self->_write_graphic_frame( $index, $description );
+        $self->_write_graphic_frame( $index, $rel_index, $description );
     }
     elsif ( $type == 2 ) {
 
         # Write the xdr:pic element.
-        $self->_write_pic( $index, $col_absolute, $row_absolute, $width,
-            $height, $description );
+        $self->_write_pic(
+            $index, $rel_index, $col_absolute, $row_absolute,
+            $width, $height,    $description,  $url_rel_index,
+            $tip,   $decorative
+        );
     }
     else {
 
@@ -246,7 +273,7 @@ sub _write_absolute_anchor {
         $self->_write_pos( 0, 0 );
 
         # Write the xdr:ext element.
-        $self->_write_ext( 9308969, 6078325 );
+        $self->_write_xdr_ext( 9308969, 6078325 );
 
     }
     else {
@@ -255,13 +282,13 @@ sub _write_absolute_anchor {
         $self->_write_pos( 0, -47625 );
 
         # Write the xdr:ext element.
-        $self->_write_ext( 6162675, 6124575 );
+        $self->_write_xdr_ext( 6162675, 6124575 );
 
     }
 
 
     # Write the xdr:graphicFrame element.
-    $self->_write_graphic_frame( $index );
+    $self->_write_graphic_frame( $index, $index );
 
     # Write the xdr:clientData element.
     $self->_write_client_data();
@@ -417,11 +444,11 @@ sub _write_pos {
 
 ##############################################################################
 #
-# _write_ext()
+# _write_xdr_ext()
 #
 # Write the <xdr:ext> element.
 #
-sub _write_ext {
+sub _write_xdr_ext {
 
     my $self = shift;
     my $cx   = shift;
@@ -444,10 +471,11 @@ sub _write_ext {
 #
 sub _write_graphic_frame {
 
-    my $self  = shift;
-    my $index = shift;
-    my $name  = shift;
-    my $macro = '';
+    my $self      = shift;
+    my $index     = shift;
+    my $rel_index = shift;
+    my $name      = shift;
+    my $macro     = '';
 
     my @attributes = ( 'macro' => $macro );
 
@@ -460,7 +488,7 @@ sub _write_graphic_frame {
     $self->_write_xfrm();
 
     # Write the a:graphic element.
-    $self->_write_atag_graphic( $index );
+    $self->_write_atag_graphic( $rel_index );
 
     $self->xml_end_tag( 'xdr:graphicFrame' );
 }
@@ -502,24 +530,151 @@ sub _write_nv_graphic_frame_pr {
 #
 sub _write_c_nv_pr {
 
-    my $self  = shift;
-    my $id    = shift;
-    my $name  = shift;
-    my $descr = shift;
+    my $self          = shift;
+    my $index         = shift;
+    my $name          = shift;
+    my $description   = shift;
+    my $url_rel_index = shift;
+    my $tip           = shift;
+    my $decorative    = shift;
 
     my @attributes = (
-        'id'   => $id,
+        'id'   => $index,
         'name' => $name,
     );
 
     # Add description attribute for images.
-    if ( defined $descr ) {
-        push @attributes, ( descr => $descr );
+    if ($description && !$decorative) {
+        push @attributes, ( descr => $description );
     }
 
-    $self->xml_empty_tag( 'xdr:cNvPr', @attributes );
+    if ( $url_rel_index || $decorative ) {
+        $self->xml_start_tag( 'xdr:cNvPr', @attributes );
+
+        if ($url_rel_index) {
+            # Write the a:hlinkClick element.
+            $self->_write_a_hlink_click( $url_rel_index, $tip );
+        }
+
+        if ($decorative) {
+            # Write the adec:decorative element.
+            $self->_write_decorative();
+        }
+
+        $self->xml_end_tag( 'xdr:cNvPr' );
+    }
+    else {
+        $self->xml_empty_tag( 'xdr:cNvPr', @attributes );
+    }
 }
 
+
+##############################################################################
+#
+# _write_a_hlink_click()
+#
+# Write the <a:hlinkClick> element.
+#
+sub _write_a_hlink_click {
+
+    my $self    = shift;
+    my $index   = shift;
+    my $tip     = shift;
+    my $schema  = 'http://schemas.openxmlformats.org/officeDocument/';
+    my $xmlns_r = $schema . '2006/relationships';
+    my $r_id    = 'rId' . $index;
+
+    my @attributes = (
+        'xmlns:r' => $xmlns_r,
+        'r:id'    => $r_id,
+    );
+
+    push( @attributes, ( 'tooltip' => $tip ) ) if $tip;
+
+    $self->xml_empty_tag('a:hlinkClick', @attributes );
+}
+
+
+##############################################################################
+#
+# _write_decorative()
+#
+# Write the <adec:decorative> element.
+#
+sub _write_decorative {
+
+    my $self = shift;
+
+
+    $self->xml_start_tag( 'a:extLst' );
+
+    $self->_write_a_uri_ext( '{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}' );
+    $self->_write_a16_creation_id();
+    $self->xml_end_tag( 'a:ext' );
+
+    $self->_write_a_uri_ext( '{C183D7F6-B498-43B3-948B-1728B52AA6E4}' );
+    $self->_write_adec_decorative();
+    $self->xml_end_tag( 'a:ext' );
+
+    $self->xml_end_tag( 'a:extLst' );
+}
+
+##############################################################################
+#
+# _write_a_uri_ext()
+#
+# Write the <a:ext> element.
+#
+sub _write_a_uri_ext {
+
+    my $self = shift;
+    my $uri  = shift;
+
+    my @attributes = ( 'uri' => $uri );
+
+    $self->xml_start_tag( 'a:ext', @attributes );
+}
+
+##############################################################################
+#
+# _write_adec_decorative()
+#
+# Write the <adec:decorative> element.
+#
+sub _write_adec_decorative {
+
+    my $self       = shift;
+    my $xmlns_adec = 'http://schemas.microsoft.com/office/' .
+                     'drawing/2017/decorative';
+    my $val        = 1;
+
+    my @attributes = (
+        'xmlns:adec' => $xmlns_adec,
+        'val'        => $val,
+    );
+
+    $self->xml_empty_tag( 'adec:decorative', @attributes );
+}
+
+##############################################################################
+#
+# _write_a16_creation_id()
+#
+# Write the <a16:creationId> element.
+#
+sub _write_a16_creation_id {
+
+    my $self       = shift;
+    my $xmlns_a_16 = 'http://schemas.microsoft.com/office/drawing/2014/main';
+    my $id         = '{00000000-0008-0000-0000-000002000000}';
+
+    my @attributes = (
+        'xmlns:a16' => $xmlns_a_16,
+        'id'        => $id,
+    );
+
+    $self->xml_empty_tag( 'a16:creationId', @attributes );
+}
 
 ##############################################################################
 #
@@ -838,21 +993,26 @@ sub _write_nv_sp_pr {
 #
 sub _write_pic {
 
-    my $self         = shift;
-    my $index        = shift;
-    my $col_absolute = shift;
-    my $row_absolute = shift;
-    my $width        = shift;
-    my $height       = shift;
-    my $description  = shift;
+    my $self          = shift;
+    my $index         = shift;
+    my $rel_index     = shift;
+    my $col_absolute  = shift;
+    my $row_absolute  = shift;
+    my $width         = shift;
+    my $height        = shift;
+    my $description   = shift;
+    my $url_rel_index = shift;
+    my $tip           = shift;
+    my $decorative    = shift;
 
     $self->xml_start_tag( 'xdr:pic' );
 
     # Write the xdr:nvPicPr element.
-    $self->_write_nv_pic_pr( $index, $description );
+    $self->_write_nv_pic_pr( $index, $rel_index, $description, $url_rel_index,
+        $tip, $decorative );
 
     # Write the xdr:blipFill element.
-    $self->_write_blip_fill( $index );
+    $self->_write_blip_fill( $rel_index );
 
     # Pictures are rectangle shapes by default.
     my $shape = { _type => 'rect' };
@@ -873,14 +1033,19 @@ sub _write_pic {
 #
 sub _write_nv_pic_pr {
 
-    my $self        = shift;
-    my $index       = shift;
-    my $description = shift;
+    my $self          = shift;
+    my $index         = shift;
+    my $rel_index     = shift;
+    my $description   = shift;
+    my $url_rel_index = shift;
+    my $tip           = shift;
+    my $decorative    = shift;
 
     $self->xml_start_tag( 'xdr:nvPicPr' );
 
     # Write the xdr:cNvPr element.
-    $self->_write_c_nv_pr( $index + 1, 'Picture ' . $index, $description );
+    $self->_write_c_nv_pr( $index + 1, 'Picture ' . $index,
+        $description, $url_rel_index, $tip, $decorative );
 
     # Write the xdr:cNvPicPr element.
     $self->_write_c_nv_pic_pr();
@@ -1415,7 +1580,7 @@ John McNamara jmcnamara@cpan.org
 
 =head1 COPYRIGHT
 
-(c) MM-MMXV, John McNamara.
+(c) MM-MMXXI, John McNamara.
 
 All Rights Reserved. This module is free software. It may be used, redistributed and/or modified under the same terms as Perl itself.
 

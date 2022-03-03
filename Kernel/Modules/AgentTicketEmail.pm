@@ -15,8 +15,8 @@ use warnings;
 
 use Mail::Address;
 
-use Kernel::System::VariableCheck qw(:all);
 use Kernel::Language qw(Translatable);
+use Kernel::System::VariableCheck qw(:all);
 
 our $ObjectManagerDisabled = 1;
 
@@ -70,13 +70,13 @@ sub Run {
     }
 
     # get needed objects
-    my $ParamObject       = $Kernel::OM->Get('Kernel::System::Web::Request');
-    my $UploadCacheObject = $Kernel::OM->Get('Kernel::System::Web::UploadCache');
-    my $TicketObject      = $Kernel::OM->Get('Kernel::System::Ticket');
-    my $QueueObject       = $Kernel::OM->Get('Kernel::System::Queue');
-    my $MainObject        = $Kernel::OM->Get('Kernel::System::Main');
     my $ConfigObject      = $Kernel::OM->Get('Kernel::Config');
     my $LinkObject        = $Kernel::OM->Get('Kernel::System::LinkObject');
+    my $MainObject        = $Kernel::OM->Get('Kernel::System::Main');
+    my $QueueObject       = $Kernel::OM->Get('Kernel::System::Queue');
+    my $TicketObject      = $Kernel::OM->Get('Kernel::System::Ticket');
+    my $ParamObject       = $Kernel::OM->Get('Kernel::System::Web::Request');
+    my $UploadCacheObject = $Kernel::OM->Get('Kernel::System::Web::UploadCache');
 
     my $Debug = $Param{Debug} || 0;
     my $Config = $ConfigObject->Get("Ticket::Frontend::$Self->{Action}");
@@ -91,6 +91,11 @@ sub Run {
         )
     ) {
         $GetParam{$Key} = $ParamObject->GetParam( Param => $Key );
+    }
+
+    if ( $ConfigObject->Get('Frontend::Agent::CreateOptions::ViewAllOwner') ) {
+        $GetParam{OwnerAll}       = 1;
+        $GetParam{ResponsibleAll} = 1;
     }
 
     my @SelectedCIIDs;
@@ -2271,10 +2276,6 @@ sub Run {
             $GetParam{From} = $Queue{Email};
         }
 
-        if ( $ConfigObject->Get('Frontend::Agent::CreateOptions::ViewAllOwner') ) {
-            $GetParam{OwnerAll}       = 1;
-            $GetParam{ResponsibleAll} = 1;
-        }
         $ElementChanged = $GetParam{ElementChanged} || $ElementChanged;
         my $ServiceID =
             $GetParam{ServiceID}

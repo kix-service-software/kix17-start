@@ -1,9 +1,24 @@
 package LWP::Authen::Digest;
 
 use strict;
-use base 'LWP::Authen::Basic';
+use parent 'LWP::Authen::Basic';
+
+our $VERSION = '6.61';
 
 require Digest::MD5;
+
+sub _reauth_requested {
+    my ($class, $auth_param, $ua, $request, $auth_header) = @_;
+    my $ret = defined($$auth_param{stale}) && lc($$auth_param{stale}) eq 'true';
+    if ($ret) {
+        my $hdr = $request->header($auth_header);
+        $hdr =~ tr/,/;/;    # "," is used to separate auth-params!!
+        ($hdr) = HTTP::Headers::Util::split_header_words($hdr);
+        my $nonce = {@$hdr}->{nonce};
+        delete $$ua{authen_md5_nonce_count}{$nonce};
+    }
+    return $ret;
+}
 
 sub auth_header {
     my($class, $user, $pass, $request, $ua, $h) = @_;
@@ -44,22 +59,12 @@ sub auth_header {
 	@resp{qw(qop cnonce nc)} = ("auth", $cnonce, $nc);
     }
 
-    my(@order) = qw(username realm qop algorithm uri nonce nc cnonce response);
-    if($request->method =~ /^(?:POST|PUT)$/) {
-	$md5->add($request->content);
-	my $content = $md5->hexdigest;
-	$md5->reset;
-	$md5->add(join(":", @digest[0..1], $content));
-	$md5->reset;
-	$resp{"message-digest"} = $md5->hexdigest;
-	push(@order, "message-digest");
-    }
-    push(@order, "opaque");
+    my(@order) = qw(username realm qop algorithm uri nonce nc cnonce response opaque);
     my @pairs;
     for (@order) {
 	next unless defined $resp{$_};
 
-	# RFC2617 sais that qop-value and nc-value should be unquoted.
+	# RFC2617 says that qop-value and nc-value should be unquoted.
 	if ( $_ eq 'qop' || $_ eq 'nc' ) {
 		push(@pairs, "$_=" . $resp{$_});
 	}

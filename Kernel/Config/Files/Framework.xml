@@ -5290,7 +5290,7 @@
         <Group>Framework</Group>
         <SubGroup>Core::Web</SubGroup>
         <Setting>
-            <String Regex="">&lt;KIX_CONFIG_Frontend::WebPath&gt;js/thirdparty/ckeditor-4.16.0/</String>
+            <String Regex="">&lt;KIX_CONFIG_Frontend::WebPath&gt;js/thirdparty/ckeditor-4.17.2/</String>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Frontend::RichTextWidth" Required="1" Valid="1">
@@ -10149,10 +10149,10 @@ via the Preferences button after logging in.
                     <Prio>50</Prio>
                 </NavBar>
                 <Loader>
-                    <CSS>thirdparty/fullcalendar-3.10.2/fullcalendar.min.css</CSS>
+                    <CSS>thirdparty/fullcalendar-3.10.5/fullcalendar.min.css</CSS>
                     <CSS>thirdparty/nvd3-1.8.6/nv.d3.min.css</CSS>
                     <JavaScript>thirdparty/momentjs-2.29.1/moment.min.js</JavaScript>
-                    <JavaScript>thirdparty/fullcalendar-3.10.2/fullcalendar.min.js</JavaScript>
+                    <JavaScript>thirdparty/fullcalendar-3.10.5/fullcalendar.min.js</JavaScript>
                     <JavaScript>thirdparty/d3-3.5.17/d3.min.js</JavaScript>
                     <JavaScript>thirdparty/nvd3-1.8.6/nv.d3.min.js</JavaScript>
                     <JavaScript>thirdparty/nvd3-1.8.6/models/lineChart.js</JavaScript>
@@ -10190,10 +10190,10 @@ via the Preferences button after logging in.
                     <Prio>890</Prio>
                 </NavBar>
                 <Loader>
-                    <CSS>thirdparty/fullcalendar-3.10.2/fullcalendar.min.css</CSS>
+                    <CSS>thirdparty/fullcalendar-3.10.5/fullcalendar.min.css</CSS>
                     <CSS>thirdparty/nvd3-1.8.6/nv.d3.min.css</CSS>
                     <JavaScript>thirdparty/momentjs-2.29.1/moment.min.js</JavaScript>
-                    <JavaScript>thirdparty/fullcalendar-3.10.2/fullcalendar.min.js</JavaScript>
+                    <JavaScript>thirdparty/fullcalendar-3.10.5/fullcalendar.min.js</JavaScript>
                     <JavaScript>thirdparty/d3-3.5.17/d3.min.js</JavaScript>
                     <JavaScript>thirdparty/nvd3-1.8.6/nv.d3.min.js</JavaScript>
                     <JavaScript>thirdparty/nvd3-1.8.6/models/lineChart.js</JavaScript>
@@ -11851,7 +11851,7 @@ via the Preferences button after logging in.
         <Setting>
             <Array>
                 <Item>thirdparty/fontawesome/font-awesome.css</Item>
-                <Item>thirdparty/jstree-3.3.11/themes/default/style.min.css</Item>
+                <Item>thirdparty/jstree-3.3.12/themes/default/style.min.css</Item>
                 <Item>Base.ColorTheme.css</Item>
                 <Item>Base.css</Item>
                 <Item>Base.Header.css</Item>
@@ -11888,14 +11888,14 @@ via the Preferences button after logging in.
             <Array>
                 <Item>thirdparty/jquery-3.6/jquery.min.js</Item>
                 <Item>thirdparty/jquery-browser-detection/jquery-browser-detection.js</Item>
-                <Item>thirdparty/jquery-ui-1.12.1/jquery-ui.min.js</Item>
+                <Item>thirdparty/jquery-ui-1.13.1/jquery-ui.min.js</Item>
                 <Item>thirdparty/jquery-ui-touch-punch-0.2.3/jquery.ui.touch-punch.js</Item>
                 <Item>thirdparty/jquery-validate-1.19.3/jquery.validate.min.js</Item>
                 <Item>thirdparty/stacktrace-2.0.2/stacktrace-with-promises-and-json-polyfills.min.js</Item>
                 <Item>thirdparty/jquery-pubsub/pubsub.js</Item>
-                <Item>thirdparty/jstree-3.3.11/jstree.min.js</Item>
-                <Item>thirdparty/jquery-tablesorter-2.31.1/jquery.tablesorter.min.js</Item>
-                <Item>thirdparty/jscolor-2.4.5/jscolor.min.js</Item>
+                <Item>thirdparty/jstree-3.3.12/jstree.min.js</Item>
+                <Item>thirdparty/jquery-tablesorter-2.31.3/jquery.tablesorter.min.js</Item>
+                <Item>thirdparty/jscolor-2.4.7/jscolor.min.js</Item>
                 <Item>Core.JavaScriptEnhancements.js</Item>
                 <Item>Core.Debug.js</Item>
                 <Item>Core.Exception.js</Item>
@@ -11949,7 +11949,7 @@ via the Preferences button after logging in.
         <Setting>
             <Array>
                 <Item>thirdparty/fontawesome/font-awesome.css</Item>
-                <Item>thirdparty/jstree-3.3.11/themes/default/style.min.css</Item>
+                <Item>thirdparty/jstree-3.3.12/themes/default/style.min.css</Item>
                 <Item>Base.ColorTheme.css</Item>
                 <Item>Base.css</Item>
                 <Item>Base.Header.css</Item>
@@ -11985,11 +11985,11 @@ via the Preferences button after logging in.
                 <Item>thirdparty/jquery-3.6/jquery.min.js</Item>
                 <Item>thirdparty/jquery-browser-detection/jquery-browser-detection.js</Item>
                 <Item>thirdparty/jquery-validate-1.19.3/jquery.validate.min.js</Item>
-                <Item>thirdparty/jquery-ui-1.12.1/jquery-ui.min.js</Item>
+                <Item>thirdparty/jquery-ui-1.13.1/jquery-ui.min.js</Item>
                 <Item>thirdparty/stacktrace-2.0.2/stacktrace-with-promises-and-json-polyfills.min.js</Item>
                 <Item>thirdparty/jquery-pubsub/pubsub.js</Item>
-                <Item>thirdparty/jstree-3.3.11/jstree.min.js</Item>
-                <Item>thirdparty/jquery-tablesorter-2.31.1/jquery.tablesorter.min.js</Item>
+                <Item>thirdparty/jstree-3.3.12/jstree.min.js</Item>
+                <Item>thirdparty/jquery-tablesorter-2.31.3/jquery.tablesorter.min.js</Item>
                 <Item>Core.Debug.js</Item>
                 <Item>Core.Exception.js</Item>
                 <Item>Core.Data.js</Item>

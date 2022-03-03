@@ -282,69 +282,82 @@ sub Run {
             return;
         }
         else {
-
-            # copy attachments...
-            my %ArticleIndex = $Self->{TicketObject}->ArticleAttachmentIndex(
-                ArticleID => $Param{Data}->{ArticleID},
-                UserID    => 1,
-            );
-            for my $Index ( keys %ArticleIndex ) {
-                next if ( $ArticleIndex{$Index}->{'Filename'} =~ /^file/ );
-                my $Inline     = 0;
-                my %Attachment = $Self->{TicketObject}->ArticleAttachment(
-                    ArticleID => $Param{Data}->{ArticleID},
-                    FileID    => $Index,
+            # process first and current article
+            my @ArticleIDs = ( $FirstArticle{ArticleID}, $Param{Data}->{ArticleID} );
+            for my $ArticleID ( @ArticleIDs ) {
+                # get attachment index from article
+                my %ArticleIndex = $Self->{TicketObject}->ArticleAttachmentIndex(
+                    ArticleID => $ArticleID,
                     UserID    => 1,
                 );
 
-                if( $Attachment{Disposition} eq 'inline' ) {
-                    $Inline = 1;
-                }
+                # process attachments
+                for my $Index ( keys %ArticleIndex ) {
+                    # skip html attachments
+                    next if ( $ArticleIndex{$Index}->{Filename} =~ /^file-[12]$/ || $ArticleIndex{$Index}->{Filename} eq 'file-1.html' );
 
-                my $AttachmentID = $Self->{FAQObject}->AttachmentAdd(
-                    %Attachment,
-                    ItemID => $ItemID,
-                    UserID => $ThisArticle{CreatedBy},
-                );
+                    # get attachment data
+                    my %Attachment = $Self->{TicketObject}->ArticleAttachment(
+                        ArticleID => $ArticleID,
+                        FileID    => $Index,
+                        UserID    => 1,
+                    );
 
-                if ( $AttachmentID
-                    && $Inline
-                ) {
-                    my $ContentID = $Attachment{ContentID};
-                    $ContentID =~ s{ > }{}xms;
-                    $ContentID =~ s{ < }{}xms;
-
-                    # picture URL in upload cache
-                    my $Search =  '(src=")(cid:'.$ContentID.')(")';
-
-                    # picture URL in FAQ attachment
-                    my $Replace = $Self->{LayoutObject}->{Baselink}
-                        . "Action=AgentFAQZoom;Subaction=DownloadAttachment;"
-                        . "ItemID=$ItemID;FileID=$AttachmentID";
-
-                    # rewrite picture URLs
-                    FIELD:
-                    for my $Number ( 1 .. 6 ) {
-
-                        # check if field contains something
-                        next FIELD if !$NewFAQItemData{"Field$Number"};
-
-                        # remove newlines
-                        $NewFAQItemData{"Field$Number"} =~ s{ [\n\r]+ }{}gxms;
-
-                        # replace URL
-                        $NewFAQItemData{"Field$Number"} =~ s{$Search}{$1$Replace$3}xms;
+                    # check for inline attachment
+                    my $Inline     = 0;
+                    if( $Attachment{Disposition} eq 'inline' ) {
+                        $Inline = 1;
                     }
 
-                    # update FAQ article without writing a history entry
-                    my $Success = $Self->{FAQObject}->FAQUpdate(
-                        %NewFAQItemData,
-                        ItemID      => $ItemID,
-                        HistoryOff  => 1,
-                        ApprovalOff => 1,
-                        UserID      => $ThisArticle{CreatedBy},
+                    # add attachment to faq entry
+                    my $AttachmentID = $Self->{FAQObject}->AttachmentAdd(
+                        %Attachment,
+                        ItemID => $ItemID,
+                        Inline => $Inline,
+                        UserID => $ThisArticle{CreatedBy},
                     );
+
+                    # replace inline attachments in fields
+                    if (
+                        $AttachmentID
+                        && $Inline
+                    ) {
+                        # prepare ContentID
+                        my $ContentID = $Attachment{ContentID};
+                        $ContentID =~ s{ > }{}xms;
+                        $ContentID =~ s{ < }{}xms;
+
+                        # prepare search pattern
+                        my $Search =  '(src=")(cid:'.$ContentID.')(")';
+                        $Search =~ s/\./\./g;
+
+                        # prepapre replace pattern
+                        my $Replace = $Self->{LayoutObject}->{Baselink}
+                            . "Action=AgentFAQZoom;Subaction=DownloadAttachment;"
+                            . "ItemID=$ItemID;FileID=$AttachmentID";
+
+                        # process fields
+                        for my $Number ( 1 .. 6 ) {
+                            # check if field contains something
+                            next if !$NewFAQItemData{'Field' .$Number};
+
+                            # remove newlines
+                            $NewFAQItemData{'Field' .$Number} =~ s{ [\n\r]+ }{}gxms;
+
+                            # replace URL
+                            $NewFAQItemData{'Field' .$Number} =~ s{$Search}{$1$Replace$3}xms;
+                        }
+                    }
                 }
+
+                # update FAQ article without writing a history entry
+                my $Success = $Self->{FAQObject}->FAQUpdate(
+                    %NewFAQItemData,
+                    ItemID      => $ItemID,
+                    HistoryOff  => 1,
+                    ApprovalOff => 1,
+                    UserID      => $ThisArticle{CreatedBy},
+                );
             }
 
             # create link between ticket and FAQ-entry...

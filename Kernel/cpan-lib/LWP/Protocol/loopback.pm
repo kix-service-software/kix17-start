@@ -1,11 +1,12 @@
 package LWP::Protocol::loopback;
 
 use strict;
-use vars qw(@ISA);
+
+our $VERSION = '6.61';
+
 require HTTP::Response;
 
-require LWP::Protocol;
-@ISA = qw(LWP::Protocol);
+use parent qw(LWP::Protocol);
 
 sub request {
     my($self, $request, $proxy, $arg, $size, $timeout) = @_;
