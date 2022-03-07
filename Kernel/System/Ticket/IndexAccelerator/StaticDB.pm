@@ -263,6 +263,7 @@ END
         $TicketData{CreateTimeUnix} = $Row[5];
         $TicketData{ArchiveFlag}    = $Row[6];
     }
+    return 1 if ( !$TicketData{State} );
 
     # check if this ticket is still viewable
     my @ViewableStates = $StateObject->StateGetStatesByType(
