@@ -203,7 +203,9 @@ Core.UI.RichTextEditor = (function (TargetNS) {
             // Needed for clientside validation of RTE
             CKEDITOR.instances[EditorID].on('blur', function () {
                 CKEDITOR.instances[EditorID].updateElement();
+                $EditorArea.addClass('NoErrorFocus');
                 Core.Form.Validate.ValidateElement($EditorArea);
+                $EditorArea.removeClass('NoErrorFocus');
             });
 
             // needed for client-side validation
