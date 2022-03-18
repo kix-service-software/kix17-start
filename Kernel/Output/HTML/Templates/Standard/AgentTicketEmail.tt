@@ -357,7 +357,7 @@ $('#Dest').on('change', function (Event) {
 
                     <label for="CustomerID">[% Translate("CustomerID") | html %]:</label>
                     <div class="Field">
-                        <input type="text" name="CustomerID" id="CustomerID" value="[% Data.CustomerID | html %]" [% IF Config("Ticket::Frontend::AgentTicketEmail::CustomerIDReadOnly") %] readonly [% END %] class="W75pc"/>
+                        <input type="text" name="CustomerID" id="CustomerID" value="[% Data.CustomerID | html %]" autocomplete="off" [% IF Config("Ticket::Frontend::AgentTicketEmail::CustomerIDReadOnly") %] readonly [% END %] class="W75pc"/>
                     </div>
 
                     <div class="Clear"></div>

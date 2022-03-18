@@ -117,6 +117,7 @@ sub ListAllCommands {
             Directory => $CommandDirectory,
             Filter    => '*.pm',
             Recursive => 1,
+            Silent    => 1,
         );
 
         @CommandFiles = ( @CommandFiles, @CommandFilesTmp );
