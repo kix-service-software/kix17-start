@@ -1,6 +1,12 @@
 # Change log of KIX
 * Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.19.0-RC3 (2022/03/18)
+ * (2022/03/17) - Bugfix: KIX17-2896 (fix automatic focus for empty required richtext) (millinger)
+ * (2022/03/17) - Bugfix: KIX17-2902 (fixed sorting of config item search) (millinger)
+ * (2022/03/08) - Bugfix: KIX17-2105 (consistent behaviour when splitting tickets) (millinger)
+ * (2022/03/07) - Bugfix: KIX17-2730 (silent error for deleted tickets on ticket index rebuild) (millinger)
+
 # 17.19.0-RC2 (2022/03/03)
  * (2022/03/02) - Bugfix: KIX17-2830 (generic agent disables notification not triggered by job) (millinger)
  * (2022/03/02) - CR: KIX17-2823 (updated LICENCE-Third-Party) (fjacquemin)
