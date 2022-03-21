@@ -87,7 +87,10 @@ Core.Form.Validate = (function (TargetNS) {
         }
 
         // If the element, which has an validation error, is a richtext element, than manually trigger the focus event
-        if (Core.UI.RichTextEditor.IsEnabled($Element)) {
+        if (
+            Core.UI.RichTextEditor.IsEnabled($Element)
+            && !$Element.hasClass('NoErrorFocus')
+        ) {
             window.setTimeout(function () {
                 $Element.focus();
             }, 0);
