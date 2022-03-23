@@ -13,6 +13,8 @@ package Kernel::Modules::AdminGenericInterfaceWebservice;
 use strict;
 use warnings;
 
+use Storable qw(dclone);
+
 use Kernel::System::VariableCheck qw(:all);
 use Kernel::Language qw(Translatable);
 
@@ -536,7 +538,8 @@ sub Run {
         }
 
         # copy action config
-        $WebserviceData->{Config}->{$CommunicationType}->{$ActionType}->{$NewActionName} = $WebserviceData->{Config}->{$CommunicationType}->{$ActionType}->{$ActionName};
+        # dereference is necessary, since YAML will save the reference as alias, so it would work like a symbolic link
+        %{ $WebserviceData->{Config}->{$CommunicationType}->{$ActionType}->{$NewActionName} } = %{ dclone($WebserviceData->{Config}->{$CommunicationType}->{$ActionType}->{$ActionName}) };
 
         # update web service
         my $Success = $WebserviceObject->WebserviceUpdate(
