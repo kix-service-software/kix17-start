@@ -1,6 +1,9 @@
 # Change log of KIX
 * Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.19.0-RC4 (2022/03/24)
+ * (2022/03/23) - Bugfix: KIX17-1831 (dereference action config) (millinger)
+
 # 17.19.0-RC3 (2022/03/18)
  * (2022/03/17) - Bugfix: KIX17-2896 (fix automatic focus for empty required richtext) (millinger)
  * (2022/03/17) - Bugfix: KIX17-2902 (fixed sorting of config item search) (millinger)
