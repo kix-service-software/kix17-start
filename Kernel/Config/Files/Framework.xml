@@ -4674,37 +4674,7 @@
         <SubGroup>Tool::Acknowledge</SubGroup>
         <Setting>
             <Hash>
-                <Item Key="Nagios1">pipe</Item>
-            </Hash>
-        </Setting>
-    </ConfigItem>
-    <ConfigItem Name="Tool::Acknowledge::NamedPipe::CMD" Required="0" Valid="1">
-        <Description Translatable="1">Named pipe acknowledge command.</Description>
-        <Group>Framework</Group>
-        <SubGroup>Tool::Acknowledge</SubGroup>
-        <Setting>
-            <Hash>
-                <Item Key="Nagios1">echo '&lt;OUTPUTSTRING&gt;' >  /var/lib/nagios3/rw/nagios.cmd</Item>
-            </Hash>
-        </Setting>
-    </ConfigItem>
-    <ConfigItem Name="Tool::Acknowledge::NamedPipe::Host" Required="0" Valid="1">
-        <Description Translatable="1">Named pipe acknowledge format for host.</Description>
-        <Group>Framework</Group>
-        <SubGroup>Tool::Acknowledge</SubGroup>
-        <Setting>
-            <Hash>
-                <Item Key="Nagios1">[&lt;UNIXTIME&gt;] ACKNOWLEDGE_HOST_PROBLEM;&lt;HOST_NAME&gt;;1;1;1;&lt;LOGIN&gt;;&lt;a href="&lt;CONFIG_HttpType&gt;://&lt;CONFIG_FQDN&gt;/&lt;CONFIG_ScriptAlias&gt;index.pl?Action=AgentTicketZoom&amp;TicketID=&lt;TicketID&gt;"&gt;&lt;CONFIG_Ticket::Hook&gt;&lt;TicketNumber&gt;&lt;/a&gt;</Item>
-            </Hash>
-        </Setting>
-    </ConfigItem>
-    <ConfigItem Name="Tool::Acknowledge::NamedPipe::Service" Required="0" Valid="1">
-        <Description Translatable="1">Named pipe acknowledge format for service.</Description>
-        <Group>Framework</Group>
-        <SubGroup>Tool::Acknowledge</SubGroup>
-        <Setting>
-            <Hash>
-                <Item Key="Nagios1">[&lt;UNIXTIME&gt;] ACKNOWLEDGE_SVC_PROBLEM;&lt;HOST_NAME&gt;;&lt;SERVICE_NAME&gt;;1;1;1;&lt;LOGIN&gt;;&lt;a href="&lt;CONFIG_HttpType&gt;://&lt;CONFIG_FQDN&gt;/&lt;CONFIG_ScriptAlias&gt;index.pl?Action=AgentTicketZoom&amp;TicketID=&lt;TicketID&gt;"&gt;&lt;CONFIG_Ticket::Hook&gt;&lt;TicketNumber&gt;&lt;/a&gt;</Item>
+                <Item Key="Nagios1">http</Item>
             </Hash>
         </Setting>
     </ConfigItem>
