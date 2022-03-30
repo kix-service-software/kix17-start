@@ -139,7 +139,7 @@ sub Run {
         my $SessionID = '';
         if ( $Self->{SessionID} && !$Self->{SessionIDCookie} ) {
             $SessionID  = ';' . $Self->{SessionName} . '=' . $Self->{SessionID};
-            my $Pattern = '(?:Action=AgentFAQZoom;Subaction=DownloadAttachment;ItemID=\d+;FileID=\d+)';
+            my $Pattern = '(Action=AgentFAQZoom;Subaction=DownloadAttachment;ItemID=\d+;FileID=\d+)';
             $FieldContent =~ s{ $Pattern }{$1$SessionID}gmsx;
         }
 
