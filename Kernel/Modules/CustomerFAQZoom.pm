@@ -164,6 +164,9 @@ sub Run {
         my $FieldPattern = 'index[.]pl [?] Action=AgentFAQ [&](amp;)? Subaction=Download [&](amp;)?';
         $FieldContent =~ s{$FieldPattern}{customer.pl?Action=CustomerFAQZoom;Subaction=DownloadAttachment;}gxms;
 
+        # remove session from url
+        $FieldContent =~ s{(Action=CustomerFAQZoom;Subaction=DownloadAttachment;ItemID=\d+;FileID=\d+)[^"]+?"}{$1"}gxms;
+
         # build base URL for inline images
         my $SessionID = '';
         if ( $Self->{SessionID} && !$Self->{SessionIDCookie} ) {
