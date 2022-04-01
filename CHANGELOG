@@ -1,6 +1,9 @@
 # Change log of KIX
 * Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.19.0-RC6 (2022/04/01)
+ * (2022/04/01) - Bugfix: KIX17-2857 (fixed language file) (millinger)
+
 # 17.19.0-RC5 (2022/04/01)
  * (2022/03/30) - Bugfix: KIX17-2929 (fix handling of session for faq article inline images) (millinger)
  * (2022/03/30) - Bugfix: KIX17-2928 (remove session from faq inline images) (millinger)
