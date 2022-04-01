@@ -4508,18 +4508,11 @@ sub Data {
         = 'De-/aktiviert die Anzeige des Kurztextes eines Neuigkeiten Eintrages.';
     $Lang->{'Dis-/enables displaying the author of a message entry.'}
         = 'De-/aktiviert die Anzeige des Autor eines Neuigkeiten Eintrages.';
-    $Lang->{'Dis-/enables edit link in dashboard for author and users of group defined in "SystemMessage###GroupDashboard".'}
-        = 'De-/aktiviert den Bearbeitungslink im Dashboard für Autor und Benutzer einer Gruppe, die in "SystemMessage###GroupDashboard" definiert ist.';
-    $Lang->{'Dis-/enables delete link in dashboard for author and users of group defined in "SystemMessage###GroupDashboard".'}
-        = 'De-/aktiviert den Link zum Löschen im Dashboard für Autor und Benutzer einer Gruppe, die in "SystemMessage###GroupDashboard" definiert ist.';
-    $Lang->{'Defines the group name to which the user must belong to see edit/delete link if not author.'}
-        = 'Definiert den Gruppennamen, zu dem der Benutzer gehören muss, um den Link zum Bearbeiten/Löschen anzuzeigen, wenn er nicht autorisiert ist.';
-    $Lang->{'By clicking on "mark as read" the news is not showed again as a popup. News widget will still display it.'}
-        = 'Beim Klick auf "Als gelesen markieren" wird die Neuigkeit nicht erneut als Popup angezeigt. Im Widget erscheint sie weiterhin.';
-    $Lang->{'Open message when user visits dashboard'}  = 'Neuigkeit öffnen wenn Agenten das Dashboard öffnen';
-    $Lang->{'Create and manage messages.'}              = 'Erstellt und verwaltet Neuigkeiten.';
-    $Lang->{'Message Overview Limit'}                   = 'Übersichtsbegrenzung der Neuigkeiten';
-    $Lang->{'Message limit per page for overview.'}     = 'Übersichtsbegrenzung pro Seite der Neuigkeiten.';
+    $Lang->{'Open message when user visits template.'}     = 'Neuigkeit öffnen wenn Anwender den Bereich öffnen.';
+    $Lang->{'Template has to be selected at \'Display\'.'} = 'Bereich muss bei \'Anzeige\' ausgewählt sein.'
+    $Lang->{'Create and manage messages.'}                 = 'Erstellt und verwaltet Neuigkeiten.';
+    $Lang->{'Message Overview Limit'}                      = 'Übersichtsbegrenzung der Neuigkeiten';
+    $Lang->{'Message limit per page for overview.'}        = 'Übersichtsbegrenzung pro Seite der Neuigkeiten.';
 
     $Lang->{'Messages per page'}    = 'Neuigkeiten pro Seite';
     $Lang->{'Mark as read'}         = 'Als gelesen markieren';
@@ -4539,6 +4532,10 @@ sub Data {
     $Lang->{'Message deleted!'}     = 'Neuigkeit gelöscht!';
     $Lang->{'Read this message'}    = 'Diese Neuigkeit lesen';
     $Lang->{'Messages'}             = 'Neuigkeiten';
+
+    $Lang->{'Display templates'} = 'Anzeige-Bereiche';
+    $Lang->{'Popup templates'}   = 'Popup-Bereiche';
+
 
     # CUSTOM FOOTER
     $Lang->{'Defines a link list that can be added in the footer. The links can be assigned separately to the frontends. (Key: <priority>::<link title>; Value: 0 => deactivated, 1 => show everywhere, 2 => only agent frontend, 3 => only customer frontend)'}

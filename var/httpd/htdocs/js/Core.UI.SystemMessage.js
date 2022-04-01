@@ -18,10 +18,15 @@ Core.UI = Core.UI || {};
  *      This namespace contains the special module functions for the system message.
  */
 Core.UI.SystemMessage = (function (TargetNS) {
+    var ShownModule,
+        ShownIdentifier;
 
-    TargetNS.Init = function (Module, Identifier, Force) {
+    TargetNS.Init = function (Module, Identifier) {
 
         if ( Module === 'KIXSidebar' ) {
+            ShownModule     = Module;
+            ShownIdentifier = Identifier;
+
             KIXSidebarTools.UpdateSidebar(
                 'SystemMessageAJAXHandler',
                 Identifier,
@@ -34,7 +39,6 @@ Core.UI.SystemMessage = (function (TargetNS) {
         }
 
         else if ( Module === 'Login' ) {
-
             $('body.LoginScreen > .MainBox')
                 .removeClass('SpacingTopLarge')
                 .css({
@@ -45,12 +49,21 @@ Core.UI.SystemMessage = (function (TargetNS) {
                 var ID = $(this).attr('data-id');
                 TargetNS.ShowContent(Module, Identifier, ID);
             });
+
+            if ( $('.SystemMessageOpenDialog.Popup').length === 1 ) {
+                var ID = $('.SystemMessageOpenDialog.Popup').attr('data-id');
+                TargetNS.ShowContent(Module, Identifier, ID);
+            }
         }
 
         else if ( Module === 'Dashboard' ) {
-            if ( Force ) {
-                TargetNS.ShowContent(Module, Identifier,  Force);
-            }
+            ShownModule     = Module;
+            ShownIdentifier = Identifier;
+
+            $('.AutoColspan').each(function() {
+                var ColspanCount = $(this).closest('table').find('th').length;
+                $(this).attr('colspan', ColspanCount);
+            });
 
             $('.SystemMessageOpenDialog').on('click', function() {
                 var ID = $(this).closest('tr').attr('data-id');
@@ -73,6 +86,13 @@ Core.UI.SystemMessage = (function (TargetNS) {
         };
 
         Core.AJAX.FunctionCall(Core.Config.Get('Baselink'), Data, function (Response) {
+            if ( Response.PopupID ) {
+                TargetNS.ShowContent(ShownModule, ShownIdentifier, Response.PopupID);
+            }
+
+            if ( !Response.Content ) {
+                return false;
+            }
 
             if ( $('#MainBox').length ) {
                 $('#MainBox').prepend(Response.Content);
@@ -119,7 +139,8 @@ Core.UI.SystemMessage = (function (TargetNS) {
                 Data;
 
             // 'Confirmation' opens a dialog with 2 buttons: MarkAsRead and close
-            if ( Response.MarkAsRead === '1'
+            if (
+                Response.MarkAsRead === '1'
                 && Module !== 'Login'
             ) {
                 Data = {
@@ -136,7 +157,7 @@ Core.UI.SystemMessage = (function (TargetNS) {
                         // define the function that is called when the 'Yes' button is pressed
                         Function: function(){
                             Core.AJAX.FunctionCall(BaseLink, Data, function (Response) {
-                                if ( Module === 'KIXSidebar') {
+                                if ( Module === 'KIXSidebar' ) {
                                     KIXSidebarTools.UpdateSidebar(
                                         'SystemMessageAJAXHandler',
                                         Identifier,
@@ -146,6 +167,17 @@ Core.UI.SystemMessage = (function (TargetNS) {
                                         },
                                         window['KIXSidebarCallback' + Identifier]
                                    );
+                                }
+                                else if ( Module === 'Dashboard' ) {
+                                    var URL = Core.Config.Get('Baselink') + 'Action=AgentDashboard;Subaction=Element;Name=' + Identifier;
+
+                                    Core.AJAX.ContentUpdate($('#Dashboard' + Identifier), URL, function() {
+                                        TargetNS.Init(Module, Identifier, null);
+                                    });
+                                }
+                                else if ( Module === 'Header' ) {
+                                    $('#SystemMessageWidget').remove();
+                                    TargetNS.ShowWidget();
                                 }
                                 Core.UI.Dialog.CloseDialog($('.Dialog:visible'));
                             });
@@ -181,27 +213,6 @@ Core.UI.SystemMessage = (function (TargetNS) {
         $('.SystemMessageOpenDialog').on('click', function() {
             var ID = $(this).closest('tr').attr('data-id');
             TargetNS.ShowContent('KIXSidebar', Identifier, ID);
-        });
-
-        $('.SystemMessageMarkAsRead').on('click', function(){
-            var Data = {
-                    Action: 'SystemMessageAJAXHandler',
-                    Subaction: 'AJAXUpdate',
-                    MessageID: $(this).closest('tr').attr('data-id')
-                },
-                CallingAction = Core.Config.Get('Action');
-
-            Core.AJAX.FunctionCall(Core.Config.Get('Baselink'), Data, function (Response) {
-                KIXSidebarTools.UpdateSidebar(
-                     'SystemMessageAJAXHandler',
-                     Identifier,
-                     {
-                         'CallingAction': CallingAction,
-                         'Module': 'KIXSidebar'
-                     },
-                     window['KIXSidebarCallback' + Identifier]
-                );
-            });
         });
     }
 

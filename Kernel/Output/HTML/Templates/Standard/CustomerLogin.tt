@@ -62,8 +62,7 @@
                     <table class="DataTable">
                         <tbody>
 [% RenderBlockStart("SystemMessageRow") %]
-                            <tr class="SystemMessageOpenDialog" data-id="[% Data.MessageID %]" title="[% Translate("Read this message") %]">
-                                <td><i class="fa fa-eye"></i></td>
+                            <tr class="SystemMessageOpenDialog [% Data.Popup %]" data-id="[% Data.MessageID %]" title="[% Translate("Read this message") %]">
                                 <td>[% Data.Title | html %]</td>
 [% RenderBlockStart("SystemMessageTeaser") %]
                                 <td>[% Data.ShortText | html %]</td>
@@ -75,7 +74,7 @@
                 </div>
 [% WRAPPER JSOnDocumentComplete %]
     <script type="text/javascript">//<![CDATA[
-        Core.UI.SystemMessage.Init('Login', null, null);
+        Core.UI.SystemMessage.Init('Login', null);
     //]]></script>
 [% END %]
             </div>

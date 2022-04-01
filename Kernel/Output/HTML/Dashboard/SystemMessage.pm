@@ -11,9 +11,10 @@ package Kernel::Output::HTML::Dashboard::SystemMessage;
 use strict;
 use warnings;
 
+use Kernel::Language qw(Translatable);
+
 our @ObjectDependencies = (
     'Kernel::Config',
-    'Kernel::System::Group',
     'Kernel::System::User',
     'Kernel::Output::HTML::Layout',
     'Kernel::System::SystemMessage',
@@ -27,13 +28,47 @@ sub new {
     my $Self = {%Param};
     bless( $Self, $Type );
 
+    my $UserObject = $Kernel::OM->Get('Kernel::System::User');
+
+    # check if the user has preferences for this widget
+    my %Preferences = $UserObject->GetPreferences(
+        UserID => $Self->{UserID},
+    );
+
+    $Self->{PrefKeyShowRead}  = 'UserDashboardPref' . $Self->{Name} . '-ShowRead';
+
+    if ( !$Self->{ShowRead} ) {
+        $Self->{ShowRead} = $Preferences{ $Self->{PrefKeyShowRead} } || '0';
+    }
+    else {
+        $UserObject->SetPreferences(
+            UserID => $Self->{UserID},
+            Key    => $Self->{PrefKeyShowRead},
+            Value  => $Self->{ShowRead},
+        );
+    }
+
     return $Self;
 }
 
 sub Preferences {
     my ( $Self, %Param ) = @_;
 
-    return;
+    my @Params = (
+        {
+            Desc  => Translatable('Show already read messages'),
+            Name  => $Self->{PrefKeyShowRead},
+            Block => 'Option',
+            Data  => {
+                '0' => 'No',
+                '1' => 'Yes'
+            },
+            SelectedID  => $Self->{ShowRead} || '0',
+            Translation => 1,
+        }
+    );
+
+    return @Params;
 }
 
 sub Config {
@@ -48,34 +83,24 @@ sub Run {
     my ( $Self, %Param ) = @_;
 
     my $ConfigObject        = $Kernel::OM->Get('Kernel::Config');
-    my $GroupObject         = $Kernel::OM->Get('Kernel::System::Group');
     my $UserObject          = $Kernel::OM->Get('Kernel::System::User');
     my $SystemMessageObject = $Kernel::OM->Get('Kernel::System::SystemMessage');
     my $LayoutObject        = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my $JSONObject          = $Kernel::OM->Get('Kernel::System::JSON');
 
     my $Config  = $ConfigObject->Get('SystemMessage');
-    my $GroupID = $GroupObject->GroupLookup(
-        Group => $Config->{GroupDashboard} || 'admin'
-    );
-
-    # get user groups
-    my %GroupIDs  = $GroupObject->GroupMemberList(
-        UserID => $Self->{UserID},
-        Type   => 'rw',
-        Result => 'HASH'
-    );
 
     # get message list
     my @MessageIDList = $SystemMessageObject->MessageSearch(
-        Action    => 'AgentDashboard',
-        DateCheck => 1,
-        Valid     => 1,
-        UserID    => $Self->{UserID},
-        UserType  => $Self->{UserType},
-        SortBy    => 'Created',
-        OrderBy   => 'Down',
-        Result    => 'ARRAY'
+        Action          => 'AgentDashboard',
+        DateCheck       => 1,
+        Valid           => 1,
+        IgnoreUserReads => $Self->{ShowRead},
+        UserID          => $Self->{UserID},
+        UserType        => $Self->{UserType},
+        SortBy          => 'Created',
+        OrderBy         => 'Down',
+        Result          => 'ARRAY'
     );
 
     # get user preferences
@@ -91,31 +116,11 @@ sub Run {
         %UserReads = %{$JSONData};
     }
 
-    my $ForceDialog;
-    my @MessageDataList;
-    for my $MessageID ( @MessageIDList ) {
-
-        # get message data
-        my %MessageData = $SystemMessageObject->MessageGet(
-            MessageID => $MessageID,
-        );
-
-        if (
-            $MessageData{UsedDashboard}
-            && !$ForceDialog
-            && !$UserReads{$MessageID}
-        ) {
-            $ForceDialog = $MessageID;
-        }
-
-        push(@MessageDataList, \%MessageData);
-    }
-
     $LayoutObject->Block(
         Name => 'DashboardSystemMessage',
         Data => {
            %{ $Self->{Config} },
-           ForceDialog => $ForceDialog,
+           Name => $Self->{Name},
         },
     );
 
@@ -131,83 +136,50 @@ sub Run {
         );
     }
 
-    if (
-        $Config->{EditOnDashboard}
-        && $GroupIDs{$GroupID}
-    ) {
-        $LayoutObject->Block(
-            Name => 'DashboardHeadEdit',
-        );
-    }
-
-    if (
-        $Config->{DeleteOnDashboard}
-        && $GroupIDs{$GroupID}
-    ) {
-        $LayoutObject->Block(
-            Name => 'DashboardHeadDelete',
-        );
-    }
-
     # show messages
-    my $Output = '';
-    for my $MessageData ( @MessageDataList ) {
+    if ( scalar(@MessageIDList) ) {
+        for my $MessageID ( @MessageIDList ) {
 
+            # get message data
+            my %MessageData = $SystemMessageObject->MessageGet(
+                MessageID => $MessageID,
+            );
+
+            $LayoutObject->Block(
+                Name => 'DashboardRow',
+                Data => \%MessageData
+            );
+
+            if ( $Config->{ShowTeaser} ) {
+
+                $LayoutObject->Block(
+                    Name => 'DashboardColumnTeaser',
+                    Data => \%MessageData
+                );
+            }
+
+            if ( $Config->{ShowCreatedBy} ) {
+
+                my %UserData = $UserObject->GetUserData(
+                    UserID => $MessageData{CreatedBy}
+                );
+
+                $LayoutObject->Block(
+                    Name => 'DashboardColumnCreatedBy',
+                    Data => \%UserData
+                );
+            }
+        }
+    }
+    else {
         $LayoutObject->Block(
-            Name => 'DashboardRow',
-            Data => $MessageData
-        );
-
-        if ( $Config->{ShowTeaser} ) {
-
-            $LayoutObject->Block(
-                Name => 'DashboardColumnTeaser',
-                Data => $MessageData
-            );
-        }
-
-        if ( $Config->{ShowCreatedBy} ) {
-
-            my %UserData = $UserObject->GetUserData(
-                UserID => $MessageData->{CreatedBy}
-            );
-
-            $LayoutObject->Block(
-                Name => 'DashboardColumnCreatedBy',
-                Data => \%UserData
-            );
-        }
-
-        if (
-            $Config->{EditOnDashboard}
-            && $GroupIDs{$GroupID}
-        ) {
-            $LayoutObject->Block(
-                Name => 'DashboardColumnEdit',
-                Data => $MessageData
-            );
-        }
-
-        if (
-            $Config->{DeleteOnDashboard}
-            && $GroupIDs{$GroupID}
-        ) {
-            $LayoutObject->Block(
-                Name => 'DashboardColumnDelete',
-                Data => $MessageData
-            );
-        }
-    }
-
-    # check if content got shown, if true, render block
-    if (scalar(@MessageIDList)) {
-        $Output = $LayoutObject->Output(
-            TemplateFile => 'AgentDashboardSystemMessage',
-            Data         => {
-                %{ $Self->{Config} },
-            },
+            Name => 'DashboardSystemMessageNone',
         );
     }
+
+    my $Output = $LayoutObject->Output(
+        TemplateFile => 'AgentDashboardSystemMessage',
+    );
 
     # return content
     return $Output;
