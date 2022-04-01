@@ -4509,7 +4509,7 @@ sub Data {
     $Lang->{'Dis-/enables displaying the author of a message entry.'}
         = 'De-/aktiviert die Anzeige des Autor eines Neuigkeiten Eintrages.';
     $Lang->{'Open message when user visits template.'}     = 'Neuigkeit öffnen wenn Anwender den Bereich öffnen.';
-    $Lang->{'Template has to be selected at \'Display\'.'} = 'Bereich muss bei \'Anzeige\' ausgewählt sein.'
+    $Lang->{'Template has to be selected at \'Display\'.'} = 'Bereich muss bei \'Anzeige\' ausgewählt sein.';
     $Lang->{'Create and manage messages.'}                 = 'Erstellt und verwaltet Neuigkeiten.';
     $Lang->{'Message Overview Limit'}                      = 'Übersichtsbegrenzung der Neuigkeiten';
     $Lang->{'Message limit per page for overview.'}        = 'Übersichtsbegrenzung pro Seite der Neuigkeiten.';
