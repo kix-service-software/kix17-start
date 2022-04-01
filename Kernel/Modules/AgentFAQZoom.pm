@@ -136,7 +136,7 @@ sub Run {
         }{Action=AgentFAQZoom;Subaction=DownloadAttachment;}gxms;
 
         # remove session from url
-        $FieldContent =~ s{(Action=AgentFAQZoom;Subaction=DownloadAttachment;ItemID=\d+;FileID=\d+)[^"]+?"}{$1"}gxms;
+        $FieldContent =~ s{(Action=AgentFAQZoom;Subaction=DownloadAttachment;ItemID=\d+;FileID=\d+)[^"]*?"}{$1"}gxms;
 
         # build base URL for in-line images
         my $SessionID = '';
