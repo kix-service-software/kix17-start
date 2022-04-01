@@ -6251,10 +6251,21 @@ sub _BuildSystemMessage {
         Name => 'SystemMessage'
     );
 
+    my $PopupUsed = 0;
     for my $MessageID ( @MessageIDList ) {
         my %MessageData = $SystemMessageObject->MessageGet(
             MessageID => $MessageID
         );
+        
+        # check for popup message
+        if (
+            !$PopupUsed
+            && ref( $MessageData{PopupTemplates} ) eq 'ARRAY'
+            && grep( { $Param{Action} eq $_ } @{$MessageData{PopupTemplates}} )
+        ) {
+            $MessageData{Popup} = 'Popup';
+            $PopupUsed          = 1;
+        }
 
         $Self->Block(
             Name => 'SystemMessageRow',

@@ -34,6 +34,9 @@ use vars qw(%INC);
 _RemoveObsoleteDirectory();
 _RemoveObsoleteFiles();
 
+# migrate system message configuration
+_MigrateSystemMessage();
+
 exit 0;
 
 sub _RemoveObsoleteDirectory {
@@ -99,6 +102,40 @@ sub _RemoveObsoleteFiles {
     }
 
     return 1;
+}
+
+sub _MigrateSystemMessage {
+
+    # get needed objects
+    my $SystemMessageObject = $Kernel::OM->Get('Kernel::System::SystemMessage');
+
+    # get all messages
+    my %Messages = $SystemMessageObject->MessageList(
+        Valid => 0,
+    );
+
+    # process messages
+    for my $MessageID ( keys( %Messages ) ) {
+        # get message data
+        my %Message = $SystemMessageObject->MessageGet(
+            MessageID => $MessageID,
+        );
+
+        # check if UsedDashboard is set
+        if ( $Message{UsedDashboard} ) {
+            # remove key
+            delete( $Message{UsedDashboard} );
+
+            # set AgentDashboard as popup templates
+            $Message{PopupTemplates} = ['AgentDashboard'];
+
+            # update config
+            my $Success = $SystemMessageObject->MessageUpdate(
+                %Message,
+                UserID => 1,
+            );
+        }
+    }
 }
 
 =back
