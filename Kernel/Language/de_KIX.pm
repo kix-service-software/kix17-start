@@ -4536,6 +4536,7 @@ sub Data {
     $Lang->{'Display templates'} = 'Anzeige-Bereiche';
     $Lang->{'Popup templates'}   = 'Popup-Bereiche';
 
+    $Lang->{'Show already read messages'} = 'Zeige gelesene Neuigkeiten';
 
     # CUSTOM FOOTER
     $Lang->{'Defines a link list that can be added in the footer. The links can be assigned separately to the frontends. (Key: <priority>::<link title>; Value: 0 => deactivated, 1 => show everywhere, 2 => only agent frontend, 3 => only customer frontend)'}
