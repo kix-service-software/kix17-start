@@ -752,7 +752,7 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
      *      This function reloads info for selected customer.
      */
     TargetNS.ReloadCustomerInfo = function (CustomerKey,CallingAction,Type) {
-
+        var CustomerID;
         if (
             Type == 'Agent'
             && !ExistsCustomerUser(CustomerKey)
@@ -774,7 +774,11 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
             if ( CallingAction !== undefined && CallingAction != '' ) {
                 Action = CallingAction;
             }
-            GetCustomerInfo(CustomerKey, $('#CustomerID').val(), Action);
+            CustomerID = $('#CustomerID').val();
+            if ( !CustomerID ) {
+                CustomerID = $('#CustomerID').attr('value');
+            }
+            GetCustomerInfo(CustomerKey, CustomerID, Action);
 
             // set hidden field SelectedCustomerUser
             if ($('#SelectedCustomerUser').val() != CustomerKey) {
