@@ -26,10 +26,10 @@ sub ArticleIndexBuild {
 
     # check needed stuff
     for my $Needed (qw(ArticleID UserID)) {
-        if ( !$Param{$Needed} ) {
+        if ( !$Param{ $Needed } ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
-                Message  => "Need $Needed!",
+                Message  => 'Need ' . $Needed . '!',
             );
             return;
         }
@@ -42,22 +42,20 @@ sub ArticleIndexBuild {
         DynamicFields => 0,
     );
 
-    my $SearchIndexAttributes = $Kernel::OM->Get('Kernel::Config')->Get('Ticket::SearchIndex::Attribute');
-    for my $Key (qw(From To Cc Subject)) {
-        if ( $Article{$Key} ) {
-            $Article{$Key} = $Self->_ArticleIndexString(
-                String        => $Article{$Key},
-                WordLengthMin => $SearchIndexAttributes->{WordLengthMin} || 3,
-                WordLengthMax => $SearchIndexAttributes->{WordLengthMax} || 30,
-                SplitPattern  => $SearchIndexAttributes->{SplitPattern}  || '\s+',
-            );
-        }
-    }
+    # prepare index data
+    my $HasContent = 0;
+    for my $Key (qw(From To Cc Subject Body)) {
+        if ( $Article{ $Key } ) {
+            $Article{ $Key } = eval {
+                $Self->_ArticleIndexString(
+                    String => $Article{$Key},
+                );
+            };
 
-    if ( $Article{Body} ) {
-        $Article{Body} = $Self->_ArticleIndexString(
-            String => $Article{Body},
-        );
+            if ( $Article{ $Key } ) {
+                $HasContent = 1;
+            }
+        }
     }
 
     # get database object
@@ -70,7 +68,7 @@ sub ArticleIndexBuild {
     );
 
     # return if no content exists
-    return 1 if !$Article{Body};
+    return 1 if !$HasContent;
 
     # insert search index
     $DBObject->Do(
@@ -247,7 +245,7 @@ sub _ArticleIndexQuerySQLExt {
 sub _ArticleIndexString {
     my ( $Self, %Param ) = @_;
 
-    if ( !defined $Param{String} ) {
+    if ( !defined( $Param{String} ) ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => "Need String!",
@@ -255,145 +253,104 @@ sub _ArticleIndexString {
         return;
     }
 
-    my $SearchIndexAttributes = $Kernel::OM->Get('Kernel::Config')->Get('Ticket::SearchIndex::Attribute');
+    # init SearchIndexConfig
+    if ( !$Self->{SearchIndexConfig} ) {
+        my $SearchIndexAttributes = $Kernel::OM->Get('Kernel::Config')->Get('Ticket::SearchIndex::Attribute');
 
-    my $WordCountMax = $SearchIndexAttributes->{WordCountMax} || 1000;
-
-    # get words (use eval to prevend exits on damaged utf8 signs)
-    my $ListOfWords = eval {
-        $Self->_ArticleIndexStringToWord(
-            String        => \$Param{String},
-            WordLengthMin => $Param{WordLengthMin} || $SearchIndexAttributes->{WordLengthMin} || 3,
-            WordLengthMax => $Param{WordLengthMax} || $SearchIndexAttributes->{WordLengthMax} || 30,
-            SplitPattern  => $Param{SplitPattern}  || $SearchIndexAttributes->{SplitPattern}  || '\s+',
-        );
-    };
-
-    return if !$ListOfWords;
-
-    # find ranking of words
-    my %List;
-    my $IndexString = '';
-    my $Count       = 0;
-    WORD:
-    for my $Word ( @{$ListOfWords} ) {
-
-        $Count++;
-
-        # only index the first 1000 words
-        last WORD if $Count > $WordCountMax;
-
-        if ( $List{$Word} ) {
-
-            $List{$Word}++;
-
-            next WORD;
-        }
-        else {
-
-            $List{$Word} = 1;
-
-            if ($IndexString) {
-                $IndexString .= ' ';
-            }
-
-            $IndexString .= $Word
-        }
+        $Self->{SearchIndexConfig} = {
+            WordCountMax  => $SearchIndexAttributes->{WordCountMax}  || 1000,
+            WordLengthMin => $SearchIndexAttributes->{WordLengthMin} || 3,
+            WordLengthMax => $SearchIndexAttributes->{WordLengthMax} || 30,
+            SplitPattern  => $SearchIndexAttributes->{SplitPattern}  || '\s+',
+        };
     }
 
-    return $IndexString;
-}
-
-sub _ArticleIndexStringToWord {
-    my ( $Self, %Param ) = @_;
-
-    # check needed stuff
-    if ( !defined $Param{String} ) {
-        $Kernel::OM->Get('Kernel::System::Log')->Log(
-            Priority => 'error',
-            Message  => "Need String!",
-        );
-        return;
-    }
-
-    # get config object
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-
-    my $SearchIndexAttributes = $ConfigObject->Get('Ticket::SearchIndex::Attribute');
-    my @Filters               = @{ $ConfigObject->Get('Ticket::SearchIndex::Filters') || [] };
-    my $StopWordRaw           = $ConfigObject->Get('Ticket::SearchIndex::StopWords') || {};
-
-    # error handling
-    if ( !$StopWordRaw || ref $StopWordRaw ne 'HASH' ) {
-
-        $Kernel::OM->Get('Kernel::System::Log')->Log(
-            Priority => 'error',
-            Message  => "Invalid config option Ticket::SearchIndex::StopWords! "
-                . "Please reset the search index options to reactivate the factory defaults.",
-        );
-
-        return;
-    }
-
-    my %StopWord;
-    LANGUAGE:
-    for my $Language ( sort keys %{$StopWordRaw} ) {
-
-        if ( !$Language || !$StopWordRaw->{$Language} || ref $StopWordRaw->{$Language} ne 'ARRAY' ) {
-
+    # init SearchIndexStopWords
+    if ( !$Self->{SearchIndexStopWords} ) {
+        my $StopWordRaw = $Kernel::OM->Get('Kernel::Config')->Get('Ticket::SearchIndex::StopWords') || {};
+        if (
+            !$StopWordRaw
+            || ref( $StopWordRaw ) ne 'HASH'
+        ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
-                Message  => "Invalid config option Ticket::SearchIndex::StopWords###$Language! "
-                    . "Please reset this option to reactivate the factory defaults.",
+                Message  => 'Invalid config option Ticket::SearchIndex::StopWords! Please reset the search index options to reactivate the factory defaults.',
             );
 
-            next LANGUAGE;
+            return;
         }
 
-        WORD:
-        for my $Word ( @{ $StopWordRaw->{$Language} } ) {
+        LANGUAGE:
+        for my $Language ( keys( %{ $StopWordRaw } ) ) {
+            if (
+                !$Language
+                || !$StopWordRaw->{ $Language }
+                || ref( $StopWordRaw->{ $Language } ) ne 'ARRAY'
+            ) {
+                $Kernel::OM->Get('Kernel::System::Log')->Log(
+                    Priority => 'error',
+                    Message  => 'Invalid config option Ticket::SearchIndex::StopWords###' . $Language . '! Please reset this option to reactivate the factory defaults.',
+                );
 
-            next WORD if !defined $Word || !length $Word;
+                next LANGUAGE;
+            }
 
-            $Word = lc $Word;
+            WORD:
+            for my $Word ( @{ $StopWordRaw->{ $Language } } ) {
+                next WORD if(
+                    !defined( $Word )
+                    || !length( $Word )
+                );
 
-            $StopWord{$Word} = 1;
+                $Word = lc( $Word );
+
+                $Self->{SearchIndexStopWords}->{ $Word } = 1;
+            }
         }
     }
 
-    # get words
-    my $LengthMin    = $Param{WordLengthMin} || $SearchIndexAttributes->{WordLengthMin} || 3;
-    my $LengthMax    = $Param{WordLengthMax} || $SearchIndexAttributes->{WordLengthMax} || 30;
-    my $SplitPattern = $Param{SplitPattern}  || $SearchIndexAttributes->{SplitPattern}  || '\s+';
-    my @ListOfWords;
+    # init SearchIndexFilters
+    if ( !$Self->{SearchIndexFilters} ) {
+        $Self->{SearchIndexFilters} = $Kernel::OM->Get('Kernel::Config')->Get('Ticket::SearchIndex::Filters') || [];
+    }
 
+    # prepare word list
+    my %Words = ();
     WORD:
-    for my $Word ( split /$SplitPattern/, ${ $Param{String} } ) {
+    for my $Word ( split( /$Self->{SearchIndexConfig}->{SplitPattern}/, lc( ${ $Param{String} } ) ) ) {
+        next WORD if (
+            !defined( $Word )
+            || !length( $Word )
+        );
 
         # apply filters
-        FILTER:
-        for my $Filter (@Filters) {
-            next WORD if !defined $Word || !length $Word;
+        for my $Filter ( @{ $Self->{SearchIndexFilters} } ) {
             $Word =~ s/$Filter//g;
         }
+        next WORD if ( !defined( $Word ) );
 
-        next WORD if !defined $Word || !length $Word;
+        # get length of word
+        my $Length = length( $Word );
+        next WORD if ( !$Length );
 
-        # convert to lowercase to avoid LOWER()/LCASE() in the DB query
-        $Word = lc $Word;
+        # check for stop word
+        next WORD if( $Self->{SearchIndexStopWords}->{ $Word } );
 
-        next WORD if $StopWord{$Word};
+        # check for known word
+        next WORD if( $Words{ $Word } );
 
-        # only index words/strings within length boundaries
-        my $Length = length $Word;
+        # check word length boundaries
+        next WORD if( $Length < $Self->{SearchIndexConfig}->{WordLengthMin} );
+        next WORD if( $Length > $Self->{SearchIndexConfig}->{WordLengthMax} );
 
-        next WORD if $Length < $LengthMin;
-        next WORD if $Length > $LengthMax;
+        $Words{ $Word } = 1;
 
-        push @ListOfWords, $Word;
+        if ( keys( %Words ) >= $Self->{SearchIndexConfig}->{WordCountMax} ) {
+            last WORD;
+        }
     }
 
-    return \@ListOfWords;
+    return join( ' ', keys( %Words ) );
 }
 
 1;
