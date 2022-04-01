@@ -37,7 +37,7 @@
         window.KIXSidebarCallback[% Data.Identifier | html %] = KIXSidebarCallback[% Data.Identifier | html %];
     }
 
-    Core.UI.SystemMessage.Init('KIXSidebar', '[% Data.Identifier | html %]', null);
+    Core.UI.SystemMessage.Init('KIXSidebar', '[% Data.Identifier | html %]');
 //]]>
 </script>
 [% END %]
@@ -68,7 +68,6 @@
     <table id="Result[% Data.Identifier | html %]" class="DataTable">
         <thead>
             <tr>
-                <th></th>
                 <th>[% Translate("Headline") %]</th>
                 <th>[% Translate("Teaser") %]</th>
             </tr>
@@ -76,9 +75,6 @@
         <tbody>
 [% RenderBlockStart("KIXSidebarMessageResultRow") %]
             <tr data-id="[% Data.MessageID | html %]">
-                <td class="SystemMessageMarkAsRead" title="[% Data.MarkAsRead | html %]">
-                    <i class="fa fa-times"></i>
-                </td>
                 <td class="SystemMessageOpenDialog" title="[% Data.ReadMessage | html %]" >
                     [% Data.Title  %]
                 </td>

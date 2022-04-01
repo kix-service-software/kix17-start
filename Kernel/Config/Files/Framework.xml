@@ -14317,7 +14317,7 @@ via the Preferences button after logging in.
                 <Item Key="Module">Kernel::Output::HTML::Dashboard::SystemMessage</Item>
                 <Item Key="Title" Translatable="1">Messages</Item>
                 <Item Key="Description" Translatable="1">Current message!</Item>
-                <Item Key="Block">ContentLarge</Item>
+                <Item Key="Block">ContentSmall</Item>
                 <Item Key="Group"></Item>
                 <Item Key="Default">1</Item>
             </Hash>
@@ -14400,47 +14400,6 @@ via the Preferences button after logging in.
     </ConfigItem>
     <ConfigItem Name="SystemMessage###ShowCreatedBy" Required="1" Valid="1">
         <Description Translatable="1">Dis-/enables displaying the author of a message entry.</Description>
-        <Group>Framework</Group>
-        <SubGroup>Core::SystemMessage</SubGroup>
-        <Setting>
-            <Option SelectedID="0">
-                <Item Key="0" Translatable="1">No</Item>
-                <Item Key="1" Translatable="1">Yes</Item>
-            </Option>
-        </Setting>
-    </ConfigItem>
-    <ConfigItem Name="SystemMessage###EditOnDashboard" Required="1" Valid="1">
-        <Description Translatable="1">Dis-/enables edit link in dashboard for author and users of group defined in "SystemMessage###GroupDashboard".</Description>
-        <Group>Framework</Group>
-        <SubGroup>Core::SystemMessage</SubGroup>
-        <Setting>
-            <Option SelectedID="1">
-                <Item Key="0" Translatable="1">No</Item>
-                <Item Key="1" Translatable="1">Yes</Item>
-            </Option>
-        </Setting>
-    </ConfigItem>
-    <ConfigItem Name="SystemMessage###DeleteOnDashboard" Required="1" Valid="1">
-        <Description Translatable="1">Dis-/enables delete link in dashboard for author and users of group defined in "SystemMessage###GroupDashboard".</Description>
-        <Group>Framework</Group>
-        <SubGroup>Core::SystemMessage</SubGroup>
-        <Setting>
-            <Option SelectedID="1">
-                <Item Key="0" Translatable="1">No</Item>
-                <Item Key="1" Translatable="1">Yes</Item>
-            </Option>
-        </Setting>
-    </ConfigItem>
-    <ConfigItem Name="SystemMessage###GroupDashboard" Required="1" Valid="1">
-        <Description Translatable="1">Defines the group name to which the user must belong to see edit/delete link if not author.</Description>
-        <Group>Framework</Group>
-        <SubGroup>Core::SystemMessage</SubGroup>
-        <Setting>
-            <String Regex="">admin</String>
-        </Setting>
-    </ConfigItem>
-    <ConfigItem Name="SystemMessage###MarkAsRead" Required="1" Valid="1">
-        <Description Translatable="1">By clicking on "mark as read" the news is not showed again as a popup. News widget will still display it.</Description>
         <Group>Framework</Group>
         <SubGroup>Core::SystemMessage</SubGroup>
         <Setting>

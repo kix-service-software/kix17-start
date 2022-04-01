@@ -59,10 +59,15 @@ sub new {
 add news
 
     my $ID = $SystemMessageObject->MessageAdd(
-        Title    => 'Some Message',
-        ValidID  => 123,
-        Config   => 'YAML-Conent'
-        UserID   => 123,
+        Title          => 'Some Message',
+        ValidID        => 123,
+        ShortText      => 'Some short text',
+        Body           => 'Some news text',
+        ValidFrom      => 'Timestamp',
+        ValidTo        => 'Timestamp',
+        Templates      => [...],
+        PopupTemplates => [...],
+        UserID         => 123,
     );
 
 =cut
@@ -86,7 +91,7 @@ sub MessageAdd {
     }
 
     my %Config;
-    for ( qw(Templates ShortText Body ValidTo ValidFrom UsedDashboard) ) {
+    for ( qw(Templates PopupTemplates ShortText Body ValidTo ValidFrom) ) {
         $Config{$_} = $Param{$_} || '';
     }
 
@@ -125,11 +130,16 @@ END
 update news
 
     my $Success = $SystemMessageObject->MessageUpdate(
-        ID       => '123',
-        Title    => 'Message',
-        ValidID  => 123,
-        Config   => 'YAML-Conent'
-        UserID   => 123,
+        MessageID      => '123',
+        Title          => 'Message',
+        ValidID        => 123,
+        ShortText      => 'Some short text',
+        Body           => 'Some news text',
+        ValidFrom      => 'Timestamp',
+        ValidTo        => 'Timestamp',
+        Templates      => [...],
+        PopupTemplates => [...],
+        UserID         => 123,
     );
 
 =cut
@@ -153,7 +163,7 @@ sub MessageUpdate {
 
 
     my %Config;
-    for ( qw(Templates ShortText Body ValidTo ValidFrom UsedDashboard) ) {
+    for ( qw(Templates PopupTemplates ShortText Body ValidTo ValidFrom) ) {
         $Config{$_} = $Param{$_} || '';
     }
 
@@ -220,7 +230,7 @@ sub MessageDelete {
 
 =item MessageList()
 
-get all valid newss
+get all valid news
 
     my %Messages = $SystemMessageObject->MessageList();
 
@@ -231,7 +241,7 @@ Returns:
         3 => 'Some Name3',
     );
 
-get all newss
+get all news
 
     my %Messages = $SystemMessageObject->MessageList(
         Valid => 0,
@@ -287,8 +297,8 @@ search for message
 
     my @Message = $SystemMessageObject->MessageSearch(
         Search  => '*some*',           # optional
-        Valid   => 1,                  # optional defaul(0)
-        SortBy  => 'Created',          # optional defaul(Created)
+        Valid   => 1,                  # optional default(0)
+        SortBy  => 'Created',          # optional default(Created)
         OrderBy => 'Down',             # optional default(Down)
         Result  => 'ARRAY'             # optional default(HASH)
     );
@@ -299,10 +309,11 @@ Returns:
 search with used action and active state or valid date
 
     my %Message = $SystemMessageObject->MessageSearch(
-        Action   => 'AgentTicketPhone', # optional
-        Valid    => 1,                  # optional defaul(0)
-        UserID   => 1,                  # optional
-        UserType => 'user'              # required if UserID used
+        Action          => 'AgentTicketPhone', # optional
+        IgnoreUserReads => 1,                  # optional default(0)
+        Valid           => 1,                  # optional defaul(0)
+        UserID          => 1,                  # optional
+        UserType        => 'user'              # required if UserID used
     );
 
 Returns:
@@ -316,7 +327,7 @@ search on valid date check
 
     my %Message = $SystemMessageObject->MessageSearch(
         DateCheck => 1,                 # optional
-        Valid     => 1,                 # optional defaul(0)
+        Valid     => 1,                 # optional default(0)
     );
 
 Returns:
@@ -386,7 +397,10 @@ sub MessageSearch {
     }
 
     my %UserReads;
-    if ( $Param{UserID} ) {
+    if (
+        !$Param{IgnoreUserReads}
+        && $Param{UserID}
+    ) {
 
         # check needed stuff
         if ( !$Param{UserType} ) {
@@ -522,7 +536,10 @@ sub MessageSearch {
         }
     }
 
-    if ( $Param{UserID} ) {
+    if ( 
+        !$Param{IgnoreUserReads}
+        && $Param{UserID}
+    ) {
         my $UserReadsStrg = '';
         if ( %NewUserReads ) {
             $UserReadsStrg = $JSONObject->Encode(
@@ -565,17 +582,17 @@ get news all attributes
 Returns:
 
     %Message = (
-        MessageID     => '123',
-        Title         => 'Simple message',
-        ValidID       => '1',
-        ShortText     => 'Some short text',
-        Body          => 'Some news text',
-        ValidFrom     => 'Timestamp',
-        ValidTo       => 'Timestamp',
-        Templates     => [...],
-        UsedDashboard => 1
-        Created       => '2010-04-07 15:41:15',
-        Changed       => '2010-04-07 15:59:45',
+        MessageID      => '123',
+        Title          => 'Simple message',
+        ValidID        => '1',
+        ShortText      => 'Some short text',
+        Body           => 'Some news text',
+        ValidFrom      => 'Timestamp',
+        ValidTo        => 'Timestamp',
+        Templates      => [...],
+        PopupTemplates => [...],
+        Created        => '2010-04-07 15:41:15',
+        Changed        => '2010-04-07 15:59:45',
     );
 
 =cut
@@ -623,8 +640,8 @@ END
                 Data => $Row[3]
             );
 
-            for my $Key ( sort keys %{$Data} ) {
-                $Result{$Key} = $Data->{$Key} || '';
+            for my $Key ( keys( %{$Data} ) ) {
+                $Result{ $Key } = $Data->{ $Key };
             }
         }
     }
