@@ -1,6 +1,14 @@
 # Change log of KIX
 * Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.19.0-RC5 (2022/04/01)
+ * (2022/03/30) - Bugfix: KIX17-2929 (fix handling of session for faq article inline images) (millinger)
+ * (2022/03/30) - Bugfix: KIX17-2928 (remove session from faq inline images) (millinger)
+ * (2022/03/30) - Bugfix: KIX17-2927 (show inline images for faq articles without session cookie) (millinger)
+ * (2022/03/28) - Bugfix: KIX17-2914 (fix security issues in package manager) (millinger)
+ * (2022/03/28) - Bugfix: KIX17-2913 (remove unsecure acknowledge type 'pipe') (millinger)
+ * (2022/03/28) - Bugfix: KIX17-2921 (fix removal of obsolete files) (millinger)
+
 # 17.19.0-RC4 (2022/03/24)
  * (2022/03/23) - Bugfix: KIX17-1831 (dereference action config) (millinger)
 
