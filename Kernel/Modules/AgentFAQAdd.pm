@@ -361,6 +361,16 @@ sub Run {
             return $Output;
         }
 
+        # remove session from inline attachments
+        NUMBER:
+        for my $Number ( 1 .. 6 ) {
+            # skip empty fields
+            next NUMBER if !$GetParam{ 'Field' . $Number };
+
+            # remove session from url
+            $GetParam{ 'Field' . $Number } =~ s{(Action=AgentFAQZoom;Subaction=DownloadAttachment;ItemID=\d+;FileID=\d+)[^"]+?"}{$1"}gxms;
+        }
+
         # add the new FAQ article
         my $FAQID = $FAQObject->FAQAdd(
             %GetParam,

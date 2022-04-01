@@ -95,7 +95,7 @@ sub _RemoveObsoleteFiles {
     );
 
     for my $File ( @FileList ) {
-        rm( $HomePath . '/' . $File );
+        unlink( $HomePath . '/' . $File );
     }
 
     return 1;

@@ -373,6 +373,20 @@ sub Run {
                         if ( $Hash->{Format} && $Hash->{Format} =~ /plain/i ) {
                             $Hash->{Content} = '<pre class="contentbody">' . $Hash->{Content} . '</pre>';
                         }
+
+                        # Strip out external images, javascript, etc
+                        my %SafetyContent = $Kernel::OM->Get('Kernel::System::HTMLUtils')->Safety(
+                            String       => $Hash->{Content},
+                            NoApplet     => 1,
+                            NoObject     => 1,
+                            NoEmbed      => 1,
+                            NoSVG        => 1,
+                            NoIntSrcLoad => 0,
+                            NoExtSrcLoad => 1,
+                            NoJavaScript => 1,
+                        );
+                        $Hash->{Content} = $SafetyContent{String};
+
                         $LayoutObject->Block(
                             Name => "PackageItemIntro",
                             Data => {
@@ -489,7 +503,7 @@ sub Run {
 
             $Output .= $LayoutObject->Notify(
                 Priority => $Priority,
-                Data     => "$Name $Version - $Message",
+                Info     => "$Name $Version - $Message",
                 Link     => $LayoutObject->{Baselink}
                     . 'Action=AdminPackageManager;Subaction=View;Name='
                     . $Name
@@ -661,6 +675,20 @@ sub Run {
                         if ( $Hash->{Format} && $Hash->{Format} =~ /plain/i ) {
                             $Hash->{Content} = '<pre class="contentbody">' . $Hash->{Content} . '</pre>';
                         }
+
+                        # Strip out external images, javascript, etc
+                        my %SafetyContent = $Kernel::OM->Get('Kernel::System::HTMLUtils')->Safety(
+                            String       => $Hash->{Content},
+                            NoApplet     => 1,
+                            NoObject     => 1,
+                            NoEmbed      => 1,
+                            NoSVG        => 1,
+                            NoIntSrcLoad => 0,
+                            NoExtSrcLoad => 1,
+                            NoJavaScript => 1,
+                        );
+                        $Hash->{Content} = $SafetyContent{String};
+
                         $LayoutObject->Block(
                             Name => "PackageItemIntro",
                             Data => {
@@ -1526,7 +1554,7 @@ sub Run {
 
         $Output .= $LayoutObject->Notify(
             Priority => $Priority,
-            Data     => "$ReinstallKey $NeedReinstall{$ReinstallKey} - $Message",
+            Info     => "$ReinstallKey $NeedReinstall{$ReinstallKey} - $Message",
             Link     => $LayoutObject->{Baselink}
                 . 'Action=AdminPackageManager;Subaction=View;Name='
                 . $ReinstallKey
@@ -1581,6 +1609,20 @@ sub _MessageGet {
             }
         }
     }
+
+    # Strip out external images, javascript, etc
+    my %SafetyContent = $Kernel::OM->Get('Kernel::System::HTMLUtils')->Safety(
+        String       => $Description,
+        NoApplet     => 1,
+        NoObject     => 1,
+        NoEmbed      => 1,
+        NoSVG        => 1,
+        NoIntSrcLoad => 0,
+        NoExtSrcLoad => 1,
+        NoJavaScript => 1,
+    );
+    $Description = $SafetyContent{String};
+
     return if !$Description && !$Title;
     return (
         Description => $Description,
