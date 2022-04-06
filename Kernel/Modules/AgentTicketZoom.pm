@@ -114,6 +114,9 @@ sub new {
             TicketNumber => $ParamObject->GetParam( Param => 'TicketNumber' ),
             UserID       => $Self->{UserID},
         );
+
+        # save ticket id at layout object
+        $LayoutObject->{TicketID} = $Self->{TicketID};
     }
 
     # get zoom settings depending on ticket type
