@@ -646,7 +646,8 @@ sub ImportDataSave {
 
     if ( $NewUserData{$UserKey} ) {
         %UserData = $Kernel::OM->Get('Kernel::System::User')->GetUserData(
-            User => $NewUserData{$UserKey}
+            User          => $NewUserData{$UserKey},
+            NoOutOfOffice => 1,
         );
     }
 
