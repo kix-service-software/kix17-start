@@ -1415,10 +1415,16 @@ sub StatsFieldParameterBuild {
 
     # prepare frontend
     my $Frontend = 'Public';
-    if ( $Self->{UserType} eq 'User' ) {
+    if (
+        $Self->{UserType}
+        && $Self->{UserType} eq 'User'
+    ) {
         $Frontend = 'Agent';
     }
-    elsif ( $Self->{UserType} eq 'Customer' ) {
+    elsif (
+        $Self->{UserType}
+        && $Self->{UserType} eq 'Customer'
+    ) {
         $Frontend = 'Customer';
     }
 
