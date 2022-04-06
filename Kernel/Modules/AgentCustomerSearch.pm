@@ -113,8 +113,12 @@ sub Run {
     # get customer info
     elsif ( $Self->{Subaction} eq 'CustomerInfo' ) {
 
-        my $CallingAction = $ParamObject->GetParam( Param => 'CallingAction' ) || '';
-        my $TicketID      = $ParamObject->GetParam( Param => 'TicketID' ) || '';
+        # get params
+        my $CallingAction  = $ParamObject->GetParam( Param => 'CallingAction' )  || '';
+        my $TicketID       = $ParamObject->GetParam( Param => 'TicketID' )       || '';
+        my $CustomerUserID = $ParamObject->GetParam( Param => 'CustomerUserID' ) || '';
+        my $CustomerID     = $ParamObject->GetParam( Param => 'CustomerID' )     || '';
+
         my %TicketData;
         if ( $TicketID ) {
             %TicketData = $TicketObject->TicketGet(
@@ -123,13 +127,16 @@ sub Run {
                 UserID        => $Self->{UserID} || 1,
             );
 
+            if (
+                $TicketData{CustomerUserID} eq $CustomerUserID
+                && !$CustomerID
+            ) {
+                $CustomerID = $TicketData{CustomerID};
+            }
+
             delete $TicketData{CustomerID};
             delete $TicketData{CustomerUserID};
         }
-
-        # get params
-        my $CustomerUserID = $ParamObject->GetParam( Param => 'CustomerUserID' ) || '';
-        my $CustomerID     = $ParamObject->GetParam( Param => 'CustomerID' )     || '';
 
         my $CustomerTableHTMLString        = '';
         my $CustomerDetailsTableHTMLString = '';
