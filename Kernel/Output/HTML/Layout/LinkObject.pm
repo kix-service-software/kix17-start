@@ -1536,19 +1536,20 @@ sub _PreferencesLinkObject {
         }
 
         # get requested url
-        my $RequestURL = $Self->{RequestedURL};
-        if ( defined $RequestURL && $RequestURL ) {
-            my $URLPattern = 'Agent(.*?)ZoomTabLinkedObjects;(.*?)DirectLinkAnchor=(.*?);?(.*)';
-            $RequestURL =~ s/$URLPattern/Agent$1Zoom;$2$4/;
-            if (
-                defined $1
-                && $1 eq 'Ticket'
-            ) {
-                $Param{RequestedURL} = $RequestURL . ';SelectedTab=2;';
-            }
-            else {
-                $Param{RequestedURL} = $RequestURL . ';SelectedTab=1;';
-            }
+        if ( $Self->{RequestedURL} ) {
+            # get requested url from layout object
+            my $RequestURL = $Self->{RequestedURL};
+
+            # prepare required action
+            $RequestURL =~ s/Action=Agent(.+?)ZoomTabLinkedObjects;/Action=Agent$1Zoom;/;
+
+            # remove tab index
+            $RequestURL =~ s/;TabIndex=\d+//;
+
+            # remove browser cache workaround
+            $RequestURL =~ s/&_=\d+//;
+
+            $Param{RequestedURL} = $RequestURL . ';SelectedTab=' . $ParamObject->GetParam( Param => 'TabIndex' );
         }
         elsif ( $Self->{Action} eq 'AgentLinkObject' ) {
             $Param{RequestedURL}
@@ -1559,15 +1560,6 @@ sub _PreferencesLinkObject {
                 . ';SourceKey='
                 . $ParamObject->GetParam( Param => 'SourceKey' )
                 . ';SEARCH::TicketNumber=***;'
-        }
-        elsif ( $Self->{Action} eq 'AgentTicketZoomTabLinkedObjects' ) {
-            $Param{RequestedURL}
-                = 'Action=AgentTicketZoom'
-                . ';CallingAction='
-                . $Self->{Action}
-                . ';TicketID='
-                . $ParamObject->GetParam( Param => 'TicketID' )
-                . ';SelectedTab=2;';
         }
 
         $LayoutObject->Block(

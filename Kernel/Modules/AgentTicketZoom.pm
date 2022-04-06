@@ -116,10 +116,6 @@ sub new {
         );
     }
 
-    # get zoom settings depending on ticket type
-    $Self->{DisplaySettings}  = $ConfigObject->Get("Ticket::Frontend::AgentTicketZoom");
-    $Self->{DirectLinkAnchor} = $ParamObject->GetParam( Param => 'DirectLinkAnchor' ) || '';
-
     return $Self;
 }
 
@@ -741,7 +737,8 @@ sub MaskAgentZoom {
     # generate content of ticket zoom tabs
     my $TicketZoomBackendRef = $ConfigObject->Get('AgentTicketZoomBackend');
     if ( $TicketZoomBackendRef && ref($TicketZoomBackendRef) eq 'HASH' ) {
-        for my $CurrKey ( sort keys %{$TicketZoomBackendRef} ) {
+        my $TabIndex = 0;
+        for my $CurrKey ( sort( keys( %{ $TicketZoomBackendRef } ) ) ) {
 
             # only show process information tab if ticket is process ticket
             next if !$IsProcessTicket && $CurrKey =~ /Process/;
@@ -832,12 +829,10 @@ sub MaskAgentZoom {
                 }
             }
 
-            my $DirectLinkAnchor = $BackendShortRef->{Description};
-            $DirectLinkAnchor =~ s/\s/_/g;
-
-            # register as tab if link registered...
+            # check link from tab config
             my $Link = $BackendShortRef->{Link};
             if ($Link) {
+                # replace link params
                 $Link =~ s{
                       \$Param\{"([^"]+)"\}
                     }
@@ -847,20 +842,23 @@ sub MaskAgentZoom {
                       }
                     }egx;
 
-                my $TemplateString = $Link . ";DirectLinkAnchor=" . $DirectLinkAnchor;
-                $TemplateString = $LayoutObject->Output(
-                    Template => $TemplateString,
+                # get prepared link from layout output
+                $Link = $LayoutObject->Output(
+                    Template => $Link,
                 );
 
                 $LayoutObject->Block(
                     Name => 'DataTabDataLink',
                     Data => {
-                        Link        => $TemplateString,
+                        Link        => $Link . ';TabIndex=' . $TabIndex,
                         Description => $BackendShortRef->{Description},
                         Label       => $BackendShortRef->{Title},
                         LabelCount  => $Count ? " (" . $Count . ")" : '',
                     },
                 );
+
+                # increment tab index
+                $TabIndex += 1;
             }
 
             # preload content if preload module registered...
