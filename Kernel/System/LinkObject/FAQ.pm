@@ -97,13 +97,12 @@ sub LinkListWithData {
     # get FAQ object
     my $FAQObject = $Kernel::OM->Get('Kernel::System::FAQ');
 
-    for my $LinkType ( sort keys %{ $Param{LinkList} } ) {
+    for my $LinkType ( keys %{ $Param{LinkList} } ) {
 
-        for my $Direction ( sort keys %{ $Param{LinkList}->{$LinkType} } ) {
+        for my $Direction ( keys %{ $Param{LinkList}->{$LinkType} } ) {
 
             FAQID:
-            for my $FAQID ( sort keys %{ $Param{LinkList}->{$LinkType}->{$Direction} } ) {
-
+            for my $FAQID ( keys %{ $Param{LinkList}->{$LinkType}->{$Direction} } ) {
                 # get FAQ data
                 my %FAQData = $FAQObject->FAQGet(
                     ItemID     => $FAQID,
@@ -153,20 +152,37 @@ sub ObjectPermission {
         }
     }
 
+    # get needed objects
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+    my $FAQObject    = $Kernel::OM->Get('Kernel::System::FAQ');
+    my $GroupObject  = $Kernel::OM->Get('Kernel::System::Group');
+
+    # get FAQ data
+    my %FAQData = $FAQObject->FAQGet(
+        ItemID     => $Param{Key},
+        ItemFields => 1,
+        UserID     => $Param{UserID},
+    );
+    # no permission if no FAQ data was found
+    return if ( !%FAQData );
+
+    # check user permission for category
+    my $Access = $FAQObject->CheckCategoryUserPermission(
+        UserID     => $Param{UserID},
+        CategoryID => $FAQData{CategoryID},
+    );
+    return if ( !$Access );
+
     # check module registry of AgentFAQZoom
-    my $ModuleReg = $Kernel::OM->Get('Kernel::Config')->Get('Frontend::Module')->{AgentFAQZoom};
+    my $ModuleReg = $ConfigObject->Get('Frontend::Module')->{AgentFAQZoom};
 
     # do not grant access if frontend module is not registered
     return if !$ModuleReg;
 
     # grant access if module permission has no Group or GroupRo defined
     if ( !$ModuleReg->{GroupRo} && !$ModuleReg->{Group} ) {
-
         return 1;
     }
-
-    # get database object
-    my $GroupObject = $Kernel::OM->Get('Kernel::System::Group');
 
     PERMISSION:
     for my $Permission (qw(GroupRo Group)) {

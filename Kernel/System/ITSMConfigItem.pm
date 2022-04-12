@@ -2361,7 +2361,7 @@ sub CountLinkedObjects {
             Key1    => $Param{ConfigItemID},
             Object2 => $CurrObject,
             State   => 'Valid',
-            UserID  => 1,
+            UserID  => $Param{UserID} || 1,
         );
 
         $Result = $Result + ( scalar( keys(%LinkList) ) || 0 );

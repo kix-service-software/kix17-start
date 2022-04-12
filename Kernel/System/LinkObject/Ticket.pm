@@ -102,13 +102,12 @@ sub LinkListWithData {
     my %IgnoreLinkTicketStateTypesHash;
     map { $IgnoreLinkTicketStateTypesHash{$_}++ } @IgnoreLinkedTicketStateTypes;
 
-    for my $LinkType ( sort keys %{ $Param{LinkList} } ) {
+    for my $LinkType ( keys %{ $Param{LinkList} } ) {
 
-        for my $Direction ( sort keys %{ $Param{LinkList}->{$LinkType} } ) {
+        for my $Direction ( keys %{ $Param{LinkList}->{$LinkType} } ) {
 
             TICKETID:
-            for my $TicketID ( sort keys %{ $Param{LinkList}->{$LinkType}->{$Direction} } ) {
-
+            for my $TicketID ( keys %{ $Param{LinkList}->{$LinkType}->{$Direction} } ) {
                 # get ticket data
                 my %TicketData = $TicketObject->TicketGet(
                     TicketID      => $TicketID,
