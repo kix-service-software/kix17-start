@@ -2916,6 +2916,12 @@ sub _ArticleMenu {
                 }
             }
         }
+        if (
+            $Config->{OnlyResponsible}
+            && $Self->{UserID} != $Ticket{ResponsibleID}
+        ) {
+            $Access = 0;
+        }
 
         if ($Access) {
             push @MenuItems, {
