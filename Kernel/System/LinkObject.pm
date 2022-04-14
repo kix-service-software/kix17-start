@@ -98,7 +98,7 @@ sub PossibleTypesList {
 
     # remove not needed entries
     POSSIBLELINK:
-    for my $PossibleLink ( sort keys %PossibleLinkList ) {
+    for my $PossibleLink ( keys %PossibleLinkList ) {
 
         # extract objects
         my $Object1 = $PossibleLinkList{$PossibleLink}->{Object1};
@@ -117,7 +117,7 @@ sub PossibleTypesList {
 
     # check types
     POSSIBLELINK:
-    for my $PossibleLink ( sort keys %PossibleLinkList ) {
+    for my $PossibleLink ( keys %PossibleLinkList ) {
 
         # extract type
         my $Type = $PossibleLinkList{$PossibleLink}->{Type} || '';
@@ -130,7 +130,7 @@ sub PossibleTypesList {
 
     # extract the type list
     my %PossibleTypesList;
-    for my $PossibleLink ( sort keys %PossibleLinkList ) {
+    for my $PossibleLink ( keys %PossibleLinkList ) {
 
         # extract type
         my $Type = $PossibleLinkList{$PossibleLink}->{Type};
@@ -177,7 +177,7 @@ sub PossibleObjectsList {
     # investigate the possible object list
     my %PossibleObjectsList;
     POSSIBLELINK:
-    for my $PossibleLink ( sort keys %PossibleLinkList ) {
+    for my $PossibleLink ( keys %PossibleLinkList ) {
 
         # extract objects
         my $Object1 = $PossibleLinkList{$PossibleLink}->{Object1};
@@ -232,7 +232,7 @@ sub PossibleLinkList {
 
     # prepare the possible link list
     POSSIBLELINK:
-    for my $PossibleLink ( sort keys %PossibleLinkList ) {
+    for my $PossibleLink ( keys %PossibleLinkList ) {
 
         # check the object1, object2 and type string
         ARGUMENT:
@@ -272,7 +272,7 @@ sub PossibleLinkList {
 
     # check the existing objects
     POSSIBLELINK:
-    for my $PossibleLink ( sort keys %PossibleLinkList ) {
+    for my $PossibleLink ( keys %PossibleLinkList ) {
 
         # check if object backends exist
         ARGUMENT:
@@ -309,7 +309,7 @@ sub PossibleLinkList {
 
     # check types
     POSSIBLELINK:
-    for my $PossibleLink ( sort keys %PossibleLinkList ) {
+    for my $PossibleLink ( keys %PossibleLinkList ) {
 
         # extract type
         my $Type = $PossibleLinkList{$PossibleLink}->{Type};
@@ -490,12 +490,12 @@ END
 
     # check type groups
     OBJECT:
-    for my $Object ( sort keys %{$Links} ) {
+    for my $Object ( keys %{$Links} ) {
 
         next OBJECT if $Object ne $Param{TargetObject};
 
         TYPE:
-        for my $Type ( sort keys %{ $Links->{$Object} } ) {
+        for my $Type ( keys %{ $Links->{$Object} } ) {
 
             # extract source and target
             my $Source = $Links->{$Object}->{$Type}->{Source} ||= {};
@@ -890,19 +890,19 @@ sub LinkDeleteAll {
         next STATE if !$LinkList;
         next STATE if !%{$LinkList};
 
-        for my $Object ( sort keys %{$LinkList} ) {
+        for my $Object ( keys %{$LinkList} ) {
 
-            for my $LinkType ( sort keys %{ $LinkList->{$Object} } ) {
+            for my $LinkType ( keys %{ $LinkList->{$Object} } ) {
 
                 # extract link type List
                 my $LinkTypeList = $LinkList->{$Object}->{$LinkType};
 
-                for my $Direction ( sort keys %{$LinkTypeList} ) {
+                for my $Direction ( keys %{$LinkTypeList} ) {
 
                     # extract direction list
                     my $DirectionList = $LinkList->{$Object}->{$LinkType}->{$Direction};
 
-                    for my $ObjectKey ( sort keys %{$DirectionList} ) {
+                    for my $ObjectKey ( keys %{$DirectionList} ) {
 
                         # delete the link
                         $Self->LinkDelete(
@@ -990,6 +990,14 @@ sub LinkList {
 
     return if !$ObjectID;
 
+    # check permission for object
+    my $Permission = $Self->ObjectPermission(
+        Object  => $Param{Object},
+        Key     => $Param{Key},
+        UserID  => $Param{UserID},
+    );
+    return if ( !$Permission );
+
     # lookup state id
     my $StateID = $Self->StateLookup(
         Name => $Param{State},
@@ -1039,12 +1047,21 @@ sub LinkList {
     # store results
     my %Links;
     my %TypePointedList;
+    LINKDATA:
     for my $LinkData (@Data) {
 
         # lookup object name
         my $TargetObject = $Self->ObjectLookup(
             ObjectID => $LinkData->{TargetObjectID},
         );
+
+        # check permission for linked object
+        my $TargetPermission = $Self->ObjectPermission(
+            Object  => $TargetObject,
+            Key     => $LinkData->{TargetKey},
+            UserID  => $Param{UserID},
+        );
+        next LINKDATA if ( !$TargetPermission );
 
         # get type data
         my %TypeData = $Self->TypeGet(
@@ -1079,12 +1096,21 @@ sub LinkList {
     }
 
     # store results
+    LINKDATA:
     for my $LinkData (@Data) {
 
         # lookup object name
         my $SourceObject = $Self->ObjectLookup(
             ObjectID => $LinkData->{SourceObjectID},
         );
+
+        # check permission for linked object
+        my $SourcePermission = $Self->ObjectPermission(
+            Object  => $SourceObject,
+            Key     => $LinkData->{SourceKey},
+            UserID  => $Param{UserID},
+        );
+        next LINKDATA if ( !$SourcePermission );
 
         # get type data
         my %TypeData = $Self->TypeGet(
@@ -1098,10 +1124,10 @@ sub LinkList {
     }
 
     # merge source target pairs into source for unpointed link types
-    for my $Object ( sort keys %Links ) {
+    for my $Object ( keys %Links ) {
 
         TYPE:
-        for my $Type ( sort keys %{ $Links{$Object} } ) {
+        for my $Type ( keys %{ $Links{$Object} } ) {
 
             next TYPE if $TypePointedList{$Type};
 
@@ -1126,7 +1152,7 @@ sub LinkList {
 
     # removed not needed elements
     OBJECT:
-    for my $Object ( sort keys %Links ) {
+    for my $Object ( keys %Links ) {
 
         # removed not needed object
         if ( $Param{Object2} && $Param{Object2} ne $Object ) {
@@ -1137,10 +1163,10 @@ sub LinkList {
         next OBJECT if !$Param{Direction};
 
         # removed not needed direction
-        for my $Type ( sort keys %{ $Links{$Object} } ) {
+        for my $Type ( keys %{ $Links{$Object} } ) {
 
             DIRECTION:
-            for my $Direction ( sort keys %{ $Links{$Object}->{$Type} } ) {
+            for my $Direction ( keys %{ $Links{$Object}->{$Type} } ) {
 
                 next DIRECTION if $Param{Direction} eq $Direction;
                 next DIRECTION if $Param{Direction} ne 'Source' && $Param{Direction} ne 'Target';
@@ -1228,7 +1254,7 @@ sub LinkListWithData {
 
     # add data to hash
     OBJECT:
-    for my $Object ( sort keys %{$LinkList} ) {
+    for my $Object ( keys %{$LinkList} ) {
 
         # check if backend object can be loaded
         if (
@@ -1269,13 +1295,13 @@ sub LinkListWithData {
 
     # clean the hash
     OBJECT:
-    for my $Object ( sort keys %{$LinkList} ) {
+    for my $Object ( keys %{$LinkList} ) {
 
         LINKTYPE:
-        for my $LinkType ( sort keys %{ $LinkList->{$Object} } ) {
+        for my $LinkType ( keys %{ $LinkList->{$Object} } ) {
 
             DIRECTION:
-            for my $Direction ( sort keys %{ $LinkList->{$Object}->{$LinkType} } ) {
+            for my $Direction ( keys %{ $LinkList->{$Object}->{$LinkType} } ) {
 
                 next DIRECTION if %{ $LinkList->{$Object}->{$LinkType}->{$Direction} };
 
@@ -1350,14 +1376,14 @@ sub LinkKeyList {
 
     # add data to hash
     my %LinkKeyList;
-    for my $Type ( sort keys %{$TypeList} ) {
+    for my $Type ( keys %{$TypeList} ) {
 
         # extract direction list
         my $DirectionList = $TypeList->{$Type};
 
-        for my $Direction ( sort keys %{$DirectionList} ) {
+        for my $Direction ( keys %{$DirectionList} ) {
 
-            for my $Key ( sort keys %{ $DirectionList->{$Direction} } ) {
+            for my $Key ( keys %{ $DirectionList->{$Direction} } ) {
 
                 # add key to list
                 $LinkKeyList{$Key} = $DirectionList->{$Direction}->{$Key};
@@ -1423,14 +1449,14 @@ sub LinkKeyListWithData {
 
     # add data to hash
     my %LinkKeyList;
-    for my $Type ( sort keys %{$TypeList} ) {
+    for my $Type ( keys %{$TypeList} ) {
 
         # extract direction list
         my $DirectionList = $TypeList->{$Type};
 
-        for my $Direction ( sort keys %{$DirectionList} ) {
+        for my $Direction ( keys %{$DirectionList} ) {
 
-            for my $Key ( sort keys %{ $DirectionList->{$Direction} } ) {
+            for my $Key ( keys %{ $DirectionList->{$Direction} } ) {
 
                 # add key to list
                 $LinkKeyList{$Key} = $DirectionList->{$Direction}->{$Key};
@@ -1906,7 +1932,7 @@ sub TypeList {
 
     # prepare the type list
     TYPE:
-    for my $Type ( sort keys %TypeList ) {
+    for my $Type ( keys %TypeList ) {
 
         # check the source and target name
         ARGUMENT:
@@ -1970,7 +1996,7 @@ sub TypeGroupList {
 
     # prepare the possible link list
     TYPEGROUP:
-    for my $TypeGroup ( sort keys %TypeGroupList ) {
+    for my $TypeGroup ( keys %TypeGroupList ) {
 
         # check the types
         TYPE:
@@ -2005,7 +2031,7 @@ sub TypeGroupList {
 
     # check types
     TYPEGROUP:
-    for my $TypeGroup ( sort keys %TypeGroupList ) {
+    for my $TypeGroup ( keys %TypeGroupList ) {
 
         # check the types
         TYPE:
@@ -2063,7 +2089,7 @@ sub PossibleType {
 
     # check all type groups
     TYPEGROUP:
-    for my $TypeGroup ( sort keys %TypeGroupList ) {
+    for my $TypeGroup ( keys %TypeGroupList ) {
 
         my %TypeList = map { $_ => 1 } @{ $TypeGroupList{$TypeGroup} };
 

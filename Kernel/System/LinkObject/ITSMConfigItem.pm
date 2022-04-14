@@ -82,13 +82,12 @@ sub LinkListWithData {
         return;
     }
 
-    for my $LinkType ( sort keys %{ $Param{LinkList} } ) {
+    for my $LinkType ( keys %{ $Param{LinkList} } ) {
 
-        for my $Direction ( sort keys %{ $Param{LinkList}->{$LinkType} } ) {
+        for my $Direction ( keys %{ $Param{LinkList}->{$LinkType} } ) {
 
             CONFIGITEMID:
-            for my $ConfigItemID ( sort keys %{ $Param{LinkList}->{$LinkType}->{$Direction} } ) {
-
+            for my $ConfigItemID ( keys %{ $Param{LinkList}->{$LinkType}->{$Direction} } ) {
                 # get last version data
                 my $VersionData = $Kernel::OM->Get('Kernel::System::ITSMConfigItem')->VersionGet(
                     ConfigItemID => $ConfigItemID,
