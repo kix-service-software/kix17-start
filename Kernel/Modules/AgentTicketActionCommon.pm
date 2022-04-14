@@ -2290,7 +2290,7 @@ sub _Mask {
         if ( $OldACL ) {
             %OldACLUsers = $TicketObject->TicketAclData();
         }
- 
+
         # prepare display data
         my %OldOwnersShown = map( { $_ => $OldUserNameList{$_} } keys( %OldACLUsers ) );
 
@@ -3081,7 +3081,7 @@ sub _GetOldOwners {
     if ( $ACL ) {
         %ACLUsers = $TicketObject->TicketAclData();
     }
- 
+
     # prepare display data
     my %ShownUsers = map( { $_ => $UserNameList{$_} } keys( %ACLUsers ) );
 
