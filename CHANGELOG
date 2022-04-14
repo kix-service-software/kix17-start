@@ -1,6 +1,20 @@
 # Change log of KIX
 * Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.19.0-RC7 (2022/04/14)
+ * (2022/04/13) - Bugfix: KIX17-2553 (fix permission checks for AgentArticleEdit) (millinger)
+ * (2022/04/13) - Bugfix: KIX17-2093 (fix validation of date fields for config items) (millinger)
+ * (2022/04/12) - Bugfix: KIX17-2062 (check object permissions of linked objects) (millinger)
+ * (2022/04/12) - Bugfix: KIX17-2949 (keep user roles and custom queues on user import) (millinger)
+ * (2022/04/12) - Bugfix: KIX17-2953 (fixed missing error message of Date or DateTime fields) (fjacquemin)
+ * (2022/04/06) - Bugfix: KIX17-726 (added hint for new field behaviour) (millinger)
+ * (2022/04/06) - Bugfix: KIX17-2620 (prevent log message when calling ticket zoom with number) (millinger)
+ * (2022/04/06) - Bugfix: KIX17-2109 (fix selected tab after content reload) (millinger)
+ * (2022/04/04) - Bugfix: KIX17-2946 (check variables before use to avoid error messages) (fober)
+ * (2022/04/04) - Bugfix: KIX17-2893 (fix import for users currently out of office) (millinger)
+ * (2022/04/01) - Bugfix: KIX17-2587 (fixed shown customer data at AgentTicketZoom unsing MultipleCustomerIDs) (millinger)
+ * (2022/04/01) - Bugfix: KIX17-2857 (added missing translation) (millinger)
+
 # 17.19.0-RC6 (2022/04/01)
  * (2022/04/01) - Bugfix: KIX17-2857 (fixed language file) (millinger)
 
