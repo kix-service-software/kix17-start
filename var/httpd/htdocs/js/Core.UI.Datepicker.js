@@ -153,10 +153,8 @@ Core.UI.Datepicker = (function (TargetNS) {
         if (typeof LocalizationData === 'undefined') {
             LocalizationData = Core.Config.Get('Datepicker.Localization');
             if (typeof LocalizationData === 'undefined') {
-                // KIX4OTRS-capeIT
                 // throw new Core.Exception.ApplicationError('Datepicker localization data could not be found!', 'InternalError');
                 return;
-                // EO KIX4OTRS-capeIT
             }
         }
 
@@ -222,22 +220,18 @@ Core.UI.Datepicker = (function (TargetNS) {
                 Element.Year.find('option[value=' + Year + ']').prop('selected', true);
                 Element.Month.find('option[value=' + Month + ']').prop('selected', true);
                 Element.Day.find('option[value=' + Day + ']').prop('selected', true);
-                // KIX4OTRS-capeIT
                 if (Element.Date && Element.Date.length) {
                     Element.Date.val(DateText);
                 }
-                // EO KIX4OTRS-capeIT
             }
             else {
                 Element.Year.val(Year);
                 Element.Month.val(LeadingZero(Month));
                 Element.Day.val(LeadingZero(Day));
 
-                // KIX4OTRS-capeIT
                 if (Element.Date && Element.Date.length) {
                     Element.Date.val(DateText).trigger('change');
                 }
-                // EO KIX4OTRS-capeIT
             }
 
             // Check Used Element if available
@@ -245,19 +239,26 @@ Core.UI.Datepicker = (function (TargetNS) {
                 Element.Used.prop('checked', true);
             }
         };
-        // KIX4OTRS-capeIT
         // Options.beforeShow = function (Input) {
         Options.beforeShow = function (Input, Instance) {
-        // EO KIX4OTRS-capeIT
+            var defaultDate;
+
+            if (
+                Element.Year.val()
+                && Element.Month.val()
+                && Element.Day.val()
+            ) {
+                defaultDate = new Date(Element.Year.val(), Element.Month.val() - 1, Element.Day.val());
+            }
+
             $(Input).val('');
+
             return {
-                defaultDate: new Date(Element.Year.val(), Element.Month.val() - 1, Element.Day.val())
+                defaultDate: defaultDate
             };
         };
 
-// KIX-capeIT
         $('#ui-datepicker-div').remove();
-// EO KIX-capeIT
 
         $DatepickerElement.datepicker(Options);
 
@@ -271,9 +272,7 @@ Core.UI.Datepicker = (function (TargetNS) {
             if (Element.DateInFuture) {
                 ErrorMessage = Core.Config.Get('Datepicker.ErrorMessageDateInFuture');
 
-                // KIX4OTRS-capeIT
                 $DatepickerElement.datepicker('option', 'minDate', '-0d');
-                // EO KIX4OTRS-capeIT
             }
             else if (Element.DateNotInFuture) {
                 ErrorMessage = Core.Config.Get('Datepicker.ErrorMessageDateNotInFuture');
@@ -296,7 +295,6 @@ Core.UI.Datepicker = (function (TargetNS) {
             }
         }
 
-        // KIX4OTRS-capeIT
         if (Element.Date && Element.Date.length) {
             $DatepickerElement.datepicker('option', 'dateFormat', Element.Format);
 
@@ -363,14 +361,12 @@ Core.UI.Datepicker = (function (TargetNS) {
                 return false;
             });
         }
-        // EO KIX4OTRS-capeIT
 
         $('#' + Core.App.EscapeSelector(Element.Day.attr('id')) + 'DatepickerIcon').off('click.Datepicker').on('click.Datepicker', function () {
             $DatepickerElement.datepicker('show');
             return false;
         });
 
-        // KIX4OTRS-capeIT
         // special handling for AgentStatistics
         if (Core.Config.Get('Action') === 'AgentStatistics') {
             $('#EditDialog #' + Core.App.EscapeSelector(Element.Day.attr('id')) + 'DatepickerIcon').off('click.Datepicker').on('click.Datepicker', function () {
@@ -379,14 +375,10 @@ Core.UI.Datepicker = (function (TargetNS) {
                 return false;
             });
         }
-        // EO KIX4OTRS-capeIT
 
         // do not show the datepicker container div.
-        // KIX4OTRS-capeIT
         // in case of multiple datepicker containers created
-        // $('#ui-datepicker-div').hide();
         $('.ui-datepicker').hide();
-        // EO KIX4OTRS-capeIT
     };
 
     return TargetNS;
