@@ -754,16 +754,24 @@ sub ImportDataSave {
         }
 
         # set CustomQueues
-        # delete existing entries
-        $Kernel::OM->Get('Kernel::System::DB')->Do(
-            SQL  => 'DELETE FROM personal_queues WHERE user_id = ?',
-            Bind => [ \$UserID ],
-        );
 
         my $CurrIndex = 0;
+        my $CustomQueueCleanup = 1;
         my $NumberOfCustomQueues = $ObjectData->{NumberOfCustomQueues} || 10;
         while ( $CurrIndex < $NumberOfCustomQueues ) {
             if ( $UserData{ 'CustomQueue' . sprintf( "%03d", $CurrIndex ) } ) {
+
+                # only clean up before first custom queue to set
+                if ( $CustomQueueCleanup ) {
+                    # delete existing entries
+                    $Kernel::OM->Get('Kernel::System::DB')->Do(
+                        SQL  => 'DELETE FROM personal_queues WHERE user_id = ?',
+                        Bind => [ \$UserID ],
+                    );
+
+                    # remember cleanup
+                    $CustomQueueCleanup = 0;
+                }
 
                 # get QueueID
                 my $QueueID = $Kernel::OM->Get('Kernel::System::Queue')->QueueLookup(
@@ -863,27 +871,34 @@ UserConfigItemOverviewSmallPageShown UserChangeOverviewSmallPageShown UserRefres
 =cut
 
         # set roles
-        # delete existing entries
-        $Kernel::OM->Get('Kernel::System::DB')->Do(
-            SQL  => 'DELETE FROM role_user WHERE user_id = ?',
-            Bind => [ \$UserID ],
-        );
-
-        # reset cache for user roles
-        $Kernel::OM->Get('Kernel::System::Cache')->CleanUp(
-            Type => 'DBRoleUserGet',
-        );
-        $Kernel::OM->Get('Kernel::System::Cache')->CleanUp(
-            Type => 'GroupPermissionUserGet',
-        );
-        $Kernel::OM->Get('Kernel::System::Cache')->CleanUp(
-            Type => 'GroupPermissionGroupGet',
-        );
-
         $CurrIndex = 0;
+        my $RoleCleanup = 1;
         my $NumberOfRoles = $ObjectData->{NumberOfRoles} || 10;
         while ( $CurrIndex < $NumberOfRoles ) {
             if ( $UserData{ 'Role' . sprintf( "%03d", $CurrIndex ) } ) {
+
+                # only clean up before first role to set
+                if ( $RoleCleanup ) {
+                    # delete existing entries
+                    $Kernel::OM->Get('Kernel::System::DB')->Do(
+                        SQL  => 'DELETE FROM role_user WHERE user_id = ?',
+                        Bind => [ \$UserID ],
+                    );
+
+                    # reset cache for user roles
+                    $Kernel::OM->Get('Kernel::System::Cache')->CleanUp(
+                        Type => 'DBRoleUserGet',
+                    );
+                    $Kernel::OM->Get('Kernel::System::Cache')->CleanUp(
+                        Type => 'GroupPermissionUserGet',
+                    );
+                    $Kernel::OM->Get('Kernel::System::Cache')->CleanUp(
+                        Type => 'GroupPermissionGroupGet',
+                    );
+
+                    # remember cleanup
+                    $RoleCleanup = 0;
+                }
 
                 # get RoleID
                 my $RoleID = $Kernel::OM->Get('Kernel::System::Group')->RoleLookup(
