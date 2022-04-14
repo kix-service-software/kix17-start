@@ -1194,10 +1194,23 @@ sub Run {
                 Permission => 'ro',
             );
 
-            # remove doubles
+            # process result
             for my $SearchResult ( keys %SearchList ) {
-                next if defined $ResultHash{$SearchResult} && $ResultHash{$SearchResult};
-                $ResultHash{$SearchResult} = $SearchList{$SearchResult};
+                # skip current ticket
+                next if ( $SearchResult eq $GetParam{TicketID} );
+
+                # check for duplicates
+                next if( $ResultHash{$SearchResult} );
+
+                # check ticket permission for copy/move
+                my $AccessOk = $TicketObject->OwnerCheck(
+                    TicketID => $SearchResult,
+                    OwnerID  => $Self->{UserID},
+                );
+                next if ( !$AccessOk );
+
+                # add ticket to result list
+                $ResultHash{ $SearchResult } = $SearchList{ $SearchResult };
             }
 
         }

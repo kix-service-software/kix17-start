@@ -26,8 +26,7 @@ sub new {
 
     # create needed objects
     my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
-    $Self->{CallingAction}    = $ParamObject->GetParam( Param => 'CallingAction' )    || '';
-    $Self->{DirectLinkAnchor} = $ParamObject->GetParam( Param => 'DirectLinkAnchor' ) || '';
+    $Self->{CallingAction} = $ParamObject->GetParam( Param => 'CallingAction' ) || '';
 
     return $Self;
 }
@@ -51,12 +50,15 @@ sub Run {
     my $AttachmentCount = 0;
 
     # get some params...
-    for (qw(TicketID AclAction)) {
+    for (qw(TicketID AclAction TabIndex)) {
         $GetParam{$_} = $ParamObject->GetParam( Param => $_ );
     }
 
-    if ( !$Param{TicketID} && $Self->{TicketID} ) {
-        $Param{TicketID} = $Self->{TicketID};
+    if (
+        !$GetParam{TicketID}
+        && $Self->{TicketID}
+    ) {
+        $GetParam{TicketID} = $Self->{TicketID};
     }
 
     # check required params...
@@ -94,11 +96,11 @@ sub Run {
 
     # get all attachments
     my $ArticleIdx = 0;
-    foreach my $Article (@ArticleList) {
+    foreach my $Article ( @ArticleList ) {
         $ArticleIdx++;
         my %AtmIndex = %{ $Article->{Atms} };
 
-        foreach my $FileID ( sort keys %AtmIndex ) {
+        foreach my $FileID ( sort( keys( %AtmIndex ) ) ) {
             my %File = %{ $AtmIndex{$FileID} };
 
             if ( !$AttachmentCount ) {
@@ -106,6 +108,9 @@ sub Run {
                 # create outer block
                 $LayoutObject->Block(
                     Name => 'AttachmentList',
+                    Data => {
+                        TabIndex => $GetParam{TabIndex},
+                    },
                 );
                 my $Config = $ConfigObject->Get('Ticket::Frontend::AgentTicketZoomTabAttachments');
                 if ( $Config && $Config->{AllowAttachmentDelete} ) {
@@ -123,11 +128,14 @@ sub Run {
                     if ( $MainObject->Require( $Jobs{$Job}->{Module} ) ) {
                         my $Object = $Jobs{$Job}->{Module}->new(
                             %{$Self},
-                            TicketID  => $Self->{TicketID},
+                            TicketID  => $GetParam{TicketID},
                             ArticleID => $Article->{ArticleID},
                         );
                         my %Data = $Object->Run(
-                            File => { %File, FileID => $FileID, },
+                            File    => {
+                                %File,
+                                FileID => $FileID,
+                            },
                             Article => $Article,
                         );
                         if (%Data) {
@@ -138,6 +146,7 @@ sub Run {
                                     %{$Article},
                                     ArticleIdx => $ArticleIdx,
                                     Session    => $Session,
+                                    TabIndex   => $GetParam{TabIndex},
                                 },
                             );
                         }
@@ -222,13 +231,12 @@ sub Run {
 
     # nothing to show
     if ( !$AttachmentCount ) {
-        $Param{NothingAvailableMsg}
-            = $LayoutObject->{LanguageObject}->Translate('No attachments available');
+        $Param{NothingAvailableMsg} = $LayoutObject->{LanguageObject}->Translate('No attachments available');
         $LayoutObject->Block(
             Name => 'AttachmentMsg',
             Data => {
                 %Param
-                }
+            },
         );
     }
 
@@ -236,18 +244,19 @@ sub Run {
     if ( $Self->{Subaction} eq 'Delete' || $Self->{Subaction} eq 'Download' ) {
 
         my @AttachmentIDs = $ParamObject->GetArray( Param => 'AttachmentID' );
-        my $TicketID      = $ParamObject->GetParam( Param => 'TicketID' );
         my @ArticleIdxs   = $ParamObject->GetArray( Param => 'ArticleIdx' );
         my $Access = 0;
 
-        my %Ticket = $TicketObject->TicketGet( TicketID => $TicketID );
+        my %Ticket = $TicketObject->TicketGet(
+            TicketID => $GetParam{TicketID},
+        );
 
         if ( $Self->{Subaction} eq 'Delete' ) {
             # check responsible permissions
             if ( $Ticket{Responsible} || $Ticket{ResponsibleID} ) {
                 $Access = $TicketObject->TicketPermission(
                     Type     => 'rw',
-                    TicketID => $TicketID,
+                    TicketID => $GetParam{TicketID},
                     UserID   => $Self->{UserID},
                 );
                 if ( !$Access ) {
@@ -263,7 +272,7 @@ sub Run {
             # check permissions
             $Access = $TicketObject->TicketPermission(
                 Type     => 'ro',
-                TicketID => $TicketID,
+                TicketID => $GetParam{TicketID},
                 UserID   => $Self->{UserID}
             );
             if ( !$Access ) {
@@ -278,7 +287,7 @@ sub Run {
 
             if ( $Self->{Subaction} eq 'Delete' ) {
                 $Self->_ArticleDeleteChangedAttachment(
-                    TicketID      => $TicketID,
+                    TicketID      => $GetParam{TicketID},
                     AttachmentIDs => \@AttachmentIDs,
                 );
             }
@@ -293,10 +302,13 @@ sub Run {
         }
 
         # reload tab
-        my $URL = "Action=AgentTicketZoom;TicketID=$Self->{TicketID};SelectedTab=1";
+        my $URL = 'Action=AgentTicketZoom'
+                . ';TicketID=' . $GetParam{TicketID}
+                . ';SelectedTab=' . $GetParam{TabIndex};
         if ( $Self->{Config}->{RedirectURL} ) {
-            $URL =
-                $Self->{Config}->{RedirectURL} . ";TicketID=$Self->{TicketID};SelectedTab=1";
+            $URL = $Self->{Config}->{RedirectURL}
+                 . ';TicketID=' . $GetParam{TicketID}
+                 . ';SelectedTab=' . $GetParam{TabIndex};
         }
 
         return $LayoutObject->Redirect( OP => $URL );
@@ -305,14 +317,10 @@ sub Run {
     # store last screen...
     if ( $Self->{CallingAction} ) {
 
-        $Self->{RequestedURL} =~ s/DirectLinkAnchor=.+?(;|$)//;
         $Self->{RequestedURL} =~ s/CallingAction=.+?(;|$)//;
         $Self->{RequestedURL} =~ s/(^|;|&)Action=.+?(;|$)//;
-        $Self->{RequestedURL} =
-            "Action="
-            . $Self->{CallingAction} . ";"
-            . $Self->{RequestedURL} . "#"
-            . $Self->{DirectLinkAnchor};
+        $Self->{RequestedURL} = 'Action=' . $Self->{CallingAction}
+                              . ';' . $Self->{RequestedURL};
 
         $SessionObject->UpdateSessionID(
             SessionID => $Self->{SessionID},
@@ -323,7 +331,7 @@ sub Run {
 
     $Output = $LayoutObject->Output(
         TemplateFile => 'AgentTicketZoomTabAttachments',
-        Data         => {%Param},
+        Data         => {%GetParam},
     );
 
     $Output .= $LayoutObject->Footer( Type => 'TicketZoomTab' );

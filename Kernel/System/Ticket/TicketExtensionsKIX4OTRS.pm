@@ -250,7 +250,7 @@ sub CountLinkedObjects {
             Key1    => $Param{TicketID},
             Object2 => $CurrObject,
             State   => 'Valid',
-            UserID  => 1,
+            UserID  => $Param{UserID} || 1,
         );
 
         # do not count merged tickets if user preference set

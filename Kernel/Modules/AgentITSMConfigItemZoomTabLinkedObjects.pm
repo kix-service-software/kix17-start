@@ -210,7 +210,7 @@ END
         my $QuickLinkStrg = $LayoutObject->BuildQuickLinkHTML(
             Object              => 'ITSMConfigItem',
             Key                 => $ConfigItemID,
-            RefreshURL          => "Action=$Self->{Action};ConfigItemID=$ConfigItemID",
+            RefreshURL          => 'Action=' . $Self->{Action} . ';ConfigItemID=' . $ConfigItemID . ';SelectedTab=' . $ParamObject->GetParam( Param => 'TabIndex' ),
         );
         $LayoutObject->Block(
             Name => 'QuickLink',

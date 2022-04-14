@@ -3442,38 +3442,22 @@ sub BuildDateSelection {
     }
 
     my $DateInputStyle = $ConfigObject->Get('TimeInputFormat');
-    my $Prefix         = $Param{Prefix} || '';
+    my $Prefix         = $Param{Prefix}   || '';
     my $DiffTime       = $Param{DiffTime} || 0;
     my $Format         = defined( $Param{Format} ) ? $Param{Format} : 'DateInputFormatLong';
     my $Area           = $Param{Area} || 'Agent';
     my $Optional       = $Param{ $Prefix . 'Optional' } || 0;
     my $Required       = $Param{ $Prefix . 'Required' } || 0;
-    my $Used           = $Param{ $Prefix . 'Used' } || 0;
-    my $Class          = '';
-    my $ClassDate      = '';
-    my $ClassTime      = '';
-    if ( !$SmartStyleDate && !$SmartStyleTime ) {
-        $Class          = $Param{ $Prefix . 'Class' } || '';
+    my $Used           = $Param{ $Prefix . 'Used' }     || 0;
+    my $Class          = $Param{ $Prefix . 'Class' }    || '';
+    my $ClassDate      = $Param{ $Prefix . 'Class' }    || '';
+    my $ClassTime      = $Param{ $Prefix . 'Class' }    || '';
+
+    if ( $SmartStyleDate ) {
+        $ClassDate .= ' Modernize';
     }
-    elsif ( $SmartStyleDate && !$SmartStyleTime ) {
-        if ( $Param{ $Prefix . 'Class' } ) {
-            $ClassDate = $Param{ $Prefix . 'Class' } . ' Modernize';
-            $ClassTime = $Param{ $Prefix . 'Class' };
-        }
-        else {
-            $ClassDate = 'Modernize';
-            $ClassTime = '';
-        }
-    }
-    else {
-        if ( $Param{ $Prefix . 'Class' } ) {
-            $ClassDate = $Param{ $Prefix . 'Class' } . ' Modernize';
-            $ClassTime = $Param{ $Prefix . 'Class' } . ' Modernize';
-        }
-        else {
-            $ClassDate = 'Modernize';
-            $ClassTime = 'Modernize';
-        }
+    if ( $SmartStyleTime ) {
+        $ClassTime .= ' Modernize';
     }
 
     # Defines, if the date selection should be validated on client side with JS
@@ -6256,7 +6240,7 @@ sub _BuildSystemMessage {
         my %MessageData = $SystemMessageObject->MessageGet(
             MessageID => $MessageID
         );
-        
+
         # check for popup message
         if (
             !$PopupUsed

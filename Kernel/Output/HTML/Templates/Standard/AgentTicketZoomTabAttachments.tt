@@ -38,6 +38,7 @@
                 <form action="[% Env("CGIHandle") %]" method="post" id="AttachmentForm">
                     <input type="hidden" name="Action" value="[% Env("Action") %]">
                     <input type="hidden" name="Subaction" value="Download">
+                    <input type="hidden" name="TabIndex" value="[% Data.TabIndex %]">
                     <table id="AttachmentTable" class="DataTable TableFixed">
                         <thead>
                             <tr>

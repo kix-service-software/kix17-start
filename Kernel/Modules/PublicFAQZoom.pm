@@ -128,7 +128,7 @@ sub Run {
         $FieldContent =~ s{$FieldPattern}{public.pl?Action=PublicFAQZoom;Subaction=DownloadAttachment;}gxms;
 
         # remove session from url
-        $FieldContent =~ s{(Action=PublicFAQZoom;Subaction=DownloadAttachment;ItemID=\d+;FileID=\d+)[^"]+?"}{$1"}gxms;
+        $FieldContent =~ s{(Action=PublicFAQZoom;Subaction=DownloadAttachment;ItemID=\d+;FileID=\d+)[^"]*?"}{$1"}gxms;
 
         my $HTMLUtilsObject = $Kernel::OM->Get('Kernel::System::HTMLUtils');
 
