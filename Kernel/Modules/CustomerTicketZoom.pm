@@ -212,7 +212,7 @@ sub Run {
             if ( !$IsACLReducible ) {
                 $DynamicFieldHTML{ $DynamicFieldConfig->{Name} } = $BackendObject->EditFieldRender(
                     DynamicFieldConfig => $DynamicFieldConfig,
-                    Mandatory          => $Config->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
+                    Mandatory          => $Config->{FollowUpDynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
                     LayoutObject       => $LayoutObject,
                     ParamObject        => $ParamObject,
                     AJAXUpdate         => 0,
