@@ -384,14 +384,18 @@
         color: inherit;
     }
     .DataTable > tbody > tr:hover > td,
-    .TableSmall > tbody > tr:hover > td {
+    .TableSmall > tbody > tr:hover > td,
+    .DataTable > tbody > tr[class*="Highlight"]:hover > td a,
+    .TableSmall > tbody > tr[class*="Highlight"]:hover > td a {
         background-color: #78BE5A;
         border-right-color: #FFFFFF;
     }
     .DataTable > tbody > tr:hover > td,
     .TableSmall > tbody > tr:hover > td,
     .DataTable > tbody > tr:hover > td *,
-    .TableSmall > tbody > tr:hover > td * {
+    .TableSmall > tbody > tr:hover > td *,
+    .DataTable > tbody > tr[class*="Highlight"]:hover > td a,
+    .TableSmall > tbody > tr[class*="Highlight"]:hover > td a {
         color: #FFFFFF;
     }
     .DataTable > tbody > tr:hover > td input,
