@@ -96,7 +96,7 @@
                 </div>
                 <div class="Content">
 [% RenderBlockStart("ActivityDialog") %]
-                    <p><a title="[% Translate(Data.Name) | html %]" class="AsPopup PopupType_TicketAction" href="[% Env("Baselink") %]Action=CustomerTicketProcess;Subaction=DisplayActivityDialog;TicketID=[% Data.TicketID | uri %];ProcessEntityID=[% Data.ProcessEntityID | uri %];ActivityDialogEntityID=[% Data.ActivityDialogEntityID | uri %]">[% Translate(Data.Name) | html %]</a></p>
+                    <a title="[% Translate(Data.Name) | html %]" class="AsPopup PopupType_TicketAction" href="[% Env("Baselink") %]Action=CustomerTicketProcess;Subaction=DisplayActivityDialog;TicketID=[% Data.TicketID | uri %];ProcessEntityID=[% Data.ProcessEntityID | uri %];ActivityDialogEntityID=[% Data.ActivityDialogEntityID | uri %]">[% Translate(Data.Name) | html %]</a>
 [% RenderBlockEnd("ActivityDialog") %]
 [% RenderBlockStart("NoActivityDialog") %]
                     <p>[% Translate("There are no dialogs available at this point in the process.") | html %]</p>
