@@ -1146,13 +1146,13 @@
     /**
     *   @subsection package manager
     */
-    .IconNotReady {
+    .DataTable > tbody td > .IconNotReady {
         color: #C5383C;
     }
-    .IconReady::before {
+    .DataTable > tbody td > .IconReady::before {
         color: #00FF00;
     }
-    tr:hover .IconReady::before {
+    .DataTable > tbody tr:hover td > .IconReady::before {
         color: #FFFFFF;
     }
 
