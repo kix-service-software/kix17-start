@@ -265,14 +265,18 @@
         position: relative;
     }
     .DataTable thead .SortDescendingLarge > a::after,
-    .TableSmall thead .SortDescendingLarge > a::after {
+    .TableSmall thead .SortDescendingLarge > a::after,
+    .DataTable thead th.tablesorter-headerAsc > div > a::after,
+    .TableSmall thead th.tablesorter-headerAsc > div  > a::after {
         content: "\25BC";
         position: absolute;
         left: -6px;
         z-index: 1;
     }
     .DataTable thead .SortAscendingLarge > a::after,
-    .TableSmall thead .SortAscendingLarge > a::after {
+    .TableSmall thead .SortAscendingLarge > a::after,
+    .DataTable thead th.tablesorter-headerDesc > div > a::after,
+    .TableSmall thead th.tablesorter-headerDesc > div > a::after {
         content: "\25B2";
         position: absolute;
         left: -6px;
@@ -283,6 +287,13 @@
     .TableSmall thead th.OverviewHeader.SortDescendingLarge,
     .TableSmall thead th.OverviewHeader.SortAscendingLarge {
         padding-left: 8px;
+    }
+    .DataTable thead th.tablesorter-headerDesc > div,
+    .DataTable thead th.tablesorter-headerAsc > div,
+    .TableSmall thead th.tablesorter-headerDesc > div,
+    .TableSmall thead th.tablesorter-headerAsc > div {
+        padding-left: 8px;
+        position: relative;
     }
     .DataTable thead th.DashboardHeader .ColumnSettingsTrigger,
     .TableSmall thead th.OverviewHeader .ColumnSettingsTrigger {
