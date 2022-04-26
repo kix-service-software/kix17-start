@@ -434,6 +434,10 @@
         vertical-align: middle;
         margin: 0 5px;
     }
+    fieldset.TableLike > .RichTextField > div.FieldEmpty {
+        margin-top: 5px;
+        border: none;
+    }
 
 
     /**
