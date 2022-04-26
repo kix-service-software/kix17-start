@@ -2395,6 +2395,7 @@ sub Data {
         'Stacked' => 'Gestapelt',
         'Expanded' => 'Ausgedehnt',
         'Stream' => 'Fließend',
+        'Values' => 'Werte',
         'Please select a valid graph output format in the configuration of this widget.' =>
             'Bitte wählen Sie eine gültiges Ausgabeformat in der Konfiguration dieses Widgets aus.',
         'The content of this statistic is being prepared for you, please be patient.' =>

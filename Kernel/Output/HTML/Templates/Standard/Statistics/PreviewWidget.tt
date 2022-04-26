@@ -148,6 +148,7 @@
         <script type="text/javascript">
 
         // Add translations for statistic previews.
+        Core.Config.Set('Values', [% Translate("Values") | JSON %]);
         Core.Config.Set('Grouped', [% Translate("Grouped") | JSON %]);
         Core.Config.Set('Stacked', [% Translate("Stacked") | JSON %]);
         Core.Config.Set('Expanded', [% Translate("Expanded") | JSON %]);
