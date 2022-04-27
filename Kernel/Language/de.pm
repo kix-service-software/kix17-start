@@ -4551,6 +4551,7 @@ Ihr Helpdesk-Team
             'Benutzerdefinierter Text für Kunden, die noch keine Tickets haben (wenn Sie für diesen Text eine Übersetzung wünschen, fügen Sie die Übersetzung in einem eigenen Übersetzungsmodul hinzu).',
         'Customer Administration' => 'Kundenverwaltung',
         'Customer Information Center Search.' => 'Kunden-Informationszentrum-Suche.',
+        'Customer Information Center Search'  => 'Kunden-Informationszentrum-Suche.',
         'Customer Information Center.' => 'Kunden-Informationszentrum.',
         'Customer Ticket Print Module.' => 'Kunden-Ticketdruck-Modul.',
         'Contact <-> Groups' => 'Ansprechpartner <-> Gruppen',
