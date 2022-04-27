@@ -1834,6 +1834,7 @@ sub Data {
     $Lang->{'show details / edit'}           = 'Details anzeigen / editieren';
     $Lang->{'remove'}                        = 'Artikel Flag entfernen';
     $Lang->{'- mark as -'}                   = '- markieren als -';
+    $Lang->{'MarkAs'}                        = 'markieren als';
     $Lang->{'Link ticket with:'}             = 'Verknüpfe Ticket mit:';
     $Lang->{'Link Configuration Item with:'} = 'Verknüpfe Configuration Item mit:';
     $Lang->{'Link Change with:'}             = 'Verknüpfe Change mit:';
@@ -3794,6 +3795,9 @@ sub Data {
     $Lang->{'Phone1'}               = 'Telefon 1';
     $Lang->{'Phone2'}               = 'Telefon 2';
     $Lang->{'Further ticket data'}  = 'Weitere Ticketdaten';
+    $Lang->{'Edit this ticket'}     = 'Dieses Ticket bearbeiten';
+    $Lang->{'Print forward fax for this ticket!'}
+        = 'Weiterleitungsfax für dieses Ticket drucken!';
     $Lang->{'Defines CI-attributes for CI-Classes which are not forwarded.'}
         = 'Definiert CI-Attribute fuer CI-Klassen, die nicht weitergeleitet werden.';
     $Lang->{'Defines only CI-attributes for CI-Classes which are forwarded.'}
