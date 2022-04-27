@@ -66,7 +66,8 @@ sub ValueLookup {
     return '' if !$Param{Value};
 
     my %CustomerSearchList = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerSearch(
-        Search => $Param{Value},
+        UserLogin => $Param{Value},
+        Valid     => 0,
     );
 
     return $CustomerSearchList{ $Param{Value} } || $Param{Value};
