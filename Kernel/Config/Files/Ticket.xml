@@ -14924,15 +14924,6 @@ Thanks for your help!
             </Option>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="Ticket::Frontend::AgentTicketZoomTabProcess###DynamicField" Required="0" Valid="1">
-        <Description Translatable="1">Dynamic fields shown in the process tab of the agent interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.</Description>
-        <Group>Ticket</Group>
-        <SubGroup>Frontend::Agent::Ticket::ViewTicketZoomTabProcess</SubGroup>
-        <Setting>
-            <Hash>
-            </Hash>
-        </Setting>
-    </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::AgentTicketZoom###TicketDataKeys" Required="1" Valid="1">
         <Description Translatable="1">Defines which ticket data parameters are displayed in direct data presentation.</Description>
         <Group>Ticket</Group>
