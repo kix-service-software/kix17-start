@@ -6385,7 +6385,7 @@ sub _BuildCustomHighlight{
             $Selector =~ s/[:\.,\\\/]//;
             $Selector =~ s/[+]/Plus/;
             $Selector =~ s/[-]/Minus/;
-            $Selector = 'Highlight' . $View . $Selector;
+            $Selector = 'DataTable > tbody > tr.Highlight' . $View . $Selector;
 
             if ( $View eq 'Large' ) {
                 $Selector = 'Flag span.' . $Selector;
@@ -6395,6 +6395,12 @@ sub _BuildCustomHighlight{
                     . $Selector
                     . ' a';
             }
+
+            # set same css for TableSmall
+            my $SelectorSmall = $Selector;
+            $SelectorSmall =~ s/DataTable/TableSmall/mg;
+
+            $Selector .= ", .$SelectorSmall";
 
             $Self->Block(
                 Name => 'CustomTicketHighlight',

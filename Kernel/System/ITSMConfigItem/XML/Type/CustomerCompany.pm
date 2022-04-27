@@ -69,7 +69,11 @@ sub ValueLookup {
         CustomerID => $Param{Value},
     );
 
-    return $CustomerCompany{CustomerCompanyName} || '';
+    if ( %CustomerCompany ) {
+        return "$CustomerCompany{CustomerCompanyName} ($CustomerCompany{CustomerID})";
+    }
+
+    return '';
 }
 
 =item StatsAttributeCreate()

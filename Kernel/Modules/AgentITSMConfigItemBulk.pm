@@ -75,11 +75,7 @@ sub Run {
         } else {
             for my $Item (@ContentItems) {
                 next if $Item->{Filename} ne 'GetParam';
-                $Item->{Content} = $EncodeObject->Convert(
-                    Text => $Item->{Content},
-                    From => 'utf-8',
-                    To   => 'iso-8859-1',
-                );
+                $EncodeObject->EncodeInput( \$Item->{Content} );
                 %GetParam = $JSONObject->Decode( Data => $Item->{Content});
             }
         }
@@ -95,11 +91,7 @@ sub Run {
     my @ConfigItemIDs;
     for my $Item (@ContentItems) {
         next if $Item->{Filename} ne 'ItemIDs';
-        $Item->{Content} = $EncodeObject->Convert(
-            Text => $Item->{Content},
-            From => 'utf-8',
-            To   => 'iso-8859-1',
-        );
+        $EncodeObject->EncodeInput( \$Item->{Content} );
         push(@ConfigItemIDs, split(',', $Item->{Content}));
     }
 

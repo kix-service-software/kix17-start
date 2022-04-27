@@ -91,6 +91,11 @@
     .OwnerDetailsMagnifier,
     .ResponsibleDetailsMagnifier {
         cursor: pointer;
+        width: auto;
+        height: auto;
+        display: inline-block;
+        text-align: center;
+        margin: -2px 0 0 5px;
     }
 
 
@@ -158,6 +163,9 @@
     */
     #CIClassSelection.Content {
         border-bottom: none;
+    }
+    .KIXSidebarTools > .Content > .SearchBox {
+        margin-bottom: 5px;
     }
 
 

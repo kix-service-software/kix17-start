@@ -269,6 +269,9 @@
         margin: 10px 2px 5px 5px;
         font-weight: bold;
     }
+    .SortableColumns > ul.ColumnOrder > li.ui-sortable-handle {
+        cursor: move
+    }
     #SortableSelected,
     #SortablePossible {
         list-style-type: none;

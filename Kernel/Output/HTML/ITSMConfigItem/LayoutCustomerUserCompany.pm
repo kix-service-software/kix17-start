@@ -70,13 +70,34 @@ create output string
 sub OutputStringCreate {
     my ( $Self, %Param ) = @_;
 
+    my $LayoutObject          = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $CustomerCompanyObject = $Kernel::OM->Get('Kernel::System::CustomerCompany');
+
+    my $Value;
+    if ( $Param{Key} ) {
+        my %CustomerCompany = $CustomerCompanyObject->CustomerCompanyGet(
+            CustomerID => $Param{Key},
+        );
+
+        if ( %CustomerCompany ) {
+            $Value = "$CustomerCompany{CustomerCompanyName} ($CustomerCompany{CustomerID})";
+        }
+    }
+
+    if (
+        !$Value
+        && $Param{Value}
+    ) {
+        $Value = $Param{Value};
+    }
+
     # transform ascii to html
-    $Param{Value} = $Self->{LayoutObject}->Ascii2Html(
-        Text => $Param{Value} || '',
+    $Value = $LayoutObject->Ascii2Html(
+        Text           => $Value || '',
         HTMLResultMode => 1,
     );
 
-    return $Param{Value};
+    return $Value;
 }
 
 =item FormDataGet()

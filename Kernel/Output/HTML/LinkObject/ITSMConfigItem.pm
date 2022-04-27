@@ -1430,6 +1430,7 @@ sub _XMLData2Hash {
             $Value = $Self->{LayoutObject}->ITSMConfigItemOutputStringCreate(
                 Value => $Value,
                 Item  => $Item,
+                Key   => $Param{XMLData}->{ $Item->{Key} }->[$Counter]->{Content}
             );
 
             # add prefix

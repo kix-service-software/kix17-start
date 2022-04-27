@@ -1,0 +1,195 @@
+---
+0001:
+  StepName: 'Keep pure ascii text'
+  InputValue: |-
+      Some Text
+  CheckValue: |-
+      Some Text
+0002:
+  StepName: 'Remove html tags'
+  InputValue: |-
+      <b>Some Text</b>
+  CheckValue: |-
+      Some Text
+0003:
+  StepName: 'Replace links with marker and append link list'
+  InputValue: |-
+      <b>Some Text</b><br/><a href="http://example.com">Some URL</a>
+  CheckValue: |-
+      Some Text
+      [1]Some URL
+
+      [1] http://example.com
+0004:
+  StepName: 'Replace <br> with line break'
+  InputValue: |-
+      First Line<br>
+      Second Line<br />
+      Third Line<br class="foo">
+      Fourth Line<br class="bar" />
+      Fifth Line
+  CheckValue: |-
+      First Line
+      Second Line
+      Third Line
+      Fourth Line
+      Fifth Line
+0005:
+  StepName: 'Whitespace removal'
+  InputValue: |-
+      a       b
+  CheckValue: |-
+      a b
+0006:
+  StepName: 'Decode html entities'
+  InputValue: |-
+      &gt; This is the first test.<br/>
+      &gt; <br/>
+      &gt; Buenas noches,<br/>
+      &gt; <br/>
+  CheckValue: |
+      > This is the first test.
+      > 
+      > Buenas noches,
+      > 
+
+0007:
+  StepName: 'Handle listings'
+  InputValue: |-
+      <ul><li>a</li><li>b</li><li>c</li></ul><ol><li>one</li><li>two</li><li>three</li></ol>
+  CheckValue: " - a\n - b\n - c\n\n1. one\n2. two\n3. three\n"
+0008:
+  StepName: 'Handle paragraph and listings'
+  InputValue: |-
+      <html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/></head><body style="font-family:Geneva,Helvetica,Arial,sans-serif; font-size: 12px;"><p>test<br />
+      test<br />
+      test<br />
+      test<br />
+      test<br />
+      </p>
+      <ul><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li></ul></body></html>
+  CheckValue: |
+      test
+      test
+      test
+      test
+      test
+
+       - 1
+       - 2
+       - 3
+       - 4
+       - 5
+
+0009:
+  StepName: 'Handle nested listings'
+  InputValue: |-
+      <ul><li>a</li><ul><li>a.a</li><li>a.b</li><ol><li>a.b.1</li><li>a.b.2</li></ol></ul><li>b</li><ol><li>b.1</li><li>b.2</li></ol></ul>
+  CheckValue: " - a\n   - a.a\n   - a.b\n    1. a.b.1\n    2. a.b.2\n - b\n  1. b.1\n  2. b.2\n"
+0010:
+  StepName: 'Preserve preformated text'
+  InputValue: |-
+      <pre>Some Text
+
+      With new Lines</pre>
+  CheckValue: |-
+      Some Text
+
+      With new Lines
+0011:
+  StepName: 'Preserve preformated text'
+  InputValue: |-
+      <code>Some Text
+
+      With new Lines  </code><br />Some Other Text
+  CheckValue: |-
+      Some Text
+
+      With new Lines  
+      Some Other Text
+0012:
+  StepName: 'Handle blockquote'
+  InputValue: |-
+      <blockquote>Some Text<br/><br/>With new Lines  </blockquote><br />Some Other Text
+  CheckValue: |-
+      > Some Text
+      > 
+      > With new Lines 
+
+      Some Other Text
+0013:
+  StepName: 'Handle div of type cite'
+  InputValue: |-
+      <div>Line 0</div><div style="border:none;border-left:solid blue 1.5pt;padding:0cm 0cm 0cm 4.0pt" type="cite">Line 1<br/>
+      Line 2<br/>
+      Line 3</div>
+  CheckValue: |
+      Line 0
+
+      > Line 1
+      > Line 2
+      > Line 3
+
+0014:
+  StepName: 'Handle nested div of type cite'
+  InputValue: |-
+      <div>Line 0</div><div style="border:none;border-left:solid blue 1.5pt;padding:0cm 0cm 0cm 4.0pt" type="cite">Line 1<br/>
+      <div style="border:none;border-left:solid blue 1.5pt;padding:0cm 0cm 0cm 4.0pt" type="cite">Line 2<br/></div>
+      Line 3</div>
+  CheckValue: |
+      Line 0
+
+      > Line 1
+      > 
+      > > Line 2
+      > Line 3
+
+0015:
+  StepName: 'Handle link within preformated text'
+  InputValue: |-
+      <pre><a class="moz-txt-link-freetext" href="mailto:html@example.com">mailto:html@example.com</a></pre>
+  CheckValue: |-
+      [1]mailto:html@example.com
+
+      [1] mailto:html@example.com
+0016:
+  StepName: 'Remove comments'
+  InputValue: |-
+    <!-- asdlfjasdf sdflajsdfj -->
+  CheckValue: ""
+0017:
+  StepName: 'Remove content of style tags'
+  InputValue: |-
+    a<style type="text/css" />bc<style type="text/css">d</style  >e
+  CheckValue: |-
+    abce
+0018:
+  StepName: 'Correctly encoded GRINNING FACE WITH SMILING EYES (decimal)'
+  InputValue: |-
+    &#128512;
+  CheckValue: |-
+    😀
+0019:
+  StepName: 'Correctly encoded GRINNING FACE WITH SMILING EYES (hex)'
+  InputValue: |-
+    &#x1F600;
+  CheckValue: |-
+    😀
+0020:
+  StepName: 'Correctly encoded LATIN SMALL LETTER U WITH DIAERESIS (decimal)'
+  InputValue: |-
+    &#252;
+  CheckValue: |-
+    ü
+0021:
+  StepName: 'Correctly encoded LATIN SMALL LETTER U WITH DIAERESIS (hex)'
+  InputValue: |-
+    &#xfc;
+  CheckValue: |-
+    ü
+0022:
+  StepName: 'Correctly encoded LATIN SMALL LETTER U WITH DIAERESIS (named)'
+  InputValue: |-
+    &uuml;
+  CheckValue: |-
+    ü

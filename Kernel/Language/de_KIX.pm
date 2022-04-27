@@ -1272,7 +1272,7 @@ sub Data {
     $Lang->{'Defines parameters for the AgentITSMWorkOrderZoomTab "Linked Objects".'}
         = 'Legt Parameter fest für das AgentITSMWorkOrderZoomTab "Linked Objects".';
     $Lang->{'Defines the shown columns of CIs in the link table complex view, depending on the CI class. Each entry must be prefixed with the class name and double colons (i.e. Computer::). There are a few CI-Attributes that common to all CIs (example for the class Computer: Computer::Name, Computer::CurDeplState, Computer::CreateTime). To show individual CI-Attributes as defined in the CI-Definition, the following scheme must be used (example for the class Computer): Computer::HardDisk::1, Computer::HardDisk::1::Capacity::1, Computer::HardDisk::2, Computer::HardDisk::2::Capacity::1. If there is no entry for a CI class, then the default columns are shown.'}
-		= 'Legt die angezeigten Spalten der CIs in der Komplexansicht der Tabelle "Verlinkte Objekte" fest. Jeder Eintrag muss mit einem Klassennamen gefolgt von Doppelpunkten beginnen (z.B. Computer::). Es gibt einige CI-Attribute, die alle CIs gemeinsam haben (Beispiel für die Klasse Computer: Computer::Name, Computer::CurDeplState, Computer::CreateTime). Um individuelle CI-Attribute anzuzeigen, wie sie in der CI-Definition festgelegt sind, muss das folgende Schema genutzt werden (Beispiel für die Klasse Computer): Computer::HardDisk::1, Computer::HardDisk::1::Capacity::1, Computer::HardDisk::2, Computer::HardDisk::2::Capacity::1. Wenn kein Eintrag für eine CI-Klasse hinterlegt ist, werden die Standardspalten angezeigt.';
+        = 'Legt die angezeigten Spalten der CIs in der Komplexansicht der Tabelle "Verlinkte Objekte" fest. Jeder Eintrag muss mit einem Klassennamen gefolgt von Doppelpunkten beginnen (z.B. Computer::). Es gibt einige CI-Attribute, die alle CIs gemeinsam haben (Beispiel für die Klasse Computer: Computer::Name, Computer::CurDeplState, Computer::CreateTime). Um individuelle CI-Attribute anzuzeigen, wie sie in der CI-Definition festgelegt sind, muss das folgende Schema genutzt werden (Beispiel für die Klasse Computer): Computer::HardDisk::1, Computer::HardDisk::1::Capacity::1, Computer::HardDisk::2, Computer::HardDisk::2::Capacity::1. Wenn kein Eintrag für eine CI-Klasse hinterlegt ist, werden die Standardspalten angezeigt.';
     $Lang->{'Defines the image types.'} = 'Legt die Bildtype fest, die geladen werden können.';
     $Lang->{'Parameters for the pages (in which the configuration items are shown).'}
         = 'Parameter für die Seiten, auf denen ConfigItems angezeigt werden.';
@@ -1834,6 +1834,7 @@ sub Data {
     $Lang->{'show details / edit'}           = 'Details anzeigen / editieren';
     $Lang->{'remove'}                        = 'Artikel Flag entfernen';
     $Lang->{'- mark as -'}                   = '- markieren als -';
+    $Lang->{'MarkAs'}                        = 'markieren als';
     $Lang->{'Link ticket with:'}             = 'Verknüpfe Ticket mit:';
     $Lang->{'Link Configuration Item with:'} = 'Verknüpfe Configuration Item mit:';
     $Lang->{'Link Change with:'}             = 'Verknüpfe Change mit:';
@@ -2105,6 +2106,8 @@ sub Data {
     $Lang->{'Assigend To'} = 'Zugeordnet zu';
     $Lang->{'No existing or matching text module'}
         = 'Es sind keine oder keine passenden Text-Bausteine vorhanden';
+    $Lang->{'No existing or matching text module category'}
+        = 'Es sind keine oder keine passenden Textbaustein-Kategorien vorhanden';
     $Lang->{'Categories'}                      = 'Kategorien';
     $Lang->{'Text Module Category Management'} = 'Verwaltung Textbaustein-Kategorien';
     $Lang->{'Text Module Categories'}          = 'Text-Baustein-Kategorien';
@@ -2774,10 +2777,10 @@ sub Data {
         =
         '';
     $Lang->{
-        'Enables/disables the functionality to check ConfigItems for unique names. Before enabling this option you should check your system for already existing config items with duplicate names. You can do this with the script bin/kix.ITSMConfigItemListDuplicates.pl.'
+        'Enables/disables the functionality to check ConfigItems for unique names. Before enabling this option you should check your system for already existing config items with duplicate names. You can do this with the You can do this with the console command Admin::ITSM::Configitem::ListDuplicates.'
         }
         =
-        '(De-)Aktiviert die Funktionalität um ConfigItems auf eindeutige Namen zu überprüfen. Bevor Sie diese Option aktivieren, sollten Sie Ihr System auf bereits vorhandene ConfigItems mit gleichem Namen überprüfen. Sie können dies mit Hilfe des scripts bin/kix.ITSMConfigItemListDuplicates.pl tun.';
+        '(De-)Aktiviert die Funktionalität um ConfigItems auf eindeutige Namen zu überprüfen. Bevor Sie diese Option aktivieren, sollten Sie Ihr System auf bereits vorhandene ConfigItems mit gleichem Namen überprüfen. Sie können dies mit Hilfe des Konsolenbefehls Admin::ITSM::Configitem::ListDuplicates tun.';
     $Lang->{'Module to check the group responsible for a class.'} = '';
     $Lang->{'Module to check the group responsible for a configuration item.'} =
         '';
@@ -3792,6 +3795,9 @@ sub Data {
     $Lang->{'Phone1'}               = 'Telefon 1';
     $Lang->{'Phone2'}               = 'Telefon 2';
     $Lang->{'Further ticket data'}  = 'Weitere Ticketdaten';
+    $Lang->{'Edit this ticket'}     = 'Dieses Ticket bearbeiten';
+    $Lang->{'Print forward fax for this ticket!'}
+        = 'Weiterleitungsfax für dieses Ticket drucken!';
     $Lang->{'Defines CI-attributes for CI-Classes which are not forwarded.'}
         = 'Definiert CI-Attribute fuer CI-Klassen, die nicht weitergeleitet werden.';
     $Lang->{'Defines only CI-attributes for CI-Classes which are forwarded.'}
@@ -3834,8 +3840,9 @@ sub Data {
     $Lang->{'notesupplier-internal'} = 'Notiz intern an Dienstleister';
 
     # Options
-    $Lang->{'MaxArraySize'}  = 'Anzahl Einträge';
-    $Lang->{'ItemSeparator'} = 'Anzeigetrenner';
+    $Lang->{'MaxArraySize'}      = 'Anzahl Einträge';
+    $Lang->{'Number of records'} = 'Anzahl Datensätze';
+    $Lang->{'ItemSeparator'}     = 'Anzeigetrenner';
 
     $Lang->{'DatabaseDSN'}         = 'Datenbank DSN';
     $Lang->{'DatabaseUser'}        = 'Datenbank Benutzer';
@@ -3866,6 +3873,7 @@ sub Data {
 
     # Descriptions...
     $Lang->{'Specify the maximum number of entries.'}  = 'Gibt die maximale Anzahl möglicher Einträge an.';
+    $Lang->{'Specify the maximum number of records.'}  = 'Gibt die maximale Anzahl möglicher Datensätze an.';
     $Lang->{'Specify the DSN for used database.'}      = 'Gibt die DSN der Datenbank an.';
     $Lang->{'Specify the user for used database.'}     = 'Gibt den Benutzer der Datenbank an.';
     $Lang->{'Specify the password for used database.'} = 'Gibt das Passwort der Datenbank an.';
@@ -3874,9 +3882,9 @@ sub Data {
     $Lang->{'The key column of the database is the column which the data record identifies and from where the value to be stored can be obtained.'}
         = 'Die Schlüsselspalte der Datenbank ist die Spalte, womit der Datensatz identifiziert und woher der zu speichernde Wert bezogen werden kann.';
     $Lang->{'The value column is the column of the table used that returns the value of the data record for display. If no value column has been specified, the key column is used as a fallback.'}
-    	= 'Die Wertespalte ist die Spalte der Tabelle, die genutzt wird, um den Wert des Datensatzes für die Anzeige zurückzugeben. Wenn keine Wertespalte angegeben wurde,wird die Schlüsselspalte genutzt.';
+        = 'Die Wertespalte ist die Spalte der Tabelle, die genutzt wird, um den Wert des Datensatzes für die Anzeige zurückzugeben. Wenn keine Wertespalte angegeben wurde,wird die Schlüsselspalte genutzt.';
     $Lang->{'The search column is the column (or several columns separated by commas) of the table used in which a suitable data record can be searched for. If no search column has been specified, the key column is used as a fallback.'}
-    	= 'Die Suchspalte ist die Spalte (oder mehrere Spalten getrennt mit Kommas) der Tabelle, die genutzt wird, um dort nach einem passenden Datensatz zu suchen. Wenn keine Wertespalte angegeben wurde,wird die Schlüsselspalte genutzt.';
+        = 'Die Suchspalte ist die Spalte (oder mehrere Spalten getrennt mit Kommas) der Tabelle, die genutzt wird, um dort nach einem passenden Datensatz zu suchen. Wenn keine Wertespalte angegeben wurde,wird die Schlüsselspalte genutzt.';
     $Lang->{'The value of the key column is used as an identifier of the selected data record.'}
         = 'Der Wert des Schlüsselspalte wird als Kenner des gewählten Datensatzes genutzt.';
     $Lang->{'The value column is the column of the database table that returns the value of the data record for display. If no value column has been specified, the key column is used as a fallback.'}

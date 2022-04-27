@@ -1661,6 +1661,9 @@ sub Data {
         'AutoIncrement' => 'AutoIncrement',
         'SQL' => 'SQL',
         'File differences for file %s' => 'Dateiunterschiede für Datei %s',
+        'File is not installed!' => 'Datei ist nicht vorhanden!',
+        'File is different!' => 'Datei ist unterschiedlich!',
+        'File is OK' => 'Datei ist OK',
 
         # Template: AdminPerformanceLog
         'Performance Log' => 'Performance Log',
@@ -4551,6 +4554,7 @@ Ihr Helpdesk-Team
             'Benutzerdefinierter Text für Kunden, die noch keine Tickets haben (wenn Sie für diesen Text eine Übersetzung wünschen, fügen Sie die Übersetzung in einem eigenen Übersetzungsmodul hinzu).',
         'Customer Administration' => 'Kundenverwaltung',
         'Customer Information Center Search.' => 'Kunden-Informationszentrum-Suche.',
+        'Customer Information Center Search'  => 'Kunden-Informationszentrum-Suche.',
         'Customer Information Center.' => 'Kunden-Informationszentrum.',
         'Customer Ticket Print Module.' => 'Kunden-Ticketdruck-Modul.',
         'Contact <-> Groups' => 'Ansprechpartner <-> Gruppen',
