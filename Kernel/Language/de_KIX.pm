@@ -2105,6 +2105,8 @@ sub Data {
     $Lang->{'Assigend To'} = 'Zugeordnet zu';
     $Lang->{'No existing or matching text module'}
         = 'Es sind keine oder keine passenden Text-Bausteine vorhanden';
+    $Lang->{'No existing or matching text module category'}
+        = 'Es sind keine oder keine passenden Textbaustein-Kategorien vorhanden';
     $Lang->{'Categories'}                      = 'Kategorien';
     $Lang->{'Text Module Category Management'} = 'Verwaltung Textbaustein-Kategorien';
     $Lang->{'Text Module Categories'}          = 'Text-Baustein-Kategorien';

@@ -173,9 +173,16 @@
                 <div id="CategoryTreeControl" class="SpacingBottom">
                     <a href="?#" class="Collaps">[% Translate("Collapse All") | html %]</a> | <a href="?#" class="Expand">[% Translate("Expand All") | html %]</a>
                 </div>
+[% RenderBlockStart("NoCategoryTree") %]
+                <div class="JSTreeSelectionContainer">
+                    <p>[% Translate("No existing or matching text module category")%]</p>
+                </div>
+[% RenderBlockEnd("NoCategoryTree") %]
+[% RenderBlockStart("CategoryTree") %]
                 <div id="CategorySelectionContainer" class="JSTreeSelectionContainer">
                     [% Data.CategoryTree %]
                 </div>
+[% RenderBlockEnd("CategoryTree") %]
             </div>
         </div>
 
@@ -278,5 +285,5 @@ if ($('#SearchName').val().length) {
             </div>
         </div>
 [% RenderBlockEnd("Edit") %]
-</div>
+    </div>
 </div>
