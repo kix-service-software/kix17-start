@@ -277,6 +277,9 @@ sub InputCreate {
     # check if value can be edited and if so decrypt value
     if ( !$Access ) {
         $String .= "readonly=\"readonly\" ";
+        while ( $Value =~ /[a-zA-Z0-9_]/ ) {
+            $Value =~ s/[a-zA-Z0-9_]/*/;
+        }
     }
     else {
         $Value = $Self->_Decrypt($Value);
