@@ -2777,10 +2777,10 @@ sub Data {
         =
         '';
     $Lang->{
-        'Enables/disables the functionality to check ConfigItems for unique names. Before enabling this option you should check your system for already existing config items with duplicate names. You can do this with the script bin/kix.ITSMConfigItemListDuplicates.pl.'
+        'Enables/disables the functionality to check ConfigItems for unique names. Before enabling this option you should check your system for already existing config items with duplicate names. You can do this with the You can do this with the console command Admin::ITSM::Configitem::ListDuplicates.'
         }
         =
-        '(De-)Aktiviert die Funktionalität um ConfigItems auf eindeutige Namen zu überprüfen. Bevor Sie diese Option aktivieren, sollten Sie Ihr System auf bereits vorhandene ConfigItems mit gleichem Namen überprüfen. Sie können dies mit Hilfe des scripts bin/kix.ITSMConfigItemListDuplicates.pl tun.';
+        '(De-)Aktiviert die Funktionalität um ConfigItems auf eindeutige Namen zu überprüfen. Bevor Sie diese Option aktivieren, sollten Sie Ihr System auf bereits vorhandene ConfigItems mit gleichem Namen überprüfen. Sie können dies mit Hilfe des Konsolenbefehls Admin::ITSM::Configitem::ListDuplicates tun.';
     $Lang->{'Module to check the group responsible for a class.'} = '';
     $Lang->{'Module to check the group responsible for a configuration item.'} =
         '';
