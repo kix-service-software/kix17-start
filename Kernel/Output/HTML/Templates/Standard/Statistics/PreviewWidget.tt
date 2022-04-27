@@ -185,7 +185,10 @@
 
     <div class="Preview">
     [% IF !Data.PreviewResult || !PreviewFormats.size %]
-        <p>[% Translate('This statistic does not provide preview data.') | html %]</p>
+        <p class="Hint">
+            <i class="fa fa-ban"></i>
+            [% Translate('This statistic does not provide preview data.') | html %]
+        </p>
     [% ELSE %]
         [% FOREACH Format IN PreviewFormats %]
             [% IF Format == 'Print' %]
