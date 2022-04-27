@@ -864,6 +864,7 @@ sub _XMLOutput {
             $Value = $LayoutObject->ITSMConfigItemOutputStringCreate(
                 Value => $Value,
                 Item  => $Item,
+                Key   => $Param{XMLData}->{ $Item->{Key} }->[$Counter]->{Content}
             );
 
             # get css based on changes
