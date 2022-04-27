@@ -393,6 +393,15 @@ sub BuildAttachmentModification {
         . "<input type=\"hidden\" name=\"$AttDirIDName\" value=\"$AttachID\"/> "
         . "<input type=\"file\" id=\"$AttDirIDName\" name=\"$AttDirIDUploadName\" class=\"fixed\"/> ";
 
+    $Self->{LayoutObject}->AddJSOnDocumentComplete( Code => <<"EOF" );
+\$('#' + Core.App.EscapeSelector('$AttDirIDName')).on('change', function (){
+    \$('input[name=SubmitSave]').val('0');
+    Core.Form.Validate.DisableValidation(\$('#ClassItem'));
+    \$('#ClassItem').removeClass('PreventMultipleSubmits');
+    \$(this).closest('form').submit();
+});
+EOF
+
     return $Output;
 }
 
