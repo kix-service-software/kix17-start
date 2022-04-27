@@ -419,6 +419,13 @@
     .DataTableNoHighlight tbody tr td select {
         width: 85%;
     }
+    .TableSmall tbody td.NoWrap,
+    .DataTable tbody td.NoWrap {
+        overflow: hidden;
+        max-width: 0;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
 
 
     /**

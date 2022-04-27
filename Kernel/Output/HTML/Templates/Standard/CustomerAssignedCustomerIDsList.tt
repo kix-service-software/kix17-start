@@ -13,6 +13,7 @@
        <tr>
            <th></th>
            <th>[% Translate("Customer ID") | html %]</th>
+           <th>[% Translate("Company") | html %]</th>
        </tr>
    </thead>
    <tbody>
@@ -21,8 +22,11 @@
            <td>
                <input type="radio" class="SelectedCustomerIDRadio" name="SelectedCustomerIDRadio" id="SelectedCustomerIDRadio[% Data.ID | html %]" value="[% Data.ID | html %]"/>
            </td>
-           <td>
-               <label for="SelectedCustomerIDRadio[% Data.ID | html %]">[% Data.CustomerCompanyName | truncate(25) | html %] ([% Data.ID | html %])</label>
+           <td class="NoWrap">
+               <label for="SelectedCustomerIDRadio[% Data.ID | html %]">[% Data.ID | html %]</label>
+           </td>
+           <td class="NoWrap">
+               <label for="SelectedCustomerIDRadio[% Data.ID | html %]">[% Data.CustomerCompanyName | html %]</label>
            </td>
 [% RenderBlockEnd("CustomerIDRow") %]
        </tr>
