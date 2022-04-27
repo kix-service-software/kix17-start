@@ -251,7 +251,7 @@ $('.TicketTemplateDelete').on('click', function (Event) {
                         <div class="Clear"></div>
                         <label for="Frontend">[% Translate("Available for user groups") | html %]:</label>
                         <div class="Field">
-                        [% Data.UserGroupStrg %]
+                            [% Data.UserGroupStrg %]
                         </div>
                         <div class="Clear"></div>
 [% RenderBlockStart("TicketType") %]
@@ -260,8 +260,10 @@ $('.TicketTemplateDelete').on('click', function (Event) {
                             <input type="hidden" id="TypeIDFixed" name="TypeIDFixed" value="[% Data.TypeIDFixed | html %]"/>
                         </label>
                         <div class="Field">
-                        [% Data.TypeStrg %]
-                            <input type="Checkbox" class="FieldEmpty" id="TypeIDEmpty" name="TypeIDEmpty" value="1"[% Data.TypeIDEmpty | html %]>[% Translate("Empty value") | html %]
+                            [% Data.TypeStrg %]
+                            <div class="FieldEmpty">
+                                <input type="Checkbox" id="TypeIDEmpty" name="TypeIDEmpty" value="1"[% Data.TypeIDEmpty | html %]>[% Translate("Empty value") | html %]
+                            </div>
                         </div>
                         <div class="Clear"></div>
 [% RenderBlockEnd("TicketType") %]
@@ -271,8 +273,10 @@ $('.TicketTemplateDelete').on('click', function (Event) {
                             <input type="hidden" id="QueueIDFixed" name="QueueIDFixed" value="[% Data.QueueIDFixed | html %]"/>
                         </label>
                         <div class="Field">
-                        [% Data.QueueStrg %]
-                            <input type="Checkbox" class="FieldEmpty" id="QueueIDEmpty" name="QueueIDEmpty" value="1"[% Data.QueueIDEmpty | html %]>[% Translate("Empty value") | html %]
+                            [% Data.QueueStrg %]
+                            <div class="FieldEmpty">
+                                <input type="Checkbox" id="QueueIDEmpty" name="QueueIDEmpty" value="1"[% Data.QueueIDEmpty | html %]>[% Translate("Empty value") | html %]
+                            </div>
                         </div>
                         <div class="Clear"></div>
 
@@ -286,19 +290,25 @@ $('#QueueID').on('change', function (Event) {
                         <label for="ToCustomer">[% Translate("Contact") | html %]:</label>
                         <div class="Field">
                             <input id="ToCustomer" type="text" name="From" value="[% Data.From | html %]" class="CustomerAutoCompleteTo W75pc [% Data.ToInvalid | html %]" autocomplete="off" />
-                            <input type="Checkbox" class="FieldEmpty" id="FromEmpty" name="FromEmpty" value="1"[% Data.FromEmpty | html %]>[% Translate("Empty value") | html %]
+                            <div class="FieldEmpty">
+                                <input type="Checkbox" id="FromEmpty" name="FromEmpty" value="1"[% Data.FromEmpty | html %]>[% Translate("Empty value") | html %]
+                            </div>
                         </div>
                         <div class="Clear"></div>
                         <label for="CcCustomer">[% Translate("Cc") | html %]:</label>
                         <div class="Field">
                             <input id="CcCustomer" type="text" name="Cc" value="[% Data.Cc | html %]" class="CustomerAutoCompleteCc W75pc [% Data.CcInvalid | html %]" autocomplete="off" />
-                            <input type="Checkbox" class="FieldEmpty" id="CcEmpty" name="CcEmpty" value="1"[% Data.CcEmpty | html %]>[% Translate("Empty value") | html %]
+                            <div class="FieldEmpty">
+                                <input type="Checkbox" id="CcEmpty" name="CcEmpty" value="1"[% Data.CcEmpty | html %]>[% Translate("Empty value") | html %]
+                            </div>
                         </div>
                         <div class="Clear"></div>
                         <label for="BccCustomer">[% Translate("Bcc") | html %]:</label>
                         <div class="Field">
                             <input id="BccCustomer" type="text" name="Bcc" value="[% Data.Bcc | html %]" class="CustomerAutoCompleteBcc W75pc [% Data.BccInvalid | html %]" autocomplete="off" />
-                            <input type="Checkbox" class="FieldEmpty" id="BccEmpty" name="BccEmpty" value="1"[% Data.BccEmpty | html %]>[% Translate("Empty value") | html %]
+                            <div class="FieldEmpty">
+                                <input type="Checkbox" id="BccEmpty" name="BccEmpty" value="1"[% Data.BccEmpty | html %]>[% Translate("Empty value") | html %]
+                            </div>
                         </div>
                         <div class="Clear"></div>
                         <label for="CustomerID">[% Translate("CustomerID") | html %]:</label>
@@ -327,11 +337,11 @@ $('#ToCustomer, #CcCustomer, #BccCustomer').on('change',function() {
                             <input type="hidden" id="ServiceIDFixed" name="ServiceIDFixed" value="[% Data.ServiceIDFixed | html %]"/>
                         </label>
                         <div class="Field">
-                        [% Data.ServiceStrg %]
-                        <a href="#" id="ServiceSelectionGetAll" class="GetAllAJAX" title="[% Translate("Get all") | html %]">
-                            <span>[% Translate("Get all") | html %]</span>
-                            <i class="fa fa-refresh"></i>
-                        </a>
+                            [% Data.ServiceStrg %]
+                            <a href="#" id="ServiceSelectionGetAll" class="GetAllAJAX" title="[% Translate("Get all") | html %]">
+                                <span>[% Translate("Get all") | html %]</span>
+                                <i class="fa fa-refresh"></i>
+                            </a>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
     $('#ServiceID').on('change', function (Event) {
@@ -346,7 +356,9 @@ $('#ServiceSelectionGetAll').on('click', function (Event) {
 });
 //]]></script>
 [% END %]
-                            <input type="Checkbox" class="FieldEmpty"id="ServiceIDEmpty" name="ServiceIDEmpty" value="1"[% Data.ServiceIDEmpty | html %]>[% Translate("Empty value") | html %]
+                            <div class="FieldEmpty">
+                                <input type="Checkbox"id="ServiceIDEmpty" name="ServiceIDEmpty" value="1"[% Data.ServiceIDEmpty | html %]>[% Translate("Empty value") | html %]
+                            </div>
                         </div>
                         <div class="Clear"></div>
 [% RenderBlockEnd("TicketService") %]
@@ -357,17 +369,19 @@ $('#ServiceSelectionGetAll').on('click', function (Event) {
                         </label>
                         <div class="Field">
                         [% Data.SLAStrg %]
-                            <input type="Checkbox" class="FieldEmpty" id="SLAIDEmpty" name="SLAIDEmpty" value="1"[% Data.SLAIDEmpty | html %]>[% Translate("Empty value") | html %]
+                            <div class="FieldEmpty">
+                                <input type="Checkbox" id="SLAIDEmpty" name="SLAIDEmpty" value="1"[% Data.SLAIDEmpty | html %]>[% Translate("Empty value") | html %]
+                            </div>
                         </div>
                         <div class="Clear"></div>
 [% RenderBlockEnd("TicketSLA") %]
                         <label for="OwnerID">[% Translate("Owner") | html %]:</label>
                         <div class="Field">
-                        [% Data.OwnerStrg %]
-                        <a href="#" id="OwnerSelectionGetAll" class="GetAllAJAX" title="[% Translate("Get all") | html %]">
-                            <span>[% Translate("Get all") | html %]</span>
-                            <i class="fa fa-refresh"></i>
-                        </a>
+                            [% Data.OwnerStrg %]
+                            <a href="#" id="OwnerSelectionGetAll" class="GetAllAJAX" title="[% Translate("Get all") | html %]">
+                                <span>[% Translate("Get all") | html %]</span>
+                                <i class="fa fa-refresh"></i>
+                            </a>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
 $('#OwnerSelectionGetAll').on('click', function (Event) {
@@ -379,17 +393,19 @@ $('#OwnerSelectionGetAll').on('click', function (Event) {
 });
 //]]></script>
 [% END %]
-                            <input type="Checkbox" id="OwnerIDEmpty" name="OwnerIDEmpty" value="1"[% Data.OwnerIDEmpty | html %]>[% Translate("Empty value") | html %]
+                            <div class="FieldEmpty">
+                                <input type="Checkbox" id="OwnerIDEmpty" name="OwnerIDEmpty" value="1"[% Data.OwnerIDEmpty | html %]>[% Translate("Empty value") | html %]
+                            </div>
                         </div>
                         <div class="Clear"></div>
 [% RenderBlockStart("Responsible") %]
                         <label for="ResponsibleID">[% Translate("Responsible") | html %]:</label>
                         <div class="Field">
-                        [% Data.ResponsibleStrg %]
-                        <a href="#" id="ResponsibleSelectionGetAll" class="GetAllAJAX" title="[% Translate("Get all") | html %]">
-                            <span>[% Translate("Get all") | html %]</span>
-                            <i class="fa fa-refresh"></i>
-                        </a>
+                            [% Data.ResponsibleStrg %]
+                            <a href="#" id="ResponsibleSelectionGetAll" class="GetAllAJAX" title="[% Translate("Get all") | html %]">
+                                <span>[% Translate("Get all") | html %]</span>
+                                <i class="fa fa-refresh"></i>
+                            </a>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
 $('#ResponsibleSelectionGetAll').on('click', function (Event) {
@@ -401,14 +417,18 @@ $('#ResponsibleSelectionGetAll').on('click', function (Event) {
 });
 //]]></script>
 [% END %]
-                            <input type="Checkbox" class="FieldEmpty" id="ResponsibleIDEmpty" name="ResponsibleIDEmpty" value="1"[% Data.ResponsibleIDEmpty | html %]>[% Translate("Empty value") | html %]
+                            <div class="FieldEmpty">
+                                <input type="Checkbox" id="ResponsibleIDEmpty" name="ResponsibleIDEmpty" value="1"[% Data.ResponsibleIDEmpty | html %]>[% Translate("Empty value") | html %]
+                            </div>
                         </div>
                         <div class="Clear"></div>
 [% RenderBlockEnd("Responsible") %]
                         <label for="Subject">[% Translate("Subject") | html %]:</label>
                         <div class="Field">
                             <input type="text" class="W75pc " name="Subject" id="Subject" value="[% Data.Subject | html %]"/>
-                            <input type="Checkbox" class="FieldEmpty" id="SubjectEmpty" name="SubjectEmpty" value="1"[% Data.SubjectEmpty | html %]>[% Translate("Empty value") | html %]
+                            <div class="FieldEmpty">
+                                <input type="Checkbox" id="SubjectEmpty" name="SubjectEmpty" value="1"[% Data.SubjectEmpty | html %]>[% Translate("Empty value") | html %]
+                            </div>
                         </div>
                         <div class="Clear"></div>
                         <label for="RichText">[% Translate("Text") | html %]:</label>
@@ -417,7 +437,9 @@ $('#ResponsibleSelectionGetAll').on('click', function (Event) {
 [% InsertTemplate("RichTextEditor.tt") %]
 [% RenderBlockEnd("RichText") %]
                             <textarea id="RichText" class="RichText  [% Data.BodyInvalid | html %]" name="Body" title="Message body" rows="15" cols="[% Config("Ticket::Frontend::TextAreaEmail") %]">[% Data.Body | html %]</textarea>
-                            <input type="Checkbox" class="FieldEmpty"id="BodyEmpty" name="BodyEmpty" value="1"[% Data.BodyEmpty | html %]>[% Translate("Empty value") | html %]
+                            <div class="FieldEmpty">
+                                <input type="Checkbox"id="BodyEmpty" name="BodyEmpty" value="1"[% Data.BodyEmpty | html %]>[% Translate("Empty value") | html %]
+                            </div>
                         </div>
                         <div class="Clear"></div>
                         <label for="StateID">
@@ -428,26 +450,23 @@ $('#ResponsibleSelectionGetAll').on('click', function (Event) {
                         [% Data.StatesStrg %]
                         </div>
                         <div class="Clear"></div>
-# TODO                        <label>[% Translate("Pending Date") | html %] ([% Translate("for pending* states") | html %]):</label>
-#                        <div class="Field">
-#                        [% Data.PendingDateString %]
-#                        </div>
-#                        <div class="Clear"></div>
                         <label for="PriorityID">
                             <i class="fa fa-thumb-tack LimitTemplateSelectionIcon_[% Data.PriorityIDFixedClass | html %]"></i> [% Translate("Priority") | html %]:
                             <input type="hidden" id="PriorityIDFixed" name="PriorityIDFixed" value="[% Data.PriorityIDFixed | html %]"/>
                         </label>
                         <div class="Field">
-                        [% Data.PriorityStrg %]
+                            [% Data.PriorityStrg %]
                         </div>
                         <div class="Clear"></div>
 [% RenderBlockStart("DynamicField") %]
                         <div class="Row Row_DynamicField_[% Data.Name | html %]">
-                        [% Data.Label %]
+                            [% Data.Label %]
                             <div class="Field">
                                 [% Data.Field %]
 [% RenderBlockStart("DynamicFieldEmpty") %]
-                                <input type="Checkbox" class="FieldEmpty" id="DynamicField_[% Data.Name | html %]Empty" name="DynamicField_[% Data.Name | html %]Empty" value="1"[% Data.Checked | html %]>[% Translate("Empty value") | html %]
+                                <div class="FieldEmpty">
+                                    <input type="Checkbox" id="DynamicField_[% Data.Name | html %]Empty" name="DynamicField_[% Data.Name | html %]Empty" value="1"[% Data.Checked | html %]>[% Translate("Empty value") | html %]
+                                </div>
 [% RenderBlockEnd("DynamicFieldEmpty") %]
                             </div>
                             <div class="Clear"></div>
@@ -457,31 +476,33 @@ $('#ResponsibleSelectionGetAll').on('click', function (Event) {
                         <label for="TimeUnits">[% Translate("Time units") | html %] [% Translate(Config("Ticket::Frontend::TimeUnits")) | html %]:</label>
                         <div class="Field">
                             <input type="text" class="W50pc" name="TimeUnits" id="TimeUnits" value="[% Data.TimeUnits | html %]"/>
-                            <input type="Checkbox" class="FieldEmpty" id="TimeUnitsEmpty" name="TimeUnitsEmpty" value="1"[% Data.TimeUnitsEmpty | html %]>[% Translate("Empty value") | html %]
+                            <div class="FieldEmpty">
+                                <input type="Checkbox" id="TimeUnitsEmpty" name="TimeUnitsEmpty" value="1"[% Data.TimeUnitsEmpty | html %]>[% Translate("Empty value") | html %]
+                            </div>
                         </div>
                         <div class="Clear"></div>
 [% RenderBlockEnd("TimeUnits") %]
 [% RenderBlockStart("ArticleType") %]
                         <label for="ArticleType">[% Translate("Article type") | html %]:</label>
                         <div class="Field">
-                        [% Data.ArticleTypeStrg %]
+                            [% Data.ArticleTypeStrg %]
                         </div>
                         <div class="Clear"></div>
 [% RenderBlockEnd("ArticleType") %]
 [% RenderBlockStart("ArticleSenderType") %]
                         <label for="ArticleSenderType">[% Translate("Article sender type") | html %]:</label>
                         <div class="Field">
-                        [% Data.ArticleSenderTypeStrg %]
+                            [% Data.ArticleSenderTypeStrg %]
                         </div>
                         <div class="Clear"></div>
 [% RenderBlockEnd("ArticleSenderType") %]
 [% RenderBlockStart("LinkType") %]
                         <label for="LinkType">[% Translate("Link type") | html %]:</label>
                         <div class="Field">
-                        [% Data.LinkTypeStrg %]
-                        <div id="LinkTypeServerError" class="TooltipErrorMessage">
-                            <p>[% Translate("Link type invalid.") | html %]</p>
-                        </div>
+                            [% Data.LinkTypeStrg %]
+                            <div id="LinkTypeServerError" class="TooltipErrorMessage">
+                                <p>[% Translate("Link type invalid.") | html %]</p>
+                            </div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
     $('#LinkType').on('change', function (Event) {
@@ -495,7 +516,7 @@ $('#ResponsibleSelectionGetAll').on('click', function (Event) {
 [% RenderBlockStart("LinkDirection") %]
                         <label for="LinkDirection">[% Translate("Link direction") | html %]:</label>
                         <div class="Field">
-                        [% Data.LinkDirectionStrg %]
+                            [% Data.LinkDirectionStrg %]
                         </div>
                         <div class="Clear"></div>
 [% RenderBlockEnd("LinkDirection") %]
