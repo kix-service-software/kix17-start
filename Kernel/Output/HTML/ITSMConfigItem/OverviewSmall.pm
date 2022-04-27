@@ -653,6 +653,7 @@ sub _XMLData2Hash {
                 $Value = $Kernel::OM->Get('Kernel::Output::HTML::Layout')->ITSMConfigItemOutputStringCreate(
                     Value => $Value,
                     Item  => $Item,
+                    Key   => $Param{XMLData}->{ $Item->{Key} }->[$Counter]->{Content}
                 );
             }
 
