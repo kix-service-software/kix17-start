@@ -115,6 +115,9 @@
     #CIClassSelection.Content {
         border-bottom: none;
     }
+    .KIXSidebarTools > .Content > .SearchBox {
+        margin-bottom: 5px;
+    }
 
 
     /***
