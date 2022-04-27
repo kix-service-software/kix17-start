@@ -1661,6 +1661,9 @@ sub Data {
         'AutoIncrement' => 'AutoIncrement',
         'SQL' => 'SQL',
         'File differences for file %s' => 'Dateiunterschiede für Datei %s',
+        'File is not installed!' => 'Datei ist nicht vorhanden!',
+        'File is different!' => 'Datei ist unterschiedlich!',
+        'File is OK' => 'Datei ist OK',
 
         # Template: AdminPerformanceLog
         'Performance Log' => 'Performance Log',
