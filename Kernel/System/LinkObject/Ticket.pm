@@ -70,10 +70,17 @@ fill up the link list with data
 sub LinkListWithData {
     my ( $Self, %Param ) = @_;
 
+    # get needed object
+    my $TicketObject          = $Kernel::OM->Get('Kernel::System::Ticket');
+    my $LogObject             = $Kernel::OM->Get('Kernel::System::Log');
+    my $ConfigObject          = $Kernel::OM->Get('Kernel::Config');
+    my $CustomerUserObject    = $Kernel::OM->Get('Kernel::System::CustomerUser');
+    my $CustomerCompanyObject = $Kernel::OM->Get('Kernel::System::CustomerCompany');
+
     # check needed stuff
     for my $Argument (qw(LinkList UserID)) {
         if ( !$Param{$Argument} ) {
-            $Kernel::OM->Get('Kernel::System::Log')->Log(
+            $LogObject->Log(
                 Priority => 'error',
                 Message  => "Need $Argument!",
             );
@@ -83,19 +90,16 @@ sub LinkListWithData {
 
     # check link list
     if ( ref $Param{LinkList} ne 'HASH' ) {
-        $Kernel::OM->Get('Kernel::System::Log')->Log(
+        $LogObject->Log(
             Priority => 'error',
             Message  => 'LinkList must be a hash reference!',
         );
         return;
     }
 
-    # get ticket object
-    my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
-
     # get config, which ticket state types should not be included in linked tickets overview
     my @IgnoreLinkedTicketStateTypes = @{
-        $Kernel::OM->Get('Kernel::Config')->Get('LinkObject::IgnoreLinkedTicketStateTypes')
+        $ConfigObject->Get('LinkObject::IgnoreLinkedTicketStateTypes')
             // []
     };
 
@@ -128,6 +132,27 @@ sub LinkListWithData {
                 ) {
                     delete $Param{LinkList}->{$LinkType}->{$Direction}->{$TicketID};
                     next TICKETID;
+                }
+
+                if (
+                    $TicketData{CustomerUserID}
+                    && !$TicketData{CustomerName}
+                ) {
+                    $TicketData{CustomerName} = $CustomerUserObject->CustomerName(
+                        UserLogin => $TicketData{CustomerUserID},
+                    );
+                }
+
+                if (
+                    $TicketData{CustomerID}
+                    && !$TicketData{CustomerCompanyName}
+                ) {
+                    my %CustomerCompanyData = $CustomerCompanyObject->CustomerCompanyGet(
+                        CustomerID => $TicketData{CustomerID},
+                    );
+                    if ( %CustomerCompanyData ) {
+                        $TicketData{CustomerCompanyName} = $CustomerCompanyData{CustomerCompanyName};
+                    }
                 }
 
                 # add ticket data
