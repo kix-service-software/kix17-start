@@ -136,6 +136,8 @@ sub _MigrateSystemMessage {
             );
         }
     }
+
+    return 1;
 }
 
 =back
