@@ -39,7 +39,7 @@ Core.KIX4OTRS.CustomerIDsSelection = (function(TargetNS) {
         });
 
         Core.App.Subscribe('Event.Agent.CustomerSearch.GetCustomerInfo.Callback', function(){
-            $('#SelectedCustomerIDRadio' + $('#CustomerID').val()).prop("checked", true);
+            $('.SelectedCustomerIDRadio[value="' + $('#CustomerID').val() + '"]').prop("checked", true);
         });
     };
 
