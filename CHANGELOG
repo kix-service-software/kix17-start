@@ -1,6 +1,16 @@
 # Change log of KIX
 * Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.19.0-RC9 (2022/05/20)
+ * (2022/05/17) - Bugfix: KIX17-2467 (fixed position and size of popup window) (fjacquemin)
+ * (2022/05/12) - Bugfix: KIX17-2996 (fixed missing filling of CustomerName and CustomerCompanyName in LinkObject Ticket) (fjacquemin)
+ * (2022/04/27) - Bugfix: KIX17-2745 (changed table of the customerIDs in the sidebar) (fjacquemin)
+ * (2022/04/27) - Bugfix: KIX17-2923 (Fixed position of calendar information when not enough space) (fjacquemin)
+ * (2022/04/27) - Bugfix: KIX17-2658 (Fixed aeticle flag dialog position when scrolled before) (fjacquemin)
+ * (2022/04/27) - Bugfix: KIX17-2698 (fixed missing value change event handling of config item attribute CIAttachment) (fjacquemin)
+ * (2022/04/26) - Bugfix: KIX17-2747 (fixed missing label translation of report diagrams) (fjacquemin)
+ * (2022/04/19) - Bugfix: KIX17-2770 (fix id selection for multiple customer ids) (mbauer)
+
 # 17.19.0-RC8 (2022/04/27)
  * (2022/04/27) - Bugfix: KIX17-2747 (fixed value display of ITSMConfigItem attributes CustomerCompany and CustmerUserCompany) (fjacquemin)
  * (2022/04/26) - Bugfix: KIX17-2747 (fixed translation of the MaxArraySize of dynamic field ITSMConfigItem and RemoteDB) (fjacquemin)
