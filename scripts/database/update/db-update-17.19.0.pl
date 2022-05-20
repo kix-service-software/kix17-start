@@ -94,7 +94,8 @@ sub _RemoveObsoleteFiles {
         'Kernel/cpan-lib/CGI/Switch.pm',
         'Kernel/cpan-lib/Font/TTF/Changes_old.txt',
         'Kernel/cpan-lib/Font/TTF/Manual.pod',
-        'Kernel/cpan-lib/HTML/TokeParser.pm'
+        'Kernel/cpan-lib/HTML/TokeParser.pm',
+        'Kernel/Output/HTML/OutputFilter/AgentTicketPopupSize.pm'
     );
 
     for my $File ( @FileList ) {
@@ -136,6 +137,8 @@ sub _MigrateSystemMessage {
             );
         }
     }
+
+    return 1;
 }
 
 =back

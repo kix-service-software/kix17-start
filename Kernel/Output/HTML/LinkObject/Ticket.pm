@@ -93,6 +93,8 @@ sub new {
     # define sortable columns
     $Self->{ValidSortableColumns} = {
         'TicketNumber'           => 1,
+        'CustomerName'           => 1,
+        'CustomerCompanyName'    => 1,
     };
 
     return $Self;
@@ -171,21 +173,26 @@ Return
 sub TableCreateComplex {
     my ( $Self, %Param ) = @_;
 
+    # get needed object
+    my $LogObject     = $Kernel::OM->Get('Kernel::System::Log');
+    my $LayoutObject  = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $TicketObject  = $Kernel::OM->Get('Kernel::System::Ticket');
+    my $TimeObject    = $Kernel::OM->Get('Kernel::System::Time');
+    my $UserObject    = $Kernel::OM->Get('Kernel::System::User');
+    my $BackendObject = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
+
     # check needed stuff
-    if ( !$Param{ObjectLinkListWithData} || ref $Param{ObjectLinkListWithData} ne 'HASH' ) {
-        $Kernel::OM->Get('Kernel::System::Log')->Log(
+    if (
+        !$Param{ObjectLinkListWithData}
+        || ref $Param{ObjectLinkListWithData} ne 'HASH'
+    ) {
+        $LogObject->Log(
             Priority => 'error',
             Message  => 'Need ObjectLinkListWithData!',
         );
         return;
     }
 
-    # get user object
-    my $LayoutObject  = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-    my $TicketObject  = $Kernel::OM->Get('Kernel::System::Ticket');
-    my $TimeObject    = $Kernel::OM->Get('Kernel::System::Time');
-    my $UserObject    = $Kernel::OM->Get('Kernel::System::User');
-    my $BackendObject = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
 
     # get user preferences
     my %UserPreferences = $UserObject->GetPreferences( UserID => $Self->{UserID} );
@@ -208,12 +215,12 @@ sub TableCreateComplex {
                 next
                     if (
                     (
-                           !defined $UserPreferences{UserShowMergedTicketsInLinkedObjects}
+                       !defined $UserPreferences{UserShowMergedTicketsInLinkedObjects}
                         || !$UserPreferences{UserShowMergedTicketsInLinkedObjects}
                     )
                     && $Direction eq 'Target'
                     && $DirectionList->{$TicketID}->{State} eq 'merged'
-                    );
+                );
 
                 $LinkList{$TicketID}->{Data} = $DirectionList->{$TicketID};
             }
@@ -414,6 +421,7 @@ sub TableCreateComplex {
                     $TmpHash{Content} = $Valuetrg->{Value} || '';
                 }
             }
+
             push( @ItemColumns, \%TmpHash );
         }
 

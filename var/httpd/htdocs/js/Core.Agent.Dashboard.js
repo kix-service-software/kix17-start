@@ -420,6 +420,11 @@ Core.Agent.Dashboard = (function (TargetNS) {
                 // increase X position to don't be overlapped by mouse pointer
                 PosX = PosX + 15;
 
+                // changes the X position to the left when there is less than 400 pixels of space to the right edge of the screen
+                if ( (PosX + 400) > window.outerWidth ) {
+                   PosX = PosX - ((PosX + 400) - PosX) - 30;
+                }
+
                 Layer =
                 '<div id="events-layer" class="Hidden" style="position:absolute; top: ' + PosY + 'px; left:' + PosX + 'px; z-index: 999;"> ' +
                 '    <div class="EventDetails">' +
