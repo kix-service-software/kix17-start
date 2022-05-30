@@ -161,8 +161,8 @@ Core.UI.Datepicker = (function (TargetNS) {
         // get highest Datepicker id
         DatepickerCount = 0;
         $('input[id^="Datepicker"]').each( function() {
-            var DatepickerID = $(this).attr('id');
-            var ID = DatepickerID.substring(10);
+            var DatepickerID = $(this).attr('id'),
+                ID           = parseInt(DatepickerID.substring(10));
             if ( DatepickerCount < ID ) {
                 DatepickerCount = ID;
             }
@@ -172,20 +172,25 @@ Core.UI.Datepicker = (function (TargetNS) {
         DatepickerCount++;
 
         // Check, if datepicker is used with three input element or with three select boxes
-        if (typeof Element === 'object' &&
-            typeof Element.Day !== 'undefined' &&
-            typeof Element.Month !== 'undefined' &&
-            typeof Element.Year !== 'undefined' &&
-            isJQueryObject(Element.Day, Element.Month, Element.Year) &&
-            // Sometimes it can happen that BuildDateSelection was called without placing the full date selection.
-            //  Ignore in this case.
-            Element.Day.length
+        // Sometimes it can happen that BuildDateSelection was called without placing the full date selection.
+        // Ignore in this case.
+        if (
+            typeof Element === 'object'
+            && typeof Element.Day !== 'undefined'
+            && typeof Element.Month !== 'undefined'
+            && typeof Element.Year !== 'undefined'
+            && isJQueryObject(Element.Day, Element.Month, Element.Year)
+            && Element.Day.length
         ) {
 
             $DatepickerElement = $('<input>').attr('type', 'hidden').attr('id', 'Datepicker' + DatepickerCount);
             Element.Year.after($DatepickerElement);
 
-            if (Element.Day.is('select') && Element.Month.is('select') && Element.Year.is('select')) {
+            if (
+                Element.Day.is('select')
+                && Element.Month.is('select')
+                && Element.Year.is('select')
+            ) {
                 HasDateSelectBoxes = true;
             }
         }
@@ -211,15 +216,16 @@ Core.UI.Datepicker = (function (TargetNS) {
         };
 
         Options.onSelect = function (DateText, Instance) {
-            var Year = Instance.selectedYear,
+            var Year  = Instance.selectedYear,
                 Month = Instance.selectedMonth + 1,
-                Day = Instance.selectedDay;
+                Day   = Instance.selectedDay;
 
             // Update the three select boxes
             if (HasDateSelectBoxes) {
                 Element.Year.find('option[value=' + Year + ']').prop('selected', true);
                 Element.Month.find('option[value=' + Month + ']').prop('selected', true);
                 Element.Day.find('option[value=' + Day + ']').prop('selected', true);
+
                 if (Element.Date && Element.Date.length) {
                     Element.Date.val(DateText);
                 }
@@ -283,19 +289,25 @@ Core.UI.Datepicker = (function (TargetNS) {
 
             // Add validation error messages for all dateselection elements
             Element.Year
-            .after('<div id="' + Element.Day.attr('id') + 'Error" class="TooltipErrorMessage"><p>' + ErrorMessage + '</p></div>')
-            .after('<div id="' + Element.Month.attr('id') + 'Error" class="TooltipErrorMessage"><p>' + ErrorMessage + '</p></div>')
-            .after('<div id="' + Element.Year.attr('id') + 'Error" class="TooltipErrorMessage"><p>' + ErrorMessage + '</p></div>');
+                .after('<div id="' + Element.Day.attr('id') + 'Error" class="TooltipErrorMessage"><p>' + ErrorMessage + '</p></div>')
+                .after('<div id="' + Element.Month.attr('id') + 'Error" class="TooltipErrorMessage"><p>' + ErrorMessage + '</p></div>')
+                .after('<div id="' + Element.Year.attr('id') + 'Error" class="TooltipErrorMessage"><p>' + ErrorMessage + '</p></div>');
 
             // only insert time element error messages if time elements are present
-            if (Element.Hour && Element.Hour.length) {
+            if (
                 Element.Hour
-                .after('<div id="' + Element.Hour.attr('id') + 'Error" class="TooltipErrorMessage"><p>' + ErrorMessage + '</p></div>')
-                .after('<div id="' + Element.Minute.attr('id') + 'Error" class="TooltipErrorMessage"><p>' + ErrorMessage + '</p></div>');
+                && Element.Hour.length
+            ) {
+                Element.Hour
+                    .after('<div id="' + Element.Hour.attr('id') + 'Error" class="TooltipErrorMessage"><p>' + ErrorMessage + '</p></div>')
+                    .after('<div id="' + Element.Minute.attr('id') + 'Error" class="TooltipErrorMessage"><p>' + ErrorMessage + '</p></div>');
             }
         }
 
-        if (Element.Date && Element.Date.length) {
+        if (
+            Element.Date
+            && Element.Date.length
+        ) {
             $DatepickerElement.datepicker('option', 'dateFormat', Element.Format);
 
             // we need some special handling, if the element ID contains :: (CI edit)
@@ -346,7 +358,10 @@ Core.UI.Datepicker = (function (TargetNS) {
                   });
         }
 
-        if (Element.Time && Element.Time.length) {
+        if (
+            Element.Time
+            && Element.Time.length
+        ) {
             Element.Time
             .change( function () {
                 var times = $(this).val().split(':');
