@@ -91,8 +91,6 @@ sub ToAscii {
     # get length of line for forcing line breakes
     my $LineLength = $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Frontend::TextAreaNote') || 78;
 
-    my $String = $Param{String};
-
     # get parser object
     my $Parser = HTML::Parser->new(
         api_version        => 3,
