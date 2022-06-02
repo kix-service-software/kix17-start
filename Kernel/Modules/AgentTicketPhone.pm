@@ -1755,7 +1755,6 @@ sub Run {
                     %ACLCompatGetParam,
                     CustomerUserID => $CustomerUser || $SelectedCustomerUser || '',
                     QueueID        => $NewQueueID   || $Self->{QueueID}      || 1,
-                    TypeID         => $GetParam{TypeID},
                 ),
                 NextState  => $NextState,
                 Priorities => $Self->_GetPriorities(
@@ -1784,8 +1783,8 @@ sub Run {
                 To           => $Self->_GetTos(
                     %GetParam,
                     %ACLCompatGetParam,
-                    QueueID => $NewQueueID || $Self->{QueueID} || 1,
-                    TypeID  => $GetParam{TypeID},
+                    CustomerUserID => $CustomerUser || $SelectedCustomerUser || '',
+                    QueueID        => $NewQueueID || $Self->{QueueID} || 1,
                 ),
                 ToSelected  => $Dest,
                 Errors      => \%Error,
@@ -2339,7 +2338,6 @@ sub Run {
             %ACLCompatGetParam,
             CustomerUserID => $CustomerUser || '',
             QueueID        => $QueueID      || 1,
-            TypeID         => $GetParam{TypeID},
         );
         my $Priorities = $Self->_GetPriorities(
             %GetParam,
