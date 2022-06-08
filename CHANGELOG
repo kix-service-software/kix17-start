@@ -1,6 +1,12 @@
 # Change log of KIX
 * Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.19.0-RC10 (2022/06/08)
+ * (2022/06/07) - Bugfix: KIX17-3007 (adjust utf8 encoding correction) (mbauer)
+ * (2022/06/02) - Bugfix: KIX17-3014 (fallback order for presort) (mbauer)
+ * (2022/06/01) - Bugfix: KIX17-3032 (keep selected queue after file upload) (mbauer)
+ * (2022/05/30) - Bugfix: KIX17-3024 (fixed setting the date in the wrong date field when the datepicker count is over 9) (fjacquemin)
+
 # 17.19.0-RC9 (2022/05/20)
  * (2022/05/17) - Bugfix: KIX17-2467 (fixed position and size of popup window) (fjacquemin)
  * (2022/05/12) - Bugfix: KIX17-2996 (fixed missing filling of CustomerName and CustomerCompanyName in LinkObject Ticket) (fjacquemin)
