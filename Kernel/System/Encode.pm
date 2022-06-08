@@ -146,10 +146,14 @@ sub Convert {
                 $TruncatedText = substr( $TruncatedText, 0, 65 ) . '[...]';
             }
 
-            print STDERR "No valid '$Param{To}' string: '$TruncatedText'!\n";
+            # output debug message
+            if ( $Self->{Debug} ) {
+                print STDERR "No valid '$Param{To}' string: '$TruncatedText'!\n";
+            }
 
             # strip invalid chars / 0 = will put a substitution character in
             # place of a malformed character
+            eval { $Param{Text} = Encode::encode($Param{To}, Encode::decode($Param{From}, $Param{Text}, 0), 0) };
             eval { Encode::from_to( $Param{Text}, $Param{From}, $Param{To}, 0 ) };
 
             # set utf-8 flag
