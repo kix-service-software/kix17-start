@@ -141,6 +141,24 @@ sub LinkListWithData {
                     $TicketData{CustomerName} = $CustomerUserObject->CustomerName(
                         UserLogin => $TicketData{CustomerUserID},
                     );
+
+                    if ( !$TicketData{CustomerName} ) {
+                        my %CustomerUsers = $CustomerUserObject->CustomerSearch(
+                            PostMasterSearch => $TicketData{CustomerUserID},
+                        );
+
+                        if ( %CustomerUsers ) {
+                            my @CustomerUserIDs = keys %CustomerUsers;
+
+                            $TicketData{CustomerName} = $CustomerUserObject->CustomerName(
+                                UserLogin => $CustomerUserIDs[0],
+                            );
+                        }
+                    }
+
+                    if ( !$TicketData{CustomerName} ) {
+                        $TicketData{CustomerName} = $TicketData{CustomerUserID};
+                    }
                 }
 
                 if (
