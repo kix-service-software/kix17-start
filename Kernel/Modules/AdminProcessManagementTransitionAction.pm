@@ -563,6 +563,7 @@ sub _ShowEdit {
         my @ListTmp = $Kernel::OM->Get('Kernel::System::Main')->DirectoryRead(
             Directory => $TransitionDirectory,
             Filter    => '*.pm',
+            Silent    => 1,
         );
         @List = ( @List, @ListTmp );
     }
