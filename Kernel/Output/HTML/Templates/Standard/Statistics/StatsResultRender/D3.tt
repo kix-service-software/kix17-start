@@ -39,6 +39,14 @@ $('#download-svg').on('click', function() {
 $('#download-png').on('click', function() {
     this.href = Core.UI.AdvancedChart.ConvertSVGtoPNG($('#svg-container'));
 });
+
+// add translations
+Core.Config.Set('Values', [% Translate("Values") | JSON %]);
+Core.Config.Set('Grouped', [% Translate("Grouped") | JSON %]);
+Core.Config.Set('Stacked', [% Translate("Stacked") | JSON %]);
+Core.Config.Set('Expanded', [% Translate("Expanded") | JSON %]);
+Core.Config.Set('Stream', [% Translate("Stream") | JSON %]);
+
 Core.UI.AdvancedChart.Init(
     [% Data.Format | JSON %],
     [% JSON(Data.RawData) %],
