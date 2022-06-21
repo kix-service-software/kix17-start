@@ -50,8 +50,11 @@ sub Run {
     my %Config;
     my %Match;
     my %Set;
-    my $StopAfterMatch;
-    if ( $Param{JobConfig} && ref $Param{JobConfig} eq 'HASH' ) {
+    my %Not;
+    if (
+        $Param{JobConfig}
+        && ref $Param{JobConfig} eq 'HASH'
+    ) {
         %Config = %{ $Param{JobConfig} };
         if ( $Config{Match} ) {
             %Match = %{ $Config{Match} };
@@ -59,101 +62,187 @@ sub Run {
         if ( $Config{Set} ) {
             %Set = %{ $Config{Set} };
         }
-        $StopAfterMatch = $Config{StopAfterMatch} || 0;
+        if ( $Config{Not} ) {
+            %Not = %{ $Config{Not} };
+        }
     }
 
+    # prepare prefix for log
     my $Prefix = '';
     if ( $Config{Name} ) {
-        $Prefix = "Filter: '$Config{Name}' ";
+        $Prefix = "Filter: '$Config{Name}'";
     }
 
-    # match 'Match => ???' stuff
-    my $Matched       = '';
-    my $MatchedNot    = 0;
-    my $MatchedResult = '';
-    for ( sort keys %Match ) {
+    # prepare suffix for log
+    my $Suffix = "(Message-ID: $Param{GetParam}->{'Message-ID'})";
 
+    # match 'Match => ???' stuff
+    my $MatchedResult = '';
+    ATTRIBUTE:
+    for my $Attribute ( sort( keys( %Match ) ) ) {
+
+        # check Body as last attribute
+        if ( $Attribute eq 'Body' ) {
+            next ATTRIBUTE;
+        }
         # match only email addresses
-        if ( $Param{GetParam}->{$_} && $Match{$_} =~ /^EMAILADDRESS:(.*)$/ ) {
+        if (
+            $Param{GetParam}->{ $Attribute }
+            && $Match{ $Attribute } =~ /^EMAILADDRESS:(.*)$/
+        ) {
             my $SearchEmail    = $1;
             my @EmailAddresses = $Self->{ParserObject}->SplitAddressLine(
-                Line => $Param{GetParam}->{$_},
+                Line => $Param{GetParam}->{ $Attribute },
             );
             my $LocalMatched;
             RECIPIENTS:
-            for my $Recipients (@EmailAddresses) {
-                my $Email = $Self->{ParserObject}->GetEmailAddress( Email => $Recipients );
+            for my $Recipients ( @EmailAddresses ) {
+                my $Email = $Self->{ParserObject}->GetEmailAddress(
+                    Email => $Recipients
+                );
                 if ( $Email =~ /^$SearchEmail$/i ) {
                     $LocalMatched = 1;
-                    if ($SearchEmail) {
+                    if ( $SearchEmail ) {
                         $MatchedResult = $SearchEmail;
                     }
                     if ( $Self->{Debug} > 1 ) {
                         $Kernel::OM->Get('Kernel::System::Log')->Log(
                             Priority => 'debug',
-                            Message  => "$Prefix'$Param{GetParam}->{$_}' =~ /$Match{$_}/i matched!",
+                            Message  => "$Prefix '$Param{GetParam}->{ $Attribute }' =~ /$Match{ $Attribute }/i matched! $Suffix",
                         );
                     }
                     last RECIPIENTS;
                 }
             }
-            if ( !$LocalMatched ) {
-                $MatchedNot = 1;
-            }
-            else {
-                $Matched = 1;
+            if (
+                (
+                    !$LocalMatched
+                    && !$Not{ $Attribute }
+                )
+                || (
+                    $LocalMatched
+                    && $Not{ $Attribute }
+                )
+            ) {
+                if ( $Self->{Debug} > 1 ) {
+                    $Kernel::OM->Get('Kernel::System::Log')->Log(
+                        Priority => 'debug',
+                        Message  => "$Prefix '$Attribute' NOT fulfilled! $Suffix",
+                    );
+                }
+                return 1;
             }
         }
-
         # match string
-        elsif ( $Param{GetParam}->{$_} && $Param{GetParam}->{$_} =~ /$Match{$_}/i ) {
-
+        elsif (
+            defined( $Param{GetParam}->{ $Attribute } )
+            && (
+                (
+                    !$Not{ $Attribute }
+                    && $Param{GetParam}->{ $Attribute } =~ m{$Match{ $Attribute }}i
+                )
+                || (
+                    $Not{ $Attribute }
+                    && $Param{GetParam}->{ $Attribute } !~ m{$Match{ $Attribute }}i
+                )
+            )
+        ) {
             # don't lose older match values if more than one header is
             # used for matching.
-            $Matched = 1;
-            if ($1) {
+            if ( $1 ) {
                 $MatchedResult = $1;
             }
+
             if ( $Self->{Debug} > 1 ) {
+                my $Op = $Not{ $Attribute } ? '!' : "=";
+
                 $Kernel::OM->Get('Kernel::System::Log')->Log(
                     Priority => 'debug',
-                    Message  => "$Prefix'$Param{GetParam}->{$_}' =~ /$Match{$_}/i matched!",
+                    Message =>
+                        "$Prefix '$Param{GetParam}->{ $Attribute }' $Op~ /$Match{ $Attribute }/i matched! $Suffix",
                 );
             }
         }
         else {
-            $MatchedNot = 1;
             if ( $Self->{Debug} > 1 ) {
+                my $Op = $Not{ $Attribute } ? '!' : "=";
+
                 $Kernel::OM->Get('Kernel::System::Log')->Log(
                     Priority => 'debug',
-                    Message  => "$Prefix'$Param{GetParam}->{$_}' =~ /$Match{$_}/i matched NOT!",
+                    Message  => "$Prefix '$Param{GetParam}->{ $Attribute }' $Op~ /$Match{ $Attribute }/i matched NOT! $Suffix",
                 );
             }
-        }
-    }
 
-    # should I ignore the incoming mail?
-    if ( $Matched && !$MatchedNot ) {
-        for ( sort keys %Set ) {
-            $Set{$_} =~ s/\[\*\*\*\]/$MatchedResult/;
-            $Param{GetParam}->{$_} = $Set{$_};
-            $Kernel::OM->Get('Kernel::System::Log')->Log(
-                Priority => 'notice',
-                Message  => $Prefix
-                    . "Set param '$_' to '$Set{$_}' (Message-ID: $Param{GetParam}->{'Message-ID'}) ",
-            );
-        }
-
-        # stop after match
-        if ($StopAfterMatch) {
-            $Kernel::OM->Get('Kernel::System::Log')->Log(
-                Priority => 'notice',
-                Message  => $Prefix
-                    . "Stopped filter processing because of used 'StopAfterMatch' (Message-ID: $Param{GetParam}->{'Message-ID'}) ",
-            );
             return 1;
         }
     }
+
+    # check body
+    if ( defined( $Match{Body} ) ) {
+        # optimize regex with leading wildcard
+        if (
+            $Match{Body} =~ m/^\.\+/
+            || $Match{Body} =~ m/^\(\.\+/
+            || $Match{Body} =~ m/^\(\?\:\.\+/
+        ) {
+            $Match{Body} = '^' . $Match{Body};
+        }
+
+        # match body
+        if (
+            defined $Param{GetParam}->{Body}
+            && (
+                (
+                    !$Not{Body}
+                    && $Param{GetParam}->{Body} =~ m{$Match{Body}}i
+                )
+                || (
+                    $Not{Body}
+                    && $Param{GetParam}->{Body} !~ m{$Match{Body}}i
+                )
+            )
+        ) {
+            # don't lose older match values if more than one header is
+            # used for matching.
+            if ( $1 ) {
+                $MatchedResult = $1;
+            }
+
+            if ( $Self->{Debug} > 1 ) {
+                my $Op = $Not{Body} ? '!' : "=";
+
+                $Kernel::OM->Get('Kernel::System::Log')->Log(
+                    Priority => 'debug',
+                    Message =>
+                        "$Prefix '$Param{GetParam}->{Body}' $Op~ /$Match{Body}/i matched! $Suffix",
+                );
+            }
+        }
+        else {
+            if ( $Self->{Debug} > 1 ) {
+                my $Op = $Not{Body} ? '!' : "=";
+
+                $Kernel::OM->Get('Kernel::System::Log')->Log(
+                    Priority => 'debug',
+                    Message  => "$Prefix '$Param{GetParam}->{Body}' $Op~ /$Match{Body}/i matched NOT! $Suffix",
+                );
+            }
+
+            return 1;
+        }
+    }
+
+    # set parameter for matched filter
+    for my $Attribute ( sort( keys( %Set ) ) ) {
+        $Set{ $Attribute } =~ s/\[\*\*\*\]/$MatchedResult/;
+        $Param{GetParam}->{ $Attribute } = $Set{ $Attribute };
+
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
+            Priority => 'notice',
+            Message  => "$Prefix Set param '$Attribute' to '$Set{ $Attribute }' $Suffix",
+        );
+    }
+
     return 1;
 }
 
