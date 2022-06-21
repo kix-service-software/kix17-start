@@ -11012,6 +11012,11 @@
                         <Item Key="From">noreply@</Item>
                     </Hash>
                 </Item>
+                <Item Key="Not">
+                    <Hash>
+                        <Item Key="From">0</Item>
+                    </Hash>
+                </Item>
                 <Item Key="Set">
                     <Hash>
                         <Item Key="X-KIX-Ignore">yes</Item>
@@ -11030,6 +11035,11 @@
                 <Item Key="Match">
                     <Hash>
                         <Item Key="Subject">SomeNumber:(\d\d\d\d)</Item>
+                    </Hash>
+                </Item>
+                <Item Key="Not">
+                    <Hash>
+                        <Item Key="Subject">0</Item>
                     </Hash>
                 </Item>
                 <Item Key="Set">
