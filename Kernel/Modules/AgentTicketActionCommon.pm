@@ -1461,8 +1461,6 @@ sub Run {
         DYNAMICFIELD:
         for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
 
-            next DYNAMICFIELD if $DynamicFieldConfig->{ObjectType} ne 'Ticket';
-
             for my $DynamicFieldHTMLKey ( ('Label', 'Field') ) {
                 my $CurrentDynamicFieldHTML
                     = $DynamicFieldHTML{ $DynamicFieldConfig->{Name} }->{ $DynamicFieldHTMLKey };
