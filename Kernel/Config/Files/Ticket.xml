@@ -10319,6 +10319,10 @@
             <Array>
                 <Item>ArticleCreate</Item>
                 <Item>ArticleUpdate</Item>
+                <Item>ArticleCopy</Item>
+                <Item>ArticleMove</Item>
+                <Item>ArticleMerge</Item>
+                <Item>ArticleMergeTarget</Item>
                 <Item>ArticleSend</Item>
                 <Item>ArticleBounce</Item>
                 <Item>ArticleAgentNotification</Item>

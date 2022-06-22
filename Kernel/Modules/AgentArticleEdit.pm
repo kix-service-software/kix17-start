@@ -65,8 +65,7 @@ sub Run {
         $GetParam{$_} = $ParamObject->GetParam( Param => $_ ) || '';
         if ( !$GetParam{$_} ) {
             return $LayoutObject->ErrorScreen(
-                Message => $LayoutObject->{LanguageObject}
-                    ->Translate( 'Need %s in AgentArticleEdit!', $_ ),
+                Message => $LayoutObject->{LanguageObject}->Translate( 'Need %s in AgentArticleEdit!', $_ ),
                 Comment => Translatable('Please contact your admin.'),
             );
         }
@@ -101,8 +100,13 @@ sub Run {
     if ( IsHashRefWithData( \%AclAction ) ) {
 
         # show error screen if ACL prohibits this action
-        if ( defined $AclAction{ $Self->{Action} } && $AclAction{ $Self->{Action} } eq '0' ) {
-            return $LayoutObject->NoPermission( WithHeader => 'yes' );
+        if (
+            defined( $AclAction{ $Self->{Action} } )
+            && $AclAction{ $Self->{Action} } eq '0'
+        ) {
+            return $LayoutObject->NoPermission(
+                WithHeader => 'yes'
+            );
         }
     }
 
@@ -132,23 +136,23 @@ sub Run {
     # prevent permission checks for wrong ticket number
     if ( $GetParam{TicketID} != $Article{TicketID} ) {
         return $LayoutObject->NoPermission(
-            Message =>
-                "Sorry, you're given ticket number does not match your article's ticket number!",
+            Message => "Sorry, you're given ticket number does not match your article's ticket number!",
             Comment => 'Please contact your admin.',
         );
     }
 
     # check if only responsible can edit articles
-    if ( $Self->{Config}->{OnlyResponsible} && $Self->{UserID} != $Article{ResponsibleID} ) {
+    if (
+        $Self->{Config}->{OnlyResponsible}
+        && $Self->{UserID} != $Article{ResponsibleID}
+    ) {
         my $Output = $LayoutObject->Header(
             Value => $Ticket{Number},
             Type  => 'Small',
         );
-        $Output .=
-            $LayoutObject->Warning(
-            Message =>
-                'Sorry, you need to be the responsible of the ticket to do this action!',
-            );
+        $Output .= $LayoutObject->Warning(
+            Message => 'Sorry, you need to be the responsible of the ticket to do this action!',
+        );
 
         $Output .= $LayoutObject->Footer( Type => 'Small', );
         return $Output;
@@ -227,7 +231,7 @@ sub Run {
     my $AccessGroupEditOk = 0;
     if (
         defined $Self->{Config}->{PermissionGroupEdit}
-        && ( ref $Self->{Config}->{PermissionGroupEdit} ) eq 'ARRAY'
+        && ref( $Self->{Config}->{PermissionGroupEdit} ) eq 'ARRAY'
     ) {
         if ( scalar @{ $Self->{Config}->{PermissionGroupEdit} } ) {
             for my $Group ( @{ $Self->{Config}->{PermissionGroupEdit} } ) {
@@ -244,7 +248,7 @@ sub Run {
     my $AccessGroupCopyOk = 0;
     if (
         defined $Self->{Config}->{PermissionGroupCopy}
-        && ( ref $Self->{Config}->{PermissionGroupCopy} ) eq 'ARRAY'
+        && ref( $Self->{Config}->{PermissionGroupCopy} ) eq 'ARRAY'
     ) {
         if ( scalar @{ $Self->{Config}->{PermissionGroupCopy} } ) {
             for my $Group ( @{ $Self->{Config}->{PermissionGroupCopy} } ) {
@@ -261,7 +265,7 @@ sub Run {
     my $AccessGroupMoveOk = 0;
     if (
         defined $Self->{Config}->{PermissionGroupMove}
-        && ( ref $Self->{Config}->{PermissionGroupMove} ) eq 'ARRAY'
+        && ref( $Self->{Config}->{PermissionGroupMove} ) eq 'ARRAY'
     ) {
         if ( scalar @{ $Self->{Config}->{PermissionGroupMove} } ) {
             for my $Group ( @{ $Self->{Config}->{PermissionGroupMove} } ) {
@@ -295,8 +299,7 @@ sub Run {
     if (
         $AccessGroupEditOk
         && $Self->{Config}->{EditableArticleTypes}
-        && $Self->{Config}->{EditableArticleTypes} =~
-        /(^|.*,)$Article{ArticleType}(,.*|$)/
+        && $Self->{Config}->{EditableArticleTypes} =~ /(^|.*,)$Article{ArticleType}(,.*|$)/
     ) {
         $LayoutObject->Block(
             Name => 'ArticleEdit',
@@ -384,12 +387,11 @@ sub Run {
         next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
         # extract the dynamic field value from the web request
-        $DynamicFieldValues{ $DynamicFieldConfig->{Name} }
-            = $BackendObject->EditFieldValueGet(
+        $DynamicFieldValues{ $DynamicFieldConfig->{Name} } = $BackendObject->EditFieldValueGet(
             DynamicFieldConfig => $DynamicFieldConfig,
             ParamObject        => $ParamObject,
             LayoutObject       => $LayoutObject,
-            );
+        );
 
     }
 
@@ -401,8 +403,7 @@ sub Run {
         next DYNAMICFIELD if !$DynamicField;
         next DYNAMICFIELD if !$DynamicFieldValues{$DynamicField};
 
-        $DynamicFieldACLParameters{ 'DynamicField_' . $DynamicField }
-            = $DynamicFieldValues{$DynamicField};
+        $DynamicFieldACLParameters{ 'DynamicField_' . $DynamicField } = $DynamicFieldValues{$DynamicField};
     }
     $GetParam{DynamicField} = \%DynamicFieldACLParameters;
 
@@ -436,16 +437,14 @@ sub Run {
                 );
             }
 
-            $GetParam{Created}
-                = $GetParam{Year} . '-'
+            $GetParam{Created} = $GetParam{Year} . '-'
                 . $GetParam{Month} . '-'
                 . $GetParam{Day} . ' '
                 . $GetParam{Hour} . ':'
                 . $GetParam{Minute} . ':'
                 . '00';
 
-            $GetParam{IncomingTime}
-                = $TimeObject->TimeStamp2SystemTime( String => $GetParam{Created} );
+            $GetParam{IncomingTime} = $TimeObject->TimeStamp2SystemTime( String => $GetParam{Created} );
         }
 
         #-----------------------------------------------------------------------
@@ -515,8 +514,7 @@ sub Run {
         }
 
         # get all attachments meta data
-        my @Attachments
-            = $UploadCacheObject->FormIDGetAllFilesMeta( FormID => $Self->{FormID}, );
+        my @Attachments = $UploadCacheObject->FormIDGetAllFilesMeta( FormID => $Self->{FormID}, );
 
         # create html strings for all dynamic fields
         my %DynamicFieldHTML;
@@ -562,8 +560,7 @@ sub Run {
 
                 if ( !IsHashRefWithData($ValidationResult) ) {
                     return $LayoutObject->ErrorScreen(
-                        Message =>
-                            "Could not perform validation on field $DynamicFieldConfig->{Label}!",
+                        Message => "Could not perform validation on field $DynamicFieldConfig->{Label}!",
                         Comment => 'Please contact the admin.',
                     );
                 }
@@ -697,9 +694,7 @@ sub Run {
                 if ( $LayoutObject->{BrowserRichText} ) {
 
                     # verify html document
-                    my $HTMLBody =
-                        $LayoutObject
-                        ->RichTextDocumentComplete( String => $GetParam{Body}, );
+                    my $HTMLBody = $LayoutObject->RichTextDocumentComplete( String => $GetParam{Body}, );
 
                     # and save (new) body as html attachment
                     $UpdateSuccessful =
@@ -724,9 +719,7 @@ sub Run {
                 # save all (new) attachments
 
                 # get pre loaded attachments
-                @Attachments =
-                    $UploadCacheObject
-                    ->FormIDGetAllFilesData( FormID => $Self->{FormID}, );
+                @Attachments = $UploadCacheObject->FormIDGetAllFilesData( FormID => $Self->{FormID}, );
 
                 # get submit attachment
                 my %UploadStuff = $ParamObject->GetUploadAll(
@@ -776,6 +769,16 @@ sub Run {
                         );
                     }
                 }
+
+                # trigger event on ticket object
+                $TicketObject->EventHandler(
+                    Event => 'ArticleUpdate',
+                    Data  => {
+                        TicketID  => $Article{TicketID},
+                        ArticleID => $Article{ArticleID},
+                    },
+                    UserID => $Self->{UserID},
+                );
             }
         }
         # set dynamic fields
@@ -922,8 +925,7 @@ sub Run {
 
         # redirect
         return $LayoutObject->PopupClose(
-            URL =>
-                "Action=AgentTicketZoom&TicketID=$Article{TicketID};ArticleID=$Article{ArticleID}"
+            URL => "Action=AgentTicketZoom&TicketID=$Article{TicketID};ArticleID=$Article{ArticleID}"
         );
     }
 
@@ -973,9 +975,7 @@ sub Run {
         if ( !$NewTicketID ) {
             my $Output = $LayoutObject->Header( Type => 'Small', );
             $Output .= $LayoutObject->Notify(
-                Info =>
-                    $LayoutObject->{LanguageObject}
-                    ->Get('Sorry, no ticket found for ticket number: ')
+                Info => $LayoutObject->{LanguageObject}->Get('Sorry, no ticket found for ticket number: ')
                     . $GetParam{NewTicketNumber}
                     . '!',
             );
@@ -1019,15 +1019,13 @@ sub Run {
             );
             if ( $CopyResult eq 'CopyFailed' ) {
                 return $LayoutObject->ErrorScreen(
-                    Message =>
-                        "Can't copy article $GetParam{ArticleID} to ticket $GetParam{NewTicketNumber}!",
+                    Message => "Can't copy article $GetParam{ArticleID} to ticket $GetParam{NewTicketNumber}!",
                     Comment => Translatable('Please contact your admin.'),
                 );
             }
             elsif ( $CopyResult eq 'UpdateFailed' ) {
                 return $LayoutObject->ErrorScreen(
-                    Message => $LayoutObject->{LanguageObject}
-                        ->Translate( 'Can\'t update times for article %s!', $GetParam{ArticleID} ),
+                    Message => $LayoutObject->{LanguageObject}->Translate( 'Can\'t update times for article %s!', $GetParam{ArticleID} ),
                     Comment => Translatable('Please contact your admin.'),
                 );
             }
@@ -1080,8 +1078,7 @@ sub Run {
             );
             if ( $MoveResult eq 'MoveFailed' ) {
                 return $LayoutObject->ErrorScreen(
-                    Message =>
-                        "Can't move article $GetParam{ArticleID} to ticket $GetParam{NewTicketNumber}!",
+                    Message => "Can't move article $GetParam{ArticleID} to ticket $GetParam{NewTicketNumber}!",
                     Comment => Translatable('Please contact your admin.'),
                 );
             }
@@ -1133,8 +1130,7 @@ sub Run {
         );
         if ( !$DeleteResult ) {
             return $LayoutObject->ErrorScreen(
-                Message =>
-                    "Can't delete article $GetParam{ArticleID} from ticket $Article{TicketNumber}!",
+                Message => "Can't delete article $GetParam{ArticleID} from ticket $Article{TicketNumber}!",
                 Comment => Translatable('Please contact your admin.'),
             );
         }
@@ -1166,9 +1162,7 @@ sub Run {
                 $Kernel::OM->Get('Kernel::System::Web::Request')->GetParam( Param => $_ ) ne
                 'undefined'
             ) {
-                $Param{$_}
-                    = $Kernel::OM->Get('Kernel::System::Web::Request')->GetParam( Param => $_ )
-                    || '';
+                $Param{$_} = $Kernel::OM->Get('Kernel::System::Web::Request')->GetParam( Param => $_ ) || '';
             }
             else {
                 $Param{$_} = '';
@@ -1333,16 +1327,13 @@ sub Run {
         }
 
         # unescape URIs for inline images etc
-        $Article{Body}
-            =~ s/<img([^>]*)\ssrc="(.*?)"/"<img$1" . ' src="' . URI::Escape::uri_unescape( $2 ) . '"'/egi;
+        $Article{Body} =~ s/<img([^>]*)\ssrc="(.*?)"/"<img$1" . ' src="' . URI::Escape::uri_unescape( $2 ) . '"'/egi;
 
         # encode entities for preformatted code within rich text editor
         $Article{Body} = encode_entities( $Article{Body} );
 
         # get all attachments meta data
-        my @Attachments =
-            $UploadCacheObject
-            ->FormIDGetAllFilesMeta( FormID => $Self->{FormID}, );
+        my @Attachments = $UploadCacheObject->FormIDGetAllFilesMeta( FormID => $Self->{FormID}, );
 
         # create html strings for all dynamic fields
         my %DynamicFieldHTML;
@@ -1385,28 +1376,25 @@ sub Run {
             }
 
             # get field html
-            $DynamicFieldHTML{ $DynamicFieldConfig->{Name} } =
-                $BackendObject->EditFieldRender(
+            $DynamicFieldHTML{ $DynamicFieldConfig->{Name} } = $BackendObject->EditFieldRender(
                 DynamicFieldConfig   => $DynamicFieldConfig,
                 PossibleValuesFilter => $PossibleValuesFilter,
                 Value                => $Value,
-                Mandatory =>
-                    $Self->{Config}->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
-                LayoutObject    => $LayoutObject,
-                ParamObject     => $ParamObject,
-                AJAXUpdate      => 1,
-                UpdatableFields => $Self->_GetFieldsToUpdate(),
-                );
+                Mandatory            => $Self->{Config}->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
+                LayoutObject         => $LayoutObject,
+                ParamObject          => $ParamObject,
+                AJAXUpdate           => 1,
+                UpdatableFields      => $Self->_GetFieldsToUpdate(),
+            );
         }
 
         # print form ...
         my $Output = $LayoutObject->Header( Type => 'Small', );
         $Output .= $Self->_Mask(
-            TicketID         => $Article{TicketID},
-            DynamicFieldHTML => \%DynamicFieldHTML,
             %Article,
-            FormID      => $Self->{FormID},
-            Attachments => \@Attachments,
+            DynamicFieldHTML => \%DynamicFieldHTML,
+            FormID           => $Self->{FormID},
+            Attachments      => \@Attachments,
         );
         $Output .= $LayoutObject->Footer( Type => 'Small', );
         return $Output;
@@ -1510,8 +1498,7 @@ sub _Mask {
     # get possible notes
     if ( $Self->{Config}->{EditableArticleTypes} ) {
         my $ShowTypeEdit = 0;
-        my %EditableArticleTypes
-            = map { $_ => 1 } split( /,/, $Self->{Config}->{EditableArticleTypes} );
+        my %EditableArticleTypes = map { $_ => 1 } split( /,/, $Self->{Config}->{EditableArticleTypes} );
         foreach my $ArticleType ( sort keys %EditableArticleTypes ) {
             if ( $Param{ArticleType} =~ /$ArticleType/ ) {
                 $ShowTypeEdit = 1;
@@ -1583,8 +1570,7 @@ sub _GetFieldsToUpdate {
 
     # set the fields that can be updateable via AJAXUpdate
     if ( !$Param{OnlyDynamicFields} ) {
-        @UpdatableFields
-            = qw(
+        @UpdatableFields = qw(
             TypeID ServiceID SLAID NewOwnerID OldOwnerID NewResponsibleID NewStateID
             NewPriorityID
         );
