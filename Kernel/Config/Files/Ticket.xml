@@ -685,6 +685,8 @@
             <Hash>
                 <Item Key="Module">Kernel::System::Ticket::Event::DynamicFieldFromCustomerUser</Item>
                 <Item Key="Event">(TicketCreate|TicketCustomerUpdate)</Item>
+                <Item Key="UnknownCustomerUserKeepsValues">0</Item>
+                <Item Key="EmptyFieldKeepsValues">0</Item>
             </Hash>
         </Setting>
     </ConfigItem>
