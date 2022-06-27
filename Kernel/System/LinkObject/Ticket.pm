@@ -208,6 +208,9 @@ sub ObjectPermission {
         }
     }
 
+    # special handling for form ids
+    return 1 if ( $Param{Key} =~ m/\d+\.\d+\.\d+/ );
+
     return $Kernel::OM->Get('Kernel::System::Ticket')->TicketPermission(
         Type     => 'ro',
         TicketID => $Param{Key},
