@@ -36,7 +36,7 @@ sub Run {
     my ( $Self, %Param ) = @_;
 
     # check needed stuff
-    for my $Needed (qw(Data UserID)) {
+    for my $Needed (qw(Data UserID Config)) {
         if ( !$Param{$Needed} ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
@@ -73,6 +73,15 @@ sub Run {
     );
     return if ( !%Ticket );
 
+    my %CustomerUserData = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerUserDataGet(
+        User          => $Ticket{CustomerUserID},
+        DynamicFields => 1,
+    );
+    return if (
+        $Param{Config}->{UnknownCustomerUserKeepsValues}
+        && !%CustomerUserData
+    );
+
     # get dynamic field objects
     my $DynamicFieldObject        = $Kernel::OM->Get('Kernel::System::DynamicField');
     my $DynamicFieldBackendObject = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
@@ -86,22 +95,20 @@ sub Run {
 
     my $DynamicFieldsReverse = { reverse %{$DynamicFields} };
 
-    my %CustomerUserData = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerUserDataGet(
-        User          => $Ticket{CustomerUserID},
-        DynamicFields => 1,
-    );
-
     # also continue if there was no CustomerUser data found - erase values
     # loop over the configured mapping of customer data variables to dynamic fields
     CUSTOMERUSERVARIABLENAME:
-    for my $CustomerUserVariableName ( sort keys %Mapping ) {
+    for my $CustomerUserVariableName ( sort( keys( %Mapping ) ) ) {
+        next CUSTOMERUSERVARIABLENAME if (
+            $Param{Config}->{EmptyFieldKeepsValues}
+            && !$CustomerUserData{ $CustomerUserVariableName }
+        );
 
         # check config for the particular mapping
         if ( !defined $DynamicFieldsReverse->{ $Mapping{$CustomerUserVariableName} } ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
-                Message =>
-                    "DynamicField $Mapping{$CustomerUserVariableName} in DynamicFieldFromCustomerUser::Mapping must be set in system and valid.",
+                Message  => "DynamicField $Mapping{$CustomerUserVariableName} in DynamicFieldFromCustomerUser::Mapping must be set in system and valid.",
             );
             next CUSTOMERUSERVARIABLENAME;
         }

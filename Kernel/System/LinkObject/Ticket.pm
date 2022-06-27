@@ -141,6 +141,24 @@ sub LinkListWithData {
                     $TicketData{CustomerName} = $CustomerUserObject->CustomerName(
                         UserLogin => $TicketData{CustomerUserID},
                     );
+
+                    if ( !$TicketData{CustomerName} ) {
+                        my %CustomerUsers = $CustomerUserObject->CustomerSearch(
+                            PostMasterSearch => $TicketData{CustomerUserID},
+                        );
+
+                        if ( %CustomerUsers ) {
+                            my @CustomerUserIDs = keys %CustomerUsers;
+
+                            $TicketData{CustomerName} = $CustomerUserObject->CustomerName(
+                                UserLogin => $CustomerUserIDs[0],
+                            );
+                        }
+                    }
+
+                    if ( !$TicketData{CustomerName} ) {
+                        $TicketData{CustomerName} = $TicketData{CustomerUserID};
+                    }
                 }
 
                 if (
@@ -189,6 +207,9 @@ sub ObjectPermission {
             return;
         }
     }
+
+    # special handling for form ids
+    return 1 if ( $Param{Key} =~ m/\d+\.\d+\.\d+/ );
 
     return $Kernel::OM->Get('Kernel::System::Ticket')->TicketPermission(
         Type     => 'ro',

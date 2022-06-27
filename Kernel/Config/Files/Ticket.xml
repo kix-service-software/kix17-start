@@ -685,6 +685,8 @@
             <Hash>
                 <Item Key="Module">Kernel::System::Ticket::Event::DynamicFieldFromCustomerUser</Item>
                 <Item Key="Event">(TicketCreate|TicketCustomerUpdate)</Item>
+                <Item Key="UnknownCustomerUserKeepsValues">0</Item>
+                <Item Key="EmptyFieldKeepsValues">0</Item>
             </Hash>
         </Setting>
     </ConfigItem>
@@ -10319,6 +10321,10 @@
             <Array>
                 <Item>ArticleCreate</Item>
                 <Item>ArticleUpdate</Item>
+                <Item>ArticleCopy</Item>
+                <Item>ArticleMove</Item>
+                <Item>ArticleMerge</Item>
+                <Item>ArticleMergeTarget</Item>
                 <Item>ArticleSend</Item>
                 <Item>ArticleBounce</Item>
                 <Item>ArticleAgentNotification</Item>
@@ -11012,6 +11018,11 @@
                         <Item Key="From">noreply@</Item>
                     </Hash>
                 </Item>
+                <Item Key="Not">
+                    <Hash>
+                        <Item Key="From">0</Item>
+                    </Hash>
+                </Item>
                 <Item Key="Set">
                     <Hash>
                         <Item Key="X-KIX-Ignore">yes</Item>
@@ -11030,6 +11041,11 @@
                 <Item Key="Match">
                     <Hash>
                         <Item Key="Subject">SomeNumber:(\d\d\d\d)</Item>
+                    </Hash>
+                </Item>
+                <Item Key="Not">
+                    <Hash>
+                        <Item Key="Subject">0</Item>
                     </Hash>
                 </Item>
                 <Item Key="Set">
@@ -16790,14 +16806,6 @@ Thanks for your help!
                 <Item Key="Prio">6100</Item>
                 <Item Key="Active">10</Item>
             </Hash>
-        </Setting>
-    </ConfigItem>
-    <ConfigItem Name="Ticket::Frontend::CustomerTicketMessage###TicketTypeFix" Required="1" Valid="1">
-        <Description Translatable="1">Used ticket type, if ticket type selection is disabled.</Description>
-        <Group>Ticket</Group>
-        <SubGroup>Frontend::Customer::Ticket::ViewNew</SubGroup>
-        <Setting>
-            <String Regex="">default</String>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::CustomerTicketMessage###Subject" Required="0" Valid="0">
