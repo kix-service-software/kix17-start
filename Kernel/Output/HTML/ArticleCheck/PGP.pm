@@ -185,7 +185,7 @@ sub Check {
         my $Message = $TicketObject->ArticlePlain(
             ArticleID => $Self->{ArticleID},
             UserID    => $Self->{UserID},
-        );
+        ) || '';
 
         # create local email parser object
         my $ParserObject = Kernel::System::EmailParser->new(
@@ -230,7 +230,7 @@ sub Check {
         my $Message = $TicketObject->ArticlePlain(
             ArticleID => $Self->{ArticleID},
             UserID    => $Self->{UserID},
-        );
+        ) || '';
         my $Parser = MIME::Parser->new();
         $Parser->decode_headers(0);
         $Parser->extract_nested_messages(0);
