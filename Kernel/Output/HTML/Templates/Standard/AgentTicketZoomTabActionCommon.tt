@@ -460,6 +460,8 @@ $('#FileUpload').on('change', function (Event) {
     var UploadFileFrame = $('<iframe name="' + FrameFUName + '"></iframe>');
     // hide iframe
     UploadFileFrame.css("display", "none");
+    // append uploadframe to body
+    $('body:first').append(UploadFileFrame);
     // load iframe content
     UploadFileFrame.on("load", function(data) {
 
@@ -477,8 +479,6 @@ $('#FileUpload').on('change', function (Event) {
             SubmittingFileForm.find('#UploadFinish').val('1').trigger('change');
         }, 1000);
     });
-    // append uploadframe to body
-    $('body:first').append(UploadFileFrame);
     // set form target to iframe
     SubmittingFileForm.attr('target', FrameFUName);
     // submit form
