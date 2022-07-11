@@ -499,7 +499,7 @@ Core.UI.Popup = (function (TargetNS) {
                 }
 
                 if (WindowMode === 'Popup') {
-                    var Match     = URL.match(/.*Action=(.*?);/ism),
+                    var Match     = URL.match(/^(?:.+;|.+&|.*\?|)Action=(.+?)(?:;.*|&.*|)$/ism),
                         PopupData = {},
                         Data      = {
                             Action : 'PopupSize',

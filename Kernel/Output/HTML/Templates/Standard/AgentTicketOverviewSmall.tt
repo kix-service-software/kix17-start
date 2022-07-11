@@ -517,7 +517,9 @@ $('.OverviewHeader').off('click').on('click', '.ColumnSettingsTrigger', function
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
     $('.OverviewActions').on('change', 'select[name=DestQueueID]', function (Event) {
-        $(this).closest('form').submit();
+        if ($(this).val() > 0) {
+            $(this).closest('form').submit();
+        }
     });
 //]]></script>
 [% END %]
