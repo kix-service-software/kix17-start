@@ -277,8 +277,10 @@ Returns:
 sub GenerateCustomFilesArchive {
     my ( $Self, %Param ) = @_;
 
-    # get config object
+    # get needed objects
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+    my $LogObject    = $Kernel::OM->Get('Kernel::System::Log');
+    my $MainObject   = $Kernel::OM->Get('Kernel::System::Main');
 
     my $TempDir = $ConfigObject->Get('TempDir') . '/SupportBundle';
 
@@ -314,15 +316,11 @@ sub GenerateCustomFilesArchive {
 
     $TarObject->add_files(@List);
 
-    # within the tar file the paths are not absolute, so leading "/" must be removed
-    my $HomeWithoutSlash = $Self->{Home};
-    $HomeWithoutSlash =~ s{\A\/}{};
-
     # Mask Passwords in Config.pm
-    my $Config = $TarObject->get_content( $HomeWithoutSlash . '/Kernel/Config.pm' );
+    my $Config = $TarObject->get_content( $Self->{Home} . '/Kernel/Config.pm' );
 
     if ( !$Config ) {
-        $Kernel::OM->Get('Kernel::System::Log')->Log(
+        $LogObject->Log(
             Priority => 'error',
             Message  => "Kernel/Config.pm was not found in the modified files!",
         );
@@ -347,13 +345,13 @@ sub GenerateCustomFilesArchive {
         }
     }
 
-    $TarObject->replace_content( $HomeWithoutSlash . '/Kernel/Config.pm', $Config );
+    $TarObject->replace_content( $Self->{Home} . '/Kernel/Config.pm', $Config );
 
     my $Write = $TarObject->write( $CustomFilesArchive, 0 );
     if ( !$Write ) {
 
         # log info
-        $Kernel::OM->Get('Kernel::System::Log')->Log(
+        $LogObject->Log(
             Priority => 'error',
             Message  => "Can't write $CustomFilesArchive: $!",
         );
@@ -365,7 +363,7 @@ sub GenerateCustomFilesArchive {
     if ( !open( $TARFH, '<', $CustomFilesArchive ) ) {
 
         # log info
-        $Kernel::OM->Get('Kernel::System::Log')->Log(
+        $LogObject->Log(
             Priority => 'error',
             Message  => "Can't read $CustomFilesArchive: $!",
         );
@@ -379,11 +377,11 @@ sub GenerateCustomFilesArchive {
     };
     close $TARFH;
 
-    if ( $Kernel::OM->Get('Kernel::System::Main')->Require('Compress::Zlib') ) {
+    if ( $MainObject->Require('Compress::Zlib') ) {
         my $GzTar = Compress::Zlib::memGzip($TmpTar);
 
         # log info
-        $Kernel::OM->Get('Kernel::System::Log')->Log(
+        $LogObject->Log(
             Priority => 'notice',
             Message  => "Compression of $CustomFilesArchive end",
         );
@@ -392,7 +390,7 @@ sub GenerateCustomFilesArchive {
     }
 
     # log info
-    $Kernel::OM->Get('Kernel::System::Log')->Log(
+    $LogObject->Log(
         Priority => 'notice',
         Message  => "$CustomFilesArchive was not compressed",
     );
@@ -508,19 +506,19 @@ sub _GetMD5SumLookup {
 sub _GetCustomFileList {
     my ( $Self, %Param ) = @_;
 
-    # check needed stuff
-    for my $Needed (qw(Directory)) {
-        if ( !$Param{$Needed} ) {
-            $Kernel::OM->Get('Kernel::System::Log')->Log(
-                Priority => 'error',
-                Message  => "Need $Needed!"
-            );
-            return;
-        }
-    }
-
-    # get config object
+    # get needed objects
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+    my $LogObject    = $Kernel::OM->Get('Kernel::System::Log');
+    my $MainObject   = $Kernel::OM->Get('Kernel::System::Main');
+
+    # check needed stuff
+    if ( !$Param{Directory} ) {
+        $LogObject->Log(
+            Priority => 'error',
+            Message  => "Need Directory!"
+        );
+        return;
+    }
 
     # article directory
     my $ArticleDir = $ConfigObject->Get('ArticleDir');
@@ -534,12 +532,29 @@ sub _GetCustomFileList {
     # cleanup file name
     $TempDir =~ s/\/\//\//g;
 
+    my @SkipPath;
+    my @PGPSMIME = (
+        'SMIME::CertPath',
+        'SMIME::PrivatePath',
+        'PGP::Options'
+    );
+    for my $Config ( @PGPSMIME ) {
+        my $Path = $ConfigObject->Get($Config);
+
+        if ( $Config =~ /^PGP/ ) {
+            my ($TruePath) = $Path =~ /.*?(\/.*\/).*/g;
+
+            next if ( !$TruePath );
+            $Path = $TruePath;
+        }
+        push(@SkipPath, $Path);
+    }
+
     # check all $Param{Directory}/* in home directory
     my @Files;
     my @List = glob("$Param{Directory}/*");
     FILE:
     for my $File (@List) {
-
         # cleanup file name
         $File =~ s/\/\//\//g;
 
@@ -561,6 +576,13 @@ sub _GetCustomFileList {
             # do not include documentation
             next FILE if $File =~ /doc/;
 
+            # do not include PGP and SMIME
+            if ( @SkipPath ) {
+                for my $Dir ( @SkipPath ) {
+                    next FILE if $File =~ /\Q$Dir\E/i;
+                }
+            }
+
             # add directory to list
             push @Files, $Self->_GetCustomFileList( Directory => $File );
         }
@@ -578,10 +600,13 @@ sub _GetCustomFileList {
             # do not include ARCHIVE
             next FILE if $File =~ /ARCHIVE/;
 
+            # do not include PreCustomPackageRegistration
+            next FILE if $File =~ /.*\.PreCustomPackageRegistration\.\d+-\d+-\d+_\d+-\d+/;
+
             # do not include if file is not readable
             next FILE if !-r $File;
 
-            my $MD5Sum = $Kernel::OM->Get('Kernel::System::Main')->MD5sum(
+            my $MD5Sum = $MainObject->MD5sum(
                 Filename => $File,
             );
 
