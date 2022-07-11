@@ -1,6 +1,14 @@
 # Change log of KIX
 * Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.19.0-RC12 (2022/07/11)
+ * (2022/07/11) - Bugfix: KIX17-3104 (fixed missing exclusion of PGP and S-MIME files when creating support bundle) (fjacquemin)
+ * (2022/07/06) - Bugfix: KIX17-3078 (preselect internal article type responding to internal article) (mbauer)
+ * (2022/07/06) - Bugfix: KIX17-1210 (prevent chrome from canceling upload in tab) (mbauer)
+ * (2022/07/01) - Bugfix: KIX17-3075 (prevent submit for current queue in move selection) (mbauer)
+ * (2022/07/01) - Bugfix: KIX17-3073 (fallback for missing article plain text) (mbauer)
+ * (2022/07/01) - Bugfix: KIX17-2467 (fix match for calling action) (mbauer)
+
 # 17.19.0-RC11 (2022/06/27)
  * (2022/06/22) - Bugfix: KIX17-3052 (configuration for value handling) (mbauer)
  * (2022/06/22) - Bugfix: KIX17-3057 (handle Form-ACLs for article dynamic fields) (mbauer)
