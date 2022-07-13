@@ -565,9 +565,10 @@ sub Run {
     elsif ( $Param{Action} eq 'LostPassword' ) {
 
         # get needed objects
-        my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-        my $EmailObject  = $Kernel::OM->Get('Kernel::System::Email');
-        my $ValidObject  = $Kernel::OM->Get('Kernel::System::Valid');
+        my $LayoutObject   = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+        my $EmailObject    = $Kernel::OM->Get('Kernel::System::Email');
+        my $ValidObject    = $Kernel::OM->Get('Kernel::System::Valid');
+        my $ExecutorObject = $Kernel::OM->Get('Kernel::System::AsynchronousExecutor::LostPasswordExecutor');
 
         # check feature
         if ( !$ConfigObject->Get('LostPassword') ) {
@@ -673,52 +674,19 @@ sub Run {
                 return;
             }
 
-            my $PreferencesGroups = $ConfigObject->Get('PreferencesGroups');
-
-            # get new password
-            $UserData{NewPW} = $UserObject->GenerateRandomPassword(
-                Size => $PreferencesGroups->{Password}->{PasswordMinSize}
+            $ExecutorObject->AsyncCall(
+                ObjectName     => 'Kernel::System::AsynchronousExecutor::LostPasswordExecutor',
+                FunctionName   => 'Run',
+                TaskName       => $Self->{Action} . '-' . $Token . '-Run',
+                FunctionParams => {
+                    CallAction => 'Run',
+                    Token    => $Token,
+                    UserData => \%UserData,
+                    User     => $User,
+                    Type     => 'User',
+                },
+                Attempts       => 1,
             );
-
-            # update new password
-            my $Success = $UserObject->SetPassword(
-                UserLogin => $UserData{UserLogin},
-                PW        => $UserData{NewPW}
-            );
-            if ( !$Success ) {
-                $LayoutObject->Print(
-                    Output => \$LayoutObject->Login(
-                        Title       => 'Login',
-                        Message     => $LayoutObject->{LanguageObject}->Translate('Reset password unsuccessful. Please contact the administrator.'),
-                        MessageType => 'Error',
-                    ),
-                );
-                return;
-            }
-
-            # send notify email with new password
-            my $Body    = $ConfigObject->Get('NotificationBodyLostPassword')
-                || 'New Password is: <KIX_NEWPW>';
-            my $Subject = $ConfigObject->Get('NotificationSubjectLostPassword')
-                || 'New Password!';
-            for ( sort keys %UserData ) {
-                $Body =~ s/<(KIX|OTRS)_$_>/$UserData{$_}/gi;
-            }
-
-            # send notify email
-            my $Sent = $EmailObject->Send(
-                To       => $UserData{UserEmail},
-                Subject  => $Subject,
-                Charset  => $LayoutObject->{UserCharset},
-                MimeType => 'text/plain',
-                Body     => $Body
-            );
-            if ( !$Sent ) {
-                $LayoutObject->FatalError(
-                    Comment => Translatable('Please contact the administrator.'),
-                );
-                return;
-            }
 
             # return that new password was sent
             $LayoutObject->Print(
@@ -748,46 +716,18 @@ sub Run {
                 $UserData{UserID}
                 && $UserIsValid
             ) {
-                # generate token
-                $UserData{Token} = $UserObject->TokenGenerate(
-                    UserID => $UserData{UserID},
+                $ExecutorObject->AsyncCall(
+                    ObjectName     => 'Kernel::System::AsynchronousExecutor::LostPasswordExecutor',
+                    FunctionName   => 'Run',
+                    TaskName       => 'LostPasswordToken-' . $UserData{UserID} . '-Run',
+                    FunctionParams => {
+                        Subaction => 'TokenSend',
+                        UserData => \%UserData,
+                        User     => $User,
+                        Type     => 'User',
+                    },
+                    Attempts       => 1,
                 );
-
-                # prepare notify email with link
-                my $Body = $ConfigObject->Get('NotificationBodyLostPasswordToken');
-                if ( !$Body ) {
-                    $LayoutObject->FatalError(
-                        Message => 'ERROR: NotificationBodyLostPasswordToken is missing!',
-                        Comment => Translatable('Please contact the administrator.'),
-                    );
-                    return;
-                }
-                my $Subject = $ConfigObject->Get('NotificationSubjectLostPasswordToken');
-                if ( !$Subject ) {
-                    $LayoutObject->FatalError(
-                        Message => 'ERROR: NotificationSubjectLostPasswordToken is missing!',
-                        Comment => Translatable('Please contact the administrator.'),
-                    );
-                    return;
-                }
-                for ( sort keys %UserData ) {
-                    $Body =~ s/<(KIX|OTRS)_$_>/$UserData{$_}/gi;
-                }
-
-                # send notify email
-                my $Sent = $EmailObject->Send(
-                    To       => $UserData{UserEmail},
-                    Subject  => $Subject,
-                    Charset  => $LayoutObject->{UserCharset},
-                    MimeType => 'text/plain',
-                    Body     => $Body
-                );
-                if ( !$Sent ) {
-                    $LayoutObject->FatalError(
-                        Comment => Translatable('Please contact the administrator.'),
-                    );
-                    return;
-                }
             }
 
             # Security: Always pretend that password reset instructions were sent to
