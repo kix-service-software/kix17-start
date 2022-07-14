@@ -35,10 +35,16 @@ sub new {
 sub Run {
     my ( $Self, %Param ) = @_;
 
+    # get needed objects
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+    my $EmailObject  = $Kernel::OM->Get('Kernel::System::Email');
+    my $LogObject    = $Kernel::OM->Get('Kernel::System::Log');
+    my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
+
     # check needed stuff
     for (qw(JobConfig GetParam)) {
         if ( !$Param{$_} ) {
-            $Kernel::OM->Get('Kernel::System::Log')->Log(
+            $LogObject->Log(
                 Priority => 'error',
                 Message  => "Need $_!"
             );
@@ -46,100 +52,134 @@ sub Run {
         }
     }
 
+    # prepare suffix for log
+    my $Suffix = "(Message-ID: $Param{GetParam}->{'Message-ID'})";
+
     # get config options
-    my %Config;
     my %Match;
     my %Set;
-    if ( $Param{JobConfig} && ref $Param{JobConfig} eq 'HASH' ) {
-        %Config = %{ $Param{JobConfig} };
-        if ( $Config{Match} ) {
-            %Match = %{ $Config{Match} };
+    if (
+        $Param{JobConfig}
+        && ref( $Param{JobConfig} ) eq 'HASH'
+    ) {
+        if ( ref( $Param{JobConfig}->{Match} ) eq 'HASH' ) {
+            %Match = %{ $Param{JobConfig}->{Match} };
         }
-        if ( $Config{Set} ) {
-            %Set = %{ $Config{Set} };
+        if ( ref( $Param{JobConfig}->{Set} ) eq 'HASH' ) {
+            %Set = %{ $Param{JobConfig}->{Set} };
         }
     }
 
-    # match 'Match => ???' stuff
-    my $Matched    = '';
-    my $MatchedNot = 0;
-    for ( sort keys %Match ) {
+    ATTRIBUTE:
+    for my $Attribute ( sort( keys( %Match ) ) ) {
 
-        if ( $Param{GetParam}->{$_} && $Param{GetParam}->{$_} =~ /$Match{$_}/i ) {
-            $Matched = $1 || '1';
+        # check Body as last attribute
+        if ( $Attribute eq 'Body' ) {
+            next ATTRIBUTE;
+        }
+
+        if (
+            defined( $Param{GetParam}->{ $Attribute } )
+            && $Param{GetParam}->{ $Attribute } =~ /$Match{ $Attribute }/i
+        ) {
             if ( $Self->{Debug} > 1 ) {
-                $Kernel::OM->Get('Kernel::System::Log')->Log(
+                $LogObject->Log(
                     Priority => 'debug',
-                    Message  => "'$Param{GetParam}->{$_}' =~ /$Match{$_}/i matched!",
+                    Message  => "'$Param{GetParam}->{ $Attribute }' =~ /$Match{ $Attribute }/i matched! $Suffix",
                 );
             }
         }
         else {
-            $MatchedNot = 1;
             if ( $Self->{Debug} > 1 ) {
-                $Kernel::OM->Get('Kernel::System::Log')->Log(
+                $LogObject->Log(
                     Priority => 'debug',
-                    Message  => "'$Param{GetParam}->{$_}' =~ /$Match{$_}/i matched NOT!",
+                    Message  => "'$Param{GetParam}->{ $Attribute }' =~ /$Match{ $Attribute }/i matched NOT! $Suffix",
+                );
+            }
+
+            return 1;
+        }
+    }
+
+    # check body
+    if ( defined( $Match{Body} ) ) {
+        # optimize regex with leading wildcard
+        if (
+            $Match{Body} =~ m/^\.\+/
+            || $Match{Body} =~ m/^\(\.\+/
+            || $Match{Body} =~ m/^\(\?\:\.\+/
+        ) {
+            $Match{Body} = '^' . $Match{Body};
+        }
+
+        # match body
+        if (
+            defined( $Param{GetParam}->{Body} )
+            && $Param{GetParam}->{Body} =~ m{$Match{Body}}i
+        ) {
+            if ( $Self->{Debug} > 1 ) {
+                $LogObject->Log(
+                    Priority => 'debug',
+                    Message  => "'$Param{GetParam}->{Body}' =~ /$Match{Body}/i matched! $Suffix",
                 );
             }
         }
-    }
-    if ( $Matched && !$MatchedNot ) {
+        else {
+            if ( $Self->{Debug} > 1 ) {
+                $LogObject->Log(
+                    Priority => 'debug',
+                    Message  => "'$Param{GetParam}->{Body}' =~ /$Match{Body}/i matched NOT! $Suffix",
+                );
+            }
 
-        # get ticket object
-        my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
-
-        # check if new ticket
-        my $Tn = $TicketObject->GetTNByString( $Param{GetParam}->{Subject} );
-
-        return 1 if $Tn && $TicketObject->TicketCheckNumber( Tn => $Tn );
-
-        # set attributes if ticket is created
-        for ( sort keys %Set ) {
-            $Param{GetParam}->{$_} = $Set{$_};
-            $Kernel::OM->Get('Kernel::System::Log')->Log(
-                Priority => 'notice',
-                Message =>
-                    "Set param '$_' to '$Set{$_}' (Message-ID: $Param{GetParam}->{'Message-ID'}) ",
-            );
+            return 1;
         }
+    }
 
-        # get config object
-        my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+    # check if new ticket
+    my $Tn = $TicketObject->GetTNByString( $Param{GetParam}->{Subject} );
 
-        # send bounce mail
-        my $Subject = $ConfigObject->Get(
-            'PostMaster::PreFilterModule::NewTicketReject::Subject'
-        );
-        my $Body = $ConfigObject->Get(
-            'PostMaster::PreFilterModule::NewTicketReject::Body'
-        );
-        my $Sender = $ConfigObject->Get(
-            'PostMaster::PreFilterModule::NewTicketReject::Sender'
-        ) || '';
+    return 1 if (
+        $Tn
+        && $TicketObject->TicketCheckNumber( Tn => $Tn )
+    );
 
-        $Kernel::OM->Get('Kernel::System::Email')->Send(
-            From       => $Sender,
-            To         => $Param{GetParam}->{From},
-            Subject    => $Subject,
-            Body       => $Body,
-            Charset    => 'utf-8',
-            MimeType   => 'text/plain',
-            Loop       => 1,
-            Attachment => [
-                {
-                    Filename    => 'email.txt',
-                    Content     => $Param{GetParam}->{Body},
-                    ContentType => 'application/octet-stream',
-                }
-            ],
-        );
+    # set attributes if ticket is created
+    for my $Attribute ( sort( keys( %Set ) ) ) {
+        $Param{GetParam}->{ $Attribute } = $Set{ $Attribute };
 
-        $Kernel::OM->Get('Kernel::System::Log')->Log(
+        $LogObject->Log(
             Priority => 'notice',
-            Message  => "Send reject mail to '$Param{GetParam}->{From}'!",
+            Message  => "Set param '$Attribute' to '$Set{ $Attribute }' $Suffix",
         );
     }
+
+    # send bounce mail
+    my $Subject = $ConfigObject->Get( 'PostMaster::PreFilterModule::NewTicketReject::Subject' );
+    my $Body    = $ConfigObject->Get( 'PostMaster::PreFilterModule::NewTicketReject::Body' );
+    my $Sender  = $ConfigObject->Get( 'PostMaster::PreFilterModule::NewTicketReject::Sender' ) || '';
+
+    $EmailObject->Send(
+        From       => $Sender,
+        To         => $Param{GetParam}->{From},
+        Subject    => $Subject,
+        Body       => $Body,
+        Charset    => 'utf-8',
+        MimeType   => 'text/plain',
+        Loop       => 1,
+        Attachment => [
+            {
+                Filename    => 'email.txt',
+                Content     => $Param{GetParam}->{Body},
+                ContentType => 'application/octet-stream',
+            }
+        ],
+    );
+
+    $LogObject->Log(
+        Priority => 'notice',
+        Message  => "Send reject mail to '$Param{GetParam}->{From}'! $Suffix",
+    );
 
     return 1;
 }
