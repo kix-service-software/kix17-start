@@ -196,6 +196,97 @@ sub ArticleCreate {
     # process html article
     elsif ( $Param{MimeType} =~ /text\/html/i ) {
 
+        my $FQDN = $Kernel::OM->Get('Kernel::Config')->Get('FQDN');
+        $Param{Body} =~ s{(src=").*?Action=(Agent|Customer)TicketAttachment;Subaction=HTMLView;ArticleID=(\d+);FileID=(\d+).*?(")}{
+            # init replacement
+            my $Replacement = '';
+
+            # get frontend
+            my $Frontend = $2;
+
+            # get data from attachment url
+            my $ExistingArticleID = $3;
+            my $ExistingFileID    = $4;
+
+            # get data of existing article
+            my %ExistingArticle = $Self->ArticleGet(
+                ArticleID     => $ExistingArticleID,
+                DynamicFields => 0,
+                UserID        => $Param{UserID},
+            );
+
+            if ( %ExistingArticle ) {
+                # check access
+                my $Access = 0;
+
+                if ( $Frontend eq 'Agent' ) {
+                    $Access = $Self->TicketPermission(
+                        Type     => 'ro',
+                        TicketID => $ExistingArticle{TicketID},
+                        UserID   => $Param{UserID},
+                    );
+                }
+                elsif (
+                    $Frontend eq 'Customer'
+                    && $Kernel::OM->Get('Kernel::Output::HTML::Layout')->{UserID}
+                ) {
+                    # check permissions
+                    $Access = $Self->TicketCustomerPermission(
+                        Type     => 'ro',
+                        TicketID => $ExistingArticle{TicketID},
+                        UserID   => $Kernel::OM->Get('Kernel::Output::HTML::Layout')->{UserID}
+                    );
+
+                    if ( $Access ) {
+                        # get all articles of this ticket
+                        my @CustomerArticleTypes = $Self->ArticleTypeList( Type => 'Customer' );
+                        my @ArticleBox           = $Self->ArticleContentIndex(
+                            TicketID      => $ExistingArticle{TicketID},
+                            ArticleType   => \@CustomerArticleTypes,
+                            UserID        => $Param{UserID},
+                            DynamicFields => 0,
+                        );
+
+                        if ( !grep { $_->{ArticleID} eq $ExistingArticleID } @ArticleBox ) {
+                            $Access = 0;
+                        }
+                    }
+                }
+
+                if ( $Access ) {
+                    # get attachment data
+                    my %ExistingAttachment = $Self->ArticleAttachment(
+                        ArticleID => $ExistingArticleID,
+                        FileID    => $ExistingFileID,
+                        UserID    => $Param{UserID},
+                    );
+
+                    # check for inline attachment
+                    if (
+                        %ExistingAttachment
+                        && $ExistingAttachment{Disposition}
+                        && $ExistingAttachment{Disposition} eq 'inline'
+                    ) {
+                        my $AttachmentData = {
+                            ContentID   => 'pasted.' . time() . '.' . int(rand(1000000)) . '@' . $FQDN,
+                            Filename    => $ExistingAttachment{Filename},
+                            Content     => $ExistingAttachment{Content},
+                            ContentType => $ExistingAttachment{ContentType},
+                            Disposition => 'inline',
+                        };
+
+                        push @AttachmentConvert, $AttachmentData;
+
+                        $Replacement = 'cid:' . $AttachmentData->{ContentID};
+                    }
+                }
+            }
+
+            # compose new image tag
+            $1 . $Replacement . $5
+
+        }egxi;
+
         # add html article as attachment
         my $Attach = {
             Content     => $Param{Body},
