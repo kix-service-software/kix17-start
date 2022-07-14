@@ -349,15 +349,31 @@ sub _MailParse {
     # to remember if an element was found before
     my %AlreadyMatched;
 
+    # prepare regex
+    my %Pattern;
+    for my $Element (@DynamicFieldContent) {
+        next if !$Self->{Config}->{ $Element . 'RegExp' };
+
+        my $Regex = $Self->{Config}->{ $Element . 'RegExp' };
+        if (
+            $Regex =~ m/^\.\+/
+            || $Regex =~ m/^\(\.\+/
+            || $Regex =~ m/^\(\?\:\.\+/
+        ) {
+            $Regex = '^' . $Regex;
+        }
+        $Pattern{$Element} = $Regex;
+    }
+
     LINE:
     for my $Line (@BodyLines) {
         # Try to get State, Host and Service from email BODY
         ELEMENT:
         for my $Element (@DynamicFieldContent) {
-            next ELEMENT if !$Self->{Config}->{ $Element . 'RegExp' };
+            next ELEMENT if !$Pattern{$Element};
             next ELEMENT if $AlreadyMatched{$Element};
 
-            my $Regex = $Self->{Config}->{ $Element . 'RegExp' };
+            my $Regex = $Pattern{$Element};
 
             if ( $Line =~ /$Regex/ ) {
 

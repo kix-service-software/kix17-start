@@ -102,11 +102,21 @@ sub Run {
 
         # split the body into separate lines
         my @BodyLines = split /\n/, $Param{GetParam}->{Body};
+        my $Regex     = $Param{JobConfig}->{NumberRegExp};
+
+        # optimize regex with leading wildcard
+        if (
+            $Regex =~ m/^\.\+/
+            || $Regex =~ m/^\(\.\+/
+            || $Regex =~ m/^\(\?\:\.\+/
+        ) {
+            $Regex = '^' . $Regex;
+        }
 
         # traverse lines and return first match
         LINE:
         for my $Line (@BodyLines) {
-            if ( $Line =~ m{ $Param{JobConfig}->{NumberRegExp} }msx ) {
+            if ( $Line =~ m{ $Regex }msx ) {
 
                 # get the found element value
                 $Self->{Number} = $1;
