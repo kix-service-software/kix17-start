@@ -1,6 +1,11 @@
 # Change log of KIX
 * Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.19.0-RC13 (2022/07/14)
+ * (2022/07/13) - Bugfix: KIX17-3097 (fixed missing quoting of slashes in json encode) (fjacquemin)
+ * (2022/07/12) - Bugfix: KIX17-3094 (added optimize regex with leading wildcard) (fjacquemin)
+ * (2022/07/12) - Bugfix: KIX17-3079 (fixed response of send lost password) (fjacquemin)
+
 # 17.19.0-RC12 (2022/07/11)
  * (2022/07/11) - Bugfix: KIX17-3104 (fixed missing exclusion of PGP and S-MIME files when creating support bundle) (fjacquemin)
  * (2022/07/06) - Bugfix: KIX17-3078 (preselect internal article type responding to internal article) (mbauer)
