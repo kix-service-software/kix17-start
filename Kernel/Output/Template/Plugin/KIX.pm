@@ -154,17 +154,33 @@ sub new {
         return $LayoutObject->JSONEncode( Data => $_[0] );
     };
 
+    my $JSONHTMLFunction = sub {
+        return $LayoutObject->JSONEncode(
+            Data        => $_[0],
+            EscapeSlash => 1
+        );
+    };
+
+    my $JSONHTMLFilter = sub {
+        return $LayoutObject->JSONEncode(
+            Data        => $_[0],
+            EscapeSlash => 1
+        );
+    };
+
     $Context->stash()->set( 'Config',      $ConfigFunction );
     $Context->stash()->set( 'Env',         $EnvFunction );
     $Context->stash()->set( 'Translate',   $TranslateFunction );
     $Context->stash()->set( 'Localize',    $LocalizeFunction );
     $Context->stash()->set( 'Interpolate', $InterpolateFunction );
     $Context->stash()->set( 'JSON',        $JSONFunction );
+    $Context->stash()->set( 'JSONHTML',    $JSONHTMLFunction );
 
     $Context->define_filter( 'Translate',   [ $TranslateFilterFactory,   1 ] );
     $Context->define_filter( 'Localize',    [ $LocalizeFilterFactory,    1 ] );
     $Context->define_filter( 'Interpolate', [ $InterpolateFilterFactory, 1 ] );
     $Context->define_filter( 'JSON', $JSONFilter );
+    $Context->define_filter( 'JSONHTML', $JSONHTMLFilter );
 
     return bless {
         _CONTEXT => $Context,

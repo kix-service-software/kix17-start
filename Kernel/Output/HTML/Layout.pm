@@ -566,9 +566,15 @@ sub JSONEncode {
     # check for needed data
     return if !defined $Param{Data};
 
+    my %Options;
+    if ( defined $Param{EscapeSlash} ) {
+        $Options{EscapeSlash} = $Param{EscapeSlash} || 0;
+    }
+
     # get JSON encoded data
     my $JSON = $Kernel::OM->Get('Kernel::System::JSON')->Encode(
         Data => $Param{Data},
+        %Options
     ) || '""';
 
     # remove trailing and trailing double quotes if requested

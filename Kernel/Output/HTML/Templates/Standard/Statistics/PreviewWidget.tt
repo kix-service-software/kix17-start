@@ -168,7 +168,7 @@
             if (Format.match(/D3/)) {
                 Core.UI.AdvancedChart.Init(
                     Format,
-                    [% JSON(Data.PreviewResult) %],
+                    [% JSONHTML(Data.PreviewResult) %],
 ### Patch licensed under the GPL-3.0, Copyright (C) 2001-2022 OTRS AG, https://otrs.com/ ###
                     'svg#PreviewContent' + Core.App.EscapeSelector(FormatCleaned),
 ### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2022 OTRS AG, https://otrs.com/ ###
