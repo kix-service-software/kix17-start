@@ -70,7 +70,7 @@ sub Run {
             );
         }
         # exception for FollowUpDynamicField
-        if ( $Frontend eq 'CustomerTicketZoomFollowUp' ) {
+        elsif ( $Frontend eq 'CustomerTicketZoomFollowUp' ) {
             $ItemKey  = 'Ticket::Frontend::CustomerTicketZoom###FollowUpDynamicField';
             %ItemHash = $SysConfigObject->ConfigItemGet(
                 Name => $ItemKey,
