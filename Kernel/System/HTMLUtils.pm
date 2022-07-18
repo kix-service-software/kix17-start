@@ -1111,6 +1111,7 @@ sub Safety {
     my $Parser = HTML::Parser->new(
         api_version        => 3,
         declaration_h      => [ \&_SafetyDeclarationHandler, 'self, text' ],
+        comment_h          => [ \&_SafetyCommentHandler, 'self, text' ],
         start_h            => [ \&_SafetyTagStartHandler, 'self, tagname, attr, attrseq' ],
         end_h              => [ \&_SafetyTagEndHandler, 'self, tagname' ],
         text_h             => [ \&_SafetyTextHandler, 'self, text, is_cdata' ],
@@ -1189,13 +1190,26 @@ sub _SafetyDeclarationHandler {
     return;
 }
 
+sub _SafetyCommentHandler {
+    my ( $Self, $Text ) = @_;
+
+    # remember replacement, conditional comments can contain unsecure code
+    $Self->{Safety}->{Replace} = 1;
+
+    return;
+}
+
 sub _SafetyTagStartHandler {
     my ( $Self, $TagName, $Attributes, $AttributeSequence ) = @_;
+
+    # cleanup tag name
+    $TagName = lc($TagName);
+    $TagName =~ s/[^a-z0-9]+//g;
 
     # check for further opening of style tag for expression check
     if (
         $Self->{Flag}->{StyleExpression}
-        && lc($TagName) eq 'style'
+        && $TagName eq 'style'
     ) {
         $Self->{Flag}->{StyleExpression} += 1;
         return;
@@ -1204,7 +1218,7 @@ sub _SafetyTagStartHandler {
     # check for open flagged tag
     if ( $Self->{Flag}->{TagName} ) {
         # check for further opening of flagged tag
-        if ( lc($TagName) eq $Self->{Flag}->{TagName} ) {
+        if ( $TagName eq $Self->{Flag}->{TagName} ) {
             $Self->{Flag}->{TagCount} += 1;
         }
 
@@ -1215,15 +1229,15 @@ sub _SafetyTagStartHandler {
     for my $Config ( keys( %{ $Self->{TagMap} } ) ) {
         if (
             $Self->{Config}->{ 'No' . $Config }
-            && lc( $TagName ) eq $Self->{TagMap}->{ $Config }
+            && $TagName eq $Self->{TagMap}->{ $Config }
         ) {
             # remember replacement
             $Self->{Safety}->{Replace} = 1;
 
             # check for non-void elements
-            if ( !$Self->{VoidElements}->{ lc($TagName) } ) {
+            if ( !$Self->{VoidElements}->{ $TagName } ) {
                 # flag tag
-                $Self->{Flag}->{TagName}  = lc($TagName);
+                $Self->{Flag}->{TagName}  = $TagName;
                 $Self->{Flag}->{TagCount} = 1;
             }
 
@@ -1242,7 +1256,7 @@ sub _SafetyTagStartHandler {
     for my $Attribute ( @{ $AttributeSequence } ) {
         # check for HTTP redirects
         if (
-            lc($TagName) eq 'meta'
+            $TagName eq 'meta'
             && lc( $Attribute ) eq 'http-equiv'
             && lc( $Attributes->{ $Attribute } )  eq 'refresh'
         ) {
@@ -1255,8 +1269,8 @@ sub _SafetyTagStartHandler {
         if ( $Self->{Config}->{NoJavaScript} ) {
             # check for link and style tag
             if (
-                lc($TagName) eq 'link'
-                || lc($TagName) eq 'style'
+                $TagName eq 'link'
+                || $TagName eq 'style'
             ) {
                 # check for type 'text/javascript'
                 if (
@@ -1267,21 +1281,17 @@ sub _SafetyTagStartHandler {
                     $Self->{Safety}->{Replace} = 1;
 
                     # flag tag
-                    $Self->{Flag}->{TagName}  = lc($TagName);
+                    $Self->{Flag}->{TagName}  = $TagName;
                     $Self->{Flag}->{TagCount} = 1;
 
                     return;
-                }
-                elsif ( lc($TagName) eq 'style' ) {
-                    # flag check for style expression
-                    $Self->{Flag}->{StyleExpression} = 1;
                 }
             }
 
             # check for animate and set tag
             if (
-                lc($TagName) eq 'animate'
-                || lc($TagName) eq 'set'
+                $TagName eq 'animate'
+                || $TagName eq 'set'
             ) {
                 my $CheckValue = lc( $Attributes->{ $Attribute } );
                 $CheckValue =~ s/[^a-z1-9:;=()]+//g;
@@ -1290,7 +1300,7 @@ sub _SafetyTagStartHandler {
                     $Self->{Safety}->{Replace} = 1;
 
                     # flag tag
-                    $Self->{Flag}->{TagName}  = lc($TagName);
+                    $Self->{Flag}->{TagName}  = $TagName;
                     $Self->{Flag}->{TagCount} = 1;
 
                     return;
@@ -1298,7 +1308,7 @@ sub _SafetyTagStartHandler {
             }
 
             # check for 'on'-attributes
-            if ( $Attribute =~ m/^on[a-z]+$/i ) {
+            if ( $Attribute =~ m/^on.+$/i ) {
                 # remember replacement
                 $Self->{Safety}->{Replace} = 1;
 
@@ -1310,14 +1320,22 @@ sub _SafetyTagStartHandler {
                 lc( $Attribute ) eq 'background'
                 || lc( $Attribute ) eq 'url'
                 || lc( $Attribute ) eq 'src'
+                || lc( $Attribute ) eq 'dynsrc'
+                || lc( $Attribute ) eq 'lowsrc'
                 || lc( $Attribute ) eq 'href'
                 || lc( $Attribute ) eq 'xlink:href'
                 || lc( $Attribute ) eq 'action'
                 || lc( $Attribute ) eq 'formaction'
             ) {
+
+                # prepare checkvalue
                 my $CheckValue = lc( $Attributes->{ $Attribute } );
                 $CheckValue =~ s/[^a-z1-9:;=()]+//g;
-                if ( $CheckValue =~ m/^javascript.+/ ) {
+                if (
+                    $CheckValue =~ m/^javascript.+/
+                    || $CheckValue =~ m/^livescript.+/
+                    || $CheckValue =~ m/^vbscript.+/
+                ) {
                     # remember replacement
                     $Self->{Safety}->{Replace} = 1;
 
@@ -1326,14 +1344,20 @@ sub _SafetyTagStartHandler {
             }
 
             # check for expression function in style attribute
-            if (
-                lc( $Attribute ) eq 'style'
-                && $Attributes->{ $Attribute } =~ m/expression\(/i
-            ) {
-                # remember replacement
-                $Self->{Safety}->{Replace} = 1;
+            if ( lc( $Attribute ) eq 'style' ) {
+                # prepare attribute value
+                my $AttributeValue = $Attributes->{ $Attribute };
+                $AttributeValue =~ s/\/\*.*?\*\///g;
 
-                next ATTRIBUTE;
+                if (
+                    $AttributeValue =~ m/expression\(/i
+                    || $AttributeValue =~ m/javascript/i
+                ) {
+                    # remember replacement
+                    $Self->{Safety}->{Replace} = 1;
+
+                    next ATTRIBUTE;
+                }
             }
         }
 
@@ -1392,7 +1416,7 @@ sub _SafetyTagStartHandler {
 
         # check for iframe with srcdoc attribute
         if (
-            lc($TagName) eq 'iframe'
+            $TagName eq 'iframe'
             && lc( $Attribute ) eq 'srcdoc'
         ) {
             # call safety function for srcdoc
@@ -1409,12 +1433,26 @@ sub _SafetyTagStartHandler {
             }
         }
 
+        # prepare attribute value
+        my $AttributeValue = encode_entities( $Attributes->{ $Attribute } );
+
+        # check for changes
+        if ( $AttributeValue ne $Attributes->{ $Attribute } ) {
+            # remember replacement
+            $Self->{Safety}->{Replace} = 1;
+        }
+
         # add attribute with value
-        $String .= ' ' . $Attribute . '="' . encode_entities( $Attributes->{ $Attribute } ) . '"';
+        $String .= ' ' . $Attribute . '="' . $AttributeValue . '"';
+    }
+
+    # flag check for style expression
+    if ( $TagName eq 'style' ) {
+        $Self->{Flag}->{StyleExpression} = 1;
     }
 
     # special handling for void elements
-    if ( $Self->{VoidElements}->{ lc($TagName) } ) {
+    if ( $Self->{VoidElements}->{ $TagName } ) {
         $String .= ' /';
     }
 
@@ -1430,15 +1468,19 @@ sub _SafetyTagStartHandler {
 sub _SafetyTagEndHandler {
     my ( $Self, $TagName ) = @_;
 
+    # cleanup tag name
+    $TagName = lc($TagName);
+    $TagName =~ s/[^a-z0-9]+//g;
+
     # ignore void elements
-    if ( $Self->{VoidElements}->{ lc($TagName) } ) {
+    if ( $Self->{VoidElements}->{ $TagName } ) {
         return;
     }
 
     # check style tag for expression function
     if ( $Self->{Flag}->{StyleExpression} ) {
         # check for closing of style tag for expression check
-        if ( lc($TagName) eq 'style' ) {
+        if ( $TagName eq 'style' ) {
             $Self->{Flag}->{StyleExpression} -= 1;
             if ( $Self->{Flag}->{StyleExpression} == 0 ) {
                 delete( $Self->{Flag}->{StyleExpression} );
@@ -1449,7 +1491,7 @@ sub _SafetyTagEndHandler {
     # check for open flagged tag
     if ( $Self->{Flag}->{TagName} ) {
         # check for closing of flagged tag
-        if ( lc($TagName) eq $Self->{Flag}->{TagName} ) {
+        if ( $TagName eq $Self->{Flag}->{TagName} ) {
             $Self->{Flag}->{TagCount} -= 1;
             if ( $Self->{Flag}->{TagCount} == 0 ) {
                 delete( $Self->{Flag}->{TagName} );
@@ -1463,7 +1505,7 @@ sub _SafetyTagEndHandler {
     for my $Config ( keys( %{ $Self->{TagMap} } ) ) {
         if (
             $Self->{Config}->{ 'No' . $Config }
-            && lc( $TagName ) eq $Self->{TagMap}->{ $Config }
+            && $TagName eq $Self->{TagMap}->{ $Config }
         ) {
             # remember replacement
             $Self->{Safety}->{Replace} = 1;
@@ -1480,6 +1522,35 @@ sub _SafetyTagEndHandler {
 
 sub _SafetyTextHandler {
     my ( $Self, $Text, $IsCDATA ) = @_;
+
+    # check style tag
+    if ( $Self->{Flag}->{StyleExpression} ) {
+        # for expression function
+        if ( $Text =~ m/expression\(/i ) {
+            # remember replacement
+            $Self->{Safety}->{Replace} = 1;
+
+            return;
+        }
+
+        # for javascript
+        my $CheckValue = lc( $Text );
+        $CheckValue =~ s/[^a-z1-9:;=()@]+//g;
+        if ( $CheckValue =~ m/javascript/ ) {
+            # remember replacement
+            $Self->{Safety}->{Replace} = 1;
+
+            return;
+        }
+
+        # for @import
+        if ( $CheckValue =~ m/^\@import/i ) {
+            # remember replacement
+            $Self->{Safety}->{Replace} = 1;
+
+            return;
+        }
+    }
 
     # check style tag for expression function
     if ( $Self->{Flag}->{StyleExpression} ) {
@@ -1502,7 +1573,15 @@ sub _SafetyTextHandler {
     }
     # encode text before appending
     else {
-        $Self->{Safety}->{String} .= encode_entities( decode_entities( $Text ) );
+        # encode text
+        my $EncodedText = encode_entities( decode_entities( $Text ) );
+
+        # check for changes
+        if ( $EncodedText ne $Text ) {
+            # remember replacement
+            $Self->{Safety}->{Replace} = 1;
+        }
+        $Self->{Safety}->{String} .= $EncodedText;
     }
 
     return;

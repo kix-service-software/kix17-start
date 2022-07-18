@@ -7,7 +7,7 @@
   CheckValue:
     String: |-
       Fix Schwyz! qu&auml;kt J&uuml;rgen bl&ouml;d vom Pa&szlig; 
-    Replace: 0
+    Replace: 1
 0002:
   StepName: 'Encode html correctly - leave already encoded html'
   InputData:
