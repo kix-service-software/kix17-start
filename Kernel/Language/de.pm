@@ -1438,6 +1438,13 @@ sub Data {
         'Delete invoker' => 'Invoker löschen',
         'Clone webservice' => 'Webservice klonen',
         'Import webservice' => 'Webservice importieren',
+        'Need ActionName!' => 'Benötige ActionName!',
+        'Need ActionType!' => 'Benötige ActionType!',
+        'Got invalid Invoker!' => 'Ungültiger Invoker angegeben!',
+        'Got invalid Operation!' => 'Ungültige Operation angegeben!',
+        'Invoker with copy name already exists!' => 'Invoker mit Kopienamen existiert bereits!',
+        'Operation with copy name already exists!' => 'Operation mit Kopienamen existiert bereits!',
+        '%s "%s" created' => '%s "%s" erstellt',
 
         # Template: AdminGenericInterfaceWebserviceHistory
         'GenericInterface Configuration History for Web Service %s' => 'GenericInterface-Konfigurations-Historie für Webservice %s',
@@ -1654,6 +1661,9 @@ sub Data {
         'AutoIncrement' => 'AutoIncrement',
         'SQL' => 'SQL',
         'File differences for file %s' => 'Dateiunterschiede für Datei %s',
+        'File is not installed!' => 'Datei ist nicht vorhanden!',
+        'File is different!' => 'Datei ist unterschiedlich!',
+        'File is OK' => 'Datei ist OK',
 
         # Template: AdminPerformanceLog
         'Performance Log' => 'Performance Log',
@@ -2388,6 +2398,7 @@ sub Data {
         'Stacked' => 'Gestapelt',
         'Expanded' => 'Ausgedehnt',
         'Stream' => 'Fließend',
+        'Values' => 'Werte',
         'Please select a valid graph output format in the configuration of this widget.' =>
             'Bitte wählen Sie eine gültiges Ausgabeformat in der Konfiguration dieses Widgets aus.',
         'The content of this statistic is being prepared for you, please be patient.' =>
@@ -4544,6 +4555,7 @@ Ihr Helpdesk-Team
             'Benutzerdefinierter Text für Kunden, die noch keine Tickets haben (wenn Sie für diesen Text eine Übersetzung wünschen, fügen Sie die Übersetzung in einem eigenen Übersetzungsmodul hinzu).',
         'Customer Administration' => 'Kundenverwaltung',
         'Customer Information Center Search.' => 'Kunden-Informationszentrum-Suche.',
+        'Customer Information Center Search'  => 'Kunden-Informationszentrum-Suche.',
         'Customer Information Center.' => 'Kunden-Informationszentrum.',
         'Customer Ticket Print Module.' => 'Kunden-Ticketdruck-Modul.',
         'Contact <-> Groups' => 'Ansprechpartner <-> Gruppen',
@@ -5936,7 +5948,10 @@ Ihr Helpdesk-Team
         'Portuguese' => 'Portugiesisch',
         'Portuguese (Brasil)' => 'Portugiesisch (Brasilien)',
         'PostMaster Filters' => 'PostMaster-Filter',
+        'Postmaster handles followups and new tickets based on the system address assigned queues. The queue, the system address has assigned for new tickets, is also considered.'
+            => 'PostMaster behandelt FollowUps und neue Tickets basierend auf den Queues, welche die relevante Systemadresse ausgewählt haben. Die Queue, welche die Systemadresse für neue Tickets zugewiesen hat, wird ebenfalls berücksichtigt.',
         'PostMaster Mail Accounts' => 'PostMaster-E-Mail-Konten',
+        'Postmaster skips notifications of rejected followups.' => 'PostMaster versendet keine FollowUp-Benachrichtigungen bei Ablehnung.',
         'Process Management Activity Dialog GUI' => 'Prozess-Management Aktivität-Dialog GUI',
         'Process Management Activity GUI' => 'Prozess-Management-Aktivitäten GUI',
         'Process Management Path GUI' => 'Prozess-Management-Pfad GUI',

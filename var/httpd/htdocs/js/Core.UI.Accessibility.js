@@ -97,12 +97,13 @@ Core.UI.Accessibility = (function (TargetNS) {
      */
     TargetNS.AudibleAlert = function (Text) {
         var AlertMessageID = 'Accessibility_AlertMessage';
+        var QuotedText     = $('<div />').text(Text).html();
 
         // remove possibly pre-existing alert message
         $('#' + AlertMessageID).remove();
 
         // add new alert message
-        $('body').append('<div role="alert" id="' + AlertMessageID + '" class="ARIAAlertMessage">' + Text + '</div>');
+        $('body').append('<div role="alert" id="' + AlertMessageID + '" class="ARIAAlertMessage">' + QuotedText + '</div>');
 
     };
 

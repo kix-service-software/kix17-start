@@ -13,6 +13,8 @@ package Kernel::System::Cache;
 use strict;
 use warnings;
 
+use Storable qw(dclone);
+
 our @ObjectDependencies = (
     'Kernel::Config',
     'Kernel::System::Log',
@@ -167,7 +169,12 @@ sub Set {
 
     # Set in-memory cache.
     if ( $Self->{CacheInMemory} && ( $Param{CacheInMemory} // 1 ) ) {
-        $Self->{Cache}->{ $Param{Type} }->{ $Param{Key} } = $Param{Value};
+        if ( ref( $Param{Value} ) ) {
+            $Self->{Cache}->{ $Param{Type} }->{ $Param{Key} } = dclone( $Param{Value} );
+        }
+        else {
+            $Self->{Cache}->{ $Param{Type} }->{ $Param{Key} } = $Param{Value};
+        }
     }
 
     # If in-memory caching is not active, make sure the in-memory
@@ -231,7 +238,12 @@ sub Get {
     # check in-memory cache
     if ( $Self->{CacheInMemory} && ( $Param{CacheInMemory} // 1 ) ) {
         if ( exists $Self->{Cache}->{ $Param{Type} }->{ $Param{Key} } ) {
-            return $Self->{Cache}->{ $Param{Type} }->{ $Param{Key} };
+            if ( ref( $Self->{Cache}->{ $Param{Type} }->{ $Param{Key} } ) ) {
+                return dclone( $Self->{Cache}->{ $Param{Type} }->{ $Param{Key} } );
+            }
+            else {
+                return $Self->{Cache}->{ $Param{Type} }->{ $Param{Key} };
+            }
         }
     }
 
@@ -243,7 +255,12 @@ sub Get {
     # set in-memory cache
     if ( defined $Value ) {
         if ( $Self->{CacheInMemory} && ( $Param{CacheInMemory} // 1 ) ) {
-            $Self->{Cache}->{ $Param{Type} }->{ $Param{Key} } = $Value;
+            if ( ref( $Value ) ) {
+                $Self->{Cache}->{ $Param{Type} }->{ $Param{Key} } = dclone( $Value );
+            }
+            else {
+                $Self->{Cache}->{ $Param{Type} }->{ $Param{Key} } = $Value;
+            }
         }
     }
 

@@ -1,4 +1,4 @@
-# $Id$
+# $Id: DBI.pm 1490648 2013-06-07 13:46:30Z perrin $
 package Apache::DBI;
 use strict;
 

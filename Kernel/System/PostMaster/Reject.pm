@@ -50,7 +50,8 @@ sub Run {
     }
     my %GetParam = %{ $Param{GetParam} };
 
-    # get ticket object
+    # get needed objects
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
     my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
 
     # get ticket data
@@ -83,6 +84,7 @@ sub Run {
         HistoryComment   => "\%\%$Param{Tn}\%\%$Comment",
         AutoResponseType => $AutoResponseType,
         OrigHeader       => \%GetParam,
+        NoAgentNotify    => $ConfigObject->Get('PostMaster::Reject::NoAgentNotify'),
     );
     if ( !$ArticleID ) {
         return;

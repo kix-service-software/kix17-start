@@ -263,6 +263,9 @@
         float: left;
         width: 50%;
     }
+    .SortableColumns > ul.ColumnOrder > li.ui-sortable-handle {
+        cursor: move
+    }
     .SortableColumnsDescription {
         display: block;
         margin: 10px 2px 5px 5px;

@@ -44,7 +44,7 @@
     </div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    Core.UI.SystemMessage.Init('Widget', null, null);
+    Core.UI.SystemMessage.Init('Widget', null);
 //]]></script>
 [% END %]
 </div>

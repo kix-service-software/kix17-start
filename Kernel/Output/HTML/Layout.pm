@@ -566,9 +566,15 @@ sub JSONEncode {
     # check for needed data
     return if !defined $Param{Data};
 
+    my %Options;
+    if ( defined $Param{EscapeSlash} ) {
+        $Options{EscapeSlash} = $Param{EscapeSlash} || 0;
+    }
+
     # get JSON encoded data
     my $JSON = $Kernel::OM->Get('Kernel::System::JSON')->Encode(
         Data => $Param{Data},
+        %Options
     ) || '""';
 
     # remove trailing and trailing double quotes if requested
@@ -3442,38 +3448,22 @@ sub BuildDateSelection {
     }
 
     my $DateInputStyle = $ConfigObject->Get('TimeInputFormat');
-    my $Prefix         = $Param{Prefix} || '';
+    my $Prefix         = $Param{Prefix}   || '';
     my $DiffTime       = $Param{DiffTime} || 0;
     my $Format         = defined( $Param{Format} ) ? $Param{Format} : 'DateInputFormatLong';
     my $Area           = $Param{Area} || 'Agent';
     my $Optional       = $Param{ $Prefix . 'Optional' } || 0;
     my $Required       = $Param{ $Prefix . 'Required' } || 0;
-    my $Used           = $Param{ $Prefix . 'Used' } || 0;
-    my $Class          = '';
-    my $ClassDate      = '';
-    my $ClassTime      = '';
-    if ( !$SmartStyleDate && !$SmartStyleTime ) {
-        $Class          = $Param{ $Prefix . 'Class' } || '';
+    my $Used           = $Param{ $Prefix . 'Used' }     || 0;
+    my $Class          = $Param{ $Prefix . 'Class' }    || '';
+    my $ClassDate      = $Param{ $Prefix . 'Class' }    || '';
+    my $ClassTime      = $Param{ $Prefix . 'Class' }    || '';
+
+    if ( $SmartStyleDate ) {
+        $ClassDate .= ' Modernize';
     }
-    elsif ( $SmartStyleDate && !$SmartStyleTime ) {
-        if ( $Param{ $Prefix . 'Class' } ) {
-            $ClassDate = $Param{ $Prefix . 'Class' } . ' Modernize';
-            $ClassTime = $Param{ $Prefix . 'Class' };
-        }
-        else {
-            $ClassDate = 'Modernize';
-            $ClassTime = '';
-        }
-    }
-    else {
-        if ( $Param{ $Prefix . 'Class' } ) {
-            $ClassDate = $Param{ $Prefix . 'Class' } . ' Modernize';
-            $ClassTime = $Param{ $Prefix . 'Class' } . ' Modernize';
-        }
-        else {
-            $ClassDate = 'Modernize';
-            $ClassTime = 'Modernize';
-        }
+    if ( $SmartStyleTime ) {
+        $ClassTime .= ' Modernize';
     }
 
     # Defines, if the date selection should be validated on client side with JS
@@ -6251,10 +6241,21 @@ sub _BuildSystemMessage {
         Name => 'SystemMessage'
     );
 
+    my $PopupUsed = 0;
     for my $MessageID ( @MessageIDList ) {
         my %MessageData = $SystemMessageObject->MessageGet(
             MessageID => $MessageID
         );
+
+        # check for popup message
+        if (
+            !$PopupUsed
+            && ref( $MessageData{PopupTemplates} ) eq 'ARRAY'
+            && grep( { $Param{Action} eq $_ } @{$MessageData{PopupTemplates}} )
+        ) {
+            $MessageData{Popup} = 'Popup';
+            $PopupUsed          = 1;
+        }
 
         $Self->Block(
             Name => 'SystemMessageRow',
@@ -6390,7 +6391,7 @@ sub _BuildCustomHighlight{
             $Selector =~ s/[:\.,\\\/]//;
             $Selector =~ s/[+]/Plus/;
             $Selector =~ s/[-]/Minus/;
-            $Selector = 'Highlight' . $View . $Selector;
+            $Selector = 'DataTable > tbody > tr.Highlight' . $View . $Selector;
 
             if ( $View eq 'Large' ) {
                 $Selector = 'Flag span.' . $Selector;
@@ -6400,6 +6401,12 @@ sub _BuildCustomHighlight{
                     . $Selector
                     . ' a';
             }
+
+            # set same css for TableSmall
+            my $SelectorSmall = $Selector;
+            $SelectorSmall =~ s/DataTable/TableSmall/mg;
+
+            $Selector .= ", .$SelectorSmall";
 
             $Self->Block(
                 Name => 'CustomTicketHighlight',

@@ -1211,16 +1211,15 @@ sub ConfigItemSearch {
         next if ( !$OrderByTable{$OrderBy} );
         $Match = 1;
     }
-    if ( !$Match ) {
-        @{ $Param{OrderBy} } = ('Number');
+    my @OrderBy = ('Number');
+    if ( $Match ) {
+        @OrderBy = @{ $Param{OrderBy} };
     }
 
     # check if OrderBy contains only unique valid values
     my %OrderBySeen;
     ORDERBY:
-    for my $OrderBy ( @{ $Param{OrderBy} } ) {
-
-        next ORDERBY if $OrderBy eq 'Name';
+    for my $OrderBy ( @OrderBy ) {
 
         if ( !$OrderBy || !$OrderByTable{$OrderBy} || $OrderBySeen{$OrderBy} ) {
 
@@ -1265,9 +1264,7 @@ sub ConfigItemSearch {
     my @SQLOrderBy;
     my $Count = 0;
     ORDERBY:
-    for my $OrderBy ( @{ $Param{OrderBy} } ) {
-
-        next ORDERBY if $OrderBy eq 'Name';
+    for my $OrderBy ( @OrderBy ) {
 
         # set the default order direction
         my $Direction = 'DESC';
@@ -1292,7 +1289,7 @@ sub ConfigItemSearch {
 
     # if there is a possibility that the ordering is not determined
     # we add an ascending ordering by id
-    if ( !grep { $_ eq 'ConfigItemID' } ( @{ $Param{OrderBy} } ) ) {
+    if ( !grep { $_ eq 'ConfigItemID' } ( @OrderBy ) ) {
         push @SQLOrderBy, "$OrderByTable{ConfigItemID} ASC";
     }
 
@@ -2364,7 +2361,7 @@ sub CountLinkedObjects {
             Key1    => $Param{ConfigItemID},
             Object2 => $CurrObject,
             State   => 'Valid',
-            UserID  => 1,
+            UserID  => $Param{UserID} || 1,
         );
 
         $Result = $Result + ( scalar( keys(%LinkList) ) || 0 );

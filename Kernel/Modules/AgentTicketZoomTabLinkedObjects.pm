@@ -221,7 +221,7 @@ sub MaskAgentZoomTabLinkedObjects {
         my $QuickLinkStrg = $LayoutObject->BuildQuickLinkHTML(
             Object     => 'Ticket',
             Key        => $Ticket{TicketID},
-            RefreshURL => "Action=$Self->{Action};TicketID=$Self->{TicketID}",
+            RefreshURL => 'Action=' . $Self->{Action} . ';TicketID=' . $Ticket{TicketID} . ';SelectedTab=' . $ParamObject->GetParam( Param => 'TabIndex' ),
         );
         $LayoutObject->Block(
             Name => 'QuickLink',

@@ -94,6 +94,7 @@ sub Run {
             TranslateText => \%TranslateText,
         );
 
+        $MessageData{MarkAsRead} = '1';
         if (
             $UserReads{$MessageID}
             || $CallingAction =~ /^Public/
@@ -172,6 +173,7 @@ sub Run {
 
     elsif ( $Module eq 'Header' ) {
         my $SBAgentAction    = $ConfigObject->Get('Frontend::KIXSidebarBackend')->{KIXSBSystemMessage}->{Actions}         || '';
+        my $AgentDashboard   = $ConfigObject->Get('DashboardBackend')->{'0000-SystemMessage'}                             || '';
         my $SBCustomerAction = $ConfigObject->Get('CustomerFrontend::KIXSidebarBackend')->{KIXSBSystemMessage}->{Actions} || '';
         my $IsShow           = 0;
         my $UserID           = $Self->{UserID};
@@ -189,6 +191,10 @@ sub Run {
             if (
                 $CallingAction ne 'Login'
                 && $CallingAction !~ /$SBAgentAction/
+                && (
+                    $CallingAction ne 'AgentDashboard'
+                    || !$AgentDashboard
+                )
             ) {
                 $IsShow = 1;
             }
@@ -200,51 +206,71 @@ sub Run {
             $UserType = '';
         }
 
-        if ( $IsShow ) {
-            my @MessageIDList = $SystemMessageObject->MessageSearch(
-                Action   => $CallingAction,
-                Valid    => 1,
-                UserID   => $UserID,
-                UserType => $UserType,
-                SortBy   => 'Created',
-                OrderBy  => 'Down',
-                Result   => 'ARRAY'
-            );
+        # init response data
+        my %Response = ();
 
-            if ( scalar(@MessageIDList) ) {
+        # get message list
+        my @MessageIDList = $SystemMessageObject->MessageSearch(
+            Action   => $CallingAction,
+            Valid    => 1,
+            UserID   => $UserID,
+            UserType => $UserType,
+            SortBy   => 'Created',
+            OrderBy  => 'Down',
+            Result   => 'ARRAY'
+        );
+
+        # check if at least one message is available
+        if ( scalar(@MessageIDList) ) {
+            # check if messages should be shown by header
+            if ( $IsShow ) {
+                # init widget
                 $LayoutObject->Block(
                     Name => 'SystemMessageWidget',
                     Data => {
                     },
                 );
 
+                # show teaser header if configured
                 if ( $Config->{ShowTeaser} ) {
                     $LayoutObject->Block(
                         Name => 'SystemMessageHeadTeaser',
                     );
                 }
 
+                # show created by header if configured
                 if ( $Config->{ShowCreatedBy} ) {
                     $LayoutObject->Block(
                         Name => 'SystemMessageHeadCreatedBy',
                     );
                 }
+            }
 
-                # show messages
-                for my $MessageID ( @MessageIDList ) {
+            # process messages
+            for my $MessageID ( @MessageIDList ) {
+                # get message data
+                my %MessageData = $SystemMessageObject->MessageGet(
+                    MessageID => $MessageID,
+                );
 
-                    # get message data
-                    my %MessageData = $SystemMessageObject->MessageGet(
-                        MessageID => $MessageID,
-                    );
+                # check for popup message
+                if (
+                    !$Response{PopupID}
+                    && !$UserReads{$MessageID}
+                    && ref( $MessageData{PopupTemplates} ) eq 'ARRAY'
+                    && grep( { $CallingAction eq $_ } @{$MessageData{PopupTemplates}} )
+                ) {
+                    $Response{PopupID} = $MessageID;
+                }
 
+                # check if messages should be shown by header
+                if ( $IsShow ) {
                     $LayoutObject->Block(
                         Name => 'SystemMessageRow',
                         Data => \%MessageData
                     );
 
                     if ( $Config->{ShowTeaser} ) {
-
                         $LayoutObject->Block(
                             Name => 'SystemMessageColumnTeaser',
                             Data => \%MessageData
@@ -263,23 +289,21 @@ sub Run {
                         );
                     }
                 }
+            }
 
-                # check if content got shown, if true, render block
-                my %Response;
+            # check if messages should be shown by header
+            if ( $IsShow ) {
+                # render output
                 $Response{Content} = $LayoutObject->Output(
                     TemplateFile => 'SystemMessageDialog',
-                    Data         => {
-                    },
+                    Data         => {},
                 );
-                $Output = $LayoutObject->JSONEncode(
-                    Data => \%Response
-                );
-            } else {
-                $Output = 1;
             }
-        } else {
-            $Output = 1;
         }
+
+        $Output = $LayoutObject->JSONEncode(
+            Data => \%Response
+        );
     }
 
     elsif ( $Module eq 'KIXSidebar' ) {

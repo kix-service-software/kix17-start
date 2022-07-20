@@ -153,18 +153,16 @@ Core.UI.Datepicker = (function (TargetNS) {
         if (typeof LocalizationData === 'undefined') {
             LocalizationData = Core.Config.Get('Datepicker.Localization');
             if (typeof LocalizationData === 'undefined') {
-                // KIX4OTRS-capeIT
                 // throw new Core.Exception.ApplicationError('Datepicker localization data could not be found!', 'InternalError');
                 return;
-                // EO KIX4OTRS-capeIT
             }
         }
 
         // get highest Datepicker id
         DatepickerCount = 0;
         $('input[id^="Datepicker"]').each( function() {
-            var DatepickerID = $(this).attr('id');
-            var ID = DatepickerID.substring(10);
+            var DatepickerID = $(this).attr('id'),
+                ID           = parseInt(DatepickerID.substring(10));
             if ( DatepickerCount < ID ) {
                 DatepickerCount = ID;
             }
@@ -174,20 +172,25 @@ Core.UI.Datepicker = (function (TargetNS) {
         DatepickerCount++;
 
         // Check, if datepicker is used with three input element or with three select boxes
-        if (typeof Element === 'object' &&
-            typeof Element.Day !== 'undefined' &&
-            typeof Element.Month !== 'undefined' &&
-            typeof Element.Year !== 'undefined' &&
-            isJQueryObject(Element.Day, Element.Month, Element.Year) &&
-            // Sometimes it can happen that BuildDateSelection was called without placing the full date selection.
-            //  Ignore in this case.
-            Element.Day.length
+        // Sometimes it can happen that BuildDateSelection was called without placing the full date selection.
+        // Ignore in this case.
+        if (
+            typeof Element === 'object'
+            && typeof Element.Day !== 'undefined'
+            && typeof Element.Month !== 'undefined'
+            && typeof Element.Year !== 'undefined'
+            && isJQueryObject(Element.Day, Element.Month, Element.Year)
+            && Element.Day.length
         ) {
 
             $DatepickerElement = $('<input>').attr('type', 'hidden').attr('id', 'Datepicker' + DatepickerCount);
             Element.Year.after($DatepickerElement);
 
-            if (Element.Day.is('select') && Element.Month.is('select') && Element.Year.is('select')) {
+            if (
+                Element.Day.is('select')
+                && Element.Month.is('select')
+                && Element.Year.is('select')
+            ) {
                 HasDateSelectBoxes = true;
             }
         }
@@ -213,31 +216,28 @@ Core.UI.Datepicker = (function (TargetNS) {
         };
 
         Options.onSelect = function (DateText, Instance) {
-            var Year = Instance.selectedYear,
+            var Year  = Instance.selectedYear,
                 Month = Instance.selectedMonth + 1,
-                Day = Instance.selectedDay;
+                Day   = Instance.selectedDay;
 
             // Update the three select boxes
             if (HasDateSelectBoxes) {
                 Element.Year.find('option[value=' + Year + ']').prop('selected', true);
                 Element.Month.find('option[value=' + Month + ']').prop('selected', true);
                 Element.Day.find('option[value=' + Day + ']').prop('selected', true);
-                // KIX4OTRS-capeIT
+
                 if (Element.Date && Element.Date.length) {
                     Element.Date.val(DateText);
                 }
-                // EO KIX4OTRS-capeIT
             }
             else {
                 Element.Year.val(Year);
                 Element.Month.val(LeadingZero(Month));
                 Element.Day.val(LeadingZero(Day));
 
-                // KIX4OTRS-capeIT
                 if (Element.Date && Element.Date.length) {
                     Element.Date.val(DateText).trigger('change');
                 }
-                // EO KIX4OTRS-capeIT
             }
 
             // Check Used Element if available
@@ -245,19 +245,26 @@ Core.UI.Datepicker = (function (TargetNS) {
                 Element.Used.prop('checked', true);
             }
         };
-        // KIX4OTRS-capeIT
         // Options.beforeShow = function (Input) {
         Options.beforeShow = function (Input, Instance) {
-        // EO KIX4OTRS-capeIT
+            var defaultDate;
+
+            if (
+                Element.Year.val()
+                && Element.Month.val()
+                && Element.Day.val()
+            ) {
+                defaultDate = new Date(Element.Year.val(), Element.Month.val() - 1, Element.Day.val());
+            }
+
             $(Input).val('');
+
             return {
-                defaultDate: new Date(Element.Year.val(), Element.Month.val() - 1, Element.Day.val())
+                defaultDate: defaultDate
             };
         };
 
-// KIX-capeIT
         $('#ui-datepicker-div').remove();
-// EO KIX-capeIT
 
         $DatepickerElement.datepicker(Options);
 
@@ -271,9 +278,7 @@ Core.UI.Datepicker = (function (TargetNS) {
             if (Element.DateInFuture) {
                 ErrorMessage = Core.Config.Get('Datepicker.ErrorMessageDateInFuture');
 
-                // KIX4OTRS-capeIT
                 $DatepickerElement.datepicker('option', 'minDate', '-0d');
-                // EO KIX4OTRS-capeIT
             }
             else if (Element.DateNotInFuture) {
                 ErrorMessage = Core.Config.Get('Datepicker.ErrorMessageDateNotInFuture');
@@ -284,20 +289,25 @@ Core.UI.Datepicker = (function (TargetNS) {
 
             // Add validation error messages for all dateselection elements
             Element.Year
-            .after('<div id="' + Element.Day.attr('id') + 'Error" class="TooltipErrorMessage"><p>' + ErrorMessage + '</p></div>')
-            .after('<div id="' + Element.Month.attr('id') + 'Error" class="TooltipErrorMessage"><p>' + ErrorMessage + '</p></div>')
-            .after('<div id="' + Element.Year.attr('id') + 'Error" class="TooltipErrorMessage"><p>' + ErrorMessage + '</p></div>');
+                .after('<div id="' + Element.Day.attr('id') + 'Error" class="TooltipErrorMessage"><p>' + ErrorMessage + '</p></div>')
+                .after('<div id="' + Element.Month.attr('id') + 'Error" class="TooltipErrorMessage"><p>' + ErrorMessage + '</p></div>')
+                .after('<div id="' + Element.Year.attr('id') + 'Error" class="TooltipErrorMessage"><p>' + ErrorMessage + '</p></div>');
 
             // only insert time element error messages if time elements are present
-            if (Element.Hour && Element.Hour.length) {
+            if (
                 Element.Hour
-                .after('<div id="' + Element.Hour.attr('id') + 'Error" class="TooltipErrorMessage"><p>' + ErrorMessage + '</p></div>')
-                .after('<div id="' + Element.Minute.attr('id') + 'Error" class="TooltipErrorMessage"><p>' + ErrorMessage + '</p></div>');
+                && Element.Hour.length
+            ) {
+                Element.Hour
+                    .after('<div id="' + Element.Hour.attr('id') + 'Error" class="TooltipErrorMessage"><p>' + ErrorMessage + '</p></div>')
+                    .after('<div id="' + Element.Minute.attr('id') + 'Error" class="TooltipErrorMessage"><p>' + ErrorMessage + '</p></div>');
             }
         }
 
-        // KIX4OTRS-capeIT
-        if (Element.Date && Element.Date.length) {
+        if (
+            Element.Date
+            && Element.Date.length
+        ) {
             $DatepickerElement.datepicker('option', 'dateFormat', Element.Format);
 
             // we need some special handling, if the element ID contains :: (CI edit)
@@ -348,7 +358,10 @@ Core.UI.Datepicker = (function (TargetNS) {
                   });
         }
 
-        if (Element.Time && Element.Time.length) {
+        if (
+            Element.Time
+            && Element.Time.length
+        ) {
             Element.Time
             .change( function () {
                 var times = $(this).val().split(':');
@@ -363,14 +376,12 @@ Core.UI.Datepicker = (function (TargetNS) {
                 return false;
             });
         }
-        // EO KIX4OTRS-capeIT
 
         $('#' + Core.App.EscapeSelector(Element.Day.attr('id')) + 'DatepickerIcon').off('click.Datepicker').on('click.Datepicker', function () {
             $DatepickerElement.datepicker('show');
             return false;
         });
 
-        // KIX4OTRS-capeIT
         // special handling for AgentStatistics
         if (Core.Config.Get('Action') === 'AgentStatistics') {
             $('#EditDialog #' + Core.App.EscapeSelector(Element.Day.attr('id')) + 'DatepickerIcon').off('click.Datepicker').on('click.Datepicker', function () {
@@ -379,14 +390,10 @@ Core.UI.Datepicker = (function (TargetNS) {
                 return false;
             });
         }
-        // EO KIX4OTRS-capeIT
 
         // do not show the datepicker container div.
-        // KIX4OTRS-capeIT
         // in case of multiple datepicker containers created
-        // $('#ui-datepicker-div').hide();
         $('.ui-datepicker').hide();
-        // EO KIX4OTRS-capeIT
     };
 
     return TargetNS;

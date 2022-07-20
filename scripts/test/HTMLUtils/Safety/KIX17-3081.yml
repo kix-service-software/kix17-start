@@ -1,0 +1,844 @@
+---
+0001:
+  StepName: 'Basic XSS Test Without Filter Evasion'
+  InputData:
+    String: |-
+      <SCRIPT SRC=http://xss.rocks/xss.js></SCRIPT>
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      
+    Replace: 1
+0002:
+  StepName: 'XSS Locator (Polygot)'
+  InputData:
+    String: |-
+      javascript:/*--></title></style></textarea></script></xmp><svg/onload='+/"/+/onmouseover=1/+/[*/[]/+alert(1)//'>
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      javascript:/*--&gt;</title></style></textarea></xmp><svg>
+    Replace: 1
+0003:
+  StepName: 'Image XSS Using the JavaScript Directive'
+  InputData:
+    String: |-
+      <IMG SRC="javascript:alert('XSS');">
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <img />
+    Replace: 1
+0004:
+  StepName: 'No Quotes and no Semicolon'
+  InputData:
+    String: |-
+      <IMG SRC=javascript:alert('XSS')>
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <img />
+    Replace: 1
+0005:
+  StepName: 'Case Insensitive XSS Attack Vector'
+  InputData:
+    String: |-
+      <IMG SRC=JaVaScRiPt:alert('XSS')>
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <img />
+    Replace: 1
+0006:
+  StepName: 'HTML Entities'
+  InputData:
+    String: |-
+      <IMG SRC=javascript:alert(&quot;XSS&quot;)>
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <img />
+    Replace: 1
+0007:
+  StepName: 'Grave Accent Obfuscation'
+  InputData:
+    String: |-
+      <IMG SRC=`javascript:alert("RSnake says, 'XSS'")`>
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <img says,="says," 'xss'")`="&#39;XSS&#39;&quot;)`" />
+    Replace: 1
+0008:
+  StepName: 'Malformed A Tags'
+  InputData:
+    String: |-
+      \<a onmouseover="alert(document.cookie)"\>xxs link\</a\>
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      \<a \="\">xxs link\</a>
+    Replace: 1
+0009:
+  StepName: 'Malformed A Tags (Chrome)'
+  InputData:
+    String: |-
+      \<a onmouseover=alert(document.cookie)\>xxs link\</a\>
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      \<a>xxs link\</a>
+    Replace: 1
+0010:
+  StepName: 'Malformed IMG Tags'
+  InputData:
+    String: |-
+      <IMG """><SCRIPT>alert("XSS")</SCRIPT>"\>
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <img """="&quot;&quot;&quot;" />&quot;\&gt;
+    Replace: 1
+0011:
+  StepName: 'fromCharCode'
+  InputData:
+    String: |-
+      <IMG SRC=javascript:alert(String.fromCharCode(88,83,83))>
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <img />
+    Replace: 1
+0012:
+  StepName: 'Default SRC Tag to Get Past Filters that Check SRC Domain'
+  InputData:
+    String: |-
+      <IMG SRC=# onmouseover="alert('xxs')">
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <img src="#" />
+    Replace: 1
+0013:
+  StepName: 'Default SRC Tag by Leaving it Empty'
+  InputData:
+    String: |-
+      <IMG SRC= onmouseover="alert('xxs')">
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <img src="onmouseover=&quot;alert(&#39;xxs&#39;)&quot;" />
+    Replace: 1
+0014:
+  StepName: 'Default SRC Tag by Leaving it out Entirely'
+  InputData:
+    String: |-
+      <IMG onmouseover="alert('xxs')">
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <img />
+    Replace: 1
+0015:
+  StepName: 'On Error Alert'
+  InputData:
+    String: |-
+      <IMG SRC=/ onerror="alert(String.fromCharCode(88,83,83))"></img>
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <img src="/" />
+    Replace: 1
+0016:
+  StepName: 'IMG onerror and JavaScript Alert Encode'
+  InputData:
+    String: |-
+      <img src=x onerror="&#0000106&#0000097&#0000118&#0000097&#0000115&#0000099&#0000114&#0000105&#0000112&#0000116&#0000058&#0000097&#0000108&#0000101&#0000114&#0000116&#0000040&#0000039&#0000088&#0000083&#0000083&#0000039&#0000041">
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <img src="x" />
+    Replace: 1
+0017:
+  StepName: 'Decimal HTML Character References'
+  InputData:
+    String: |-
+      <IMG SRC=&#106;&#97;&#118;&#97;&#115;&#99;&#114;&#105;&#112;&#116;&#58;&#97;&#108;&#101;&#114;&#116;&#40;&#39;&#88;&#83;&#83;&#39;&#41;>
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <img />
+    Replace: 1
+0018:
+  StepName: 'Decimal HTML Character References Without Trailing Semicolons'
+  InputData:
+    String: |-
+      <IMG SRC=&#0000106&#0000097&#0000118&#0000097&#0000115&#0000099&#0000114&#0000105&#0000112&#0000116&#0000058&#0000097&#0000108&#0000101&#0000114&#0000116&#0000040&#0000039&#0000088&#0000083&#0000083&#0000039&#0000041>
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <img />
+    Replace: 1
+0019:
+  StepName: 'Hexadecimal HTML Character References Without Trailing Semicolons'
+  InputData:
+    String: |-
+      <IMG SRC=&#x6A&#x61&#x76&#x61&#x73&#x63&#x72&#x69&#x70&#x74&#x3A&#x61&#x6C&#x65&#x72&#x74&#x28&#x27&#x58&#x53&#x53&#x27&#x29>
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <img />
+    Replace: 1
+0020:
+  StepName: 'Embedded Tab'
+  InputData:
+    String: |-
+      <IMG SRC="jav ascript:alert('XSS');">
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <img />
+    Replace: 1
+0021:
+  StepName: 'Embedded Encoded Tab'
+  InputData:
+    String: |-
+      <IMG SRC="jav&#x09;ascript:alert('XSS');">
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <img />
+    Replace: 1
+0022:
+  StepName: 'Embedded Newline to Break-up XSS'
+  InputData:
+    String: |-
+      <IMG SRC="jav&#x0A;ascript:alert('XSS');">
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <img />
+    Replace: 1
+0023:
+  StepName: 'Embedded Carriage Return to Break-up XSS'
+  InputData:
+    String: |-
+      <IMG SRC="jav&#x0D;ascript:alert('XSS');">
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <img />
+    Replace: 1
+0024:
+  StepName: 'Non-alpha-non-digit XSS'
+  InputData:
+    String: |-
+      <SCRIPT/XSS SRC="http://xss.rocks/xss.js"></SCRIPT>
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      
+    Replace: 1
+0025:
+  StepName: 'Non-alpha-non-digit XSS (Gecko)'
+  InputData:
+    String: |-
+      <BODY onload!#$%&()*~+-_.,:;?@[/|\]^`=alert("XSS")>
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <body>
+    Replace: 1
+0026:
+  StepName: 'Non-alpha-non-digit XSS (IE)'
+  InputData:
+    String: |-
+      <SCRIPT/SRC="http://xss.rocks/xss.js"></SCRIPT>
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      
+    Replace: 1
+0027:
+  StepName: 'Extraneous Open Brackets'
+  InputData:
+    String: |-
+      <<SCRIPT>alert("XSS");//\<</SCRIPT>
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      &lt;
+    Replace: 1
+0028:
+  StepName: 'No Closing Script Tags'
+  InputData:
+    String: |-
+      <SCRIPT SRC=http://xss.rocks/xss.js?< B >
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      
+    Replace: 1
+0029:
+  StepName: 'Protocol Resolution in Script Tags'
+  InputData:
+    String: |-
+      <SCRIPT SRC=//xss.rocks/.j>
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      
+    Replace: 1
+0030:
+  StepName: 'Half Open HTML/JavaScript XSS Vector'
+  InputData:
+    String: |-
+      <IMG SRC="('XSS')"
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      
+    Replace: 1
+0031:
+  StepName: 'Double Open Angle Brackets'
+  InputData:
+    String: |-
+      <iframe src=http://xss.rocks/scriptlet.html <
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      
+    Replace: 1
+0032:
+  StepName: 'End Title Tag'
+  InputData:
+    String: |-
+      </TITLE><SCRIPT>alert("XSS");</SCRIPT>
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      </title>
+    Replace: 1
+0033:
+  StepName: 'INPUT Image'
+  InputData:
+    String: |-
+      <INPUT TYPE="IMAGE" SRC="javascript:alert('XSS');">
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <input type="IMAGE" />
+    Replace: 1
+0034:
+  StepName: 'BODY Image'
+  InputData:
+    String: |-
+      <BODY BACKGROUND="javascript:alert('XSS')">
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <body>
+    Replace: 1
+0035:
+  StepName: 'IMG Dynsrc'
+  InputData:
+    String: |-
+      <IMG DYNSRC="javascript:alert('XSS')">
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <img />
+    Replace: 1
+0036:
+  StepName: 'IMG Lowsrc'
+  InputData:
+    String: |-
+      <IMG LOWSRC="javascript:alert('XSS')">
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <img />
+    Replace: 1
+0037:
+  StepName: 'List-style-image'
+  InputData:
+    String: |-
+      <STYLE>li {list-style-image: url("javascript:alert('XSS')");}</STYLE><UL><LI>XSS</br>
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <style></style><ul><li>XSS
+    Replace: 1
+0038:
+  StepName: 'VBscript in an Image'
+  InputData:
+    String: |-
+      <IMG SRC='vbscript:msgbox("XSS")'>
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <img />
+    Replace: 1
+0039:
+  StepName: 'Livescript (older versions of Netscape only)'
+  InputData:
+    String: |-
+      <IMG SRC="livescript:[code]">
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <img />
+    Replace: 1
+0040:
+  StepName: 'SVG Object Tag'
+  InputData:
+    String: |-
+      <svg/onload=alert('XSS')>
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <svg>
+    Replace: 1
+0041:
+  StepName: 'BODY Tag'
+  InputData:
+    String: |-
+      <BODY ONLOAD=alert('XSS')>
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <body>
+    Replace: 1
+0042:
+  StepName: 'BODY Tag'
+  InputData:
+    String: |-
+      <BODY ONLOAD =alert('XSS')>
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <body>
+    Replace: 1
+0043:
+  StepName: 'BGSOUND'
+  InputData:
+    String: |-
+      <BGSOUND SRC="javascript:alert('XSS');">
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <bgsound>
+    Replace: 1
+0044:
+  StepName: '& JavaScript includes'
+  InputData:
+    String: |-
+      <BR SIZE="&{alert('XSS')}">
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <br size="&amp;{alert(&#39;XSS&#39;)}" />
+    Replace: 1
+0045:
+  StepName: 'STYLE sheet'
+  InputData:
+    String: |-
+      <LINK REL="stylesheet" HREF="javascript:alert('XSS');">
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <link rel="stylesheet" />
+    Replace: 1
+0046:
+  StepName: 'STYLE Tags with Broken-up JavaScript for XSS'
+  InputData:
+    String: |-
+      <STYLE>@im\port'\ja\vasc\ript:alert("XSS")';</STYLE>
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <style></style>
+    Replace: 1
+0047:
+  StepName: 'STYLE Attribute using a Comment to Break-up Expression'
+  InputData:
+    String: |-
+      <IMG STYLE="xss:expr/*XSS*/ession(alert('XSS'))">
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <img />
+    Replace: 1
+0048:
+  StepName: 'IMG STYLE with Expression'
+  InputData:
+    String: |-
+      exp/*<A STYLE='no\xss:noxss("*//*");
+      xss:ex/*XSS*//*/*/pression(alert("XSS"))'>
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      exp/*<a>
+    Replace: 1
+0049:
+  StepName: 'STYLE Tag (Older versions of Netscape only)'
+  InputData:
+    String: |-
+      <STYLE TYPE="text/javascript">alert('XSS');</STYLE>
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      
+    Replace: 1
+0050:
+  StepName: 'STYLE Tag using Background-image'
+  InputData:
+    String: |-
+      <STYLE>.XSS{background-image:url("javascript:alert('XSS')");}</STYLE><A CLASS=XSS></A>
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <style></style><a class="XSS"></a>
+    Replace: 1
+0051:
+  StepName: 'STYLE Tag using Background'
+  InputData:
+    String: |-
+      <STYLE type="text/css">BODY{background:url("javascript:alert('XSS')")}</STYLE>
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <style type="text/css"></style>
+    Replace: 1
+0052:
+  StepName: 'STYLE Tag using Background'
+  InputData:
+    String: |-
+      <STYLE type="text/css">BODY{background:url("<javascript:alert>('XSS')")}</STYLE>
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <style type="text/css"></style>
+    Replace: 1
+0053:
+  StepName: 'Anonymous HTML with STYLE Attribute'
+  InputData:
+    String: |-
+      <XSS STYLE="xss:expression(alert('XSS'))">
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <xss>
+    Replace: 1
+0054:
+  StepName: 'US-ASCII Encoding'
+  InputData:
+    String: |-
+      ¼script¾alert(¢XSS¢)¼/script¾
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      &frac14;script&frac34;alert(&cent;XSS&cent;)&frac14;/script&frac34;
+    Replace: 1
+0055:
+  StepName: 'META'
+  InputData:
+    String: |-
+      <META HTTP-EQUIV="refresh" CONTENT="0;url=javascript:alert('XSS');">
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      
+    Replace: 1
+0056:
+  StepName: 'META using Data'
+  InputData:
+    String: |-
+      <META HTTP-EQUIV="refresh" CONTENT="0;url=data:text/html base64,PHNjcmlwdD5hbGVydCgnWFNTJyk8L3NjcmlwdD4K">
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      
+    Replace: 1
+0057:
+  StepName: 'META with Additional URL Parameter'
+  InputData:
+    String: |-
+      <META HTTP-EQUIV="refresh" CONTENT="0; URL=http://;URL=javascript:alert('XSS');">
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      
+    Replace: 1
+0058:
+  StepName: 'IFRAME'
+  InputData:
+    String: |-
+      <IFRAME SRC="javascript:alert('XSS');"></IFRAME>
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <iframe></iframe>
+    Replace: 1
+0059:
+  StepName: 'IFRAME Event Based'
+  InputData:
+    String: |-
+      <IFRAME SRC=# onmouseover="alert(document.cookie)"></IFRAME>
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <iframe src="#"></iframe>
+    Replace: 1
+0060:
+  StepName: 'FRAME'
+  InputData:
+    String: |-
+      <FRAMESET><FRAME SRC="javascript:alert('XSS');"></FRAMESET>
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <frameset><frame></frameset>
+    Replace: 1
+0061:
+  StepName: 'TABLE'
+  InputData:
+    String: |-
+      <TABLE BACKGROUND="javascript:alert('XSS')">
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <table>
+    Replace: 1
+0062:
+  StepName: 'TD'
+  InputData:
+    String: |-
+      <TABLE><TD BACKGROUND="javascript:alert('XSS')">
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <table><td>
+    Replace: 1
+0063:
+  StepName: 'DIV Background-image'
+  InputData:
+    String: |-
+      <DIV STYLE="background-image: url(javascript:alert('XSS'))">
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <div>
+    Replace: 1
+0064:
+  StepName: 'DIV Expression'
+  InputData:
+    String: |-
+      <DIV STYLE="width: expression(alert('XSS'));">
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <div>
+    Replace: 1
+0065:
+  StepName: 'Downlevel-Hidden Block'
+  InputData:
+    String: |-
+      <!--[if gte IE 4]>
+      <SCRIPT>alert('XSS');</SCRIPT>
+      <![endif]-->
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      
+    Replace: 1
+0066:
+  StepName: 'BASE Tag'
+  InputData:
+    String: |-
+      <BASE HREF="javascript:alert('XSS');//">
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <base />
+    Replace: 1
+0067:
+  StepName: 'OBJECT Tag'
+  InputData:
+    String: |-
+      <OBJECT TYPE="text/x-scriptlet" DATA="http://xss.rocks/scriptlet.html"></OBJECT>
+    NoObject: 1
+  CheckValue:
+    String: |-
+      
+    Replace: 1
+0068:
+  StepName: 'EMBED a Flash Movie That Contains XSS'
+  InputData:
+    String: |-
+      <EMBED SRC="http://ha.ckers.org/xss.swf" AllowScriptAccess="always"></EMBED>
+    NoEmbed: 1
+  CheckValue:
+    String: |-
+      
+    Replace: 1
+0069:
+  StepName: 'EMBED SVG Which Contains XSS Vector'
+  InputData:
+    String: |-
+      <EMBED SRC="data:image/svg+xml;base64,PHN2ZyB4bWxuczpzdmc9Imh0dH A6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv MjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hs aW5rIiB2ZXJzaW9uPSIxLjAiIHg9IjAiIHk9IjAiIHdpZHRoPSIxOTQiIGhlaWdodD0iMjAw IiBpZD0ieHNzIj48c2NyaXB0IHR5cGU9InRleHQvZWNtYXNjcmlwdCI+YWxlcnQoIlh TUyIpOzwvc2NyaXB0Pjwvc3ZnPg==" type="image/svg+xml" AllowScriptAccess="always"></EMBED>
+    NoEmbed: 1
+  CheckValue:
+    String: |-
+      
+    Replace: 1
+0070:
+  StepName: 'Assuming you can only fit in a few characters and it filters against .js'
+  InputData:
+    String: |-
+      <SCRIPT SRC="http://xss.rocks/xss.jpg"></SCRIPT>
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      
+    Replace: 1
+0071:
+  StepName: 'SSI (Server Side Includes)'
+  InputData:
+    String: |-
+      <!--#exec cmd="/bin/echo '<SCR'"--><!--#exec cmd="/bin/echo 'IPT SRC=http://xss.rocks/xss.js></SCRIPT>'"-->
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      
+    Replace: 1
+0072:
+  StepName: 'IMG Embedded Commands'
+  InputData:
+    String: |-
+      <IMG SRC="http://www.thesiteyouareon.com/somecommand.php?somevariables=maliciouscode">
+    NoExtSrcLoad: 1
+  CheckValue:
+    String: |-
+      <img />
+    Replace: 1
+0073:
+  StepName: 'UTF-7 Encoding'
+  InputData:
+    String: |-
+      <HEAD><META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=UTF-7"> </HEAD>+ADw-SCRIPT+AD4-alert('XSS');+ADw-/SCRIPT+AD4-
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <head><meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-7" /> </head>
+    Replace: 1
+0074:
+  StepName: 'XSS Using HTML Quote Encapsulation 1'
+  InputData:
+    String: |-
+      <SCRIPT a=">" SRC="httx://xss.rocks/xss.js"></SCRIPT>
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      
+    Replace: 1
+0075:
+  StepName: 'XSS Using HTML Quote Encapsulation 2'
+  InputData:
+    String: |-
+      <SCRIPT =">" SRC="httx://xss.rocks/xss.js"></SCRIPT>
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      
+    Replace: 1
+0076:
+  StepName: 'XSS Using HTML Quote Encapsulation 3'
+  InputData:
+    String: |-
+      <SCRIPT a=">" '' SRC="httx://xss.rocks/xss.js"></SCRIPT>
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      
+    Replace: 1
+0077:
+  StepName: 'XSS Using HTML Quote Encapsulation 4'
+  InputData:
+    String: |-
+      <SCRIPT "a='>'" SRC="httx://xss.rocks/xss.js"></SCRIPT>
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      
+    Replace: 1
+0078:
+  StepName: 'XSS Using HTML Quote Encapsulation 5'
+  InputData:
+    String: |-
+      <SCRIPT a=>SRC="httx://xss.rocks/xss.js"></SCRIPT>
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      
+    Replace: 1
+0079:
+  StepName: 'XSS Using HTML Quote Encapsulation 6'
+  InputData:
+    String: |-
+      <SCRIPT a=">'>" SRC="httx://xss.rocks/xss.js"></SCRIPT>
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      
+    Replace: 1
+0080:
+  StepName: 'XSS Using HTML Quote Encapsulation 7'
+  InputData:
+    String: |-
+      <SCRIPT>document.write("<SCRI");</SCRIPT>PT SRC="httx://xss.rocks/xss.js"></SCRIPT>
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      PT SRC=&quot;httx://xss.rocks/xss.js&quot;&gt;
+    Replace: 1
+0081:
+  StepName: 'Different Syntax or Encoding 1'
+  InputData:
+    String: |-
+      "><script >alert(document.cookie)</script >
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      &quot;&gt;
+    Replace: 1
+0082:
+  StepName: 'Different Syntax or Encoding 2'
+  InputData:
+    String: |-
+      "><ScRiPt>alert(document.cookie)</ScRiPt>
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      &quot;&gt;
+    Replace: 1
+0083:
+  StepName: 'Different Syntax or Encoding 3'
+  InputData:
+    String: |-
+      "%3cscript%3ealert(document.cookie)%3c/script%3e
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      &quot;%3cscript%3ealert(document.cookie)%3c/script%3e
+    Replace: 1
+0084:
+  StepName: 'Bypassing Non-Recursive Filtering'
+  InputData:
+    String: |-
+      <scr<script>ipt>alert(document.cookie)</script>
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <scrscript>ipt&gt;alert(document.cookie)
+    Replace: 1

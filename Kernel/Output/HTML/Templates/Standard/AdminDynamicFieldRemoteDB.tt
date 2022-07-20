@@ -127,12 +127,12 @@ $('#DatabaseFieldKey').on('change', function (Event) {
                             </p>
                         </div>
                         <div class="Clear"></div>
-                        <label class="Mandatory" for="MaxArraySize"><span class="Marker">*</span> [% Translate("MaxArraySize") | html %]:</label>
+                        <label class="Mandatory" for="MaxArraySize"><span class="Marker">*</span> [% Translate("Number of records") | html %]:</label>
                         <div class="Field">
                             <input id="MaxArraySize" class="W25pc Validate_Required Validate_Number [% Data.MaxArraySizeServerError %]" type="text" maxlength="3" value="[% Data.MaxArraySize | html %]" name="MaxArraySize"/>
                             <div id="MaxArraySizeError" class="TooltipErrorMessage"><p>[% Translate("This field must be numeric.") | html %]</p></div>
                             <div id="MaxArraySizeServerError" class="TooltipErrorMessage"><p>[% Translate(Data.MaxArraySizeServerErrorMessage) | html %]</p></div>
-                            <p class="FieldExplanation">[% Translate("Specify the maximum number of entries.") | html %]</p>
+                            <p class="FieldExplanation">[% Translate("Specify the maximum number of records.") | html %]</p>
                         </div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[

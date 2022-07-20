@@ -17,7 +17,7 @@ package SOAP::Lite;
 use strict;
 use warnings;
 
-our $VERSION = '1.19';
+our $VERSION = '1.27'; # VERSION
 
 package SOAP::XMLSchemaApacheSOAP::Deserializer;
 
@@ -806,7 +806,7 @@ sub new {
     } => $class;
     $self->typelookup({
            'base64Binary' =>
-              [10, sub {$_[0] =~ /[^\x09\x0a\x0d\x20-\x7f]/ }, 'as_base64Binary'],
+              [10, sub { $_[0] =~ /[^\x09\x0a\x0d\x20-\x7f]/ }, 'as_base64Binary'],
            'zerostring' =>
                [12, sub { $_[0] =~ /^0\d+$/ }, 'as_string'],
             # int (and actually long too) are subtle: the negative range is one greater...
@@ -2480,7 +2480,7 @@ package SOAP::Client;
 
 use SOAP::Lite::Utils;
 
-$VERSION = $SOAP::Lite::VERSION;
+our $VERSION = '1.27'; # VERSION
 sub BEGIN {
     __PACKAGE__->__mk_accessors(qw(endpoint code message
         is_success status options));
@@ -3412,6 +3412,7 @@ EOP
     my $namespaces = $self->deserializer->ids->[1];
     foreach my $key (keys %{$namespaces}) {
         my ($ns,$prefix) = SOAP::Utils::splitqname($key);
+        next if $namespaces->{$key} eq 'http://schemas.xmlsoap.org/wsdl/soap/';
         $self->{'_stub'} .= '  $self->serializer->register_ns("'.$namespaces->{$key}.'","'.$prefix.'");'."\n"
             if (defined $ns && ($ns eq "xmlns"));
     }
@@ -3523,7 +3524,7 @@ use SOAP::Lite::Utils;
 use SOAP::Constants;
 use SOAP::Packager;
 
-use Scalar::Util qw(weaken blessed);
+use Scalar::Util qw(weaken blessed reftype);
 
 @ISA = qw(SOAP::Cloneable);
 
@@ -3852,15 +3853,27 @@ sub call {
                 my($value) = $_->value; # take first value
 
                 # fillup parameters
-                UNIVERSAL::isa($_[$param] => 'SOAP::Data')
-                    ? $_[$param]->SOAP::Data::value($value)
-                    : UNIVERSAL::isa($_[$param] => 'ARRAY')
-                        ? (@{$_[$param]} = @$value)
-                        : UNIVERSAL::isa($_[$param] => 'HASH')
-                            ? (%{$_[$param]} = %$value)
-                            : UNIVERSAL::isa($_[$param] => 'SCALAR')
-                                ? (${$_[$param]} = $$value)
-                                : ($_[$param] = $value)
+                if ( reftype( $_[$param] ) ) {
+                    if ( reftype( $_[$param] ) eq 'SCALAR' ) {
+                        ${ $_[$param] } = $$value;
+                    }
+                    elsif ( reftype( $_[$param] ) eq 'ARRAY' ) {
+                        @{ $_[$param] } = @$value;
+                    }
+                    elsif ( reftype( $_[$param] ) eq 'HASH' ) {
+                        if ( eval { $_[$param]->isa('SOAP::Data') } ) {
+                            $_[$param]->SOAP::Data::value($value);
+                        }
+                        elsif ( reftype($value) eq 'REF' ) {
+                            %{ $_[$param] } = %$$value;
+                        }
+                        else { %{ $_[$param] } = %$value; }
+                    }
+                    else { $_[$param] = $value; }
+                }
+                else {
+                    $_[$param] = $value;
+                }
             }
         }
     }
@@ -4127,7 +4140,7 @@ the specified WSDL schema and uses it as the basis for generating stubs.
 When set to a true value, the raw XML is returned by the call to a remote
 method.
 
-The default is to return the a L<SOAP::SOM> object (false).
+The default is to return a L<SOAP::SOM> object (false).
 
 =item autotype(boolean)
 
@@ -4160,7 +4173,7 @@ The default is to not send any additional characters.
 
 Allows for the setting of arbitrary attributes on the header object. Keep in mind the requirement that
  any attributes not natively known to SOAP must be namespace-qualified.
-If using $session->call ($method, $callData, $callHeader), SOAP::Lite serializes the informations as
+If using $session->call ($method, $callData, $callHeader), SOAP::Lite serializes information as
 
   <soap:Envelope>
     <soap:Header>
@@ -5710,7 +5723,7 @@ of this software.
 
 Latest development takes place on GitHub.com. Come on by and fork it.
 
-git@github.com:redhotpenguin/soaplite.git
+git@github.com:redhotpenguin/perl-soaplite.git
 
 Also see the HACKING file.
 

@@ -10,7 +10,7 @@ package SOAP::Transport::HTTP;
 
 use strict;
 
-our $VERSION = 1.17;
+our $VERSION = '1.27'; # VERSION
 
 use SOAP::Lite;
 use SOAP::Packager;
@@ -124,6 +124,11 @@ sub new {
 
     while (@methods) {
         my ( $method, $params ) = splice( @methods, 0, 2 );
+        # ssl_opts takes a hash, not a ref - see RT 107924
+        if (ref $params eq 'HASH' && $method eq 'ssl_opts') {
+            $self->$method( %$params );
+            next;
+        }
         $self->$method( ref $params eq 'ARRAY' ? @$params : $params );
     }
 
@@ -212,6 +217,7 @@ sub send_receive {
             else {
                 require Encode;
                 $envelope = Encode::encode($encoding, $envelope);
+                $bytelength = SOAP::Utils::bytelength($envelope);
             }
             #  if !$SOAP::Constants::DO_NOT_USE_LWP_LENGTH_HACK
             #      && length($envelope) != $bytelength;
@@ -488,6 +494,11 @@ sub make_response {
       && ( $self->options->{compress_threshold} || 0 ) <
       SOAP::Utils::bytelength $response;
 
+    if ($] > 5.007 && $encoding) {
+        require Encode;
+        $response = Encode::encode( $encoding, $response );
+    }
+
     $response = Compress::Zlib::compress($response) if $compressed;
 
 # this next line does not look like a good test to see if something is multipart
@@ -507,9 +518,7 @@ sub make_response {
                       && $encoding ? 'charset=' . lc($encoding) : () ),
                 'Content-Length' => SOAP::Utils::bytelength $response
             ),
-            ( $] > 5.007 )
-            ? do { require Encode; Encode::encode( $encoding, $response ) }
-            : $response,
+            $response,
         ) );
 
     $self->response->headers->header( 'Content-Type' =>

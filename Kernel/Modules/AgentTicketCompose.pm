@@ -1941,6 +1941,29 @@ sub _Mask {
         }
         else {
             $Selected{SelectedValue} = $Config->{DefaultArticleType};
+
+            # if default value is not internal, check if article for response is external
+            if ( $Selected{SelectedValue} !~ m{internal} ) {
+                if ( $Param{GetParam}->{ArticleID} ) {
+                    my %ArticleData = $TicketObject->ArticleGet(
+                        ArticleID     => $Param{GetParam}->{ArticleID},
+                        DynamicFields => 0,
+                    );
+
+                    my $DataArticleType = $TicketObject->ArticleTypeLookup(
+                        ArticleTypeID => $ArticleData{ArticleTypeID}
+                    );
+
+                    if ( $DataArticleType =~ m{internal} ) {
+                        for my $ArticleType ( sort( values( %ArticleTypeList ) ) ) {
+                            if ( $ArticleType =~ m{internal} ) {
+                                $Selected{SelectedValue} = $ArticleType;
+                                last;
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         $Param{ArticleTypesStrg} = $LayoutObject->BuildSelection(

@@ -16,7 +16,7 @@ our $ObjectManagerDisabled = 1;
 sub new {
     my ( $Type, %Param ) = @_;
 
-    my $Self = {%Param};
+    my $Self = { %Param };
     bless( $Self, $Type );
 
     return $Self;
@@ -25,25 +25,30 @@ sub new {
 sub Run {
     my ( $Self, %Param ) = @_;
 
-    # create needed objects
-    my $DynamicFieldObject = $Kernel::OM->Get('Kernel::System::DynamicField');
+    # get needed objects
     my $LayoutObject       = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $DynamicFieldObject = $Kernel::OM->Get('Kernel::System::DynamicField');
+    my $ParamObject        = $Kernel::OM->Get('Kernel::System::Web::Request');
 
     my $DynamicFieldName = '';
 
     # get dynamic field information
-    my $ID = $Kernel::OM->Get('Kernel::System::Web::Request')->GetParam( Param => 'ID' );
-    if ( defined $ID && $ID ) {
+    my $ID = $ParamObject->GetParam(
+        Param => 'ID',
+    );
+    if ( $ID ) {
 
-        my $DynamicField = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldGet(
-            ID => $ID
+        my $DynamicField = $DynamicFieldObject->DynamicFieldGet(
+            ID => $ID,
         );
         $DynamicFieldName = $DynamicField->{Name};
     }
 
     # get all available frontendmodules which use dynamic fields
     # get already assigned dynamic fields
-    my %FrontendModules = $Self->_GetAllAvailableFrontendModules( Name => $DynamicFieldName );
+    my %FrontendModules = $Self->_GetAllAvailableFrontendModules(
+        Name => $DynamicFieldName,
+    );
 
     # create available dynamic field multiselect field
     $Param{AvailableFrontendModulesStrg} = $LayoutObject->BuildSelection(
@@ -176,39 +181,41 @@ sub _GetAllAvailableFrontendModules {
 
     # get customer frontend modules
     my $ConfigHashCustomer = $ConfigObject->Get('CustomerFrontend::Module');
-
-    # get admin frontend modules
-    my %ConfigHash = ( %{$ConfigHashAgent}, %{$ConfigHashCustomer} );
+    my %ConfigHash         = ( %{ $ConfigHashAgent }, %{ $ConfigHashCustomer } );
 
     # get all tabs
     my $ConfigHashTabs = $ConfigObject->Get('AgentTicketZoomBackend');
-    for my $Item ( keys %{$ConfigHashTabs} ) {
+    for my $Item ( keys( %{ $ConfigHashTabs } ) ) {
 
         # if no link is given
-        next if !defined $ConfigHashTabs->{$Item}->{Link};
+        next if ( !defined( $ConfigHashTabs->{ $Item }->{Link} ) );
 
         # look for PretendAction
-        my ($PretendAction) = $ConfigHashTabs->{$Item}->{Link} =~ /^(?:.*?)\;PretendAction=(.*?)\;(?:.*)$/;
-        next if ( !$PretendAction || $ConfigHash{$PretendAction} );
+        if ( $ConfigHashTabs->{ $Item }->{Link} =~ /^(.*?)\;PretendAction=(.*?)\;(.*)$/ ) {
+            next if (
+                !$2
+                || $ConfigHash{ $2 }
+            );
 
-     # if given and not already registered as frontend module - add width empty value to config hash
-        $ConfigHash{$PretendAction} = '';
+            # if given and not already registered as frontend module - add width empty value to config hash
+            $ConfigHash{ $2 } = '';
+        }
     }
 
     # ticket overview - add width empty value to config hash
-    $ConfigHash{'OverviewCustom'}  = '';
     $ConfigHash{'OverviewSmall'}   = '';
     $ConfigHash{'OverviewMedium'}  = '';
     $ConfigHash{'OverviewPreview'} = '';
 
     # KIXSidebars - add width empty value to config hash
-    foreach my $Frontend (qw(Frontend CustomerFrontend)) {
-        my $SidebarConfig
-            = $ConfigObject->Get( $Frontend . '::KIXSidebarBackend' );
-        if ( $SidebarConfig && ref($SidebarConfig) eq 'HASH' ) {
-            foreach my $Key ( sort keys %{$SidebarConfig} ) {
-                my $SidebarBackendConfig = $ConfigObject
-                    ->Get( 'Ticket::Frontend::KIXSidebar' . $Key );
+    for my $Frontend ( qw(Frontend CustomerFrontend) ) {
+        my $SidebarConfig = $ConfigObject->Get( $Frontend . '::KIXSidebarBackend' );
+        if (
+            $SidebarConfig
+            && ref( $SidebarConfig ) eq 'HASH'
+        ) {
+            for my $Key ( sort( keys( %{ $SidebarConfig } ) ) ) {
+                my $SidebarBackendConfig = $ConfigObject->Get( 'Ticket::Frontend::KIXSidebar' . $Key );
                 if ( exists( $SidebarBackendConfig->{DynamicField} ) ) {
                     $ConfigHash{ 'KIXSidebar' . $Key } = '';
                 }
@@ -216,45 +223,90 @@ sub _GetAllAvailableFrontendModules {
         }
     }
 
+    # init result params
     my %AvailableFrontends;
     my @SelectedFrontends  = ();
     my @MandatoryFrontends = ();
 
-    $AvailableFrontends{CustomerTicketZoomFollowUp} = 'CustomerTicketZoomFollowUp';
+    # handle dynamic field for process tab
+    if (
+        defined( $ConfigObject->Get( 'Ticket::Frontend::AgentTicketZoom' ) )
+        && defined( $ConfigObject->Get( 'Ticket::Frontend::AgentTicketZoom' )->{ProcessWidgetDynamicField} )
+    ) {
+        $AvailableFrontends{AgentTicketZoomTabProcess} = 'AgentTicketZoomTabProcess';
+
+        my $ConfigRef = $ConfigObject->Get( 'Ticket::Frontend::AgentTicketZoom' )->{ProcessWidgetDynamicField}->{ $Param{Name} };
+        if ( !$ConfigRef ) {
+            # nothing to do
+        }
+        elsif ( $ConfigRef eq '1' ) {
+            push( @SelectedFrontends, 'AgentTicketZoomTabProcess' );
+        }
+        elsif ( $ConfigRef eq '2' ) {
+            push( @SelectedFrontends,  'AgentTicketZoomTabProcess' );
+            push( @MandatoryFrontends, 'AgentTicketZoomTabProcess' );
+        }
+    }
+
+    # handle followup dynamic field for customer frontend
+    if (
+        defined( $ConfigObject->Get( 'Ticket::Frontend::CustomerTicketZoom' ) )
+        && defined( $ConfigObject->Get( 'Ticket::Frontend::CustomerTicketZoom' )->{FollowUpDynamicField} )
+    ) {
+        $AvailableFrontends{CustomerTicketZoomFollowUp} = 'CustomerTicketZoomFollowUp';
+
+        my $ConfigRef = $ConfigObject->Get( 'Ticket::Frontend::CustomerTicketZoom' )->{FollowUpDynamicField}->{ $Param{Name} };
+        if ( !$ConfigRef ) {
+            # nothing to do
+        }
+        elsif ( $ConfigRef eq '1' ) {
+            push( @SelectedFrontends, 'CustomerTicketZoomFollowUp' );
+        }
+        elsif ( $ConfigRef eq '2' ) {
+            push( @SelectedFrontends,  'CustomerTicketZoomFollowUp' );
+            push( @MandatoryFrontends, 'CustomerTicketZoomFollowUp' );
+        }
+    }
 
     # get all frontend modules with dynamic field config
-    for my $Item ( keys %ConfigHash ) {
-        my $ItemConfig = $ConfigObject->Get( "Ticket::Frontend::" . $Item );
+    for my $Item ( keys( %ConfigHash ) ) {
+        my $ItemConfig = $ConfigObject->Get( 'Ticket::Frontend::' . $Item );
 
-        # if dynamic field config exists
-        next if !( defined $ItemConfig && defined $ItemConfig->{DynamicField} );
-        $AvailableFrontends{$Item} = $Item;
-
-        # if dynamic field is activated
-        # for CustomerTicketZoom check also FollowUpDynamicFields
-        if ( $Item eq 'CustomerTicketZoom'
-            && defined $ItemConfig->{FollowUpDynamicField}->{ $Param{Name} }
+        # if dynamic field config not exists try admin and agent frontend for other modules
+        # integration of CustomerUserDynamicField and CustomerCompanyDynamicField
+        if (
+            !defined( $ItemConfig )
+            || !defined( $ItemConfig->{DynamicField} )
         ) {
-            if ( $ItemConfig->{FollowUpDynamicField}->{ $Param{Name} } eq '1' ) {
-                push @SelectedFrontends, 'CustomerTicketZoomFollowUp';
-            }
-            elsif ( $ItemConfig->{FollowUpDynamicField}->{ $Param{Name} } eq '2' ) {
-                push @SelectedFrontends,  'CustomerTicketZoomFollowUp';
-                push @MandatoryFrontends, 'CustomerTicketZoomFollowUp';
+            for my $Frontend ( qw(Admin Agent) ) {
+                $ItemConfig = $ConfigObject->Get( $Frontend . '::Frontend::' . $Item );
+                last if (
+                    defined( $ItemConfig )
+                    && defined( $ItemConfig->{DynamicField} )
+                );
             }
         }
 
-        # if dynamic field is activated
-        next
-            if (
-            !defined $ItemConfig->{DynamicField}->{ $Param{Name} }
-            || $ItemConfig->{DynamicField}->{ $Param{Name} } eq '0'
-            );
-        push @SelectedFrontends, $Item;
+        # next if no config found
+        next if (
+            !defined( $ItemConfig )
+            || !defined( $ItemConfig->{DynamicField} )
+        );
 
-        # if dynamic field is mandatory
-        next if $ItemConfig->{DynamicField}->{ $Param{Name} } ne '2';
-        push @MandatoryFrontends, $Item;
+        # add available frontend
+        $AvailableFrontends{ $Item } = $Item;
+
+        # next if not selected
+        next if ( !$ItemConfig->{DynamicField}->{ $Param{Name} } );
+
+        # add seleclted frontend
+        push( @SelectedFrontends, $Item );
+
+        # next if not mandatory
+        next if ( $ItemConfig->{DynamicField}->{ $Param{Name} } ne '2' );
+
+        # add mandatory frontend
+        push( @MandatoryFrontends, $Item );
     }
 
     # return result

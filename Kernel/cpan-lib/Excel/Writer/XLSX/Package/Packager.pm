@@ -6,7 +6,7 @@ package Excel::Writer::XLSX::Package::Packager;
 #
 # Used in conjunction with Excel::Writer::XLSX
 #
-# Copyright 2000-2015, John McNamara, jmcnamara@cpan.org
+# Copyright 2000-2021, John McNamara, jmcnamara@cpan.org
 #
 # Documentation after __END__
 #
@@ -23,6 +23,8 @@ use Excel::Writer::XLSX::Package::App;
 use Excel::Writer::XLSX::Package::Comments;
 use Excel::Writer::XLSX::Package::ContentTypes;
 use Excel::Writer::XLSX::Package::Core;
+use Excel::Writer::XLSX::Package::Custom;
+use Excel::Writer::XLSX::Package::Metadata;
 use Excel::Writer::XLSX::Package::Relationships;
 use Excel::Writer::XLSX::Package::SharedStrings;
 use Excel::Writer::XLSX::Package::Styles;
@@ -31,7 +33,7 @@ use Excel::Writer::XLSX::Package::Theme;
 use Excel::Writer::XLSX::Package::VML;
 
 our @ISA     = qw(Exporter);
-our $VERSION = '0.85';
+our $VERSION = '1.09';
 
 
 ###############################################################################
@@ -55,7 +57,6 @@ sub new {
 
     $self->{_package_dir}      = '';
     $self->{_workbook}         = undef;
-    $self->{_sheet_names}      = [];
     $self->{_worksheet_count}  = 0;
     $self->{_chartsheet_count} = 0;
     $self->{_chart_count}      = 0;
@@ -94,10 +95,8 @@ sub _add_workbook {
 
     my $self        = shift;
     my $workbook    = shift;
-    my @sheet_names = @{ $workbook->{_sheetnames} };
 
     $self->{_workbook}          = $workbook;
-    $self->{_sheet_names}       = \@sheet_names;
     $self->{_chart_count}       = scalar @{ $workbook->{_charts} };
     $self->{_drawing_count}     = scalar @{ $workbook->{_drawings} };
     $self->{_num_vml_files}     = $workbook->{_num_vml_files};
@@ -136,6 +135,7 @@ sub _create_package {
     $self->_write_shared_strings_file();
     $self->_write_app_file();
     $self->_write_core_file();
+    $self->_write_custom_file();
     $self->_write_content_types_file();
     $self->_write_styles_file();
     $self->_write_theme_file();
@@ -146,6 +146,7 @@ sub _create_package {
     $self->_write_drawing_rels_files();
     $self->_add_image_files();
     $self->_add_vba_project();
+    $self->_write_metadata_file();
 }
 
 
@@ -422,6 +423,7 @@ sub _write_app_file {
     }
 
     $app->_set_properties( $properties );
+    $app->{_doc_security} = $self->{_workbook}->{_read_only};
 
     $app->_set_xml_writer( $dir . '/docProps/app.xml' );
     $app->_assemble_xml_file();
@@ -446,6 +448,50 @@ sub _write_core_file {
     $core->_set_properties( $properties );
     $core->_set_xml_writer( $dir . '/docProps/core.xml' );
     $core->_assemble_xml_file();
+}
+
+
+###############################################################################
+#
+# _write_metadata_file()
+#
+# Write the metadata.xml file.
+#
+sub _write_metadata_file {
+
+    my $self       = shift;
+    my $dir        = $self->{_package_dir};
+    my $metadata   = Excel::Writer::XLSX::Package::Metadata->new();
+
+    return if !$self->{_workbook}->{_has_metadata};
+
+    _mkdir( $dir . '/xl' );
+
+    $metadata->_set_xml_writer( $dir . '/xl/metadata.xml' );
+    $metadata->_assemble_xml_file();
+}
+
+
+###############################################################################
+#
+# _write_custom_file()
+#
+# Write the custom.xml file.
+#
+sub _write_custom_file {
+
+    my $self       = shift;
+    my $dir        = $self->{_package_dir};
+    my $properties = $self->{_workbook}->{_custom_properties};
+    my $custom     = Excel::Writer::XLSX::Package::Custom->new();
+
+    return if !@$properties;
+
+    _mkdir( $dir . '/docProps' );
+
+    $custom->_set_properties( $properties );
+    $custom->_set_xml_writer( $dir . '/docProps/custom.xml' );
+    $custom->_assemble_xml_file();
 }
 
 
@@ -504,6 +550,16 @@ sub _write_content_types_file {
         $content->_add_vba_project();
     }
 
+    # Add the custom properties if present.
+    if ( @{ $self->{_workbook}->{_custom_properties} } ) {
+        $content->_add_custom_properties();
+    }
+
+    # Add the metadata file if present.
+    if ( $self->{_workbook}->{_has_metadata} ) {
+        $content->_add_metadata();
+    }
+
     $content->_set_xml_writer( $dir . '/[Content_Types].xml' );
     $content->_assemble_xml_file();
 }
@@ -517,16 +573,17 @@ sub _write_content_types_file {
 #
 sub _write_styles_file {
 
-    my $self             = shift;
-    my $dir              = $self->{_package_dir};
-    my $xf_formats       = $self->{_workbook}->{_xf_formats};
-    my $palette          = $self->{_workbook}->{_palette};
-    my $font_count       = $self->{_workbook}->{_font_count};
-    my $num_format_count = $self->{_workbook}->{_num_format_count};
-    my $border_count     = $self->{_workbook}->{_border_count};
-    my $fill_count       = $self->{_workbook}->{_fill_count};
-    my $custom_colors    = $self->{_workbook}->{_custom_colors};
-    my $dxf_formats      = $self->{_workbook}->{_dxf_formats};
+    my $self               = shift;
+    my $dir                = $self->{_package_dir};
+    my $xf_formats         = $self->{_workbook}->{_xf_formats};
+    my $palette            = $self->{_workbook}->{_palette};
+    my $font_count         = $self->{_workbook}->{_font_count};
+    my $num_format_count   = $self->{_workbook}->{_num_format_count};
+    my $border_count       = $self->{_workbook}->{_border_count};
+    my $fill_count         = $self->{_workbook}->{_fill_count};
+    my $custom_colors      = $self->{_workbook}->{_custom_colors};
+    my $dxf_formats        = $self->{_workbook}->{_dxf_formats};
+    my $has_comments       = $self->{_workbook}->{_has_comments};
 
     my $rels = Excel::Writer::XLSX::Package::Styles->new();
 
@@ -541,7 +598,7 @@ sub _write_styles_file {
         $fill_count,
         $custom_colors,
         $dxf_formats,
-
+        $has_comments,
     );
 
     $rels->_set_xml_writer( $dir . '/xl/styles.xml' );
@@ -621,10 +678,17 @@ sub _write_root_rels_file {
     _mkdir( $dir . '/_rels' );
 
     $rels->_add_document_relationship( '/officeDocument', 'xl/workbook.xml' );
+
     $rels->_add_package_relationship( '/metadata/core-properties',
         'docProps/core.xml' );
+
     $rels->_add_document_relationship( '/extended-properties',
         'docProps/app.xml' );
+
+    if ( @{ $self->{_workbook}->{_custom_properties} } ) {
+        $rels->_add_document_relationship( '/custom-properties',
+            'docProps/custom.xml' );
+    }
 
     $rels->_set_xml_writer( $dir . '/_rels/.rels' );
     $rels->_assemble_xml_file();
@@ -674,6 +738,11 @@ sub _write_workbook_rels_file {
         $rels->_add_ms_package_relationship( '/vbaProject', 'vbaProject.bin' );
     }
 
+    # Add the metadata file if required.
+    if ( $self->{_workbook}->{_has_metadata} ) {
+        $rels->_add_document_relationship( '/sheetMetadata', 'metadata.xml' );
+    }
+
     $rels->_set_xml_writer( $dir . '/xl/_rels/workbook.xml.rels' );
     $rels->_assemble_xml_file();
 }
@@ -703,6 +772,7 @@ sub _write_worksheet_rels_files {
             @{ $worksheet->{_external_drawing_links} },
             @{ $worksheet->{_external_vml_links} },
             @{ $worksheet->{_external_table_links} },
+            @{ $worksheet->{_external_background_links} },
             @{ $worksheet->{_external_comment_links} },
         );
 
@@ -962,7 +1032,7 @@ John McNamara jmcnamara@cpan.org
 
 =head1 COPYRIGHT
 
-(c) MM-MMXV, John McNamara.
+(c) MM-MMXXI, John McNamara.
 
 All Rights Reserved. This module is free software. It may be used, redistributed and/or modified under the same terms as Perl itself.
 

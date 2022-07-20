@@ -99,6 +99,51 @@ sub Run {
     }
 
     # ------------------------------------------------------------ #
+    # return all force templates of the message
+    # ------------------------------------------------------------ #
+    if ( $Self->{Subaction} eq 'AJAXPopup' ) {
+        # get ID
+        my $ID   = $ParamObject->GetParam( Param => 'MessageID' ) || '';
+        my %Data = $SystemMessageObject->MessageGet(
+            MessageID => $ID
+        );
+        my %Response;
+        if ( %Data ) {
+            $Response{Title}   = $Data{Title};
+            $Response{Close}   = $LayoutObject->{LanguageObject}->Translate('Close');
+            $Response{Content} = '<table class="DataTable">'
+                . '<thead>'
+                . '  <tr>'
+                . '    <th>'
+                . $LayoutObject->{LanguageObject}->Translate('Popup')
+                . '    </th>'
+                . '  </tr>'
+                . '</thead>'
+                . '<tbody>';
+            for my $Template ( @{$Data{PopupTemplates}} ) {
+                $Response{Content} .= '<tr>'
+                    . '  <td>'
+                    . $Template
+                    . '  </td>'
+                    . '</tr>';
+            }
+            $Response{Content} .= '</tbody>'
+                . '</table>';
+        }
+
+        my $JSONStrg = $LayoutObject->JSONEncode(
+            Data => \%Response
+        );
+
+        return $LayoutObject->Attachment(
+            ContentType => 'application/json; charset=' . $LayoutObject->{Charset},
+            Content     => $JSONStrg || 1,
+            Type        => 'inline',
+            NoCache     => 1,
+        );
+    }
+
+    # ------------------------------------------------------------ #
     # delete
     # ------------------------------------------------------------ #
     elsif ( $Self->{Subaction} eq 'Delete' ) {
@@ -166,11 +211,13 @@ sub Run {
             }
         }
 
-        for my $Needed ( qw(ValidFromUsed ValidToUsed UsedDashboard) ) {
+        for my $Needed ( qw(ValidFromUsed ValidToUsed) ) {
             $GetParam{$Needed} = $ParamObject->GetParam( Param => $Needed ) || '';
         }
 
-        @{$GetParam{Templates}} = $ParamObject->GetArray( Param => 'Templates' );
+        for my $Needed ( qw(Templates PopupTemplates) ) {
+            @{$GetParam{$Needed}} = $ParamObject->GetArray( Param => $Needed );
+        }
 
         if (!scalar( @{$GetParam{Templates}} ) ) {
             $Errors{ 'TemplatesInvalid'} = 'ServerError';
@@ -289,11 +336,13 @@ sub Run {
             }
         }
 
-        for my $Needed ( qw(ValidFromUsed ValidToUsed UsedDashboard) ) {
+        for my $Needed ( qw(ValidFromUsed ValidToUsed) ) {
             $GetParam{$Needed} = $ParamObject->GetParam( Param => $Needed ) || '';
         }
 
-        @{$GetParam{Templates}} = $ParamObject->GetArray( Param => 'Templates' );
+        for my $Needed ( qw(Templates PopupTemplates) ) {
+            @{$GetParam{$Needed}} = $ParamObject->GetArray( Param => $Needed );
+        }
 
         if (!scalar( @{$GetParam{Templates}} ) ) {
             $Errors{ 'TemplatesInvalid'} = 'ServerError';
@@ -500,7 +549,15 @@ sub _Mask {
         Translation  => 0
     );
 
-    $Param{IsChecked} = 'checked="checked"' if $Param{UsedDashboard};
+    $Param{PopupTemplatesOption} = $LayoutObject->BuildSelection(
+        Name         => 'PopupTemplates',
+        Data         => \@TemplateList,
+        SelectedID   => $Param{PopupTemplates} || '',
+        Class        => 'Modernize',
+        Multiple     => 1,
+        PossibleNone => 1,
+        Translation  => 0
+    );
 
     $LayoutObject->Block( Name => 'ActionList' );
     $LayoutObject->Block( Name => 'ActionOverview');

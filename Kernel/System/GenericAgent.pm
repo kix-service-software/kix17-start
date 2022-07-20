@@ -1499,6 +1499,10 @@ sub _JobRunTicket {
             TicketID => $Param{TicketID},
         );
     }
+
+    # reset disable sending emails
+    delete( $TicketObject->{SendNoNotification} );
+
     return 1;
 }
 

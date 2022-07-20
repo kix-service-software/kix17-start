@@ -22,7 +22,7 @@ BEGIN {
     }
 }
 
-use JSON;
+use JSON -support_by_pp;
 
 our @ObjectDependencies = (
     'Kernel::System::Log',
@@ -67,8 +67,9 @@ sub new {
 Encode a perl data structure to a JSON string.
 
     my $JSONString = $JSONObject->Encode(
-        Data     => $Data,
-        SortKeys => 1,          # (optional) (0|1) default 0, to sort the keys of the json data
+        Data        => $Data,
+        SortKeys    => 1,          # (optional) (0|1) default 0, to sort the keys of the json data
+        EscapeSlash => 1,          # (optional) (0|1) default 0, to escape slash for usage in html code
     );
 
 =cut
@@ -93,6 +94,11 @@ sub Encode {
     # sort the keys of the JSON data
     if ( $Param{SortKeys} ) {
         $JSONObject->canonical( [1] );
+    }
+
+    # escape slashes of the JSON data, to reduce the risk of XSS
+    if ( $Param{EscapeSlash} ) {
+        $JSONObject->escape_slash( [1] );
     }
 
     # get JSON-encoded presentation of perl structure

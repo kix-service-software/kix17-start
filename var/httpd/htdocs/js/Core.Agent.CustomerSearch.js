@@ -139,8 +139,14 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
 
         Core.AJAX.FunctionCall(Core.Config.Get('Baselink'), Data, function (Response) {
             // set CustomerID
-            $('#CustomerID').val(Response.CustomerID);
-            $('#ShowCustomerID').html(Response.CustomerID);
+            if (Response.CustomerID !== '') {
+                $('#CustomerID').val(Response.CustomerID);
+                $('#ShowCustomerID').html(Response.CustomerID);
+            }
+            else {
+                $('#CustomerID').val(CustomerUserID);
+                $('#ShowCustomerID').html(CustomerUserID);
+            }
 
             // show customer info
             $('#CustomerInfo .Content').html(Response.CustomerTableHTMLString);
@@ -507,6 +513,9 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
         if (typeof CustomerKey !== 'undefined') {
             CustomerKey = htmlDecode(CustomerKey);
         }
+        else {
+            CustomerKey = CustomerValue;
+        }
 
         if (CustomerValue === '') {
             return false;
@@ -743,7 +752,7 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
      *      This function reloads info for selected customer.
      */
     TargetNS.ReloadCustomerInfo = function (CustomerKey,CallingAction,Type) {
-
+        var CustomerID;
         if (
             Type == 'Agent'
             && !ExistsCustomerUser(CustomerKey)
@@ -765,7 +774,11 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
             if ( CallingAction !== undefined && CallingAction != '' ) {
                 Action = CallingAction;
             }
-            GetCustomerInfo(CustomerKey, $('#CustomerID').val(), Action);
+            CustomerID = $('#CustomerID').val();
+            if ( !CustomerID ) {
+                CustomerID = $('#CustomerID').attr('value');
+            }
+            GetCustomerInfo(CustomerKey, CustomerID, Action);
 
             // set hidden field SelectedCustomerUser
             if ($('#SelectedCustomerUser').val() != CustomerKey) {
@@ -788,9 +801,6 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
             $('#SelectedCustomerUser').length
             && $('#SelectedCustomerUser').val() != ""
         ) {
-            // reset selected customer id
-            $('#CustomerID').val('');
-
             TargetNS.ReloadCustomerInfo($('#SelectedCustomerUser').val());
         }
 
@@ -850,7 +860,8 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
                         return false;
                     }
 
-                    Core.Agent.CustomerSearch.AddTicketCustomer(ObjectId, $('#' + ObjectId).val(), $('#' + ObjectId).prev('.CustomerKey').val());
+                    // clear search input
+                    $('#' + ObjectId).val('');
                     return false;
                 });
 

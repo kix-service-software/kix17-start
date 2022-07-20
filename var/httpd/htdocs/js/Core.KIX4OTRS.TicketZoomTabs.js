@@ -68,7 +68,6 @@ Core.KIX4OTRS.TicketZoomTabs = (function(TargetNS) {
 
             // Mark article as seen in backend
             var Data = {
-                    // Action: 'AgentTicketZoom',
                     Action : 'AgentTicketZoomTabArticle',
                     Subaction : 'MarkAsSeen',
                     TicketID : TicketID,
@@ -124,16 +123,16 @@ Core.KIX4OTRS.TicketZoomTabs = (function(TargetNS) {
     TargetNS.ShowArticleFlagOptionsDialog = function(ArticleOptionsText) {
         $('#ArticleTable .FlagIcon').each(function() {
             var FlagInformationArray = $(this).attr('id').split("_"),
-                ArticleID = FlagInformationArray[1],
-                ArticleFlagKey = FlagInformationArray[2],
-                Position = $(this).offset();
+                ArticleID            = FlagInformationArray[1],
+                ArticleFlagKey       = FlagInformationArray[2];
 
             $(this).off('click').on('click', function(event) {
+                var Position = $(this).offset();
                 if ( $('#ArticleFlagOptions_' + ArticleID + '_' + ArticleFlagKey).length ) {
                     Core.UI.Dialog.ShowContentDialog(
                         $('#ArticleFlagOptions_' + ArticleID + '_' + ArticleFlagKey),
                         ArticleOptionsText,
-                        Position.top,
+                        Position.top - $(document).scrollTop(),
                         parseInt(Position.left, 10) + 25,
                         false,
                         false,
