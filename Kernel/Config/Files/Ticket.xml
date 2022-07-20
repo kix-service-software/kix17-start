@@ -685,6 +685,8 @@
             <Hash>
                 <Item Key="Module">Kernel::System::Ticket::Event::DynamicFieldFromCustomerUser</Item>
                 <Item Key="Event">(TicketCreate|TicketCustomerUpdate)</Item>
+                <Item Key="UnknownCustomerUserKeepsValues">0</Item>
+                <Item Key="EmptyFieldKeepsValues">0</Item>
             </Hash>
         </Setting>
     </ConfigItem>
@@ -6014,7 +6016,6 @@
         <Description Translatable="1">Defines which states should be set automatically (Content), after the pending time of state (Key) has been reached.</Description>
         <Group>Ticket</Group>
         <SubGroup>Core::Ticket</SubGroup>
-        <ValidateModule>Kernel::System::SysConfig::StateValidate</ValidateModule>
         <Setting>
             <Hash>
                 <Item Key="pending auto close+" Translatable="1">closed successful</Item>
@@ -10320,6 +10321,10 @@
             <Array>
                 <Item>ArticleCreate</Item>
                 <Item>ArticleUpdate</Item>
+                <Item>ArticleCopy</Item>
+                <Item>ArticleMove</Item>
+                <Item>ArticleMerge</Item>
+                <Item>ArticleMergeTarget</Item>
                 <Item>ArticleSend</Item>
                 <Item>ArticleBounce</Item>
                 <Item>ArticleAgentNotification</Item>
@@ -10979,6 +10984,17 @@
             </Array>
         </Setting>
     </ConfigItem>
+    <ConfigItem Name="PostMaster::Reject::NoAgentNotify" Required="1" Valid="1">
+        <Description Translatable="1">Postmaster skips notifications of rejected followups.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Core::PostMaster</SubGroup>
+        <Setting>
+            <Option SelectedID="0">
+                <Item Key="0" Translatable="1">No</Item>
+                <Item Key="1" Translatable="1">Yes</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
     <ConfigItem Name="PostMaster::StrictFollowUp" Required="1" Valid="1">
         <Description Translatable="1">Postmaster handles followups and new tickets based on the system address assigned queues. The queue, the system address has assigned for new tickets, is also considered.</Description>
         <Group>Ticket</Group>
@@ -11002,6 +11018,11 @@
                         <Item Key="From">noreply@</Item>
                     </Hash>
                 </Item>
+                <Item Key="Not">
+                    <Hash>
+                        <Item Key="From">0</Item>
+                    </Hash>
+                </Item>
                 <Item Key="Set">
                     <Hash>
                         <Item Key="X-KIX-Ignore">yes</Item>
@@ -11020,6 +11041,11 @@
                 <Item Key="Match">
                     <Hash>
                         <Item Key="Subject">SomeNumber:(\d\d\d\d)</Item>
+                    </Hash>
+                </Item>
+                <Item Key="Not">
+                    <Hash>
+                        <Item Key="Subject">0</Item>
                     </Hash>
                 </Item>
                 <Item Key="Set">
@@ -13020,7 +13046,7 @@ Thanks for your help!
                 <Item Key="Title">Text Modules</Item>
                 <Item Key="Description">Show or hide the text modules</Item>
                 <Item Key="Prio">0200</Item>
-                <Item Key="Actions">CustomerTicket(Message|MessageQuick|Zoom)</Item>
+                <Item Key="Actions">CustomerTicket(Message|MessageQuick|ZoomFollowUp)</Item>
             </Hash>
         </Setting>
     </ConfigItem>
@@ -14914,15 +14940,6 @@ Thanks for your help!
             </Option>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="Ticket::Frontend::AgentTicketZoomTabProcess###DynamicField" Required="0" Valid="1">
-        <Description Translatable="1">Dynamic fields shown in the process tab of the agent interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.</Description>
-        <Group>Ticket</Group>
-        <SubGroup>Frontend::Agent::Ticket::ViewTicketZoomTabProcess</SubGroup>
-        <Setting>
-            <Hash>
-            </Hash>
-        </Setting>
-    </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::AgentTicketZoom###TicketDataKeys" Required="1" Valid="1">
         <Description Translatable="1">Defines which ticket data parameters are displayed in direct data presentation.</Description>
         <Group>Ticket</Group>
@@ -16789,14 +16806,6 @@ Thanks for your help!
                 <Item Key="Prio">6100</Item>
                 <Item Key="Active">10</Item>
             </Hash>
-        </Setting>
-    </ConfigItem>
-    <ConfigItem Name="Ticket::Frontend::CustomerTicketMessage###TicketTypeFix" Required="1" Valid="1">
-        <Description Translatable="1">Used ticket type, if ticket type selection is disabled.</Description>
-        <Group>Ticket</Group>
-        <SubGroup>Frontend::Customer::Ticket::ViewNew</SubGroup>
-        <Setting>
-            <String Regex="">default</String>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::CustomerTicketMessage###Subject" Required="0" Valid="0">

@@ -402,7 +402,7 @@ sub new {
         $Self->{PreOrder} = $SearchParams{TicketSearch}->{PreOrder}
             || $Preferences{ $Self->{PrefKeyPreOrder} }
             || $PreOrder
-            || '';
+            || 'Down';
     }
     elsif ( !$Self->{Config}->{UserPreSortActive} ) {
         if (

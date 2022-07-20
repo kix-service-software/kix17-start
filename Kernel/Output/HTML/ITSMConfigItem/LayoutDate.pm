@@ -174,6 +174,18 @@ sub InputCreate {
         }
     }
 
+    my $Class    = '';
+    my $Required = $Param{Required};
+    my $Invalid  = $Param{Invalid};
+
+    if ($Required) {
+        $Class .= ' Validate_Required';
+    }
+
+    if ($Invalid) {
+        $Class .= ' ServerError';
+    }
+
     my %Values;
     if ( $Param{Value} || $Param{Item}->{Input}->{ValueDefault} ) {
         my $Value = $Param{Value} || $Param{Item}->{Input}->{ValueDefault};
@@ -186,10 +198,11 @@ sub InputCreate {
     }
 
     my $String = $Kernel::OM->Get('Kernel::Output::HTML::Layout')->BuildDateSelection(
-        Prefix           => $Param{Key} . '::',
-        Format           => 'DateInputFormat',
-        YearPeriodPast   => $Param{Item}->{Input}->{YearPeriodPast} || 10,
-        YearPeriodFuture => $Param{Item}->{Input}->{YearPeriodFuture} || 10,
+        Prefix                       => $Param{Key} . '::',
+        Format                       => 'DateInputFormat',
+        YearPeriodPast               => $Param{Item}->{Input}->{YearPeriodPast} || 10,
+        YearPeriodFuture             => $Param{Item}->{Input}->{YearPeriodFuture} || 10,
+        $Param{Key} . '::' . 'Class' => $Class,
         %Values,
     );
 

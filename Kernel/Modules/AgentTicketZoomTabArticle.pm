@@ -814,6 +814,9 @@ sub MaskAgentZoom {
     # get param object
     my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
 
+    # get tab index
+    my $TabIndex = $ParamObject->GetParam( Param => 'TabIndex' );
+
     # get article page
     my $ArticlePage = $ParamObject->GetParam( Param => 'ArticlePage' );
 
@@ -1280,6 +1283,7 @@ sub MaskAgentZoom {
             AclAction         => \%AclAction,
             StandardResponses => $StandardTemplates{Answer},
             StandardForwards  => $StandardTemplates{Forward},
+            TabIndex          => $TabIndex,
         );
     }
 
@@ -1554,15 +1558,6 @@ sub _ArticleTree {
         );
     }
 
-    # check if ticket is normal or process ticket to decide which tab to load
-    my $IsProcessTicket = $Kernel::OM->Get('Kernel::System::Ticket')->TicketCheckForProcessType(
-        'TicketID' => $Self->{TicketID}
-    );
-    my $SelectedTab = 0;
-    if ($IsProcessTicket) {
-        $SelectedTab = 1;
-    }
-
     # check if expand/collapse view is usable (not available for too many
     # articles)
     if ( $Self->{ZoomExpand} && $#ArticleBox < $ArticleMaxLimit ) {
@@ -1574,7 +1569,7 @@ sub _ArticleTree {
                 ZoomExpand     => $Self->{ZoomExpand},
                 ZoomExpandSort => $Self->{ZoomExpandSort},
                 Page           => $Param{Page},
-                SelectedTab    => $SelectedTab,
+                SelectedTab    => $Param{TabIndex},
             },
         );
     }
@@ -1588,7 +1583,7 @@ sub _ArticleTree {
                 ZoomExpand     => $Self->{ZoomExpand},
                 ZoomExpandSort => $Self->{ZoomExpandSort},
                 Page           => $Param{Page},
-                SelectedTab    => $SelectedTab,
+                SelectedTab    => $Param{TabIndex},
             },
         );
     }
@@ -2920,6 +2915,12 @@ sub _ArticleMenu {
                     $Access = 0;
                 }
             }
+        }
+        if (
+            $Config->{OnlyResponsible}
+            && $Self->{UserID} != $Ticket{ResponsibleID}
+        ) {
+            $Access = 0;
         }
 
         if ($Access) {

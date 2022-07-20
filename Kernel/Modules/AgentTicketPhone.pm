@@ -29,14 +29,13 @@ sub new {
     my $Self = {%Param};
     bless( $Self, $Type );
 
-    #get config object
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+    my $Config = $Kernel::OM->Get('Kernel::Config')->Get("Ticket::Frontend::$Self->{Action}");
 
     # get the dynamic fields for this screen
     $Self->{DynamicField} = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
         Valid       => 1,
         ObjectType  => [ 'Ticket', 'Article' ],
-        FieldFilter => $ConfigObject->Get("Ticket::Frontend::$Self->{Action}")->{DynamicField} || {},
+        FieldFilter => $Config->{DynamicField} || {},
     );
 
     # get form id
@@ -49,10 +48,9 @@ sub new {
 
     # handle for quick ticket templates
     my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
-    $Self->{DefaultSet} = $ParamObject->GetParam( Param => 'DefaultSet' ) || 0;
-    $Self->{DefaultSetTypeChanged} =
-        $ParamObject->GetParam( Param => 'DefaultSetTypeChanged' ) || 0;
-    $Self->{ActionReal} = $Self->{Action};
+    $Self->{DefaultSet}            = $ParamObject->GetParam( Param => 'DefaultSet' ) || 0;
+    $Self->{DefaultSetTypeChanged} = $ParamObject->GetParam( Param => 'DefaultSetTypeChanged' ) || 0;
+    $Self->{ActionReal}            = $Self->{Action};
 
     return $Self;
 }
@@ -63,8 +61,17 @@ sub Run {
     # get params
     my %GetParam;
 
-    # get param object
-    my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
+    # get needed objects
+    my $ConfigObject              = $Kernel::OM->Get('Kernel::Config');
+    my $LayoutObject              = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $CustomerUserObject        = $Kernel::OM->Get('Kernel::System::CustomerUser');
+    my $DynamicFieldObject        = $Kernel::OM->Get('Kernel::System::DynamicField');
+    my $DynamicFieldBackendObject = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
+    my $LinkObject                = $Kernel::OM->Get('Kernel::System::LinkObject');
+    my $QueueObject               = $Kernel::OM->Get('Kernel::System::Queue');
+    my $TicketObject              = $Kernel::OM->Get('Kernel::System::Ticket');
+    my $ParamObject               = $Kernel::OM->Get('Kernel::System::Web::Request');
+    my $UploadCacheObject         = $Kernel::OM->Get('Kernel::System::Web::UploadCache');
 
     for my $Key (
         qw(ArticleID LinkTicketID PriorityID NewUserID
@@ -76,6 +83,11 @@ sub Run {
         )
     ) {
         $GetParam{$Key} = $ParamObject->GetParam( Param => $Key );
+    }
+
+    if ( $ConfigObject->Get('Frontend::Agent::CreateOptions::ViewAllOwner') ) {
+        $GetParam{OwnerAll}       = 1;
+        $GetParam{ResponsibleAll} = 1;
     }
 
     my @SelectedCIIDs;
@@ -165,17 +177,6 @@ sub Run {
     # to store the reference to the dynamic field for the impact
     my $ImpactDynamicFieldConfig;
 # ---
-
-    # get needed objects
-    my $LayoutObject              = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-    my $DynamicFieldBackendObject = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
-    my $ConfigObject              = $Kernel::OM->Get('Kernel::Config');
-    my $CustomerUserObject        = $Kernel::OM->Get('Kernel::System::CustomerUser');
-    my $UploadCacheObject         = $Kernel::OM->Get('Kernel::System::Web::UploadCache');
-    my $TicketObject              = $Kernel::OM->Get('Kernel::System::Ticket');
-    my $QueueObject               = $Kernel::OM->Get('Kernel::System::Queue');
-    my $DynamicFieldObject        = $Kernel::OM->Get('Kernel::System::DynamicField');
-    my $LinkObject                = $Kernel::OM->Get('Kernel::System::LinkObject');
 
     my $Config = $ConfigObject->Get("Ticket::Frontend::$Self->{Action}");
 
@@ -491,40 +492,6 @@ sub Run {
                 Subject      => $Article{Subject} || '',
             );
 
-            # save article from for addresses list
-            $ArticleFrom = $Article{From};
-
-            # if To is present
-            # and is no a queue
-            # and also is no a system address
-            # set To as article from
-            if ( IsStringWithData( $Article{To} ) ) {
-                my %Queues = $QueueObject->QueueList();
-
-                if ( $ConfigObject->{CustomerPanelOwnSelection} ) {
-                    for my $Queue ( sort keys %{ $ConfigObject->{CustomerPanelOwnSelection} } ) {
-                        my $Value = $ConfigObject->{CustomerPanelOwnSelection}->{$Queue};
-                        $Queues{$Queue} = $Value;
-                    }
-                }
-
-                my %QueueLookup = reverse %Queues;
-                my %SystemAddressLookup
-                    = reverse $Kernel::OM->Get('Kernel::System::SystemAddress')->SystemAddressList();
-                my @ArticleFromAddress;
-                my $SystemAddressEmail;
-
-                if ($ArticleFrom) {
-                    @ArticleFromAddress = Mail::Address->parse($ArticleFrom);
-                    $SystemAddressEmail = $ArticleFromAddress[0]->address();
-                }
-
-                if ( !defined $QueueLookup{ $Article{To} } && defined $SystemAddressLookup{$SystemAddressEmail} ) {
-                    $ArticleFrom = $Article{To};
-                }
-
-            }
-
             # body preparation for plain text processing
             $Article{Body} = $LayoutObject->ArticleQuote(
                 TicketID           => $Article{TicketID},
@@ -549,88 +516,127 @@ sub Run {
                 $Article{Body} = $SafetyCheckResultNoExt{String};
             }
 
-            # show customer info
-            if ( $ConfigObject->Get('Ticket::Frontend::CustomerInfoCompose') ) {
-                if ( $Article{CustomerUserID} ) {
-                    %CustomerData = $CustomerUserObject->CustomerUserDataGet(
-                        User => $Article{CustomerUserID},
+            # check article type and use To (in case)
+            my $SplitMailAddress;
+            my $SplitMailFormat;
+            my $SystemAddressObject = $Kernel::OM->Get('Kernel::System::SystemAddress');
+            if ($Article{SenderType} !~ /customer/ ) {
+                # parse mail address
+                for my $Email ( Mail::Address->parse( $Article{To} ) ) {
+                    my $IsLocal = $SystemAddressObject->SystemAddressIsLocalAddress(
+                        Address => $Email->address(),
                     );
-                }
-                elsif ( $Article{CustomerID} ) {
-                    %CustomerData = $CustomerUserObject->CustomerUserDataGet(
-                        CustomerID => $Article{CustomerID},
-                    );
+                    if (
+                        !$ConfigObject->Get('CheckEmailInternalAddress')
+                        || !$IsLocal
+                    ) {
+                        $SplitMailFormat  = $Email->format();
+                        $SplitMailAddress = $Email->address();
+                        last;
+                    }
                 }
             }
-            if ( $Article{CustomerUserID} ) {
+            # get mail address of article From
+            else {
+                # parse mail address
+                for my $Email ( Mail::Address->parse( $Article{From} ) ) {
+                    $SplitMailFormat  = $Email->format();
+                    $SplitMailAddress = $Email->address();
+                    last;
+                }
+            }
+
+            # process mail address
+            if ($SplitMailAddress) {
+                # get customer by PostMasterSearch
                 my %CustomerUserList = $CustomerUserObject->CustomerSearch(
-                    UserLogin => $Article{CustomerUserID},
+                    PostMasterSearch => lc( $SplitMailAddress ),
                 );
-                for my $KeyCustomerUserList ( sort keys %CustomerUserList ) {
-                    $Article{From} = $CustomerUserList{$KeyCustomerUserList};
+
+                my %CustomerUserData;
+                for my $CustomerUserID ( sort( keys( %CustomerUserList ) ) ) {
+                    %CustomerUserData = $CustomerUserObject->CustomerUserDataGet(
+                        User => $CustomerUserID,
+                    );
                 }
+
+                my $CustomerElement;
+                my $CustomerKey;
+                my $CustomerEmail;
+                # handle know customer user
+                if (%CustomerUserData) {
+                    # copy customer user
+                    $GetParam{CustomerUserID} = $CustomerUserData{UserID};
+
+                    # copy customer company from article data if its the same customer user
+                    if ( $CustomerUserData{UserID} eq $Article{CustomerUserID} ) {
+                        $GetParam{CustomerID} = $Article{CustomerID};
+                    }
+                    # use primary customer id of contact
+                    else {
+                        $GetParam{CustomerID} = $CustomerUserData{UserCustomerID};
+                    }
+
+                    # copy data for CustomerInfoCompose
+                    if ( $ConfigObject->Get('Ticket::Frontend::CustomerInfoCompose') ) {
+                        %CustomerData = %CustomerUserData;
+                    }
+
+                    $CustomerElement = $CustomerUserList{ $CustomerUserData{UserID} };
+                    $CustomerKey     = $CustomerUserData{UserID};
+                    $CustomerEmail   = $CustomerUserData{UserEmail};
+                }
+                # handle unknow customer user
+                else {
+                    $GetParam{CustomerID} = $SplitMailAddress;
+
+                    $CustomerElement = $SplitMailFormat;
+                    $CustomerKey     = $SplitMailAddress;
+                    $CustomerEmail   = $SplitMailAddress;
+                }
+
+                # extend multiple addresses list
+                # check email address
+                my $Count            = scalar @MultipleCustomer || 1;
+                my $CountAux         = $Count;
+                my $CustomerError    = '';
+                my $CustomerErrorMsg = 'CustomerGenericServerErrorMsg';
+                my $CustomerDisabled = '';
+                my $CustomerSelected = ( $Count eq '1' ? 'checked="checked"' : '' );
+                if ( !$CheckItemObject->CheckEmail( Address => $CustomerEmail ) ) {
+                    $CustomerErrorMsg = $CheckItemObject->CheckErrorType()
+                        . 'ServerErrorMsg';
+                    $CustomerError = 'ServerError';
+                }
+
+                # check for duplicated entries
+                if ( defined $AddressesList{$CustomerEmail} && $CustomerError eq '' ) {
+                    $CustomerErrorMsg = 'IsDuplicatedServerErrorMsg';
+                    $CustomerError    = 'ServerError';
+                }
+
+                if ( $CustomerError ne '' ) {
+                    $CustomerDisabled = 'disabled="disabled"';
+                    $CountAux         = $Count . 'Error';
+                }
+
+                push @MultipleCustomer, {
+                    Count            => $CountAux,
+                    CustomerElement  => $CustomerElement,
+                    CustomerSelected => $CustomerSelected,
+                    CustomerKey      => $CustomerKey,
+                    CustomerError    => $CustomerError,
+                    CustomerErrorMsg => $CustomerErrorMsg,
+                    CustomerDisabled => $CustomerDisabled,
+                };
+                $AddressesList{$CustomerEmail} = 1;
+
+                $Count += 1;
             }
 
-            # for initial service and SLA search
-            $CustomerData{CustomerUserLogin} = $Article{CustomerUserID} || '';
-            $GetParam{ServiceID}             = $Article{ServiceID}      || '';
-            $GetParam{SLAID}                 = $Article{SLAID}          || '';
-        }
-
-        # multiple addresses list
-        # check email address
-        my $CountFrom = scalar @MultipleCustomer || 1;
-        my %CustomerDataFrom;
-        if ( $Article{CustomerUserID} ) {
-            %CustomerDataFrom = $CustomerUserObject->CustomerUserDataGet(
-                User => $Article{CustomerUserID},
-            );
-        }
-
-        for my $Email ( Mail::Address->parse($ArticleFrom) ) {
-
-            my $CountAux         = $CountFrom;
-            my $CustomerError    = '';
-            my $CustomerErrorMsg = 'CustomerGenericServerErrorMsg';
-            my $CustomerDisabled = '';
-            my $CustomerSelected = ( $CountFrom eq '1' ? 'checked="checked"' : '' );
-            my $EmailAddress     = $Email->address();
-            if ( !$CheckItemObject->CheckEmail( Address => $EmailAddress ) ) {
-                $CustomerErrorMsg = $CheckItemObject->CheckErrorType()
-                    . 'ServerErrorMsg';
-                $CustomerError = 'ServerError';
-            }
-
-            # check for duplicated entries
-            if ( defined $AddressesList{$Email} && $CustomerError eq '' ) {
-                $CustomerErrorMsg = 'IsDuplicatedServerErrorMsg';
-                $CustomerError    = 'ServerError';
-            }
-
-            if ( $CustomerError ne '' ) {
-                $CustomerDisabled = 'disabled="disabled"';
-                $CountAux         = $CountFrom . 'Error';
-            }
-
-            my $CustomerKey = '';
-            if (
-                defined $CustomerDataFrom{UserEmail}
-                && $CustomerDataFrom{UserEmail} eq $EmailAddress
-            ) {
-                $CustomerKey = $Article{CustomerUserID};
-            }
-
-            push @MultipleCustomer, {
-                Count            => $CountAux,
-                CustomerElement  => $Email->address(),
-                CustomerSelected => $CustomerSelected,
-                CustomerKey      => $CustomerKey,
-                CustomerError    => $CustomerError,
-                CustomerErrorMsg => $CustomerErrorMsg,
-                CustomerDisabled => $CustomerDisabled,
-            };
-            $AddressesList{$EmailAddress} = 1;
-            $CountFrom++;
+            # copy service and sla
+            $GetParam{ServiceID} = $Article{ServiceID} || '';
+            $GetParam{SLAID}     = $Article{SLAID}     || '';
         }
 
         # get user preferences
@@ -1147,9 +1153,9 @@ sub Run {
             From         => $Article{From},
             Subject      => $Subject,
             Body         => $Body,
-            CustomerID   => $GetParam{CustomerID} || $Article{CustomerID},
+            CustomerID   => $GetParam{CustomerID},
             CustomerUser => $GetParam{QuickTicketCustomer}
-                || $Article{CustomerUserID}
+                || $GetParam{CustomerUserID}
                 || $ParamObject->GetParam( Param => 'SelectedCustomerUser' ),
             CustomerData => \%CustomerData,
             Attachments  => \@Attachments,
@@ -1749,7 +1755,6 @@ sub Run {
                     %ACLCompatGetParam,
                     CustomerUserID => $CustomerUser || $SelectedCustomerUser || '',
                     QueueID        => $NewQueueID   || $Self->{QueueID}      || 1,
-                    TypeID         => $GetParam{TypeID},
                 ),
                 NextState  => $NextState,
                 Priorities => $Self->_GetPriorities(
@@ -1778,8 +1783,8 @@ sub Run {
                 To           => $Self->_GetTos(
                     %GetParam,
                     %ACLCompatGetParam,
-                    QueueID => $NewQueueID || $Self->{QueueID} || 1,
-                    TypeID  => $GetParam{TypeID},
+                    CustomerUserID => $CustomerUser || $SelectedCustomerUser || '',
+                    QueueID        => $NewQueueID || $Self->{QueueID} || 1,
                 ),
                 ToSelected  => $Dest,
                 Errors      => \%Error,
@@ -2252,10 +2257,6 @@ sub Run {
             $QueueID = $1;
         }
 
-        if ( $ConfigObject->Get('Frontend::Agent::CreateOptions::ViewAllOwner') ) {
-            $GetParam{OwnerAll}       = 1;
-            $GetParam{ResponsibleAll} = 1;
-        }
         my $ElementChanged
             = $GetParam{ElementChanged}
             || $ParamObject->GetParam( Param => 'ElementChanged' )
@@ -2337,7 +2338,6 @@ sub Run {
             %ACLCompatGetParam,
             CustomerUserID => $CustomerUser || '',
             QueueID        => $QueueID      || 1,
-            TypeID         => $GetParam{TypeID},
         );
         my $Priorities = $Self->_GetPriorities(
             %GetParam,

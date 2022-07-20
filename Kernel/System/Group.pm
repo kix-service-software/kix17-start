@@ -167,10 +167,13 @@ sub GroupAdd {
         Type => 'Group',
         Key  => 'GroupList::0',
     );
-    $CacheObject->Delete(
-        Type => 'Group',
-        Key  => 'GroupList::1',
-    );
+    my %ValidList = $Kernel::OM->Get('Kernel::System::Valid')->ValidList();
+    for my $ValidID ( keys( %ValidList ) ) {
+        $CacheObject->Delete(
+            Type => 'Group',
+            Key  => 'GroupList::' . $ValidID,
+        );
+    }
     $CacheObject->CleanUp(
         Type => 'CustomerGroup',
     );
@@ -308,10 +311,13 @@ sub GroupUpdate {
         Type => 'Group',
         Key  => 'GroupList::0',
     );
-    $CacheObject->Delete(
-        Type => 'Group',
-        Key  => 'GroupList::1',
-    );
+    my %ValidList = $Kernel::OM->Get('Kernel::System::Valid')->ValidList();
+    for my $ValidID ( keys( %ValidList ) ) {
+        $CacheObject->Delete(
+            Type => 'Group',
+            Key  => 'GroupList::' . $ValidID,
+        );
+    }
     $CacheObject->CleanUp(
         Type => 'CustomerGroup',
     );
@@ -631,10 +637,13 @@ sub RoleAdd {
         Type => 'Group',
         Key  => 'RoleList::0',
     );
-    $CacheObject->Delete(
-        Type => 'Group',
-        Key  => 'RoleList::1',
-    );
+    my %ValidList = $Kernel::OM->Get('Kernel::System::Valid')->ValidList();
+    for my $ValidID ( keys( %ValidList ) ) {
+        $CacheObject->Delete(
+            Type => 'Group',
+            Key  => 'RoleList::' . $ValidID,
+        );
+    }
 
     return $RoleID;
 }
@@ -719,10 +728,13 @@ sub RoleUpdate {
         Type => 'Group',
         Key  => 'RoleList::0',
     );
-    $CacheObject->Delete(
-        Type => 'Group',
-        Key  => 'RoleList::1',
-    );
+    my %ValidList = $Kernel::OM->Get('Kernel::System::Valid')->ValidList();
+    for my $ValidID ( keys( %ValidList ) ) {
+        $CacheObject->Delete(
+            Type => 'Group',
+            Key  => 'RoleList::' . $ValidID,
+        );
+    }
 
     return 1 if $RoleData{ValidID} eq $Param{ValidID};
 

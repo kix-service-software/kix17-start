@@ -6205,6 +6205,12 @@ sub TicketMerge {
         }
     }
 
+    # get relevant article list before merge
+    my @MergeArticleIndex = $Self->ArticleGet(
+        TicketID => $Param{MergeTicketID},
+        UserID   => $Param{UserID},
+    );
+
     # get database object
     my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
 
@@ -6393,7 +6399,7 @@ END
     $Self->_TicketCacheClear( TicketID => $Param{MergeTicketID} );
     $Self->_TicketCacheClear( TicketID => $Param{MainTicketID} );
 
-    # trigger event
+    # trigger events
     $Self->EventHandler(
         Event => 'TicketMerge',
         Data  => {
@@ -6402,7 +6408,6 @@ END
         },
         UserID => $Param{UserID},
     );
-
     $Self->EventHandler(
         Event => 'TicketMergeTarget',
         Data  => {
@@ -6411,6 +6416,26 @@ END
         },
         UserID => $Param{UserID},
     );
+    for my $ArticleEntry ( @MergeArticleIndex ) {
+        $Self->EventHandler(
+            Event => 'ArticleMerge',
+            Data  => {
+                ArticleID    => $ArticleEntry->{ArticleID},
+                TicketID     => $Param{MergeTicketID},
+                MainTicketID => $Param{MainTicketID},
+            },
+            UserID => $Param{UserID},
+        );
+        $Self->EventHandler(
+            Event => 'ArticleMergeTarget',
+            Data  => {
+                ArticleID      => $ArticleEntry->{ArticleID},
+                TicketID       => $Param{MainTicketID},
+                MergedTicketID => $Param{MergeTicketID},
+            },
+            UserID => $Param{UserID},
+        );
+    }
 
     return 1;
 }

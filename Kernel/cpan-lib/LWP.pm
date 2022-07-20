@@ -1,14 +1,16 @@
 package LWP;
 
-$VERSION = "6.13";
-sub Version { $VERSION; }
+our $VERSION = '6.61';
 
-require 5.008;
 require LWP::UserAgent;  # this should load everything you need
+
+sub Version { $VERSION; }
 
 1;
 
 __END__
+
+=pod
 
 =encoding utf-8
 
@@ -49,8 +51,8 @@ used separately or together.
 =item *
 
 Provides an object oriented model of HTTP-style communication.  Within
-this framework we currently support access to http, https, gopher, ftp, news,
-file, and mailto resources.
+this framework we currently support access to C<http>, C<https>, C<gopher>,
+C<ftp>, C<news>, C<file>, and C<mailto> resources.
 
 =item *
 
@@ -101,7 +103,7 @@ The libwww-perl library is based on HTTP style communication. This
 section tries to describe what that means.
 
 Let us start with this quote from the HTTP specification document
-<URL:http://www.w3.org/Protocols/>:
+L<http://www.w3.org/Protocols/>:
 
 =over 3
 
@@ -141,11 +143,11 @@ It is as simple as that!
 
 =head2 The Request Object
 
-The libwww-perl request object has the class name C<HTTP::Request>.
+The libwww-perl request object has the class name L<HTTP::Request>.
 The fact that the class name uses C<HTTP::> as a
 prefix only implies that we use the HTTP model of communication.  It
 does not limit the kind of services we can try to pass this I<request>
-to.  For instance, we will send C<HTTP::Request>s both to ftp and
+to.  For instance, we will send L<HTTP::Request>s both to ftp and
 gopher servers, as well as to the local file system.
 
 The main attributes of the request objects are:
@@ -178,7 +180,7 @@ B<content> is an arbitrary amount of data.
 
 =head2 The Response Object
 
-The libwww-perl response object has the class name C<HTTP::Response>.
+The libwww-perl response object has the class name L<HTTP::Response>.
 The main attributes of objects of this class are:
 
 =over 3
@@ -239,11 +241,11 @@ The user agent is an interface layer between
 your application code and the network.  Through this interface you are
 able to access the various servers on the network.
 
-The class name for the user agent is C<LWP::UserAgent>.  Every
+The class name for the user agent is L<LWP::UserAgent>.  Every
 libwww-perl application that wants to communicate should create at
 least one object of this class. The main method provided by this
-object is request(). This method takes an C<HTTP::Request> object as
-argument and (eventually) returns a C<HTTP::Response> object.
+object is request(). This method takes an L<HTTP::Request> object as
+argument and (eventually) returns a L<HTTP::Response> object.
 
 The user agent has many other attributes that let you
 configure how it will interact with the network and with your
@@ -271,12 +273,12 @@ address will be sent to the servers with every request.
 =item *
 
 B<parse_head> specifies whether we should initialize response
-headers from the E<lt>head> section of HTML documents.
+headers from the C<< <head> >> section of HTML documents.
 
 =item *
 
 B<proxy> and B<no_proxy> specify if and when to go through
-a proxy server. <URL:http://www.w3.org/History/1994/WWW/Proxies/>
+a proxy server. L<http://www.w3.org/History/1994/WWW/Proxies/>
 
 =item *
 
@@ -287,8 +289,8 @@ passwords needed to access certain services.
 
 Many applications want even more control over how they interact
 with the network and they get this by sub-classing
-C<LWP::UserAgent>.  The library includes a
-sub-class, C<LWP::RobotUA>, for robot applications.
+L<LWP::UserAgent>.  The library includes a
+sub-class, L<LWP::RobotUA>, for robot applications.
 
 =head2 An Example
 
@@ -316,7 +318,7 @@ represented in actual perl code:
       print $res->status_line, "\n";
   }
 
-The $ua is created once when the application starts up.  New request
+The C<$ua> is created once when the application starts up.  New request
 objects should normally created for each request sent.
 
 
@@ -326,7 +328,7 @@ This section discusses the various protocol schemes and
 the HTTP style methods that headers may be used for each.
 
 For all requests, a "User-Agent" header is added and initialized from
-the $ua->agent attribute before the request is handed to the network
+the C<< $ua->agent >> attribute before the request is handed to the network
 layer.  In the same way, a "From" header is initialized from the
 $ua->from attribute.
 
@@ -350,7 +352,7 @@ internal error response.
 The library automatically adds a "Host" and a "Content-Length" header
 to the HTTP request before it is sent over the network.
 
-For a GET request you might want to add a "If-Modified-Since" or
+For a GET request you might want to add an "If-Modified-Since" or
 "If-None-Match" header to make the request conditional.
 
 For a POST request you should add the "Content-Type" header.  When you
@@ -405,7 +407,7 @@ using the "Range" header.
 
 Directory listings are by default returned unprocessed (as returned
 from the ftp server) with the content media type reported to be
-"text/ftp-dir-listing". The C<File::Listing> module provides methods
+"text/ftp-dir-listing". The L<File::Listing> module provides methods
 for parsing of these directory listing.
 
 The ftp module is also able to convert directory listings to HTML and
@@ -417,7 +419,7 @@ For normal file retrievals, the "Content-Type" is guessed based on the
 file name suffix. See L<LWP::MediaTypes>.
 
 The "If-Modified-Since" request header works for servers that implement
-the MDTM command.  It will probably not work for directory listings though.
+the C<MDTM> command.  It will probably not work for directory listings though.
 
 Example:
 
@@ -497,7 +499,7 @@ Example:
 
 =head2 CPAN Requests
 
-URLs with scheme C<cpan:> are redirected to the a suitable CPAN
+URLs with scheme C<cpan:> are redirected to a suitable CPAN
 mirror.  If you have your own local mirror of CPAN you might tell LWP
 to use it for C<cpan:> URLs by an assignment like this:
 
@@ -569,7 +571,7 @@ The following environment variables are used by LWP:
 
 =item HOME
 
-The C<LWP::MediaTypes> functions will look for the F<.media.types> and
+The L<LWP::MediaTypes> functions will look for the F<.media.types> and
 F<.mime.types> files relative to you home directory.
 
 =item http_proxy
@@ -586,13 +588,13 @@ L<LWP::UserAgent>.
 
 =item PERL_LWP_ENV_PROXY
 
-If set to a TRUE value, then the C<LWP::UserAgent> will by default call
+If set to a TRUE value, then the L<LWP::UserAgent> will by default call
 C<env_proxy> during initialization.  This makes LWP honor the proxy variables
 described above.
 
 =item PERL_LWP_SSL_VERIFY_HOSTNAME
 
-The default C<verify_hostname> setting for C<LWP::UserAgent>.  If
+The default C<verify_hostname> setting for L<LWP::UserAgent>.  If
 not set the default will be 1.  Set it as 0 to disable hostname
 verification (the default prior to libwww-perl 5.840.
 
@@ -606,8 +608,8 @@ is located.  See L<LWP::UserAgent> for details.
 
 =item PERL_HTTP_URI_CLASS
 
-Used to decide what URI objects to instantiate.  The default is C<URI>.
-You might want to set it to C<URI::URL> for compatibility with old times.
+Used to decide what URI objects to instantiate.  The default is L<URI>.
+You might want to set it to L<URI::URL> for compatibility with old times.
 
 =back
 
@@ -632,7 +634,7 @@ Markus B Krüger, Markus Laker, Martijn Koster, Martin Thurn, Matthew
 Eldridge, Matthew.van.Eerde, Matt Sergeant, Michael A. Chase, Michael
 Quaranta, Michael Thompson, Mike Schilli, Moshe Kaminsky, Nathan
 Torkington, Nicolai Langfeldt, Norton Allen, Olly Betts, Paul
-J. Schinder, peterm, Philip GuentherDaniel Buenzli, Pon Hwa Lin,
+J. Schinder, peterm, Philip Guenther, Daniel Buenzli, Pon Hwa Lin,
 Radoslaw Zielinski, Radu Greab, Randal L. Schwartz, Richard Chen,
 Robin Barker, Roy Fielding, Sander van Zoest, Sean M. Burke,
 shildreth, Slaven Rezic, Steve A Fink, Steve Hay, Steven Butler,

@@ -468,7 +468,13 @@ Core.UI.AdvancedChart = (function (TargetNS) {
                         left: 80
                     })
                     .groupSpacing(0.1)
-                    .showLegend(ShowLegend);
+                    .showLegend(ShowLegend)
+                    .controlLabels({
+                        stacked: Core.Config.Get('Stacked'),
+                        grouped: Core.Config.Get('Grouped'),
+                        stream: Core.Config.Get('Stream'),
+                        expanded: Core.Config.Get('Expanded')
+                    });
 
                 // set stacked/grouped state
                 if (PreferencesData && PreferencesData.State) {
@@ -476,7 +482,7 @@ Core.UI.AdvancedChart = (function (TargetNS) {
                 }
 
                 Chart.yAxis
-                    .axisLabel("Values")
+                    .axisLabel(Core.Config.Get("Values"))
                     .tickFormat(d3.format(ValueFormat));
 
                 d3.select(Element)
@@ -610,12 +616,20 @@ Core.UI.AdvancedChart = (function (TargetNS) {
             // don't let nv/d3 exceptions block the rest of KIX JavaScript
             try {
 
-                Chart.margin({
-                    top: 20,
-                    right: 80,
-                    bottom: 50,
-                    left: 80
-                });
+                Chart
+                    .margin({
+                        top: 20,
+                        right: 80,
+                        bottom: 50,
+                        left: 80
+                    })
+                    .controlLabels({
+                        stacked: Core.Config.Get('Stacked'),
+                        grouped: Core.Config.Get('Grouped'),
+                        stream: Core.Config.Get('Stream'),
+                        expanded: Core.Config.Get('Expanded'),
+                        values: Core.Config.Get('Values')
+                    });
 
                 Chart.duration(Options.Duration || 0);
                 Chart.showLegend(ShowLegend);

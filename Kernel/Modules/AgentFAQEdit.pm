@@ -226,6 +226,17 @@ sub Run {
             $FAQData{$Field} =~ s{
                 Action=AgentFAQ [&](amp;)? Subaction=Download [&](amp;)?
             }{Action=AgentFAQZoom;Subaction=DownloadAttachment;}gxms;
+
+            # remove session from url
+            $FAQData{$Field} =~ s{(Action=AgentFAQZoom;Subaction=DownloadAttachment;ItemID=\d+;FileID=\d+)[^"]+?"}{$1"}gxms;
+
+            # build base URL for in-line images
+            if ( $Self->{SessionID} && !$Self->{SessionIDCookie} ) {
+                my $SessionID = ';' . $Self->{SessionName} . '=' . $Self->{SessionID};
+                my $Pattern   = '(Action=AgentFAQZoom;Subaction=DownloadAttachment;ItemID=\d+;FileID=\d+)';
+                $FAQData{$Field} =~ s{ $Pattern }{$1$SessionID}gmsx;
+            }
+
         }
 
         # create HTML strings for all dynamic fields
@@ -532,6 +543,16 @@ sub Run {
         my $ContentType = 'text/plain';
         if ( $LayoutObject->{BrowserRichText} && $ConfigObject->Get('FAQ::Item::HTML') ) {
             $ContentType = 'text/html';
+        }
+
+        # remove session from inline attachments
+        NUMBER:
+        for my $Number ( 1 .. 6 ) {
+            # skip empty fields
+            next NUMBER if !$GetParam{ 'Field' . $Number };
+
+            # remove session from url
+            $GetParam{ 'Field' . $Number } =~ s{(Action=AgentFAQZoom;Subaction=DownloadAttachment;ItemID=\d+;FileID=\d+)[^"]+?"}{$1"}gxms;
         }
 
         # update the new FAQ article

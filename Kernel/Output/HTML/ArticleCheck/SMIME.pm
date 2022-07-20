@@ -98,7 +98,7 @@ sub Check {
         my $Message = $TicketObject->ArticlePlain(
             ArticleID => $Self->{ArticleID},
             UserID    => $Self->{UserID},
-        );
+        ) || '';
         return if !$Message;
 
         my @Email = ();

@@ -1372,8 +1372,9 @@ sub VersionSearch {
     }
 
     # set default order and order direction
-    if ( !@{ $Param{OrderBy} } ) {
-        $Param{OrderBy} = ['ConfigItemID'];
+    my @OrderBy = ('ConfigItemID');
+    if ( @{ $Param{OrderBy} } ) {
+        @OrderBy = @{ $Param{OrderBy} };
     }
     if ( !@{ $Param{OrderByDirection} } ) {
         $Param{OrderByDirection} = ['Up'];
@@ -1401,7 +1402,7 @@ sub VersionSearch {
 
     my @TempArray = ();
 
-    for my $OrderBy ( @{ $Param{OrderBy} } ) {
+    for my $OrderBy ( @OrderBy ) {
         if ( $OrderBy && $OrderByTable{$OrderBy} && !$OrderBySeen{$OrderBy} ) {
             push @TempArray, $OrderBy;
         }
@@ -1435,7 +1436,7 @@ sub VersionSearch {
     my @SQLOrderBy;
     my $Count = 0;
     my @OrderBySelectColumns;
-    for my $OrderBy ( @{ $Param{OrderBy} } ) {
+    for my $OrderBy ( @OrderBy ) {
 
         # set the default order direction
         my $Direction = 'DESC';

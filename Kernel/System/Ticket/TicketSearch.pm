@@ -2200,7 +2200,6 @@ sub TicketSearch {
                 $SQLExt .= " u.first_name $OrderBySuffix, u.last_name ";
             }
             else {
-
                 # regular sort
                 $SQLSelect .= ', ' . $SortOptions{ $SortByArray[$Count] };
                 $SQLExt    .= ' ' . $SortOptions{ $SortByArray[$Count] };
@@ -2253,8 +2252,8 @@ sub TicketSearch {
         );
     while ( my @Row = $DBObject->FetchrowArray() ) {
         $Count = $Row[0];
+        push @TicketIDs, $Row[0] if ( !$Tickets{ $Row[0] } );
         $Tickets{ $Row[0] } = $Row[1];
-        push @TicketIDs, $Row[0];
     }
 
     # return COUNT
@@ -4278,12 +4277,10 @@ sub TicketSearchOR {
                     DynamicFieldConfig => $DynamicField,
                     TableAlias         => $DynamicFieldJoinTables{$DynamicFieldName},
                 );
-
                 $SQLSelect .= ", $SQLOrderField ";
                 $SQLExt    .= " $SQLOrderField ";
             }
             else {
-
                 # regular sort
                 $SQLSelect .= ', ' . $SortOptions{ $SortByArray[$Count] };
                 $SQLExt    .= ' ' . $SortOptions{ $SortByArray[$Count] };
@@ -4336,8 +4333,8 @@ sub TicketSearchOR {
         );
     while ( my @Row = $DBObject->FetchrowArray() ) {
         $Count = $Row[0];
+        push( @TicketIDs, $Row[0] ) if ( !$Tickets{ $Row[0] } );
         $Tickets{ $Row[0] } = $Row[1];
-        push @TicketIDs, $Row[0];
     }
 
     # return COUNT
@@ -4540,12 +4537,69 @@ sub FilterPrepare {
                     return if !scalar(@NewArray);
                     $Prepared{$Attribute} = \@NewArray;
                 }
+                elsif (
+                    $Attribute =~ m/^DynamicField_/
+                    && ref $Filter->{$Attribute} eq 'HASH'
+                ) {
+                    for my $Operator ( keys( %{ $Filter->{$Attribute} } ) ) {
+                        if ( $Prepared{$Attribute}->{$Operator} ) {
+                            my @Force;
+                            my @Curr;
+                            my @NewArray;
+
+                            if ( ref $Prepared{$Attribute}->{$Operator} eq 'ARRAY' ) {
+                                @Curr = @{$Prepared{$Attribute}->{$Operator}};
+                            }
+                            else {
+                                push(@Curr, $Prepared{$Attribute}->{$Operator});
+                            }
+
+                            if ( ref $Filter->{$Attribute}->{$Operator} eq 'ARRAY' ) {
+                                @Force = @{$Filter->{$Attribute}->{$Operator}};
+                            }
+                            else {
+                                push(@Force, $Filter->{$Attribute}->{$Operator});
+                            }
+
+                            for my $Item ( @Force ) {
+                                if ( grep({ $Item eq $_ } @Curr) ) {
+                                    push(@NewArray, $Item);
+                                }
+                            }
+
+                            return if !scalar(@NewArray);
+                            $Prepared{$Attribute}->{$Operator} = \@NewArray;
+                        }
+                        else {
+                            if ( ref $Filter->{$Attribute}->{$Operator} eq 'ARRAY' ) {
+                                $Prepared{$Attribute}->{$Operator} = [];
+                                push(@{$Prepared{$Attribute}->{$Operator}}, @{$Filter->{$Attribute}->{$Operator}});
+                            }
+                            else {
+                                $Prepared{$Attribute}->{$Operator} = $Filter->{$Attribute}->{$Operator};
+                            }
+                        }
+                    }
+                }
             } else {
                 if ( ref $Filter->{$Attribute} eq 'ARRAY' ) {
                     $Prepared{$Attribute} = [];
                     push(@{$Prepared{$Attribute}}, @{$Filter->{$Attribute}});
                 }
-
+                elsif (
+                    $Attribute =~ m/^DynamicField_/
+                    && ref $Filter->{$Attribute} eq 'HASH'
+                ) {
+                    for my $Operator ( keys( %{ $Filter->{$Attribute} } ) ) {
+                        if ( ref $Filter->{$Attribute}->{$Operator} eq 'ARRAY' ) {
+                            $Prepared{$Attribute}->{$Operator} = [];
+                            push(@{$Prepared{$Attribute}->{$Operator}}, @{$Filter->{$Attribute}->{$Operator}});
+                        }
+                        else {
+                            $Prepared{$Attribute}->{$Operator} = $Filter->{$Attribute}->{$Operator};
+                        }
+                    }
+                }
                 else {
                     $Prepared{$Attribute} = $Filter->{$Attribute};
                 }

@@ -127,6 +127,7 @@ $('#ShowContextSettingsDialog').on('click', function (Event) {
                                 <th>[% Translate("Valid To") | html %]</th>
                                 <th>[% Translate("Author") | html %]</th>
                                 <th>[% Translate("Display") | html %]</th>
+                                <th>[% Translate("Popup") | html %]</th>
                                 <th>[% Translate("Delete") | html %]</th>
                             </tr>
                         </thead>
@@ -143,6 +144,12 @@ $('#ShowContextSettingsDialog').on('click', function (Event) {
                                     <a title='[% Translate("Display templates") | html %]' class="ShowDisplay" data-id="[% Data.MessageID %]">
                                         <i class="fa fa-eye"></i>
                                         <span class="InvisibleText">[% Translate("Display templates") | html %]</span>
+                                    </a>
+                                </td>
+                                <td class="Center">
+                                    <a title='[% Translate("Popup templates") | html %]' class="ShowPopup" data-id="[% Data.MessageID %]">
+                                        <i class="fa fa-eye"></i>
+                                        <span class="InvisibleText">[% Translate("Popup templates") | html %]</span>
                                     </a>
                                 </td>
                                 <td class="Center">
@@ -197,6 +204,30 @@ $('#ShowContextSettingsDialog').on('click', function (Event) {
         return false;
     });
 
+    $('.ShowPopup').on('click', function(){
+        var Data = {
+            Action: 'AdminSystemMessage',
+            Subaction: 'AJAXPopup',
+            MessageID: $(this).attr('data-id')
+        };
+
+        Core.AJAX.FunctionCall(Core.Config.Get('Baselink'), Data, function (Response) {
+            Core.UI.Dialog.ShowContentDialog(
+                Response.Content,
+                Response.Title,
+                '20%',
+                'Center',
+                true,
+                [
+                    {
+                        Label: Response.Close,
+                        Type:'Close',
+                    }
+                ]
+            );
+        });
+        return false;
+    });
 //]]></script>
 [% END %]
 [% RenderBlockEnd("Overview") %]
@@ -251,6 +282,13 @@ $('#ShowContextSettingsDialog').on('click', function (Event) {
                         </div>
                         <div class="Clear"></div>
 
+                        <label for=" PopupTemplates">[% Translate("Popup") | html %]:</label>
+                        <div class="Field">
+                            [% Data.PopupTemplatesOption %]
+                            <p class="FieldExplanation">[% Translate("Open message when user visits template.") | html %] [% Translate("Template has to be selected at 'Display'.") | html %]</p>
+                        </div>
+                        <div class="Clear"></div>
+
                         <label for="ValidFrom">[% Translate("Validation date") | html %]:</label>
                         <div class="Field">
                             [% Data.ValidFromOption %]
@@ -260,12 +298,6 @@ $('#ShowContextSettingsDialog').on('click', function (Event) {
                         <label for="ValidTo">[% Translate("Invalidation date") | html %]:</label>
                         <div class="Field">
                             [% Data.ValidToOption %]
-                        </div>
-                        <div class="Clear"></div>
-
-                        <label for="UsedDashboard">[% Translate("Open message when user visits dashboard") | html %]:</label>
-                        <div class="Field">
-                            <input type="checkbox" id="UsedDashboard" name="UsedDashboard" value="1" [% Data.IsChecked %]/>
                         </div>
                         <div class="Clear"></div>
 

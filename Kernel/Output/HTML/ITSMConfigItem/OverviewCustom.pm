@@ -707,9 +707,10 @@ sub _GetColumnContent {
 
     # create additional objects
     my $ConfigObject         = $Kernel::OM->Get('Kernel::Config');
-    my $LogObject            = $Kernel::OM->Get('Kernel::System::Log');
     my $LayoutObject         = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $HTMLUtilsObject      = $Kernel::OM->Get('Kernel::System::HTMLUtils');
     my $ConfigItemObject     = $Kernel::OM->Get('Kernel::System::ITSMConfigItem');
+    my $LogObject            = $Kernel::OM->Get('Kernel::System::Log');
 
     # check needed stuff
     for (qw(ConfigItemID ShowColumns PredefinedColumns)) {
@@ -804,6 +805,7 @@ sub _GetColumnContent {
                 if ( $Column =~ m/(State|Class)/ ) {
                     $ColumnContent = $LayoutObject->{LanguageObject}->Translate($ColumnContent);
                 }
+                $ColumnContent = $HTMLUtilsObject->ToHTML( String => $ColumnContent );
             }
 
             # store config item table data

@@ -117,7 +117,7 @@ if ($('#ToolBar li.Extended.SearchFulltext').length) {
 [% IF !Data.NoSystemMessage %]
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    Core.UI.SystemMessage.Init('Header', null, null);
+    Core.UI.SystemMessage.Init('Header', null);
 //]]></script>
 [% END %]
 [% END %]

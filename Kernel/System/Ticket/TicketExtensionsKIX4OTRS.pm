@@ -250,7 +250,7 @@ sub CountLinkedObjects {
             Key1    => $Param{TicketID},
             Object2 => $CurrObject,
             State   => 'Valid',
-            UserID  => 1,
+            UserID  => $Param{UserID} || 1,
         );
 
         # do not count merged tickets if user preference set
@@ -392,7 +392,7 @@ sub GetTotalNonEscalationRelevantBusinessTime {
     if ( $PendStartTime ) {
         my $WorkingTime = $TimeObject->WorkingTime(
             StartTime => $PendStartTime,
-            StopTime  => $TimeObject->CurrentTimestamp(),
+            StopTime  => $TimeObject->SystemTime(),
             Calendar  => $Escalation{Calendar},
         );
         $PendTotalTime += $WorkingTime;

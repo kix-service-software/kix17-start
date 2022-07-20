@@ -13,6 +13,7 @@
     <form action="[% Env("CGIHandle") %]" method="post" id="CIImageDialog" name="CIImageDialog">
         <input type="hidden" value="[% Env("Action") %]" name="Action"/>
         <input type="hidden" value="SetImageText" name="Subaction" />
+        <input type="hidden" value="[% Data.TabIndex %]" name="TabIndex" />
         <input type="hidden" value="[% Data.ConfigItemID | html %]" name="ConfigItemID"/>
         <input type="hidden" value="" name="ImageID" />
         <fieldset class="TableLike">
@@ -27,6 +28,7 @@
     <form action="[% Env("CGIHandle") %]" method="post" id="CIImageDialogDelete" name="CIImageDialogDelete">
         <input type="hidden" value="[% Env("Action") %]" name="Action"/>
         <input type="hidden" value="ImageDelete" name="Subaction" />
+        <input type="hidden" value="[% Data.TabIndex %]" name="TabIndex" />
         <input type="hidden" value="[% Data.ConfigItemID | html %]" name="ConfigItemID"/>
         <input type="hidden" value="" name="ImageID" />
         <input type="hidden" value="" name="ImageType" />
@@ -58,6 +60,7 @@
                 <form action="[% Env("CGIHandle") %]" method="post" enctype="multipart/form-data" name="compose" id="CIImageFileUpload" class="Validate PreventMultipleSubmits">
                     <input type="hidden" name="Action" value="[% Env("Action") %]"/>
                     <input type="hidden" name="Subaction" value="StoreNew" />
+                    <input type="hidden" value="[% Data.TabIndex %]" name="TabIndex" />
                     <input type="hidden" name="ConfigItemID" value="[% Data.ConfigItemID %]"/>
                     <input type="hidden" name="ImageID" value="[% Data.Test %]"/>
                     <input type="hidden" name="FileUploaded" value="[% Data.FileUploaded | html %]"/>

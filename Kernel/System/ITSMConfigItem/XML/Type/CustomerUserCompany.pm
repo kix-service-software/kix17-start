@@ -11,6 +11,9 @@ package Kernel::System::ITSMConfigItem::XML::Type::CustomerUserCompany;
 use strict;
 use warnings;
 
+# prevent 'Used once' warning for Kernel::OM
+use Kernel::System::ObjectManager;
+
 our @ObjectDependencies = (
     'Kernel::System::Log'
 );
@@ -60,8 +63,17 @@ get the xml data of a version
 sub ValueLookup {
     my ( $Self, %Param ) = @_;
 
-    return $Param{Value} || '';
+    return '' if !$Param{Value};
 
+    my %CustomerCompany = $Kernel::OM->Get('Kernel::System::CustomerCompany')->CustomerCompanyGet(
+        CustomerID => $Param{Value},
+    );
+
+    if ( %CustomerCompany ) {
+        return "$CustomerCompany{CustomerCompanyName} ($CustomerCompany{CustomerID})";
+    }
+
+    return '';
 }
 
 =item StatsAttributeCreate()

@@ -2,7 +2,7 @@
  * This software is part of the KIX project, https://www.kixdesk.com/
  * Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
  * --
- * @project KIX (https://www.kixdesk.com) <https://www.kixdesk.com> - Agent Frontend
+ * @project KIX (https://www.kixdesk.com) <https://www.kixdesk.com> - Customer Frontend
  * @copyright c.a.p.e. IT GmbH
  * @license AGPL (https://www.gnu.org/licenses/agpl.txt) <https://www.gnu.org/licenses/agpl.txt>
  * --
@@ -27,7 +27,7 @@
         border-width: 1px;
         border-style: solid;
         padding: 3px 8px;
-        margin-right: 5px;
+        margin: 0 5px 5px 0;
         display: inline-block;
     }
 
@@ -77,6 +77,11 @@
     .OwnerDetailsMagnifier,
     .ResponsibleDetailsMagnifier {
         cursor: pointer;
+        width: auto;
+        height: auto;
+        display: inline-block;
+        text-align: center;
+        margin: -2px 0 0 5px;
     }
 
 
@@ -109,6 +114,9 @@
     */
     #CIClassSelection.Content {
         border-bottom: none;
+    }
+    .KIXSidebarTools > .Content > .SearchBox {
+        margin-bottom: 5px;
     }
 
 

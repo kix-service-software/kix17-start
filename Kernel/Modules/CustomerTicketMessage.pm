@@ -41,12 +41,18 @@ sub new {
 sub Run {
     my ( $Self, %Param ) = @_;
 
+    # get needed objects
+    my $ConfigObject       = $Kernel::OM->Get('Kernel::Config');
+    my $LayoutObject       = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $DynamicFieldObject = $Kernel::OM->Get('Kernel::System::DynamicField');
+    my $BackendObject      = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
+    my $QueueObject        = $Kernel::OM->Get('Kernel::System::Queue');
+    my $TicketObject       = $Kernel::OM->Get('Kernel::System::Ticket');
+    my $ParamObject        = $Kernel::OM->Get('Kernel::System::Web::Request');
+
     # get params
     my %GetParam;
-    my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
-
     for my $Key (qw( Subject Body PriorityID TypeID ServiceID SLAID Expand Dest QueueID )) {
-
         $GetParam{$Key} = $ParamObject->GetParam( Param => $Key );
     }
 
@@ -54,8 +60,7 @@ sub Run {
     my %ACLCompatGetParam;
     $ACLCompatGetParam{OwnerID} = $GetParam{NewUserID};
 
-    $GetParam{SelectedCustomerID} = $ParamObject->GetParam( Param => 'SelectedCustomerID' )
-        || '';
+    $GetParam{SelectedCustomerID} = $ParamObject->GetParam( Param => 'SelectedCustomerID' ) || '';
     my $ConfigItemIDStrg = $ParamObject->GetParam( Param => 'SelectedConfigItemIDs' ) || '';
     $ConfigItemIDStrg =~ s/^,//g;
     my @SelectedCIIDs = split( ',', $ConfigItemIDStrg );
@@ -64,17 +69,14 @@ sub Run {
     # get Dynamic fields from ParamObject
     my %DynamicFieldValues;
 
-    my $Config = $Kernel::OM->Get('Kernel::Config')->Get("Ticket::Frontend::$Self->{Action}");
+    my $Config = $ConfigObject->Get("Ticket::Frontend::$Self->{Action}");
 
     # get the dynamic fields for this screen
-    my $DynamicFieldList = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
+    my $DynamicFieldList = $DynamicFieldObject->DynamicFieldListGet(
         Valid       => 1,
         ObjectType  => [ 'Ticket', 'Article' ],
         FieldFilter => $Config->{DynamicField} || {},
     );
-
-    my $LayoutObject  = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-    my $BackendObject = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
 
     # reduce the dynamic fields to only the ones that are designed for customer interface
     my @CustomerDynamicFields;
@@ -99,7 +101,6 @@ sub Run {
     $Self->{DefaultSet} = $ParamObject->GetParam( Param => 'DefaultSet' ) || 0;
 
     # get all dynamic fields
-    my $DynamicFieldObject = $Kernel::OM->Get('Kernel::System::DynamicField');
     $Self->{NotShownDynamicFields} = $DynamicFieldObject->DynamicFieldList(
         Valid      => 1,
         ObjectType => [ 'Ticket', 'Article' ],
@@ -136,12 +137,11 @@ sub Run {
         next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
         # extract the dynamic field value form the web request
-        $DynamicFieldValues{ $DynamicFieldConfig->{Name} } =
-            $BackendObject->EditFieldValueGet(
+        $DynamicFieldValues{ $DynamicFieldConfig->{Name} } = $BackendObject->EditFieldValueGet(
             DynamicFieldConfig => $DynamicFieldConfig,
             ParamObject        => $ParamObject,
             LayoutObject       => $LayoutObject,
-            );
+        );
     }
 
     # convert dynamic field values into a structure for ACLs
@@ -154,10 +154,6 @@ sub Run {
         $DynamicFieldACLParameters{ 'DynamicField_' . $DynamicField } = $DynamicFieldValues{$DynamicField};
     }
     $GetParam{DynamicField} = \%DynamicFieldACLParameters;
-
-    my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
-    my $QueueObject  = $Kernel::OM->Get('Kernel::System::Queue');
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
     # handle for quick ticket templates
     if (
@@ -188,6 +184,52 @@ sub Run {
                 }
             }
         }
+    }
+
+    # check deactivated fields
+    if (
+        $ConfigObject->Get('Ticket::Type')
+        && !$Config->{'TicketType'}
+        && $Config->{'TicketTypeDefault'}
+    ) {
+        my %TypeList = reverse $TicketObject->TicketTypeList(
+            %Param,
+            Action         => $Self->{Action},
+            CustomerUserID => $Self->{UserID},
+        );
+        $GetParam{TypeID} = $TypeList{ $Config->{'TicketTypeDefault'} };
+        if ( !$GetParam{TypeID} ) {
+            $LayoutObject->CustomerFatalError(
+                Message => $LayoutObject->{LanguageObject}->Translate( 'Check SysConfig setting for %s::TicketTypeDefault.', $Self->{Action} ),
+                Comment => Translatable('Please contact your administrator'),
+            );
+            return;
+        }
+    }
+    if (
+        !$Config->{'Queue'}
+        && $Config->{'QueueDefault'}
+    ) {
+        my $QueueDefault = $Config->{'QueueDefault'};
+        my $QueueDefaultID = $QueueObject->QueueLookup( Queue => $QueueDefault );
+        if ($QueueDefaultID) {
+            $Param{ToSelected}          = $QueueDefaultID . '||' . $QueueDefault;
+            $ACLCompatGetParam{QueueID} = $QueueDefaultID;
+        }
+        else {
+            $LayoutObject->CustomerFatalError(
+                Message => $LayoutObject->{LanguageObject}->Translate( 'Check SysConfig setting for %s::QueueDefault.', $Self->{Action} ),
+                Comment => Translatable('Please contact your administrator'),
+            );
+            return;
+        }
+    }
+    if (
+        !$Config->{'Priority'}
+        && $Config->{'PriorityDefault'}
+    ) {
+        $GetParam{PriorityID} = '';
+        $GetParam{Priority}   = $Config->{PriorityDefault};
     }
 
     # prepare queue compat data
@@ -245,7 +287,7 @@ sub Run {
     }
 
     # run acl to prepare TicketAclFormData
-    my $ShownDFACL = $Kernel::OM->Get('Kernel::System::Ticket')->TicketAcl(
+    my $ShownDFACL = $TicketObject->TicketAcl(
         %GetParam,
         %ACLCompatGetParam,
         Action         => $Self->{Action},
@@ -288,7 +330,7 @@ sub Run {
             my ( $QueueIDParam, $QueueParam ) = split( /\|\|/, $GetParam{Dest} );
             my $QueueIDLookup = $QueueObject->QueueLookup( Queue => $QueueParam );
             if ( $QueueIDLookup && $QueueIDLookup eq $QueueIDParam ) {
-                my $CustomerPanelOwnSelection = $Kernel::OM->Get('Kernel::Config')->Get('CustomerPanelOwnSelection');
+                my $CustomerPanelOwnSelection = $ConfigObject->Get('CustomerPanelOwnSelection');
                 if ( %{ $CustomerPanelOwnSelection // {} } ) {
                     $Param{ToSelected} = $QueueIDParam . '||' . $CustomerPanelOwnSelection->{$QueueParam};
                 }
@@ -688,39 +730,6 @@ sub Run {
 
         # challenge token check for write action
         $LayoutObject->ChallengeTokenCheck( Type => 'Customer' );
-
-        # if customer is not allowed to set priority, set it to default
-        if ( !$Config->{Priority} ) {
-            $GetParam{PriorityID} = '';
-            $GetParam{Priority}   = $Config->{PriorityDefault};
-        }
-
-        # if customer is not alowed to set ticket type, set it to default
-        if ( $ConfigObject->Get('Ticket::Type') && !$Config->{TicketType} ) {
-            my %Type = $TicketObject->TicketTypeList(
-                %GetParam,
-                Action         => $Self->{Action},
-                CustomerUserID => $Self->{UserID},
-            );
-
-            my $TicketTypeDefault = $Config->{TicketTypeFix} || '';
-            if ($TicketTypeDefault) {
-
-                # Blanks remove
-                $TicketTypeDefault =~ s/^\s+|\s+$//g;
-
-                # select TypeID from Name
-                my $DefaultTypeID = '';
-                for my $ID ( keys %Type ) {
-                    my $Name = $Type{$ID};
-                    if ( $Name eq $TicketTypeDefault ) {
-                        $DefaultTypeID = $ID;
-                        last;
-                    }
-                }
-                $GetParam{TypeID} = $DefaultTypeID;
-            }
-        }
 
         # create new ticket, do db insert
         my $TicketID = $TicketObject->TicketCreate(

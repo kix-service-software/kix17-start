@@ -1521,8 +1521,6 @@ sub Run {
         DYNAMICFIELD:
         for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
 
-            next DYNAMICFIELD if $DynamicFieldConfig->{ObjectType} ne 'Ticket';
-
             for my $DynamicFieldHTMLKey ( ('Label', 'Field') ) {
                 my $CurrentDynamicFieldHTML
                     = $DynamicFieldHTML{ $DynamicFieldConfig->{Name} }->{ $DynamicFieldHTMLKey };
@@ -2330,7 +2328,7 @@ sub _Mask {
         if ( $OldACL ) {
             %OldACLUsers = $TicketObject->TicketAclData();
         }
- 
+
         # prepare display data
         my %OldOwnersShown = map( { $_ => $OldUserNameList{$_} } keys( %OldACLUsers ) );
 
@@ -3127,7 +3125,7 @@ sub _GetOldOwners {
     if ( $ACL ) {
         %ACLUsers = $TicketObject->TicketAclData();
     }
- 
+
     # prepare display data
     my %ShownUsers = map( { $_ => $UserNameList{$_} } keys( %ACLUsers ) );
 

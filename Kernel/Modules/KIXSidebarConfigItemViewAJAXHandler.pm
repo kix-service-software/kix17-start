@@ -287,6 +287,7 @@ sub _XMLOutput {
                 $Value = $Self->{LayoutObject}->ITSMConfigItemOutputStringCreate(
                     Value => $Value,
                     Item  => $Item,
+                    Key   => $Param{XMLData}->{ $Item->{Key} }->[$Counter]->{Content}
                 );
 
                 # calculate indentation for left-padding css based on 15px per level and 10px as default

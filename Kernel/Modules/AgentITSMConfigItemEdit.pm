@@ -913,7 +913,7 @@ sub _XMLFormOutput {
             # search the last content
             COUNTER:
             for my $Counter ( 1 .. $Item->{CountMax} ) {
-                last COUNTER if ( 
+                last COUNTER if (
                     !defined $Param{XMLData}->{ $Item->{Key} }->[$Counter]->{Content}
                     && !$Param{XMLData}->{ $Item->{Key} }->[$Counter]->{Init}
                 );
@@ -987,14 +987,8 @@ sub _XMLFormOutput {
             );
 
             # ID?
-            my $LabelFor = $ItemID;
             if ( $Item->{Input}->{Type} eq 'Date' || $Item->{Input}->{Type} eq 'DateTime' ) {
-                $LabelFor = '';
-            }
-
-            # id needed?
-            if ($LabelFor) {
-                $LabelFor = 'for="' . $LabelFor . '"';
+                $ItemID = $InputKey . '::Date';
             }
 
             # set anchor on last element of the input key
@@ -1029,7 +1023,7 @@ sub _XMLFormOutput {
                     Description  => $Item->{Description} || $Item->{Name},
                     InputString  => $InputString,
                     Class        => $Class || '',
-                    LabelFor     => $LabelFor || '',
+                    LabelFor     => 'for="' . $ItemID . '"',
                     LabelClass   => $LabelClass || '',
                     LabelAnchor  => $LabelAnchor || '',
                 },

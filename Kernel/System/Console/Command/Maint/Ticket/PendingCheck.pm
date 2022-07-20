@@ -89,21 +89,21 @@ sub Run {
             );
 
             # set new state
-            my $Success = $TicketObject->TicketStateSet(
+            my $NewStateID = $TicketObject->TicketStateSet(
                 TicketID => $TicketID,
                 State    => $States{ $Ticket{State} },
                 UserID   => 1,
             );
 
             # error handling
-            if ( !$Success ) {
+            if ( !$NewStateID ) {
                 $Self->Print(" failed.\n");
                 next TICKETID;
             }
 
             # get state type for new state
             my %State = $StateObject->StateGet(
-                Name => $States{ $Ticket{State} },
+                ID => $NewStateID,
             );
             if ( $State{TypeName} eq 'closed' ) {
 

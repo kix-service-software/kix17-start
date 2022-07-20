@@ -148,6 +148,7 @@
         <script type="text/javascript">
 
         // Add translations for statistic previews.
+        Core.Config.Set('Values', [% Translate("Values") | JSON %]);
         Core.Config.Set('Grouped', [% Translate("Grouped") | JSON %]);
         Core.Config.Set('Stacked', [% Translate("Stacked") | JSON %]);
         Core.Config.Set('Expanded', [% Translate("Expanded") | JSON %]);
@@ -167,7 +168,7 @@
             if (Format.match(/D3/)) {
                 Core.UI.AdvancedChart.Init(
                     Format,
-                    [% JSON(Data.PreviewResult) %],
+                    [% JSONHTML(Data.PreviewResult) %],
 ### Patch licensed under the GPL-3.0, Copyright (C) 2001-2022 OTRS AG, https://otrs.com/ ###
                     'svg#PreviewContent' + Core.App.EscapeSelector(FormatCleaned),
 ### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2022 OTRS AG, https://otrs.com/ ###
@@ -185,7 +186,10 @@
 
     <div class="Preview">
     [% IF !Data.PreviewResult || !PreviewFormats.size %]
-        <p>[% Translate('This statistic does not provide preview data.') | html %]</p>
+        <p class="Hint">
+            <i class="fa fa-ban"></i>
+            [% Translate('This statistic does not provide preview data.') | html %]
+        </p>
     [% ELSE %]
         [% FOREACH Format IN PreviewFormats %]
             [% IF Format == 'Print' %]

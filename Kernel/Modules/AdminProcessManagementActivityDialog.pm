@@ -745,23 +745,27 @@ sub _ShowEdit {
             delete $AvailableFields{$Field} if $Field ne 'HorizontalLine';
         }
 
-        # sort by translated field names
-        my %AvailableFieldsTranslated;
-        for my $Field ( sort keys %AvailableFields ) {
+        # ranslated field names
+        my %FieldsTranslated;
+        for my $Field ( keys %{ $ActivityDialogData->{Config}->{Fields} } ) {
             my $Translation = $LayoutObject->{LanguageObject}->Translate($Field);
-            $AvailableFieldsTranslated{$Field} = $Translation;
+            $FieldsTranslated{$Field} = $Translation;
+        }
+        for my $Field ( keys %AvailableFields ) {
+            my $Translation = $LayoutObject->{LanguageObject}->Translate($Field);
+            $FieldsTranslated{$Field} = $Translation;
         }
 
-        # display available fields
+        # display available fields sorted by translated field names
         for my $Field (
-            sort { $AvailableFieldsTranslated{$a} cmp $AvailableFieldsTranslated{$b} }
-            keys %AvailableFieldsTranslated
+            sort { $FieldsTranslated{$a} cmp $FieldsTranslated{$b} }
+            keys %AvailableFields
         ) {
             $LayoutObject->Block(
                 Name => 'AvailableFieldRow',
                 Data => {
                     Field               => $Field,
-                    FieldnameTranslated => $AvailableFieldsTranslated{$Field},
+                    FieldnameTranslated => $FieldsTranslated{$Field},
                 },
             );
         }
@@ -780,8 +784,9 @@ sub _ShowEdit {
             $LayoutObject->Block(
                 Name => 'AssignedFieldRow',
                 Data => {
-                    Field       => $Field,
-                    FieldConfig => $FieldConfigJSON,
+                    Field               => $Field,
+                    FieldnameTranslated => $FieldsTranslated{$Field},
+                    FieldConfig         => $FieldConfigJSON,
                 },
             );
         }

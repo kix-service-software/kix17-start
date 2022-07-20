@@ -1,9 +1,13 @@
 package CGI;
 require 5.008001;
-use if $] >= 5.019, 'deprecate';
 use Carp 'croak';
 
-$CGI::VERSION='4.21';
+my $appease_cpants_kwalitee = q/
+use strict;
+use warnings;
+#/;
+
+$CGI::VERSION='4.54';
 
 use CGI::Util qw(rearrange rearrange_header make_attributes unescape escape expires ebcdic2ascii ascii2ebcdic);
 
@@ -23,6 +27,8 @@ $DISABLE_UPLOADS     = 0;
 $UNLINK_TMP_FILES    = 1;
 $LIST_CONTEXT_WARN   = 1;
 $ENCODE_ENTITIES     = q{&<>"'};
+$ALLOW_DELETE_CONTENT = 0;
+$COOKIE_CACHE        = 0;  # backcompat: cache was broken for years
 
 @SAVED_SYMBOLS = ();
 
@@ -85,11 +91,15 @@ sub initialize_globals {
     # make param('PUTDATA') act like file upload
     $PUTDATA_UPLOAD = 0;
 
+    # Add QUERY_STRING to POST request
+    $APPEND_QUERY_STRING = 0;
+
     # Other globals that you shouldn't worry about.
     undef $Q;
     $BEEN_THERE = 0;
     $DTD_PUBLIC_IDENTIFIER = "";
     undef @QUERY_PARAM;
+    undef %QUERY_PARAM;
     undef %EXPORT;
     undef $QUERY_CHARSET;
     undef %QUERY_FIELDNAMES;
@@ -277,7 +287,7 @@ sub import {
     # To allow overriding, search through the packages
     # Till we find one in which the correct subroutine is defined.
     my @packages = ($self,@{"$self\:\:ISA"});
-    for $sym (keys %EXPORT) {
+    for $sym (sort keys %EXPORT) {
 	my $pck;
 	my $def = $DefaultClass;
 	for $pck (@packages) {
@@ -398,9 +408,10 @@ sub param {
 
 	# list context can be dangerous so warn:
 	# http://blog.gerv.net/2014.10/new-class-of-vulnerability-in-perl-web-applications
-	if ( wantarray && $LIST_CONTEXT_WARN ) {
+	if ( wantarray && $LIST_CONTEXT_WARN == 1 ) {
 		my ( $package, $filename, $line ) = caller;
 		if ( $package ne 'CGI' ) {
+			$LIST_CONTEXT_WARN++; # only warn once
 			warn "CGI::param called in list context from $filename line $line, this can lead to vulnerabilities. "
 				. 'See the warning in "Fetching the value or values of a single named parameter"';
 		}
@@ -434,7 +445,7 @@ sub param {
 
     my @result = @{$self->{param}{$name}};
 
-    if ($PARAM_UTF8 && $name ne 'PUTDATA' && $name ne 'POSTDATA') {
+    if ($PARAM_UTF8 && $name ne 'PUTDATA' && $name ne 'POSTDATA' && $name ne 'PATCHDATA') {
       eval "require Encode; 1;" unless Encode->can('decode'); # bring in these functions
       @result = map {ref $_ ? $_ : $self->_decode_utf8($_) } @result;
     }
@@ -546,6 +557,12 @@ sub init {
 	  ) {
 	  my($boundary) = $ENV{'CONTENT_TYPE'} =~ /boundary=\"?([^\";,]+)\"?/;
 	  $self->read_multipart($boundary,$content_length);
+	  if ($APPEND_QUERY_STRING) {
+	    # Some people want to have their cake and eat it too!
+	    # Set $APPEND_QUERY_STRING = 1 to have the contents of the query string
+	    # APPENDED to the POST data.
+	    $query_string .= (length($query_string) ? '&' : '') . $ENV{'QUERY_STRING'} if defined $ENV{'QUERY_STRING'};
+	  }
 	  last METHOD;
       } 
 
@@ -593,7 +610,7 @@ sub init {
 	      last METHOD;
 	  }
 	  if (ref($initializer) && ref($initializer) eq 'HASH') {
-	      for (keys %$initializer) {
+	      for (sort keys %$initializer) {
 		  $self->param('-name'=>$_,'-value'=>$initializer->{$_});
 	      }
 	      last METHOD;
@@ -630,9 +647,9 @@ sub init {
 	      last METHOD;
       }
 
-      if ($meth eq 'POST' || $meth eq 'PUT') {
+      if ($meth eq 'POST' || $meth eq 'PUT' || $meth eq 'PATCH') {
 	  if ( $content_length > 0 ) {
-        if ( ( $PUTDATA_UPLOAD || $self->{'.upload_hook'} ) && !$is_xforms && ($meth eq 'POST' || $meth eq 'PUT')
+        if ( ( $PUTDATA_UPLOAD || $self->{'.upload_hook'} ) && !$is_xforms && ($meth eq 'POST' || $meth eq 'PUT' || $meth eq 'PATCH')
             && defined($ENV{'CONTENT_TYPE'})
             && $ENV{'CONTENT_TYPE'} !~ m|^application/x-www-form-urlencoded|
         && $ENV{'CONTENT_TYPE'} !~ m|^multipart/form-data| ){
@@ -644,10 +661,12 @@ sub init {
             $self->read_from_client(\$query_string,$content_length,0);
         }
 	  }
-	  # Some people want to have their cake and eat it too!
-	  # Uncomment this line to have the contents of the query string
-	  # APPENDED to the POST data.
-	  # $query_string .= (length($query_string) ? '&' : '') . $ENV{'QUERY_STRING'} if defined $ENV{'QUERY_STRING'};
+	  if ($APPEND_QUERY_STRING) {
+	    # Some people want to have their cake and eat it too!
+	    # Set $APPEND_QUERY_STRING = 1 to have the contents of the query string
+	    # APPENDED to the POST data.
+	    $query_string .= (length($query_string) ? '&' : '') . $ENV{'QUERY_STRING'} if defined $ENV{'QUERY_STRING'};
+	  }
 	  last METHOD;
       }
 
@@ -668,7 +687,7 @@ sub init {
   }
 
 # YL: Begin Change for XML handler 10/19/2001
-    if (!$is_xforms && ($meth eq 'POST' || $meth eq 'PUT')
+    if (!$is_xforms && ($meth eq 'POST' || $meth eq 'PUT' || $meth eq 'PATCH')
         && defined($ENV{'CONTENT_TYPE'})
         && $ENV{'CONTENT_TYPE'} !~ m|^application/x-www-form-urlencoded|
 	&& $ENV{'CONTENT_TYPE'} !~ m|^multipart/form-data| ) {
@@ -933,7 +952,7 @@ sub _setup_symbols {
 	$DEBUG=0,                next if /^[:-]no_?[Dd]ebug$/;
 	$DEBUG=2,                next if /^[:-][Dd]ebug$/;
 	$USE_PARAM_SEMICOLONS++, next if /^[:-]newstyle_urls$/;
-	$PUTDATA_UPLOAD++,       next if /^[:-](?:putdata_upload|postdata_upload)$/;
+	$PUTDATA_UPLOAD++,       next if /^[:-](?:putdata_upload|postdata_upload|patchdata_upload)$/;
 	$PARAM_UTF8++,           next if /^[:-]utf8$/;
 	$XHTML++,                next if /^[:-]xhtml$/;
 	$XHTML=0,                next if /^[:-]no_?xhtml$/;
@@ -1001,9 +1020,8 @@ sub read_postdata_putdata {
         # skip the file if uploads disabled
         if ($DISABLE_UPLOADS) {
             
-            #	      while (defined($data = $buffer->read)) { }
-            my $buff;
-            my $unit = $MultipartBuffer::INITIAL_FILLUNIT;
+            my $buf;
+            my $unit = $CGI::MultipartBuffer::INITIAL_FILLUNIT;
             my $len  = $content_length;
             while ( $len > 0 ) {
                 my $read = $self->read_from_client( \$buf, $unit, 0 );
@@ -1032,7 +1050,7 @@ sub read_postdata_putdata {
         my ($data);
         local ($\) = '';
         my $totalbytes;
-        my $unit = $MultipartBuffer::INITIAL_FILLUNIT;
+        my $unit = $CGI::MultipartBuffer::INITIAL_FILLUNIT;
         my $len  = $content_length;
         $unit = $len;
         my $ZERO_LOOP_COUNTER =0;
@@ -1098,7 +1116,7 @@ sub SERVER_PUSH { 'multipart/x-mixed-replace;boundary="' . shift() . '"'; }
 # Create a new multipart buffer
 sub new_MultipartBuffer {
     my($self,$boundary,$length) = @_;
-    return MultipartBuffer->new($self,$boundary,$length);
+    return CGI::MultipartBuffer->new($self,$boundary,$length);
 }
 
 # Read data from a file handle
@@ -1138,7 +1156,7 @@ sub import_names {
     die "Can't import names into \"main\"\n" if \%{"${namespace}::"} == \%::;
     if ($delete || $MOD_PERL || exists $ENV{'FCGI_ROLE'}) {
 	# can anyone find an easier way to do this?
-	for (keys %{"${namespace}::"}) {
+	for (sort keys %{"${namespace}::"}) {
 	    local *symbol = "${namespace}::${_}";
 	    undef $symbol;
 	    undef @symbol;
@@ -1219,6 +1237,10 @@ sub MethGet {
     return request_method() eq 'GET';
 }
 
+sub MethPatch {
+    return request_method() eq 'PATCH';
+}
+
 sub MethPost {
     return request_method() eq 'POST';
 }
@@ -1240,7 +1262,7 @@ sub STORE {
     my $self = shift;
     my $tag  = shift;
     my $vals = shift;
-    my @vals = index($vals,"\0")!=-1 ? split("\0",$vals) : $vals;
+    my @vals = defined($vals) && index($vals,"\0")!=-1 ? split("\0",$vals) : $vals;
     $self->param(-name=>$tag,-value=>\@vals);
 }
 
@@ -1407,7 +1429,7 @@ sub save {
 	        if length($escaped_param) or length($value);
 	}
     }
-    for (keys %{$self->{'.fieldnames'}}) {
+    for (sort keys %{$self->{'.fieldnames'}}) {
           print $filehandle ".cgifields=",escape("$_"),"\n";
     }
     print $filehandle "=\n";    # end of record
@@ -2435,7 +2457,7 @@ sub popup_menu {
         if (/<optgroup/) {
             for my $v (split(/\n/)) {
                 my $selectit = $XHTML ? 'selected="selected"' : 'selected';
-		for my $selected (keys %selected) {
+		for my $selected (sort keys %selected) {
 		    $v =~ s/(value="\Q$selected\E")/$selectit $1/;
 		}
                 $result .= "$v\n";
@@ -2557,7 +2579,7 @@ sub scrolling_list {
         if (/<optgroup/) {
             for my $v (split(/\n/)) {
                 my $selectit = $XHTML ? 'selected="selected"' : 'selected';
-		for my $selected (keys %selected) {
+		for my $selected (sort keys %selected) {
 		    $v =~ s/(value="$selected")/$selectit $1/;
 		}
                 $result .= "$v\n";
@@ -2676,11 +2698,11 @@ sub url {
     my $request_uri =  $self->request_uri || '';
     my $query_str   =  $query ? $self->query_string : '';
 
+    $script_name    =~ s/\?.*$//s; # remove query string
     $request_uri    =~ s/\?.*$//s; # remove query string
     $request_uri    =  unescape($request_uri);
 
     my $uri         =  $rewrite && $request_uri ? $request_uri : $script_name;
-    $uri            =~ s/\?.*$//s; # remove query string
 
 	if ( defined( $ENV{PATH_INFO} ) ) {
 		# IIS sometimes sets PATH_INFO to the same value as SCRIPT_NAME so only sub it out
@@ -2743,8 +2765,8 @@ sub url {
 ####
 sub cookie {
     my($self,@p) = self_or_default(@_);
-    my($name,$value,$path,$domain,$secure,$expires,$httponly) =
-	rearrange([NAME,[VALUE,VALUES],PATH,DOMAIN,SECURE,EXPIRES,HTTPONLY],@p);
+    my($name,$value,$path,$domain,$secure,$expires,$httponly,$max_age,$samesite) =
+	rearrange([NAME,[VALUE,VALUES],PATH,DOMAIN,SECURE,EXPIRES,HTTPONLY,'MAX-AGE',SAMESITE],@p);
 
     require CGI::Cookie;
 
@@ -2752,7 +2774,7 @@ sub cookie {
     # value of the cookie, if any.  For efficiency, we cache the parsed
     # cookies in our state variables.
     unless ( defined($value) ) {
-	$self->{'.cookies'} = CGI::Cookie->fetch;
+	$self->{'.cookies'} = CGI::Cookie->fetch unless $COOKIE_CACHE && exists $self->{'.cookies'};
 	
 	# If no name is supplied, then retrieve the names of all our cookies.
 	return () unless $self->{'.cookies'};
@@ -2772,6 +2794,8 @@ sub cookie {
     push(@param,'-expires'=>$expires) if $expires;
     push(@param,'-secure'=>$secure) if $secure;
     push(@param,'-httponly'=>$httponly) if $httponly;
+    push(@param,'-max-age'=>$max_age) if $max_age;
+    push(@param,'-samesite'=>$samesite) if $samesite;
 
     return CGI::Cookie->new(@param);
 }
@@ -2877,7 +2901,7 @@ sub _name_and_path_from_env {
 }
 
 #### Method: request_method
-# Returns 'POST', 'GET', 'PUT' or 'HEAD'
+# Returns 'POST', 'GET', 'PUT', 'PATCH' or 'HEAD'
 ####
 sub request_method {
     return (defined $ENV{'REQUEST_METHOD'}) ? $ENV{'REQUEST_METHOD'} : undef;
@@ -2920,7 +2944,7 @@ sub query_string {
            push(@pairs,"$eparam=$value");
        }
     }
-    for (keys %{$self->{'.fieldnames'}}) {
+    for (sort keys %{$self->{'.fieldnames'}}) {
       push(@pairs,".cgifields=".escape("$_"));
     }
     return join($USE_PARAM_SEMICOLONS ? ';' : '&',@pairs);
@@ -2968,7 +2992,7 @@ sub Accept {
     return $prefs{$search} if $prefs{$search};
 
     # Didn't get it, so try pattern matching.
-    for (keys %prefs) {
+    for (sort keys %prefs) {
 	next unless /\*/;       # not a pattern match
 	($pat = $_) =~ s/([^\w*])/\\$1/g; # escape meta characters
 	$pat =~ s/\*/.*/g; # turn it into a pattern
@@ -3121,7 +3145,7 @@ sub http {
         }
         return $ENV{"HTTP_$parameter"};
     }
-    return grep { /^HTTP(?:_|$)/ } keys %ENV;
+    return grep { /^HTTP(?:_|$)/ } sort keys %ENV;
 }
 
 #### Method: https
@@ -3139,7 +3163,7 @@ sub https {
         return $ENV{"HTTPS_$parameter"};
     }
     return wantarray
-        ? grep { /^HTTPS(?:_|$)/ } keys %ENV
+        ? grep { /^HTTPS(?:_|$)/ } sort keys %ENV
         : $ENV{'HTTPS'};
 }
 
@@ -3270,7 +3294,7 @@ sub register_parameter {
 sub get_fields {
     my($self) = @_;
     return $self->CGI::hidden('-name'=>'.cgifields',
-			      '-values'=>[keys %{$self->{'.parametersToAdd'}}],
+			      '-values'=>[sort keys %{$self->{'.parametersToAdd'}}],
 			      '-override'=>1);
 }
 
@@ -3329,7 +3353,7 @@ sub read_multipart {
 
 	$header{'Content-Disposition'} ||= ''; # quench uninit variable warning
 
-	my($param)= $header{'Content-Disposition'}=~/[\s;]name="([^"]*)"/;
+	my $param = _mp_value_parse( $header{'Content-Disposition'},'name' );
         $param .= $TAINTED;
 
         # See RFC 1867, 2183, 2045
@@ -3392,7 +3416,7 @@ sub read_multipart {
 	  # together with the body for later parsing with an external
 	  # MIME parser module
 	  if ( $multipart ) {
-	      for ( keys %header ) {
+	      for ( sort keys %header ) {
 		  print $filehandle "$_: $header{$_}${CRLF}";
 	      }
 	      print $filehandle "${CRLF}";
@@ -3434,6 +3458,28 @@ sub read_multipart {
 	  push(@{$self->{param}{$param}},$filehandle);
       }
     }
+}
+
+sub _mp_value_parse {
+	my ( $string,$field ) = @_;
+
+	my $is_quoted = $string =~/[\s;]$field="/ ? 1 : 0;
+	my $param;
+
+	if ( $is_quoted ) {
+		# a quoted token cannot contain anything but an unescaped quote
+		($param) = $string =~/[\s;]$field="((?:\\"|[^"])*)"/;
+	} else {
+		# a plain token cannot contain any reserved characters
+		# https://tools.ietf.org/html/rfc2616#section-2.2
+		# separators     = "(" | ")" | "<" | ">" | "@"
+		#                | "," | ";" | ":" | "\" | <">
+		#                | "/" | "[" | "]" | "?" | "="
+		#                | "{" | "}" | SP | HT
+		($param) = $string =~/[\s;]$field=([^\(\)<>\@,;:\\"\/\[\]\?=\{\} \015\n\t]*)/;
+	}
+
+	return $param;
 }
 
 #####
@@ -3579,7 +3625,7 @@ sub _set_values_and_labels {
     $$l = $v if ref($v) eq 'HASH' && !ref($$l);
     return $self->param($n) if !defined($v);
     return $v if !ref($v);
-    return ref($v) eq 'HASH' ? keys %$v : @$v;
+    return ref($v) eq 'HASH' ? sort keys %$v : @$v;
 }
 
 # internal routine, don't use
@@ -3588,7 +3634,7 @@ sub _set_attributes {
     my($element, $attributes) = @_;
     return '' unless defined($attributes->{$element});
     $attribs = ' ';
-    for my $attrib (keys %{$attributes->{$element}}) {
+    for my $attrib (sort keys %{$attributes->{$element}}) {
         (my $clean_attrib = $attrib) =~ s/^-//;
         $attribs .= "@{[lc($clean_attrib)]}=\"$attributes->{$element}{$attrib}\" ";
     }
@@ -3600,18 +3646,23 @@ sub _set_attributes {
 # Globals and stubs for other packages that we use.
 #########################################################
 
-######################## MultipartBuffer ####################
+######################## CGI::MultipartBuffer ####################
 
-package MultipartBuffer;
+package CGI::MultipartBuffer;
 
 $_DEBUG = 0;
 
 # how many bytes to read at a time.  We use
 # a 4K buffer by default.
-$INITIAL_FILLUNIT = 1024 * 4;
-$TIMEOUT = 240*60;       # 4 hour timeout for big files
-$SPIN_LOOP_MAX = 2000;  # bug fix for some Netscape servers
-$CRLF=$CGI::CRLF;
+$MultipartBuffer::INITIAL_FILLUNIT ||= 1024 * 4;
+$MultipartBuffer::TIMEOUT          ||= 240*60; # 4 hour timeout for big files
+$MultipartBuffer::SPIN_LOOP_MAX    ||= 2000;   # bug fix for some Netscape servers
+$MultipartBuffer::CRLF             ||= $CGI::CRLF;
+
+$INITIAL_FILLUNIT = $MultipartBuffer::INITIAL_FILLUNIT;
+$TIMEOUT          = $MultipartBuffer::TIMEOUT;
+$SPIN_LOOP_MAX    = $MultipartBuffer::SPIN_LOOP_MAX;
+$CRLF             = $MultipartBuffer::CRLF;
 
 sub new {
     my($package,$interface,$boundary,$length) = @_;
@@ -3845,10 +3896,10 @@ if ($^W) {
     $CGI::CGI = '';
     $CGI::CGI=<<EOF;
     $CGI::VERSION;
-    $MultipartBuffer::SPIN_LOOP_MAX;
-    $MultipartBuffer::CRLF;
-    $MultipartBuffer::TIMEOUT;
-    $MultipartBuffer::INITIAL_FILLUNIT;
+    $CGI::MultipartBuffer::SPIN_LOOP_MAX;
+    $CGI::MultipartBuffer::CRLF;
+    $CGI::MultipartBuffer::TIMEOUT;
+    $CGI::MultipartBuffer::INITIAL_FILLUNIT;
 EOF
     ;
 }

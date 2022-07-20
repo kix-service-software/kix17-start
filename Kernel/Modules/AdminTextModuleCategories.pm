@@ -489,15 +489,27 @@ sub Run {
         Data => \%Param,
     );
 
-    # build category tree
-    $Param{CategoryTree} = $LayoutObject->TextModuleCategoryTree(
-        SelectedCategoryID   => $GetParam{SelectedCategoryID},
-        Categories           => \%TextModuleCategoryData,
-        CategoryDeletionLink => 1,
-        NoVirtualCategories  => 1,
-        NoContentCounters    => 1,
-        Limit                => $DefaultLimit,
-    );
+    if ( %TextModuleCategoryData ) {
+        # build category tree
+        $Param{CategoryTree} = $LayoutObject->TextModuleCategoryTree(
+            SelectedCategoryID   => $GetParam{SelectedCategoryID},
+            Categories           => \%TextModuleCategoryData,
+            CategoryDeletionLink => 1,
+            NoVirtualCategories  => 1,
+            NoContentCounters    => 1,
+            Limit                => $DefaultLimit,
+        );
+
+        $LayoutObject->Block(
+            Name => 'CategoryTree',
+            Data => \%Param
+        );
+    }
+    else {
+        $LayoutObject->Block(
+            Name => 'NoCategoryTree',
+        );
+    }
 
     # generate output
     $Output .= $LayoutObject->Output(

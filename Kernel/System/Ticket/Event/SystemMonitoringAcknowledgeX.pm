@@ -179,16 +179,7 @@ sub Run {
     );
 
     my $Return;
-    if ( $Type eq 'pipe' ) {
-        $Return = $Self->_Pipe(
-
-            ConfigKey => $ConfigKey,
-
-            Ticket => \%Ticket,
-            User   => \%User,
-        );
-    }
-    elsif ( $Type eq 'http' ) {
+    if ( $Type eq 'http' ) {
         $Return = $Self->_HTTP(
 
             ConfigKey => $ConfigKey,
@@ -226,82 +217,6 @@ sub Run {
 
         return;
     }
-}
-
-sub _Pipe {
-    my ( $Self, %Param ) = @_;
-
-    # check needed stuff
-    for my $Needed (qw(Ticket User)) {
-        if ( !$Param{$Needed} ) {
-            $Kernel::OM->Get('Kernel::System::Log')->Log(
-                Priority => 'error',
-                Message  => "Need $Needed!",
-            );
-
-            return;
-        }
-    }
-    my %Ticket = %{ $Param{Ticket} };
-    my %User   = %{ $Param{User} };
-
-    # send acknowledge to system monitoring
-    my $CMD = "";
-    if ( $Self->{ConfigObject}->Get('Tool::Acknowledge::HTTP::CMD') ) {
-        $CMD = $Self->{ConfigObject}->Get('Tool::Acknowledge::HTTP::CMD')->{ $Param{ConfigKey} };
-    }
-    my $Data;
-    if ( $Ticket{ $Self->{Fservice} } !~ /^host$/i ) {
-        if ( $Self->{ConfigObject}->Get('Tool::Acknowledge::NamedPipe::Service') ) {
-            $Data = $Self->{ConfigObject}->Get('Tool::Acknowledge::NamedPipe::Service')
-                ->{ $Param{ConfigKey} };
-        }
-    }
-    else {
-        if ( $Self->{ConfigObject}->Get('Tool::Acknowledge::NamedPipe::Host') ) {
-            $Data = $Self->{ConfigObject}->Get('Tool::Acknowledge::NamedPipe::Host')->{ $Param{ConfigKey} };
-        }
-    }
-
-    # replace ticket tags
-    TICKET:
-    for my $Key ( sort keys %Ticket ) {
-        next TICKET if !defined $Ticket{$Key};
-
-        # strip not allowed characters
-        $Ticket{$Key} =~ s/'//g;
-        $Ticket{$Key} =~ s/;//g;
-
-        $Ticket{$Key} =~ s/\r//g;
-
-        $Data =~ s/<$Key>/$Ticket{$Key}/g;
-    }
-
-    # replace config tags
-    $Data =~ s{<CONFIG_(.+?)>}{$Self->{ConfigObject}->Get($1)}egx;
-
-    # replace login
-    $Data =~ s/<LOGIN>/$User{UserLogin}/g;
-
-    # replace host
-    $Data =~ s/<HOST_NAME>/$Ticket{$Self->{Fhost}}/g;
-
-    # replace service
-    $Data =~ s/<SERVICE_NAME>/$Ticket{$Self->{Fservice}}/g;
-
-    # replace address
-    $Data =~ s/<ADDRESS_NAME>/$Ticket{$Self->{Faddress}}/g;
-
-    # replace time stamp
-    my $Time = time();
-    $Data =~ s/<UNIXTIME>/$Time/g;
-
-    # replace OUTPUTSTRING
-    $CMD =~ s/<OUTPUTSTRING>/$Data/g;
-
-    system($CMD);
-
-    return 1;
 }
 
 sub _HTTP {

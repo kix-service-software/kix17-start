@@ -172,6 +172,7 @@ sub Run {
     # load and build tabs
     my $ConfigItemZoomBackendRef = $ConfigObject->Get('AgentITSMConfigItemZoomBackend');
     if ( $ConfigItemZoomBackendRef && ref($ConfigItemZoomBackendRef) eq 'HASH' ) {
+        my $TabIndex = 0;
         for my $CurrKey ( sort( keys( %{$ConfigItemZoomBackendRef} ) ) ) {
 
             my $Count = '';
@@ -232,12 +233,17 @@ sub Run {
                 }
             }
 
-            my $DirectLinkAnchor = $ConfigItemZoomBackendRef->{$CurrKey}->{Description};
-            $DirectLinkAnchor =~ s/\s/_/g;
-
             my $Link = $ConfigItemZoomBackendRef->{$CurrKey}->{Link};
             if ($Link) {
-                $Link =~ s/\$Param\{"([^"]+)"\}/$Param{$1}/mg;
+                # replace link params
+                $Link =~ s{
+                      \$Param\{"([^"]+)"\}
+                    }
+                    {
+                      if ( defined $1 ) {
+                        $Param{$1} || '';
+                      }
+                    }egx;
 
                 # image tab
                 if ( $Link =~ m/(.*?)ZoomTabImages(.*)/ ) {
@@ -259,12 +265,15 @@ sub Run {
                 $LayoutObject->Block(
                     Name => 'DataTabDataLink',
                     Data => {
-                        Link        => $Link . ";DirectLinkAnchor=" . $DirectLinkAnchor,
+                        Link        => $Link . ";TabIndex=" . $TabIndex,
                         Description => $ConfigItemZoomBackendRef->{$CurrKey}->{Description},
                         Label       => $ConfigItemZoomBackendRef->{$CurrKey}->{Title},
                         LabelCount  => $Count ? " (" . $Count . ")" : '',
                         }
                 );
+
+                # increment tab index
+                $TabIndex += 1;
             }
             if ( $ConfigItemZoomBackendRef->{$CurrKey}->{PreloadModule} ) {
                 $LayoutObject->Block(

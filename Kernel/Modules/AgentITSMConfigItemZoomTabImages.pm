@@ -50,6 +50,7 @@ sub Run {
     my $ConfigItemID = $ParamObject->GetParam( Param => 'ConfigItemID' ) || 0;
     my $ImageID      = $ParamObject->GetParam( Param => 'ImageID' )      || '';
     my $ImageType    = $ParamObject->GetParam( Param => 'ImageType' )    || '';
+    my $TabIndex     = $ParamObject->GetParam( Param => 'TabIndex' )     || '';
 
     # check needed stuff
     if ( !$ConfigItemID ) {
@@ -88,6 +89,7 @@ sub Run {
             ImageID      => $ImageID,
             Test         => $ImageID,
             FileUploaded => $FileUploaded,
+            TabIndex     => $TabIndex,
         },
     );
 
@@ -145,22 +147,12 @@ sub Run {
             );
         }
 
-        # get tab position
-        my $Backends    = $ConfigObject->Get('AgentITSMConfigItemZoomBackend');
-        my $TabPosition = -1;
-        for my $Backend ( sort keys %{$Backends} ) {
-            $TabPosition++;
-            next if $Backend !~ m/Images/;
-            last;
-        }
-
         # reload tab
-        my $URL
-            = "Action=AgentITSMConfigItemZoom;ConfigItemID="
-            . $ConfigItemID
-            . ";ImageID=" . $Filename
-            . ";FileUploaded=" . $FileUploaded
-            . ";SelectedTab=" . $TabPosition;
+        my $URL = 'Action=AgentITSMConfigItemZoom'
+                . ';ConfigItemID=' . $ConfigItemID
+                . ';ImageID=' . $Filename
+                . ';FileUploaded=' . $FileUploaded
+                . ';SelectedTab=' . $TabIndex;
         return $LayoutObject->Redirect( OP => $URL );
     }
     ################################################################
@@ -200,21 +192,11 @@ sub Run {
             Mode      => 'utf8',
         );
 
-        # get tab position
-        my $Backends    = $ConfigObject->Get('AgentITSMConfigItemZoomBackend');
-        my $TabPosition = -1;
-        for my $Backend ( sort keys %{$Backends} ) {
-            $TabPosition++;
-            next if $Backend !~ m/Images/;
-            last;
-        }
-
         # reload tab
-        my $URL
-            = "Action=AgentITSMConfigItemZoom;ConfigItemID="
-            . $ConfigItemID
-            . ";FileUploaded=" . $FileUploaded
-            . ";SelectedTab=" . $TabPosition;
+        my $URL = 'Action=AgentITSMConfigItemZoom'
+                . ';ConfigItemID=' . $ConfigItemID
+                . ';FileUploaded=' . $FileUploaded
+                . ';SelectedTab=' . $TabIndex;
         return $LayoutObject->Redirect( OP => $URL );
 
     }
@@ -237,20 +219,10 @@ sub Run {
             );
         }
 
-        # get tab position
-        my $Backends    = $ConfigObject->Get('AgentITSMConfigItemZoomBackend');
-        my $TabPosition = -1;
-        for my $Backend ( sort keys %{$Backends} ) {
-            $TabPosition++;
-            next if $Backend !~ m/Images/;
-            last;
-        }
-
         # redirect url
-        my $URL
-            = "Action=AgentITSMConfigItemZoom;ConfigItemID="
-            . $ConfigItemID
-            . ";SelectedTab=" . $TabPosition;
+        my $URL = 'Action=AgentITSMConfigItemZoom'
+                . ';ConfigItemID=' . $ConfigItemID
+                . ';SelectedTab=' . $TabIndex;
         return $LayoutObject->Redirect( OP => $URL );
     }
 

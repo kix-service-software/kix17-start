@@ -260,6 +260,7 @@ Core.UI.Popup = (function (TargetNS) {
      */
     TargetNS.CheckPopupsOnUnload = function () {
         var Size = 0;
+
         CheckOpenPopups();
         $.each(OpenPopups, function (Key, Value) {
             // IE(7) treats windows in new tabs (opened with right-click) also as popups
@@ -498,28 +499,60 @@ Core.UI.Popup = (function (TargetNS) {
                 }
 
                 if (WindowMode === 'Popup') {
-                    PopupFeatures = PopupProfiles[PopupProfile].WindowURLParams;
-                    // Get the position of the current screen on browsers which support it (non-IE) and
-                    //  use it to open the popup on the same screen
-                    PopupFeatures += ',left=' + ((window.screen.left || 0) + PopupProfiles[PopupProfile].Left);
-                    PopupFeatures += ',width=' + PopupProfiles[PopupProfile].Width;
+                    var Match     = URL.match(/^(?:.+;|.+&|.*\?|)Action=(.+?)(?:;.*|&.*|)$/ism),
+                        PopupData = {},
+                        Data      = {
+                            Action : 'PopupSize',
+                            Subaction : 'GetPopupSize',
+                            CallingAction : ''
+                        },
+                        Action;
 
-                    // Bug#11205 (http://bugs.otrs.org/show_bug.cgi?id=11205)
-                    // On small screens (still wide enough to open a popup)
-                    // it can happen, that the popup window is higher than the screen height
-                    // In this case, reduce the popup height to fit into the screen
-                    // We don't have to do that for the width, because a smaller screen width
-                    // would result in a "responsive popup" aka iframe.
-                    if (window.screen.availHeight < PopupProfiles[PopupProfile].Height + PopupProfiles[PopupProfile].Top) {
-                        PopupFeatures += ',height=' + (window.screen.availHeight - PopupProfiles[PopupProfile].Top - 20);
-                        // Adjust top position to have the same distance between top and bottom line.
-                        PopupFeatures += ',top=' + ((window.screen.top || 0) + (PopupProfiles[PopupProfile].Top / 2));
+                    if ( Match[1] ) {
+                        Action = Match[1];
+                        Data.CallingAction = Action;
+                    }
+
+                    // get user preferences width and height of the popup window
+                    Core.AJAX.FunctionCall(Core.Config.Get('Baselink'), Data, function(Result) {
+                        $.each(Result, function() {
+                            PopupData['Width']  = parseInt(this.Width);
+                            PopupData['Height'] = parseInt(this.Height);
+                            PopupData['Left']   = parseInt(this.PositionX);
+                            PopupData['Top']    = parseInt(this.PositionY);
+                        });
+                    }, 'json', false);
+                    PopupFeatures = PopupProfiles[PopupProfile].WindowURLParams;
+
+                    if ( PopupData !== undefined ) {
+                        PopupFeatures += ',left=' + PopupData.Left;
+                        PopupFeatures += ',screenX=' + PopupData.Left;
+                        PopupFeatures += ',width=' + PopupData.Width;
+                        PopupFeatures += ',height=' + PopupData.Height;
+                        PopupFeatures += ',top=' + PopupData.Top;
                     }
                     else {
-                        PopupFeatures += ',height=' + PopupProfiles[PopupProfile].Height;
-                        PopupFeatures += ',top=' + ((window.screen.top || 0) + PopupProfiles[PopupProfile].Top);
-                    }
+                        // Get the position of the current screen on browsers which support it (non-IE) and
+                        //  use it to open the popup on the same screen
+                        PopupFeatures += ',left=' + ((window.screen.left || 0) + PopupProfiles[PopupProfile].Left);
+                        PopupFeatures += ',width=' + PopupProfiles[PopupProfile].Width;
 
+                        // Bug#11205 (http://bugs.otrs.org/show_bug.cgi?id=11205)
+                        // On small screens (still wide enough to open a popup)
+                        // it can happen, that the popup window is higher than the screen height
+                        // In this case, reduce the popup height to fit into the screen
+                        // We don't have to do that for the width, because a smaller screen width
+                        // would result in a "responsive popup" aka iframe.
+                        if (window.screen.availHeight < PopupProfiles[PopupProfile].Height + PopupProfiles[PopupProfile].Top) {
+                            PopupFeatures += ',height=' + (window.screen.availHeight - PopupProfiles[PopupProfile].Top - 20);
+                            // Adjust top position to have the same distance between top and bottom line.
+                            PopupFeatures += ',top=' + ((window.screen.top || 0) + (PopupProfiles[PopupProfile].Top / 2));
+                        }
+                        else {
+                            PopupFeatures += ',height=' + PopupProfiles[PopupProfile].Height;
+                            PopupFeatures += ',top=' + ((window.screen.top || 0) + PopupProfiles[PopupProfile].Top);
+                        }
+                    }
                     NewWindow = window.open(URL, WindowName, PopupFeatures);
 
                     // check for popup blockers.
@@ -532,6 +565,54 @@ Core.UI.Popup = (function (TargetNS) {
                         OpenPopups[Type] = NewWindow;
                     }
 
+                    // get end of resizing
+                    $(NewWindow).resize(function() {
+                        if (this.resizeTO) {
+                            clearTimeout(this.resizeTO);
+                        }
+                        this.resizeTO = setTimeout(function() {
+                            $(NewWindow).trigger('resizeEnd');
+                        }, 500);
+                    });
+
+                    var OldPositionX = NewWindow.screenX,
+                        OldPositionY = NewWindow.screenY,
+                        MoveInterval = setInterval( function() {
+                            if (
+                                NewWindow.window !== null
+                                && NewWindow.window.closed === false
+                            ) {
+                                if (
+                                    OldPositionX != NewWindow.screenX
+                                    || OldPositionY != NewWindow.screenY
+                                ) {
+                                    $(NewWindow).trigger('moveEnd');
+                                }
+                                OldPositionX = NewWindow.screenX;
+                                OldPositionY = NewWindow.screenY;
+                            }
+                            else {
+                                clearInterval(MoveInterval);
+                            }
+                        }, 5000);
+
+                    // save new size every time the size has changed or moved
+                    $(NewWindow).on('resizeEnd moveEnd', function() {
+                        var Height    = NewWindow.outerHeight,
+                            Width     = NewWindow.outerWidth,
+                            PositionX = NewWindow.screenX,
+                            PositionY = NewWindow.screenY,
+                            Data      = {
+                                Action : 'PopupSize',
+                                Subaction : 'UpdatePopupSize',
+                                CallingAction : Action,
+                                Width : Width,
+                                Height : Height,
+                                PositionX : PositionX,
+                                PositionY : PositionY
+                            };
+                        Core.AJAX.FunctionCall(Core.Config.Get('Baselink'), Data, function() {}, 'text');
+                    });
                 }
                 else if (WindowMode === 'Iframe') {
                     // jump to the top
