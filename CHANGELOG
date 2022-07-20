@@ -1,6 +1,9 @@
 # Change log of KIX
 * Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.19.0-RC15 (2022/07/20)
+ * (2022/07/08) - Bugfix: KIX17-3081 (additional cases for HTMLUtils::Safety) (mbauer)
+
 # 17.19.0-RC14 (2022/07/18)
  * (2022/07/14) - CR: KIX17-3116 (updated depends) (fjacquemin)
 
