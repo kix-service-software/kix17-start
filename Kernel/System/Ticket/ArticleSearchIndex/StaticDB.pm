@@ -317,7 +317,7 @@ sub _ArticleIndexString {
     # prepare word list
     my %Words = ();
     WORD:
-    for my $Word ( split( /$Self->{SearchIndexConfig}->{SplitPattern}/, lc( ${ $Param{String} } ) ) ) {
+    for my $Word ( split( /$Self->{SearchIndexConfig}->{SplitPattern}/, lc( $Param{String} ) ) ) {
         next WORD if (
             !defined( $Word )
             || !length( $Word )
