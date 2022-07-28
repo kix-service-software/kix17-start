@@ -1200,7 +1200,7 @@ sub Run {
                 }
                 next COLUMN if !IsHashRefWithData($DynamicFieldConfig);
 
-                my $Label = $DynamicFieldConfig->{Label};
+                my $Label = $LayoutObject->{LanguageObject}->Translate( $DynamicFieldConfig->{Label} );
                 $Title = $Label;
                 my $FilterTitle = $Label;
 
