@@ -85,6 +85,8 @@
 [% RenderBlockStart("SearchJS") %]
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
+    var TicketID = '[% Data.TicketID %]';
+
     if (typeof KIXSidebarCallback[% Data.Identifier | html %] === typeof undefined) {
         window.KIXSidebarCallback[% Data.Identifier | html %];
     } else if(typeof window.KIXSidebarCallback[% Data.Identifier | html %] === typeof undefined) {
@@ -95,6 +97,10 @@
             var Data = {};
             Data.SearchString   = $('#SearchString[% Data.Identifier | html %]').val();
             Data.CustomerUserID = $('#SelectedCustomerUser').val();
+
+            if (TicketID !== '') {
+                Data.TicketID = TicketID;
+            }
 
             KIXSidebarTools.DelayUpdateSidebar(
                 'KIXSidebarRemoteDBSearchAJAXHandler',
@@ -114,6 +120,10 @@
         var Data = {};
         Data.SearchString   = $('#SearchString[% Data.Identifier | html %]').val();
         Data.CustomerUserID = $('#SelectedCustomerUser').val();
+
+        if (TicketID !== '') {
+            Data.TicketID = TicketID;
+        }
 
         KIXSidebarTools.UpdateSidebar(
             'KIXSidebarRemoteDBSearchAJAXHandler',
@@ -153,6 +163,8 @@
 [% RenderBlockStart("AutoSearch") %]
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
+    var TicketID = '[% Data.TicketID %]';
+
     if (typeof KIXSidebarCallback[% Data.Identifier | html %] === typeof undefined) {
         window.KIXSidebarCallback[% Data.Identifier | html %];
     } else if(typeof window.KIXSidebarCallback[% Data.Identifier | html %] === typeof undefined) {
@@ -162,6 +174,10 @@
     var Data = {};
     Data.SearchString   = '*';
     Data.CustomerUserID = $('#SelectedCustomerUser').val();
+
+    if (TicketID !== '') {
+        Data.TicketID = TicketID;
+    }
 
     KIXSidebarTools.UpdateSidebar(
         'KIXSidebarRemoteDBSearchAJAXHandler',
@@ -177,6 +193,8 @@
 [% RenderBlockStart("CustomerDependend") %]
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
+    var TicketID = '[% Data.TicketID %]';
+
     if (typeof KIXSidebarCallback[% Data.Identifier | html %] === typeof undefined) {
         window.KIXSidebarCallback[% Data.Identifier | html %];
     } else if(typeof window.KIXSidebarCallback[% Data.Identifier | html %] === typeof undefined) {
@@ -195,6 +213,10 @@
             var Data = {};
             Data.SearchString   = SearchString;
             Data.CustomerUserID = $('#SelectedCustomerUser').val();
+
+            if (TicketID !== '') {
+                Data.TicketID = TicketID;
+            }
 
             KIXSidebarTools.UpdateSidebar(
                 'KIXSidebarRemoteDBSearchAJAXHandler',

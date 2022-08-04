@@ -65,12 +65,20 @@
     }
     $('#SearchString[% Data.Identifier | html %]').on('keyup', function (Event) {
         if ( (Event.keyCode !== 13) && ($('#SearchString[% Data.Identifier | html %]').val().length >= [% Data.QueryMinLength | html %]) ) {
-            var TicketID = '';
+            var TicketID = '[% Data.TicketID %]';
             var FormID = '';
-            if ($('input[name=TicketID]').length && $('input[name=TicketID]').val() != '') {
+            if (
+                TicketID === ''
+                && $('input[name=TicketID]').length
+                && $('input[name=TicketID]').val() !== ''
+            ) {
                 TicketID = $('input[name=TicketID]').val();
             }
-            else if ($('input[name=FormID]').length && $('input[name=FormID]').val() != '') {
+            else if (
+                TicketID === ''
+                && $('input[name=FormID]').length
+                && $('input[name=FormID]').val() !== ''
+            ) {
                 FormID = $('input[name=FormID]').val();
             }
 
@@ -93,12 +101,20 @@
     });
 
     function KIXSidebarCISearch[% Data.Identifier | html %]() {
-        var TicketID = '';
+        var TicketID = '[% Data.TicketID %]';
         var FormID = '';
-        if ($('input[name=TicketID]').length && $('input[name=TicketID]').val() != '') {
+        if (
+            TicketID === ''
+            && $('input[name=TicketID]').length
+            && $('input[name=TicketID]').val() !== ''
+        ) {
             TicketID = $('input[name=TicketID]').val();
         }
-        else if ($('input[name=FormID]').length && $('input[name=FormID]').val() != '') {
+        else if (
+            TicketID === ''
+            && $('input[name=FormID]').length
+            && $('input[name=FormID]').val() !== ''
+        ) {
             FormID = $('input[name=FormID]').val();
         }
 
@@ -148,12 +164,20 @@
 [% RenderBlockStart("AutoSearch") %]
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    var TicketID = '';
+    var TicketID = '[% Data.TicketID %]';
     var FormID = '';
-    if ($('input[name=TicketID]').length && $('input[name=TicketID]').val() != '') {
+    if (
+        TicketID === ''
+        && $('input[name=TicketID]').length
+        && $('input[name=TicketID]').val() !== ''
+    ) {
         TicketID = $('input[name=TicketID]').val();
     }
-    else if ($('input[name=FormID]').length && $('input[name=FormID]').val() != '') {
+    else if (
+        TicketID === ''
+        && $('input[name=FormID]').length
+        && $('input[name=FormID]').val() !== ''
+    ) {
         FormID = $('input[name=FormID]').val();
     }
 
@@ -191,13 +215,22 @@
     $('#SelectedCustomerUser').on('change',
         function() {
             var ObjectID = '';
-            var TicketID = '';
+            var TicketID = '[% Data.TicketID %]';
             var FormID = '';
-            if ($('input[name=TicketID]').length && $('input[name=TicketID]').val() != '') {
+            if (TicketID !== '') {
+                ObjectID = TicketID;
+            }
+            else if (
+                $('input[name=TicketID]').length
+                && $('input[name=TicketID]').val() !== ''
+            ) {
                 TicketID = $('input[name=TicketID]').val();
                 ObjectID = TicketID;
             }
-            else if ($('input[name=FormID]').length && $('input[name=FormID]').val() != '') {
+            else if (
+                $('input[name=FormID]').length
+                && $('input[name=FormID]').val() !== ''
+            ) {
                 FormID   = $('input[name=FormID]').val();
                 ObjectID = FormID;
             }
@@ -214,11 +247,11 @@
                 SearchString = $('#SearchString[% Data.Identifier | html %]').val();
             }
 
-    var Data = {};
-    Data.TicketID       = TicketID;
-    Data.FormID         = FormID;
-    Data.SearchString   = SearchString;
-    Data.CustomerUserID = $('#SelectedCustomerUser').val();
+            var Data = {};
+            Data.TicketID       = TicketID;
+            Data.FormID         = FormID;
+            Data.SearchString   = SearchString;
+            Data.CustomerUserID = $('#SelectedCustomerUser').val();
 
             KIXSidebarTools.UpdateSidebar(
                 'KIXSidebarCISearchAJAXHandler',
@@ -238,13 +271,23 @@
 <script type="text/javascript">//<![CDATA[
     $('#SearchResult[% Data.Identifier | html %]').on('UpdateResultField',
         function(){
-            var ObjectID = '';
+            var ObjectID = '[% Data.TicketID %]';
             var LinkMode = '';
-            if ($('input[name=TicketID]').length && $('input[name=TicketID]').val() != '') {
+
+            if (ObjectID !== '') {
+                LinkMode = 'Valid';
+            }
+            else if (
+                $('input[name=TicketID]').length
+                && $('input[name=TicketID]').val() !== ''
+            ) {
                 ObjectID = $('input[name=TicketID]').val();
                 LinkMode = 'Valid';
             }
-            else if ($('input[name=FormID]').length && $('input[name=FormID]').val() != '') {
+            else if (
+                $('input[name=FormID]').length
+                && $('input[name=FormID]').val() !== ''
+            ) {
                 ObjectID = $('input[name=FormID]').val();
                 LinkMode = 'Temporary';
             }
