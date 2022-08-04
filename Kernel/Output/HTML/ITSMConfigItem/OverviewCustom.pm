@@ -74,17 +74,6 @@ sub Run {
         "LastChanged",  "InciStateID",      "DeplStateID"
     );
 
-    # create translation hash
-    my %TranslationHash = (
-        'CurDeplState'     => 'Deployment State',
-        'CurDeplStateType' => 'Deployment State Type',
-        'CurInciStateType' => 'Incident State Type',
-        'CurInciState'     => 'Incident State',
-        'LastChanged'      => 'Last changed',
-        'CurInciSignal'    => 'Current Incident Signal',
-        'CurDeplSignal'    => 'Current Deployment Signal'
-    );
-
     # get columns
     my %CurrentUserData = $UserObject->GetUserData(
         UserID => $Self->{UserID},
@@ -97,16 +86,8 @@ sub Run {
     }
 
     # meta items
-    my @AvailableCols = ();
     if ( $CurrentUserData{ "UserCustomCILV-" . $Self->{Action} . "-" . $Param{TitleValue} } ) {
-        @ShowColumns = split(
-            /,/,
-            $CurrentUserData{ "UserCustomCILV-" . $Self->{Action} . "-" . $Param{TitleValue} }
-        );
-    }
-
-    if ( scalar @AvailableCols ) {
-        @ShowColumns = @AvailableCols;
+        @ShowColumns = split( /,/, $CurrentUserData{ "UserCustomCILV-" . $Self->{Action} . "-" . $Param{TitleValue} } );
     }
 
     # to store the color for the deployment states
@@ -435,33 +416,46 @@ END
                 $OrderBy = 'Up';
             }
 
-            my $Translation;
-            my @TranslationArray = ();
-            my $TmpColumn        = $Column;
-            my $ColumnSortBy;
 
-            while ( $TmpColumn =~ m/^(.*?)::(.*)$/ ) {
-                push @TranslationArray,
-                    $LayoutObject->{LanguageObject}->Translate( $Param{TranslationRef}->{$1} )
-                    || $1;
-                $TmpColumn = $2;
+            # get parts of the entry
+            my @SplitItem = split( /::/, $Column );
+
+            # translate parts of entry
+            my @TranslationArray;
+            my $Prefix = '';
+            for my $SplitPart ( @SplitItem ) {
+                if ( $Param{DisplayValueRef}->{ $Prefix . $SplitPart } ) {
+                    push( @TranslationArray, $LayoutObject->{LanguageObject}->Translate( $Param{DisplayValueRef}->{ $Prefix . $SplitPart } ) );
+                }
+                else {
+                    push( @TranslationArray, $LayoutObject->{LanguageObject}->Translate( $SplitPart ) );
+                }
+
+                $Prefix .= $SplitPart . '::';
             }
-            push @TranslationArray,
-                $LayoutObject->{LanguageObject}->Translate( $Param{TranslationRef}->{$TmpColumn} )
-                || $TmpColumn;
-            $Translation = join( "::", @TranslationArray );
+
+            # get joined translation
+            my $Translation = join( "::", @TranslationArray );
 
             # get column name
             my $ColumnName = '';
-            if ( $Column ne 'CurInciSignal' && $Column ne 'CurDeplSignal' && $Column ne 'Number' ) {
-                $ColumnName = $TranslationHash{$Column} || $Translation || $Column
+            if (
+                $Column ne 'CurInciSignal'
+                && $Column ne 'CurDeplSignal'
+                && $Column ne 'Number'
+            ) {
+                $ColumnName = $Translation;
             }
             elsif ( $Column eq 'Number' ) {
                 $ColumnName = 'ConfigItem#'
             }
 
             # get sort by
-            if ( $Column eq 'CurInciSignal' || $Column eq 'CurInciState' ) {
+            my $ColumnSortBy;
+            if (
+                $Column eq 'CurInciSignal'
+                || $Column eq 'CurInciState'
+            ) {
                 $ColumnSortBy = 'InciStateID';
             }
             elsif ( $Column eq 'CurDeplState' ) {
@@ -497,8 +491,7 @@ END
                 );
                 $LayoutObject->Block(
                     Name => 'RecordCustomHeaderLinkEnd',
-                    Data => {
-                    },
+                    Data => {},
                 );
             }
             else {

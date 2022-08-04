@@ -1037,16 +1037,23 @@ sub Run {
 
             # find out which columns should be shown
             my @ShowColumns;
+            my %PossibleColumn = ();
+
             if ( $Self->{Config}->{ShowColumns} ) {
 
                 # get all possible columns from config
-                my %PossibleColumn = %{ $Self->{Config}->{ShowColumns} };
+                %PossibleColumn = %{ $Self->{Config}->{ShowColumns} };
+
+                # show column "Class" if filter 'All' is selected
+                if ( $ClassID eq 'All' ) {
+                    $PossibleColumn{Class} = '1';
+                }
 
                 # get the column names that should be shown
                 COLUMNNAME:
-                for my $Name ( sort keys %PossibleColumn ) {
-                    next COLUMNNAME if !$PossibleColumn{$Name};
-                    push @ShowColumns, $Name;
+                for my $Name ( sort( keys( %PossibleColumn ) ) ) {
+                    next COLUMNNAME if ( !$PossibleColumn{ $Name } );
+                    push( @ShowColumns, $Name );
                 }
             }
 
@@ -1060,15 +1067,15 @@ sub Run {
 
                 NAME:
                 for my $Name ( @{ $Self->{Config}->{ShowColumnsByClass} } ) {
-                    my ( $Class, $Column ) = split /::/, $Name, 2;
+                    my ( $Class, $Column ) = split( /::/, $Name, 2 );
 
-                    next NAME if !$Column;
+                    next NAME if ( !$Column );
 
-                    push @{ $ColumnByClass{$Class} }, $Column;
+                    push( @{ $ColumnByClass{ $Class } }, $Column );
                 }
 
                 # check if there is a specific column config for the selected class
-                my $SelectedClass = $ClassList->{$ClassID};
+                my $SelectedClass = $ClassList->{ $ClassID };
                 if ( $ColumnByClass{$SelectedClass} ) {
                     @ShowColumns = @{ $ColumnByClass{$SelectedClass} };
                 }
@@ -1088,22 +1095,23 @@ sub Run {
                 . $LayoutObject->{LanguageObject}->Translate('Class');
 
             $Output .= $LayoutObject->ITSMConfigItemListShow(
-                ConfigItemIDs => $SearchResultList,
-                Total         => scalar @{$SearchResultList},
-                View          => $Self->{View},
-                Filter        => $ClassID,
-                Env           => $Self,
-                LinkPage      => $LinkPage,
-                LinkSort      => $LinkSort,
-                LinkFilter    => $LinkFilter,
-                LinkBack      => $LinkBack,
-                Profile       => $Self->{Profile},
-                TitleName     => $Title,
-                ShowColumns   => \@ShowColumns,
-                SortBy        => $LayoutObject->Ascii2Html( Text => $Self->{SortBy} ),
-                OrderBy       => $LayoutObject->Ascii2Html( Text => $Self->{OrderBy} ),
-                ClassID       => $ClassID,
-                ClassList     => $ClassList,
+                ConfigItemIDs   => $SearchResultList,
+                Total           => scalar @{$SearchResultList},
+                View            => $Self->{View},
+                Filter          => $ClassID,
+                Env             => $Self,
+                LinkPage        => $LinkPage,
+                LinkSort        => $LinkSort,
+                LinkFilter      => $LinkFilter,
+                LinkBack        => $LinkBack,
+                Profile         => $Self->{Profile},
+                TitleName       => $Title,
+                ShowColumns     => \@ShowColumns,
+                SortBy          => $LayoutObject->Ascii2Html( Text => $Self->{SortBy} ),
+                OrderBy         => $LayoutObject->Ascii2Html( Text => $Self->{OrderBy} ),
+                ClassID         => $ClassID,
+                ClassList       => $ClassList,
+                PossibleColumns => \%PossibleColumn,
             );
 
             # build footer
