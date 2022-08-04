@@ -211,8 +211,10 @@ sub Run {
 
     my %GetParam;
     my $Stat = $Kernel::OM->Get('Kernel::System::Stats')->StatsGet(
-        StatID => $Self->{StatID},
-        UserID => 1,
+        StatID                   => $Self->{StatID},
+        UserID                   => 1,
+        SelectedObjectAttributes => 1,
+
     );
 
     if ( $Stat->{StatType} eq 'static' ) {

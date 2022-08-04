@@ -44,7 +44,10 @@ sub Preferences {
     # get StatID
     my $StatID = $Self->{Config}->{StatID};
 
-    my $Stat = $Kernel::OM->Get('Kernel::System::Stats')->StatsGet( StatID => $StatID );
+    my $Stat = $Kernel::OM->Get('Kernel::System::Stats')->StatsGet(
+        StatID                   => $StatID,
+        SelectedObjectAttributes => 1,
+    );
 
     # get the object name
     if ( $Stat->{StatType} eq 'static' ) {
