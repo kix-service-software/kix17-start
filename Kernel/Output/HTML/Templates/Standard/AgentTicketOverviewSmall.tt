@@ -192,10 +192,10 @@ Core.Agent.TableFilters.InitUserAutocomplete( $(".UserAutoComplete") );
 [% RenderBlockStart("OverviewNavBarPageDynamicField") %]
                     <th class="OverviewHeader [% Data.HeaderColumnName | html %] DynamicField Last [% Data.CSS | html %]">
 [% RenderBlockStart("OverviewNavBarPageDynamicFieldSortable") %]
-                        <a name="OverviewControl" href="[% Env("Baselink") %]Action=[% Env("Action") %];[% Data.LinkSort %];SortBy=DynamicField_[% Data.DynamicFieldName | uri %];OrderBy=[% Data.OrderBy | uri %]" title="[% Translate(Data.Title) | html %]">[% Translate(Data.Label) | html %]</a>
+                        <a name="OverviewControl" href="[% Env("Baselink") %]Action=[% Env("Action") %];[% Data.LinkSort %];SortBy=DynamicField_[% Data.DynamicFieldName | uri %];OrderBy=[% Data.OrderBy | uri %]" title="[% Data.Title | html %]">[% Data.Label | html %]</a>
 [% RenderBlockEnd("OverviewNavBarPageDynamicFieldSortable") %]
 [% RenderBlockStart("OverviewNavBarPageDynamicFieldNotSortable") %]
-                        <span class="Gray" title="[% Data.Title | html %]">[% Translate(Data.Label) | html %]</span>
+                        <span class="Gray" title="[% Data.Title | html %]">[% Data.Label | html %]</span>
 [% RenderBlockEnd("OverviewNavBarPageDynamicFieldNotSortable") %]
 
 [% RenderBlockStart("OverviewNavBarPageDynamicFieldFiltrableSortable") %]
@@ -207,7 +207,7 @@ Core.Agent.TableFilters.InitUserAutocomplete( $(".UserAutoComplete") );
                                 [% Data.ColumnFilterStrg %]
                             </div>
                         </div>
-                        <a name="OverviewControl" href="[% Env("Baselink") %]Action=[% Env("Action") %];[% Data.LinkSort %];SortBy=DynamicField_[% Data.DynamicFieldName | uri %];OrderBy=[% Data.OrderBy | uri %]" title="[% Translate(Data.Title) | html %]">[% Data.Label | html %]</a>
+                        <a name="OverviewControl" href="[% Env("Baselink") %]Action=[% Env("Action") %];[% Data.LinkSort %];SortBy=DynamicField_[% Data.DynamicFieldName | uri %];OrderBy=[% Data.OrderBy | uri %]" title="[% Data.Title | html %]">[% Data.Label | html %]</a>
 [% RenderBlockEnd("OverviewNavBarPageDynamicFieldFiltrableSortable") %]
 
 [% RenderBlockStart("OverviewNavBarPageDynamicFieldFiltrableNotSortable") %]
