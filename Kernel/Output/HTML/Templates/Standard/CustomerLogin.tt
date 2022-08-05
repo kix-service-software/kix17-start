@@ -121,7 +121,7 @@
                                         [% Translate("Username") | html %]
                                     </label>
                                     <div class="Field">
-                                        <input type="text" autocorrect="off" autocapitalize="off" autocomplete=[% IF Config("Secure::DisableLoginAutocomplete::Customer") %]"off"[% ELSE %]"username"[% END %] title="[% Translate("Your user name") | html %]" name="User" id="User" maxlength="150" />
+                                        <input type="text" autofocus autocorrect="off" autocapitalize="off" autocomplete=[% IF Config("Secure::DisableLoginAutocomplete::Customer") %]"off"[% ELSE %]"username"[% END %] title="[% Translate("Your user name") | html %]" name="User" id="User" maxlength="150" />
 [% RenderBlockStart("CreateAccountLink") %]
                                         <p id="SignUpLink" class="Left">
                                             <a href="" id="SignUp">[% Translate("Not yet registered?") | html %] [% Translate("Sign up now") | html %]</a>.
