@@ -40,6 +40,10 @@ sub Configure {
 sub Run {
     my ( $Self, %Param ) = @_;
 
+    # Refresh common objects after a certain number of loop iterations.
+    #   This will call event handlers and clean up caches to avoid excessive mem usage.
+    my $CommonObjectRefresh = 50;
+
     $Self->Print("<yellow>Rebuilding article search index...</yellow>\n");
 
     # disable ticket events
@@ -64,7 +68,16 @@ sub Run {
     TICKETID:
     for my $TicketID (@TicketIDs) {
 
-        $Count++;
+        if ( $Count++ % $CommonObjectRefresh == 0 ) {
+            $Kernel::OM->ObjectsDiscard(
+                Objects => [
+                    'Kernel::System::DB',
+                    'Kernel::System::Ticket'
+                ],
+            );
+
+            $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
+        }
 
         # get articles
         my @ArticleIndex = $TicketObject->ArticleIndex(
