@@ -215,6 +215,7 @@ sub ObjectPermission {
         Type     => 'ro',
         TicketID => $Param{Key},
         UserID   => $Param{UserID},
+        LogNo    => 1,
     );
 }
 
