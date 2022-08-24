@@ -147,6 +147,9 @@ sub ObjectPermission {
         }
     }
 
+    # grant access for root@localhost
+    return 1 if ( $Param{UserID} == 1 );
+
     # get config of configitem zoom frontend module
     $Self->{Config} = $Kernel::OM->Get('Kernel::Config')->Get('ITSMConfigItem::Frontend::AgentITSMConfigItemZoom');
 
