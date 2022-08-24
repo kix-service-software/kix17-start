@@ -152,6 +152,9 @@ sub ObjectPermission {
         }
     }
 
+    # grant access for root@localhost
+    return 1 if ( $Param{UserID} == 1 );
+
     # get needed objects
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
     my $FAQObject    = $Kernel::OM->Get('Kernel::System::FAQ');
