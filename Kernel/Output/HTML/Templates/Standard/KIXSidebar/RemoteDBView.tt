@@ -30,6 +30,8 @@
 <script type="text/javascript">//<![CDATA[
     KIXSidebarTools.Init('[% Data.Identifier | html %]');
 
+    var TicketID = '[% Data.TicketID %]';
+
     if (typeof KIXSidebarCallback[% Data.Identifier | html %] === typeof undefined) {
         window.KIXSidebarCallback[% Data.Identifier | html %];
     } else if(typeof window.KIXSidebarCallback[% Data.Identifier | html %] === typeof undefined) {
@@ -37,6 +39,10 @@
     }
 
     var Data = {};
+
+    if (TicketID !== '') {
+        Data.TicketID = TicketID;
+    }
 
     KIXSidebarTools.UpdateSidebar(
         'KIXSidebarRemoteDBViewAJAXHandler',
@@ -48,6 +54,10 @@
     $('#DynamicField_[% Data.DynamicField | html %]').on('change', function () {
         var Data = {};
 
+        if (TicketID !== '') {
+            Data.TicketID = TicketID;
+        }
+
         KIXSidebarTools.UpdateSidebar(
             'KIXSidebarRemoteDBViewAJAXHandler',
             '[% Data.Identifier | html %]',
@@ -57,6 +67,10 @@
     });
 
     var Data = {};
+
+    if (TicketID !== '') {
+        Data.TicketID = TicketID;
+    }
 
     KIXSidebarTools.UpdateSidebar(
         'KIXSidebarRemoteDBViewAJAXHandler',

@@ -538,7 +538,10 @@ sub _AsciiTagEndHandler {
         # check for ending div
         elsif ( lc($TagName) eq 'div' ) {
             # check if current div is part of the stack
-            if ( $Self->{Flag}->{Quote}->{DivLevel} eq $Self->{Flag}->{Quote}->{Stack}->[-1] ) {
+            if (
+                $Self->{Flag}->{Quote}->{Stack}->[-1]
+                && $Self->{Flag}->{Quote}->{DivLevel} eq $Self->{Flag}->{Quote}->{Stack}->[-1]
+            ) {
                 # reduce level of quotation
                 $Self->{Flag}->{Quote}->{QuoteLevel} -= 1;
 

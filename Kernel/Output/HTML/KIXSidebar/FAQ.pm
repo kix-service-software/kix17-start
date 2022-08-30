@@ -43,6 +43,14 @@ sub Run {
         $AdditionalClasses .= 'Collapsed';
     }
 
+    my $TicketID = '';
+    if (
+        $Param{Config}->{'TicketIDSearchMaskRegExp'}
+        && $Param{Action} =~ /$Param{Config}->{'TicketIDSearchMaskRegExp'}/
+    ) {
+        $TicketID = $Param{Ticket}->{TicketID} || '';
+    }
+
     if ( $Param{Action} =~ /^Customer/) {
         $Self->{LayoutObject}->Block(
             Name => 'CustomerWidgetHeader',
@@ -79,6 +87,7 @@ sub Run {
             Data => {
                 %{$Param{Ticket} || {}},
                 %{$Param{Config}},
+                TicketID => $TicketID,
             },
         );
     }
@@ -98,6 +107,7 @@ sub Run {
             Data => {
                 %{$Param{Ticket} || {}},
                 %{$Param{Config}},
+                TicketID => $TicketID,
             },
         );
     }

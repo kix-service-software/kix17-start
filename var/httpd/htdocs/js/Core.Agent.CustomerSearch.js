@@ -162,11 +162,14 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
             $('#CustomerInfo .WidgetPopup .Content').html(Response.CustomerDetailsTableHTMLString);
 
             // only execute this part, if service selection is combined with customer selection and keep selected service
-            if (CallingAction != 'AgentKIXSidebarCustomerInfo' && $('#ServiceID').length) {
-                Core.AJAX.FormUpdate($('#CustomerID').closest('form'), 'AJAXUpdate', 'ServiceID', [ 'Dest', 'SelectedCustomerUser', 'TypeID', 'NewUserID', 'NewResponsibleID', 'NextStateID', 'PriorityID', 'SLAID', 'CryptKeyID', 'OwnerAll', 'ResponsibleAll' ]);
+            if (
+                CallingAction !== 'AgentKIXSidebarCustomerInfo'
+                && CallingAction !== 'AgentTicketCustomer'
+                && Core.Config.Get('Action') !== 'AgentTicketProcess'
+            ) {
+                Core.AJAX.FormUpdate($('#CustomerID').closest('form'), 'AJAXUpdate', 'CustomerID', [ 'Dest', 'SelectedCustomerUser', 'TypeID', 'NewUserID', 'NewResponsibleID', 'NextStateID', 'PriorityID', 'ServiceID', 'SLAID', 'CryptKeyID', 'OwnerAll', 'ResponsibleAll' ]);
             }
-
-            if (Core.Config.Get('Action') === 'AgentTicketProcess'){
+            else if (Core.Config.Get('Action') === 'AgentTicketProcess'){
                 // reset service
                 $('#ServiceID').attr('selectedIndex', 0);
                 // update services (trigger ServiceID change event)

@@ -307,8 +307,7 @@ sub ITSMConfigItemListShow {
     }
 
     # fallback due to problem with session object (T#2015102290000583)
-    my %UserPreferences
-        = $Kernel::OM->Get('Kernel::System::User')->GetPreferences( UserID => $Self->{UserID} );
+    my %UserPreferences = $Kernel::OM->Get('Kernel::System::User')->GetPreferences( UserID => $Self->{UserID} );
     if ( !$Param{View} && $UserPreferences{ 'UserITSMConfigItemOverview' . $Env->{Action} } ) {
         $Param{View} = $UserPreferences{ 'UserITSMConfigItemOverview' . $Env->{Action} };
     }
@@ -605,11 +604,11 @@ sub ITSMConfigItemListShow {
                 },
             );
 
-            $Param{TranslationRef} = $Self->_ShowColumnSettings(
+            $Param{DisplayValueRef} = $Self->_ShowColumnSettings(
                 ClassID      => $ClassID,
                 TitleValue   => $Param{TitleValue},
                 View         => $View,
-                ShowColumns  => $Param{PossibleColumns},
+                ShowColumns  => $Param{ShowColumns},
                 Action       => $LayoutObject->{Action},
                 LayoutObject => $LayoutObject,
             );
@@ -717,11 +716,11 @@ sub _ShowColumnSettings {
     my ( $Self, %Param ) = @_;
 
     # check needed stuff
-    return if !$Param{ClassID};
-    return if !$Param{View};
-    return if !$Param{TitleValue};
-    return if !$Param{Action};
-    return if !$Param{LayoutObject};
+    return if ( !$Param{ClassID} );
+    return if ( !$Param{View} );
+    return if ( !$Param{TitleValue} );
+    return if ( !$Param{Action} );
+    return if ( !$Param{LayoutObject} );
 
     # create needed objects
     my $LayoutObject         = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
@@ -745,7 +744,7 @@ sub _ShowColumnSettings {
     my $Definition;
     my %DefinitionHash = ();
     my $ClassList      = ();
-    if ($ClassID) {
+    if ( $ClassID ) {
 
         # get definition
         if ( $ClassID ne 'All' ) {
@@ -755,16 +754,17 @@ sub _ShowColumnSettings {
                 ClassID => $ClassID,
             );
         }
-        elsif ( $ClassID eq 'All' && $Action eq 'AgentITSMConfigItemSearch' ) {
-
+        elsif (
+            $ClassID eq 'All'
+            && $Action eq 'AgentITSMConfigItemSearch'
+        ) {
             $ClassList = $GeneralCatalogObject->ItemList(
                 Class => 'ITSM::ConfigItem::Class',
             );
 
             # check access
-            $Self->{Config}
-                = $ConfigObject->Get("ITSMConfigItem::Frontend::$Self->{Action}");
-            for my $ClassID ( sort keys %{$ClassList} ) {
+            $Self->{Config} = $ConfigObject->Get( 'ITSMConfigItem::Frontend::' . $Self->{Action} );
+            for my $ClassID ( sort( keys( %{ $ClassList } ) ) ) {
                 my $HasAccess = $ConfigItemObject->Permission(
                     Type    => $Self->{Config}->{Permission},
                     Scope   => 'Class',
@@ -772,12 +772,12 @@ sub _ShowColumnSettings {
                     UserID  => $Self->{UserID},
                 );
 
-                delete $ClassList->{$ClassID} if !$HasAccess;
+                delete( $ClassList->{ $ClassID } ) if ( !$HasAccess );
             }
 
             # get definition hash
-            for my $Class ( keys %{$ClassList} ) {
-                $DefinitionHash{$Class} = $ConfigItemObject->DefinitionGet(
+            for my $Class ( keys( %{ $ClassList } ) ) {
+                $DefinitionHash{ $Class } = $ConfigItemObject->DefinitionGet(
                     ClassID => $Class,
                 );
             }
@@ -789,51 +789,32 @@ sub _ShowColumnSettings {
 
     # get user settings
     if (
-        defined $CurrentUserData{
-            'UserCustomCILV-'
-                . $Action . '-'
-                . $Param{TitleValue}
-        }
-        && $CurrentUserData{
-            'UserCustomCILV-'
-                . $Action . '-'
-                . $Param{TitleValue}
-        }
+        defined( $CurrentUserData{ 'UserCustomCILV-' . $Action . '-' . $Param{TitleValue} } )
+        && $CurrentUserData{ 'UserCustomCILV-' . $Action . '-' . $Param{TitleValue} }
     ) {
-        my $SelectedColumnString
-            = $CurrentUserData{
-            'UserCustomCILV-'
-                . $Action . '-'
-                . $Param{TitleValue}
-            };
-        my @SelectedColumnArray = split( /,/, $SelectedColumnString );
+        my $SelectedColumnString = $CurrentUserData{ 'UserCustomCILV-' . $Action . '-' . $Param{TitleValue} };
+        my @SelectedColumnArray  = split( /,/, $SelectedColumnString );
 
         # get selected values
-        for my $Item (@SelectedColumnArray) {
-            push @SelectedValueArray, $Param{TitleValue} . '::' . $Item;
+        for my $Item ( @SelectedColumnArray ) {
+            push( @SelectedValueArray, $Item );
         }
     }
 
     # if no columns selected
-    if ( !( scalar @SelectedValueArray ) ) {
-        for my $ShownColumn ( keys %{ $Param{ShowColumns} } ) {
-            next if !$Param{ShowColumns}->{$ShownColumn};
-            push @SelectedValueArray, $Param{TitleValue} . '::' . $ShownColumn;
+    if ( !scalar( @SelectedValueArray ) ) {
+        for my $ShownColumn ( @{ $Param{ShowColumns} } ) {
+            push( @SelectedValueArray, $ShownColumn );
         }
     }
     else {
-        my @TempArray = ();
-        for my $ShownColumn (@SelectedValueArray) {
-            my ( $Value, $Item) = $ShownColumn =~ m/^(.*?)::(.*)$/;
-            push( @TempArray, $Item );
-        }
         if ( $View eq 'Custom' ) {
-            $Param{ShowColumns} = \@TempArray;
+            $Param{ShowColumns} = \@SelectedValueArray;
         }
     }
 
-    # create translation hash
-    my %TranslationHash = (
+    # create display value hash
+    my %DisplayValueHash = (
         'CurDeplState'     => 'Deployment State',
         'CurInciState'     => 'Current Incident State',
         'CurDeplStateType' => 'Deployment State Type',
@@ -843,112 +824,115 @@ sub _ShowColumnSettings {
         'CurDeplSignal'    => 'Current Deployment Signal'
     );
 
-    # get selected value string
-    my $SelectedValueStrg
-        = '<div class="SortableColumns"><span class="SortableColumnsDescription">'
-        . $LayoutObject->{LanguageObject}->Translate('Selected Columns')
-        . ':</span><ul class="ColumnOrder" id="SortableSelected">';
-
-    my %SelectedAttributes = map { $_ => 1 } @SelectedValueArray;
-
-    # get selected class specific attributes for translation
-    $Self->_ConfigLine(
-        DefinitionRef      => $Definition->{DefinitionRef},
-        CSSClass           => $CSSClass,
-        MainItem           => $Param{TitleValue},
-        SelectedAttributes => \%SelectedAttributes,
-        TranslationRef     => \%TranslationHash,
-        ReturnSelected     => 1,
-    );
-
-    for my $Item (@SelectedValueArray) {
-
-        # translate selected item
-        my @SplitItem = split( /::/, $Item );
-
-        # CI class name will not be translated
-        my @TranslationArray;
-
-        foreach my $SplitPart (@SplitItem) {
-            if ( defined $TranslationHash{$SplitPart} ) {
-                push @TranslationArray,
-                    $LayoutObject->{LanguageObject}->Translate( $TranslationHash{$SplitPart} );
-            }
-            else {
-                push @TranslationArray,
-                    $LayoutObject->{LanguageObject}->Translate($SplitPart);
-            }
-        }
-
-        $SelectedValueStrg .= '<li class="ui-state-default'
-            . $CSSClass
-            . '" name="'
-            . $Item . '">'
-            . join( '::', @TranslationArray )
-            . '<span class="ui-icon ui-icon-arrowthick-2-n-s"></span>'
-            . '</li>';
-    }
-    $SelectedValueStrg .= '</ul></div>';
-
-    # get possible value string
-    my $PossibleValueStrg
-        = '<div class="SortableColumns"><span class="SortableColumnsDescription">'
-        . $LayoutObject->{LanguageObject}->Translate('Possible Columns')
-        . ':</span><ul class="ColumnOrder" id="SortablePossible">';
-
-    # if no possible columns selected
-    if ( !defined $Param{PossibleColumns} || !$Param{PossibleColumns} ) {
-        $Self->{DefaultConfig}
-            = $ConfigObject->Get("ITSMConfigItem::Frontend::AgentITSMConfigItem");
-        $Param{PossibleColumns} = $Self->{DefaultConfig}->{ShowColumns};
-    }
-
-    my @UsedColumns = keys %{ $Param{PossibleColumns} };
-
-    # add main attributes
-    for my $MainItem ( keys %{ $Param{PossibleColumns} } ) {
-
-        next if !$Param{PossibleColumns}->{$MainItem};
-        next if $SelectedAttributes{ $Param{TitleValue} . '::' . $MainItem };
-
-        my $TranslatedMainItem = $TranslationHash{$MainItem} || $MainItem;
-        $PossibleValueStrg .= '<li class="ui-state-default'
-            . $CSSClass
-            . '" name="'
-            . $Param{TitleValue} . '::' . $MainItem . '">'
-            . $LayoutObject->{LanguageObject}->Translate( $Param{TitleValue} ) . '::'
-            . $LayoutObject->{LanguageObject}->Translate($TranslatedMainItem)
-            . '<span class="ui-icon ui-icon-arrowthick-2-n-s"></span>'
-            . '</li>';
-    }
-
-    if ( $ClassID && $ClassID ne 'All' ) {
-
-        # add class specific attributes
-        $PossibleValueStrg .= $Self->_ConfigLine(
-            DefinitionRef      => $Definition->{DefinitionRef},
-            CSSClass           => $CSSClass,
-            MainItem           => $Param{TitleValue},
-            SelectedAttributes => \%SelectedAttributes,
-            TranslationRef     => \%TranslationHash,
-            UsedColumns        => \@UsedColumns,
+    if (
+        $ClassID
+        && $ClassID ne 'All'
+    ) {
+        # prepare display values for class
+        $Self->_PrepareDisplayValues(
+            DefinitionRef   => $Definition->{DefinitionRef},
+            DisplayValueRef => \%DisplayValueHash,
+            Prefix          => ''
         );
     }
-    elsif ( $ClassID eq 'All' && $Action eq 'AgentITSMConfigItemSearch' ) {
-
-        for my $Class ( keys %{$ClassList} ) {
-
-            # add class specific attributes
-            $PossibleValueStrg .= $Self->_ConfigLine(
-                DefinitionRef      => $DefinitionHash{$Class}->{DefinitionRef},
-                CSSClass           => $CSSClass,
-                MainItem           => $Param{TitleValue},
-                SelectedAttributes => \%SelectedAttributes,
-                TranslationRef     => \%TranslationHash,
-                UsedColumns        => \@UsedColumns,
+    elsif (
+        $ClassID eq 'All'
+        && $Action eq 'AgentITSMConfigItemSearch'
+    ) {
+        # prepare display values for class list
+        for my $Class ( sort( keys( %{ $ClassList } ) ) ) {
+            $Self->_PrepareDisplayValues(
+                DefinitionRef   => $DefinitionHash{ $Class }->{DefinitionRef},
+                DisplayValueRef => \%DisplayValueHash,
+                Prefix          => ''
             );
         }
     }
+
+    my %SelectedAttributes = map { $_ => 1 } @SelectedValueArray;
+
+    # get selected value string
+    my $SelectedValueStrg = '<div class="SortableColumns"><span class="SortableColumnsDescription">'
+                          . $LayoutObject->{LanguageObject}->Translate('Selected Columns')
+                          . ':</span><ul class="ColumnOrder" id="SortableSelected">';
+
+    SELECTEDITEM:
+    for my $Item ( @SelectedValueArray ) {
+        # get parts of the entry
+        my @SplitItem = split( /::/, $Item );
+
+        # translate parts of entry
+        my @TranslationArray;
+        my $Prefix = '';
+        for my $SplitPart ( @SplitItem ) {
+            if ( $DisplayValueHash{ $Prefix . $SplitPart } ) {
+                push( @TranslationArray, $LayoutObject->{LanguageObject}->Translate( $DisplayValueHash{ $Prefix . $SplitPart } ) );
+            }
+            else {
+                push( @TranslationArray, $LayoutObject->{LanguageObject}->Translate( $SplitPart ) );
+            }
+
+            $Prefix .= $SplitPart . '::';
+        }
+
+        # add entry to output
+        $SelectedValueStrg .= '<li class="ui-state-default'
+                            . $CSSClass
+                            . '" name="'
+                            . $Item . '">'
+                            . join( '::', @TranslationArray )
+                            . '<span class="ui-icon ui-icon-arrowthick-2-n-s"></span>'
+                            . '</li>';
+    }
+
+    $SelectedValueStrg .= '</ul></div>';
+
+    # if no possible columns selected
+    if (
+        !defined( $Param{PossibleColumns} )
+        || !$Param{PossibleColumns}
+    ) {
+        $Self->{DefaultConfig}  = $ConfigObject->Get('ITSMConfigItem::Frontend::AgentITSMConfigItem');
+        $Param{PossibleColumns} = $Self->{DefaultConfig}->{ShowColumns};
+    }
+
+    # get possible value string
+    my $PossibleValueStrg = '<div class="SortableColumns"><span class="SortableColumnsDescription">'
+                          . $LayoutObject->{LanguageObject}->Translate('Possible Columns')
+                          . ':</span><ul class="ColumnOrder" id="SortablePossible">';
+
+    POSSIBLEITEM:
+    for my $Item ( sort( keys( %DisplayValueHash ) ) ) {
+        # skip selected entries
+        next POSSIBLEITEM if ( $SelectedAttributes{ $Item } );
+
+        # get parts of entry
+        my @SplitItem = split( /::/, $Item );
+
+        # translate parts of entry
+        my @TranslationArray;
+        my $Prefix = '';
+        for my $SplitPart ( @SplitItem ) {
+            if ( $DisplayValueHash{ $Prefix . $SplitPart } ) {
+                push( @TranslationArray, $LayoutObject->{LanguageObject}->Translate( $DisplayValueHash{ $Prefix . $SplitPart } ) );
+            }
+            else {
+                push( @TranslationArray, $LayoutObject->{LanguageObject}->Translate( $SplitPart ) );
+            }
+
+            $Prefix .= $SplitPart . '::';
+        }
+
+        # add entry to output
+        $PossibleValueStrg .= '<li class="ui-state-default'
+                            . $CSSClass
+                            . '" name="'
+                            . $Item . '">'
+                            . join( '::', @TranslationArray )
+                            . '<span class="ui-icon ui-icon-arrowthick-2-n-s"></span>'
+                            . '</li>';
+    }
+
     $PossibleValueStrg .= '</ul></div>';
 
     # Output
@@ -958,65 +942,32 @@ sub _ShowColumnSettings {
             Columns => $PossibleValueStrg . $SelectedValueStrg,
         },
     );
-    return \%TranslationHash;
+    return \%DisplayValueHash;
 }
 
-sub _ConfigLine {
+sub _PrepareDisplayValues {
     my ( $Self, %Param ) = @_;
 
-    # create needed objects
-    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-
-    if ( !$Param{MainItemTranslated} ) {
-        $Param{MainItemTranslated} = $LayoutObject->{LanguageObject}->Translate( $Param{MainItem} );
-    }
-
-    my $Line = '';
+    ITEM:
     for my $Item ( @{ $Param{DefinitionRef} } ) {
-
-        next if ( grep { $_ eq $Item->{Name} } @{ $Param{UsedColumns} } );
-
-        # get name for translating
-        $Param{TranslationRef}->{ $Item->{Key} } = $Item->{Name};
-
-        if (
-            (
-                !$Param{ReturnSelected}
-                && !$Param{SelectedAttributes}->{ $Param{MainItem} . '::' . $Item->{Key} }
-            )
-            ||
-            (
-                $Param{ReturnSelected}
-                && $Param{SelectedAttributes}->{ $Param{MainItem} . '::' . $Item->{Key} }
-            )
-        ) {
-            $Line = $Line . '<li class="ui-state-default'
-                . $Param{CSSClass}
-                . '" name="'
-                . $Param{MainItem} . '::' . $Item->{Key} . '">'
-                . $Param{MainItemTranslated} . '::'
-                . $LayoutObject->{LanguageObject}->Translate( $Item->{Name} )
-                . '<span class="ui-icon ui-icon-arrowthick-2-n-s"></span>'
-                . '</li>';
-            push @{ $Param{UsedColumns} }, $Item->{Name};
+        # get display name if not set yet
+        if ( !$Param{DisplayValueRef}->{ $Param{Prefix} . $Item->{Key} } ) {
+            $Param{DisplayValueRef}->{ $Param{Prefix} . $Item->{Key} } = $Item->{Name};
         }
 
+        # process sub
         if ( $Item->{Sub} ) {
-            $Line .= $Self->_ConfigLine(
-                DefinitionRef      => $Item->{Sub},
-                CSSClass           => $Param{CSSClass},
-                MainItem           => $Param{MainItem} . '::' . $Item->{Key},
-                MainItemTranslated => $Param{MainItemTranslated} . '::'
-                    . $LayoutObject->{LanguageObject}->Translate( $Item->{Name} ),
-                SelectedAttributes => $Param{SelectedAttributes},
-                TranslationRef     => $Param{TranslationRef},
-                UsedColumns        => $Param{UsedColumns},
+            $Self->_PrepareDisplayValues(
+                DefinitionRef   => $Item->{Sub},
+                DisplayValueRef => $Param{DisplayValueRef},
+                Prefix          => $Param{Prefix} . $Item->{Key} . '::',
             );
         }
     }
 
-    return $Line;
+    return 1;
 }
+
 1;
 
 =back
