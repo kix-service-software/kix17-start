@@ -1,6 +1,9 @@
 # Change log of KIX
 * Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.19.1-RC2 (2022/08/30)
+ * (2022/08/30) - release candidate
+
 # 17.19.1-RC1 (2022/08/30)
  * (2022/08/25) - Bugfix: KIX17-3140 (fix calculation for non escalation relevant business time) (mbauer)
  * (2022/08/24) - Bugfix: KIX17-3176 (fix uninitialized value for HTMLUtils) (mbauer)
