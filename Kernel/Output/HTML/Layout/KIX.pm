@@ -286,6 +286,9 @@ sub CustomerAssignedCustomerIDsTable {
 sub AgentCustomerDetailsViewTable {
     my ( $Self, %Param ) = @_;
 
+    # get needed objects
+    my $HTMLUtilsObject = $Kernel::OM->Get('Kernel::System::HTMLUtils');
+
     # add ticket params if given
     if ( $Param{Ticket} ) {
         %{ $Param{Data} } = ( %{ $Param{Data} }, %{ $Param{Ticket} } );
@@ -314,8 +317,10 @@ sub AgentCustomerDetailsViewTable {
         if ( $Field->[3] && $Field->[3] >= 1 && $Param{Data}->{ $Field->[0] } ) {
             my %Record = (
                 %{ $Param{Data} },
-                Key   => $Field->[1],
-                Value => $Param{Data}->{ $Field->[0] },
+                Key       => $Field->[1],
+                Value     => $Param{Data}->{ $Field->[0] },
+                LinkStart => '',
+                LinkStop  => '',
             );
             if ( ref( $Record{Value} ) eq 'ARRAY' ) {
                 $Record{Value} = join( ', ', @{ $Record{Value} } );
@@ -336,6 +341,24 @@ sub AgentCustomerDetailsViewTable {
                     Text => $Record{Value},
                     Max  => $Param{Max},
                 );
+            }
+            $Record{Entry} = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout')->Output(
+                Template => '[% Data.LinkStart | Interpolate %][% Data.ValueShort %][% Data.LinkStop %]',
+                Data     => \%Record,
+            );
+            my %Safe = $HTMLUtilsObject->Safety(
+                String       => $Record{Entry},
+                NoApplet     => 1,
+                NoObject     => 1,
+                NoEmbed      => 1,
+                NoSVG        => 1,
+                NoImg        => 1,
+                NoIntSrcLoad => 0,
+                NoExtSrcLoad => 1,
+                NoJavaScript => 1,
+            );
+            if ( $Safe{Replace} ) {
+                $Record{Entry} = $Safe{String};
             }
             $Self->Block(
                 Name => 'CustomerDetailsRow',
