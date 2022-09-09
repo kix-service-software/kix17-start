@@ -1,6 +1,11 @@
 # Change log of KIX
 * Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.19.1-RC3 (2022/09/09)
+ * (2022/09/07) - Bugfix: KIX17-3186 (remove js-code from links in navigation bar) (mbauer)
+ * (2022/09/07) - Bugfix: KIX17-3187 (remove js-code from links in customer information) (mbauer)
+ * (2022/09/07) - Bugfix: KIX17-3188 (prohibit usage of perl code in templates) (mbauer)
+
 # 17.19.1-RC2 (2022/08/30)
  * (2022/08/30) - release candidate
 
