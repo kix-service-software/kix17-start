@@ -29,7 +29,7 @@
             <i class="fa fa-circle" title="[% Data.UserStateDescription | html %]"></i>
         </span>
 [% RenderBlockEnd("CustomerRowUserStatus") %]
-        [% Data.LinkStart | Interpolate %][% Data.ValueShort %][% Data.LinkStop %]
+        [% Data.Entry %]
 [% RenderBlockStart("CustomerRowItem") %]
         <a href="[% Data.URL %]" target="[% Data.Target | html %]">
             <img src="[% Config("Frontend::ImagePath") %][% Data.Image | html %]" border="0" alt="[% Translate(Data.Action) | html %]" title="[% Translate(Data.Alt) | html %]" />
@@ -80,7 +80,7 @@
 [% RenderBlockStart("CustomerDetailsRow") %]
     <label>[% Translate(Data.Key) | html %]:</label>
     <p class="Value" title="[% Data.Value | html %]">
-        [% Data.LinkStart | Interpolate %][% Data.ValueShort %][% Data.LinkStop %]
+        [% Data.Entry %]
     </p>
     <div class="Clear"></div>
 [% RenderBlockEnd("CustomerDetailsRow") %]

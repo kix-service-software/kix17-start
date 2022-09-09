@@ -88,8 +88,9 @@ sub AgentCustomerViewTable {
     );
 
     # get needed objects
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-    my $MainObject   = $Kernel::OM->Get('Kernel::System::Main');
+    my $ConfigObject    = $Kernel::OM->Get('Kernel::Config');
+    my $HTMLUtilsObject = $Kernel::OM->Get('Kernel::System::HTMLUtils');
+    my $MainObject      = $Kernel::OM->Get('Kernel::System::Main');
 
     # check Frontend::CustomerUser::Image
     my $CustomerImage = $ConfigObject->Get('Frontend::CustomerUser::Image');
@@ -150,8 +151,10 @@ sub AgentCustomerViewTable {
             if ( $Field->[3] && $Field->[3] >= $ShownType && $Param{Data}->{ $Field->[0] } ) {
                 my %Record = (
                     %{ $Param{Data} },
-                    Key   => $Field->[1],
-                    Value => $Param{Data}->{ $Field->[0] },
+                    Key       => $Field->[1],
+                    Value     => $Param{Data}->{ $Field->[0] },
+                    LinkStart => '',
+                    LinkStop  => '',
                 );
                 if ( $Field->[6] ) {
                     $Record{LinkStart} = "<a href=\"$Field->[6]\"";
@@ -169,6 +172,24 @@ sub AgentCustomerViewTable {
                         Text => $Record{Value},
                         Max  => $Param{Max}
                     );
+                }
+                $Record{Entry} = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout')->Output(
+                    Template => '[% Data.LinkStart | Interpolate %][% Data.ValueShort %][% Data.LinkStop %]',
+                    Data     => \%Record,
+                );
+                my %Safe = $HTMLUtilsObject->Safety(
+                    String       => $Record{Entry},
+                    NoApplet     => 1,
+                    NoObject     => 1,
+                    NoEmbed      => 1,
+                    NoSVG        => 1,
+                    NoImg        => 1,
+                    NoIntSrcLoad => 0,
+                    NoExtSrcLoad => 1,
+                    NoJavaScript => 1,
+                );
+                if ( $Safe{Replace} ) {
+                    $Record{Entry} = $Safe{String};
                 }
                 $Self->Block(
                     Name => 'CustomerRow',

@@ -68,8 +68,9 @@ sub Run {
     return if !%CustomerCompany;
 
     # get needed objects
-    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-    my $ValidObject  = $Kernel::OM->Get('Kernel::System::Valid');
+    my $LayoutObject    = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $HTMLUtilsObject = $Kernel::OM->Get('Kernel::System::HTMLUtils');
+    my $ValidObject     = $Kernel::OM->Get('Kernel::System::Valid');
     my $CompanyIsValid;
 
     # make ValidID readable
@@ -114,14 +115,35 @@ sub Run {
 
         # check if a link must be placed
         if ( $Entry->[6] ) {
-            $LayoutObject->Block(
-                Name => "ContentSmallCustomerCompanyInformationRowLink",
-                Data => {
+            my $Link = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout')->Output(
+                Template => '<a href="[% Data.URL | Interpolate %]" target="[% Data.Target | html %]">[% Data.Value | html %]</a>',
+                Data     => {
                     %CustomerCompany,
                     Label  => $Entry->[1],
                     Value  => $CustomerCompany{$Key},
                     URL    => $Entry->[6],
                     Target => '_blank',
+                },
+            );
+            my %Safe = $HTMLUtilsObject->Safety(
+                String       => $Link,
+                NoApplet     => 1,
+                NoObject     => 1,
+                NoEmbed      => 1,
+                NoSVG        => 1,
+                NoImg        => 1,
+                NoIntSrcLoad => 0,
+                NoExtSrcLoad => 1,
+                NoJavaScript => 1,
+            );
+            if ( $Safe{Replace} ) {
+                $Link = $Safe{String};
+            }
+            $LayoutObject->Block(
+                Name => "ContentSmallCustomerCompanyInformationRowLink",
+                Data => {
+                    Label => $Entry->[1],
+                    Link  => $Link,
                 },
             );
 
