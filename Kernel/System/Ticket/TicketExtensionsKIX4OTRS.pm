@@ -344,8 +344,9 @@ sub GetTotalNonEscalationRelevantBusinessTime {
 
     # get all history lines...
     my @HistoryLines = $Self->HistoryGet(
-        TicketID => $Param{TicketID},
-        UserID   => 1,
+        TicketID   => $Param{TicketID},
+        NoUserData => 1,
+        UserID     => 1,
     );
 
     my $PendStartTime = 0;
