@@ -1,6 +1,10 @@
 # Change log of KIX
 * Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.19.1-RC5 (2022/09/29)
+ * (2022/09/27) - CR: KIX17-3230 (HistoryGet optimized) (mbauer)
+ * (2022/09/26) - CR: KIX17-3231 (Optimized LinkAdd and LinkList) (mbauer)
+
 # 17.19.1-RC4 (2022/09/26)
  * (2022/09/26) - Bugfix: KIX17-3226 (fixed missing configuration PopupSize for the costumer frontend) (fjacquemin)
 
