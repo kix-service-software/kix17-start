@@ -724,8 +724,9 @@ sub ViewScreen {
     }
 
     my $Stat = $Kernel::OM->Get('Kernel::System::Stats')->StatsGet(
-        StatID => $StatID,
-        UserID => $Self->{UserID},
+        StatID                   => $StatID,
+        UserID                   => $Self->{UserID},
+        SelectedObjectAttributes => 1,
     );
 
     # get param
@@ -928,8 +929,9 @@ sub RunAction {
     }
 
     my $Stat = $Kernel::OM->Get('Kernel::System::Stats')->StatsGet(
-        StatID => $Param{StatID},
-        UserID => $Self->{UserID},
+        StatID                   => $Param{StatID},
+        UserID                   => $Self->{UserID},
+        SelectedObjectAttributes => 1,
     );
 
     # permission check

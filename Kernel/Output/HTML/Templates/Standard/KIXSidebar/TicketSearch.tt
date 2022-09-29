@@ -38,12 +38,20 @@
     }
     $('#SearchString[% Data.Identifier | html %]').on('keyup', function (Event) {
         if ( (Event.keyCode !== 13) && ($('#SearchString[% Data.Identifier | html %]').val().length >= [% Data.QueryMinLength | html %]) ) {
-            var TicketID = '';
+            var TicketID = '[% Data.TicketID %]';
             var FormID = '';
-            if ($('input[name=TicketID]').length && $('input[name=TicketID]').val() != '') {
+            if (
+                TicketID === ''
+                && $('input[name=TicketID]').length
+                && $('input[name=TicketID]').val() != ''
+            ) {
                 TicketID = $('input[name=TicketID]').val();
             }
-            else if ($('input[name=FormID]').length && $('input[name=FormID]').val() != '') {
+            else if (
+                TicketID === ''
+                && $('input[name=FormID]').length
+                && $('input[name=FormID]').val() != ''
+            ) {
                 FormID = $('input[name=FormID]').val();
             }
 
@@ -66,12 +74,20 @@
     });
 
     function KIXSidebarTicketAJAXSearchBox[% Data.Identifier | html %]() {
-        var TicketID = '';
+        var TicketID = '[% Data.TicketID %]';
         var FormID = '';
-        if ($('input[name=TicketID]').length && $('input[name=TicketID]').val() != '') {
+        if (
+            TicketID === ''
+            && $('input[name=TicketID]').length
+            && $('input[name=TicketID]').val() != ''
+        ) {
             TicketID = $('input[name=TicketID]').val();
         }
-        else if ($('input[name=FormID]').length && $('input[name=FormID]').val() != '') {
+        else if (
+            TicketID === ''
+            && $('input[name=FormID]').length
+            && $('input[name=FormID]').val() != ''
+        ) {
             FormID = $('input[name=FormID]').val();
         }
 
@@ -112,12 +128,20 @@
         window.KIXSidebarCallback[% Data.Identifier | html %] = KIXSidebarCallback[% Data.Identifier | html %];
     }
     function KIXSidebarTicketAJAXSearchSubject[% Data.Identifier | html %]() {
-        var TicketID = '';
+        var TicketID = '[% Data.TicketID %]';
         var FormID = '';
-        if ($('input[name=TicketID]').length && $('input[name=TicketID]').val() != '') {
+        if (
+            TicketID === ''
+            && $('input[name=TicketID]').length
+            && $('input[name=TicketID]').val() != ''
+        ) {
             TicketID = $('input[name=TicketID]').val();
         }
-        else if ($('input[name=FormID]').length && $('input[name=FormID]').val() != '') {
+        else if (
+            TicketID === ''
+            && $('input[name=FormID]').length
+            && $('input[name=FormID]').val() != ''
+        ) {
             FormID = $('input[name=FormID]').val();
         }
 
@@ -156,12 +180,20 @@
         window.KIXSidebarCallback[% Data.Identifier | html %] = KIXSidebarCallback[% Data.Identifier | html %];
     }
     function KIXSidebarTicketAJAXSearchAll[% Data.Identifier | html %]() {
-        var TicketID = '';
+        var TicketID = '[% Data.TicketID %]';
         var FormID = '';
-        if ($('input[name=TicketID]').length && $('input[name=TicketID]').val() != '') {
+        if (
+            TicketID === ''
+            && $('input[name=TicketID]').length
+            && $('input[name=TicketID]').val() != ''
+        ) {
             TicketID = $('input[name=TicketID]').val();
         }
-        else if ($('input[name=FormID]').length && $('input[name=FormID]').val() != '') {
+        else if (
+            TicketID === ''
+            && $('input[name=FormID]').length
+            && $('input[name=FormID]').val() != ''
+        ) {
             FormID = $('input[name=FormID]').val();
         }
 
@@ -198,11 +230,20 @@
     }
     KIXSidebarTools.Init('[% Data.Identifier | html %]');
 
-    var TicketID = '';
+    var TicketID = '[% Data.TicketID %]';
     var FormID = '';
-    if ($('input[name=TicketID]').length && $('input[name=TicketID]').val() != '') {
+    if (
+        TicketID === ''
+        && $('input[name=TicketID]').length
+        && $('input[name=TicketID]').val() != ''
+    ) {
         TicketID = $('input[name=TicketID]').val();
-    } else if ($('input[name=FormID]').length && $('input[name=FormID]').val() != '') {
+    }
+    else if (
+        TicketID === ''
+        && $('input[name=FormID]').length
+        && $('input[name=FormID]').val() != ''
+    ) {
         FormID = $('input[name=FormID]').val();
     }
 

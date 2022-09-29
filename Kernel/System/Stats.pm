@@ -204,7 +204,8 @@ sub StatsGet {
         );
     }
 
-    $Param{NoObjectAttributes} = $Param{NoObjectAttributes} ? 1 : 0;
+    $Param{NoObjectAttributes}       = $Param{NoObjectAttributes} ? 1 : 0;
+    $Param{SelectedObjectAttributes} = $Param{SelectedObjectAttributes} ? 1 : 0;
 
     # get cache object
     my $CacheObject = $Kernel::OM->Get('Kernel::System::Cache');
@@ -310,10 +311,27 @@ sub StatsGet {
         # @StatAttributesSimplified give you arrays without undef array elements
         my @StatAttributesSimplified;
 
+        my $SelectedObjectAttributes;
+        if ( $Param{SelectedObjectAttributes} ) {
+            $SelectedObjectAttributes = {};
+
+            if ( $StatsXML->{ $Key } ) {
+                my @StatAttributes = @{ $StatsXML->{ $Key } };
+                if ( !$StatAttributes[0] ) {
+                    shift( @StatAttributes );
+                }
+
+                for my $Attribute (@StatAttributes) {
+                    $SelectedObjectAttributes->{ $Attribute->{Element} } = 1;
+                }
+            }
+        }
+
         # get the attributes of the object
         my @ObjectAttributes = $Self->GetStatsObjectAttributes(
-            ObjectModule => $Stat{ObjectModule},
-            Use          => $Key,
+            ObjectModule             => $Stat{ObjectModule},
+            Use                      => $Key,
+            SelectedObjectAttributes => $SelectedObjectAttributes
         );
 
         next KEY if !@ObjectAttributes;
@@ -942,7 +960,9 @@ sub GetStatsObjectAttributes {
     return if !$StatObject;
 
     # load attributes
-    my @ObjectAttributesRaw = $StatObject->GetObjectAttributes();
+    my @ObjectAttributesRaw = $StatObject->GetObjectAttributes(
+        SelectedObjectAttributes => $Param{SelectedObjectAttributes},
+    );
 
     # build the objectattribute array
     my @ObjectAttributes;
@@ -1627,7 +1647,10 @@ sub StatsRun {
         }
     }
 
-    my $Stat = $Self->StatsGet( StatID => $Param{StatID} );
+    my $Stat = $Self->StatsGet(
+        StatID                   => $Param{StatID},
+        SelectedObjectAttributes => 1,
+    );
     my %GetParam = %{ $Param{GetParam} };
     my @Result;
 

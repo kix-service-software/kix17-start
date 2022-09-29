@@ -1,6 +1,41 @@
 # Change log of KIX
 * Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.19.1 (2022/09/29)
+ * (2022/09/29) - productive release
+ * (2022/07/13) - Bugfix: KIX17-3065 (extract inline images from internal sources) (mbauer)
+
+# 17.19.1-RC5 (2022/09/29)
+ * (2022/09/27) - CR: KIX17-3230 (HistoryGet optimized) (mbauer)
+ * (2022/09/26) - CR: KIX17-3231 (Optimized LinkAdd and LinkList) (mbauer)
+
+# 17.19.1-RC4 (2022/09/26)
+ * (2022/09/26) - Bugfix: KIX17-3226 (fixed missing configuration PopupSize for the costumer frontend) (fjacquemin)
+
+# 17.19.1-RC3 (2022/09/09)
+ * (2022/09/07) - Bugfix: KIX17-3186 (remove js-code from links in navigation bar) (mbauer)
+ * (2022/09/07) - Bugfix: KIX17-3187 (remove js-code from links in customer information) (mbauer)
+ * (2022/09/07) - Bugfix: KIX17-3188 (prohibit usage of perl code in templates) (mbauer)
+
+# 17.19.1-RC2 (2022/08/30)
+ * (2022/08/30) - release candidate
+
+# 17.19.1-RC1 (2022/08/30)
+ * (2022/08/25) - Bugfix: KIX17-3140 (fix calculation for non escalation relevant business time) (mbauer)
+ * (2022/08/24) - Bugfix: KIX17-3176 (fix uninitialized value for HTMLUtils) (mbauer)
+ * (2022/08/24) - Bugfix: KIX17-3145 (grant access to linked objects for root@localhost) (mbauer)
+ * (2022/08/18) - Bugfix: KIX17-3165 (prevent log entry for permission check of linked objects) (mbauer)
+ * (2022/08/12) - Bugfix: KIX17-3163 (keep complete file id of inline attachments in content) (mbauer)
+ * (2022/08/04) - Bugfix: KIX17-418 (switch to login on refresh with expired session) (mbauer)
+ * (2022/08/03) - Bugfix: KIX17-2299 (fixed empty list of selected columns for custom view) (mbauer)
+ * (2022/08/03) - Bugfix: KIX17-1905 (fix encoding error log) (mbauer)
+ * (2022/08/02) - Bugfix: KIX17-3146 (sidebar shows no result under certain circumstances) (mbauer)
+ * (2022/07/28) - Bugfix: KIX17-3136 (trigger form update on customer selection without service selection) (mbauer)
+ * (2022/07/28) - Bugfix: KIX17-3142 (translate labels of dynamic fields in overview tables) (mbauer)
+ * (2022/07/27) - Bugfix: KIX17-3139 (fix article search index build by static db) (mbauer)
+ * (2022/07/25) - CR: KIX17-3093 (performace improvements for agent dashboard) (mbauer)
+ * (2022/07/20) - Bugfix: KIX17-3065 (extract inline images from internal sources) (mbauer)
+
 # 17.19.0 (2022/07/20)
  * (2022/07/20) - productive release
  * (2022/04/01) - CR: KIX17-2973 (faster indexing of articles for fulltext search) (mbauer)

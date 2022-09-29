@@ -2092,7 +2092,7 @@ sub FAQInlineAttachmentURLUpdate {
         $FAQData{"Field$Number"} =~ s{$Search}{$Replace}xms;
 
         # remove session from url
-        $FAQData{"Field$Number"} =~ s{(Action=AgentFAQZoom;Subaction=DownloadAttachment;ItemID=\d+;FileID=\d+)[^"]+?"}{$1"}gxms;
+        $FAQData{"Field$Number"} =~ s{(Action=AgentFAQZoom;Subaction=DownloadAttachment;ItemID=\d+;FileID=\d+)[^"]*?"}{$1"}gxms;
     }
 
     # update FAQ article without writing a history entry

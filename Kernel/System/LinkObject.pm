@@ -482,10 +482,12 @@ END
 
     # get all links that the source object already has
     my $Links = $Self->LinkList(
-        Object => $Param{SourceObject},
-        Key    => $Param{SourceKey},
-        State  => $Param{State},
-        UserID => $Param{UserID},
+        Object  => $Param{SourceObject},
+        Key     => $Param{SourceKey},
+        Object2 => $Param{TargetObject},
+        Key2    => $Param{TargetKey},
+        State   => $Param{State},
+        UserID  => $Param{UserID},
     );
 
     # check type groups
@@ -1004,7 +1006,9 @@ sub LinkList {
     );
 
     # prepare SQL statement
-    my $TypeSQL = '';
+    my $TypeSQL    = '';
+    my $Object2SQL = '';
+    my $Key2SQL    = '';
     my @Bind = ( \$ObjectID, \$Param{Key}, \$StateID );
 
     # add type id to SQL statement
@@ -1020,6 +1024,22 @@ sub LinkList {
         push @Bind, \$TypeID;
     }
 
+    # add Object2 to SQL statement
+    if ( $Param{Object2} ) {
+        # lookup target object id
+        my $Object2ID = $Self->ObjectLookup(
+            Name => $Param{Object2},
+        );
+        $Object2SQL = 'AND target_object_id = ? ';
+        push( @Bind, \$Object2ID, );
+    }
+
+    # add Key2 to SQL statement
+    if ( $Param{Key2} ) {
+        $Key2SQL = 'AND target_key = ? ';
+        push( @Bind, \$Param{Key2} );
+    }
+
     # get database object
     my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
 
@@ -1030,7 +1050,9 @@ sub LinkList {
               . ' WHERE source_object_id = ?'
               . '    AND source_key = ?'
               . '    AND state_id = ? '
-              . $TypeSQL,
+              . $TypeSQL
+              . $Object2SQL
+              . $Key2SQL,
         Bind => \@Bind,
     );
 
@@ -1074,6 +1096,16 @@ sub LinkList {
         $Links{$TargetObject}->{ $TypeData{Name} }->{Target}->{ $LinkData->{TargetKey} } = 1;
     }
 
+    # update direction of Object2 for SQL statement
+    if ( $Param{Object2} ) {
+        $Object2SQL = 'AND source_object_id = ? ';
+    }
+
+    # update direction of Key2 for SQL statement
+    if ( $Param{Key2} ) {
+        $Key2SQL = 'AND source_key = ? ';
+    }
+
     # get links where the given object is the target
     return if !$DBObject->Prepare(
         SQL  => 'SELECT source_object_id, source_key, type_id'
@@ -1081,7 +1113,9 @@ sub LinkList {
               . ' WHERE target_object_id = ?'
               . '    AND target_key = ?'
               . '    AND state_id = ? '
-              . $TypeSQL,
+              . $TypeSQL
+              . $Object2SQL
+              . $Key2SQL,
         Bind => \@Bind,
     );
 
@@ -1148,28 +1182,23 @@ sub LinkList {
         }
     }
 
-    return \%Links if !$Param{Object2} && !$Param{Direction};
+    return \%Links if ( !$Param{Direction} );
+    return \%Links if (
+        $Param{Direction} ne 'Source'
+        && $Param{Direction} ne 'Target'
+    );
 
     # removed not needed elements
     OBJECT:
-    for my $Object ( keys %Links ) {
-
-        # removed not needed object
-        if ( $Param{Object2} && $Param{Object2} ne $Object ) {
-            delete $Links{$Object};
-            next OBJECT;
-        }
-
-        next OBJECT if !$Param{Direction};
+    for my $Object ( keys( %Links ) ) {
 
         # removed not needed direction
-        for my $Type ( keys %{ $Links{$Object} } ) {
+        for my $Type ( keys( %{ $Links{$Object} } ) ) {
 
             DIRECTION:
-            for my $Direction ( keys %{ $Links{$Object}->{$Type} } ) {
+            for my $Direction ( keys( %{ $Links{$Object}->{$Type} } ) ) {
 
-                next DIRECTION if $Param{Direction} eq $Direction;
-                next DIRECTION if $Param{Direction} ne 'Source' && $Param{Direction} ne 'Target';
+                next DIRECTION if( $Param{Direction} eq $Direction );
 
                 delete $Links{$Object}->{$Type}->{$Direction};
             }

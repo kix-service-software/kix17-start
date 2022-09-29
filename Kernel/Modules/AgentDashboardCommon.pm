@@ -851,27 +851,24 @@ sub _Element {
 
     );
 
-    # get module config
-    my %Config = $Object->Config();
-
     # Perform the actual data fetching and computation on the slave db, if configured
     local $Kernel::System::DB::UseSlaveDB = 1;
+
+    # get module preferences
+    if ( $Param{PreferencesOnly} ) {
+        my @Preferences = $Object->Preferences();
+        return @Preferences;
+    }
+
+    # get module config
+    my %Config = $Object->Config();
 
     # moved upwards
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
     if ( $Object->{SearchTemplateName} ) {
-        $Config{Title} =
-            $LayoutObject->{LanguageObject}->Translate('Search Template') . ": "
-            . $Object->{SearchTemplateName};
+        $Config{Title} = $LayoutObject->{LanguageObject}->Translate('Search Template') . ": " . $Object->{SearchTemplateName};
     }
-
-    # get module preferences
-    my @Preferences = $Object->Preferences();
-    return @Preferences if $Param{PreferencesOnly};
-
-    # Perform the actual data fetching and computation on the slave db, if configured
-    local $Kernel::System::DB::UseSlaveDB = 1;
 
     if ( $Param{FilterContentOnly} ) {
         my $FilterContent = $Object->FilterContent(
@@ -939,6 +936,9 @@ sub _Element {
             TTL   => $Config{CacheTTL} * 60,
         );
     }
+
+    # get preferences
+    my @Preferences = $Object->Preferences();
 
     # return result
     return (

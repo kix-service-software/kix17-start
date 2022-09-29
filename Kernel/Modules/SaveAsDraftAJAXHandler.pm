@@ -81,11 +81,7 @@ sub Run {
 
         my @Result;
         for my $Item (@ContentItems) {
-            $Item->{Content} = $EncodeObject->Convert(
-                Text => $Item->{Content},
-                From => 'utf-8',
-                To   => 'iso-8859-1',
-            );
+            $EncodeObject->EncodeInput( \$Item->{Content} );
 
             # check if we have a new FormID for inline images of the draft
             if ( $NewFormID ) {

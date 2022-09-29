@@ -58,7 +58,11 @@ sub Run {
         %Param,
         DynamicFields => 0,
     );
-    my @HistoryLines = $TicketObject->HistoryGet( %Param, UserID => 1 );
+    my @HistoryLines = $TicketObject->HistoryGet(
+        %Param,
+        NoUserData => 1,
+        UserID     => 1,
+    );
 
     # find latest auto priority update
     for my $History (@HistoryLines) {

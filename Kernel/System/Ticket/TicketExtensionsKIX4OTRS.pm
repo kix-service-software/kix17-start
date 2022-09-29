@@ -344,8 +344,9 @@ sub GetTotalNonEscalationRelevantBusinessTime {
 
     # get all history lines...
     my @HistoryLines = $Self->HistoryGet(
-        TicketID => $Param{TicketID},
-        UserID   => 1,
+        TicketID   => $Param{TicketID},
+        NoUserData => 1,
+        UserID     => 1,
     );
 
     my $PendStartTime = 0;
@@ -390,9 +391,16 @@ sub GetTotalNonEscalationRelevantBusinessTime {
         }
     }
     if ( $PendStartTime ) {
+        my $PendStopTime;
+        if ( $Param{StopTime} ) {
+            $PendStopTime = $Param{StopTime};
+        }
+        else {
+            $PendStopTime = $TimeObject->SystemTime();
+        }
         my $WorkingTime = $TimeObject->WorkingTime(
             StartTime => $PendStartTime,
-            StopTime  => $TimeObject->SystemTime(),
+            StopTime  => $PendStopTime,
             Calendar  => $Escalation{Calendar},
         );
         $PendTotalTime += $WorkingTime;

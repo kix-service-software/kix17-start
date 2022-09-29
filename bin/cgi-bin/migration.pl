@@ -231,7 +231,7 @@ sub _GetConfigItemXMLData {
         next if !IsArrayRefWithData($Definitions);
 
         push @Parts, "SELECT 'ITSM::ConfigItem::" . $ClassID . "' as xml_type, xml_key, xml_content_key, xml_content_value from v_ci_" . $ClassID; 
-        push @Parts, "SELECT 'ITSM::ConfigItem::Archive::" . $ClassID . "' as xml_type, xml_key, xml_content_key, xml_content_value from v_ci_" . $ClassID . '_archive'; 
+        push @Parts, "SELECT 'ITSM::ConfigItem::Archiv::" . $ClassID . "' as xml_type, xml_key, xml_content_key, xml_content_value from v_ci_" . $ClassID . '_archive'; 
     }
 
     if ( $Param{ObjectID} ) {

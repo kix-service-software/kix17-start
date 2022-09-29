@@ -248,8 +248,9 @@ sub TicketCheckNumber {
 
         # get ticket history
         my @Lines = $Self->HistoryGet(
-            TicketID => $TicketID,
-            UserID   => 1,
+            TicketID   => $TicketID,
+            NoUserData => 1,
+            UserID     => 1,
         );
 
         HISTORYLINE:
@@ -5987,6 +5988,11 @@ sub HistoryGet {
         $Data{HistoryTypeID} = $Row[9];
         $Data{TypeID}        = $Row[10];
         push @Lines, \%Data;
+    }
+
+    # return data if user data is not needed
+    if ( $Param{NoUserData} ) {
+        return @Lines;
     }
 
     # get user object
