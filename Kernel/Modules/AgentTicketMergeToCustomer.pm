@@ -191,8 +191,9 @@ sub Run {
 
         # history data get
         my @HistoryData = $TicketObject->HistoryGet(
-            TicketID => $TicketID,
-            UserID   => $Param{CustomerUserID},
+            TicketID   => $TicketID,
+            NoUserData => 1,
+            UserID     => $Param{CustomerUserID},
         );
 
         for my $Line ( sort @HistoryData ) {
