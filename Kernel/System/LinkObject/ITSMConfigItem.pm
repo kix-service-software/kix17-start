@@ -108,8 +108,9 @@ sub LinkListWithData {
                 my $Access = $Kernel::OM->Get('Kernel::System::ITSMConfigItem')->Permission(
                     Scope   => 'Class',
                     ClassID => $Param{LinkList}->{$LinkType}->{$Direction}->{$ConfigItemID}->{ClassID},
-                    UserID => $Param{UserID},
-                    Type   => 'rw',
+                    UserID  => $Param{UserID},
+                    Type    => 'rw',
+                    LogNo   => 1,
                 ) || 0;
 
                 $Param{LinkList}->{$LinkType}->{$Direction}->{$ConfigItemID}->{Access} = $Access;
@@ -146,6 +147,9 @@ sub ObjectPermission {
         }
     }
 
+    # grant access for root@localhost
+    return 1 if ( $Param{UserID} == 1 );
+
     # get config of configitem zoom frontend module
     $Self->{Config} = $Kernel::OM->Get('Kernel::Config')->Get('ITSMConfigItem::Frontend::AgentITSMConfigItemZoom');
 
@@ -155,6 +159,7 @@ sub ObjectPermission {
         ItemID => $Param{Key},
         UserID => $Param{UserID},
         Type   => $Self->{Config}->{Permission},
+        LogNo  => 1,
     );
 
     return $Access;

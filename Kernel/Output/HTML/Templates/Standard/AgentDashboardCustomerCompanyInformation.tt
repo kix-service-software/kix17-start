@@ -26,9 +26,7 @@
 [% RenderBlockStart("ContentSmallCustomerCompanyInformationRowLink") %]
     <label>[% Translate(Data.Label) | html %]:</label>
     <div class="Field">
-        <a href="[% Data.URL | Interpolate %]" target="[% Data.Target | html %]">
-            [% Data.Value | html %]
-        </a>
+        [% Data.Link %]
     </div>
     <div class="Clear"></div>
 [% RenderBlockEnd("ContentSmallCustomerCompanyInformationRowLink") %]

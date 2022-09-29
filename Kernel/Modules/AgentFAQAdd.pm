@@ -368,7 +368,7 @@ sub Run {
             next NUMBER if !$GetParam{ 'Field' . $Number };
 
             # remove session from url
-            $GetParam{ 'Field' . $Number } =~ s{(Action=AgentFAQZoom;Subaction=DownloadAttachment;ItemID=\d+;FileID=\d+)[^"]+?"}{$1"}gxms;
+            $GetParam{ 'Field' . $Number } =~ s{(Action=AgentFAQZoom;Subaction=DownloadAttachment;ItemID=\d+;FileID=\d+)[^"]*?"}{$1"}gxms;
         }
 
         # add the new FAQ article

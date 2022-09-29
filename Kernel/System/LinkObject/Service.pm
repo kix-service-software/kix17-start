@@ -143,6 +143,9 @@ sub ObjectPermission {
         }
     }
 
+    # grant access for root@localhost
+    return 1 if ( $Param{UserID} == 1 );
+
     # check module registry of AgentITSMServiceZoom
     my $ModuleReg = $Kernel::OM->Get('Kernel::Config')->Get('Frontend::Module')->{AgentITSMServiceZoom};
 

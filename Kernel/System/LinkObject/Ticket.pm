@@ -208,6 +208,9 @@ sub ObjectPermission {
         }
     }
 
+    # grant access for root@localhost
+    return 1 if ( $Param{UserID} == 1 );
+
     # special handling for form ids
     return 1 if ( $Param{Key} =~ m/\d+\.\d+\.\d+/ );
 
@@ -215,6 +218,7 @@ sub ObjectPermission {
         Type     => 'ro',
         TicketID => $Param{Key},
         UserID   => $Param{UserID},
+        LogNo    => 1,
     );
 }
 

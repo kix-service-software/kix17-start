@@ -181,16 +181,17 @@ sub Run {
         TypeID        => 1,
     );
 
+    # get ticket object
+    my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
+
     # start ticket loop
     TICKET:
     for my $TicketID (@TicketIDs) {
 
-        # get ticket object
-        my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
-
         my @LinesRaw = $TicketObject->HistoryGet(
-            TicketID => $TicketID,
-            UserID   => $UserID,
+            TicketID   => $TicketID,
+            NoUserData => 1,
+            UserID     => $UserID,
         );
 
         my @Lines;

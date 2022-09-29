@@ -522,7 +522,7 @@ Core.AJAX = (function (TargetNS) {
             NewUrl = Core.Config.Get('Baselink') + "RequestedURL=" + encodeURIComponent(OldUrl);
 
         /* #rbo - T2016121190001552 - renamed X-OTRS headers */
-        if (Headers.match(/X-KIX-Login: /)) {
+        if (Headers.match(/X-KIX-Login: /i)) {
             location.href = NewUrl;
             return true;
         }

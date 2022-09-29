@@ -52,6 +52,14 @@ sub Run {
         $AdditionalClasses .= 'Collapsed';
     }
 
+    my $TicketID = '';
+    if (
+        $Param{Config}->{'TicketIDSearchMaskRegExp'}
+        && $Param{Action} =~ /$Param{Config}->{'TicketIDSearchMaskRegExp'}/
+    ) {
+        $TicketID = $Param{Ticket}->{TicketID} || '';
+    }
+
     $Self->{LayoutObject}->Block(
         Name => 'SidebarFrame',
         Data => {
@@ -74,6 +82,7 @@ sub Run {
             Data => {
                 %{$Param{Ticket} || {}},
                 %{$Param{Config}},
+                TicketID => $TicketID,
             },
         );
     }
@@ -86,6 +95,7 @@ sub Run {
             Data => {
                 %{$Param{Ticket} || {}},
                 %{$Param{Config}},
+                TicketID => $TicketID,
             },
         );
     }
@@ -110,6 +120,7 @@ sub Run {
             Data => {
                 %{$Param{Ticket} || {}},
                 %{$Param{Config}},
+                TicketID => $TicketID,
             },
         );
     }

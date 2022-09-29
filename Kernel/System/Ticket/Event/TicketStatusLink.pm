@@ -106,8 +106,9 @@ sub Run {
         # determine type of ticket before last update
         my $OldTicketType;
         my @HistoryLines = $TicketObject->HistoryGet(
-            TicketID => $TicketID,
-            UserID   => 1,
+            TicketID   => $TicketID,
+            NoUserData => 1,
+            UserID     => 1,
         );
         LINE:
         for my $Line ( reverse @HistoryLines ) {
