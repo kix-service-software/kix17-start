@@ -125,6 +125,32 @@ sub Run {
         # if it is locked for somebody else
         return if $Param{Ticket}->{OwnerID} ne $Self->{UserID};
 
+        $Param{Ticket}->{HTMLLink} = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout')->Output(
+            Template => '<a href="[% Env("Baselink") %][% Data.Link | Interpolate %]" class="[% Data.Class %]" [% Data.LinkParam %] title="[% Translate(Data.Description) | html %]">[% Translate(Data.Name) | html %]</a>',
+            Data     => {
+                %{ $Param{Config} },
+                %{ $Param{Ticket} },
+                %Param,
+                Name        => Translatable('Unlock'),
+                Description => Translatable('Unlock to give it back to the queue'),
+                Link        => 'Action=AgentTicketLock;Subaction=Unlock;TicketID=[% Data.TicketID | uri %];[% Env("ChallengeTokenParam") | html %]',
+            },
+        );
+        my %Safe = $Kernel::OM->Get('Kernel::System::HTMLUtils')->Safety(
+            String       => $Param{Ticket}->{HTMLLink},
+            NoApplet     => 1,
+            NoObject     => 1,
+            NoEmbed      => 1,
+            NoSVG        => 1,
+            NoImg        => 1,
+            NoIntSrcLoad => 0,
+            NoExtSrcLoad => 1,
+            NoJavaScript => 1,
+        );
+        if ( $Safe{Replace} ) {
+            $Param{Ticket}->{HTMLLink} = $Safe{String};
+        }
+
         # show unlock action
         return {
             %{ $Param{Config} },
@@ -132,9 +158,34 @@ sub Run {
             %Param,
             Name        => Translatable('Unlock'),
             Description => Translatable('Unlock to give it back to the queue'),
-            Link =>
-                'Action=AgentTicketLock;Subaction=Unlock;TicketID=[% Data.TicketID | uri %];[% Env("ChallengeTokenParam") | html %]',
+            Link        => 'Action=AgentTicketLock;Subaction=Unlock;TicketID=[% Data.TicketID | uri %];[% Env("ChallengeTokenParam") | html %]',
         };
+    }
+
+    $Param{Ticket}->{HTMLLink} = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout')->Output(
+        Template => '<a href="[% Env("Baselink") %][% Data.Link | Interpolate %]" class="[% Data.Class %]" [% Data.LinkParam %] title="[% Translate(Data.Description) | html %]">[% Translate(Data.Name) | html %]</a>',
+        Data     => {
+            %{ $Param{Config} },
+            %{ $Param{Ticket} },
+            %Param,
+            Name        => Translatable('Lock'),
+            Description => Translatable('Lock it to work on it'),
+            Link        => 'Action=AgentTicketLock;Subaction=Lock;TicketID=[% Data.TicketID | uri %];[% Env("ChallengeTokenParam") | html %]',
+        },
+    );
+    my %Safe = $Kernel::OM->Get('Kernel::System::HTMLUtils')->Safety(
+        String       => $Param{Ticket}->{HTMLLink},
+        NoApplet     => 1,
+        NoObject     => 1,
+        NoEmbed      => 1,
+        NoSVG        => 1,
+        NoImg        => 1,
+        NoIntSrcLoad => 0,
+        NoExtSrcLoad => 1,
+        NoJavaScript => 1,
+    );
+    if ( $Safe{Replace} ) {
+        $Param{Ticket}->{HTMLLink} = $Safe{String};
     }
 
     # if ticket is unlocked
@@ -144,8 +195,7 @@ sub Run {
         %Param,
         Name        => Translatable('Lock'),
         Description => Translatable('Lock it to work on it'),
-        Link =>
-            'Action=AgentTicketLock;Subaction=Lock;TicketID=[% Data.TicketID | uri %];[% Env("ChallengeTokenParam") | html %]',
+        Link        => 'Action=AgentTicketLock;Subaction=Lock;TicketID=[% Data.TicketID | uri %];[% Env("ChallengeTokenParam") | html %]',
     };
 }
 
