@@ -310,15 +310,6 @@ sub Run {
                         . ' disabled="disabled"></input>'
                         . '</p>';
                 }
-                elsif ( $ValueStrg->{Link} ) {
-                    $JSON .= '<p class="Value" title="'
-                        . $ValueStrg->{Title}
-                        . '"><a href="'
-                        . $ValueStrg->{Link}
-                        . '" target="_blank" class="DynamicFieldLink">'
-                        . $ValueStrg->{Value}
-                        . '</a></p>';
-                }
                 else {
                     $JSON .= '<p class="Value" title="'
                         . $ValueStrg->{Title} . '">'
