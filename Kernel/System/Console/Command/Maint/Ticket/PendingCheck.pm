@@ -77,21 +77,24 @@ sub Run {
 
             next TICKETID if $Ticket{UntilTime} >= 1;
 
-            if ( $States{ $Ticket{Type} . ':::' . $Ticket{State} } || $States{ $Ticket{State} } ) {
-                $States{ $Ticket{State} } = $States{ $Ticket{Type} . ':::' . $Ticket{State} }
-                    || $States{ $Ticket{State} };
+            my $NextState;
+            if (
+                $States{ $Ticket{Type} . ':::' . $Ticket{State} }
+                || $States{ $Ticket{State} }
+            ) {
+                $NextState = $States{ $Ticket{Type} . ':::' . $Ticket{State} } || $States{ $Ticket{State} };
             }
 
-            next TICKETID if !$States{ $Ticket{State} };
+            next TICKETID if ( !$NextState );
 
             $Self->Print(
-                " Update ticket state for ticket $Ticket{TicketNumber} ($TicketID) to '$States{$Ticket{State}}'..."
+                " Update ticket state for ticket $Ticket{TicketNumber} ($TicketID) to '$NextState'..."
             );
 
             # set new state
             my $NewStateID = $TicketObject->TicketStateSet(
                 TicketID => $TicketID,
-                State    => $States{ $Ticket{State} },
+                State    => $NextState,
                 UserID   => 1,
             );
 

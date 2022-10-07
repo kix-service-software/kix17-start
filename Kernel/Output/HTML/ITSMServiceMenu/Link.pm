@@ -85,6 +85,29 @@ sub Run {
     # don't show link menu item if there are no linkable objects
     return if !%PossibleObjects;
 
+    $Param{Service}->{HTMLLink} = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout')->Output(
+        Template => '<a href="[% Env("Baselink") %][% Data.Link | Interpolate %]" class="[% Data.MenuClass | html %]" title="[% Translate(Data.Description) | html %]">[% Translate(Data.Name) | html %]</a>',
+        Data     => {
+            %Param,
+            %{ $Param{Service} },
+            %{ $Param{Config} },
+        },
+    );
+    my %Safe = $Kernel::OM->Get('Kernel::System::HTMLUtils')->Safety(
+        String       => $Param{Service}->{HTMLLink},
+        NoApplet     => 1,
+        NoObject     => 1,
+        NoEmbed      => 1,
+        NoSVG        => 1,
+        NoImg        => 1,
+        NoIntSrcLoad => 0,
+        NoExtSrcLoad => 1,
+        NoJavaScript => 1,
+    );
+    if ( $Safe{Replace} ) {
+        $Param{Service}->{HTMLLink} = $Safe{String};
+    }
+
     $LayoutObject->Block(
         Name => 'MenuItem',
         Data => {

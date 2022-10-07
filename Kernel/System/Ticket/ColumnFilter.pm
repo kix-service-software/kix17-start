@@ -851,11 +851,17 @@ get a list of a specific ticket dynamic field values within the given tickets li
 sub DynamicFieldFilterValuesGet {
     my ( $Self, %Param ) = @_;
 
+    # get needed object
+    my $DynamicFieldObject = $Kernel::OM->Get('Kernel::System::DynamicField');
+    my $BackendObject      = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
+    my $LogObject          = $Kernel::OM->Get('Kernel::System::Log');
+    my $DBObject           = $Kernel::OM->Get('Kernel::System::DB');
+
     # check needed stuff
     for my $Needed (qw(TicketIDs ValueType FieldID)) {
 
         if ( !$Param{$Needed} ) {
-            $Kernel::OM->Get('Kernel::System::Log')->Log(
+            $LogObject->Log(
                 Priority => 'error',
                 Message  => "Need $Needed!",
             );
@@ -869,7 +875,7 @@ sub DynamicFieldFilterValuesGet {
     );
 
     if ( !IsArrayRefWithData( $Param{TicketIDs} ) ) {
-        $Kernel::OM->Get('Kernel::System::Log')->Log(
+        $LogObject->Log(
             Priority => 'error',
             Message  => 'TicketIDs must be an array ref!',
         );
@@ -884,8 +890,11 @@ sub DynamicFieldFilterValuesGet {
         $ValueType = 'value_int';
     }
 
-    # get database object
-    my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
+    my $DynamicFieldConfig = $DynamicFieldObject->DynamicFieldGet(
+        ID => $Param{FieldID}
+    );
+
+    return if !$DynamicFieldConfig;
 
     return if !$DBObject->Prepare(
         SQL =>
@@ -903,22 +912,17 @@ sub DynamicFieldFilterValuesGet {
         # check if the value is already stored
         if (
             defined $Row[0]
-            && $Row[0] ne ''
+            && $Row[0] ne q{}
             && !$Data{ $Row[0] }
         ) {
 
-            if ( $ValueType eq 'Date' ) {
-
-                # cleanup time stamps (some databases are using e. g. 2008-02-25 22:03:00.000000
-                # and 0000-00-00 00:00:00 time stamps)
-                if ( $Row[0] eq '0000-00-00 00:00:00' ) {
-                    $Row[0] = undef;
-                }
-                $Row[0] =~ s/^(\d\d\d\d-\d\d-\d\d\s\d\d:\d\d:\d\d)\..+?$/$1/;
-            }
+            my $Value = $BackendObject->ValueLookup(
+                DynamicFieldConfig => $DynamicFieldConfig,
+                Key                => $Row[0]
+            );
 
             # store the results
-            $Data{ $Row[0] } = $Row[0];
+            $Data{ $Row[0] } = $Value;
         }
     }
 

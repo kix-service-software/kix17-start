@@ -2216,6 +2216,34 @@ sub _ArticleItem {
         );
 
         if ( $ValueStrg->{Link} ) {
+            my $HTMLLink = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout')->Output(
+                Template => '<a href="[% Data.Link | Interpolate %]" target="_blank" class="DynamicFieldLink">[% Data.Value %]</a>',
+                Data     => {
+                    %Ticket,
+
+                    # alias for ticket title, Title will be overwritten
+                    TicketTitle                 => $Ticket{Title},
+                    Value                       => $ValueStrg->{Value},
+                    Title                       => $ValueStrg->{Title},
+                    Link                        => $ValueStrg->{Link},
+                    LinkPreview                 => $ValueStrg->{LinkPreview},
+                    $DynamicFieldConfig->{Name} => $ValueStrg->{Title},
+                },
+            );
+            my %Safe = $Kernel::OM->Get('Kernel::System::HTMLUtils')->Safety(
+                String       => $HTMLLink,
+                NoApplet     => 1,
+                NoObject     => 1,
+                NoEmbed      => 1,
+                NoSVG        => 1,
+                NoImg        => 1,
+                NoIntSrcLoad => 0,
+                NoExtSrcLoad => 1,
+                NoJavaScript => 1,
+            );
+            if ( $Safe{Replace} ) {
+                $HTMLLink = $Safe{String};
+            }
 
             # output link element
             $LayoutObject->Block(
@@ -2229,7 +2257,8 @@ sub _ArticleItem {
                     Title                       => $ValueStrg->{Title},
                     Link                        => $ValueStrg->{Link},
                     LinkPreview                 => $ValueStrg->{LinkPreview},
-                    $DynamicFieldConfig->{Name} => $ValueStrg->{Title}
+                    $DynamicFieldConfig->{Name} => $ValueStrg->{Title},
+                    HTMLLink                    => $HTMLLink,
                 },
             );
         }

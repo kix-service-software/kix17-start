@@ -94,15 +94,66 @@ sub Run {
 
     # show subscribe action
     if ( $Watch{ $Self->{UserID} } ) {
+        $Param{Ticket}->{HTMLLink} = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout')->Output(
+            Template => '<a href="[% Env("Baselink") %][% Data.Link | Interpolate %]" class="[% Data.Class %]" [% Data.LinkParam %] title="[% Translate(Data.Description) | html %]">[% Translate(Data.Name) | html %]</a>',
+            Data     => {
+                %{ $Param{Config} },
+                %{ $Param{Ticket} },
+                %Param,
+                Name        => Translatable('Unwatch'),
+                Description => Translatable('Remove from list of watched tickets'),
+                Link        => 'Action=AgentTicketWatcher;Subaction=Unsubscribe;TicketID=[% Data.TicketID | uri %];[% Env("ChallengeTokenParam") | html %]',
+            },
+        );
+        my %Safe = $Kernel::OM->Get('Kernel::System::HTMLUtils')->Safety(
+            String       => $Param{Ticket}->{HTMLLink},
+            NoApplet     => 1,
+            NoObject     => 1,
+            NoEmbed      => 1,
+            NoSVG        => 1,
+            NoImg        => 1,
+            NoIntSrcLoad => 0,
+            NoExtSrcLoad => 1,
+            NoJavaScript => 1,
+        );
+        if ( $Safe{Replace} ) {
+            $Param{Ticket}->{HTMLLink} = $Safe{String};
+        }
+
         return {
             %{ $Param{Config} },
             %{ $Param{Ticket} },
             %Param,
             Name        => Translatable('Unwatch'),
             Description => Translatable('Remove from list of watched tickets'),
-            Link =>
-                'Action=AgentTicketWatcher;Subaction=Unsubscribe;TicketID=[% Data.TicketID | uri %];[% Env("ChallengeTokenParam") | html %]',
+            Link        => 'Action=AgentTicketWatcher;Subaction=Unsubscribe;TicketID=[% Data.TicketID | uri %];[% Env("ChallengeTokenParam") | html %]',
         };
+    }
+
+    $Param{Ticket}->{HTMLLink} = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout')->Output(
+        Template => '<a href="[% Env("Baselink") %][% Data.Link | Interpolate %]" class="[% Data.Class %]" [% Data.LinkParam %] title="[% Translate(Data.Description) | html %]">[% Translate(Data.Name) | html %]</a>',
+        Data     => {
+            %{ $Param{Config} },
+            %{ $Param{Ticket} },
+            %Param,
+            Name        => Translatable('Watch'),
+            Description => Translatable('Add to list of watched tickets'),
+            Link        => 'Action=AgentTicketWatcher;Subaction=Subscribe;TicketID=[% Data.TicketID | uri %];[% Env("ChallengeTokenParam") | html %]',
+        },
+    );
+    my %Safe = $Kernel::OM->Get('Kernel::System::HTMLUtils')->Safety(
+        String       => $Param{Ticket}->{HTMLLink},
+        NoApplet     => 1,
+        NoObject     => 1,
+        NoEmbed      => 1,
+        NoSVG        => 1,
+        NoImg        => 1,
+        NoIntSrcLoad => 0,
+        NoExtSrcLoad => 1,
+        NoJavaScript => 1,
+    );
+    if ( $Safe{Replace} ) {
+        $Param{Ticket}->{HTMLLink} = $Safe{String};
     }
 
     # show unsubscribe action
@@ -112,8 +163,7 @@ sub Run {
         %Param,
         Name        => Translatable('Watch'),
         Description => Translatable('Add to list of watched tickets'),
-        Link =>
-            'Action=AgentTicketWatcher;Subaction=Subscribe;TicketID=[% Data.TicketID | uri %];[% Env("ChallengeTokenParam") | html %]',
+        Link        => 'Action=AgentTicketWatcher;Subaction=Subscribe;TicketID=[% Data.TicketID | uri %];[% Env("ChallengeTokenParam") | html %]',
     };
 }
 

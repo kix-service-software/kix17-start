@@ -2,10 +2,14 @@
 # Modified version of the work: Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
 # Copyright (C) 2001-2022 OTRS AG, https://otrs.com/
+# Copyright (C) 2021-2022 Znuny GmbH, https://znuny.org/
 # --
-# This software comes with ABSOLUTELY NO WARRANTY. For details, see
-# the enclosed file LICENSE for license information (AGPL). If you
-# did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
+# This software comes with ABSOLUTELY NO WARRANTY. This program is
+# licensed under the AGPL-3.0 with patches licensed under the GPL-3.0.
+# For details, see the enclosed files LICENSE (AGPL) and
+# LICENSE-GPL3 (GPL3) for license information. If you did not receive
+# this files, see https://www.gnu.org/licenses/agpl.txt (APGL) and
+# https://www.gnu.org/licenses/gpl-3.0.txt (GPL3).
 # --
 
 package Kernel::System::Log;
@@ -254,7 +258,16 @@ sub Log {
         my $Data   = localtime() . ";;$Priority;;$Self->{LogPrefix};;$Message\n";
         my $String = $Self->GetLog();
 
-        shmwrite( $Self->{IPCSHMKey}, $Data . $String, 0, $Self->{IPCSize} ) || die $!;
+### Patch licensed under the GPL-3.0, Copyright (C) 2021-2022 Znuny GmbH, https://znuny.org/ ###
+#        shmwrite( $Self->{IPCSHMKey}, $Data . $String, 0, $Self->{IPCSize} ) || die $!;
+        # Fix for issue #286 (GitHub) / #328 (internal): Encode output.
+        my $EncodeObject = $Kernel::OM->Get('Kernel::System::Encode');
+
+        my $Output = $Data . $String;
+        $EncodeObject->EncodeOutput( \$Output );
+
+        shmwrite( $Self->{IPCSHMKey}, $Output, 0, $Self->{IPCSize} ) || die $!;
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2021-2022 Znuny GmbH, https://znuny.org/ ###
     }
 
     return 1;

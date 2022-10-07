@@ -109,7 +109,7 @@ $('.ShowFieldInfoOverlay').on('click', function() {
                                 <div class="Value CutValue DynamicField_[% Data.Name %]">
 <!-- OutputFilterHook_WidgetDynamicFieldBegin -->
 [% RenderBlockStart("ProcessWidgetDynamicFieldLink") %]
-                                    <span title="[% Data.Title %]"><a href="[% Data.Link | Interpolate %]"[% IF Data.LinkPreview %] data-trigger="floater" data-floater-url="[% Data.LinkPreview | Interpolate %]"[% END %] target="_blank" class="DynamicFieldLink">[% Data.Value %]</a></span>
+                                    <span title="[% Data.Title %]">[% Data.HTMLLink %]</span>
 [% RenderBlockEnd("ProcessWidgetDynamicFieldLink") %]
 [% RenderBlockStart("ProcessWidgetDynamicFieldTable") %]
                                     [% Data.Value %]

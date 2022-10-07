@@ -540,7 +540,7 @@ $('.DashboardHeader').off('click').on('click', '.ColumnSettingsTrigger', functio
                 <td>
                     <div title="[% Data.Title | html %]">
 [% RenderBlockStart("ContentLargeTicketGenericDynamicFieldLink") %]
-                        <a href="[% Data.Link | Interpolate %]"  target="_blank" class="DynamicFieldLink">[% Data.Value %]</a>
+                        [% Data.HTMLLink %]
 [% RenderBlockEnd("ContentLargeTicketGenericDynamicFieldLink") %]
 [% RenderBlockStart("ContentLargeTicketGenericDynamicFieldPlain") %]
                         [% Data.Value %]

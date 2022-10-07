@@ -122,7 +122,7 @@
 [% RenderBlockEnd("DynamicFieldContentQuoted") %]
 [% RenderBlockStart("DynamicFieldContentLink") %]
             <p class="Value" title="[% Data.Title %]">
-                <a href="[% Data.Link | Interpolate %]" target="_blank" class="DynamicFieldLink">[% Data.Value %]</a>
+                [% Data.HTMLLink %]
             </p>
 [% RenderBlockEnd("DynamicFieldContentLink") %]
 [% RenderBlockStart("DynamicFieldContentCheckbox") %]

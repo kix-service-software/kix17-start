@@ -434,7 +434,7 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
             }, 'CustomerSearch');
 
             if (
-                $Element.attr('name') != undefined 
+                $Element.attr('name') != undefined
                 && $Element.attr('name').substr(0, 13) !== 'DynamicField_'
                 && Core.Config.Get('Action') !== 'AgentBook'
                 && Core.Config.Get('Action') !== 'AgentTicketCustomer'
@@ -649,7 +649,7 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
             )
             && $('#CryptKeyID').length
         ) {
-            Core.AJAX.FormUpdate($('#' + Field).closest('form'), 'AJAXUpdate', '', [ 'CryptKeyID' ]);
+            Core.AJAX.FormUpdate($('#' + Field).closest('form'), 'AJAXUpdate', '', [ 'CryptKeyID' ], undefined ,undefined, false);
         }
 
         // now that we know that at least one customer has been added,
