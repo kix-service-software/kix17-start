@@ -1,6 +1,19 @@
 # Change log of KIX
 * Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.20.0-RC1 (2022/10/07)
+ * (2022/10/07) - CR: KIX17-3131 (updated JavaScript libraries) (fjacquemin)
+ * (2022/10/06) - Bugfix: KIX17-3186 (remove js-code from links in dynamic field display) (mbauer)
+ * (2022/10/06) - Bugfix: KIX17-3240 (Fixed encoding of log output. Thanks to Roland Jäger and Bernhard Schmalhofer) (mbauer)
+ * (2022/10/05) - Bugfix: KIX17-3186 (remove js-code from links in customer user items) (mbauer)
+ * (2022/10/05) - Bugfix: KIX17-3186 (remove js-code from links in menu modules) (mbauer)
+ * (2022/10/05) - Bugfix: KIX17-3185 (prevent error on missformed placeholder) (mbauer)
+ * (2022/10/05) - Bugfix: KIX17-3214 (clarified MaxArticlesZoomExpand) (mbauer)
+ * (2022/09/28) - Bugfix: KIX17-3213 (fixed incorrect display of value of dynamic field in the ColumnFilter) (fjacquemin)
+ * (2022/09/26) - Bugfix: KIX17-3218 (fixed status from response template is not set correctly when PGP or SMIME is active) (fjacquemin)
+ * (2022/08/25) - Bugfix: KIX17-3177 (fixed handling of type based Ticket::StateAfterPending) (mbauer)
+ * (2022/08/05) - CR: KIX17-3244 (autofocus on login) (mbauer)
+
 # 17.19.1 (2022/09/29)
  * (2022/09/29) - productive release
  * (2022/07/13) - Bugfix: KIX17-3065 (extract inline images from internal sources) (mbauer)
