@@ -11449,7 +11449,7 @@ Thanks for your help!
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::MaxArticlesZoomExpand" Required="1" Valid="1">
-        <Description Translatable="1">The maximal number of articles expanded on a single page in AgentTicketZoom.</Description>
+        <Description Translatable="1">The maximal number of articles expanded on a single page in AgentTicketZoom. If this number is exceeded, expanded view can not be used.</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewZoom</SubGroup>
         <Setting>
