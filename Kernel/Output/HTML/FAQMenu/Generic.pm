@@ -98,6 +98,29 @@ sub Run {
 
     return $Param{Counter} if !$Access;
 
+    $Param{FAQItem}->{HTMLLink} = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout')->Output(
+        Template => '<a href="[% Env("Baselink") %][% Data.Link | Interpolate %]" id="[% Data.MenuID | html %]" class="[% Data.Class | html %]" [% Data.LinkParam %] title="[% Translate(Data.Description) | html %]">[% Translate(Data.Name) | html %]</a>',
+        Data     => {
+            %Param,
+            %{ $Param{FAQItem} },
+            %{ $Param{Config} },
+        },
+    );
+    my %Safe = $Kernel::OM->Get('Kernel::System::HTMLUtils')->Safety(
+        String       => $Param{FAQItem}->{HTMLLink},
+        NoApplet     => 1,
+        NoObject     => 1,
+        NoEmbed      => 1,
+        NoSVG        => 1,
+        NoImg        => 1,
+        NoIntSrcLoad => 0,
+        NoExtSrcLoad => 1,
+        NoJavaScript => 1,
+    );
+    if ( $Safe{Replace} ) {
+        $Param{FAQItem}->{HTMLLink} = $Safe{String};
+    }
+
     # output menu item
     $LayoutObject->Block(
         Name => 'MenuItem',

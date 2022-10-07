@@ -49,13 +49,13 @@
                     [% IF Data.Type == 'Cluster' %]
                         <span class="[% Data.Class %]" title="[% Translate(Data.Description) | html %]">[% Translate(Data.Name) | html %] </span><span class="MenuClusterIcon"><i class="fa fa-caret-down"></span></i>
                     [% ELSE %]
-                        <a href="[% Env("Baselink") %][% Data.Link | Interpolate %]" class="[% Data.Class %]" [% Data.LinkParam %] title="[% Translate(Data.Description) | html %]">[% Translate(Data.Name) | html %]</a>
+                        [% Data.HTMLLink %]
                     [% END %]
 [% RenderBlockStart("TicketMenuSubContainer") %]
                         <ul id="nav-[% Data.Name | replace(' ', '-') | html %]-container">
 [% RenderBlockStart("TicketMenuSubContainerItem") %]
                             <li id="nav-[% Data.Name | replace(' ', '-') | html %]">
-                                <a href="[% Env("Baselink") %][% Data.Link | Interpolate %]" class="[% Data.Class | html %]" [% Data.LinkParam %] title="[% Translate(Data.Description) | html %]">[% Translate(Data.Name) | html %]</a>
+                                [% Data.HTMLLink %]
                             </li>
 [% RenderBlockEnd("TicketMenuSubContainerItem") %]
                         </ul>

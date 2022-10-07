@@ -47,7 +47,7 @@
 [% RenderBlockStart("Menu") %]
 [% RenderBlockStart("MenuItem") %]
                     <li>
-                        <a href="[% Env("Baselink") %][% Data.Link | Interpolate %]" id="Menu[% Data.MenuID | html %]" class="[% Data.MenuClass | html %]" title="[% Translate(Data.Description) | html %]">[% Translate(Data.Name) | html %]</a>
+                        [% Data.HTMLLink %]
                     </li>
 [% RenderBlockStart("ShowConfirmDialog") %]
 [% WRAPPER JSOnDocumentComplete %]
