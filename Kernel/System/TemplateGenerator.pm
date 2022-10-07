@@ -1528,7 +1528,7 @@ sub _Replace {
 
             # prepare body (insert old email) <KIX_CUSTOMER_EMAIL[n]>, <KIX_CUSTOMER_NOTE[n]>
             #   <KIX_CUSTOMER_BODY[n]>, <KIX_AGENT_EMAIL[n]>..., <KIX_COMMENT>
-            my $Pattern = "$Start(?:(?:$DataType(EMAIL|NOTE|BODY)\\[(.+?)\\])|(?:KIX_COMMENT))$End";
+            my $Pattern = "$Start(?:(?:$DataType(EMAIL|NOTE|BODY)\\[(\\d+?)\\])|(?:KIX_COMMENT))$End";
             if ( $Param{Text} =~ /$Pattern/g ) {
 
                 my $Line       = $2 || 2500;
@@ -1581,16 +1581,16 @@ sub _Replace {
 
             # replace <KIX_CUSTOMER_SUBJECT[]>  and  <KIX_AGENT_SUBJECT[]> tags
             $Tag = "$Start$DataType" . 'SUBJECT';
-            if ( $Param{Text} =~ /$Tag\[(.+?)\]$End/g ) {
+            if ( $Param{Text} =~ /$Tag\[(\d+?)\]$End/g ) {
 
-                my $SubjectChar = $1;
+                my $SubjectChar = $1 || 50;
                 my $Subject     = $TicketObject->TicketSubjectClean(
                     TicketNumber => $Ticket{TicketNumber},
                     Subject      => $Data{Subject},
                 );
 
                 $Subject =~ s/^(.{$SubjectChar}).*$/$1 [...]/;
-                $Param{Text} =~ s/$Tag\[.+?\]$End/$Subject/g;
+                $Param{Text} =~ s/$Tag\[\d+?\]$End/$Subject/g;
             }
 
             # replace <KIX_> tags
@@ -1902,7 +1902,7 @@ sub _Replace {
 
         # replace <KIX_FIRST_EMAIL[]> tags
         $Tag2 = $Start . 'KIX_FIRST_EMAIL';
-        if ( $Param{Text} =~ /$Tag2\[(.+?)\]$End/g ) {
+        if ( $Param{Text} =~ /$Tag2\[(\d+?)\]$End/g ) {
             my $Line       = $1;
             my @Body       = split( /\n/, $FirstArticle{Body} );
             my $NewOldBody = '';
@@ -1945,19 +1945,19 @@ sub _Replace {
             }
 
             # replace tag
-            $Param{Text} =~ s/$Tag2\[.+?\]$End/$NewOldBody/g;
+            $Param{Text} =~ s/$Tag2\[\d+?\]$End/$NewOldBody/g;
         }
 
         # replace <KIX_FIRST_SUBJECT[]> tags
         $Tag2 = $Start . 'KIX_FIRST_SUBJECT';
-        if ( $Param{Text} =~ /$Tag2\[(.+?)\]$End/g ) {
-            my $SubjectChar = $1;
+        if ( $Param{Text} =~ /$Tag2\[(\d+?)\]$End/g ) {
+            my $SubjectChar = $1 || 50;
             my $Subject     = $TicketObject->TicketSubjectClean(
                 TicketNumber => $Ticket{TicketNumber},
                 Subject      => $FirstArticle{Subject},
             );
             $Subject =~ s/^(.{$SubjectChar}).*$/$1 [...]/;
-            $Param{Text} =~ s/$Tag2\[.+?\]$End/$Subject/g;
+            $Param{Text} =~ s/$Tag2\[\d+?\]$End/$Subject/g;
         }
 
         # html quoteing of content
