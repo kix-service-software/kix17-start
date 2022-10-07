@@ -362,6 +362,30 @@ sub Run {
                     );
 
                     if ( $ValueStrg->{Link} ) {
+                        my $HTMLLink = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout')->Output(
+                            Template => '<a href="[% Data.Link %]" class="DynamicFieldLink">[% Data.Value %]</a>',
+                            Data     => {
+                                Value                       => $ValueStrg->{Value},
+                                Title                       => $ValueStrg->{Title},
+                                Link                        => $ValueStrg->{Link},
+                                $DynamicFieldConfig->{Name} => $ValueStrg->{Title},
+                            },
+                        );
+                        my %Safe = $Kernel::OM->Get('Kernel::System::HTMLUtils')->Safety(
+                            String       => $HTMLLink,
+                            NoApplet     => 1,
+                            NoObject     => 1,
+                            NoEmbed      => 1,
+                            NoSVG        => 1,
+                            NoImg        => 1,
+                            NoIntSrcLoad => 0,
+                            NoExtSrcLoad => 1,
+                            NoJavaScript => 1,
+                        );
+                        if ( $Safe{Replace} ) {
+                            $HTMLLink = $Safe{String};
+                        }
+
                         $LayoutObject->Block(
                             Name => 'RecordDynamicFieldLink',
                             Data => {
@@ -369,6 +393,7 @@ sub Run {
                                 Title                       => $ValueStrg->{Title},
                                 Link                        => $ValueStrg->{Link},
                                 $DynamicFieldConfig->{Name} => $ValueStrg->{Title},
+                                HTMLLink                    => $HTMLLink,
                             },
                         );
                     }
@@ -392,6 +417,30 @@ sub Run {
                     );
 
                     if ( $ValueStrg->{Link} ) {
+                        my $HTMLLink = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout')->Output(
+                            Template => '<a href="[% Data.Link %]" class="DynamicFieldLink">[% Data.Value %]</a>',
+                            Data     => {
+                                Value                       => $ValueStrg->{Value},
+                                Title                       => $ValueStrg->{Title},
+                                Link                        => $ValueStrg->{Link},
+                                $DynamicFieldConfig->{Name} => $ValueStrg->{Title},
+                            },
+                        );
+                        my %Safe = $Kernel::OM->Get('Kernel::System::HTMLUtils')->Safety(
+                            String       => $HTMLLink,
+                            NoApplet     => 1,
+                            NoObject     => 1,
+                            NoEmbed      => 1,
+                            NoSVG        => 1,
+                            NoImg        => 1,
+                            NoIntSrcLoad => 0,
+                            NoExtSrcLoad => 1,
+                            NoJavaScript => 1,
+                        );
+                        if ( $Safe{Replace} ) {
+                            $HTMLLink = $Safe{String};
+                        }
+
                         $LayoutObject->Block(
                             Name => 'RecordDynamicField_' . $DynamicFieldConfig->{Name} . '_Link',
                             Data => {
@@ -399,6 +448,7 @@ sub Run {
                                 Title                       => $ValueStrg->{Title},
                                 Link                        => $ValueStrg->{Link},
                                 $DynamicFieldConfig->{Name} => $ValueStrg->{Title},
+                                HTMLLink                    => $HTMLLink,
                             },
                         );
                     }

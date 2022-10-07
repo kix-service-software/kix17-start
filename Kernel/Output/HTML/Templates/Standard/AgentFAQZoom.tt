@@ -78,7 +78,7 @@
                         <label>[% Translate(Data.Label) | html %]:</label>
                         <p class="Value">
 [% RenderBlockStart("FAQDynamicFieldLink") %]
-                            <span title="[% Data.Title | html %]"><a href="[% Data.Link %]" target="_blank" class="DynamicFieldLink">[% Data.Value %]</a></span>
+                            <span title="[% Data.Title | html %]">[% Data.HTMLLink %]</span>
 [% RenderBlockEnd("FAQDynamicFieldLink") %]
 [% RenderBlockStart("FAQDynamicFieldPlain") %]
                             <span title="[% Data.Title | html %]">[% Data.Value %]</span>

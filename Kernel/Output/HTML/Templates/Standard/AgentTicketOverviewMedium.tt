@@ -220,7 +220,7 @@
                         <td>
                             <label>[% Translate(Data.Label) | html %]</label>
 [% RenderBlockStart("DynamicFieldTableRowRecordLink") %]
-                            <div title="[% Data.Title | html %]"><a href="[% Data.Link | Interpolate %]" target="_blank" class="DynamicFieldLink">[% Data.Value %]</a></div>
+                            <div title="[% Data.Title | html %]">[% Data.HTMLLink %]</div>
 [% RenderBlockEnd("DynamicFieldTableRowRecordLink") %]
 [% RenderBlockStart("DynamicFieldTableRowRecordPlain") %]
                             <div title="[% Data.Title | html %]"><span>[% Data.Value %]</span></div>

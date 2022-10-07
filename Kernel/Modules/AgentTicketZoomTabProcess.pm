@@ -455,6 +455,35 @@ sub MaskAgentZoom {
                         );
 
                         if ( $Field->{Link} ) {
+                            my $HTMLLink = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout')->Output(
+                                Template => '<a href="[% Data.Link | Interpolate %]"[% IF Data.LinkPreview %] data-trigger="floater" data-floater-url="[% Data.LinkPreview | Interpolate %]"[% END %] target="_blank" class="DynamicFieldLink">[% Data.Value %]</a>',
+                                Data     => {
+                                    %Ticket,
+
+                                    # alias for ticket title, Title will be overwritten
+                                    TicketTitle    => $Ticket{Title},
+                                    Value          => $Field->{Value},
+                                    Title          => $Field->{Title},
+                                    Link           => $Field->{Link},
+                                    LinkPreview    => $Field->{LinkPreview},
+                                    $Field->{Name} => $Field->{Title},
+                                },
+                            );
+                            my %Safe = $Kernel::OM->Get('Kernel::System::HTMLUtils')->Safety(
+                                String       => $HTMLLink,
+                                NoApplet     => 1,
+                                NoObject     => 1,
+                                NoEmbed      => 1,
+                                NoSVG        => 1,
+                                NoImg        => 1,
+                                NoIntSrcLoad => 0,
+                                NoExtSrcLoad => 1,
+                                NoJavaScript => 1,
+                            );
+                            if ( $Safe{Replace} ) {
+                                $HTMLLink = $Safe{String};
+                            }
+
                             $LayoutObject->Block(
                                 Name => 'ProcessWidgetDynamicFieldLink',
                                 Data => {
@@ -467,6 +496,7 @@ sub MaskAgentZoom {
                                     Link           => $Field->{Link},
                                     LinkPreview    => $Field->{LinkPreview},
                                     $Field->{Name} => $Field->{Title},
+                                    HTMLLink       => $HTMLLink,
                                 },
                             );
                         }
