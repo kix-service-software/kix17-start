@@ -211,7 +211,7 @@ X-KIX-Login: [% Env("Baselink") %]
                                     [% Translate("Username") | html %]
                                 </label>
                                 <div class="Field">
-                                    <input type="text" autocorrect="off" autocapitalize="off" autocomplete=[% IF Config("Secure::DisableLoginAutocomplete::Agent") %]"off"[% ELSE %]"username"[% END %] title="[% Translate("Your user name") | html %]" id="User" name="User" value="[% Data.User | html %]" class="W75pc Validate_Required" />
+                                    <input type="text" autofocus autocorrect="off" autocapitalize="off" autocomplete=[% IF Config("Secure::DisableLoginAutocomplete::Agent") %]"off"[% ELSE %]"username"[% END %] title="[% Translate("Your user name") | html %]" id="User" name="User" value="[% Data.User | html %]" class="W75pc Validate_Required" />
                                     <div id="UserError" class="TooltipErrorMessage" ><p>[% Translate("This field is required.") | html %]</p></div>
                                 </div>
                                 <div class="Clear"></div>
