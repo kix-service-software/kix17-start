@@ -51,6 +51,7 @@ sub _RemoveObsoleteDirectory {
         'var/httpd/htdocs/js/thirdparty/jquery-ui-1.13.1',
         'var/httpd/htdocs/js/thirdparty/jquery-validate-1.19.3',
         'var/httpd/htdocs/skins/Agent/default/css/thirdparty/jquery-ui-1.13.1',
+        'var/httpd/htdocs/skins/Customer/default/css/thirdparty/jquery-ui-1.13.1',
 
         'var/httpd/htdocs/js/thirdparty/jscolor-2.4.7',
         'var/httpd/htdocs/js/thirdparty/momentjs-2.29.1',
