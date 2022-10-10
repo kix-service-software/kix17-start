@@ -24,7 +24,7 @@ X-KIX-Login: [% Env("Baselink") %]
     <link rel="stylesheet" type="text/css" href="[% Config("Frontend::WebPath") %]skins/Agent/[% Data.Skin | uri %]/[% Data.CSSDirectory %]/[% Data.Filename %]" />
 [% RenderBlockEnd("CommonCSS") %]
 
-    <link rel="stylesheet" href="[% Config("Frontend::WebPath") %]skins/Agent/default/css/thirdparty/jquery-ui-1.13.1/jquery-ui.min.css" />
+    <link rel="stylesheet" href="[% Config("Frontend::WebPath") %]skins/Agent/default/css/thirdparty/jquery-ui-1.13.2/jquery-ui.min.css" />
 
     <style type="text/css">
 [% RenderBlockStart("LoginLogoCSS") %]
