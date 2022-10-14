@@ -1179,7 +1179,7 @@ sub ProcessDump {
             Name           => $ActivityData->{Name},
             CreateTime     => $ActivityData->{CreateTime},
             ChangeTime     => $ActivityData->{ChangeTime},
-            ActivityDialog => $ActivityData->{Config}->{ActivityDialog} || '',
+            ActivityDialog => $ActivityData->{Config}->{ActivityDialog} || {},
         };
     }
 
