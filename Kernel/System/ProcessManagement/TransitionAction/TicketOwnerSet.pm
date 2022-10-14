@@ -116,30 +116,19 @@ sub Run {
 
     $Success = 0;
 
-    if (
-        defined $Param{Config}->{Owner}
-        && $Param{Config}->{Owner} ne $Param{Ticket}->{Owner}
-    ) {
+    if ( defined( $Param{Config}->{Owner} ) ) {
         $Success = $Kernel::OM->Get('Kernel::System::Ticket')->TicketOwnerSet(
             TicketID => $Param{Ticket}->{TicketID},
             NewUser  => $Param{Config}->{Owner},
             UserID   => $Param{UserID},
         );
     }
-    elsif (
-        defined $Param{Config}->{OwnerID}
-        && $Param{Config}->{OwnerID} ne $Param{Ticket}->{OwnerID}
-    ) {
+    elsif ( defined( $Param{Config}->{OwnerID} ) ) {
         $Success = $Kernel::OM->Get('Kernel::System::Ticket')->TicketOwnerSet(
             TicketID  => $Param{Ticket}->{TicketID},
             NewUserID => $Param{Config}->{OwnerID},
             UserID    => $Param{UserID},
         );
-    }
-    else {
-
-        # data is the same as in ticket nothing to do
-        $Success = 1;
     }
 
     if ( !$Success ) {
