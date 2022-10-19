@@ -71,9 +71,12 @@ sub Run {
     my $LayoutObject    = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my $HTMLUtilsObject = $Kernel::OM->Get('Kernel::System::HTMLUtils');
     my $ValidObject     = $Kernel::OM->Get('Kernel::System::Valid');
-    my $CompanyIsValid;
+
+    # get isolated layout object for link safety checks
+    my $HTMLLinkLayoutObject = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout');
 
     # make ValidID readable
+    my $CompanyIsValid;
     if ( $CustomerCompany{ValidID} ) {
         my @ValidIDs = $ValidObject->ValidIDsGet();
         $CompanyIsValid = grep { $CustomerCompany{ValidID} == $_ } @ValidIDs;
@@ -115,7 +118,7 @@ sub Run {
 
         # check if a link must be placed
         if ( $Entry->[6] ) {
-            my $Link = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout')->Output(
+            my $Link = $HTMLLinkLayoutObject->Output(
                 Template => '<a href="[% Data.URL | Interpolate %]" target="[% Data.Target | html %]">[% Data.Value | html %]</a>',
                 Data     => {
                     %CustomerCompany,

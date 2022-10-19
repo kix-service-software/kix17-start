@@ -2050,8 +2050,18 @@ sub _ArticleItem {
     my %Article   = %{ $Param{Article} };
     my %AclAction = %{ $Param{AclAction} };
 
-    # get ticket object
-    my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
+    # get needed objects
+    my $ConfigObject       = $Kernel::OM->Get('Kernel::Config');
+    my $LayoutObject       = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $DynamicFieldObject = $Kernel::OM->Get('Kernel::System::DynamicField');
+    my $BackendObject      = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
+    my $HTMLUtilsObject    = $Kernel::OM->Get('Kernel::System::HTMLUtils');
+    my $MainObject         = $Kernel::OM->Get('Kernel::System::Main');
+    my $TicketObject       = $Kernel::OM->Get('Kernel::System::Ticket');
+    my $UserObject         = $Kernel::OM->Get('Kernel::System::User');
+
+    # get isolated layout object for link safety checks
+    my $HTMLLinkLayoutObject = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout');
 
     # cleanup subject
     $Article{Subject} = $TicketObject->TicketSubjectClean(
@@ -2064,9 +2074,6 @@ sub _ArticleItem {
     my @MenuItems = $Self->_ArticleMenu(
         %Param,
     );
-
-    # get layout object
-    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
     # collect article meta
     my @ArticleMetaData = $Self->_ArticleCollectMeta(
@@ -2084,7 +2091,7 @@ sub _ArticleItem {
 
     # show created by if different from User ID 1
     if ( $Article{CreatedBy} > 1 ) {
-        $Article{CreatedByUser} = $Kernel::OM->Get('Kernel::System::User')->UserName( UserID => $Article{CreatedBy} );
+        $Article{CreatedByUser} = $UserObject->UserName( UserID => $Article{CreatedBy} );
         $LayoutObject->Block(
             Name => 'ArticleCreatedBy',
             Data => {%Article},
@@ -2115,9 +2122,6 @@ sub _ArticleItem {
             }
         }
     }
-
-    # get cofig object
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
     # do some strips && quoting
     my $RecipientDisplayType = $ConfigObject->Get('Ticket::Frontend::DefaultRecipientDisplayType') || 'Realname';
@@ -2168,27 +2172,22 @@ sub _ArticleItem {
     # get dynamic field config for frontend module
     my $DynamicFieldFilter = {
         %{ $ConfigObject->Get("Ticket::Frontend::AgentTicketZoom")->{DynamicField} || {} },
-        %{
-            $ConfigObject->Get("Ticket::Frontend::AgentTicketZoom")
-                ->{ProcessWidgetDynamicField}
-                || {}
-        },
+        %{ $ConfigObject->Get("Ticket::Frontend::AgentTicketZoom")->{ProcessWidgetDynamicField} || {} },
     };
 
     # get the dynamic fields for article object
-    my $DynamicField = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
+    my $DynamicField = $DynamicFieldObject->DynamicFieldListGet(
         Valid       => 1,
         ObjectType  => ['Article'],
         FieldFilter => $DynamicFieldFilter || {},
     );
-    my $DynamicFieldBackendObject = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
 
     # cycle trough the activated Dynamic Fields
     DYNAMICFIELD:
     for my $DynamicFieldConfig ( @{$DynamicField} ) {
         next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
-        my $Value = $DynamicFieldBackendObject->ValueGet(
+        my $Value = $BackendObject->ValueGet(
             DynamicFieldConfig => $DynamicFieldConfig,
             ObjectID           => $Article{ArticleID},
         );
@@ -2197,7 +2196,7 @@ sub _ArticleItem {
         next DYNAMICFIELD if $Value eq '';
 
         # get print string for this dynamic field
-        my $ValueStrg = $DynamicFieldBackendObject->DisplayValueRender(
+        my $ValueStrg = $BackendObject->DisplayValueRender(
             DynamicFieldConfig => $DynamicFieldConfig,
             Value              => $Value,
             ValueMaxChars      => $ConfigObject->
@@ -2216,7 +2215,7 @@ sub _ArticleItem {
         );
 
         if ( $ValueStrg->{Link} ) {
-            my $HTMLLink = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout')->Output(
+            my $HTMLLink = $HTMLLinkLayoutObject->Output(
                 Template => '<a href="[% Data.Link | Interpolate %]" target="_blank" class="DynamicFieldLink">[% Data.Value %]</a>',
                 Data     => {
                     %Ticket,
@@ -2230,7 +2229,7 @@ sub _ArticleItem {
                     $DynamicFieldConfig->{Name} => $ValueStrg->{Title},
                 },
             );
-            my %Safe = $Kernel::OM->Get('Kernel::System::HTMLUtils')->Safety(
+            my %Safe = $HTMLUtilsObject->Safety(
                 String       => $HTMLLink,
                 NoApplet     => 1,
                 NoObject     => 1,
@@ -2314,9 +2313,6 @@ sub _ArticleItem {
             );
         }
     }
-
-    # get main object
-    my $MainObject = $Kernel::OM->Get('Kernel::System::Main');
 
     # run article view modules
     my $Config = $ConfigObject->Get('Ticket::Frontend::ArticleViewModule');

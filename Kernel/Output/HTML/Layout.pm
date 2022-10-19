@@ -3060,11 +3060,18 @@ sub PageNavBar {
 sub NavigationBar {
     my ( $Self, %Param ) = @_;
 
+    # get needed objects
+    my $ConfigObject    = $Kernel::OM->Get('Kernel::Config');
+    my $HTMLUtilsObject = $Kernel::OM->Get('Kernel::System::HTMLUtils');
+    my $MainObject      = $Kernel::OM->Get('Kernel::System::Main');
+    my $UserObject      = $Kernel::OM->Get('Kernel::System::User');
+
+    # get isolated layout object for link safety checks
+    my $HTMLLinkLayoutObject = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout');
+
     if ( !$Param{Type} ) {
         $Param{Type} = $Self->{ModuleReg}->{NavBarName} || 'Ticket';
     }
-
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
     # create menu items
     my %NavBar;
@@ -3169,8 +3176,6 @@ sub NavigationBar {
         }
     }
 
-    my $MainObject = $Kernel::OM->Get('Kernel::System::Main');
-
     # run menu item modules
     if ( ref $ConfigObject->Get('Frontend::NavBarModule') eq 'HASH' ) {
         my %Jobs = %{ $ConfigObject->Get('Frontend::NavBarModule') };
@@ -3208,14 +3213,14 @@ sub NavigationBar {
         $Item->{NameForID} =~ s/[ &;]//ig;
         my $Sub = $NavBar{Sub}->{ $Item->{NavBar} };
 
-        $Item->{HTMLLink} = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout')->Output(
+        $Item->{HTMLLink} = $HTMLLinkLayoutObject->Output(
             Template => '<a href="[% Env("Baselink") %][% Data.Link %]" title="[% Translate(Data.Name) | html %][% Data.AccessKeyReference | html %]" accesskey="[% Data.AccessKey | html %]" [% Data.LinkOption %]>[% Translate(Data.Name) | html %]</a>',
             Data     => {
                 %$Item,
                 AccessKeyReference => $Item->{AccessKey} ? " ($Item->{AccessKey})" : '',
             },
         );
-        my %Safe = $Kernel::OM->Get('Kernel::System::HTMLUtils')->Safety(
+        my %Safe = $HTMLUtilsObject->Safety(
             String       => $Item->{HTMLLink},
             NoApplet     => 1,
             NoObject     => 1,
@@ -3254,14 +3259,14 @@ sub NavigationBar {
             $ItemSub->{Description}
                 ||= $ItemSub->{Name};    # use 'name' as fallback, this is shown as the link title
 
-            $ItemSub->{HTMLLink} = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout')->Output(
+            $ItemSub->{HTMLLink} = $HTMLLinkLayoutObject->Output(
                 Template => '<a href="[% Env("Baselink") %][% Data.Link %]" title="[% Translate(Data.Description) | html %][% Data.AccessKeyReference | html %]" accesskey="[% Data.AccessKey | html %]" [% Data.LinkOption %]>[% Translate(Data.Name) | html %]</a>',
                 Data     => {
                     %$ItemSub,
                     AccessKeyReference => $ItemSub->{AccessKey} ? " ($ItemSub->{AccessKey})" : '',
                 },
             );
-            my %Safe = $Kernel::OM->Get('Kernel::System::HTMLUtils')->Safety(
+            my %Safe = $HTMLUtilsObject->Safety(
                 String       => $ItemSub->{HTMLLink},
                 NoApplet     => 1,
                 NoObject     => 1,
@@ -3287,7 +3292,7 @@ sub NavigationBar {
     }
 
     # get user preferences for custom nav bar item ordering
-    my %UserPreferences = $Kernel::OM->Get('Kernel::System::User')->GetPreferences(
+    my %UserPreferences = $UserObject->GetPreferences(
         UserID => $Self->{UserID},
     );
 
@@ -4498,7 +4503,13 @@ sub CustomerFatalError {
 sub CustomerNavigationBar {
     my ( $Self, %Param ) = @_;
 
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+    # get needed objects
+    my $ConfigObject    = $Kernel::OM->Get('Kernel::Config');
+    my $HTMLUtilsObject = $Kernel::OM->Get('Kernel::System::HTMLUtils');
+    my $MainObject      = $Kernel::OM->Get('Kernel::System::Main');
+
+    # get isolated layout object for link safety checks
+    my $HTMLLinkLayoutObject = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout');
 
     # create menu items
     my %NavBarModule;
@@ -4609,8 +4620,6 @@ sub CustomerNavigationBar {
         }
     }
 
-    my $MainObject = $Kernel::OM->Get('Kernel::System::Main');
-
     # run menu item modules
     if ( ref $ConfigObject->Get('CustomerFrontend::NavBarModule') eq 'HASH' ) {
         my %Jobs = %{ $ConfigObject->Get('CustomerFrontend::NavBarModule') };
@@ -4679,11 +4688,11 @@ sub CustomerNavigationBar {
             $NavBarModule{$Item}->{Class} .= ' Last';
         }
 
-        $NavBarModule{$Item}->{HTMLLink} = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout')->Output(
+        $NavBarModule{$Item}->{HTMLLink} = $HTMLLinkLayoutObject->Output(
             Template => '<a href="[% Env("Baselink") %][% Data.Link %]" accesskey="[% Data.AccessKey | html %]" title="[% Translate(Data.Description || Data.Name) | html %] ([% Data.AccessKey | html %])" [% Data.LinkOption %]>[% Translate(Data.Name) | html %]</a>',
             Data     => $NavBarModule{$Item},
         );
-        my %Safe = $Kernel::OM->Get('Kernel::System::HTMLUtils')->Safety(
+        my %Safe = $HTMLUtilsObject->Safety(
             String       => $NavBarModule{$Item}->{HTMLLink},
             NoApplet     => 1,
             NoObject     => 1,
@@ -4727,14 +4736,14 @@ sub CustomerNavigationBar {
                 }
             }
 
-            $ItemSub->{HTMLLink} = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout')->Output(
+            $ItemSub->{HTMLLink} = $HTMLLinkLayoutObject->Output(
                 Template => '<a class="[% Data.Class | html %]" href="[% Env("Baselink") %][% Data.Link %]" accesskey="[% Data.AccessKey | html %]" title="[% Translate(Data.Description || Data.Name) | html %] ([% Data.AccessKey | html %])"  [% Data.LinkOption %]>[% Translate(Data.Name) | html %]</a>',
                 Data     => {
                     %$ItemSub,
                     AccessKeyReference => $ItemSub->{AccessKey} ? " ($ItemSub->{AccessKey})" : '',
                 },
             );
-            my %Safe = $Kernel::OM->Get('Kernel::System::HTMLUtils')->Safety(
+            my %Safe = $HTMLUtilsObject->Safety(
                 String       => $ItemSub->{HTMLLink},
                 NoApplet     => 1,
                 NoObject     => 1,

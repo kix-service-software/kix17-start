@@ -358,8 +358,20 @@ sub _Show {
         return;
     }
 
-    # get layout object
-    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    # get needed objects
+    my $ConfigObject       = $Kernel::OM->Get('Kernel::Config');
+    my $LayoutObject       = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $CustomerUserObject = $Kernel::OM->Get('Kernel::System::CustomerUser');
+    my $DynamicFieldObject = $Kernel::OM->Get('Kernel::System::DynamicField');
+    my $BackendObject      = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
+    my $HTMLUtilsObject    = $Kernel::OM->Get('Kernel::System::HTMLUtils');
+    my $MainObject         = $Kernel::OM->Get('Kernel::System::Main');
+    my $QueueObject        = $Kernel::OM->Get('Kernel::System::Queue');
+    my $TicketObject       = $Kernel::OM->Get('Kernel::System::Ticket');
+    my $UserObject         = $Kernel::OM->Get('Kernel::System::User');
+
+    # get isolated layout object for link safety checks
+    my $HTMLLinkLayoutObject = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout');
 
     # check if bulk feature is enabled
     if ( $Param{Bulk} ) {
@@ -383,9 +395,6 @@ sub _Show {
         }
     }
 
-    # get config object
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-
     # collect params for ArticleGet
     my %ArticleGetParams = (
         TicketID      => $Param{TicketID},
@@ -407,9 +416,6 @@ sub _Show {
         $ArticleGetParams{ArticleSenderType} = \@ActiveArticleSenderTypes;
     }
 
-    # get ticket object
-    my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
-
     # get last 5 articles
     my @ArticleBody = $TicketObject->ArticleGet(
         %ArticleGetParams,
@@ -419,12 +425,7 @@ sub _Show {
 
     my %Ticket = $TicketObject->TicketGet(
         TicketID      => $Param{TicketID},
-# ---
-# ITSMIncidentProblemManagement
-# ---
-#        DynamicFields => 0,
         DynamicFields => 1,
-# ---
     );
 
     # Fallback for tickets without articles: get at least basic ticket data
@@ -439,7 +440,7 @@ sub _Show {
     }
 
     # user info
-    my %UserInfo = $Kernel::OM->Get('Kernel::System::User')->GetUserData(
+    my %UserInfo = $UserObject->GetUserData(
         UserID => $Article{OwnerID},
     );
     %Article = ( %UserInfo, %Article );
@@ -457,9 +458,6 @@ sub _Show {
         Space => ' '
     );
 
-    # get queue object
-    my $QueueObject = $Kernel::OM->Get('Kernel::System::Queue');
-
     # fetch all std. templates ...
     my %StandardTemplates = $QueueObject->QueueStandardTemplateMemberList(
         QueueID       => $Article{QueueID},
@@ -474,7 +472,7 @@ sub _Show {
     # customer info
     if ( $Param{Config}->{CustomerInfo} ) {
         if ( $Article{CustomerUserID} ) {
-            $Article{CustomerName} = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerName(
+            $Article{CustomerName} = $CustomerUserObject->CustomerName(
                 UserLogin => $Article{CustomerUserID},
             );
         }
@@ -508,9 +506,6 @@ sub _Show {
     if ($ACL) {
         %AclAction = $TicketObject->TicketAclActionData();
     }
-
-    # get main object
-    my $MainObject = $Kernel::OM->Get('Kernel::System::Main');
 
     # run ticket pre menu modules
     my @ActionItems;
@@ -603,11 +598,7 @@ sub _Show {
         Name => 'DocumentContent',
         Data => {
             %Param,
-# ---
-# ITSMIncidentProblemManagement
-# ---
             %Ticket,
-# ---
             %Article,
             Class             => 'ArticleCount' . $ArticleCount,
             AdditionalClasses => $AdditionalClasses,
@@ -862,7 +853,7 @@ sub _Show {
 
     # responsible info
     if ( $ConfigObject->Get('Ticket::Responsible') ) {
-        my %RespInfo = $Kernel::OM->Get('Kernel::System::User')->GetUserData(
+        my %RespInfo = $UserObject->GetUserData(
             UserID => $Article{ResponsibleID},
         );
         $LayoutObject->Block(
@@ -1024,7 +1015,7 @@ sub _Show {
     my $DynamicFieldFilter = $ConfigObject->Get("Ticket::Frontend::OverviewPreview")->{DynamicField};
 
     # get the dynamic fields for this screen
-    my $DynamicField = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
+    my $DynamicField = $DynamicFieldObject->DynamicFieldListGet(
         Valid       => 1,
         ObjectType  => ['Ticket'],
         FieldFilter => $DynamicFieldFilter || {},
@@ -1035,11 +1026,8 @@ sub _Show {
     for my $DynamicFieldConfig ( @{$DynamicField} ) {
         next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
-        # get dynamic field backend object
-        my $DynamicFieldBackendObject = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
-
         # get field value
-        my $Value = $DynamicFieldBackendObject->ValueGet(
+        my $Value = $BackendObject->ValueGet(
             DynamicFieldConfig => $DynamicFieldConfig,
             ObjectID           => $Param{TicketID},
         );
@@ -1048,7 +1036,7 @@ sub _Show {
 
         $Counter++;
 
-        my $ValueStrg = $DynamicFieldBackendObject->DisplayValueRender(
+        my $ValueStrg = $BackendObject->DisplayValueRender(
             DynamicFieldConfig => $DynamicFieldConfig,
             Value              => $Value,
             ValueMaxChars      => 20,
@@ -1079,7 +1067,7 @@ sub _Show {
         );
 
         if ( $ValueStrg->{Link} ) {
-            my $HTMLLink = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout')->Output(
+            my $HTMLLink = $HTMLLinkLayoutObject->Output(
                 Template => '<a href="[% Data.Link | Interpolate %]" target="_blank" class="DynamicFieldLink">[% Data.Value %]</a>',
                 Data     => {
                     Value                       => $ValueStrg->{Value},
@@ -1088,7 +1076,7 @@ sub _Show {
                     $DynamicFieldConfig->{Name} => $ValueStrg->{Title},
                 },
             );
-            my %Safe = $Kernel::OM->Get('Kernel::System::HTMLUtils')->Safety(
+            my %Safe = $HTMLUtilsObject->Safety(
                 String       => $HTMLLink,
                 NoApplet     => 1,
                 NoObject     => 1,

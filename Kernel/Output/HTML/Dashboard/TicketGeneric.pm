@@ -990,11 +990,24 @@ sub Run {
     my %TicketSearch        = %{ $SearchParams{TicketSearch} };
     my %TicketSearchSummary = %{ $SearchParams{TicketSearchSummary} };
 
-    my $UserObject          = $Kernel::OM->Get('Kernel::System::User');
-    my $SearchProfileObject = $Kernel::OM->Get('Kernel::System::SearchProfile');
-    my $LayoutObject        = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-    my %SearchProfileData;
+    # get needed objects
+    my $ConfigObject          = $Kernel::OM->Get('Kernel::Config');
+    my $LayoutObject          = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $CacheObject           = $Kernel::OM->Get('Kernel::System::Cache');
+    my $CustomerCompanyObject = $Kernel::OM->Get('Kernel::System::CustomerCompany');
+    my $CustomerUserObject    = $Kernel::OM->Get('Kernel::System::CustomerUser');
+    my $DynamicFieldObject    = $Kernel::OM->Get('Kernel::System::DynamicField');
+    my $BackendObject         = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
+    my $HTMLUtilsObject       = $Kernel::OM->Get('Kernel::System::HTMLUtils');
+    my $SearchProfileObject   = $Kernel::OM->Get('Kernel::System::SearchProfile');
+    my $TicketObject          = $Kernel::OM->Get('Kernel::System::Ticket');
+    my $TimeObject            = $Kernel::OM->Get('Kernel::System::Time');
+    my $UserObject            = $Kernel::OM->Get('Kernel::System::User');
 
+    # get isolated layout object for link safety checks
+    my $HTMLLinkLayoutObject = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout');
+
+    my %SearchProfileData;
     if ( $Self->{SearchTemplateName} ) {
         my $SearchProfileUser;
         my $SearchProfile;
@@ -1018,7 +1031,7 @@ sub Run {
         );
 
         # add dynamic fields search criteria
-        $Self->{DynamicField} = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
+        $Self->{DynamicField} = $DynamicFieldObject->DynamicFieldListGet(
             Valid      => 1,
             ObjectType => ['Ticket','Article'],
         );
@@ -1032,16 +1045,13 @@ sub Run {
         # dynamic fields search parameters for ticket search
         my %DynamicFieldSearchParameters;
 
-        # get backend object
-        my $DynamicFieldBackendObject = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
-
         # cycle trough the activated Dynamic Fields for this screen
         DYNAMICFIELD:
         for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
             next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
             # get search field preferences
-            my $SearchFieldPreferences = $DynamicFieldBackendObject->SearchFieldPreferences(
+            my $SearchFieldPreferences = $BackendObject->SearchFieldPreferences(
                 DynamicFieldConfig => $DynamicFieldConfig,
             );
 
@@ -1061,7 +1071,7 @@ sub Run {
                 }
 
                 # extract the dynamic field value from the profile
-                my $SearchParameter = $DynamicFieldBackendObject->SearchFieldParameterBuild(
+                my $SearchParameter = $BackendObject->SearchFieldParameterBuild(
                     DynamicFieldConfig => $DynamicFieldConfig,
                     Profile            => \%SearchProfileData,
                     LayoutObject       => $LayoutObject,
@@ -1599,8 +1609,7 @@ sub Run {
         }
 
         # add search prefix and suffix if configured
-        my $SearchConfig = $Kernel::OM->Get('Kernel::Config')
-            ->Get('Ticket::Frontend::AgentTicketSearch');
+        my $SearchConfig                        = $ConfigObject->Get('Ticket::Frontend::AgentTicketSearch');
         $SearchProfileData{ConditionInline}     = $SearchConfig->{ExtendedSearchCondition};
         $SearchProfileData{ContentSearchPrefix} = '*';
         $SearchProfileData{ContentSearchSuffix} = '*';
@@ -1665,9 +1674,6 @@ sub Run {
         $TicketSearch{CustomerUserLogin} = $Param{CustomerUserLogin};
     }
 
-    # get cache object
-    my $CacheObject = $Kernel::OM->Get('Kernel::System::Cache');
-
     # check cache
     my $TicketIDs = $CacheObject->Get(
         Type => 'Dashboard',
@@ -1676,9 +1682,6 @@ sub Run {
 
     # find and show ticket list
     my $CacheUsed = 1;
-
-    # get ticket object
-    my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
 
     my $PerformSearch = 1;
     if ( $Self->{Name} =~ /SearchTemplate/ && !$Self->{SearchTemplateName} ) {
@@ -1741,11 +1744,6 @@ sub Run {
                 );
 
                 if ( $PreparedFilter->{Fulltext} ) {
-                    # get needed objects
-                    my $ConfigObject       = $Kernel::OM->Get('Kernel::Config');
-                    my $DynamicFieldObject = $Kernel::OM->Get('Kernel::System::DynamicField');
-                    my $BackendObject      = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
-
                     # isolate filter
                     my %PreparedFilter = %{ $PreparedFilter };
 
@@ -1952,11 +1950,6 @@ sub Run {
                     );
 
                     if ( $PreparedFilter->{Fulltext} ) {
-                        # get needed objects
-                        my $ConfigObject       = $Kernel::OM->Get('Kernel::Config');
-                        my $DynamicFieldObject = $Kernel::OM->Get('Kernel::System::DynamicField');
-                        my $BackendObject      = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
-
                         # isolate filter
                         my %PreparedFilter = %{ $PreparedFilter };
 
@@ -2126,9 +2119,6 @@ sub Run {
             %{$Summary},
         },
     );
-
-    # get config object
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
     # show also watcher if feature is enabled and there is a watcher filter
     if ( $ConfigObject->Get('Ticket::Watcher') && $TicketSearchSummary{Watcher} ) {
@@ -2583,7 +2573,7 @@ sub Run {
             $FilterTitle .= ', ' . $FilterTitleDesc;
 
             # get field sortable condition
-            my $IsSortable = $Kernel::OM->Get('Kernel::System::DynamicField::Backend')->HasBehavior(
+            my $IsSortable = $BackendObject->HasBehavior(
                 DynamicFieldConfig => $DynamicFieldConfig,
                 Behavior           => 'IsSortable',
             );
@@ -2740,7 +2730,7 @@ sub Run {
         }
     }
 
-    my %UserPreferences = $UserObject->GetPreferences( UserID => $Self->{UserID} );
+    my %UserPreferences          = $UserObject->GetPreferences( UserID => $Self->{UserID} );
     my $DynamicFieldDisplayLimit = $ConfigObject->Get('Frontend::OverrideDynamicFieldDisplayLimits') || 20;
 
     # show tickets
@@ -2839,9 +2829,6 @@ sub Run {
 
         # save column content
         my $DataValue;
-
-        # get needed objects
-        my $BackendObject = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
 
         # show all needed columns
         COLUMN:
@@ -3012,12 +2999,10 @@ sub Run {
                         );
                     }
                     elsif ( defined $Ticket{UntilTime} && $Ticket{UntilTime} ) {
-                        $DataValue = $Kernel::OM->Get('Kernel::System::Time')
-                            ->SystemTime2TimeStamp(
+                        $DataValue = $TimeObject->SystemTime2TimeStamp(
                             SystemTime => $Ticket{RealTillTimeNotUsed},
-                            );
-                        $DataValue = $LayoutObject->{LanguageObject}
-                            ->FormatTimeString( $DataValue, 'DateFormat' );
+                        );
+                        $DataValue = $LayoutObject->{LanguageObject}->FormatTimeString( $DataValue, 'DateFormat' );
                     }
                     else {
                         $DataValue = '';
@@ -3073,20 +3058,18 @@ sub Run {
                     # get customer name
                     my $CustomerName;
                     if ( $Ticket{CustomerUserID} ) {
-                        $CustomerName
-                            = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerName(
+                        $CustomerName = $CustomerUserObject->CustomerName(
                             UserLogin => $Ticket{CustomerUserID},
-                            );
+                        );
                     }
                     $DataValue = $CustomerName;
                 }
                 elsif ( $Column eq 'CustomerCompanyName' ) {
                     my %CustomerCompanyData;
                     if ( $Ticket{CustomerID} ) {
-                        %CustomerCompanyData = $Kernel::OM->Get('Kernel::System::CustomerCompany')
-                            ->CustomerCompanyGet(
+                        %CustomerCompanyData = $CustomerCompanyObject->CustomerCompanyGet(
                             CustomerID => $Ticket{CustomerID},
-                            );
+                        );
                     }
                     $DataValue = $CustomerCompanyData{CustomerCompanyName};
                 }
@@ -3154,7 +3137,7 @@ sub Run {
                 );
 
                 if ( $ValueStrg->{Link} ) {
-                    my $HTMLLink = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout')->Output(
+                    my $HTMLLink = $HTMLLinkLayoutObject->Output(
                         Template => '<a href="[% Data.Link | Interpolate %]"  target="_blank" class="DynamicFieldLink">[% Data.Value %]</a>',
                         Data     => {
                             Value                       => $ValueStrg->{Value},
@@ -3163,7 +3146,7 @@ sub Run {
                             $DynamicFieldConfig->{Name} => $ValueStrg->{Title},
                         },
                     );
-                    my %Safe = $Kernel::OM->Get('Kernel::System::HTMLUtils')->Safety(
+                    my %Safe = $HTMLUtilsObject->Safety(
                         String       => $HTMLLink,
                         NoApplet     => 1,
                         NoObject     => 1,

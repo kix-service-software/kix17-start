@@ -43,6 +43,9 @@ sub Run {
     my $TimeObject         = $Kernel::OM->Get('Kernel::System::Time');
     my $UserObject         = $Kernel::OM->Get('Kernel::System::User');
 
+    # get isolated layout object for link safety checks
+    my $HTMLLinkLayoutObject = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout');
+
     my %Ticket = $TicketObject->TicketGet(
         TicketID      => $Param{TicketID},
         DynamicFields => 1
@@ -136,7 +139,7 @@ sub Run {
         );
 
         if ( $ValueStrg->{Link} ) {
-            my $HTMLLink = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout')->Output(
+            my $HTMLLink = $HTMLLinkLayoutObject->Output(
                 Template => '<a href="[% Data.Link | Interpolate %]" target="_blank" class="DynamicFieldLink">[% Data.Value %]</a>',
                 Data     => {
                     %Ticket,
@@ -146,7 +149,7 @@ sub Run {
                     $DynamicFieldConfig->{Name} => $ValueStrg->{Title},
                 },
             );
-            my %Safe = $Kernel::OM->Get('Kernel::System::HTMLUtils')->Safety(
+            my %Safe = $HTMLUtilsObject->Safety(
                 String       => $HTMLLink,
                 NoApplet     => 1,
                 NoObject     => 1,

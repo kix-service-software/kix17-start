@@ -152,12 +152,19 @@ sub MaskAgentZoom {
     my ( $Self, %Param ) = @_;
 
     # get needed objects
-    my $ConfigObject       = $Kernel::OM->Get('Kernel::Config');
-    my $LayoutObject       = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-    my $ParamObject        = $Kernel::OM->Get('Kernel::System::Web::Request');
-    my $DynamicFieldObject = $Kernel::OM->Get('Kernel::System::DynamicField');
-    my $LogObject          = $Kernel::OM->Get('Kernel::System::Log');
-    my $TicketObject       = $Kernel::OM->Get('Kernel::System::Ticket');
+    my $ConfigObject         = $Kernel::OM->Get('Kernel::Config');
+    my $LayoutObject         = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $DynamicFieldObject   = $Kernel::OM->Get('Kernel::System::DynamicField');
+    my $BackendObject        = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
+    my $HTMLUtilsObject      = $Kernel::OM->Get('Kernel::System::HTMLUtils');
+    my $ActivityObject       = $Kernel::OM->Get('Kernel::System::ProcessManagement::Activity');
+    my $ActivityDialogObject = $Kernel::OM->Get('Kernel::System::ProcessManagement::ActivityDialog');
+    my $ProcessObject        = $Kernel::OM->Get('Kernel::System::ProcessManagement::Process');
+    my $TicketObject         = $Kernel::OM->Get('Kernel::System::Ticket');
+    my $ParamObject          = $Kernel::OM->Get('Kernel::System::Web::Request');
+
+    # get isolated layout object for link safety checks
+    my $HTMLLinkLayoutObject = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout');
 
     my %Ticket    = %{ $Param{Ticket} };
     my %AclAction = %{ $Param{AclAction} };
@@ -192,15 +199,13 @@ sub MaskAgentZoom {
         my $ActivityEntityIDField = 'DynamicField_'
             . $ConfigObject->Get("Process::DynamicFieldProcessManagementActivityID");
 
-        my $ProcessData
-            = $Kernel::OM->Get('Kernel::System::ProcessManagement::Process')->ProcessGet(
+        my $ProcessData = $ProcessObject->ProcessGet(
             ProcessEntityID => $Ticket{$ProcessEntityIDField},
-            );
-        my $ActivityData
-            = $Kernel::OM->Get('Kernel::System::ProcessManagement::Activity')->ActivityGet(
+        );
+        my $ActivityData = $ActivityObject->ActivityGet(
             Interface        => 'AgentInterface',
             ActivityEntityID => $Ticket{$ActivityEntityIDField},
-            );
+        );
 
         # output process information in the sidebar
         $LayoutObject->Block(
@@ -227,10 +232,6 @@ sub MaskAgentZoom {
         my $ActivityName = $ActivityData->{Name};
 
         if ($NextActivityDialogs) {
-
-            # get ActivityDialog object
-            my $ActivityDialogObject = $Kernel::OM->Get('Kernel::System::ProcessManagement::ActivityDialog');
-
             # we have to check if the current user has the needed permissions to view the
             # different activity dialogs, so we loop over every activity dialog and check if there
             # is a permission configured. If there is a permission configured we check this
@@ -323,20 +324,15 @@ sub MaskAgentZoom {
     # get dynamic field config for frontend module
     my $DynamicFieldFilter = {
         %{ $ConfigObject->Get("Ticket::Frontend::AgentTicketZoom")->{DynamicField} || {} },
-        %{
-            $ConfigObject->Get("Ticket::Frontend::AgentTicketZoom")
-                ->{ProcessWidgetDynamicField}
-                || {}
-        },
+        %{ $ConfigObject->Get("Ticket::Frontend::AgentTicketZoom")->{ProcessWidgetDynamicField} || {} },
     };
 
     # get the dynamic fields for ticket object
-    my $DynamicField = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
+    my $DynamicField = $DynamicFieldObject->DynamicFieldListGet(
         Valid       => 1,
         ObjectType  => ['Ticket'],
         FieldFilter => $DynamicFieldFilter || {},
     );
-    my $DynamicFieldBackendObject = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
 
     # to store dynamic fields to be displayed in the process widget and in the sidebar
     my ( @FieldsWidget, @FieldsSidebar );
@@ -355,7 +351,7 @@ sub MaskAgentZoom {
             $IsProcessTicket &&
             $Self->{DisplaySettings}->{ProcessWidgetDynamicField}->{ $DynamicFieldConfig->{Name} }
         ) {
-            my $ValueStrg = $DynamicFieldBackendObject->DisplayValueRender(
+            my $ValueStrg = $BackendObject->DisplayValueRender(
                 DynamicFieldConfig => $DynamicFieldConfig,
                 Value              => $Ticket{ 'DynamicField_' . $DynamicFieldConfig->{Name} },
                 LayoutObject       => $LayoutObject,
@@ -376,13 +372,11 @@ sub MaskAgentZoom {
             };
         }
 
-        my $ValueStrg = $DynamicFieldBackendObject->DisplayValueRender(
+        my $ValueStrg = $BackendObject->DisplayValueRender(
             DynamicFieldConfig => $DynamicFieldConfig,
             Value              => $Ticket{ 'DynamicField_' . $DynamicFieldConfig->{Name} },
             LayoutObject       => $LayoutObject,
-            ValueMaxChars      => $ConfigObject->
-                Get('Ticket::Frontend::DynamicFieldsZoomMaxSizeSidebar')
-                || 18,    # limit for sidebar display
+            ValueMaxChars      => $ConfigObject-> Get('Ticket::Frontend::DynamicFieldsZoomMaxSizeSidebar') || 18,    # limit for sidebar display
         );
 
         if (
@@ -455,7 +449,7 @@ sub MaskAgentZoom {
                         );
 
                         if ( $Field->{Link} ) {
-                            my $HTMLLink = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout')->Output(
+                            my $HTMLLink = $HTMLLinkLayoutObject->Output(
                                 Template => '<a href="[% Data.Link | Interpolate %]"[% IF Data.LinkPreview %] data-trigger="floater" data-floater-url="[% Data.LinkPreview | Interpolate %]"[% END %] target="_blank" class="DynamicFieldLink">[% Data.Value %]</a>',
                                 Data     => {
                                     %Ticket,
@@ -469,7 +463,7 @@ sub MaskAgentZoom {
                                     $Field->{Name} => $Field->{Title},
                                 },
                             );
-                            my %Safe = $Kernel::OM->Get('Kernel::System::HTMLUtils')->Safety(
+                            my %Safe = $HTMLUtilsObject->Safety(
                                 String       => $HTMLLink,
                                 NoApplet     => 1,
                                 NoObject     => 1,
