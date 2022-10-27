@@ -738,7 +738,7 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
     TargetNS.ResetCustomerInfo = function () {
             $('#SelectedCustomerUser').val('');
             $('#CustomerUserID').val('');
-            $('#CustomerID').val('');
+            $('#CustomerID').val('').attr('value','');
             $('#CustomerUserOption').val('');
             $('#ShowCustomerID').html('');
 
