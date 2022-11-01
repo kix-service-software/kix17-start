@@ -919,6 +919,8 @@ sub Data {
         'Definiert welche Daten in der Direktdatenanzeige dargestellt werden.';
     $Lang->{'Defines email-actions allowed for article types.'} =
         'Definiert E-Mail-Aktionen für Artikeltypen.';
+    $Lang->{'No articles were found with the defined filter.'}
+        = 'Es wurde keine Artikel mit den festgelegten Filter gefunden.';
 
     # LinkObject
     $Lang->{'Allows a search with empty search parameters in link object mask.'}
