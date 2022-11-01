@@ -858,6 +858,13 @@ sub Run {
             my $BodyText = $LayoutObject->RichText2Ascii(
                 String => $GetParam{Body} || '',
             );
+ 
+            my $Success = $TicketObject->TicketOwnerSet(
+                TicketID  => $Self->{TicketID},
+                UserID    => $Self->{UserID},
+                NewUserID => $GetParam{NewOwnerID},
+                Comment   => $BodyText,
+            );
 
             if (
                 $GetParam{NewOwnerID}
@@ -867,12 +874,6 @@ sub Run {
                     TicketID => $Self->{TicketID},
                     Lock     => 'lock',
                     UserID   => $Self->{UserID},
-                );
-                my $Success = $TicketObject->TicketOwnerSet(
-                    TicketID  => $Self->{TicketID},
-                    UserID    => $Self->{UserID},
-                    NewUserID => $GetParam{NewOwnerID},
-                    Comment   => $BodyText,
                 );
                 $UnlockOnAway = 0;
 

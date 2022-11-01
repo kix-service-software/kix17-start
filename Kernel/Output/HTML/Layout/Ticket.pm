@@ -92,6 +92,9 @@ sub AgentCustomerViewTable {
     my $HTMLUtilsObject = $Kernel::OM->Get('Kernel::System::HTMLUtils');
     my $MainObject      = $Kernel::OM->Get('Kernel::System::Main');
 
+    # get isolated layout object for link safety checks
+    my $HTMLLinkLayoutObject = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout');
+
     # check Frontend::CustomerUser::Image
     my $CustomerImage = $ConfigObject->Get('Frontend::CustomerUser::Image');
     if ($CustomerImage) {
@@ -173,7 +176,7 @@ sub AgentCustomerViewTable {
                         Max  => $Param{Max}
                     );
                 }
-                $Record{Entry} = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout')->Output(
+                $Record{Entry} = $HTMLLinkLayoutObject->Output(
                     Template => '[% Data.LinkStart | Interpolate %][% Data.ValueShort %][% Data.LinkStop %]',
                     Data     => \%Record,
                 );

@@ -854,6 +854,13 @@ sub Run {
                 String => $GetParam{Body} || '',
             );
 
+            my $Success = $TicketObject->TicketOwnerSet(
+                TicketID  => $Self->{TicketID},
+                UserID    => $Self->{UserID},
+                NewUserID => $GetParam{NewOwnerID},
+                Comment   => $BodyText,
+            );
+
             if (
                 $GetParam{NewOwnerID}
                 && $GetParam{NewOwnerID} != $Ticket{OwnerID}
@@ -862,12 +869,6 @@ sub Run {
                     TicketID => $Self->{TicketID},
                     Lock     => 'lock',
                     UserID   => $Self->{UserID},
-                );
-                my $Success = $TicketObject->TicketOwnerSet(
-                    TicketID  => $Self->{TicketID},
-                    UserID    => $Self->{UserID},
-                    NewUserID => $GetParam{NewOwnerID},
-                    Comment   => $BodyText,
                 );
                 $UnlockOnAway = 0;
 

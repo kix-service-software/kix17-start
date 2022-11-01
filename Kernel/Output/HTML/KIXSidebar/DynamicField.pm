@@ -50,12 +50,16 @@ sub Run {
     my ( $Self, %Param ) = @_;
 
     # create needed objects
-    my $ConfigObject  = $Kernel::OM->Get('Kernel::Config');
-    my $BackendObject = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
-    my $TicketObject  = $Kernel::OM->Get('Kernel::System::Ticket');
-    my $UserObject    = $Kernel::OM->Get('Kernel::System::User');
-    my $LayoutObject  = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-    my $ParamObject   = $Kernel::OM->Get('Kernel::System::Web::Request');
+    my $ConfigObject    = $Kernel::OM->Get('Kernel::Config');
+    my $LayoutObject    = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $BackendObject   = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
+    my $HTMLUtilsObject = $Kernel::OM->Get('Kernel::System::HTMLUtils');
+    my $TicketObject    = $Kernel::OM->Get('Kernel::System::Ticket');
+    my $UserObject      = $Kernel::OM->Get('Kernel::System::User');
+    my $ParamObject     = $Kernel::OM->Get('Kernel::System::Web::Request');
+
+    # get isolated layout object for link safety checks
+    my $HTMLLinkLayoutObject = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout');
 
     # get values
     my %GetParam = %Param;
@@ -70,9 +74,9 @@ sub Run {
     );
 
     # get user preferences
-    my %UserPreferences = $UserObject->GetPreferences( UserID => $Self->{UserID} );
-    my $View                 = $UserPreferences{UserKIXSidebarDynamicFieldView}      || 'Collapsed';
-    my $DynamicFieldSelected = $UserPreferences{UserKIXSidebarDynamicFieldSelection} || '';
+    my %UserPreferences       = $UserObject->GetPreferences( UserID => $Self->{UserID} );
+    my $View                  = $UserPreferences{UserKIXSidebarDynamicFieldView}      || 'Collapsed';
+    my $DynamicFieldSelected  = $UserPreferences{UserKIXSidebarDynamicFieldSelection} || '';
     my @DynamicFieldSelection = split( /,/, $DynamicFieldSelected );
 
     # check permissions
@@ -137,12 +141,11 @@ sub Run {
             next if !grep { $_ eq $DynamicFieldConfig->{Name} } @DynamicFieldSelection;
 
             # extract the dynamic field value from the web request
-            $DynamicFieldValues{ $DynamicFieldConfig->{Name} }
-                = $BackendObject->EditFieldValueGet(
+            $DynamicFieldValues{ $DynamicFieldConfig->{Name} } = $BackendObject->EditFieldValueGet(
                 DynamicFieldConfig => $DynamicFieldConfig,
                 ParamObject        => $ParamObject,
                 LayoutObject       => $LayoutObject,
-                );
+            );
         }
 
         # convert dynamic field values into a structure for ACLs
@@ -152,8 +155,7 @@ sub Run {
             next DYNAMICFIELD if !$DynamicField;
             next DYNAMICFIELD if !$DynamicFieldValues{$DynamicField};
 
-            $DynamicFieldACLParameters{ 'DynamicField_' . $DynamicField }
-                = $DynamicFieldValues{$DynamicField};
+            $DynamicFieldACLParameters{ 'DynamicField_' . $DynamicField } = $DynamicFieldValues{$DynamicField};
         }
         $GetParam{DynamicField} = \%DynamicFieldACLParameters;
 
@@ -209,8 +211,7 @@ sub Run {
             }
 
             # get field html
-            $DynamicFieldHTML{ $DynamicFieldConfig->{Name} } =
-                $BackendObject->EditFieldRender(
+            $DynamicFieldHTML{ $DynamicFieldConfig->{Name} } = $BackendObject->EditFieldRender(
                 DynamicFieldConfig   => $DynamicFieldConfig,
                 PossibleValuesFilter => $PossibleValuesFilter,
                 Value                => $Ticket{ 'DynamicField_' . $DynamicFieldConfig->{Name} },
@@ -270,8 +271,7 @@ sub Run {
             my $ValueStrg = $BackendObject->DisplayValueRender(
                 DynamicFieldConfig => $DynamicFieldConfig,
                 Value              => $Ticket{ 'DynamicField_' . $DynamicFieldConfig->{Name} },
-                ValueMaxChars      => $ConfigObject->Get("Ticket::Frontend::AgentTicketZoom")
-                    ->{TicketDataLength} || '',
+                ValueMaxChars      => $ConfigObject->Get("Ticket::Frontend::AgentTicketZoom")->{TicketDataLength} || '',
                 LayoutObject => $LayoutObject,
             );
 
@@ -329,7 +329,7 @@ sub Run {
                 );
             }
             elsif ( $ValueStrg->{Link} ) {
-                my $HTMLLink = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout')->Output(
+                my $HTMLLink = $HTMLLinkLayoutObject->Output(
                     Template => '<a href="[% Data.Link %]" target="_blank" class="DynamicFieldLink">[% Data.Value %]</a>',
                     Data     => {
                         %Ticket,
@@ -338,7 +338,7 @@ sub Run {
                         Link  => $ValueStrg->{Link},
                     },
                 );
-                my %Safe = $Kernel::OM->Get('Kernel::System::HTMLUtils')->Safety(
+                my %Safe = $HTMLUtilsObject->Safety(
                     String       => $HTMLLink,
                     NoApplet     => 1,
                     NoObject     => 1,

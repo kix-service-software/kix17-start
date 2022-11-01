@@ -250,7 +250,7 @@ sub new {
     }
 
     # get dynamic field backend object
-    my $DynamicFieldBackendObject = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
+    my $BackendObject = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
 
     # get filterable dynamic fields
     # cycle trough the activated dynamic fields for this screen
@@ -258,7 +258,7 @@ sub new {
     for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
         next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
-        my $IsFiltrable = $DynamicFieldBackendObject->HasBehavior(
+        my $IsFiltrable = $BackendObject->HasBehavior(
             DynamicFieldConfig => $DynamicFieldConfig,
             Behavior           => 'IsFiltrable',
         );
@@ -275,7 +275,7 @@ sub new {
     for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
         next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
-        my $IsSortable = $DynamicFieldBackendObject->HasBehavior(
+        my $IsSortable = $BackendObject->HasBehavior(
             DynamicFieldConfig => $DynamicFieldConfig,
             Behavior           => 'IsSortable',
         );
@@ -469,8 +469,17 @@ sub Run {
     }
 
     # get needed objects
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $ConfigObject       = $Kernel::OM->Get('Kernel::Config');
+    my $LayoutObject       = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $CustomerUserObject = $Kernel::OM->Get('Kernel::System::CustomerUser');
+    my $BackendObject      = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
+    my $HTMLUtilsObject    = $Kernel::OM->Get('Kernel::System::HTMLUtils');
+    my $TicketObject       = $Kernel::OM->Get('Kernel::System::Ticket');
+    my $TimeObject         = $Kernel::OM->Get('Kernel::System::Time');
+    my $UserObject         = $Kernel::OM->Get('Kernel::System::User');
+
+    # get isolated layout object for link safety checks
+    my $HTMLLinkLayoutObject = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout');
 
     # get needed un-/selected tickets for bulk feature
     my @SelectedItems     = @{ $Param{SelectedItems} };
@@ -504,10 +513,6 @@ sub Run {
     for my $TicketID ( @{ $Param{TicketIDs} } ) {
         $Counter++;
         if ( $Counter >= $Param{StartHit} && $Counter < ( $Param{PageShown} + $Param{StartHit} ) ) {
-
-            # get ticket object
-            my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
-
             # get last customer article
             my %Article = $TicketObject->ArticleLastCustomerArticle(
                 TicketID      => $TicketID,
@@ -731,9 +736,6 @@ sub Run {
         LastCustomerSubject => 1,
         ArticleFlagAll      => 1,
     );
-
-    # get dynamic field backend object
-    my $DynamicFieldBackendObject = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
 
     for my $Flag ( keys %{ $Self->{ArticleFlagConfig}->{ArticleFlags} } ) {
         $SpecialColumns{ 'MarkedAs::' . $Self->{ArticleFlagConfig}->{ArticleFlags}->{$Flag} } = 1
@@ -1205,7 +1207,7 @@ sub Run {
                 my $FilterTitle = $Label;
 
                 # get field sortable condition
-                my $IsSortable = $DynamicFieldBackendObject->HasBehavior(
+                my $IsSortable = $BackendObject->HasBehavior(
                     DynamicFieldConfig => $DynamicFieldConfig,
                     Behavior           => 'IsSortable',
                 );
@@ -1445,11 +1447,11 @@ sub Run {
         my %Article = %{$ArticleRef};
 
         # get ticket escalation preferences
-        my $TicketEscalation = $Kernel::OM->Get('Kernel::System::Ticket')->TicketEscalationCheck(
+        my $TicketEscalation = $TicketObject->TicketEscalationCheck(
             TicketID => $Article{TicketID},
             UserID   => $Self->{UserID},
         );
-        my $TicketEscalationDisabled = $Kernel::OM->Get('Kernel::System::Ticket')->TicketEscalationDisabledCheck(
+        my $TicketEscalationDisabled = $TicketObject->TicketEscalationDisabledCheck(
             TicketID => $Article{TicketID},
             UserID   => $Self->{UserID},
         );
@@ -1480,16 +1482,13 @@ sub Run {
         my %CustomerInfo;
         if ( $Param{Config}->{CustomerInfo} ) {
             if ( $Article{CustomerUserID} ) {
-
-                # get customer user object
-                my $CustomerUserObject = $Kernel::OM->Get('Kernel::System::CustomerUser');
-
                 $Article{CustomerName} = $CustomerUserObject->CustomerName(
                     UserLogin => $Article{CustomerUserID},
                 );
 
                 %CustomerInfo = $CustomerUserObject->CustomerUserDataGet(
-                    User => $Article{CustomerUserID},
+                    User       => $Article{CustomerUserID},
+                    CustomerID => $Article{CustomerID},
                 );
 
                 INFOKEY:
@@ -1500,9 +1499,6 @@ sub Run {
                 }
             }
         }
-
-        # get user object
-        my $UserObject = $Kernel::OM->Get('Kernel::System::User');
 
         # user info
         my %UserInfo = $UserObject->GetUserData(
@@ -1621,7 +1617,7 @@ sub Run {
                                     && $1 ne $Self->{ArticleFlagConfig}->{ArticleFlags}->{$Flag}
                                     );
 
-                                my %FlagHash = $Kernel::OM->Get('Kernel::System::Ticket')->ArticleFlagDataGet(
+                                my %FlagHash = $TicketObject->ArticleFlagDataGet(
                                     ArticleID      => $ArticleItem,
                                     ArticleFlagKey => $Flag,
                                     UserID         => $Self->{UserID},
@@ -1814,7 +1810,7 @@ sub Run {
                         );
                     }
                     elsif ( defined $Article{UntilTime} && $Article{UntilTime} ) {
-                        $DataValue = $Kernel::OM->Get('Kernel::System::Time')->SystemTime2TimeStamp(
+                        $DataValue = $TimeObject->SystemTime2TimeStamp(
                             SystemTime => $Article{RealTillTimeNotUsed},
                         );
                         $DataValue = $LayoutObject->{LanguageObject}->FormatTimeString( $DataValue, 'DateFormat' );
@@ -1885,12 +1881,12 @@ sub Run {
                 next TICKETCOLUMN if !IsHashRefWithData($DynamicFieldConfig);
 
                 # get field value
-                my $Value = $DynamicFieldBackendObject->ValueGet(
+                my $Value = $BackendObject->ValueGet(
                     DynamicFieldConfig => $DynamicFieldConfig,
                     ObjectID           => $Article{TicketID},
                 );
 
-                my $ValueStrg = $DynamicFieldBackendObject->DisplayValueRender(
+                my $ValueStrg = $BackendObject->DisplayValueRender(
                     DynamicFieldConfig => $DynamicFieldConfig,
                     Value              => $Value,
                     ValueMaxChars      => $DynamicFieldDisplayLimit,
@@ -1906,7 +1902,7 @@ sub Run {
                 );
 
                 if ( $ValueStrg->{Link} ) {
-                    my $HTMLLink = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout')->Output(
+                    my $HTMLLink = $HTMLLinkLayoutObject->Output(
                         Template => '<a href="[% Data.Link | Interpolate %]" target="_blank" class="DynamicFieldLink">[% Data.Value %]</a>',
                         Data     => {
                             Value                       => $ValueStrg->{Value},
@@ -1915,7 +1911,7 @@ sub Run {
                             $DynamicFieldConfig->{Name} => $ValueStrg->{Title},
                         },
                     );
-                    my %Safe = $Kernel::OM->Get('Kernel::System::HTMLUtils')->Safety(
+                    my %Safe = $HTMLUtilsObject->Safety(
                         String       => $HTMLLink,
                         NoApplet     => 1,
                         NoObject     => 1,
@@ -2067,8 +2063,8 @@ sub _GetColumnValues {
             next DYNAMICFIELD if $FieldName ne $HeaderColumn;
 
             # get dynamic field backend object
-            my $DynamicFieldBackendObject = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
-            my $IsFiltrable               = $DynamicFieldBackendObject->HasBehavior(
+            my $BackendObject = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
+            my $IsFiltrable               = $BackendObject->HasBehavior(
                 DynamicFieldConfig => $DynamicFieldConfig,
                 Behavior           => 'IsFiltrable',
             );
@@ -2077,7 +2073,7 @@ sub _GetColumnValues {
             if ( IsArrayRefWithData($TicketIDs) ) {
 
                 # get the historical values for the field
-                $ColumnFilterValues{$HeaderColumn} = $DynamicFieldBackendObject->ColumnFilterValuesGet(
+                $ColumnFilterValues{$HeaderColumn} = $BackendObject->ColumnFilterValuesGet(
                     DynamicFieldConfig => $DynamicFieldConfig,
                     LayoutObject       => $Kernel::OM->Get('Kernel::Output::HTML::Layout'),
                     TicketIDs          => $TicketIDs,
@@ -2086,7 +2082,7 @@ sub _GetColumnValues {
             else {
 
                 # get PossibleValues
-                $ColumnFilterValues{$HeaderColumn} = $DynamicFieldBackendObject->PossibleValuesGet(
+                $ColumnFilterValues{$HeaderColumn} = $BackendObject->PossibleValuesGet(
                     DynamicFieldConfig => $DynamicFieldConfig,
                 );
             }

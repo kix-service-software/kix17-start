@@ -86,16 +86,18 @@ if (Core.UI.Popup.CurrentIsPopupWindow()) {
 [% RenderBlockStart("TableComplex") %]
 [% RenderBlockStart("TableComplexBlock") %]
 [% IF !Data.AJAX.defined %]
-<div class="WidgetSimple SpacingTop Expanded CanDrag" id="Widget[% Data.Name | html %]">
+<div class="WidgetSimple SpacingTop Expanded [% Data.CanDrag %]" id="Widget[% Data.Name | html %]">
 [% END %]
     <div class="Header">
         <div class="ActionMenu">
+[% IF Data.ColumnSetting %]
             <div class="WidgetAction Settings">
                 <a id="SetColumnPreferences_[% Data.PreferencesID %]" title="[% Translate(Data.Blockname) | html %]" href="#">
                     <i class="fa fa-gear"></i>
                 </a>
             </div>
             <div class="Clear"></div>
+[% END %]
         </div>
         <div class="WidgetAction Toggle" title="[% Translate("Show or hide the content.") | html %]" ></div>
         <h2><span>[% Translate(Data.BlockDescription) | html %]: [% Translate(Data.Blockname) | html %]</span></h2>

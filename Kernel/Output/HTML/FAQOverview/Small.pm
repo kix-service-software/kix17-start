@@ -60,14 +60,22 @@ sub Run {
         return;
     }
 
+    # get needed objects
+    my $ConfigObject       = $Kernel::OM->Get('Kernel::Config');
+    my $LayoutObject       = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $DynamicFieldObject = $Kernel::OM->Get('Kernel::System::DynamicField');
+    my $BackendObject      = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
+    my $FAQObject          = $Kernel::OM->Get('Kernel::System::FAQ');
+    my $HTMLUtilsObject    = $Kernel::OM->Get('Kernel::System::HTMLUtils');
+
+    # get isolated layout object for link safety checks
+    my $HTMLLinkLayoutObject = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout');
+
     # store the FAQIDs
     my @IDs;
     if ( $Param{FAQIDs} && ref $Param{FAQIDs} eq 'ARRAY' ) {
         @IDs = @{ $Param{FAQIDs} };
     }
-
-    # get config object
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
     my $MultiLanguage = $ConfigObject->Get('FAQ::MultiLanguage');
 
@@ -75,7 +83,7 @@ sub Run {
     my $DynamicFieldFilter = $ConfigObject->Get("FAQ::Frontend::OverviewSmall")->{DynamicField};
 
     # get the dynamic fields for this screen
-    my $DynamicField = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
+    my $DynamicField = $DynamicFieldObject->DynamicFieldListGet(
         Valid       => 1,
         ObjectType  => ['FAQ'],
         FieldFilter => $DynamicFieldFilter || {},
@@ -83,18 +91,13 @@ sub Run {
 
     my @ShowColumns;
 
-    # get layout object
-    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-
     if (@IDs) {
-
         # check ShowColumns parameter
         if ( $Param{ShowColumns} && ref $Param{ShowColumns} eq 'ARRAY' ) {
             @ShowColumns = @{ $Param{ShowColumns} };
         }
 
         # get dynamic field backend object
-        my $DynamicFieldBackendObject = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
 
         # build column header blocks
         if (@ShowColumns) {
@@ -156,7 +159,7 @@ sub Run {
                 my $Label = $DynamicFieldConfig->{Label};
 
                 # get field sortable condition
-                my $IsSortable = $DynamicFieldBackendObject->HasBehavior(
+                my $IsSortable = $BackendObject->HasBehavior(
                     DynamicFieldConfig => $DynamicFieldConfig,
                     Behavior           => 'IsSortable',
                 );
@@ -268,9 +271,6 @@ sub Run {
                 # to store all data
                 my %Data;
 
-                # get FAQ object
-                my $FAQObject = $Kernel::OM->Get('Kernel::System::FAQ');
-
                 # get FAQ data
                 my %FAQ = $FAQObject->FAQGet(
                     ItemID     => $ID,
@@ -341,12 +341,12 @@ sub Run {
                     next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
                     # get field value
-                    my $Value = $DynamicFieldBackendObject->ValueGet(
+                    my $Value = $BackendObject->ValueGet(
                         DynamicFieldConfig => $DynamicFieldConfig,
                         ObjectID           => $ID,
                     );
 
-                    my $ValueStrg = $DynamicFieldBackendObject->DisplayValueRender(
+                    my $ValueStrg = $BackendObject->DisplayValueRender(
                         DynamicFieldConfig => $DynamicFieldConfig,
                         Value              => $Value,
                         ValueMaxChars      => 20,
@@ -361,8 +361,9 @@ sub Run {
                         },
                     );
 
+                    my $HTMLLink;
                     if ( $ValueStrg->{Link} ) {
-                        my $HTMLLink = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout')->Output(
+                        $HTMLLink = $HTMLLinkLayoutObject->Output(
                             Template => '<a href="[% Data.Link %]" class="DynamicFieldLink">[% Data.Value %]</a>',
                             Data     => {
                                 Value                       => $ValueStrg->{Value},
@@ -371,7 +372,7 @@ sub Run {
                                 $DynamicFieldConfig->{Name} => $ValueStrg->{Title},
                             },
                         );
-                        my %Safe = $Kernel::OM->Get('Kernel::System::HTMLUtils')->Safety(
+                        my %Safe = $HTMLUtilsObject->Safety(
                             String       => $HTMLLink,
                             NoApplet     => 1,
                             NoObject     => 1,
@@ -417,30 +418,6 @@ sub Run {
                     );
 
                     if ( $ValueStrg->{Link} ) {
-                        my $HTMLLink = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout')->Output(
-                            Template => '<a href="[% Data.Link %]" class="DynamicFieldLink">[% Data.Value %]</a>',
-                            Data     => {
-                                Value                       => $ValueStrg->{Value},
-                                Title                       => $ValueStrg->{Title},
-                                Link                        => $ValueStrg->{Link},
-                                $DynamicFieldConfig->{Name} => $ValueStrg->{Title},
-                            },
-                        );
-                        my %Safe = $Kernel::OM->Get('Kernel::System::HTMLUtils')->Safety(
-                            String       => $HTMLLink,
-                            NoApplet     => 1,
-                            NoObject     => 1,
-                            NoEmbed      => 1,
-                            NoSVG        => 1,
-                            NoImg        => 1,
-                            NoIntSrcLoad => 0,
-                            NoExtSrcLoad => 1,
-                            NoJavaScript => 1,
-                        );
-                        if ( $Safe{Replace} ) {
-                            $HTMLLink = $Safe{String};
-                        }
-
                         $LayoutObject->Block(
                             Name => 'RecordDynamicField_' . $DynamicFieldConfig->{Name} . '_Link',
                             Data => {

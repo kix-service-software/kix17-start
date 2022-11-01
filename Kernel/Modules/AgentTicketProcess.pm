@@ -1514,6 +1514,25 @@ sub _OutputActivityDialog {
             Message => $Message,
         );
     }
+    if (
+        !IsHashRefWithData( $Activity->{ActivityDialog} )
+        || !$Activity->{ActivityDialog}->{ $ActivityActivityDialog->{ActivityDialog} }
+    ) {
+        my $Message = $LayoutObject->{LanguageObject}->Translate(
+            'ActivityDialog does not belong to Activity!',
+        );
+
+        # does not show header and footer again
+        if ( $Self->{IsMainWindow} ) {
+            return $LayoutObject->Error(
+                Message => $Message,
+            );
+        }
+
+        $LayoutObject->FatalError(
+            Message => $Message,
+        );
+    }
 
     my $ActivityDialog = $ActivityDialogObject->ActivityDialogGet(
         ActivityDialogEntityID => $ActivityActivityDialog->{ActivityDialog},
@@ -1534,23 +1553,6 @@ sub _OutputActivityDialog {
 
         $LayoutObject->FatalError(
             Message => $Message,
-        );
-    }
-
-    # grep out Overwrites if defined on the Activity
-    my @OverwriteActivityDialogNumber = grep {
-        ref $Activity->{ActivityDialog}{$_} eq 'HASH'
-            && $Activity->{ActivityDialog}{$_}{ActivityDialogEntityID}
-            && $Activity->{ActivityDialog}{$_}{ActivityDialogEntityID} eq
-            $ActivityActivityDialog->{ActivityDialog}
-            && IsHashRefWithData( $Activity->{ActivityDialog}{$_}{Overwrite} )
-    } keys %{ $Activity->{ActivityDialog} };
-
-    # let the Overwrites Overwrite the ActivityDialog's Hash values
-    if ( $OverwriteActivityDialogNumber[0] ) {
-        %{$ActivityDialog} = (
-            %{$ActivityDialog},
-            %{ $Activity->{ActivityDialog}{ $OverwriteActivityDialogNumber[0] }{Overwrite} }
         );
     }
 
