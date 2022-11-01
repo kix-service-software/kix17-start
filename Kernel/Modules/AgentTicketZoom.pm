@@ -62,7 +62,7 @@ sub new {
 
         elsif ( defined $Self->{ZoomExpand} ) {
 
-            my $LastUsedZoomViewType = '';
+            my $LastUsedZoomViewType = q{};
             if ( defined $Self->{ZoomExpand} && $Self->{ZoomExpand} == 1 ) {
                 $LastUsedZoomViewType = 'Expand';
             }
@@ -208,7 +208,7 @@ sub Run {
         Action        => $Self->{Action},
         TicketID      => $Self->{TicketID},
         ReturnType    => 'Action',
-        ReturnSubType => '-',
+        ReturnSubType => q{-},
         UserID        => $Self->{UserID},
     );
 
@@ -336,15 +336,15 @@ sub Run {
         my @ArticleSenderTypeFilterIDs = $ParamObject->GetArray( Param => 'ArticleSenderTypeFilter' );
 
         # build session string
-        my $SessionString = '';
+        my $SessionString = q{};
         if (@ArticleTypeFilterIDs) {
             $SessionString .= 'ArticleTypeFilter<';
-            $SessionString .= join ',', @ArticleTypeFilterIDs;
+            $SessionString .= join q{,}, @ArticleTypeFilterIDs;
             $SessionString .= '>';
         }
         if (@ArticleSenderTypeFilterIDs) {
             $SessionString .= 'ArticleSenderTypeFilter<';
-            $SessionString .= join ',', @ArticleSenderTypeFilterIDs;
+            $SessionString .= join q{,}, @ArticleSenderTypeFilterIDs;
             $SessionString .= '>';
         }
 
@@ -364,7 +364,7 @@ sub Run {
         }
 
         # turn off filter explicitly for this ticket
-        if ( $SessionString eq '' ) {
+        if ( $SessionString eq q{} ) {
             $SessionString = 'off';
         }
 
@@ -376,7 +376,7 @@ sub Run {
         );
 
         # build JSON output
-        my $JSON = '';
+        my $JSON = q{};
         if ($Update) {
             $JSON = $LayoutObject->JSONEncode(
                 Data => {
@@ -404,9 +404,9 @@ sub Run {
 
         # get new order
         my $Key  = $Self->{Action} . 'Position';
-        my $Data = '';
+        my $Data = q{};
         for my $Backend (@Backends) {
-            $Data .= $Backend . ';';
+            $Data .= $Backend . q{;};
         }
 
         # update ssession
@@ -429,7 +429,7 @@ sub Run {
         return $LayoutObject->Attachment(
             ContentType => 'text/html',
             Charset     => $LayoutObject->{UserCharset},
-            Content     => '',
+            Content     => q{},
         );
     }
 
@@ -507,14 +507,15 @@ sub MaskAgentZoom {
     my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
 
     # get article page
-    $Param{ArticlePage} = $ParamObject->GetParam( Param => 'ArticlePage' );
+    $Param{StartHit}  = $ParamObject->GetParam( Param => 'StartHit' );
+    $Param{HasFilter} = $ParamObject->GetParam( Param => 'HasFilter' );
 
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
     # age design
     $Ticket{Age} = $LayoutObject->CustomerAge(
         Age   => $Ticket{Age},
-        Space => ' '
+        Space => q{ }
     );
 
     # number of articles
@@ -591,7 +592,7 @@ sub MaskAgentZoom {
             $ZoomMenuItems{ $MenuClusters{$Cluster}->{Priority} . $Cluster } = {
                 Name  => $Cluster,
                 Type  => 'Cluster',
-                Link  => '#',
+                Link  => q{#},
                 Class => 'ClusterLink',
                 Items => $MenuClusters{$Cluster}->{Items},
             };
@@ -635,7 +636,7 @@ sub MaskAgentZoom {
         );
 
         # replace class W75pc with W75 - causes no line break
-        $Param{MoveQueuesStrg} =~ s/W75pc/W75/;
+        $Param{MoveQueuesStrg} =~ s/W75pc/W75/sxm;
     }
     my %AclActionLookup = reverse %AclAction;
     if (
@@ -715,7 +716,7 @@ sub MaskAgentZoom {
         }
     }
 
-    $Param{ZoomExpand}   = $Self->{ZoomExpand};
+    $Param{ZoomExpand} = $Self->{ZoomExpand};
 
     # check if ticket is normal or process ticket
     my $IsProcessTicket = $TicketObject->TicketCheckForProcessType(
@@ -735,6 +736,13 @@ sub MaskAgentZoom {
                 UserID   => $Self->{UserID},
             );
         }
+    }
+
+    $Param{Link} = q{};
+    for my $Key ( qw( ZoomExpand StartHit HasFilter ) ) {
+
+        next if !defined $Param{$Key};
+        $Param{Link} .= ";$Key=$Param{$Key}";
     }
 
     # generate content of ticket zoom tabs
@@ -778,7 +786,7 @@ sub MaskAgentZoom {
             next if !$Access;
 
             # perform count if method registered...
-            my $Count = '';
+            my $Count = q{};
             if (
                 $BackendShortRef->{CountMethod}
                 && (
@@ -793,7 +801,7 @@ sub MaskAgentZoom {
 
                 my $DisplayResult;
                 my $Object;
-                if ( $Hashresult && $Hashresult ne '' ) {
+                if ( $Hashresult && $Hashresult ne q{} ) {
                     eval {
                         $Object        = $Kernel::OM->Get( 'Kernel::System::' . $ObjectType );
                         $DisplayResult = {
@@ -841,7 +849,7 @@ sub MaskAgentZoom {
                     }
                     {
                       if ( defined $1 ) {
-                        $Param{$1} || '';
+                        $Param{$1} || q{};
                       }
                     }egx;
 
@@ -856,7 +864,7 @@ sub MaskAgentZoom {
                         Link        => $Link . ';TabIndex=' . $TabIndex,
                         Description => $BackendShortRef->{Description},
                         Label       => $BackendShortRef->{Title},
-                        LabelCount  => $Count ? " (" . $Count . ")" : '',
+                        LabelCount  => $Count ? " (" . $Count . ")" : q{},
                     },
                 );
 
@@ -872,7 +880,7 @@ sub MaskAgentZoom {
                         Anchor      => $CurrKey,
                         Description => $BackendShortRef->{Description},
                         Label       => $BackendShortRef->{Title},
-                        LabelCount  => $Count ? " (" . $Count . ")" : '',
+                        LabelCount  => $Count ? " (" . $Count . ")" : q{},
                     },
                 );
 
@@ -882,7 +890,7 @@ sub MaskAgentZoom {
 
                 # and run reloadmodule
                 my $Object = $Module->new( %{$Self} );
-                my $ContentStrg = $Object->Run(%Param) || '';
+                my $ContentStrg = $Object->Run(%Param) || q{};
 
                 $LayoutObject->Block(
                     Name => 'DataTabContentPreloaded',

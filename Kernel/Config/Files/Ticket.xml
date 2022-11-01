@@ -14676,7 +14676,7 @@ Thanks for your help!
         <SubGroup>Frontend::Agent::Ticket::AgentTicketZoomTab</SubGroup>
         <Setting>
             <Hash>
-                <Item Key="Link">Action=AgentTicketZoomTabArticle;TicketID=$Param{"TicketID"};ArticleID=$Param{"ArticleID"};ZoomExpand=$Param{"ZoomExpand"};ArticlePage=$Param{"ArticlePage"};CallingAction=[% Env("Action") %]</Item>
+                <Item Key="Link">Action=AgentTicketZoomTabArticle;TicketID=$Param{"TicketID"};ArticleID=$Param{"ArticleID"}$Param{"Link"};CallingAction=[% Env("Action") %]</Item>
                 <Item Key="Title">Articles</Item>
                 <Item Key="Description">Shows all article of this ticket</Item>
                 <Item Key="Block">ContentItem</Item>
