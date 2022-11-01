@@ -1,6 +1,22 @@
 # Change log of KIX
 * Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.20.0-RC2 (2022/11/01)
+ * (2022/10/28) - Bugfix: KIX17-3265 (fixed handling of disabled dynamic fields for AgentTicketForward) (mbauer)
+ * (2022/10/28) - Bugfix: KIX17-3264 (fix customer company name in ticket overview small) (mbauer)
+ * (2022/10/27) - Bugfix: KIX17-3267 (use customer id of selected customer user for splitted tickets) (mbauer)
+ * (2022/10/24) - Bugfix: KIX17-2982 (removed column setting and sortable/filterable of link objects in FAQ) (fjacquemin)
+ * (2022/10/24) - CR: KIX17-3131 (fixed image path of jstree css) (fjacquemin)
+ * (2022/10/24) - Bugfix: KIX17-3100 (fixed allocation list handling) (fjacquemin)
+ * (2022/10/19) - Bugfix: KIX17-3259 (fix performance issues after security fix) (mbauer)
+ * (2022/10/17) - Bugfix: KIX17-3255 (keep customer user in config item attribute, when login is not search attribute) (mbauer)
+ * (2022/10/17) - Bugfix: KIX17-3252 (fix filter condition when using static search index) (mbauer)
+ * (2022/10/14) - Bugfix: KIX17-3224 (prevent owner reset, when owner was set by current action) (mbauer)
+ * (2022/10/14) - Bugfix: KIX17-3181 (check correlation for called activity dialog to current activity) (mbauer)
+ * (2022/10/10) - CR: KIX17-3131 (fixed missing script changes) (fjacquemin)
+ * (2022/10/10) - CR: KIX17-3131 (removed depricated ckeditor plugin) (fjacquemin)
+ * (2022/08/22) - Bugfix: KIX17-3114 (fixed article pagination) (fjacquemin)
+
 # 17.20.0-RC1 (2022/10/07)
  * (2022/10/07) - CR: KIX17-3131 (updated JavaScript libraries) (fjacquemin)
  * (2022/10/06) - Bugfix: KIX17-3186 (remove js-code from links in dynamic field display) (mbauer)
