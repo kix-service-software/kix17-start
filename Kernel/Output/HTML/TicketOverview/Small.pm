@@ -1489,7 +1489,8 @@ sub Run {
                 );
 
                 %CustomerInfo = $CustomerUserObject->CustomerUserDataGet(
-                    User => $Article{CustomerUserID},
+                    User       => $Article{CustomerUserID},
+                    CustomerID => $Article{CustomerID},
                 );
 
                 INFOKEY:
