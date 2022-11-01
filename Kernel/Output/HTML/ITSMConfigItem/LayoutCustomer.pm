@@ -193,7 +193,7 @@ sub InputCreate {
 
         # get customer data
         my %CustomerSearchList = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerSearch(
-            Search => $Value,
+            UserLogin => $Value,
         );
 
         # search address book
