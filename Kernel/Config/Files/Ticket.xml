@@ -537,7 +537,7 @@
         <Setting>
             <Hash>
                 <Item Key="Module">Kernel::System::Ticket::Event::ForceOwnerReset</Item>
-                <Item Key="Event">Ticket(Owner|Queue)Update</Item>
+                <Item Key="Event">TicketQueueUpdate</Item>
             </Hash>
         </Setting>
     </ConfigItem>
