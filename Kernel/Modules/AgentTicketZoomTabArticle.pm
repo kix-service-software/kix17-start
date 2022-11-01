@@ -63,7 +63,7 @@ sub new {
 
         elsif ( defined $Self->{ZoomExpand} ) {
 
-            my $LastUsedZoomViewType = '';
+            my $LastUsedZoomViewType = q{};
             if ( defined $Self->{ZoomExpand} && $Self->{ZoomExpand} == 1 ) {
                 $LastUsedZoomViewType = 'Expand';
             }
@@ -91,7 +91,7 @@ sub new {
         $Self->{ColumnResizing} = $UserPreferences{UserArticleTableColumnResizing};
     }
     else {
-        $Self->{ColumnResizing} = '';
+        $Self->{ColumnResizing} = q{};
     }
 
     if ( !defined $Self->{ZoomExpandSort} ) {
@@ -134,8 +134,8 @@ sub new {
     }
 
     $Self->{Config}           = $ConfigObject->Get('Ticket::Frontend::AgentTicketZoomTabArticle');
-    $Self->{CallingAction}    = $ParamObject->GetParam( Param => 'CallingAction' ) || '';
-    $Self->{DirectLinkAnchor} = $ParamObject->GetParam( Param => 'DirectLinkAnchor' ) || '';
+    $Self->{CallingAction}    = $ParamObject->GetParam( Param => 'CallingAction' )    || q{};
+    $Self->{DirectLinkAnchor} = $ParamObject->GetParam( Param => 'DirectLinkAnchor' ) || q{};
 
     # get dynamic field config for frontend module
     $Self->{DynamicFieldFilter} = {
@@ -179,6 +179,8 @@ sub Run {
 
     # get layout object
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
     # check needed stuff
     if ( !$Self->{TicketID} ) {
@@ -187,9 +189,6 @@ sub Run {
             Comment => Translatable('Please contact the administrator.'),
         );
     }
-
-    # get ticket object
-    my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
 
     # check permissions
     my $Access = $TicketObject->TicketPermission(
@@ -216,9 +215,6 @@ sub Run {
     my %PossibleActions;
     my $Counter = 0;
 
-    # get config object
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-
     my $ImagePath = $ConfigObject->Get('Frontend::ImagePath');
 
     # get all registered Actions
@@ -237,7 +233,7 @@ sub Run {
         Action        => $Self->{Action},
         TicketID      => $Self->{TicketID},
         ReturnType    => 'Action',
-        ReturnSubType => '-',
+        ReturnSubType => q{-},
         UserID        => $Self->{UserID},
     );
 
@@ -434,7 +430,7 @@ sub Run {
         my %ArticleFlagList = %{ $Self->{Config}->{ArticleFlags} };
 
         # create article flag icon string
-        my $FlagIconString = ' ';
+        my $FlagIconString = q{ };
 
         if ( defined $ArticleFlagList{$ArticleFlagKey} && $ArticleFlagList{$ArticleFlagKey} ) {
 
@@ -546,60 +542,59 @@ sub Run {
         my %ArticleDynamicFieldFilter;
 
         # cycle trough the activated Dynamic Fields for this screen
-        my $DynamicFieldBackendObject = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
+        my $BackendObject = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
 
         DYNAMICFIELD:
         for my $DynamicFieldConfig ( @{ $Self->{DynamicFieldActiveFilter} } ) {
             next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
             # extract the dynamic field value from the web request
-            $ArticleDynamicFieldFilter{ $DynamicFieldConfig->{Name} }
-                = $DynamicFieldBackendObject->EditFieldValueGet(
+            $ArticleDynamicFieldFilter{ $DynamicFieldConfig->{Name} } = $BackendObject->EditFieldValueGet(
                     DynamicFieldConfig => $DynamicFieldConfig,
                     ParamObject        => $ParamObject,
                     LayoutObject       => $LayoutObject,
-                ) || '';
+            ) || q{};
         }
 
         # build session string
-        my $SessionString = '';
+        my $SessionString = q{};
         if (@ArticleTypeFilterIDs) {
             $SessionString .= 'ArticleTypeFilter<';
-            $SessionString .= join ',', @ArticleTypeFilterIDs;
+            $SessionString .= join q{,}, @ArticleTypeFilterIDs;
             $SessionString .= '>';
         }
         if (@ArticleSenderTypeFilterIDs) {
             $SessionString .= 'ArticleSenderTypeFilter<';
-            $SessionString .= join ',', @ArticleSenderTypeFilterIDs;
+            $SessionString .= join q{,}, @ArticleSenderTypeFilterIDs;
             $SessionString .= '>';
         }
 
         # extended article filter
         if ($ArticleSubjectFilter) {
             $SessionString .= 'ArticleSubjectFilter<';
-            $SessionString .= join ',', $ArticleSubjectFilter;
+            $SessionString .= join q{,}, $ArticleSubjectFilter;
             $SessionString .= '>';
         }
         if ($ArticleBodyFilter) {
             $SessionString .= 'ArticleBodyFilter<';
-            $SessionString .= join ',', $ArticleBodyFilter;
+            $SessionString .= join q{,}, $ArticleBodyFilter;
             $SessionString .= '>';
         }
         if (@ArticleFlagFilter) {
             $SessionString .= 'ArticleFlagFilter<';
-            $SessionString .= join ',', @ArticleFlagFilter;
+            $SessionString .= join q{,}, @ArticleFlagFilter;
             $SessionString .= '>';
         }
         if ($ArticleFlagTextFilter) {
             $SessionString .= 'ArticleFlagTextFilter<';
-            $SessionString .= join ',', $ArticleFlagTextFilter;
+            $SessionString .= join q{,}, $ArticleFlagTextFilter;
             $SessionString .= '>';
         }
         for my $ArticleDynamicField ( keys %ArticleDynamicFieldFilter ) {
             $SessionString .= 'ArticleDynamicField_';
             $SessionString .= $ArticleDynamicField;
             $SessionString .= '_Filter<';
-            $SessionString .= join ',', $ArticleDynamicFieldFilter{$ArticleDynamicField};
+            $SessionString .= join q{,}, $ArticleDynamicFieldFilter{$ArticleDynamicField};
             $SessionString .= '>';
         }
 
@@ -619,7 +614,7 @@ sub Run {
         }
 
         # turn off filter explicitly for this ticket
-        if ( $SessionString eq '' ) {
+        if ( $SessionString eq q{} ) {
             $SessionString = 'off';
         }
 
@@ -631,7 +626,7 @@ sub Run {
         );
 
         # build JSON output
-        my $JSON = '';
+        my $JSON = q{};
         if ($Update) {
             $JSON = $LayoutObject->JSONEncode(
                 Data => {
@@ -662,7 +657,7 @@ sub Run {
 
         # do not use defaults for this ticket if filter was explicitly turned off
         elsif ( $ArticleFilterSessionString eq 'off' ) {
-            $ArticleFilterSessionString = '';
+            $ArticleFilterSessionString = q{};
         }
 
         # cycle trough the activated Dynamic Fields for this screen
@@ -675,8 +670,7 @@ sub Run {
                 . '_Filter';
             if (
                 $ArticleFilterSessionString
-                && $ArticleFilterSessionString
-                =~ m{ $ArticleFilterDynamicFieldName < ( [^<>]+ ) > }xms
+                && $ArticleFilterSessionString =~ m{ $ArticleFilterDynamicFieldName < ( [^<>]+ ) > }xms
             ) {
                 $Self->{ArticleFilter}->{$ArticleFilterDynamicFieldName} = $1;
             }
@@ -687,7 +681,7 @@ sub Run {
             $ArticleFilterSessionString
             && $ArticleFilterSessionString =~ m{ ArticleTypeFilter < ( [^<>]+ ) > }xms
         ) {
-            my @IDs = split /,/, $1;
+            my @IDs = split( /[,]/smx, $1);
             $Self->{ArticleFilter}->{ArticleTypeID} = \@IDs;
         }
 
@@ -696,7 +690,7 @@ sub Run {
             $ArticleFilterSessionString
             && $ArticleFilterSessionString =~ m{ ArticleSenderTypeFilter < ( [^<>]+ ) > }xms
         ) {
-            my @IDs = split /,/, $1;
+            my @IDs = split( /[,]/smx, $1);
             $Self->{ArticleFilter}->{ArticleSenderTypeID} = \@IDs;
         }
 
@@ -721,7 +715,7 @@ sub Run {
             $ArticleFilterSessionString
             && $ArticleFilterSessionString =~ m{ ArticleFlagFilter < ( [^<>]+ ) > }xms
             ) {
-            my @IDs = split /,/, $1;
+            my @IDs = split( /[,]/smx, $1);
             $Self->{ArticleFilter}->{ArticleFlag} = { map { $_ => 1 } @IDs };
         }
 
@@ -780,17 +774,19 @@ sub MaskAgentZoom {
     my %Ticket    = %{ $Param{Ticket} };
     my %AclAction = %{ $Param{AclAction} };
 
-    # get ticket object
+    # get needed objects
     my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
+    my $ParamObject  = $Kernel::OM->Get('Kernel::System::Web::Request');
+    my $UserObject   = $Kernel::OM->Get('Kernel::System::User');
+    my $QueueObject  = $Kernel::OM->Get('Kernel::System::Queue');
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
     # fetch all std. templates
-    my %StandardTemplates = $Kernel::OM->Get('Kernel::System::Queue')->QueueStandardTemplateMemberList(
+    my %StandardTemplates = $QueueObject->QueueStandardTemplateMemberList(
         QueueID       => $Ticket{QueueID},
         TemplateTypes => 1,
     );
-
-    # get user object
-    my $UserObject = $Kernel::OM->Get('Kernel::System::User');
 
     # owner info
     my %OwnerInfo = $UserObject->GetUserData(
@@ -802,115 +798,21 @@ sub MaskAgentZoom {
         UserID => $Ticket{ResponsibleID} || 1,
     );
 
-    # get cofig object
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-
-    # generate shown articles
-    my $Limit = $ConfigObject->Get('Ticket::Frontend::MaxArticlesPerPage');
-
-    my $Order = $Self->{ZoomExpandSort} eq 'reverse' ? 'DESC' : 'ASC';
-    my $Page;
-
-    # get param object
-    my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
-
-    # get tab index
-    my $TabIndex = $ParamObject->GetParam( Param => 'TabIndex' );
-
-    # get article page
-    my $ArticlePage = $ParamObject->GetParam( Param => 'ArticlePage' );
-
-    if ( $Self->{ArticleID} ) {
-        $Page = $TicketObject->ArticlePage(
-            TicketID    => $Self->{TicketID},
-            ArticleID   => $Self->{ArticleID},
-            RowsPerPage => $Limit,
-            Order       => $Order,
-            %{ $Self->{ArticleFilter} // {} },
-        );
-    }
-    elsif ($ArticlePage) {
-        $Page = $ArticlePage;
-    }
-    else {
-        $Page = 1;
-    }
-
-    # We need to find out whether pagination is actually necessary.
-    # The easiest way would be count the articles, but that would slow
-    # down the most common case (fewer articles than $Limit in the ticket).
-    # So instead we use the following trick:
-    # 1) if the $Page > 1, we need pagination
-    # 2) if not, request $Limit + 1 articles. If $Limit + 1 are actually
-    #    returned, pagination is necessary
-    my $Extra = $Page > 1 ? 0 : 1;
-    my $NeedPagination;
+    # get needed params
+    my $Count     = 0;
+    my $Page      = 1;
+    my $Order     = $Self->{ZoomExpandSort} eq 'reverse' ? 'DESC' : 'ASC';
+    my $TabIndex  = $ParamObject->GetParam( Param => 'TabIndex' );
+    my $StartHit  = $ParamObject->GetParam( Param => 'StartHit' )  || 1;
+    my $FormID    = $ParamObject->GetParam( Param => 'FormID' );
+    my $HasFilter = $ParamObject->GetParam( Param => 'HasFilter' ) || 0;
+    my $PageShown = $ConfigObject->Get('Ticket::Frontend::MaxArticlesPerPage');
     my $ArticleCount;
+    my @ArticleBox;
+    my %ArticleAllCounter;
 
-    my @ArticleContentArgs = (
-        TicketID                   => $Self->{TicketID},
-        StripPlainBodyAsAttachment => $Self->{StripPlainBodyAsAttachment},
-        UserID                     => $Self->{UserID},
-        Limit                      => $Limit + $Extra,
-        Order                      => $Order,
-        DynamicFields              => 1,
-    );
-
-    # get content
-    my @ArticleBox = $TicketObject->ArticleContentIndex(
-        @ArticleContentArgs,
-        Page => $Page,
-    );
-
-    if ( !@ArticleBox && $Page > 1 ) {
-
-        # if the page argument is past the actual number of pages,
-        # assume page 1 instead.
-        # This can happen when a new article filter was added.
-        $Page       = 1;
-        @ArticleBox = $TicketObject->ArticleContentIndex(
-            @ArticleContentArgs,
-            Page => $Page,
-        );
-        $ArticleCount = $TicketObject->ArticleCount(
-            TicketID => $Self->{TicketID},
-            %{ $Self->{ArticleFilter} // {} },
-        );
-        $NeedPagination = $ArticleCount > $Limit;
-    }
-    elsif ( @ArticleBox > $Limit ) {
-        pop @ArticleBox;
-        $NeedPagination = 1;
-        $ArticleCount   = $TicketObject->ArticleCount(
-            TicketID => $Self->{TicketID},
-            %{ $Self->{ArticleFilter} // {} },
-        );
-    }
-    elsif ( $Page == 1 ) {
-        $ArticleCount   = @ArticleBox;
-        $NeedPagination = 0;
-    }
-    else {
-        $NeedPagination = 1;
-        $ArticleCount   = $TicketObject->ArticleCount(
-            TicketID => $Ticket{TicketID},
-            %{ $Self->{ArticleFilter} // {} },
-        );
-    }
-
-    $Page ||= 1;
-
-    my $Pages;
-    if ($NeedPagination) {
-        $Pages = ceil( $ArticleCount / $Limit );
-    }
-
-    my $Count;
-    if ( $ConfigObject->Get('Ticket::Frontend::ZoomExpandSort') eq 'reverse' ) {
-        $Count = scalar @ArticleBox + 1;
-    }
-    else {
-        $Count = 0;
+    if ( !$FormID ) {
+        $FormID = $Kernel::OM->Get('Kernel::System::Web::UploadCache')->FormIDCreate();
     }
 
     # add counter
@@ -919,11 +821,11 @@ sub MaskAgentZoom {
         StripPlainBodyAsAttachment => $Self->{StripPlainBodyAsAttachment},
         UserID                     => $Self->{UserID},
         Order                      => $Order,
-        DynamicFields => 0,    # fetch later only for the article(s) to display
+        DynamicFields              => 0,    # fetch later only for the article(s) to display
     );
-    my @ArticleBoxAll = $TicketObject->ArticleContentIndex(@ArticleContentArgsAll);
 
-    if ( scalar @ArticleBox != scalar @ArticleBoxAll ) {
+    my @ArticleBoxAll = $TicketObject->ArticleContentIndex(@ArticleContentArgsAll);
+    if ( scalar @ArticleBoxAll ) {
 
         if ( $ConfigObject->Get('Ticket::Frontend::ZoomExpandSort') eq 'reverse' ) {
             $Count = scalar @ArticleBoxAll + 1;
@@ -938,31 +840,9 @@ sub MaskAgentZoom {
             }
             $Article->{Count} = $Count;
         }
-    }
 
-    my $ArticleIDFound = 0;
-    ARTICLE:
-    for my $Article (@ArticleBox) {
-
-        if ( scalar @ArticleBox != scalar @ArticleBoxAll ) {
-            my @ArticleOnPage = grep { $_->{ArticleID} =~ $Article->{ArticleID} } @ArticleBoxAll;
-            $Article->{Count} = $ArticleOnPage[0]->{Count};
-        }
-        else {
-            if ( $ConfigObject->Get('Ticket::Frontend::ZoomExpandSort') eq 'reverse' ) {
-                $Count--;
-            }
-            else {
-                $Count++;
-            }
-            $Article->{Count} = $Count;
-        }
-
-        next ARTICLE if !$Self->{ArticleID};
-        next ARTICLE if !$Article->{ArticleID};
-        next ARTICLE if $Self->{ArticleID} ne $Article->{ArticleID};
-
-        $ArticleIDFound = 1;
+        %ArticleAllCounter = map { $_->{ArticleID} => $_->{Count} } @ArticleBoxAll;
+        $ArticleCount      = scalar(@ArticleBoxAll);
     }
 
     my %ArticleFlags = $TicketObject->ArticleFlagsOfTicketGet(
@@ -970,108 +850,27 @@ sub MaskAgentZoom {
         UserID   => $Self->{UserID},
     );
 
-    # get selected or last customer article
-    my $ArticleID;
-    if ($ArticleIDFound) {
-        $ArticleID = $Self->{ArticleID};
-    }
-    else {
-
-        # find latest not seen article
-        ARTICLE:
-        for my $Article (@ArticleBox) {
-
-            # ignore system sender type
-            next ARTICLE
-                if $ConfigObject->Get('Ticket::NewArticleIgnoreSystemSender')
-                && $Article->{SenderType} eq 'system';
-
-            next ARTICLE if $ArticleFlags{ $Article->{ArticleID} }->{Seen};
-            $ArticleID = $Article->{ArticleID};
-            last ARTICLE;
-        }
-
-        # set selected article
-        if ( !$ArticleID ) {
-            if (@ArticleBox) {
-                my %Preferences = $UserObject->GetPreferences( UserID => $Self->{UserID} );
-
-                # show first article
-                if (
-                    $Preferences{ShownArticle}
-                    &&
-                    (
-                        (
-                            $Preferences{ShownArticle} eq 'first'
-                            && $Self->{ZoomExpandSort} ne 'reverse'
-                        )
-                        ||
-                        (
-                            $Preferences{ShownArticle} eq 'last'
-                            && $Self->{ZoomExpandSort} eq 'reverse'
-                        )
-                    )
-                ) {
-
-                    # set first listed article as fallback
-                    $ArticleID = $ArticleBox[0]->{ArticleID};
-                }
-                elsif (
-                    $Preferences{ShownArticle}
-                    &&
-                    (
-                        (
-                            $Preferences{ShownArticle} eq 'last'
-                            && $Self->{ZoomExpandSort} ne 'reverse'
-                        )
-                        ||
-                        (
-                            $Preferences{ShownArticle} eq 'first'
-                            && $Self->{ZoomExpandSort} eq 'reverse'
-                        )
-                    )
-                ) {
-
-                    # set last article as default if reverse sort
-                    $ArticleID = $ArticleBox[-1]->{ArticleID};
-                }
-
-                else {
-
-                    # set last customer article as selected article replacing last set
-                    ARTICLETMP:
-                    for my $ArticleTmp (@ArticleBox) {
-                        if ( $ArticleTmp->{SenderType} eq 'customer' ) {
-                            $ArticleID = $ArticleTmp->{ArticleID};
-                            last ARTICLETMP if $Self->{ZoomExpandSort} eq 'reverse';
-                        }
-                    }
-
-                    # use fallback if no customer article found - show last article
-                    if ( !defined $ArticleID ) {
-                        if ( $Self->{ZoomExpandSort} ne 'reverse' ) {
-                            $ArticleID = $ArticleBox[-1]->{ArticleID};
-                        }
-                        else {
-                            $ArticleID = $ArticleBox[0]->{ArticleID};
-                        }
-                    }
-                }
-            }
-        }
-    }
-
+    my @NewArticleBoxAll = ();
     # remember shown article ids if article filter is activated in sysconfig
-    if ( $Self->{ArticleFilterActive} && $Self->{ArticleFilter} ) {
+                if (
+        $Self->{ArticleFilterActive}
+        && $Self->{ArticleFilter}
+                ) {
 
         # reset shown article ids
         $Self->{ArticleFilter}->{ShownArticleIDs} = undef;
 
-        my $NewArticleID = '';
-        my $ShowCount    = 0;
+        my %FilterArticleTypeIDs;
+        if ( $Self->{ArticleFilter}->{ArticleTypeID} ) {
+           %FilterArticleTypeIDs = map { $_ => 1 } @{$Self->{ArticleFilter}->{ArticleTypeID}};
+        }
+        my %FilterSenderTypeIDs;
+        if ( $Self->{ArticleFilter}->{SenderTypeID} ) {
+           %FilterSenderTypeIDs = map { $_ => 1 } @{$Self->{ArticleFilter}->{SenderTypeID}};
+        }
 
         ARTICLE:
-        for my $Article (@ArticleBox) {
+        for my $Article (@ArticleBoxAll) {
 
             # cycle trough the activated Dynamic Fields for this screen
             DYNAMICFIELD:
@@ -1095,18 +894,16 @@ sub MaskAgentZoom {
 
             # article type id does not match
             if (
-                $Self->{ArticleFilter}->{ArticleTypeID}
-                && !grep { $_ eq $Article->{ArticleTypeID} }
-                @{ $Self->{ArticleFilter}->{ArticleTypeID} }
+                %FilterArticleTypeIDs
+                && !$FilterArticleTypeIDs{$Article->{ArticleTypeID}}
             ) {
                 next ARTICLE;
             }
 
             # article sender type id does not match
             if (
-                $Self->{ArticleFilter}->{ArticleSenderTypeID}
-                && !grep { $_ eq $Article->{SenderTypeID} }
-                @{ $Self->{ArticleFilter}->{ArticleSenderTypeID} }
+                %FilterSenderTypeIDs
+                && !$FilterSenderTypeIDs{$Article->{ArticleSenderTypeID}}
             ) {
                 next ARTICLE;
             }
@@ -1116,7 +913,7 @@ sub MaskAgentZoom {
             if ($ArticleFilterSubject) {
 
                 # remove leading and ending *
-                $ArticleFilterSubject =~ s/^\*(.*)\*$/$1/;
+                $ArticleFilterSubject =~ s/^[*](.*)[*]$/$1/smx;
                 if ( $Article->{Subject} !~ m/$ArticleFilterSubject/i ) {
                     next ARTICLE;
                 }
@@ -1125,10 +922,9 @@ sub MaskAgentZoom {
             # article body does not match
             my $ArticleFilterBody = $Self->{ArticleFilter}->{Body};
             if ($ArticleFilterBody) {
-
                 # remove leading and ending *
-                $ArticleFilterBody =~ s/^\*(.*)\*$/$1/;
-                if ( $Article->{Body} !~ m/$ArticleFilterBody/i ) {
+                $ArticleFilterBody =~ s/^[*](.*)[*]$/$1/smx;
+                if ( $Article->{Body} !~ m/$ArticleFilterBody/i) {
                     next ARTICLE;
                 }
             }
@@ -1139,10 +935,13 @@ sub MaskAgentZoom {
             if ($ArticleFilterFlagText) {
 
                 # remove leading and ending *
-                $ArticleFilterFlagText =~ s/^\*(.*)\*$/$1/;
+                $ArticleFilterFlagText =~ s/^[*](.*)[*]$/$1/smx;
             }
 
-            if ( defined $ArticleFilterFlag && ref $ArticleFilterFlag eq 'HASH' ) {
+            if (
+                defined $ArticleFilterFlag
+                && ref $ArticleFilterFlag eq 'HASH'
+            ) {
                 my $FoundFlag     = 0;
                 my $FoundFlagText = 0;
 
@@ -1159,21 +958,15 @@ sub MaskAgentZoom {
                             UserID         => $Self->{UserID},
                         );
 
-                        if (
-                            (
-                                defined $ArticleFlagData{Subject}
-                                && $ArticleFlagData{Subject} =~ m/$ArticleFilterFlagText/
-                            )
-                            || (
-                                defined $ArticleFlagData{Keywords}
-                                && $ArticleFlagData{Keywords} =~ m/$ArticleFilterFlagText/
-                            )
-                            || (
-                                defined $ArticleFlagData{Note}
-                                && $ArticleFlagData{Note} =~ m/$ArticleFilterFlagText/
-                            )
-                        ) {
-                            $FoundFlagText = 1;
+                        FLAGCHECK:
+                        for my $Key ( qw(Subject Keywords Note)  ) {
+                            if (
+                                    defined $ArticleFlagData{$Key}
+                                    && $ArticleFlagData{$Key} =~ m/$ArticleFilterFlagText/smx
+                            ) {
+                                $FoundFlagText = 1;
+                                last FLAGCHECK;
+                            }
                         }
                     }
                     else {
@@ -1183,36 +976,153 @@ sub MaskAgentZoom {
                 next ARTICLE if !$FoundFlag || !$FoundFlagText;
             }
 
-            # count shown articles
-            $ShowCount++;
-
             # remember article id
             $Self->{ArticleFilter}->{ShownArticleIDs}->{ $Article->{ArticleID} } = 1;
-
-            # set article id to first shown article
-            if ( $ShowCount == 1 ) {
-                $NewArticleID = $Article->{ArticleID};
-            }
-
-            # set article id to last shown customer article
-            if ( $Article->{SenderType} eq 'customer' ) {
-                $NewArticleID = $Article->{ArticleID};
-            }
+            push (@NewArticleBoxAll, $Article);
         }
 
-        # change article id if it was filtered out
-        if ( $NewArticleID && !$Self->{ArticleFilter}->{ShownArticleIDs}->{$NewArticleID} ) {
-            $ArticleID = $NewArticleID;
+        @ArticleBoxAll = @NewArticleBoxAll;
+    }
+
+    if (
+        $Self->{ArticleFilter}
+        && !$HasFilter
+    ) {
+        $HasFilter = 1;
+        $StartHit  = 1;
+    }
+    elsif (
+        !$Self->{ArticleFilter}
+        && $HasFilter
+    ) {
+        $StartHit  = 1;
+        $HasFilter = 0;
+    }
+
+    $Count = 1;
+    my $HasArticle = 0;
+    for my $Article (@ArticleBoxAll) {
+        if (
+            $Self->{ArticleID}
+            && $Self->{ArticleID} eq $Article->{ArticleID}
+        ) {
+            $Page       = ceil($Count / $PageShown);
+            $StartHit   = $Page * $PageShown + 1;
+            $HasArticle = 1;
+        }
+        $Count++;
+    }
+
+    my $ArticleIDFound = 0;
+    my $Start = $StartHit-1;
+    my $End   = $Start + $PageShown - 1;
+    for my $Index ( $Start .. $End ) {
+        last if !$ArticleBoxAll[$Index];
+
+        my $Article = $ArticleBoxAll[$Index];
+
+        $Article->{Count} = $ArticleAllCounter{$Article->{ArticleID}};
+        push( @ArticleBox, $Article);
+
+        next if !$Self->{ArticleID} || !$Article->{ArticleID};
+        next if $Self->{ArticleID} ne $Article->{ArticleID};
+
+        $ArticleIDFound = 1;
+    }
+
+    # get selected or last customer article
+    my $ArticleID;
+    if ($ArticleIDFound) {
+        $ArticleID = $Self->{ArticleID};
+    }
+    else {
+
+        # find latest not seen article
+        ARTICLE:
+        for my $Article (@ArticleBox) {
+
+            # ignore system sender type
+            next ARTICLE
+                if $ConfigObject->Get('Ticket::NewArticleIgnoreSystemSender')
+                && $Article->{SenderType} eq 'system';
+
+            next ARTICLE if $ArticleFlags{ $Article->{ArticleID} }->{Seen};
+            $ArticleID = $Article->{ArticleID};
+            last ARTICLE;
         }
 
-        # add current article id
-        $Self->{ArticleFilter}->{ShownArticleIDs}->{$NewArticleID} = 1;
+        # set selected article
+        if (
+            !$ArticleID
+            && scalar @ArticleBox
+        ) {
+            my %Preferences = $UserObject->GetPreferences( UserID => $Self->{UserID} );
+
+            # show first article
+            if (
+                $Preferences{ShownArticle}
+                && (
+                    (
+                        $Preferences{ShownArticle} eq 'first'
+                        && $Self->{ZoomExpandSort} ne 'reverse'
+                    )
+                    || (
+                        $Preferences{ShownArticle} eq 'last'
+                        && $Self->{ZoomExpandSort} eq 'reverse'
+                    )
+                )
+            ) {
+
+                # set first listed article as fallback
+                $ArticleID = $ArticleBox[0]->{ArticleID};
+            }
+            elsif (
+                $Preferences{ShownArticle}
+                && (
+                    (
+                        $Preferences{ShownArticle} eq 'last'
+                        && $Self->{ZoomExpandSort} ne 'reverse'
+                    ) ||
+                    (
+                        $Preferences{ShownArticle} eq 'first'
+                        && $Self->{ZoomExpandSort} eq 'reverse'
+                    )
+                )
+            ) {
+                # set last article as default if reverse sort
+                $ArticleID = $ArticleBox[-1]->{ArticleID};
+            }
+
+            else {
+
+                # set last customer article as selected article replacing last set
+                ARTICLETMP:
+                for my $ArticleTmp (@ArticleBox) {
+                    next ARTICLETMP if $ArticleTmp->{SenderType} ne 'customer';
+                    $ArticleID = $ArticleTmp->{ArticleID};
+                    last ARTICLETMP if $Self->{ZoomExpandSort} eq 'reverse';
+                }
+
+                # use fallback if no customer article found - show last article
+                if ( !defined $ArticleID ) {
+                    if ( $Self->{ZoomExpandSort} ne 'reverse' ) {
+                        $ArticleID = $ArticleBox[-1]->{ArticleID};
+                    }
+                    else {
+                        $ArticleID = $ArticleBox[0]->{ArticleID};
+                    }
+                }
+            }
+        }
     }
 
     # check if expand view is usable (only for less then 400 article)
     # if you have more articles is going to be slow and not usable
     my $ArticleMaxLimit = $ConfigObject->Get('Ticket::Frontend::MaxArticlesZoomExpand') // 400;
-    if ( $Self->{ZoomExpand} && $#ArticleBox > $ArticleMaxLimit ) {
+    if (
+        $Self->{ZoomExpand}
+        && $#ArticleBox > $ArticleMaxLimit
+    ) {
         $Self->{ZoomExpand} = 0;
     }
 
@@ -1221,16 +1131,20 @@ sub MaskAgentZoom {
     if ( !$Self->{ZoomExpand} ) {
         ARTICLEBOX:
         for my $ArticleTmp (@ArticleBox) {
-
-            # if ( $ArticleID eq $ArticleTmp->{ArticleID} ) {
-            if ( defined $ArticleID && $ArticleID eq $ArticleTmp->{ArticleID} ) {
+            if (
+                defined $ArticleID
+                && $ArticleID eq $ArticleTmp->{ArticleID}
+            ) {
                 push @ArticleBoxShown, $ArticleTmp;
                 last ARTICLEBOX;
             }
         }
     }
     else {
-        if ( $Self->{ArticleFilterActive} && $Self->{ArticleFilter} ) {
+        if (
+            $Self->{ArticleFilterActive}
+            && $Self->{ArticleFilter}
+        ) {
             for my $ArticleItem (@ArticleBox) {
                 next if !$Self->{ArticleFilter}->{ShownArticleIDs}->{ $ArticleItem->{ArticleID} };
                 push @ArticleBoxShown, $ArticleItem;
@@ -1262,11 +1176,39 @@ sub MaskAgentZoom {
 
         my $Pagination;
 
-        if ($NeedPagination) {
+        if (scalar @ArticleBoxAll > $PageShown) {
+            my $Link = q{};
+
+            if ( $Self->{ZoomExpand} ) {
+                $Link .= "ZoomExpand=$Self->{ZoomExpand}";
+            }
+
+            if ( $Self->{ZoomExpandSort} ) {
+                $Link .= q{;} if $Link;
+                $Link .= "ZoomExpandSort=$Self->{ZoomExpandSort}";
+            }
+
+            if ( $Self->{SelectedTab} ) {
+                $Link .= q{;} if $Link;
+                $Link .= "SelectedTab=$TabIndex";
+            }
+
+            if ( $HasFilter ) {
+                $Link .= q{;} if $Link;
+                $Link .= "HasFilter=1";
+            }
+
             $Pagination = {
-                Pages       => $Pages,
-                CurrentPage => $Page,
-                TicketID    => $Ticket{TicketID},
+                StartHit  => $StartHit,
+                PageShown => $PageShown,
+                AllHits   => scalar @ArticleBoxAll,
+                Page      => $Page,
+                Action    => 'Action=AgentTicketZoom',
+                Link      => $Link,
+                IDPrefix  => $Self->{Action},
+                TicketID  => $Ticket{TicketID},
+                ArticleID => $ArticleID,
+                FormID    => $FormID
             };
         }
 
@@ -1279,7 +1221,9 @@ sub MaskAgentZoom {
             ArticleBox        => \@ArticleBox,
             Pagination        => $Pagination,
             Page              => $Page,
-            ArticleCount      => scalar @ArticleBoxAll,
+            StartHit          => $StartHit,
+            HasFilter         => $HasFilter,
+            ArticleCount      => $ArticleCount,
             AclAction         => \%AclAction,
             StandardResponses => $StandardTemplates{Answer},
             StandardForwards  => $StandardTemplates{Forward},
@@ -1287,14 +1231,11 @@ sub MaskAgentZoom {
         );
     }
 
-    # get layout object
-    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-
     # show articles items
-    $Param{ArticleItems} = '';
+    $Param{ArticleItems} = q{};
     ARTICLE:
     for my $ArticleTmp (@ArticleBoxShown) {
-        my %Article = %$ArticleTmp;
+        my %Article = %{$ArticleTmp};
 
         $Self->_ArticleItem(
             Ticket            => \%Ticket,
@@ -1322,11 +1263,8 @@ sub MaskAgentZoom {
     # age design
     $Ticket{Age} = $LayoutObject->CustomerAge(
         Age   => $Ticket{Age},
-        Space => ' '
+        Space => q{ }
     );
-
-    # number of articles
-    $Param{ArticleCount} = $Count;
 
     $LayoutObject->Block(
         Name => 'Header',
@@ -1390,6 +1328,9 @@ sub MaskAgentZoom {
         );
         $Param{ArticleFlagTextFilterString} = $Self->{ArticleFilter}->{ArticleFlagText};
 
+
+        my $BackendObject = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
+
         # cycle trough the activated Dynamic Fields for this screen
         DYNAMICFIELD:
         for my $DynamicFieldConfig ( @{ $Self->{DynamicFieldActiveFilter} } ) {
@@ -1423,13 +1364,11 @@ sub MaskAgentZoom {
                 );
             }
 
-            my $DynamicFieldBackendObject
-                = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
-            my $DynamicFieldHTML = $DynamicFieldBackendObject->EditFieldRender(
+            my $DynamicFieldHTML = $BackendObject->EditFieldRender(
                 DynamicFieldConfig => $DynamicFieldConfig,
                 Value => defined $Self->{ArticleFilter}->{$ArticleFilterDynamicFieldName}
-                ? "$Self->{ArticleFilter}->{$ArticleFilterDynamicFieldName}"
-                : '',
+                    ? "$Self->{ArticleFilter}->{$ArticleFilterDynamicFieldName}"
+                    : q{},
                 LayoutObject => $LayoutObject,
                 ParamObject  => $ParamObject,
             );
@@ -1552,15 +1491,24 @@ sub _ArticleTree {
     );
 
     if ( $Param{Pagination} ) {
+        my $Limit = $Param{Limit} || 20_000;
+        my %PageNav = $LayoutObject->PageNavBar(
+            Limit => $Limit,
+            %{$Param{Pagination}}
+        );
+
         $LayoutObject->Block(
             Name => 'ArticlePages',
-            Data => $Param{Pagination},
+            Data => \%PageNav,
         );
     }
 
     # check if expand/collapse view is usable (not available for too many
     # articles)
-    if ( $Self->{ZoomExpand} && $#ArticleBox < $ArticleMaxLimit ) {
+    if (
+        $Self->{ZoomExpand}
+        && $#ArticleBox < $ArticleMaxLimit
+    ) {
         $LayoutObject->Block(
             Name => 'Collapse',
             Data => {
@@ -1568,7 +1516,8 @@ sub _ArticleTree {
                 ArticleID      => $ArticleID,
                 ZoomExpand     => $Self->{ZoomExpand},
                 ZoomExpandSort => $Self->{ZoomExpandSort},
-                Page           => $Param{Page},
+                StartHit       => $Param{StartHit},
+                HasFilter      => $Param{HasFilter},
                 SelectedTab    => $Param{TabIndex},
             },
         );
@@ -1582,7 +1531,8 @@ sub _ArticleTree {
                 ArticleID      => $ArticleID,
                 ZoomExpand     => $Self->{ZoomExpand},
                 ZoomExpandSort => $Self->{ZoomExpandSort},
-                Page           => $Param{Page},
+                StartHit       => $Param{StartHit},
+                HasFilter      => $Param{HasFilter},
                 SelectedTab    => $Param{TabIndex},
             },
         );
@@ -1629,6 +1579,7 @@ sub _ArticleTree {
         },
     );
 
+    my $ColumnCount = 9; # Default column without dynamic fields
     # cycle trough the activated Dynamic Fields for this screen
     DYNAMICFIELD:
     for my $DynamicFieldConfig ( @{ $Self->{DynamicFieldShow} } ) {
@@ -1641,11 +1592,12 @@ sub _ArticleTree {
                 Label => $DynamicFieldConfig->{Label},
             },
         );
+        $ColumnCount++;
     }
 
     ARTICLE:
     for my $ArticleTmp (@ArticleBox) {
-        my %Article = %$ArticleTmp;
+        my %Article = %{$ArticleTmp};
 
         # article filter is activated in sysconfig and there are articles
         # that passed the filter
@@ -1660,8 +1612,8 @@ sub _ArticleTree {
         }
 
         # show article flags
-        my $Class      = '';
-        my $ClassRow   = '';
+        my $Class      = q{};
+        my $ClassRow   = q{};
         my $NewArticle = 0;
 
         my %ArticleFlag = $TicketObject->ArticleFlagGet(
@@ -1720,7 +1672,7 @@ sub _ArticleTree {
 
         my $TmpSubject = $TicketObject->TicketSubjectClean(
             TicketNumber => $Article{TicketNumber},
-            Subject      => $Article{Subject} || '',
+            Subject      => $Article{Subject} || q{},
         );
 
         # set icon for ArticleType
@@ -1755,7 +1707,7 @@ sub _ArticleTree {
         foreach my $Icon (qw(SenderTypeIcon ArticleTypeIcon DirectionIcon)) {
             if ( $Article{$Icon} ) {
                 $Article{$Icon} =
-                    $ConfigObject->Get('Frontend::ImagePath') . '/'
+                    $ConfigObject->Get('Frontend::ImagePath') . q{/}
                     . $Article{$Icon};
             }
         }
@@ -1834,7 +1786,7 @@ sub _ArticleTree {
             );
 
             # get article flag class
-            my $CSS = $Self->{Config}->{ArticleFlagCSS}->{$Flag} || '';
+            my $CSS = $Self->{Config}->{ArticleFlagCSS}->{$Flag} || q{};
 
             # create article flag icon and hidden options dialog box
             $LayoutObject->Block(
@@ -2006,6 +1958,18 @@ sub _ArticleTree {
         }
     }
 
+    if (
+        !@ArticleBox
+        && $Self->{ArticleFilter}
+    ) {
+        $LayoutObject->Block(
+            Name => 'TreeNoItem',
+            Data => {
+                Colspan => $ColumnCount
+            }
+        );
+    }
+
     # return output
     return $LayoutObject->Output(
         TemplateFile => 'AgentTicketZoomTabArticle',
@@ -2066,7 +2030,7 @@ sub _ArticleItem {
     # cleanup subject
     $Article{Subject} = $TicketObject->TicketSubjectClean(
         TicketNumber => $Article{TicketNumber},
-        Subject      => $Article{Subject} || '',
+        Subject      => $Article{Subject} || q{},
         Size         => 0,
     );
 
@@ -2131,7 +2095,7 @@ sub _ArticleItem {
         next KEY if !$Article{$Key};
 
         # use realname only or use realname and email address
-        my $Realname = '';
+        my $Realname = q{};
         if ( $Self->{Config}->{ArticleDetailViewFrom} eq 'Realname' ) {
             $Realname = 'Realname'
         }
@@ -2193,7 +2157,7 @@ sub _ArticleItem {
         );
 
         next DYNAMICFIELD if !$Value;
-        next DYNAMICFIELD if $Value eq '';
+        next DYNAMICFIELD if $Value eq q{};
 
         # get print string for this dynamic field
         my $ValueStrg = $BackendObject->DisplayValueRender(
@@ -2441,7 +2405,7 @@ sub _ArticleItem {
     my $Count = 0;
     for my $Flag ( sort( keys( %ArticleFlag ) ) ) {
 
-        my $Key = '';
+        my $Key = q{};
         if ( !$Count ) {
             $Key = 'MarkedAs';
         }
@@ -2490,9 +2454,9 @@ sub _ArticleItem {
 
     # check if the browser sends the session id cookie
     # if not, add the session id to the url
-    my $Session = '';
+    my $Session = q{};
     if ( $LayoutObject->{SessionID} && !$LayoutObject->{SessionIDCookie} ) {
-        $Session = ';' . $LayoutObject->{SessionName} . '=' . $LayoutObject->{SessionID};
+        $Session = q{;} . $LayoutObject->{SessionName} . q{=} . $LayoutObject->{SessionID};
     }
 
     # show body
@@ -2577,10 +2541,9 @@ sub _ArticleMenu {
     # check if compose link should be shown
     if (
         $ConfigObject->Get('Frontend::Module')->{AgentTicketCompose}
-        && ( $AclActionLookup{AgentTicketCompose} )
+        && $AclActionLookup{AgentTicketCompose}
         && $Self->{Config}->{ArticleEmailActions}->{AgentTicketCompose}
-        && $Self->{Config}->{ArticleEmailActions}->{AgentTicketCompose} =~
-        /(^|.*,)$Article{ArticleType}(,.*|$)/
+        && $Self->{Config}->{ArticleEmailActions}->{AgentTicketCompose} =~ /(?:^|.*,)$Article{ArticleType}(?:,.*|$)/smx
     ) {
         my $Access = 1;
         my $Config = $ConfigObject->Get('Ticket::Frontend::AgentTicketCompose');
@@ -2644,7 +2607,7 @@ sub _ArticleMenu {
             my $StandardResponsesStrg = $LayoutObject->BuildSelection(
                 Name  => 'ResponseID',
                 ID    => 'ResponseID',
-                Class => 'Small' . ($IsModernize ? ' Modernize' : ''),
+                Class => 'Small' . ($IsModernize ? ' Modernize' : q{}),
                 Data  => \@StandardResponseArray,
             );
 
@@ -2661,7 +2624,7 @@ sub _ArticleMenu {
             };
 
             # check if reply all is needed
-            my $Recipients = '';
+            my $Recipients = q{};
             KEY:
             for my $Key (qw(From To Cc Bcc)) {
                 next KEY if !$Article{$Key};
@@ -2709,7 +2672,7 @@ sub _ArticleMenu {
                 $StandardResponsesStrg = $LayoutObject->BuildSelection(
                     Name  => 'ResponseID',
                     ID    => 'ResponseIDAll' . $Article{ArticleID},
-                    Class => 'Small' . ($IsModernize ? ' Modernize' : ''),
+                    Class => 'Small' . ($IsModernize ? ' Modernize' : q{}),
                     Data  => \@StandardResponseArrayReplyAll,
                 );
 
@@ -2735,8 +2698,7 @@ sub _ArticleMenu {
         $ConfigObject->Get('Frontend::Module')->{AgentTicketForward}
         && $AclActionLookup{AgentTicketForward}
         && $Self->{Config}->{ArticleEmailActions}->{AgentTicketForward}
-        && $Self->{Config}->{ArticleEmailActions}->{AgentTicketForward} =~
-        /(^|.*,)$Article{ArticleType}(,.*|$)/
+        && $Self->{Config}->{ArticleEmailActions}->{AgentTicketForward} =~ /(?:^|.*,)$Article{ArticleType}(?:,.*|$)/smx
     ) {
         my $Access = 1;
         my $Config = $ConfigObject->Get('Ticket::Frontend::AgentTicketForward');
@@ -2783,9 +2745,9 @@ sub _ArticleMenu {
                     @StandardForwardArray,
                     {
                         Key   => '0',
-                        Value => '- '
+                        Value => q{- }
                             . $LayoutObject->{LanguageObject}->Translate('Forward')
-                            . ' -',
+                            . q{ -},
                         Selected => 1,
                     }
                 );
@@ -2794,7 +2756,7 @@ sub _ArticleMenu {
                 my $StandardForwardsStrg = $LayoutObject->BuildSelection(
                     Name  => 'ForwardTemplateID',
                     ID    => 'ForwardTemplateID',
-                    Class => 'Small' . ($IsModernize ? ' Modernize' : ''),
+                    Class => 'Small' . ($IsModernize ? ' Modernize' : q{}),
                     Data  => \@StandardForwardArray,
                 );
 
@@ -2830,8 +2792,7 @@ sub _ArticleMenu {
         $ConfigObject->Get('Frontend::Module')->{AgentTicketBounce}
         && $AclActionLookup{AgentTicketBounce}
         && $Self->{Config}->{ArticleEmailActions}->{AgentTicketBounce}
-        && $Self->{Config}->{ArticleEmailActions}->{AgentTicketBounce} =~
-        /(^|.*,)$Article{ArticleType}(,.*|$)/
+        && $Self->{Config}->{ArticleEmailActions}->{AgentTicketBounce} =~ /(?:^|.*,)$Article{ArticleType}(?:,.*|$)/smx
     ) {
         my $Access = 1;
         my $Config = $ConfigObject->Get('Ticket::Frontend::AgentTicketBounce');
@@ -2874,8 +2835,7 @@ sub _ArticleMenu {
         $ConfigObject->Get('Frontend::Module')->{AgentTicketPhone}
         && $AclActionLookup{AgentTicketPhone}
         && $Self->{Config}->{ArticleEmailActions}->{AgentTicketPhoneSplit}
-        && $Self->{Config}->{ArticleEmailActions}->{AgentTicketPhoneSplit} =~
-        /(^|.*,)$Article{ArticleType}(,.*|$)/
+        && $Self->{Config}->{ArticleEmailActions}->{AgentTicketPhoneSplit} =~ /(?:^|.*,)$Article{ArticleType}(?:,.*|$)/smx
     ) {
 
         push @MenuItems, {
@@ -2914,8 +2874,7 @@ sub _ArticleMenu {
         $ConfigObject->Get('Frontend::Module')->{AgentArticleEdit}
         && $AclActionLookup{AgentArticleEdit}
         && $Self->{Config}->{ArticleEmailActions}->{AgentArticleEdit}
-        && $Self->{Config}->{ArticleEmailActions}->{AgentArticleEdit} =~
-        /(^|.*,)$Article{ArticleType}(,.*|$)/
+        && $Self->{Config}->{ArticleEmailActions}->{AgentArticleEdit} =~ /(?:^|.*,)$Article{ArticleType}(?:,.*|$)/smx
     ) {
         my $Access = 1;
         my $Config = $ConfigObject->Get('Ticket::Frontend::AgentArticleEdit');
@@ -3036,7 +2995,7 @@ sub _ArticleMenu {
     if (
         $ConfigObject->Get('Frontend::Module')->{AgentTicketNote}
         && $AclActionLookup{AgentTicketNote}
-        && $Article{ArticleType} =~ /^note-(internal|external)$/i
+        && $Article{ArticleType} =~ /^note-(?:internal|external)$/i
     ) {
         my $Access = 1;
         my $Config = $ConfigObject->Get('Ticket::Frontend::AgentTicketNote');
@@ -3127,7 +3086,7 @@ sub _ArticleCollectMeta {
 
                     my $WholeMatchString = $MatchData[$Counter];
                     $WholeMatchString =~ s/^\s+|\s+$//g;
-                    if ( grep { $_->{Name} eq $WholeMatchString } @Matches ) {
+                    if ( grep( { $_->{Name} eq $WholeMatchString } @Matches ) ) {
                         $Counter += $Elements + 1;
                         next MATCH;
                     }
@@ -3236,7 +3195,7 @@ sub _ArticleFlagSelectionString {
     my $ArticleFlags = $Self->{Config}->{ArticleFlags};
     my $IsModernize  = $Self->{Config}->{ArticleMenuModernize} // 1;
 
-    my $ArticleFlagStrg = '';
+    my $ArticleFlagStrg = q{};
     if ( ref $ArticleFlags eq 'HASH' && keys %{$ArticleFlags} ) {
 
         my %ArticleFlags = %{$ArticleFlags};
@@ -3255,7 +3214,7 @@ sub _ArticleFlagSelectionString {
                 Translation  => 1,
                 PossibleNone => 0,
                 Sort         => 'AlphanumericValue',
-                Class        => 'ArticleFlagSelection' . ($IsModernize ? ' Modernize' : ''),
+                Class        => 'ArticleFlagSelection' . ($IsModernize ? ' Modernize' : q{}),
             );
         }
     }

@@ -239,14 +239,6 @@ $(document.body).on('change', '.ArticleFlagSelection', function() {
             [% Translate("Article Overview") | html %] - [% Data.ArticleCount | html %] [% Translate("Article(s)") | html %]
         </span></h2>
         <div class="AdditionalInformation ControlRow">
-
-[% RenderBlockStart("ArticlePages") %]
-            <div class="ArticlePages Icons">
-[% FOREACH page IN [1 .. Data.Pages]; %]
-                <a href="[% Env("Baselink") %]Action=AgentTicketZoom;TicketID=[% Data.TicketID | uri %];ArticlePage=[% page %]" title="[% Translate('Page') %] [% page %]" data-page="[% page %]" [% IF page == Data.CurrentPage %]class="Active"[% END %]>[% page %]</a>
-[% END; %]
-            </div>
-[% RenderBlockEnd("ArticlePages") %]
             <div class="ResetColumnWidth Icons Hidden">
                 <span class="InvisibleText">[% Translate("Reset Columns Width") | html %]:</span>
                 <a id="ResetColumnWidth" href="#" title="[% Translate("Reset columns width") | html %]"><i class="fa fa-columns"></i><span>[% Translate("Reset columns width") | html %]</span></a>
@@ -267,8 +259,8 @@ $(document.body).on('change', '.ArticleFlagSelection', function() {
             <div class="ArticleView Icons">
                 <span class="InvisibleText">[% Translate("Article") | html %] [% Translate("View") | html %]:</span>
 [% RenderBlockStart("Expand") %]
-                <a class="OneArticle Active" href="[% Env("Baselink") %]Action=AgentTicketZoom;TicketID=[% Data.TicketID | uri %];ArticleID=[% Data.ArticleID | uri %];ZoomExpand=0;SelectedTab=[% Data.SelectedTab | uri %];ArticlePage=[% Data.Page | uri %]" title="[% Translate("Show one article") | html %]"><i class="fa fa-minus"></i><span>[% Translate("Show one article") | html %]</span></a>
-                <a class="AllArticles" href="[% Env("Baselink") %]Action=AgentTicketZoom;TicketID=[% Data.TicketID | uri %];ArticleID=[% Data.ArticleID | uri %];ZoomExpand=1;SelectedTab=[% Data.SelectedTab | uri %];ArticlePage=[% Data.Page | uri %]" title="[% Translate("Show all articles") | html %]"><i class="fa fa-bars"></i><span>[% Translate("Show all articles") | html %]</span></a>
+                <a class="OneArticle Active" href="[% Env("Baselink") %]Action=AgentTicketZoom;TicketID=[% Data.TicketID | uri %];ArticleID=[% Data.ArticleID | uri %];ZoomExpand=0;SelectedTab=[% Data.SelectedTab | uri %];StartHit=[% Data.StartHit | uri %];HasFilter=[% Data.HasFilter | uri %]" title="[% Translate("Show one article") | html %]"><i class="fa fa-minus"></i><span>[% Translate("Show one article") | html %]</span></a>
+                <a class="AllArticles" href="[% Env("Baselink") %]Action=AgentTicketZoom;TicketID=[% Data.TicketID | uri %];ArticleID=[% Data.ArticleID | uri %];ZoomExpand=1;SelectedTab=[% Data.SelectedTab | uri %];StartHit=[% Data.StartHit | uri %];HasFilter=[% Data.HasFilter | uri %]" title="[% Translate("Show all articles") | html %]"><i class="fa fa-bars"></i><span>[% Translate("Show all articles") | html %]</span></a>
 [% RenderBlockEnd("Expand") %]
 [% RenderBlockStart("Collapse") %]
                 <a class="OneArticle" href="[% Env("Baselink") %]Action=AgentTicketZoom;TicketID=[% Data.TicketID | uri %];ArticleID=[% Data.ArticleID | uri %];ZoomExpand=0;SelectedTab=[% Data.SelectedTab | uri %]" title="[% Translate("Show one article") | html %]"><i class="fa fa-minus"></i><span>[% Translate("Show one article") | html %]</span></a>
@@ -279,7 +271,12 @@ $(document.body).on('change', '.ArticleFlagSelection', function() {
         </div>
     </div>
     <div class="Content">
-
+[% RenderBlockStart("ArticlePages") %]
+        <div class="Pagination">
+            <strong>[% Data.Result | html %]</strong> [% Translate("of") | html %] <strong>[% Data.TotalHits | html %]</strong> - [% Translate("Page") | html %]: [% Data.SiteNavBar %]
+        </div>
+        <div class="Clear"></div>
+[% RenderBlockEnd("ArticlePages") %]
 [% RenderBlockStart("ArticleList") %]
         <div class="TicketList">
             <div id="ArticleTableBody" class="ActionRow">
@@ -429,6 +426,13 @@ $(document.body).on('change', '.ArticleFlagSelection', function() {
                                 </td>
                             </tr>
 [% RenderBlockEnd("TreeItem") %]
+[% RenderBlockStart("TreeNoItem") %]
+                            <tr>
+                                <td colspan="[% Data.Colspan %]">
+                                    [% Translate("No articles were found with the defined filter.") %]
+                                </td>
+                            </tr>
+[% RenderBlockEnd("TreeNoItem") %]
                         </tbody>
                     </table>
                 </div>
