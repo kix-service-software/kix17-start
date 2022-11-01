@@ -598,7 +598,12 @@ sub ShowTicketStatus {
     my $LayoutObject       = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my $DynamicFieldObject = $Kernel::OM->Get('Kernel::System::DynamicField');
     my $BackendObject      = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
+    my $HTMLUtilsObject    = $Kernel::OM->Get('Kernel::System::HTMLUtils');
     my $TicketObject       = $Kernel::OM->Get('Kernel::System::Ticket');
+    my $UserObject         = $Kernel::OM->Get('Kernel::System::User');
+
+    # get isolated layout object for link safety checks
+    my $HTMLLinkLayoutObject = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout');
 
     my $TicketID = $Param{TicketID} || return;
 
@@ -711,7 +716,7 @@ sub ShowTicketStatus {
     my $Queue = $ConfigObject->Get('Ticket::Frontend::CustomerTicketOverview')->{Queue};
 
     if ($Owner) {
-        my $OwnerName = $Kernel::OM->Get('Kernel::System::User')->UserName( UserID => $Ticket{OwnerID} );
+        my $OwnerName = $UserObject->UserName( UserID => $Ticket{OwnerID} );
         $LayoutObject->Block(
             Name => 'RecordOwner',
             Data => {
@@ -780,7 +785,7 @@ sub ShowTicketStatus {
         );
 
         if ( $ValueStrg->{Link} ) {
-            my $HTMLLink = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout')->Output(
+            my $HTMLLink = $HTMLLinkLayoutObject->Output(
                 Template => '<a href="[% Data.Link | Interpolate %]" class="DynamicFieldLink">[% Data.Value %]</a>',
                 Data     => {
                     Value                       => $ValueStrg->{Value},
@@ -789,7 +794,7 @@ sub ShowTicketStatus {
                     $DynamicFieldConfig->{Name} => $ValueStrg->{Title},
                 },
             );
-            my %Safe = $Kernel::OM->Get('Kernel::System::HTMLUtils')->Safety(
+            my %Safe = $HTMLUtilsObject->Safety(
                 String       => $HTMLLink,
                 NoApplet     => 1,
                 NoObject     => 1,

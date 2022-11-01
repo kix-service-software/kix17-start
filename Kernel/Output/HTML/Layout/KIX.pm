@@ -289,6 +289,9 @@ sub AgentCustomerDetailsViewTable {
     # get needed objects
     my $HTMLUtilsObject = $Kernel::OM->Get('Kernel::System::HTMLUtils');
 
+    # get isolated layout object for link safety checks
+    my $HTMLLinkLayoutObject = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout');
+
     # add ticket params if given
     if ( $Param{Ticket} ) {
         %{ $Param{Data} } = ( %{ $Param{Data} }, %{ $Param{Ticket} } );
@@ -342,7 +345,7 @@ sub AgentCustomerDetailsViewTable {
                     Max  => $Param{Max},
                 );
             }
-            $Record{Entry} = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout')->Output(
+            $Record{Entry} = $HTMLLinkLayoutObject->Output(
                 Template => '[% Data.LinkStart | Interpolate %][% Data.ValueShort %][% Data.LinkStop %]',
                 Data     => \%Record,
             );

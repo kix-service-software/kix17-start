@@ -47,8 +47,14 @@ sub Run {
         return;
     }
 
-    # get config object
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+    # get needed objects
+    my $ConfigObject    = $Kernel::OM->Get('Kernel::Config');
+    my $LayoutObject    = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $HTMLUtilsObject = $Kernel::OM->Get('Kernel::System::HTMLUtils');
+    my $TicketObject    = $Kernel::OM->Get('Kernel::System::Ticket');
+
+    # get isolated layout object for link safety checks
+    my $HTMLLinkLayoutObject = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout');
 
     # check if feature is active
     return if !$ConfigObject->Get('Ticket::Watcher');
@@ -76,7 +82,6 @@ sub Run {
         for my $Group (@Groups) {
 
             # get layout object
-            my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
             next GROUP if !$LayoutObject->{"UserIsGroup[$Group]"};
             if ( $LayoutObject->{"UserIsGroup[$Group]"} eq 'Yes' ) {
@@ -88,13 +93,13 @@ sub Run {
     return if !$Access;
 
     # check if ticket get's watched right now
-    my %Watch = $Kernel::OM->Get('Kernel::System::Ticket')->TicketWatchGet(
+    my %Watch = $TicketObject->TicketWatchGet(
         TicketID => $Param{Ticket}->{TicketID},
     );
 
     # show subscribe action
     if ( $Watch{ $Self->{UserID} } ) {
-        $Param{Ticket}->{HTMLLink} = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout')->Output(
+        $Param{Ticket}->{HTMLLink} = $HTMLLinkLayoutObject->Output(
             Template => '<a href="[% Env("Baselink") %][% Data.Link | Interpolate %]" class="[% Data.Class %]" [% Data.LinkParam %] title="[% Translate(Data.Description) | html %]">[% Translate(Data.Name) | html %]</a>',
             Data     => {
                 %{ $Param{Config} },
@@ -105,7 +110,7 @@ sub Run {
                 Link        => 'Action=AgentTicketWatcher;Subaction=Unsubscribe;TicketID=[% Data.TicketID | uri %];[% Env("ChallengeTokenParam") | html %]',
             },
         );
-        my %Safe = $Kernel::OM->Get('Kernel::System::HTMLUtils')->Safety(
+        my %Safe = $HTMLUtilsObject->Safety(
             String       => $Param{Ticket}->{HTMLLink},
             NoApplet     => 1,
             NoObject     => 1,
@@ -130,7 +135,7 @@ sub Run {
         };
     }
 
-    $Param{Ticket}->{HTMLLink} = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout')->Output(
+    $Param{Ticket}->{HTMLLink} = $HTMLLinkLayoutObject->Output(
         Template => '<a href="[% Env("Baselink") %][% Data.Link | Interpolate %]" class="[% Data.Class %]" [% Data.LinkParam %] title="[% Translate(Data.Description) | html %]">[% Translate(Data.Name) | html %]</a>',
         Data     => {
             %{ $Param{Config} },
@@ -141,7 +146,7 @@ sub Run {
             Link        => 'Action=AgentTicketWatcher;Subaction=Subscribe;TicketID=[% Data.TicketID | uri %];[% Env("ChallengeTokenParam") | html %]',
         },
     );
-    my %Safe = $Kernel::OM->Get('Kernel::System::HTMLUtils')->Safety(
+    my %Safe = $HTMLUtilsObject->Safety(
         String       => $Param{Ticket}->{HTMLLink},
         NoApplet     => 1,
         NoObject     => 1,

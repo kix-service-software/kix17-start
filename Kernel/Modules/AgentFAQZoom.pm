@@ -43,8 +43,21 @@ sub new {
 sub Run {
     my ( $Self, %Param ) = @_;
 
-    # get layout object
-    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    # get needed objects
+    my $ConfigObject       = $Kernel::OM->Get('Kernel::Config');
+    my $LayoutObject       = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $DynamicFieldObject = $Kernel::OM->Get('Kernel::System::DynamicField');
+    my $BackendObject      = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
+    my $FAQObject          = $Kernel::OM->Get('Kernel::System::FAQ');
+    my $HTMLUtilsObject    = $Kernel::OM->Get('Kernel::System::HTMLUtils');
+    my $LinkObject         = $Kernel::OM->Get('Kernel::System::LinkObject');
+    my $MainObject         = $Kernel::OM->Get('Kernel::System::Main');
+    my $TimeObject         = $Kernel::OM->Get('Kernel::System::Time');
+    my $UserObject         = $Kernel::OM->Get('Kernel::System::User');
+    my $ParamObject        = $Kernel::OM->Get('Kernel::System::Web::Request');
+
+    # get isolated layout object for link safety checks
+    my $HTMLLinkLayoutObject = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout');
 
     # permission check
     if ( !$Self->{AccessRo} ) {
@@ -53,9 +66,6 @@ sub Run {
             WithHeader => 'yes',
         );
     }
-
-    # get param object
-    my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
 
     # get params
     my %GetParam;
@@ -72,9 +82,6 @@ sub Run {
             Comment => 'Please contact the admin.',
         );
     }
-
-    # get FAQ object
-    my $FAQObject = $Kernel::OM->Get('Kernel::System::FAQ');
 
     # get FAQ item data
     my %FAQData = $FAQObject->FAQGet(
@@ -100,9 +107,6 @@ sub Run {
             WithHeader => 'yes',
         );
     }
-
-    # get HTML utils object
-    my $HTMLUtilsObject = $Kernel::OM->Get('Kernel::System::HTMLUtils');
 
     # ---------------------------------------------------------- #
     # HTMLView Sub-action
@@ -148,7 +152,7 @@ sub Run {
 
         # convert content to HTML if needed
         if (
-            $Kernel::OM->Get('Kernel::Config')->Get('FAQ::Item::HTML')
+            $ConfigObject->Get('FAQ::Item::HTML')
             && $LayoutObject->{BrowserRichText}
             && $FAQData{ContentType} ne 'text/html'
         ) {
@@ -159,12 +163,12 @@ sub Run {
 
         # check if external sources should be removed from field content
         my $NoExtSrcLoad = 0;
-        if ( $Kernel::OM->Get('Kernel::Config')->Get('Frontend::RemoveExternalSource') ) {
+        if ( $ConfigObject->Get('Frontend::RemoveExternalSource') ) {
             $NoExtSrcLoad = 1;
         }
 
         # remove active HTML content (scripts, applets, etc...)
-        my %SafeContent = $Kernel::OM->Get('Kernel::System::HTMLUtils')->Safety(
+        my %SafeContent = $HTMLUtilsObject->Safety(
             String       => $FieldContent,
             NoApplet     => 1,
             NoObject     => 1,
@@ -277,9 +281,6 @@ sub Run {
         );
     }
 
-    # get config object
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-
     # get default options
     my $MultiLanguage = $ConfigObject->Get('FAQ::MultiLanguage');
     my $Voting        = $ConfigObject->Get('FAQ::Voting');
@@ -309,10 +310,6 @@ sub Run {
     # check if user already voted this FAQ item
     my $AlreadyVoted;
     if ($VoteData) {
-
-        # get time object
-        my $TimeObject = $Kernel::OM->Get('Kernel::System::Time');
-
         # item/change_time > voting/create_time
         my $ItemChangedSystemTime = $TimeObject->TimeStamp2SystemTime(
             String => $FAQData{Changed} || '',
@@ -425,9 +422,6 @@ sub Run {
         );
     }
 
-    # get user object
-    my $UserObject = $Kernel::OM->Get('Kernel::System::User');
-
     # get user info (CreatedBy)
     my %UserInfo = $UserObject->GetUserData(
         UserID => $FAQData{CreatedBy}
@@ -458,7 +452,7 @@ sub Run {
             for my $Menu ( sort keys %Menus ) {
 
                 # load module
-                if ( $Kernel::OM->Get('Kernel::System::Main')->Require( $Menus{$Menu}->{Module} ) ) {
+                if ( $MainObject->Require( $Menus{$Menu}->{Module} ) ) {
                     my $Object = $Menus{$Menu}->{Module}->new(
                         %{$Self},
                         ItemID => $FAQData{ItemID},
@@ -618,7 +612,7 @@ sub Run {
     my $Config = $ConfigObject->Get("FAQ::Frontend::$Self->{Action}");
 
     # get the dynamic fields for this screen
-    my $DynamicField = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
+    my $DynamicField = $DynamicFieldObject->DynamicFieldListGet(
         Valid       => 1,
         ObjectType  => 'FAQ',
         FieldFilter => $Config->{DynamicField} || {},
@@ -630,7 +624,7 @@ sub Run {
         next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
         # get print string for this dynamic field
-        my $ValueStrg = $Kernel::OM->Get('Kernel::System::DynamicField::Backend')->DisplayValueRender(
+        my $ValueStrg = $BackendObject->DisplayValueRender(
             DynamicFieldConfig => $DynamicFieldConfig,
             Value              => $FAQData{ 'DynamicField_' . $DynamicFieldConfig->{Name} },
             ValueMaxChars      => 250,
@@ -647,7 +641,7 @@ sub Run {
         );
 
         if ( $ValueStrg->{Link} ) {
-            my $HTMLLink = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout')->Output(
+            my $HTMLLink = $HTMLLinkLayoutObject->Output(
                 Template => '<a href="[% Data.Link %]" target="_blank" class="DynamicFieldLink">[% Data.Value %]</a>',
                 Data     => {
                     Value                       => $ValueStrg->{Value},
@@ -656,7 +650,7 @@ sub Run {
                     $DynamicFieldConfig->{Name} => $ValueStrg->{Title},
                 },
             );
-            my %Safe = $Kernel::OM->Get('Kernel::System::HTMLUtils')->Safety(
+            my %Safe = $HTMLUtilsObject->Safety(
                 String       => $HTMLLink,
                 NoApplet     => 1,
                 NoObject     => 1,
@@ -726,7 +720,7 @@ sub Run {
         }
 
         # get linked objects
-        my $LinkListWithData = $Kernel::OM->Get('Kernel::System::LinkObject')->LinkListWithData(
+        my $LinkListWithData = $LinkObject->LinkListWithData(
             Object => 'FAQ',
             Key    => $GetParam{ItemID},
             State  => 'Valid',
