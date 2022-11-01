@@ -61,6 +61,28 @@ Core.Agent.TicketAction = (function (TargetNS) {
 
     /**
      * @private
+     * @name GetSize
+     * @memberof Core.Agent.TicketAction
+     * @function
+     * @description
+     *      Get new width and height for the iframe.
+     */
+    function GetSize() {
+        var wWidth      = $(window).width(),
+            wHeight     = $(window).height(),
+            wScrollTop  = $(window).scrollTop(),
+            wScrollLeft = $(window).scrollLeft(),
+            dHeight     = wHeight - ((10 - wScrollTop) * 2) - 100,
+            dWidth      = wWidth - ((10 - wScrollLeft) * 2) - 100;
+
+        return {
+            width: dWidth,
+            height: dHeight
+        };
+    }
+
+    /**
+     * @private
      * @name OpenCustomerDialog
      * @memberof Core.Agent.TicketAction
      * @function
@@ -68,13 +90,15 @@ Core.Agent.TicketAction = (function (TargetNS) {
      *      Open the CustomerDialog screen.
      */
     function OpenCustomerDialog() {
-        var CustomerIFrameURL, CustomerIFrame;
+        var CustomerIFrameURL,
+            CustomerIFrame,
+            data = GetSize();
 
-        CustomerIFrameURL = Core.Config.Get('CGIHandle') + '?Action=AdminCustomerUser;Nav=None;Subject=;What=';
+        CustomerIFrameURL = Core.Config.Get('CGIHandle') + '?Action=AdminCustomerUser;Nav=None;';
         CustomerIFrameURL += SerializeData(Core.App.GetSessionInformation());
 
-        CustomerIFrame = '<iframe class="TextOption Customer" src="' + CustomerIFrameURL + '"></iframe>';
-        Core.UI.Dialog.ShowContentDialog(CustomerIFrame, '', '10px', 'Center', true);
+        CustomerIFrame = '<iframe id="OptionCustomerIframe" width="' + data.width + '" height="' + data.height + '" src="' + CustomerIFrameURL + '"></iframe>';
+        Core.UI.Dialog.ShowContentDialog(CustomerIFrame, '', '10px', 'Center', true, []);
     }
 
     /**
@@ -165,6 +189,23 @@ Core.Agent.TicketAction = (function (TargetNS) {
         $('#OptionCustomer').on('click', function () {
             OpenCustomerDialog();
             return false;
+        });
+
+        $(window).on('resize',function() {
+            if (
+                $('#OptionCustomerIframe').length
+                && !$('.Dialog:visible').hasClass('Fullsize')
+            ) {
+                var data      = GetSize(),
+                    ScrollTop = $(window).scrollTop();
+                $('#OptionCustomerIframe').width(data.width);
+                $('#OptionCustomerIframe').height(data.height);
+
+                $('.Dialog:visible').css({
+                    top: (10 + ScrollTop) + 'px',
+                    left: Math.round(($(window).width() - $('.Dialog:visible').width()) / 2) + 'px'
+                });
+            }
         });
 
         // Subscribe to the reloading of the CustomerInfo box to
