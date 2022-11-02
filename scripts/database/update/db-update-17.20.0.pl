@@ -30,8 +30,11 @@ local $Kernel::OM = Kernel::System::ObjectManager->new(
 
 use vars qw(%INC);
 
-# remove obsolete files
+# remove obsolete directories
 _RemoveObsoleteDirectory();
+
+# remove obsolete files
+_RemoveObsoleteFiles();
 
 exit 0;
 
@@ -45,6 +48,10 @@ sub _RemoveObsoleteDirectory {
 
     # prepare file list
     my @DirectoryList = (
+        'Kernel/cpan-lib/Lingua',
+        'Kernel/cpan-lib/Pod',
+
+        'Kernel/System/Console/Command/Dev/Code',
 
         'var/httpd/htdocs/js/thirdparty/jquery-3.6',
         'var/httpd/htdocs/js/thirdparty/jquery-migrate-3.3.2',
@@ -61,6 +68,33 @@ sub _RemoveObsoleteDirectory {
 
     for my $Directory ( @DirectoryList ) {
         rmtree( $HomePath . q{/} . $Directory );
+    }
+
+    return 1;
+}
+
+sub _RemoveObsoleteFiles {
+
+    # get needed objects
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+    my $MainObject   = $Kernel::OM->Get('Kernel::System::Main');
+
+    # get home path
+    my $HomePath = $ConfigObject->Get('Home');
+
+    # prepare file list
+    my @FilesList = (
+        'Kernel/System/Console/Command/Dev/Tools/Config2Docbook.pm',
+        'Kernel/System/Console/Command/Dev/Tools/RPMSpecGenerate.pm',
+        'Kernel/System/Console/Command/Dev/Tools/TranslationsUpdate.pm',
+    );
+
+    for my $File ( @FilesList ) {
+        my $Success = $MainObject->FileDelete(
+            Location        => $HomePath . '/' . $File,
+            Type            => 'Local',
+            DisableWarnings => 1,
+        );
     }
 
     return 1;
