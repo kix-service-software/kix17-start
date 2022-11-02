@@ -417,13 +417,6 @@
         width: 500px;
         height: 400px;
     }
-    iframe.TextOption.Customer {
-        width: 800px;
-    }
-    iframe.TextOption.FAQ {
-        width: 900px;
-        min-height: 600px;
-    }
     iframe.FAQField {
         width: 100%;
     }
