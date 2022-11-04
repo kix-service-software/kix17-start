@@ -3,7 +3,7 @@ Locale::Codes::Script_Retired;
 
 # This file was automatically generated.  Any changes to this file will
 # be lost the next time 'deprecate_codes' is run.
-#    Generated on: Wed Dec  1 13:45:47 EST 2021
+#    Generated on: Thu Sep  1 10:02:44 EDT 2022
 
 use strict;
 require 5.006;
@@ -11,7 +11,7 @@ use warnings;
 use utf8;
 
 our($VERSION);
-$VERSION='3.69';
+$VERSION='3.72';
 
 $Locale::Codes::Retired{'script'}{'alpha'}{'code'} = {
 };

@@ -253,19 +253,24 @@ sub PerlInfoGet {
                 Algorithm::Diff
                 Apache::DBI
                 Apache2::Reload
+                Archive::Tar
+                Archive::Zip
                 Bytes::Random::Secure::Tiny
                 CGI
-                CGI::Emulate::PSGI
                 CGI::Fast
                 Class::Inspector
+                Crypt::Eksblowfish::Bcrypt
                 Crypt::PasswdMD5
                 Crypt::SSLeay
                 CSS::Minifier
                 Date::Pcalc
                 Email::Valid
+                Encode::HanExtra
                 Encode::Locale
                 Excel::Writer::XLSX
                 Font::TTF
+                GD
+                GD::SecurityImage
                 HTML::Tagset
                 HTML::Truncate
                 HTTP::Date
@@ -275,22 +280,23 @@ sub PerlInfoGet {
                 JavaScript::Minifier
                 JSON
                 JSON::PP
-                Lingua::Translit
+                JSON::XS
                 Linux::Distribution
                 Locale::Codes
                 LWP
                 LWP::Protocol::https
+                LWP::UserAgent
                 MailTools
                 Mail::Address
                 Mail::Internet
                 MIME::Tools
-                Module::Refresh
                 Mozilla::CA
+                Net::DNS
                 Net::HTTP
+                Net::HTTPS
                 Net::IMAP::Simple
                 Net::SSLGlue
                 PDF::API2
-                Pod::Strip
                 REST::Client
                 Schedule::Cron::Events
                 Set::Crontab
