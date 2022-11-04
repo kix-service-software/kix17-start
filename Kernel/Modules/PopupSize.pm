@@ -29,16 +29,23 @@ sub Run {
     # create needed objects
     my $ConfigObject  = $Kernel::OM->Get('Kernel::Config');
     my $SessionObject = $Kernel::OM->Get('Kernel::System::AuthSession');
-    my $UserObject    = $Kernel::OM->Get('Kernel::System::User');
     my $LayoutObject  = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my $ParamObject   = $Kernel::OM->Get('Kernel::System::Web::Request');
 
     # check needed stuff
     for my $Needed (qw(CallingAction)) {
-        $Param{$Needed} = $ParamObject->GetParam( Param => $Needed ) || '';
+        $Param{$Needed} = $ParamObject->GetParam( Param => $Needed ) || q{};
         if ( !$Param{$Needed} ) {
             return $LayoutObject->ErrorScreen( Message => "Need $Needed!", );
         }
+    }
+
+    my $UserObject;
+    if ( $Self->{UserType} eq 'Customer' ) {
+        $UserObject = $Kernel::OM->Get('Kernel::System::CustomerUser');
+    }
+    else {
+        $UserObject = $Kernel::OM->Get('Kernel::System::User');
     }
 
     my $CallingAction = $ParamObject->GetParam( Param => 'CallingAction' );
@@ -47,7 +54,7 @@ sub Run {
     if ( $Self->{Subaction} eq 'GetPopupSize' ) {
 
         # get user preferences
-        my %UserPreferences = $UserObject->GetUserData(
+        my %UserPreferences = $UserObject->GetPreferences(
             UserID => $Self->{UserID},
         );
 
@@ -74,7 +81,7 @@ sub Run {
         # send JSON response
         return $LayoutObject->Attachment(
             ContentType => 'application/json; charset=' . $LayoutObject->{Charset},
-            Content     => $JSON || '',
+            Content     => $JSON || q{},
             Type        => 'inline',
             NoCache     => 1,
         );
@@ -140,7 +147,7 @@ sub Run {
         return $LayoutObject->Attachment(
             ContentType => 'text/html',
             Charset     => $LayoutObject->{UserCharset},
-            Content     => '',
+            Content     => q{},
         );
     }
 }
