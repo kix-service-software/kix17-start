@@ -147,22 +147,26 @@ sub ObjectPermission {
         }
     }
 
+    my $UserType = $Kernel::OM->Get('Kernel::Output::HTML::Layout')->{UserType} || q{};
+    my $UserID   = $Param{UserID};
+
+    if ( $UserType eq 'Customer') {
+        $UserID = $Kernel::OM->Get('Kernel::Config')->Get('CustomerPanelUserID') || 1;
+    }
     # grant access for root@localhost
-    return 1 if ( $Param{UserID} == 1 );
+    return 1 if ( $UserID == 1 );
 
     # get config of configitem zoom frontend module
     $Self->{Config} = $Kernel::OM->Get('Kernel::Config')->Get('ITSMConfigItem::Frontend::AgentITSMConfigItemZoom');
 
     # check for access rights
-    my $Access = $Kernel::OM->Get('Kernel::System::ITSMConfigItem')->Permission(
+    return $Kernel::OM->Get('Kernel::System::ITSMConfigItem')->Permission(
         Scope  => 'Item',
         ItemID => $Param{Key},
-        UserID => $Param{UserID},
+        UserID => $UserID,
         Type   => $Self->{Config}->{Permission},
         LogNo  => 1,
     );
-
-    return $Access;
 }
 
 =item ObjectDescriptionGet()

@@ -143,8 +143,14 @@ sub ObjectPermission {
         }
     }
 
+    my $UserType = $Kernel::OM->Get('Kernel::Output::HTML::Layout')->{UserType} || q{};
+    my $UserID   = $Param{UserID};
+    if ( $UserType eq 'Customer') {
+        $UserID = $Kernel::OM->Get('Kernel::Config')->Get('CustomerPanelUserID') || 1;
+    }
+
     # grant access for root@localhost
-    return 1 if ( $Param{UserID} == 1 );
+    return 1 if ( $UserID == 1 );
 
     # check module registry of AgentITSMServiceZoom
     my $ModuleReg = $Kernel::OM->Get('Kernel::Config')->Get('Frontend::Module')->{AgentITSMServiceZoom};
@@ -178,7 +184,7 @@ sub ObjectPermission {
 
             # get user groups, where the user has the appropriate privilege
             my %Groups = $Kernel::OM->Get('Kernel::System::Group')->GroupMemberList(
-                UserID => $Param{UserID},
+                UserID => $UserID,
                 Type   => $Type,
                 Result => 'HASH',
             );

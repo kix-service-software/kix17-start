@@ -134,7 +134,7 @@ sub Run {
                     Object => $Form{TargetObject},
                     Key    => $Form{TargetKey},
                     State  => $Form{State},
-                    UserID => 1,
+                    UserID => $Self->{UserID},
                 );
                 for my $LinkedObject ( keys %{$LinkListWithData} ) {
                     next if $LinkedObject ne $Form{SourceObject};

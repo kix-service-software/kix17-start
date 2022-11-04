@@ -208,8 +208,14 @@ sub ObjectPermission {
         }
     }
 
+    my $UserType = $Kernel::OM->Get('Kernel::Output::HTML::Layout')->{UserType} || q{};
+    my $UserID   = $Param{UserID};
+    if ( $UserType eq 'Customer') {
+        $UserID = $Kernel::OM->Get('Kernel::Config')->Get('CustomerPanelUserID') || 1;
+    }
+
     # grant access for root@localhost
-    return 1 if ( $Param{UserID} == 1 );
+    return 1 if ( $UserID == 1 );
 
     # special handling for form ids
     return 1 if ( $Param{Key} =~ m/\d+\.\d+\.\d+/ );
@@ -217,7 +223,7 @@ sub ObjectPermission {
     return $Kernel::OM->Get('Kernel::System::Ticket')->TicketPermission(
         Type     => 'ro',
         TicketID => $Param{Key},
-        UserID   => $Param{UserID},
+        UserID   => $UserID,
         LogNo    => 1,
     );
 }
