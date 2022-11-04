@@ -105,6 +105,7 @@ sub ArticleDelete {
         $DynamicFieldBackendObject->ValueDelete(
             DynamicFieldConfig => $DynamicFieldConfig,
             ObjectID           => $Param{ArticleID},
+            NoPostValueSet     => $Param{TicketDelete},
             UserID             => $Param{UserID},
         );
     }

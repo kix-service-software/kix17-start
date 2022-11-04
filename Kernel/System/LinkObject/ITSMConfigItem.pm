@@ -360,52 +360,6 @@ sub ObjectSearch {
     return \%SearchList;
 }
 
-=item LinkAddPre()
-
-link add pre event module
-
-    $True = $LinkObject->LinkAddPre(
-        Key          => 123,
-        SourceObject => 'ITSMConfigItem',
-        SourceKey    => 321,
-        Type         => 'Normal',
-        State        => 'Valid',
-        UserID       => 1,
-    );
-
-    or
-
-    $True = $LinkObject->LinkAddPre(
-        Key          => 123,
-        TargetObject => 'ITSMConfigItem',
-        TargetKey    => 321,
-        Type         => 'Normal',
-        State        => 'Valid',
-        UserID       => 1,
-    );
-
-=cut
-
-sub LinkAddPre {
-    my ( $Self, %Param ) = @_;
-
-    # check needed stuff
-    for my $Argument (qw(Key Type State UserID)) {
-        if ( !$Param{$Argument} ) {
-            $Kernel::OM->Get('Kernel::System::Log')->Log(
-                Priority => 'error',
-                Message  => "Need $Argument!",
-            );
-            return;
-        }
-    }
-
-    # do not trigger event for temporary links
-    return 1 if $Param{State} eq 'Temporary';
-
-    return 1;
-}
-
 =item LinkAddPost()
 
 link add pre event module
@@ -467,52 +421,6 @@ sub LinkAddPost {
         },
         UserID => $Param{UserID},
     );
-
-    return 1;
-}
-
-=item LinkDeletePre()
-
-link delete pre event module
-
-    $True = $LinkObject->LinkDeletePre(
-        Key          => 123,
-        SourceObject => 'ITSMConfigItem',
-        SourceKey    => 321,
-        Type         => 'Normal',
-        State        => 'Valid',
-        UserID       => 1,
-    );
-
-    or
-
-    $True = $LinkObject->LinkDeletePre(
-        Key          => 123,
-        TargetObject => 'ITSMConfigItem',
-        TargetKey    => 321,
-        Type         => 'Normal',
-        State        => 'Valid',
-        UserID       => 1,
-    );
-
-=cut
-
-sub LinkDeletePre {
-    my ( $Self, %Param ) = @_;
-
-    # check needed stuff
-    for my $Argument (qw(Key Type State UserID)) {
-        if ( !$Param{$Argument} ) {
-            $Kernel::OM->Get('Kernel::System::Log')->Log(
-                Priority => 'error',
-                Message  => "Need $Argument!",
-            );
-            return;
-        }
-    }
-
-    # do not trigger event for temporary links
-    return 1 if $Param{State} eq 'Temporary';
 
     return 1;
 }
