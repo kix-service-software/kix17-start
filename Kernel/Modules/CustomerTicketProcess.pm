@@ -1303,7 +1303,7 @@ sub _OutputActivityDialog {
     }
     if (
         !IsHashRefWithData( $Activity->{ActivityDialog} )
-        || !$Activity->{ActivityDialog}->{ $ActivityActivityDialog->{ActivityDialog} }
+        || !grep { $_ eq $ActivityActivityDialog->{ActivityDialog} } values( %{ $Activity->{ActivityDialog} } )
     ) {
         my $Message = $LayoutObject->{LanguageObject}->Translate(
             'ActivityDialog does not belong to Activity!',
