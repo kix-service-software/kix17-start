@@ -535,24 +535,28 @@ END
     return if !$BackendTargetObject;
 
     # run pre event module of source object
-    $BackendSourceObject->LinkAddPre(
-        Key          => $Param{SourceKey},
-        TargetObject => $Param{TargetObject},
-        TargetKey    => $Param{TargetKey},
-        Type         => $Param{Type},
-        State        => $Param{State},
-        UserID       => $Param{UserID},
-    );
+    if ( $BackendSourceObject->can('LinkAddPre') ) {
+        $BackendSourceObject->LinkAddPre(
+            Key          => $Param{SourceKey},
+            TargetObject => $Param{TargetObject},
+            TargetKey    => $Param{TargetKey},
+            Type         => $Param{Type},
+            State        => $Param{State},
+            UserID       => $Param{UserID},
+        );
+    }
 
     # run pre event module of target object
-    $BackendTargetObject->LinkAddPre(
-        Key          => $Param{TargetKey},
-        SourceObject => $Param{SourceObject},
-        SourceKey    => $Param{SourceKey},
-        Type         => $Param{Type},
-        State        => $Param{State},
-        UserID       => $Param{UserID},
-    );
+    if ( $BackendTargetObject->can('LinkAddPre') ) {
+        $BackendTargetObject->LinkAddPre(
+            Key          => $Param{TargetKey},
+            SourceObject => $Param{SourceObject},
+            SourceKey    => $Param{SourceKey},
+            Type         => $Param{Type},
+            State        => $Param{State},
+            UserID       => $Param{UserID},
+        );
+    }
 
     return if !$DBObject->Do(
         SQL  => <<'END',
@@ -569,24 +573,28 @@ END
     );
 
     # run post event module of source object
-    $BackendSourceObject->LinkAddPost(
-        Key          => $Param{SourceKey},
-        TargetObject => $Param{TargetObject},
-        TargetKey    => $Param{TargetKey},
-        Type         => $Param{Type},
-        State        => $Param{State},
-        UserID       => $Param{UserID},
-    );
+    if ( $BackendSourceObject->can('LinkAddPost') ) {
+        $BackendSourceObject->LinkAddPost(
+            Key          => $Param{SourceKey},
+            TargetObject => $Param{TargetObject},
+            TargetKey    => $Param{TargetKey},
+            Type         => $Param{Type},
+            State        => $Param{State},
+            UserID       => $Param{UserID},
+        );
+    }
 
     # run post event module of target object
-    $BackendTargetObject->LinkAddPost(
-        Key          => $Param{TargetKey},
-        SourceObject => $Param{SourceObject},
-        SourceKey    => $Param{SourceKey},
-        Type         => $Param{Type},
-        State        => $Param{State},
-        UserID       => $Param{UserID},
-    );
+    if ( $BackendTargetObject->can('LinkAddPost') ) {
+        $BackendTargetObject->LinkAddPost(
+            Key          => $Param{TargetKey},
+            SourceObject => $Param{SourceObject},
+            SourceKey    => $Param{SourceKey},
+            Type         => $Param{Type},
+            State        => $Param{State},
+            UserID       => $Param{UserID},
+        );
+    }
 
     return 1;
 }
@@ -781,25 +789,45 @@ END
 
     return if !$BackendTargetObject;
 
+    my $DeleteObjectSource = 0;
+    my $DeleteObjectTarget = 0;
+    if ( $Param{DeleteObject} ) {
+        if (
+            $Param{Object1ID} eq $Existing{SourceObjectID}
+            && $Param{Key1} eq $Existing{SourceKey}
+        ) {
+            $DeleteObjectSource = 1;
+        }
+        else {
+            $DeleteObjectTarget = 1;
+        }
+    }
+
     # run pre event module of source object
-    $BackendSourceObject->LinkDeletePre(
-        Key          => $Existing{SourceKey},
-        TargetObject => $Existing{TargetObject},
-        TargetKey    => $Existing{TargetKey},
-        Type         => $Param{Type},
-        State        => $Existing{State},
-        UserID       => $Param{UserID},
-    );
+    if ( $BackendSourceObject->can('LinkDeletePre') ) {
+        $BackendSourceObject->LinkDeletePre(
+            Key          => $Existing{SourceKey},
+            TargetObject => $Existing{TargetObject},
+            TargetKey    => $Existing{TargetKey},
+            Type         => $Param{Type},
+            State        => $Existing{State},
+            DeleteObject => $DeleteObjectSource,
+            UserID       => $Param{UserID},
+        );
+    }
 
     # run pre event module of target object
-    $BackendTargetObject->LinkDeletePre(
-        Key          => $Existing{TargetKey},
-        SourceObject => $Existing{SourceObject},
-        SourceKey    => $Existing{SourceKey},
-        Type         => $Param{Type},
-        State        => $Existing{State},
-        UserID       => $Param{UserID},
-    );
+    if ( $BackendTargetObject->can('LinkDeletePre') ) {
+        $BackendTargetObject->LinkDeletePre(
+            Key          => $Existing{TargetKey},
+            SourceObject => $Existing{SourceObject},
+            SourceKey    => $Existing{SourceKey},
+            Type         => $Param{Type},
+            State        => $Existing{State},
+            DeleteObject => $DeleteObjectTarget,
+            UserID       => $Param{UserID},
+        );
+    }
 
     # delete the link
     return if !$DBObject->Do(
@@ -824,24 +852,30 @@ END
     );
 
     # run post event module of source object
-    $BackendSourceObject->LinkDeletePost(
-        Key          => $Existing{SourceKey},
-        TargetObject => $Existing{TargetObject},
-        TargetKey    => $Existing{TargetKey},
-        Type         => $Param{Type},
-        State        => $Existing{State},
-        UserID       => $Param{UserID},
-    );
+    if ( $BackendSourceObject->can('LinkDeletePost') ) {
+        $BackendSourceObject->LinkDeletePost(
+            Key          => $Existing{SourceKey},
+            TargetObject => $Existing{TargetObject},
+            TargetKey    => $Existing{TargetKey},
+            Type         => $Param{Type},
+            State        => $Existing{State},
+            DeleteObject => $DeleteObjectSource,
+            UserID       => $Param{UserID},
+        );
+    }
 
     # run post event module of target object
-    $BackendTargetObject->LinkDeletePost(
-        Key          => $Existing{TargetKey},
-        SourceObject => $Existing{SourceObject},
-        SourceKey    => $Existing{SourceKey},
-        Type         => $Param{Type},
-        State        => $Existing{State},
-        UserID       => $Param{UserID},
-    );
+    if ( $BackendTargetObject->can('LinkDeletePost') ) {
+        $BackendTargetObject->LinkDeletePost(
+            Key          => $Existing{TargetKey},
+            SourceObject => $Existing{SourceObject},
+            SourceKey    => $Existing{SourceKey},
+            Type         => $Param{Type},
+            State        => $Existing{State},
+            DeleteObject => $DeleteObjectTarget,
+            UserID       => $Param{UserID},
+        );
+    }
 
     return 1;
 }
@@ -908,12 +942,13 @@ sub LinkDeleteAll {
 
                         # delete the link
                         $Self->LinkDelete(
-                            Object1 => $Param{Object},
-                            Key1    => $Param{Key},
-                            Object2 => $Object,
-                            Key2    => $ObjectKey,
-                            Type    => $LinkType,
-                            UserID  => $Param{UserID},
+                            Object1      => $Param{Object},
+                            Key1         => $Param{Key},
+                            Object2      => $Object,
+                            Key2         => $ObjectKey,
+                            Type         => $LinkType,
+                            DeleteObject => $Param{DeleteObject},
+                            UserID       => $Param{UserID},
                         );
                     }
                 }

@@ -493,9 +493,15 @@ sub JobRun {
         }
     }
 
+    # Refresh common objects after a certain number of loop iterations.
+    #   This will call event handlers and clean up caches to avoid excessive mem usage.
+    my $CommonObjectRefresh = 50;
+
     # process each ticket
+    my $Counter = 0;
     TICKETID:
     for my $TicketID ( sort keys %Tickets ) {
+        $Counter += 1;
 
         $Self->_JobRunTicket(
             Config       => \%Job,
@@ -504,6 +510,12 @@ sub JobRun {
             TicketNumber => $Tickets{$TicketID},
             UserID       => $Param{UserID},
         );
+
+        if ( $Counter % $CommonObjectRefresh == 0 ) {
+            $Kernel::OM->ObjectsDiscard(
+                Objects => ['Kernel::System::Ticket'],
+            );
+        }
 
         next TICKETID if !$Param{SleepTime};
 

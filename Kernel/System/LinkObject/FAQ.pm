@@ -152,8 +152,14 @@ sub ObjectPermission {
         }
     }
 
+    my $UserType = $Kernel::OM->Get('Kernel::Output::HTML::Layout')->{UserType} || q{};
+    my $UserID   = $Param{UserID};
+    if ( $UserType eq 'Customer') {
+        $UserID = $Kernel::OM->Get('Kernel::Config')->Get('CustomerPanelUserID') || 1;
+    }
+
     # grant access for root@localhost
-    return 1 if ( $Param{UserID} == 1 );
+    return 1 if ( $UserID == 1 );
 
     # get needed objects
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
@@ -164,14 +170,14 @@ sub ObjectPermission {
     my %FAQData = $FAQObject->FAQGet(
         ItemID     => $Param{Key},
         ItemFields => 1,
-        UserID     => $Param{UserID},
+        UserID     => $UserID,
     );
     # no permission if no FAQ data was found
     return if ( !%FAQData );
 
     # check user permission for category
     my $Access = $FAQObject->CheckCategoryUserPermission(
-        UserID     => $Param{UserID},
+        UserID     => $UserID,
         CategoryID => $FAQData{CategoryID},
     );
     return if ( !$Access );
@@ -208,7 +214,7 @@ sub ObjectPermission {
 
             # get user groups, where the user has the appropriate privilege
             my %Groups = $GroupObject->GroupMemberList(
-                UserID => $Param{UserID},
+                UserID => $UserID,
                 Type   => $Type,
                 Result => 'HASH',
             );
@@ -364,190 +370,6 @@ sub ObjectSearch {
     }
 
     return \%SearchList;
-}
-
-=item LinkAddPre()
-
-link add pre event module
-
-    $True = $FAQLinkObject->LinkAddPre(
-        Key          => 123,
-        SourceObject => 'FAQ',
-        SourceKey    => 321,
-        Type         => 'Normal',
-        State        => 'Valid',
-        UserID       => 1,
-    );
-
-    or
-
-    $True = $FAQLinkObject->LinkAddPre(
-        Key          => 123,
-        TargetObject => 'FAQ',
-        TargetKey    => 321,
-        Type         => 'Normal',
-        State        => 'Valid',
-        UserID       => 1,
-    );
-
-=cut
-
-sub LinkAddPre {
-    my ( $Self, %Param ) = @_;
-
-    # check needed stuff
-    for my $Argument (qw(Key Type State UserID)) {
-        if ( !$Param{$Argument} ) {
-            $Kernel::OM->Get('Kernel::System::Log')->Log(
-                Priority => 'error',
-                Message  => "Need $Argument!",
-            );
-
-            return;
-        }
-    }
-
-    return 1 if $Param{State} eq 'Temporary';
-
-    return 1;
-}
-
-=item LinkAddPost()
-
-link add pre event module
-
-    $True = $FAQLinkObject->LinkAddPost(
-        Key          => 123,
-        SourceObject => 'FAQ',
-        SourceKey    => 321,
-        Type         => 'Normal',
-        State        => 'Valid',
-        UserID       => 1,
-    );
-
-    or
-
-    $True = $FAQLinkObject->LinkAddPost(
-        Key          => 123,
-        TargetObject => 'FAQ',
-        TargetKey    => 321,
-        Type         => 'Normal',
-        State        => 'Valid',
-        UserID       => 1,
-    );
-
-=cut
-
-sub LinkAddPost {
-    my ( $Self, %Param ) = @_;
-
-    # check needed stuff
-    for my $Argument (qw(Key Type State UserID)) {
-        if ( !$Param{$Argument} ) {
-            $Kernel::OM->Get('Kernel::System::Log')->Log(
-                Priority => 'error',
-                Message  => "Need $Argument!",
-            );
-
-            return;
-        }
-    }
-
-    return 1 if $Param{State} eq 'Temporary';
-
-    return 1;
-}
-
-=item LinkDeletePre()
-
-link delete pre event module
-
-    $True = $FAQLinkObject->LinkDeletePre(
-        Key          => 123,
-        SourceObject => 'FAQ',
-        SourceKey    => 321,
-        Type         => 'Normal',
-        State        => 'Valid',
-        UserID       => 1,
-    );
-
-    or
-
-    $True = $FAQLinkObject->LinkDeletePre(
-        Key          => 123,
-        TargetObject => 'FAQ',
-        TargetKey    => 321,
-        Type         => 'Normal',
-        State        => 'Valid',
-        UserID       => 1,
-    );
-
-=cut
-
-sub LinkDeletePre {
-    my ( $Self, %Param ) = @_;
-
-    # check needed stuff
-    for my $Argument (qw(Key Type State UserID)) {
-        if ( !$Param{$Argument} ) {
-            $Kernel::OM->Get('Kernel::System::Log')->Log(
-                Priority => 'error',
-                Message  => "Need $Argument!",
-            );
-
-            return;
-        }
-    }
-
-    return 1 if $Param{State} eq 'Temporary';
-
-    return 1;
-}
-
-=item LinkDeletePost()
-
-link delete post event module
-
-    $True = $FAQLinkObject->LinkDeletePost(
-        Key          => 123,
-        SourceObject => 'FAQ',
-        SourceKey    => 321,
-        Type         => 'Normal',
-        State        => 'Valid',
-        UserID       => 1,
-    );
-
-    or
-
-    $True = $FAQLinkObject->LinkDeletePost(
-        Key          => 123,
-        TargetObject => 'FAQ',
-        TargetKey    => 321,
-        Type         => 'Normal',
-        State        => 'Valid',
-        UserID       => 1,
-    );
-
-=cut
-
-sub LinkDeletePost {
-    my ( $Self, %Param ) = @_;
-
-    # check needed stuff
-    for my $Argument (qw(Key Type State UserID)) {
-        if ( !$Param{$Argument} ) {
-            $Kernel::OM->Get('Kernel::System::Log')->Log(
-                Priority => 'error',
-                Message  => "Need $Argument!",
-            );
-
-            return;
-        }
-    }
-
-    return 1 if $Param{State} eq 'Temporary';
-
-    return 1;
 }
 
 1;

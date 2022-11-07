@@ -208,8 +208,14 @@ sub ObjectPermission {
         }
     }
 
+    my $UserType = $Kernel::OM->Get('Kernel::Output::HTML::Layout')->{UserType} || q{};
+    my $UserID   = $Param{UserID};
+    if ( $UserType eq 'Customer') {
+        $UserID = $Kernel::OM->Get('Kernel::Config')->Get('CustomerPanelUserID') || 1;
+    }
+
     # grant access for root@localhost
-    return 1 if ( $Param{UserID} == 1 );
+    return 1 if ( $UserID == 1 );
 
     # special handling for form ids
     return 1 if ( $Param{Key} =~ m/\d+\.\d+\.\d+/ );
@@ -217,7 +223,7 @@ sub ObjectPermission {
     return $Kernel::OM->Get('Kernel::System::Ticket')->TicketPermission(
         Type     => 'ro',
         TicketID => $Param{Key},
-        UserID   => $Param{UserID},
+        UserID   => $UserID,
         LogNo    => 1,
     );
 }
@@ -387,51 +393,6 @@ sub ObjectSearch {
     return \%SearchList;
 }
 
-=item LinkAddPre()
-
-link add pre event module
-
-    $True = $LinkObject->LinkAddPre(
-        Key          => 123,
-        SourceObject => 'Ticket',
-        SourceKey    => 321,
-        Type         => 'Normal',
-        State        => 'Valid',
-        UserID       => 1,
-    );
-
-    or
-
-    $True = $LinkObject->LinkAddPre(
-        Key          => 123,
-        TargetObject => 'Ticket',
-        TargetKey    => 321,
-        Type         => 'Normal',
-        State        => 'Valid',
-        UserID       => 1,
-    );
-
-=cut
-
-sub LinkAddPre {
-    my ( $Self, %Param ) = @_;
-
-    # check needed stuff
-    for my $Argument (qw(Key Type State UserID)) {
-        if ( !$Param{$Argument} ) {
-            $Kernel::OM->Get('Kernel::System::Log')->Log(
-                Priority => 'error',
-                Message  => "Need $Argument!",
-            );
-            return;
-        }
-    }
-
-    return 1 if $Param{State} eq 'Temporary';
-
-    return 1;
-}
-
 =item LinkAddPost()
 
 link add pre event module
@@ -575,51 +536,6 @@ sub LinkAddPost {
     return 1;
 }
 
-=item LinkDeletePre()
-
-link delete pre event module
-
-    $True = $LinkObject->LinkDeletePre(
-        Key          => 123,
-        SourceObject => 'Ticket',
-        SourceKey    => 321,
-        Type         => 'Normal',
-        State        => 'Valid',
-        UserID       => 1,
-    );
-
-    or
-
-    $True = $LinkObject->LinkDeletePre(
-        Key          => 123,
-        TargetObject => 'Ticket',
-        TargetKey    => 321,
-        Type         => 'Normal',
-        State        => 'Valid',
-        UserID       => 1,
-    );
-
-=cut
-
-sub LinkDeletePre {
-    my ( $Self, %Param ) = @_;
-
-    # check needed stuff
-    for my $Argument (qw(Key Type State UserID)) {
-        if ( !$Param{$Argument} ) {
-            $Kernel::OM->Get('Kernel::System::Log')->Log(
-                Priority => 'error',
-                Message  => "Need $Argument!",
-            );
-            return;
-        }
-    }
-
-    return 1 if $Param{State} eq 'Temporary';
-
-    return 1;
-}
-
 =item LinkDeletePost()
 
 link delete post event module
@@ -659,6 +575,8 @@ sub LinkDeletePost {
             return;
         }
     }
+
+    return 1 if ( $Param{DeleteObject} );
 
     return 1 if $Param{State} eq 'Temporary';
 
