@@ -649,6 +649,9 @@ sub ValueDelete {
         return;
     }
 
+    # skip PostValueSet when param is set
+    return 1 if ( !$Param{NoPostValueSet} );
+
     # set the dyanamic field object handler
     my $DynamicFieldObjectHandler =
         'DynamicField' . $Param{DynamicFieldConfig}->{ObjectType} . 'HandlerObject';

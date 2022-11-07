@@ -654,15 +654,17 @@ sub TicketDelete {
         $DynamicFieldBackendObject->ValueDelete(
             DynamicFieldConfig => $DynamicFieldConfig,
             ObjectID           => $Param{TicketID},
+            NoPostValueSet     => 1,
             UserID             => $Param{UserID},
         );
     }
 
     # delete ticket links
     $Kernel::OM->Get('Kernel::System::LinkObject')->LinkDeleteAll(
-        Object => 'Ticket',
-        Key    => $Param{TicketID},
-        UserID => $Param{UserID},
+        Object       => 'Ticket',
+        Key          => $Param{TicketID},
+        DeleteObject => 1,
+        UserID       => $Param{UserID},
     );
 
     # update ticket index
@@ -705,8 +707,9 @@ sub TicketDelete {
     my @Articles = $Self->ArticleIndex( TicketID => $Param{TicketID} );
     for my $ArticleID (@Articles) {
         return if !$Self->ArticleDelete(
-            ArticleID => $ArticleID,
             %Param,
+            ArticleID    => $ArticleID,
+            TicketDelete => 1,
         );
     }
 
