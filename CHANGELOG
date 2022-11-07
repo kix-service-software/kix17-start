@@ -1,6 +1,13 @@
 # Change log of KIX
 * Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.20.0-RC3 (2022/11/07)
+ * (2022/11/04) - Bugfix: KIX17-3271 (fixed missing handling of customer user of link object permission) (fjacquemin)
+ * (2022/11/04) - Bugfix: KIX17-3270 (fixed missing handling of customer user for popup size) (fjacquemin)
+ * (2022/11/04) - Bugfix: KIX17-3227 (optimized ticket deletion by generic agent) (mbauer)
+ * (2022/11/02) - CR: KIX17-3130 (update distributed CPAN modules) (mbauer)
+ * (2022/11/01) - Bugfix: KIX17-3268 (changed dialog size of ticket option FAQ and Contact) (fjacquemin)
+
 # 17.20.0-RC2 (2022/11/01)
  * (2022/10/28) - Bugfix: KIX17-3265 (fixed handling of disabled dynamic fields for AgentTicketForward) (mbauer)
  * (2022/10/28) - Bugfix: KIX17-3264 (fix customer company name in ticket overview small) (mbauer)
