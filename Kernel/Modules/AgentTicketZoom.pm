@@ -559,6 +559,10 @@ sub MaskAgentZoom {
                 TicketID => $Self->{TicketID},
             );
 
+            if ( $Menus{$Menu}->{PopupType} ) {
+                $Menus{$Menu}->{Class} = "AsPopup PopupType_$Menus{$Menu}->{PopupType}";
+            }
+
             # run module
             my $Item = $Object->Run(
                 %Param,
@@ -567,9 +571,6 @@ sub MaskAgentZoom {
                 Config => $Menus{$Menu},
             );
             next MENU if !$Item;
-            if ( $Menus{$Menu}->{PopupType} ) {
-                $Item->{Class} = "AsPopup PopupType_$Menus{$Menu}->{PopupType}";
-            }
 
             if ( !$Menus{$Menu}->{ClusterName} ) {
 

@@ -141,9 +141,10 @@ sub Run {
     }
     else {
         $Param{PopupType} = 'TicketAction';
+        $Param{Class}     = "AsPopup PopupType_$Param{PopupType}";
     }
 
-    $Param{Ticket}->{HTMLLink} = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout')->Output(
+    my $HTMLLink = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout')->Output(
         Template => '<a href="[% Env("Baselink") %][% Data.Link | Interpolate %]" class="[% Data.Class %]" [% Data.LinkParam %] title="[% Translate(Data.Description) | html %]">[% Translate(Data.Name) | html %]</a>',
         Data     => {
             %Param,
@@ -152,7 +153,7 @@ sub Run {
         },
     );
     my %Safe = $Kernel::OM->Get('Kernel::System::HTMLUtils')->Safety(
-        String       => $Param{Ticket}->{HTMLLink},
+        String       => $HTMLLink,
         NoApplet     => 1,
         NoObject     => 1,
         NoEmbed      => 1,
@@ -163,11 +164,16 @@ sub Run {
         NoJavaScript => 1,
     );
     if ( $Safe{Replace} ) {
-        $Param{Ticket}->{HTMLLink} = $Safe{String};
+        $HTMLLink = $Safe{String};
     }
 
     # return item
-    return { %{ $Param{Config} }, %{ $Param{Ticket} }, %Param };
+    return {
+        %{ $Param{Config} },
+        %{ $Param{Ticket} },
+        %Param,
+        HTMLLink => $HTMLLink,
+    };
 }
 
 1;
