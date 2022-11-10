@@ -459,8 +459,8 @@ sub MaskAgentZoom {
     my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
     my %CustomerData = %{ $Param{CustomerData} };
 
-    # the next is needed, otherwise the tabs will have no TicketID parameter in merged tickets
-    $Param{TicketID} = $Ticket{TicketID};
+    $Param{TicketID}  = $Ticket{TicketID};
+    $Param{ArticleID} = $Self->{ArticleID} || q{};
 
     # else show normal ticket zoom view
     # fetch all move queues
