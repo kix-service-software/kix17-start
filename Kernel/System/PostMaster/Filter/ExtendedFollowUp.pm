@@ -91,7 +91,7 @@ sub Run {
         # next if in the existing ticket the dynamic field is not empty
         next if ( %ExistingTicket
                 && ref %ExistingTicket eq 'HASH'
-                && $ExistingTicket{ 'DynamicField-' . $DynamicField }
+                && $ExistingTicket{ 'DynamicField_' . $DynamicField }
         );
 
         # sender email doesnt match
