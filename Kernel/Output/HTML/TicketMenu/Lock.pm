@@ -128,7 +128,7 @@ sub Run {
         # if it is locked for somebody else
         return if $Param{Ticket}->{OwnerID} ne $Self->{UserID};
 
-        $Param{Ticket}->{HTMLLink} = $HTMLLinkLayoutObject->Output(
+        my $HTMLLink = $HTMLLinkLayoutObject->Output(
             Template => '<a href="[% Env("Baselink") %][% Data.Link | Interpolate %]" class="[% Data.Class %]" [% Data.LinkParam %] title="[% Translate(Data.Description) | html %]">[% Translate(Data.Name) | html %]</a>',
             Data     => {
                 %{ $Param{Config} },
@@ -140,7 +140,7 @@ sub Run {
             },
         );
         my %Safe = $HTMLUtilsObject->Safety(
-            String       => $Param{Ticket}->{HTMLLink},
+            String       => $HTMLLink,
             NoApplet     => 1,
             NoObject     => 1,
             NoEmbed      => 1,
@@ -151,7 +151,7 @@ sub Run {
             NoJavaScript => 1,
         );
         if ( $Safe{Replace} ) {
-            $Param{Ticket}->{HTMLLink} = $Safe{String};
+            $HTMLLink = $Safe{String};
         }
 
         # show unlock action
@@ -162,10 +162,11 @@ sub Run {
             Name        => Translatable('Unlock'),
             Description => Translatable('Unlock to give it back to the queue'),
             Link        => 'Action=AgentTicketLock;Subaction=Unlock;TicketID=[% Data.TicketID | uri %];[% Env("ChallengeTokenParam") | html %]',
+            HTMLLink    => $HTMLLink,
         };
     }
 
-    $Param{Ticket}->{HTMLLink} = $HTMLLinkLayoutObject->Output(
+    my $HTMLLink = $HTMLLinkLayoutObject->Output(
         Template => '<a href="[% Env("Baselink") %][% Data.Link | Interpolate %]" class="[% Data.Class %]" [% Data.LinkParam %] title="[% Translate(Data.Description) | html %]">[% Translate(Data.Name) | html %]</a>',
         Data     => {
             %{ $Param{Config} },
@@ -177,7 +178,7 @@ sub Run {
         },
     );
     my %Safe = $HTMLUtilsObject->Safety(
-        String       => $Param{Ticket}->{HTMLLink},
+        String       => $HTMLLink,
         NoApplet     => 1,
         NoObject     => 1,
         NoEmbed      => 1,
@@ -188,7 +189,7 @@ sub Run {
         NoJavaScript => 1,
     );
     if ( $Safe{Replace} ) {
-        $Param{Ticket}->{HTMLLink} = $Safe{String};
+        $HTMLLink = $Safe{String};
     }
 
     # if ticket is unlocked
@@ -199,6 +200,7 @@ sub Run {
         Name        => Translatable('Lock'),
         Description => Translatable('Lock it to work on it'),
         Link        => 'Action=AgentTicketLock;Subaction=Lock;TicketID=[% Data.TicketID | uri %];[% Env("ChallengeTokenParam") | html %]',
+        HTMLLink    => $HTMLLink,
     };
 }
 

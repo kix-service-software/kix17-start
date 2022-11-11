@@ -803,7 +803,7 @@ sub MaskAgentZoom {
     my $Page      = 1;
     my $Order     = $Self->{ZoomExpandSort} eq 'reverse' ? 'DESC' : 'ASC';
     my $TabIndex  = $ParamObject->GetParam( Param => 'TabIndex' );
-    my $StartHit  = $ParamObject->GetParam( Param => 'StartHit' )  || 1;
+    my $StartHit  = $ParamObject->GetParam( Param => 'StartHit' )  || undef;
     my $FormID    = $ParamObject->GetParam( Param => 'FormID' );
     my $HasFilter = $ParamObject->GetParam( Param => 'HasFilter' ) || 0;
     my $PageShown = $ConfigObject->Get('Ticket::Frontend::MaxArticlesPerPage');
@@ -989,75 +989,72 @@ sub MaskAgentZoom {
         && !$HasFilter
     ) {
         $HasFilter = 1;
-        $StartHit  = 1;
+        $StartHit  = undef;
     }
     elsif (
         !$Self->{ArticleFilter}
         && $HasFilter
     ) {
-        $StartHit  = 1;
+        $StartHit  = undef;
         $HasFilter = 0;
     }
 
-    $Count = 1;
-    my $HasArticle = 0;
-    for my $Article (@ArticleBoxAll) {
-        if (
-            $Self->{ArticleID}
-            && $Self->{ArticleID} eq $Article->{ArticleID}
-        ) {
-            $Page       = ceil($Count / $PageShown);
-            $StartHit   = $Page * $PageShown + 1;
-            $HasArticle = 1;
-        }
-        $Count++;
-    }
-
-    my $ArticleIDFound = 0;
-    my $Start = $StartHit-1;
-    my $End   = $Start + $PageShown - 1;
-    for my $Index ( $Start .. $End ) {
-        last if !$ArticleBoxAll[$Index];
-
-        my $Article = $ArticleBoxAll[$Index];
-
-        $Article->{Count} = $ArticleAllCounter{$Article->{ArticleID}};
-        push( @ArticleBox, $Article);
-
-        next if !$Self->{ArticleID} || !$Article->{ArticleID};
-        next if $Self->{ArticleID} ne $Article->{ArticleID};
-
-        $ArticleIDFound = 1;
-    }
-
-    # get selected or last customer article
     my $ArticleID;
-    if ($ArticleIDFound) {
-        $ArticleID = $Self->{ArticleID};
-    }
-    else {
+    my $HasArticle  = 0;
+    if ( !$StartHit ) {
+        $Count          = 1;
+        my $NewStartHit = undef;
+        my %Preferences = $UserObject->GetPreferences( UserID => $Self->{UserID} );
+        for my $Article (@ArticleBoxAll) {
+            if (
+                $Self->{ArticleID}
+                && $Self->{ArticleID} eq $Article->{ArticleID}
+            ) {
+                $Page        = ceil($Count / $PageShown) - 1;
+                $NewStartHit = $Page * $PageShown + 1;
+                $HasArticle  = 1;
+                $ArticleID   = $Self->{ArticleID};
+            }
+            elsif (
+                !$Self->{ArticleID}
+                && %ArticleFlags
+            ) {
 
-        # find latest not seen article
-        ARTICLE:
-        for my $Article (@ArticleBox) {
+                if (
+                    $ConfigObject->Get('Ticket::NewArticleIgnoreSystemSender')
+                    && $Article->{SenderType} eq 'system'
+                ) {
+                    $Count++;
+                    next;
+                }
 
-            # ignore system sender type
-            next ARTICLE
-                if $ConfigObject->Get('Ticket::NewArticleIgnoreSystemSender')
-                && $Article->{SenderType} eq 'system';
-
-            next ARTICLE if $ArticleFlags{ $Article->{ArticleID} }->{Seen};
-            $ArticleID = $Article->{ArticleID};
-            last ARTICLE;
+                if (
+                    $Self->{ZoomExpandSort} ne 'reverse'
+                    && !$ArticleFlags{ $Article->{ArticleID} }->{Seen}
+                    && !$HasArticle
+                ) {
+                    $Page        = ceil($Count / $PageShown) - 1;
+                    $NewStartHit = $Page * $PageShown + 1;
+                    $HasArticle  = 1;
+                    $ArticleID   = $Article->{ArticleID};
+                }
+                elsif (
+                    $Self->{ZoomExpandSort} eq 'reverse'
+                    && !$ArticleFlags{ $Article->{ArticleID} }->{Seen}
+                ) {
+                    $Page        = ceil($Count / $PageShown) - 1;
+                    $NewStartHit = $Page * $PageShown + 1;
+                    $HasArticle  = 1;
+                    $ArticleID   = $Article->{ArticleID};
+                }
+            }
+            $Count++;
         }
 
-        # set selected article
-        if (
-            !$ArticleID
-            && scalar @ArticleBox
-        ) {
-            my %Preferences = $UserObject->GetPreferences( UserID => $Self->{UserID} );
-
+        if ( $NewStartHit ) {
+            $StartHit = $NewStartHit;
+        }
+        else {
             # show first article
             if (
                 $Preferences{ShownArticle}
@@ -1074,7 +1071,9 @@ sub MaskAgentZoom {
             ) {
 
                 # set first listed article as fallback
-                $ArticleID = $ArticleBox[0]->{ArticleID};
+                $StartHit   = 1;
+                $ArticleID  = $ArticleBoxAll[0]->{ArticleID};
+                $HasArticle = 1;
             }
             elsif (
                 $Preferences{ShownArticle}
@@ -1090,29 +1089,76 @@ sub MaskAgentZoom {
                 )
             ) {
                 # set last article as default if reverse sort
-                $ArticleID = $ArticleBox[-1]->{ArticleID};
+                $Page       = ceil($Count / $PageShown) - 1;
+                $StartHit   = $Page * $PageShown + 1;
+                $ArticleID  = $ArticleBoxAll[-1]->{ArticleID};
+                $HasArticle = 1;
             }
 
             else {
 
                 # set last customer article as selected article replacing last set
+                my $Cnt = 0;
                 ARTICLETMP:
-                for my $ArticleTmp (@ArticleBox) {
+                for my $ArticleTmp (@ArticleBoxAll) {
+                    $Cnt++;
                     next ARTICLETMP if $ArticleTmp->{SenderType} ne 'customer';
-                    $ArticleID = $ArticleTmp->{ArticleID};
+                    $Page       = ceil($Cnt / $PageShown) - 1;
+                    $StartHit   = $Page * $PageShown + 1;
+                    $ArticleID  = $ArticleTmp->{ArticleID};
+                    $HasArticle = 1;
                     last ARTICLETMP if $Self->{ZoomExpandSort} eq 'reverse';
                 }
 
                 # use fallback if no customer article found - show last article
                 if ( !defined $ArticleID ) {
                     if ( $Self->{ZoomExpandSort} ne 'reverse' ) {
-                        $ArticleID = $ArticleBox[-1]->{ArticleID};
+                        $Page      = ceil($Count / $PageShown) - 1;
+                        $StartHit  = $Page * $PageShown + 1;
+                        $ArticleID = $ArticleBoxAll[-1]->{ArticleID};
                     }
                     else {
-                        $ArticleID = $ArticleBox[0]->{ArticleID};
+                        $StartHit  = 1;
+                        $ArticleID = $ArticleBoxAll[0]->{ArticleID};
                     }
+                    $HasArticle = 1;
                 }
             }
+        }
+    }
+
+    my $Start = $StartHit-1;
+    my $End   = $Start + $PageShown - 1;
+    for my $Index ( $Start .. $End ) {
+        last if !$ArticleBoxAll[$Index];
+
+        my $Article = $ArticleBoxAll[$Index];
+
+        $Article->{Count} = $ArticleAllCounter{$Article->{ArticleID}};
+        push( @ArticleBox, $Article);
+
+        if (
+            !$HasArticle
+            && (
+                !$ArticleID
+                || (
+                    $ArticleID
+                    && $Self->{ZoomExpandSort} ne 'reverse'
+                )
+            )
+        ) {
+            next if $Article->{SenderType} ne 'customer';
+            $ArticleID = $Article->{ArticleID};
+        }
+    }
+
+    # use fallback if no customer article found - show last article
+    if ( !defined $ArticleID ) {
+        if ( $Self->{ZoomExpandSort} ne 'reverse' ) {
+            $ArticleID = $ArticleBox[-1]->{ArticleID};
+        }
+        else {
+            $ArticleID = $ArticleBox[0]->{ArticleID};
         }
     }
 
@@ -2193,6 +2239,7 @@ sub _ArticleItem {
                     $DynamicFieldConfig->{Name} => $ValueStrg->{Title},
                 },
             );
+
             my %Safe = $HTMLUtilsObject->Safety(
                 String       => $HTMLLink,
                 NoApplet     => 1,
