@@ -1,6 +1,13 @@
 # Change log of KIX
 * Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.20.0-RC4 (2022/11/11)
+ * (2022/11/10) - Bugfix: KIX17-3314 (prevent overwrite of existing extended followup reference) (mbauer)
+ * (2022/11/10) - Bugfix: KIX17-3114 (changed article list handling when pagination) (fjacquemin)
+ * (2022/11/08) - Bugfix: KIX17-3311 (fix ticket action popups) (mbauer)
+ * (2022/11/07) - Bugfix: KIX17-3181 (fix check for allowed activity dialog) (mbauer)
+ * (2022/08/12) - CR: KIX17-3245 (renewing of used objects) (mbauer)
+
 # 17.20.0-RC3 (2022/11/07)
  * (2022/11/04) - Bugfix: KIX17-3271 (fixed missing handling of customer user of link object permission) (fjacquemin)
  * (2022/11/04) - Bugfix: KIX17-3270 (fixed missing handling of customer user for popup size) (fjacquemin)
