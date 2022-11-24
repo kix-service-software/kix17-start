@@ -25,13 +25,16 @@
 [% RenderBlockEnd("RecordBulkActionHeader") %]
 [% RenderBlockStart("RecordCustomHeader") %]
                 <th class="[% Data.CSS | html %]">
-[% RenderBlockStart("RecordCustomHeaderLinkStart") %]
+[% RenderBlockStart("RecordCustomHeaderLink") %]
                     <a href="[% Env("Baselink") %]Action=[% Env("Action") %];[% Data.LinkSort %];SortBy=[% Data.ColumnSortBy %];OrderBy=[% Data.OrderBy | uri %]">
-[% RenderBlockEnd("RecordCustomHeaderLinkStart") %]
                         [% Translate(Data.ColumnName) | html %]
-[% RenderBlockStart("RecordCustomHeaderLinkEnd") %]
                     </a>
-[% RenderBlockEnd("RecordCustomHeaderLinkEnd") %]
+[% RenderBlockEnd("RecordCustomHeaderLink") %]
+[% RenderBlockStart("RecordCustomHeaderNoLink") %]
+                    <span>
+                        [% Translate(Data.ColumnName) | html %]
+                    </span>
+[% RenderBlockEnd("RecordCustomHeaderNoLink") %]
                 </th>
 [% RenderBlockEnd("RecordCustomHeader") %]
             </tr>
