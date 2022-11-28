@@ -2,10 +2,14 @@
 # Modified version of the work: Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
 # Copyright (C) 2001-2022 OTRS AG, https://otrs.com/
+# Copyright (C) 2021-2022 Znuny GmbH, https://znuny.org/
 # --
-# This software comes with ABSOLUTELY NO WARRANTY. For details, see
-# the enclosed file LICENSE for license information (AGPL). If you
-# did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
+# This software comes with ABSOLUTELY NO WARRANTY. This program is
+# licensed under the AGPL-3.0 with patches licensed under the GPL-3.0.
+# For details, see the enclosed files LICENSE (AGPL) and
+# LICENSE-GPL3 (GPL3) for license information. If you did not receive
+# this files, see https://www.gnu.org/licenses/agpl.txt (APGL) and
+# https://www.gnu.org/licenses/gpl-3.0.txt (GPL3).
 # --
 
 package Kernel::System::SysConfigChangeLog;
@@ -86,20 +90,33 @@ sub new {
         %Param,
     );
 
-    return $Self if !$MainObject->Require('IPC::SysV');
+    return $Self if ( !$MainObject->Require('IPC::SysV') );
 
     # create the IPC options
-    $Self->{IPC}     = 1;
-    $Self->{IPCKey}  = '444423' . $SystemID;
-
+    $Self->{IPCKey}  = '444423' . $SystemID;       # This name is used to identify the shared memory segment.
     $Self->{IPCSize} = $ConfigObject->Get('SysConfigChangeLog::LogSystemCacheSize') || 32 * 1024;
 
     # init session data mem
-    if ( !eval { $Self->{Key} = shmget( $Self->{IPCKey}, $Self->{IPCSize}, oct(1777) ) } ) {
-        $Self->{Key} = shmget( $Self->{IPCKey}, 1, oct(1777) );
-        $Self->CleanUp();
-        $Self->{Key} = shmget( $Self->{IPCKey}, $Self->{IPCSize}, oct(1777) );
+    if ( !eval { $Self->{IPCSHMKey} = shmget( $Self->{IPCKey}, $Self->{IPCSize}, oct(1777) ) } ) {
+
+        # If direct creation fails, try more gently, allocate a small segment first and the reset/resize it.
+        $Self->{IPCSHMKey} = shmget( $Self->{IPCKey}, 1, oct(1777) );
+        if ( !shmctl( $Self->{IPCSHMKey}, 0, 0 ) ) {
+            $Self->Log(
+                Priority => 'error',
+                Message  => "Can't remove shm for log: $!",
+            );
+            return;
+        }
+
+        # Re-initialize SHM segment.
+        $Self->{IPCSHMKey} = shmget( $Self->{IPCKey}, $Self->{IPCSize}, oct(1777) );
     }
+
+    return if !$Self->{IPCSHMKey};
+
+    # Only flag IPC as active if everything worked well.
+    $Self->{IPC} = 1;
 
     return $Self;
 }
@@ -142,9 +159,9 @@ See for more info L<http://en.wikipedia.org/wiki/Syslog#Severity_levels>
 sub Log {
     my ( $Self, %Param ) = @_;
 
-    my $Priority = $Param{Priority} || 'debug';
-    my $Message  = $Param{MSG}      || $Param{Message} || '???';
-    my $Caller   = $Param{Caller}   || 0;
+    my $Priority = lc( $Param{Priority} ) || 'debug';
+    my $Message  = $Param{MSG}            || $Param{Message} || '???';
+    my $Caller   = $Param{Caller}         || 0;
 
     # returns the context of the current subroutine and sub-subroutine!
     my ( $Package1, $Filename1, $Line1, $Subroutine1 ) = caller( $Caller + 0 );
@@ -205,7 +222,7 @@ sub Log {
             $Error .= "   Module: $TraceSubroutine2$VersionString Line: $TraceLine1\n";
 
             last COUNT if !$TraceLine2;
-            }
+        }
 
         $Error .= "\n";
         print STDERR $Error;
@@ -228,7 +245,16 @@ sub Log {
         my $Data   = localtime() . ";;$Priority;;$Self->{LogPrefix};;$Message\n";
         my $String = $Self->GetLog();
 
-        shmwrite( $Self->{Key}, $Data . $String, 0, $Self->{IPCSize} ) || die $!;
+### Patch licensed under the GPL-3.0, Copyright (C) 2021-2022 Znuny GmbH, https://znuny.org/ ###
+#        shmwrite( $Self->{IPCSHMKey}, $Data . $String, 0, $Self->{IPCSize} ) || die $!;
+        # Fix for issue #286 (GitHub) / #328 (internal): Encode output.
+        my $EncodeObject = $Kernel::OM->Get('Kernel::System::Encode');
+
+        my $Output = $Data . $String;
+        $EncodeObject->EncodeOutput( \$Output );
+
+        shmwrite( $Self->{IPCSHMKey}, $Output, 0, $Self->{IPCSize} ) || die $!;
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2021-2022 Znuny GmbH, https://znuny.org/ ###
     }
 
     return 1;
@@ -264,8 +290,11 @@ sub GetLog {
 
     my $String = '';
     if ( $Self->{IPC} ) {
-        shmread( $Self->{Key}, $String, 0, $Self->{IPCSize} ) || die "$!";
+        shmread( $Self->{IPCSHMKey}, $String, 0, $Self->{IPCSize} ) || die "$!";
     }
+
+    # Remove \0 bytes that shmwrite adds for padding.
+    $String =~ s{\0}{}smxg;
 
     # encode the string
     $Kernel::OM->Get('Kernel::System::Encode')->EncodeInput( \$String );
@@ -286,14 +315,7 @@ sub CleanUp {
 
     return 1 if !$Self->{IPC};
 
-    # remove the shm
-    if ( !shmctl( $Self->{Key}, 0, 0 ) ) {
-        $Self->Log(
-            Priority => 'error',
-            Message  => "Can't remove shm for log: $!",
-        );
-        return;
-    }
+    shmwrite( $Self->{IPCSHMKey}, '', 0, $Self->{IPCSize} ) || die $!;
 
     return 1;
 }
