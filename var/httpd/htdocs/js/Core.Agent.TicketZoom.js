@@ -326,9 +326,9 @@ Core.Agent.TicketZoom = (function (TargetNS) {
             else {
                 var search  = location.search.replaceAll(';', '&'),
                     sParams = new URLSearchParams(search),
+                    articleID;
+                if ( sParams.get('ArticleID') ) {
                     articleID = sParams.get('ArticleID').replace(/#Article\d+/,'');
-
-                if (articleID) {
                     location.hash = '#Article' + articleID;
                 }
             }
