@@ -84,8 +84,7 @@ sub new {
     $Self->{LogPrefix} .= '-' . $SystemID;
 
     # configured log level (debug by default)
-    $Self->{MinimumLevel}    = $ConfigObject->Get('MinimumLogLevel') || 'debug';
-    $Self->{MinimumLevel}    = lc $Self->{MinimumLevel};
+    $Self->{MinimumLevel}    = lc( $ConfigObject->Get('MinimumLogLevel') ) || 'debug';
     $Self->{MinimumLevelNum} = $LogLevel{ $Self->{MinimumLevel} };
 
     # load log backend
@@ -102,7 +101,7 @@ sub new {
     return $Self if ( !eval "require IPC::SysV" );
 
     # create the IPC options
-    $Self->{IPCKey} = '444423' . $SystemID;       # This name is used to identify the shared memory segment.
+    $Self->{IPCKey}  = '444423' . $SystemID;       # This name is used to identify the shared memory segment.
     $Self->{IPCSize} = $ConfigObject->Get('LogSystemCacheSize') || 32 * 1024;
 
     # init session data mem
@@ -168,13 +167,13 @@ See for more info L<http://en.wikipedia.org/wiki/Syslog#Severity_levels>
 sub Log {
     my ( $Self, %Param ) = @_;
 
-    my $Priority    = lc $Param{Priority}  || 'debug';
+    my $Priority    = lc( $Param{Priority} ) || 'debug';
     my $PriorityNum = $LogLevel{$Priority} || $LogLevel{debug};
 
     return 1 if $PriorityNum < $Self->{MinimumLevelNum};
 
-    my $Message = $Param{MSG} || $Param{Message} || '???';
-    my $Caller = $Param{Caller} || 0;
+    my $Message = $Param{MSG}    || $Param{Message} || '???';
+    my $Caller  = $Param{Caller} || 0;
 
     # returns the context of the current subroutine and sub-subroutine!
     my ( $Package1, $Filename1, $Line1, $Subroutine1 ) = caller( $Caller + 0 );
