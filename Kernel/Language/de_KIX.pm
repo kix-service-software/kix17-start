@@ -212,6 +212,8 @@ sub Data {
         = 'Liste von CSS-Dateien, die immer im Agenten-Interface geladen werden.';
     $Lang->{'PostmasterFilter which sets destination queue in X-headers depending on email suffix.'}
         = 'PostmasterFilter, welcher eine Zielqueue im X-Header in Abhängigkeit vom Email-Suffix setzt.';
+    $Lang->{'Defines the maximum number of recipients allowed for each incoming email.'}
+        = 'Definiert die maximale Anzahl zulässiger Empfänger für jede eingehende E-Mail.';
     $Lang->{
         'Registers an identifier for the email filters. Value is used in the following config options. The keys will use for sorting.'
         }

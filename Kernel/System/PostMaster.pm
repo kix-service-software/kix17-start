@@ -88,7 +88,7 @@ sub new {
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
     # check needed config options
-    for my $Option (qw(PostmasterUserID PostmasterX-Header)) {
+    for my $Option (qw(PostmasterUserID PostmasterX-Header PostmasterRecipientCount)) {
         $Self->{$Option} = $ConfigObject->Get($Option)
             || die "Found no '$Option' option in configuration!";
     }
@@ -177,6 +177,10 @@ sub Run {
     for my $TicketID ( @SkipTicketIDs ) {
         $SkipTicketIDHash{$TicketID} = 1;
     }
+
+    return (5) if !$Self->_RecipientCountCheck(
+        GetParam  => $GetParam,
+    );
 
     # check if follow up
     my %FollowUps = $Self->CheckFollowUp( GetParam => $GetParam );
@@ -267,19 +271,25 @@ sub Run {
         && !$GetParam->{'X-KIX-StrictFollowUpIgnore'}
     ) {
         # get recipients
-        my $Recipient = '';
-        for my $Key (qw(Resent-To Envelope-To To Cc Bcc Delivered-To X-Original-To)) {
-            next if !$GetParam->{$Key};
-            if ($Recipient) {
-                $Recipient .= ', ';
-            }
-            $Recipient .= $GetParam->{$Key};
+        my @EmailAddresses;
+        if ( $GetParam->{Recipients} ) {
+            @EmailAddresses = @{$GetParam->{Recipients}};
         }
+        else {
+            my $Recipient = q{};
+            for my $Key (qw(Resent-To Envelope-To To Cc Bcc Delivered-To X-Original-To)) {
+                next if !$GetParam->{$Key};
+                if ($Recipient) {
+                    $Recipient .= q{, };
+                }
+                $Recipient .= $GetParam->{$Key};
+            }
 
-        # get addresses
-        my @EmailAddresses = $Self->{ParserObject}->SplitAddressLine(
-            Line => $Recipient
-        );
+            # get addresses
+            @EmailAddresses = $Self->{ParserObject}->SplitAddressLine(
+                Line => $Recipient
+            );
+        }
 
         # filter email addresses avoiding repeated and save in a hash
         my %EmailsHash = ();
@@ -899,6 +909,39 @@ sub _HandlePossibleFollowUp {
 
     return;
 }
+
+sub _RecipientCountCheck{
+    my ($Self, %Param) = @_;
+
+    # get recipients
+    my $Recipient = q{};
+    for my $Key (qw(Resent-To Envelope-To To Cc Bcc Delivered-To X-Original-To)) {
+        next if !$Param{GetParam}->{$Key};
+        if ($Recipient) {
+            $Recipient .= q{, };
+        }
+        $Recipient .= $Param{GetParam}->{$Key};
+    }
+
+    # get addresses
+    my @EmailAddresses = $Self->{ParserObject}->SplitAddressLine(
+        Line => $Recipient
+    );
+
+    $Param{GetParam}->{Recipients} = \@EmailAddresses;
+
+    if ( scalar(@EmailAddresses) > $Self->{PostmasterRecipientCount} ) {
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
+            Priority => 'info',
+            Message =>
+                "Ignored Email (From: $Param{GetParam}->{'From'}, Message-ID: $Param{GetParam}->{'Message-ID'}) "
+                . "because the X-KIX-Ignore is set (X-KIX-Ignore: $Param{GetParam}->{'X-KIX-Ignore'})."
+        );
+    }
+
+    return 1;
+}
+
 
 1;
 
