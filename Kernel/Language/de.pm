@@ -1708,7 +1708,7 @@ sub Data {
         'The field needs to be a valid regular expression or a literal word.' =>
             'Dieses Feld sollte einen gültigen regulären Ausdruck oder ein Wort enthalten.',
         'Set Email Headers' => 'E-Mail-Kopfzeilen setzen',
-        'Set email header' => 'Setze E-Mai-Kopfzeile',
+        'Set email header' => 'Setze E-Mail-Kopfzeile',
         'Set value' => 'Setze Wert',
         'The field needs to be a literal word.' => 'Dieses Feld sollte ein Wort enthalten.',
 

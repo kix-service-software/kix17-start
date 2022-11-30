@@ -6269,13 +6269,18 @@ END
 
     # get config object
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-
-    my $Body = $ConfigObject->Get('Ticket::Frontend::AutomaticMergeText');
+    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $Body = $LayoutObject->{LanguageObject}->Translate(
+        $ConfigObject->Get('Ticket::Frontend::AutomaticMergeText')
+    );
     $Body =~ s{<(KIX|OTRS)_TICKET>}{$MergeTicket{TicketNumber}}xms;
 
     $Body =~
         s{<(KIX|OTRS)_MERGE_TO_TICKET>}{<!-- KIX4OTRS MergeTargetLinkStart ::$Param{MainTicketID}:: -->$MainTicket{TicketNumber}<!-- KIX4OTRS MergeTargetLinkEnd -->}xms;
 
+    my $Subject = $LayoutObject->{LanguageObject}->Translate(
+        ($ConfigObject->Get('Ticket::Frontend::AutomaticMergeSubject') || 'Ticket Merged')
+    );
     # add merge article to merge ticket
     $Self->ArticleCreate(
         TicketID       => $Param{MergeTicketID},
@@ -6285,10 +6290,9 @@ END
         UserID         => $Param{UserID},
         HistoryType    => 'AddNote',
         HistoryComment => '%%Note',
-        Subject        => $ConfigObject->Get('Ticket::Frontend::AutomaticMergeSubject')
-            || 'Ticket Merged',
-        Body          => $Body,
-        NoAgentNotify => 1,
+        Subject        => $Subject,
+        Body           => $Body,
+        NoAgentNotify  => 1,
     );
 
     # add merge history to merge ticket
