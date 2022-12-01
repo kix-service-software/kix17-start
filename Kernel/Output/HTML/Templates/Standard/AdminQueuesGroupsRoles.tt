@@ -73,36 +73,47 @@
                  <h2><span>[% Translate("Current Queues-Groups-Roles Concept") | html %]</span></h2>
             </div>
             <div class="Content">
-                <table class="DataTable">
-                    <thead>
-                        <tr>
+                <div class="TableContent">
+                    <table class="DataTable StickyTable">
+                        <thead>
+                            <tr>
 [% RenderBlockStart("TableHeader") %]
-                            <th>[% Data.Header %]</th>
+                                <th class="[% Data.Class %]">[% Data.Header %]</th>
 [% RenderBlockEnd("TableHeader") %]
 [% RenderBlockStart("TableHeaderLink") %]
-                            <th><a href="[% Env("Baselink") %][% Data.Link | html %]" class="AsBlock">[% Data.Header %]</a></th>
+                                <th class="[% Data.Class %]">
+                                    <a href="[% Env("Baselink") %][% Data.Link | html %]" class="AsBlock">[% Data.Header %]</a>
+                                </th>
 [% RenderBlockEnd("TableHeaderLink") %]
-                        </tr>
-                    </thead>
-                    <tbody>
+                            </tr>
+                        </thead>
+                        <tbody>
 [% RenderBlockStart("TableBodyRow") %]
-                        <tr>
+                            <tr>
 [% RenderBlockStart("TableBodyContent") %]
-                            <td nowrap>
+                                <td class="[% Data.Class %]" nowrap>
 [% RenderBlockStart("TableBodyContentLinkStart") %]
-                                <a href="[% Env("Baselink") %][% Data.Link | html %]" class="AsBlock">
+                                    <a href="[% Env("Baselink") %][% Data.Link | html %]" class="AsBlock">
 [% RenderBlockEnd("TableBodyContentLinkStart") %]
-                                [% Data.Content | html %]
+                                       [% Data.Content | html %]
 [% RenderBlockStart("TableBodyContentLinkEnd") %]
-                                </a>
+                                    </a>
 [% RenderBlockEnd("TableBodyContentLinkEnd") %]
-                            </td>
+                                </td>
 [% RenderBlockEnd("TableBodyContent") %]
-                        </tr>
+                            </tr>
 [% RenderBlockEnd("TableBodyRow") %]
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
 </div>
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    var cWidth = $('.DataTable.StickyTable > thead > tr > th.StickyCol1').outerWidth();
+    $('.DataTable.StickyTable > thead > tr > th.StickyCol2').css('left', cWidth + 'px');
+    $('.DataTable.StickyTable > tbody > tr > td.StickyCol2').css('left', cWidth + 'px');
+//]]></script>
+[% END %]

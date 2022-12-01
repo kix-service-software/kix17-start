@@ -429,6 +429,32 @@
 
 
     /**
+    *   @subsection sticky table
+    */
+    .TableContent {
+        overflow: auto;
+        max-height: 800px;
+    }
+    .DataTable.StickyTable > thead > tr > th {
+        z-index: 1;
+        position: sticky;
+        top: 0;
+    }
+    .DataTable.StickyTable > thead > tr > th.StickyCol1,
+    .DataTable.StickyTable > thead > tr > th.StickyCol2{
+        z-index: 2;
+        left: 0;
+        position: sticky;
+    }
+    .DataTable.StickyTable > tbody > tr > td.StickyCol1,
+    .DataTable.StickyTable > tbody > tr > td.StickyCol2 {
+        z-index: 1;
+        left: 0;
+        position: sticky;
+    }
+
+
+    /**
     *   @subsection article table
     */
     .ArticleView,

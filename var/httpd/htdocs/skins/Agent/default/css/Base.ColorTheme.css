@@ -442,6 +442,26 @@
     }
 
 
+    /**
+    *   @subsection sticky table
+    */
+    .DataTable.StickyTable > thead > tr > th {
+        background-color: #F0F0F0;
+    }
+    .DataTable.StickyTable > tbody > tr > td.StickyCol1,
+    .DataTable.StickyTable > tbody > tr > td.StickyCol2 {
+        background-color: #FDFDFD;
+    }
+    .DataTable.StickyTable > tbody > tr:nth-child(2n) > td.StickyCol1,
+    .DataTable.StickyTable > tbody > tr:nth-child(2n) > td.StickyCol2 {
+        background-color: #F5F5F5;
+    }
+    .DataTable.StickyTable > tbody > tr:hover > td.StickyCol1,
+    .DataTable.StickyTable > tbody > tr:hover > td.StickyCol2 {
+        background-color: #78BE5A;
+    }
+
+
     /*
     *   @subsection form fields
     */
