@@ -392,22 +392,6 @@ END
     # header
     if (@ShowColumns) {
 
-        # sortable columns (for now only for AgentITSMConfigItem)
-        my %SortableColumns = (
-            InciStateID   => 1,
-            DeplStateID   => 1,
-            CurInciState  => 1,
-            CurDeplState  => 1,
-            CurInciSignal => 1,
-            CurDeplSignal => 1,
-            Class         => 1,
-            ClassID       => 1,
-            LastChanged   => 1,
-            ChangeTime    => 1,
-            Number        => 1,
-            Name          => 1,
-        );
-
         # show the bulk action button checkboxes if feature is enabled
         if ($BulkFeature) {
             push @ShowColumns, 'BulkAction';
@@ -416,20 +400,11 @@ END
         for my $Column (@ShowColumns) {
 
             # create needed veriables
-            my $CSS = q{};
+            my $CSS = 'OverviewHeader';
             my $OrderBy;
 
             # set class
-            if (
-                $Self->{Action} ne 'AgentITSMConfigItem'
-                || (
-                    $Self->{Action} eq 'AgentITSMConfigItem'
-                    && $SortableColumns{$Column}
-                )
-            ) {
-                $CSS = 'OverviewHeader '
-                    . $Column;
-            }
+            $CSS .= ' ' . $Column;
 
             # remove ID if necesary
             if ( $Param{SortBy} ) {
@@ -438,7 +413,7 @@ END
                     : ( $Param{SortBy} eq 'DeplStateID' ) ? 'CurDeplState'
                     : ( $Param{SortBy} eq 'ClassID' )     ? 'Class'
                     : ( $Param{SortBy} eq 'ChangeTime' )  ? 'LastChanged'
-                    : $Param{SortBy};
+                    :                                       $Param{SortBy};
             }
 
             # set the correct Set CSS class and order by link
@@ -513,37 +488,26 @@ END
                     Name => 'RecordCustomHeader',
                     Data => {
                         %Param,
-                        CSS => $CSS,
+                        CSS        => $CSS,
+                        OrderBy    => $OrderBy,
+                        ColumnName => $ColumnName,
+                        Column     => $Column,
                     },
                 );
 
-                if (
-                    $Self->{Action} ne 'AgentITSMConfigItem'
-                    || (
-                        $Self->{Action} eq 'AgentITSMConfigItem'
-                        && $SortableColumns{$Column}
-                    )
-                ) {
-                    $LayoutObject->Block(
-                        Name => 'RecordCustomHeaderLink',
-                        Data => {
-                            %Param,
-                            OrderBy      => $OrderBy,
-                            Column       => $Column,
-                            ColumnSortBy => $ColumnSortBy,
-                            ColumnName => $ColumnName,
-                        },
-                    );
-                }
-                else {
-                    $LayoutObject->Block(
-                        Name => 'RecordCustomHeaderNoLink',
-                        Data => {
-                            %Param,
-                            ColumnName => $ColumnName,
-                        },
-                    );
-                }
+                $LayoutObject->Block(
+                    Name => 'RecordCustomHeaderLinkStart',
+                    Data => {
+                        %Param,
+                        OrderBy      => $OrderBy,
+                        Column       => $Column,
+                        ColumnSortBy => $ColumnSortBy,
+                    },
+                );
+                $LayoutObject->Block(
+                    Name => 'RecordCustomHeaderLinkEnd',
+                    Data => {},
+                );
             }
             else {
                 my $ItemALLChecked = '';

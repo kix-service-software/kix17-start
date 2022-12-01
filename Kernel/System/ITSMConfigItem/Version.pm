@@ -1437,6 +1437,7 @@ sub VersionSearch {
     my $Count = 0;
     my @OrderBySelectColumns;
     for my $OrderBy ( @OrderBy ) {
+        next if !$OrderByTable{$OrderBy};
 
         # set the default order direction
         my $Direction = 'DESC';
