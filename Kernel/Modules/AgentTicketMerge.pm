@@ -514,10 +514,14 @@ sub Run {
             ->GetSystemAddress( QueueID => $Ticket{QueueID} );
         $Article{From} = "$Address{RealName} <$Address{Email}>";
 
+        my $MergeText = $LayoutObject->{LanguageObject}->Translate(
+            $ConfigObject->Get('Ticket::Frontend::MergeText')
+        );
+
         # add salutation and signature to body
         if ( $LayoutObject->{BrowserRichText} ) {
             my $Body = $LayoutObject->Ascii2RichText(
-                String => $ConfigObject->Get('Ticket::Frontend::MergeText'),
+                String => $MergeText,
             );
             $Article{Body} = $Salutation
                 . '<br/><br/>'
@@ -528,7 +532,7 @@ sub Run {
         else {
             $Article{Body} = $Salutation
                 . "\n\n"
-                . $ConfigObject->Get('Ticket::Frontend::MergeText')
+                . $MergeText
                 . "\n\n"
                 . $Signature;
         }
