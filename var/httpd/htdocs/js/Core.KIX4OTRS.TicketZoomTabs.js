@@ -21,6 +21,21 @@ Core.KIX4OTRS = Core.KIX4OTRS || {};
  */
 Core.KIX4OTRS.TicketZoomTabs = (function(TargetNS) {
 
+    TargetNS.InitMarkTicketAsSeen = function (TicketID) {
+
+        $('#TicketMarkAsRead').on('click', function(Event) {
+            TargetNS.MarkTicketAsSeen(TicketID,0);
+            return false;
+        });
+
+        if (
+            $('.ArticleTicketMarkAsRead').hasClass('Hidden')
+            && $('td span.UnreadArticles').length
+        ) {
+            $('.ArticleTicketMarkAsRead').removeClass('Hidden');
+        }
+    }
+
     /**
      * @function
      * @param {String}
@@ -40,7 +55,6 @@ Core.KIX4OTRS.TicketZoomTabs = (function(TargetNS) {
 
             // Mark article as seen in backend
             var Data = {
-                // Action: 'AgentTicketZoom',
                 Action : 'AgentTicketZoomTabArticle',
                 Subaction: 'TicketMarkAsSeen',
                 TicketID: TicketID
@@ -48,7 +62,11 @@ Core.KIX4OTRS.TicketZoomTabs = (function(TargetNS) {
             Core.AJAX.FunctionCall(
                 Core.Config.Get('CGIHandle'),
                 Data,
-                function () {}
+                function (Response) {
+                    if ( Response ) {
+                        $('.ArticleTicketMarkAsRead').addClass('Hidden');
+                    }
+                }
             );
         }, Timeout);
     };
@@ -76,7 +94,14 @@ Core.KIX4OTRS.TicketZoomTabs = (function(TargetNS) {
             Core.AJAX.FunctionCall(
                 Core.Config.Get('CGIHandle'),
                 Data,
-                function () {}
+                function (Response) {
+                    if (
+                        Response
+                        && !$('td span.UnreadArticles').length
+                    ) {
+                        $('.ArticleTicketMarkAsRead').addClass('Hidden');
+                    }
+                }
             );
         }, 3000);
     };
