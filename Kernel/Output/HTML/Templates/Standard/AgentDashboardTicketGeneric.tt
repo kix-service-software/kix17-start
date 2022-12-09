@@ -516,6 +516,11 @@ $('.DashboardHeader').off('click').on('click', '.ColumnSettingsTrigger', functio
                     <div title="[% Data.WholeTitle | html %]">[% Data.Title | html %]</div>
                 </td>
 [% RenderBlockEnd("ContentLargeTicketTitle") %]
+[% RenderBlockStart("ContentLargeTicketGenericLink") %]
+                <td>
+                    <a href="[% Data.Link %]" title="[% Data.Title | html %]" class="GenericLink" target="_blank">[% Data.Value %]</a>
+                </td>
+[% RenderBlockEnd("ContentLargeTicketGenericLink") %]
 [% RenderBlockStart("ContentLargeTicketGenericColumnTranslatable") %]
                 <td>
                     <div title="[% Translate(Data.GenericValue) | html %]">[% Translate(Data.GenericValue) | html %]</div>
@@ -640,7 +645,7 @@ $('#Dashboard' + Core.App.EscapeSelector('[% Data.Name | html %]') + '-box').fin
     $('.MasterAction').on('click', function (Event) {
         var $MasterActionLink = $(this).find('.MasterActionLink');
         // prevent MasterAction on Dynamic Fields links
-        if ($(Event.target).hasClass('DynamicFieldLink')) {
+        if ($(Event.target).hasClass('GenericLink')) {
             return true;
         }
         // only act if the link was not clicked directly
