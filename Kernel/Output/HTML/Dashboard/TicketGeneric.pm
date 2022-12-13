@@ -2075,12 +2075,12 @@ sub Run {
                         }
 
                         # merge hashes
-                        %ViewableTicketIDs = ( 
+                        %ViewableTicketIDs = (
                             %ViewableTicketIDs,
                             %ViewableTicketIDsTitle,
                             %ViewableTicketIDsTicketNotes,
                             %ViewableTicketIDsTN,
-                            %ViewableTicketIDsDF
+                            %ViewableTicketIDsDF,
                         );
                     }
 
@@ -2868,14 +2868,9 @@ sub Run {
 
                 elsif ( $Column eq 'Queue' ) {
                     $LayoutObject->Block(
-                        Name => 'ContentLargeTicketGenericDynamicField',
+                        Name => 'ContentLargeTicketGenericLink',
                         Data => {
-                            Title => $Ticket{Queue}
-                        },
-                    );
-                    $LayoutObject->Block(
-                        Name => 'ContentLargeTicketGenericDynamicFieldLink',
-                        Data => {
+                            Title => $Ticket{Queue},
                             Value => $Ticket{Queue},
                             Link  => $LayoutObject->{Baselink} . 'Action=AgentTicketQueue;QueueID='
                                 . $Ticket{QueueID}
@@ -3138,7 +3133,7 @@ sub Run {
 
                 if ( $ValueStrg->{Link} ) {
                     my $HTMLLink = $HTMLLinkLayoutObject->Output(
-                        Template => '<a href="[% Data.Link | Interpolate %]"  target="_blank" class="DynamicFieldLink">[% Data.Value %]</a>',
+                        Template => '<a href="[% Data.Link | Interpolate %]"  target="_blank" class="GenericLink">[% Data.Value %]</a>',
                         Data     => {
                             Value                       => $ValueStrg->{Value},
                             Title                       => $ValueStrg->{Title},
