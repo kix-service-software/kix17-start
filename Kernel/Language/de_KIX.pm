@@ -144,14 +144,13 @@ sub Data {
         = 'Modulzuweisungen werden in SysConfig gespeichert';
     $Lang->{'Please select all frontend modules which should display the dynamic field.'}
         = 'Bitte wählen Sie alle Frontendmodule,<br /> in denen das Dynamische Feld angezeigt werden soll.';
-    $Lang->{
-        'Please select all frontend modules which should have the dynamic field as a mandatory field.'
-        }
+    $Lang->{'Please select all frontend modules which should have the dynamic field as a mandatory field.' }
         = 'Bitte wählen Sie alle Frontendmodule,<br /> in denen das Dynamische Feld Pflichtfeld sein soll.';
     $Lang->{'Defines the interval to save form content as draft in milliseconds.'}
         = 'Legt das Intervall fest, in dem der Inhalt des Formulars gesichert werden soll. Der Wert ist in Millisekunden angegeben.';
     $Lang->{'Defines the message to be displayed when a draft exists and can be loaded.'}
         = 'Legt die Meldung fest, die angezeigt wird, wenn ein Entwurf existiert und geladen werden kann.';
+    $Lang->{'e.g. Text or Te*t'}        = 'z.b. Text oder Te*t';
     $Lang->{'ObjectReference'}          = 'Objektreferenz';
     $Lang->{'Object Reference'}         = 'Objektreferenz';
     $Lang->{'Field Type'}               = 'Feldtyp';
@@ -212,6 +211,8 @@ sub Data {
         = 'Liste von CSS-Dateien, die immer im Agenten-Interface geladen werden.';
     $Lang->{'PostmasterFilter which sets destination queue in X-headers depending on email suffix.'}
         = 'PostmasterFilter, welcher eine Zielqueue im X-Header in Abhängigkeit vom Email-Suffix setzt.';
+    $Lang->{'Defines the maximum number of recipients allowed for each incoming email.'}
+        = 'Definiert die maximale Anzahl zulässiger Empfänger für jede eingehende E-Mail.';
     $Lang->{
         'Registers an identifier for the email filters. Value is used in the following config options. The keys will use for sorting.'
         }
@@ -255,15 +256,15 @@ sub Data {
         = 'Hier können Sie eine Alternative für die Darstellung angeben, unter Nutzung von Platzhaltern für Variablen. Falls nichts angegeben ist, wird der Standard genutzt.';
     $Lang->{'saved'} = 'gespeichert';
     $Lang->{'All agents who are linked with this ticket and have been selected (Linked Persons)'}
-        = 'Alle Agenten die mit dem Ticket verlinkt sind und auswählt wurden (Verlinkte Personen)';
+        = 'Alle Agenten die mit dem Ticket verlinkt sind und ausgewählt wurden (Verlinkte Personen)';
     $Lang->{
         'All customer contacts who are linked with this ticket and have been selected (Linked Persons)'
         }
-        = 'Alle Ansprechpartner, die mit dem Ticket verlinkt sind und auswählt wurden (Verlinkte Personen)';
+        = 'Alle Ansprechpartner, die mit dem Ticket verlinkt sind und ausgewählt wurden (Verlinkte Personen)';
     $Lang->{
         'All 3rd person contacts who are linked with this ticket and have been selected (Linked Persons)'
         }
-        = 'Alle "Dritte" die mit dem Ticket verlinkt sind und auswählt wurden (Verlinkte Personen)';
+        = 'Alle "Dritte" die mit dem Ticket verlinkt sind und ausgewählt wurden (Verlinkte Personen)';
     $Lang->{'empty answer'} = 'Leere Antwort';
 
     # ticket template extensions
@@ -1289,8 +1290,8 @@ sub Data {
     $Lang->{'Defines parameters for the AgentITSMChangeZoomTab "Linked Objects".'}
         = 'Legt Parameter für das AgentITSMChangeZoomTab "Linked Objects" fest.';
     $Lang->{'Select Class'} = 'Klasse auswählen';
-    $Lang->{'Settings for custom ticket list view'}
-        = 'Einstellungen für persönliche Ticketlistendarstellung';
+    $Lang->{'Settings for custom config item list view'}
+        = 'Einstellungen für persönliche ConfigItem Listendarstellung';
     $Lang->{'Asset Location'} = 'Asset-Standort';
     $Lang->{'Parent Location'} = 'Übergeordneter Standort';
     $Lang->{'Check for empty fields'} = 'Auf leere Felder prüfen';

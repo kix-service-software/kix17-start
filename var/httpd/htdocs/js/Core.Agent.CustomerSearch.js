@@ -42,8 +42,16 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
      * @description
      *      Needed for the change event of customer fields, if ActiveAutoComplete is false (disabled).
      */
-        CustomerFieldChangeRunCount = {};
-
+        CustomerFieldChangeRunCount = {},
+    /**
+     * @private
+     * @name CustomerTicketCount
+     * @memberof Core.Agent.CustomerSearch
+     * @member {Object}
+     * @description
+     *      Parameter that counts the number of AddTicketCustomer calls to regulate the FormUpdate.
+     */
+        CustomerTicketCount = 0;
     /**
      * @name ExistsCustomerUser
      * @memberof Core.Agent.CustomerSearch
@@ -521,8 +529,8 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
         }
 
         if (CustomerValue === '') {
-            return false;
             Core.App.Publish('Core.Agent.CustomerSearch.AddTicketCustomer', [false, CustomerValue, CustomerKey]);
+            return false;
         }
 
         // check for duplicated entries
@@ -542,6 +550,7 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
 
         // increment customer counter
         CustomerTicketCounter++;
+        CustomerTicketCount++;
 
         // set sufix
         Suffix = '_' + CustomerTicketCounter;
@@ -648,6 +657,7 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
                 || Core.Config.Get('Action') === 'AgentTicketEmailOutbound'
             )
             && $('#CryptKeyID').length
+            && CustomerTicketCount < 3
         ) {
             Core.AJAX.FormUpdate($('#' + Field).closest('form'), 'AJAXUpdate', '', [ 'CryptKeyID' ], undefined ,undefined, false);
         }
@@ -676,8 +686,10 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
      */
     TargetNS.RemoveCustomerTicket = function (Object) {
         var TicketCustomerIDs = 0,
-        $Field = Object.closest('.Field'),
-        $Form;
+            $Field = Object.closest('.Field'),
+            $Form;
+
+        CustomerTicketCount--;
 
         if (
             Core.Config.Get('Action') === 'AgentTicketEmail'
@@ -710,8 +722,9 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
                 || Core.Config.Get('Action') === 'AgentTicketEmailOutbound'
             )
             && $('#CryptKeyID').length
+            && CustomerTicketCount < 2
         ) {
-            Core.AJAX.FormUpdate($Form, 'AJAXUpdate', '', ['CryptKeyID']);
+            Core.AJAX.FormUpdate($Form, 'AJAXUpdate', '', ['CryptKeyID'],undefined,undefined,false);
         }
 
         if(!$('.CustomerContainer input[type="radio"]').is(':checked')) {

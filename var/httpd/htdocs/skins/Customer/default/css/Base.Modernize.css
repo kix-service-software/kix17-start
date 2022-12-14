@@ -85,7 +85,6 @@
     div.InputField_ToolbarContainer ul li::after {
         content: "|";
         display: inline-block;
-        float: right;
         cursor: default;
         width: 0;
     }
@@ -387,7 +386,6 @@
         width: 22px;
         height: 20px;
         line-height: 20px;
-        vertical-align: middle;
         display: block;
         float: left;
     }

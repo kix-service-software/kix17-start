@@ -2,7 +2,7 @@
  * This software is part of the KIX project, https://www.kixdesk.com/
  * Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
  * --
- * @project KIX (https://www.kixdesk.com) <https://www.kixdesk.com> - Agent Frontend
+ * @project KIX (https://www.kixdesk.com) <https://www.kixdesk.com> - Customer Frontend
  * @copyright c.a.p.e. IT GmbH
  * @license AGPL (https://www.gnu.org/licenses/agpl.txt) <https://www.gnu.org/licenses/agpl.txt>
  * --
@@ -59,7 +59,6 @@
         content: "\f0d7";
         font: normal normal normal 14px/1 FontAwesome;
         text-align: center;
-        vertical-align: middle;
         padding: 3px;
         display: block;
     }
@@ -80,7 +79,6 @@
     .WidgetAction i {
         display: block;
         margin: 2px 0px 0px 2px;
-        vertical-align: middle;
     }
     .WidgetAction.Toggle i {
         font-size: 17px;
@@ -206,11 +204,11 @@
         padding: 2px 2px 2px 25px;
         margin-bottom: 3px;
         line-height: 150%;
-        -webkit-border-radius-: 3px;
-        -moz-border-radius-: 3px;
-        -ms-border-radius-: 3px;
-        -o-border-radius-: 3px;
-        border-radius-: 3px;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        -ms-border-radius: 3px;
+        -o-border-radius: 3px;
+        border-radius: 3px;
     }
     .SettingsWidget label input {
         position: absolute;

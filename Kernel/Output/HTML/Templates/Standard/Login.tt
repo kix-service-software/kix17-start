@@ -292,9 +292,6 @@ X-KIX-Login: [% Env("Baselink") %]
                         </form>
                     </div>
                 </div>
-                <p class="Center SpacingTop">
-                    [% Translate("A new password will be sent to your email address.") | html %]
-                </p>
             </div>
 [% RenderBlockEnd("LostPassword") %]
 

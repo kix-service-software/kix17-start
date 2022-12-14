@@ -112,15 +112,19 @@ sub Run {
 
         # create output for overview
         my $HeaderLink;
+        my $Count = 0;
         for my $Head (@Head) {
-            my $ID;
-            my $Link;
+            my ($ID, $Link, $Class) = q{};
 
             if ($HeaderLink) {
-                $ID = $GroupObject->RoleLookup( Role => $Head );
+                $ID   = $GroupObject->RoleLookup( Role => $Head );
                 $Link = 'Action=AdminRoleUser;Subaction=Role;ID=' . $ID;
             }
 
+
+            if ( $Count < 2 ) {
+                $Class = 'StickyCol' . ($Count+1);
+            }
             if ( !$HeaderLink ) {
 
                 # output table header
@@ -128,7 +132,8 @@ sub Run {
                     Name => 'TableHeader',
                     Data => {
                         Header => $Head,
-                        }
+                        Class  => $Class
+                    }
 
                 );
             }
@@ -140,12 +145,14 @@ sub Run {
                     Data => {
                         Header => $Head,
                         Link   => $Link,
-                        }
+                        Class  => $Class
+                    }
                 );
             }
             if ( $Head eq 'SystemAddress' ) {
                 $HeaderLink = 1;
             }
+            $Count++;
         }
 
         for my $DataRow (@Data) {
@@ -154,6 +161,7 @@ sub Run {
             $LayoutObject->Block(
                 Name => 'TableBodyRow',
             );
+            $Count = 0;
             for my $Data ( @{$DataRow} ) {
                 my $ID;
                 my $Link;
@@ -188,31 +196,31 @@ sub Run {
                         }
                     }
                     if ($ExistingPermission) {
-                        $ID = $GroupObject->GroupLookup( Group => ${$DataRow}[1] );
+                        $ID   = $GroupObject->GroupLookup( Group => ${$DataRow}[1] );
                         $Link = 'Action=AdminRoleGroup;Subaction=Group;ID=' . $ID;
                     }
                     else {
-                        $Link = '';
+                        $Link = q{};
                     }
                 }
-                elsif (
-                    $Data    =~ /ro/
-                    || $Data =~ /move_into/
-                    || $Data =~ /create/
-                    || $Data =~ /note/
-                    || $Data =~ /owner/
-                    || $Data =~ /priority/
-                    || $Data =~ /rw/
-                ) {
-                    $ID = $GroupObject->GroupLookup( Group => ${$DataRow}[1] );
+                elsif ( $Data =~ /^(?:ro|move_into|create|note|owner|priority|rw)$/smx ) {
+                    $ID   = $GroupObject->GroupLookup( Group => ${$DataRow}[1] );
                     $Link = 'Action=AdminRoleGroup;Subaction=Group;ID=' . $ID;
                 }
+
+                my $Class = q{};
+                if ( $Count < 2 ) {
+                    $Class = 'StickyCol' . ($Count+1);
+                }
+
                 $LayoutObject->Block(
                     Name => 'TableBodyContent',
                     Data => {
                         Content => $Data,
-                        }
+                        Class   => $Class
+                    }
                 );
+
                 if ($Link) {
 
                     # output table body
@@ -221,7 +229,7 @@ sub Run {
                         Data => {
                             Content => $Data,
                             Link    => $Link,
-                            }
+                        }
                     );
 
                     # output table body
@@ -229,6 +237,8 @@ sub Run {
                         Name => 'TableBodyContentLinkEnd',
                     );
                 }
+
+                $Count++;
             }
         }
     }

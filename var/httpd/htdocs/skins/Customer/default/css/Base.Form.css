@@ -129,8 +129,8 @@
         margin-top: 0;
         vertical-align: middle;
     }
-    fieldset.TableLike > .Field > input[id$='Date'][type!=radio],
-    fieldset.TableLike > .Row > .Field > input[id$='Date'][type!=radio] {
+    fieldset.TableLike > .Field > input[id$='Date']:not([type=radio]),
+    fieldset.TableLike > .Row > .Field > input[id$='Date']:not([type=radio]) {
         width: 80px;
     }
     fieldset.TableLike > .Field > select,
@@ -274,7 +274,6 @@
         min-height: 12px;
         padding: 3px 7px;
         line-height: 14px;
-        vertical-align: middle;
         font-size: 11px;
         border: none;
         display: block;
