@@ -1,6 +1,20 @@
 # Change log of KIX
 * Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.20.0-RC5 (2022/12/14)
+ * (2022/12/14) - Bugfix: KIX17-3347 (use correct SearchLimit for fulltext ticket search) (mbauer)
+ * (2022/12/09) - Bugfix: KIX17-3345 (fixed missing display queue in ticket dashboard) (fjacquemin)
+ * (2022/12/09) - Bugfix: KIX17-3307 (fixed non-performant CryptKey update when adding several To, Cc, Bcc) (fjacquemin)
+ * (2022/12/01) - Bugfix: KIX17-3323 (fixed missing handling of not valid OrderBy by VersionSearch) (fjacquemin)
+ * (2022/12/01) - Bugfix: KIX17-2995 (added function to hide MarkTicketAsSeen if no unseen exists) (fjacquemin)
+ * (2022/11/30) - Bugfix: KIX17-2995 (implemented sticky table for queues-groups-roles) (fjacquemin)
+ * (2022/11/30) - Bugfix: KIX17-2995 (fixed invalid css arguments) (fjacquemin)
+ * (2022/11/30) - Bugfix: KIX17-2995 (fixed missing and correcting existing translations) (fjacquemin)
+ * (2022/11/29) - Bugfix: KIX17-3258 (fixed OSA-2022-13 DoS attack using email) (fjacquemin)
+ * (2022/11/28) - Bugfix: KIX17-3240 (Fixed encoding of sysconfig log output) (mbauer)
+ * (2022/11/24) - Bugfix: KIX17-3323 (fixed sortable column in AgentITSMConfigItem) (fjacquemin)
+ * (2022/11/11) - Bugfix: KIX17-3114 (fixed check of ArticleID on initial load in zoom) (fjacquemin)
+
 # 17.20.0-RC4 (2022/11/11)
  * (2022/11/10) - Bugfix: KIX17-3314 (prevent overwrite of existing extended followup reference) (mbauer)
  * (2022/11/10) - Bugfix: KIX17-3114 (changed article list handling when pagination) (fjacquemin)
