@@ -830,6 +830,7 @@ sub Run {
                     Result       => 'ARRAY',
                     SortBy       => $Self->{SortBy},
                     OrderBy      => $Self->{OrderBy},
+                    Limit        => $Self->{SearchLimit},
                     UserID       => $Self->{UserID},
                     TicketID     => \@MergeArray,
                     ArchiveFlags => $GetParam{ArchiveFlags},
