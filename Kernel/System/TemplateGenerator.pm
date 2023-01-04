@@ -434,6 +434,32 @@ sub Template {
         }
     }
 
+    # get user language
+    my $Language;
+    if ( defined $Param{TicketID} ) {
+
+        # get ticket data
+        my %Ticket = $TicketObject->TicketGet(
+            TicketID => $Param{TicketID},
+        );
+
+        # check if template is member of ticket queue
+        my %StandardTemplates = $Kernel::OM->Get('Kernel::System::Queue')->QueueStandardTemplateMemberList(
+            QueueID       => $Ticket{QueueID},
+            TemplateTypes => 0,
+        );
+        return '' if ( !$StandardTemplates{ $Param{TemplateID} } );
+
+        # get recipient
+        my %User = $CustomerUserObject->CustomerUserDataGet(
+            User => $Ticket{CustomerUserID},
+        );
+        $Language = $User{UserLanguage};
+    }
+
+    # if customer language is not defined, set default language
+    $Language //= $ConfigObject->Get('DefaultLanguage') || 'en';
+
     my %Template = $TemplateObject->StandardTemplateGet(
         ID => $Param{TemplateID},
     );
@@ -461,25 +487,6 @@ sub Template {
             String => $Template{Template},
         );
     }
-
-    # get user language
-    my $Language;
-    if ( defined $Param{TicketID} ) {
-
-        # get ticket data
-        my %Ticket = $TicketObject->TicketGet(
-            TicketID => $Param{TicketID},
-        );
-
-        # get recipient
-        my %User = $CustomerUserObject->CustomerUserDataGet(
-            User => $Ticket{CustomerUserID},
-        );
-        $Language = $User{UserLanguage};
-    }
-
-    # if customer language is not defined, set default language
-    $Language //= $ConfigObject->Get('DefaultLanguage') || 'en';
 
     # replace place holder stuff
     my @ListOfUnSupportedTag = qw/KIX_AGENT_SUBJECT KIX_AGENT_BODY KIX_CUSTOMER_BODY KIX_CUSTOMER_SUBJECT OTRS_AGENT_SUBJECT OTRS_AGENT_BODY OTRS_CUSTOMER_BODY OTRS_CUSTOMER_SUBJECT/;
