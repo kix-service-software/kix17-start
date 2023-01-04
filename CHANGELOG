@@ -1,5 +1,10 @@
 # Change log of KIX
-* Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de/
+* Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de/
+
+# 17.20.0-RC6 (2023/01/04)
+ * (2023/01/03) - Bugfix: KIX17-3357 (fix placeholder for customer company data) (mbauer)
+ * (2023/01/02) - Bugfix: KIX17-3350 (server side validation of config item dynamic field values) (mbauer)
+ * (2022/12/16) - Bugfix: KIX17-3323 (fix sort of custom config item overview columns) (mbauer)
 
 # 17.20.0-RC5 (2022/12/14)
  * (2022/12/14) - Bugfix: KIX17-3347 (use correct SearchLimit for fulltext ticket search) (mbauer)
