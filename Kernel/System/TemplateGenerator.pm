@@ -1675,10 +1675,12 @@ sub _Replace {
         || ( defined $Param{Frontend} && $Param{Frontend} eq 'Customer' )
     ) {
 
-        my $CustomerUserID = $Param{Data}->{CustomerUserID} || $Ticket{CustomerUserID};
+        my $CustomerUserID    = $Param{Data}->{CustomerUserID} || $Ticket{CustomerUserID};
+        my $CustomerCompanyID = $Param{Data}->{CustomerID}     || $Ticket{CustomerID};
 
         my %CustomerUser = $CustomerUserObject->CustomerUserDataGet(
-            User => $CustomerUserID,
+            User       => $CustomerUserID,
+            CustomerID => $CustomerCompanyID,
         );
 
         # HTML quoting of content
