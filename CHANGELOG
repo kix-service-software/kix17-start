@@ -1,6 +1,9 @@
 # Change log of KIX
 * Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.20.0-RC9 (2023/01/05)
+ * (2023/01/04) - Bugfix: KIX17-3360 (prevent internal server error when shared memory can not be used) (mbauer)
+
 # 17.20.0-RC8 (2023/01/04)
  * (2023/01/04) - Bugfix: KIX17-3353 (check queue membership of selected templates) (mbauer)
 
