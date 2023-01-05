@@ -101,29 +101,32 @@ sub new {
     return $Self if ( !eval "require IPC::SysV" );
 
     # create the IPC options
-    $Self->{IPCKey}  = '444423' . $SystemID;       # This name is used to identify the shared memory segment.
+    $Self->{IPCKey}  = '444423' . $SystemID;       # This name is used to identify the shared memory segment
     $Self->{IPCSize} = $ConfigObject->Get('LogSystemCacheSize') || 32 * 1024;
 
     # init session data mem
     if ( !eval { $Self->{IPCSHMKey} = shmget( $Self->{IPCKey}, $Self->{IPCSize}, oct(1777) ) } ) {
 
-        # If direct creation fails, try more gently, allocate a small segment first and the reset/resize it.
+        # If direct creation fails, try more gently, allocate a small segment first and the reset/resize it
         $Self->{IPCSHMKey} = shmget( $Self->{IPCKey}, 1, oct(1777) );
         if ( !shmctl( $Self->{IPCSHMKey}, 0, 0 ) ) {
             $Self->Log(
                 Priority => 'error',
                 Message  => "Can't remove shm for log: $!",
             );
-            return;
+
+            # Continue without IPC
+            return $Self;
         }
 
-        # Re-initialize SHM segment.
+        # Re-initialize SHM segment
         $Self->{IPCSHMKey} = shmget( $Self->{IPCKey}, $Self->{IPCSize}, oct(1777) );
     }
 
-    return if !$Self->{IPCSHMKey};
+    # Continue without IPC
+    return $Self if !$Self->{IPCSHMKey};
 
-    # Only flag IPC as active if everything worked well.
+    # Only flag IPC as active if everything worked well
     $Self->{IPC} = 1;
 
     return $Self;
