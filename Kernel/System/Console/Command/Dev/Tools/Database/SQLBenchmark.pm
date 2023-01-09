@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -12,11 +12,11 @@ use strict;
 use warnings;
 use POSIX;
 
-our $IsWin32 = 0; 
+our $IsWin32 = 0;
 if ( $^O eq 'MSWin32' ) {
-    eval { 
-        require Win32; 
-        require Win32::Process; 
+    eval {
+        require Win32;
+        require Win32::Process;
     } or last;
     $IsWin32 = 1;
 }
@@ -37,7 +37,7 @@ our %Jobs = (
     'UPDATE' => '_SQLUpdate',
     'SELECT' => '_SQLSelect',
     'DELETE' => '_SQLDelete',
-); 
+);
 
 sub Configure {
     my ( $Self, %Param ) = @_;
@@ -84,7 +84,7 @@ sub Run {
     my $Records   = $Self->GetOption('records');
     my $ProcessID = $Self->GetOption('process-id');
     my $Processes = $Self->GetOption('processes');
- 
+
     if (!$ProcessID) {
 
         print "\nRunning Benchmark...\n\n";
@@ -166,14 +166,14 @@ sub _Benchmark {
 
             my $TimeTaken = 0;
             if (!$IsWin32) {
-                $TimeTaken = $Self->_DoJob( 
+                $TimeTaken = $Self->_DoJob(
                      Job       => $Job,
                      Records   => $Param{Records},
                      Processes => $Param{Processes},
                 );
             }
             else {
-                $TimeTaken = $Self->_DoJobWin32( 
+                $TimeTaken = $Self->_DoJobWin32(
                      Job       => $Job,
                      Records   => $Param{Records},
                  Processes => $Param{Processes},
@@ -216,9 +216,9 @@ sub _DoJob {
             push(@Children, $PID);
         }
     }
- 
-    while (@Children){ 
-        waitpid(shift @Children, 0); 
+
+    while (@Children){
+        waitpid(shift @Children, 0);
     }
 
     return $Self->{TimeObject}->SystemTime() - $TimeStart;
@@ -233,15 +233,15 @@ sub _DoJobWin32 {
     for my $Process ( 1 .. $Param{Processes} ) {
         my $Child;
         Win32::Process::Create(
-            $Child, 
+            $Child,
             $ENV{COMSPEC},
-            "/c $Home/bin/kix.Console.pl Dev::Tools::Database::SQLBenchmark --allow-root --job $Param{Job} --process-id $Process --records $Param{Records}", 
+            "/c $Home/bin/kix.Console.pl Dev::Tools::Database::SQLBenchmark --allow-root --job $Param{Job} --process-id $Process --records $Param{Records}",
             0, 0, "."
         );
         push(@Children, $Child);
     }
- 
-    while (@Children){ 
+
+    while (@Children){
         my $ExitCode;
         $Children[0]->GetExitCode($ExitCode);
         if ($ExitCode != Win32::Process::STILL_ACTIVE()) {
@@ -259,7 +259,7 @@ sub _SQLInsert {
     my $DBObject = Kernel::System::DB->new( %{$Self} );
 
     for my $Count ( 1 .. $Param{Records} ) {
-    
+
         my $Value1 = "aaa$Count-$Param{Process}";
         my $Value2 = int rand 1000000;
 
