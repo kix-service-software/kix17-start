@@ -1,6 +1,6 @@
 #!/bin/bash
 # --
-# Copyright (C) 2006-2021 c.a.p.e. IT GmbH, http://www.cape-it.de
+# Copyright (C) 2006-2023 c.a.p.e. IT GmbH, http://www.cape-it.de
 #
 # --
 # This program is free software; you can redistribute it and/or modify

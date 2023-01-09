@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 # --
-# Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -45,7 +45,7 @@ if ($Opts{s} =~ /^(\d+).(\d+).(\d+)$/g) {
 }
 
 if (!$StartVersion) {
-    print STDERR "Wrong version format ($Opts{s})!\n"; 
+    print STDERR "Wrong version format ($Opts{s})!\n";
     exit 1;
 }
 
@@ -55,7 +55,7 @@ if ($Opts{t} =~ /^(\d+).(\d+).(\d+)$/g) {
 }
 
 if (!$TargetVersion) {
-    print STDERR "Wrong version format ($Opts{t})!\n"; 
+    print STDERR "Wrong version format ($Opts{t})!\n";
     exit 1;
 }
 
@@ -129,7 +129,7 @@ sub _ExecScript {
     else {
         $Type = '';
     }
- 
+
     my $ScriptFile = $Kernel::OM->Get('Kernel::Config')->Get('Home').'/scripts/database/update/db-update-'.$Version.$Type.'.pl';
 
     if ( ! -f "$ScriptFile" ) {
@@ -138,7 +138,7 @@ sub _ExecScript {
 
     print "    executing $OrgType update script\n";
 
-    my $ExitCode = system($ScriptFile);    
+    my $ExitCode = system($ScriptFile);
     if ($ExitCode) {
         print STDERR "ERROR: Unable to execute $OrgType update script!";
         return;
@@ -152,7 +152,7 @@ sub _ExecSQL {
 
     # check if xml file exists, if it doesn't, exit gracefully
     my $XMLFile = $Kernel::OM->Get('Kernel::Config')->Get('Home').'/scripts/database/update/db-update-'.$Version.'_'.$Type.'.xml';
-    
+
     if ( ! -f "$XMLFile" ) {
         return 1;
     }
@@ -163,7 +163,7 @@ sub _ExecSQL {
         Location => $XMLFile,
     );
     if (!$XML) {
-        print STDERR "ERROR: Unable to read file \"$XMLFile\"!\n"; 
+        print STDERR "ERROR: Unable to read file \"$XMLFile\"!\n";
         return;
     }
 
@@ -171,7 +171,7 @@ sub _ExecSQL {
         String => $XML,
     );
     if (!@XMLArray) {
-        print STDERR "ERROR: Unable to parse file \"$XMLFile\"!\n"; 
+        print STDERR "ERROR: Unable to parse file \"$XMLFile\"!\n";
         return;
     }
 
@@ -179,27 +179,27 @@ sub _ExecSQL {
         Database => \@XMLArray,
     );
     if (!@SQL) {
-        print STDERR "ERROR: Unable to create SQL Start file \"$XMLFile\"!\n"; 
+        print STDERR "ERROR: Unable to create SQL Start file \"$XMLFile\"!\n";
         return;
     }
 
     for my $SQL (@SQL) {
-        my $Result = $Kernel::OM->Get('Kernel::System::DB')->Do( 
-            SQL => $SQL 
+        my $Result = $Kernel::OM->Get('Kernel::System::DB')->Do(
+            SQL => $SQL
         );
         if (!$Result) {
-            print STDERR "ERROR: Unable to execute SQL Start file \"$XMLFile\"!\n"; 
+            print STDERR "ERROR: Unable to execute SQL Start file \"$XMLFile\"!\n";
         }
     }
 
     # execute post SQL statements (indexes, constraints)
     my @SQLPost = $Kernel::OM->Get('Kernel::System::DB')->SQLProcessorPost();
     for my $SQL (@SQLPost) {
-        my $Result = $Kernel::OM->Get('Kernel::System::DB')->Do( 
-            SQL => $SQL 
+        my $Result = $Kernel::OM->Get('Kernel::System::DB')->Do(
+            SQL => $SQL
         );
         if (!$Result) {
-            print STDERR "ERROR: Unable to execute POST SQL!\n"; 
+            print STDERR "ERROR: Unable to execute POST SQL!\n";
         }
     }
 
