@@ -111,7 +111,7 @@ sub new {
         $Self->{IPCSHMKey} = shmget( $Self->{IPCKey}, 1, oct(1777) );
         if ( !shmctl( $Self->{IPCSHMKey}, 0, 0 ) ) {
             $Self->Log(
-                Priority => 'error',
+                Priority => 'notice',
                 Message  => "Can't remove shm for log: $!",
             );
 
