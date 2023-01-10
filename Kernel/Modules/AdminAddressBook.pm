@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -56,7 +56,7 @@ sub Run {
 
         my $Output = $Self->{LayoutObject}->Header();
         $Output .= $Self->{LayoutObject}->NavigationBar();
-        
+
         $Output .= $Self->{LayoutObject}->Output(
             TemplateFile => 'AdminAddressBook',
             Data         => \%Param,
@@ -77,7 +77,7 @@ sub Run {
 
         my $Output = $Self->{LayoutObject}->Header();
         $Output .= $Self->{LayoutObject}->NavigationBar();
-        
+
         $Output .= $Self->{LayoutObject}->Output(
             TemplateFile => 'AdminAddressBook',
             Data         => \%Param,
@@ -114,7 +114,7 @@ sub _Overview {
         Data => \%Param,
     );
 
-    $Self->{LayoutObject}->Block( 
+    $Self->{LayoutObject}->Block(
         Name => 'ActionList',
         Data => \%Param,
     );
@@ -125,7 +125,7 @@ sub _Overview {
             Search => $Param{Search},
             Limit  => $Limit + 1,
         );
-    
+
         $Self->{LayoutObject}->Block(
             Name => 'OverviewHeader',
             Data => {
@@ -133,7 +133,7 @@ sub _Overview {
                 Limit    => $Limit,
             },
         );
-    
+
         $Self->{LayoutObject}->Block(
             Name => 'OverviewResult',
             Data => \%Param,

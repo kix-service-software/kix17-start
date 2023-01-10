@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 # --
-# Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -38,7 +38,7 @@ my $Result = $Kernel::OM->Get('Kernel::System::DB')->Prepare(
     SQL => 'SELECT name FROM package_repository',
 );
 if (!$Result) {
-    print STDERR "Unable to execute SQL to get installed packages!\n"; 
+    print STDERR "Unable to execute SQL to get installed packages!\n";
 }
 else {
     while ( my @Row = $Kernel::OM->Get('Kernel::System::DB')->FetchrowArray() ) {
@@ -72,14 +72,14 @@ my %PackageTables = (
 # create database tables and insert initial values
 my $XMLFile = $Kernel::OM->Get('Kernel::Config')->Get('Home').'/scripts/database/update/kix-upgrade-to-17.xml';
 if ( ! -f "$XMLFile" ) {
-    print STDERR "File \"$XMLFile\" doesn't exist!\n"; 
+    print STDERR "File \"$XMLFile\" doesn't exist!\n";
     exit 1;
 }
 my $XML = $Kernel::OM->Get('Kernel::System::Main')->FileRead(
     Location => $XMLFile,
 );
 if (!$XML) {
-    print STDERR "Unable to read file \"$XMLFile\"!\n"; 
+    print STDERR "Unable to read file \"$XMLFile\"!\n";
     exit 1;
 }
 
@@ -87,7 +87,7 @@ my @XMLArray = $Kernel::OM->Get('Kernel::System::XML')->XMLParse(
     String => $XML,
 );
 if (!@XMLArray) {
-    print STDERR "Unable to parse file \"$XMLFile\"!\n"; 
+    print STDERR "Unable to parse file \"$XMLFile\"!\n";
     exit 1;
 }
 
@@ -95,7 +95,7 @@ my @SQL = $Kernel::OM->Get('Kernel::System::DB')->SQLProcessor(
     Database => \@XMLArray,
 );
 if (!@SQL) {
-    print STDERR "Unable to create SQL from file \"$XMLFile\"!\n"; 
+    print STDERR "Unable to create SQL from file \"$XMLFile\"!\n";
     exit 1;
 }
 
@@ -104,26 +104,26 @@ for my $SQL (@SQL) {
     if ($SQL =~ /CREATE TABLE (.*?)\s+/g) {
         next if ($PackageTables{$1} && $InstalledPackages{$PackageTables{$1}});
     }
-    # ignore alter table statement if table doesn't exist, because a specific package isn't installed 
+    # ignore alter table statement if table doesn't exist, because a specific package isn't installed
     if ($SQL =~ /ALTER TABLE (.*?)\s+/g) {
         next if ($PackageTables{$1} && !$InstalledPackages{$PackageTables{$1}});
     }
-    my $Result = $Kernel::OM->Get('Kernel::System::DB')->Do( 
-        SQL => $SQL 
+    my $Result = $Kernel::OM->Get('Kernel::System::DB')->Do(
+        SQL => $SQL
     );
     if (!$Result) {
-        print STDERR "Unable to execute SQL from file \"$XMLFile\"!\n"; 
+        print STDERR "Unable to execute SQL from file \"$XMLFile\"!\n";
     }
 }
 
 # execute post SQL statements (indexes, constraints)
 my @SQLPost = $Kernel::OM->Get('Kernel::System::DB')->SQLProcessorPost();
 for my $SQL (@SQLPost) {
-    my $Result = $Kernel::OM->Get('Kernel::System::DB')->Do( 
-        SQL => $SQL 
+    my $Result = $Kernel::OM->Get('Kernel::System::DB')->Do(
+        SQL => $SQL
     );
     if (!$Result) {
-        print STDERR "Unable to execute POST SQL!\n"; 
+        print STDERR "Unable to execute POST SQL!\n";
     }
 }
 
@@ -181,9 +181,9 @@ if ($InstalledPackages{KIXBasePro}) {
     <Version>16.1.0</Version>
 </otrs_package>
 EOT
-    
+
     # create "fake" KIXPro package entry for update installation
-    my $Result = $Kernel::OM->Get('Kernel::System::DB')->Do( 
+    my $Result = $Kernel::OM->Get('Kernel::System::DB')->Do(
         SQL  => "UPDATE package_repository SET name = 'KIXPro', version = '16.1.0', content = ? WHERE name = ?",
         Bind => [
             \$XMLPackageContent,
@@ -191,9 +191,9 @@ EOT
         ],
     );
     if (!$Result) {
-        print STDERR "Unable to create package entry \"KIXPro\" in package repository!\n"; 
+        print STDERR "Unable to create package entry \"KIXPro\" in package repository!\n";
     }
-    
+
     # create "fake" KIXPro directory for update installation
     my $Home = $Kernel::OM->Get('Kernel::Config')->Get('Home');
     if ( !( -e $Home.'/KIXPro' ) ) {
@@ -204,14 +204,14 @@ EOT
 }
 
 foreach my $Package (@ObsoletePackages) {
-    my $Result = $Kernel::OM->Get('Kernel::System::DB')->Do( 
+    my $Result = $Kernel::OM->Get('Kernel::System::DB')->Do(
         SQL  => "DELETE FROM package_repository WHERE name = ?",
         Bind => [
             \$Package,
         ],
     );
     if (!$Result) {
-        print STDERR "Unable to remove package \"$Package\" from package repository!\n"; 
+        print STDERR "Unable to remove package \"$Package\" from package repository!\n";
     }
 }
 
@@ -226,7 +226,7 @@ $Result = system(
     $FrameworkVersion,
 );
 if (!$Result) {
-    print STDERR "Unable to install necessary incremental database updates! Maybe they are already in place - please check.\n"; 
+    print STDERR "Unable to install necessary incremental database updates! Maybe they are already in place - please check.\n";
 }
 
 exit 0;

@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 # --
-# Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -129,7 +129,7 @@ sub _Count {
         ) || die "Unable to execute SQL statement!";
 
         while (my @Row = $DBObject->FetchrowArray()) {
-            $Data{$ObjectType} = $Row[0]; 
+            $Data{$ObjectType} = $Row[0];
         }
     }
     return \%Data;
@@ -230,8 +230,8 @@ sub _GetConfigItemXMLData {
         );
         next if !IsArrayRefWithData($Definitions);
 
-        push @Parts, "SELECT 'ITSM::ConfigItem::" . $ClassID . "' as xml_type, xml_key, xml_content_key, xml_content_value from v_ci_" . $ClassID; 
-        push @Parts, "SELECT 'ITSM::ConfigItem::Archiv::" . $ClassID . "' as xml_type, xml_key, xml_content_key, xml_content_value from v_ci_" . $ClassID . '_archive'; 
+        push @Parts, "SELECT 'ITSM::ConfigItem::" . $ClassID . "' as xml_type, xml_key, xml_content_key, xml_content_value from v_ci_" . $ClassID;
+        push @Parts, "SELECT 'ITSM::ConfigItem::Archiv::" . $ClassID . "' as xml_type, xml_key, xml_content_key, xml_content_value from v_ci_" . $ClassID . '_archive';
     }
 
     if ( $Param{ObjectID} ) {
@@ -239,7 +239,7 @@ sub _GetConfigItemXMLData {
             $Part .= " WHERE xml_key = '$Param{ObjectID}'";
         }
     }
-    
+
     my $SQL = join(' UNION ', @Parts);
 
     return _GetData(

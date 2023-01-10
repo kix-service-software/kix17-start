@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2022 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -550,9 +550,9 @@ sub Run {
 
             # extract the dynamic field value from the web request
             $ArticleDynamicFieldFilter{ $DynamicFieldConfig->{Name} } = $BackendObject->EditFieldValueGet(
-                    DynamicFieldConfig => $DynamicFieldConfig,
-                    ParamObject        => $ParamObject,
-                    LayoutObject       => $LayoutObject,
+                DynamicFieldConfig => $DynamicFieldConfig,
+                ParamObject        => $ParamObject,
+                LayoutObject       => $LayoutObject,
             ) || q{};
         }
 
@@ -698,7 +698,7 @@ sub Run {
         if (
             $ArticleFilterSessionString
             && $ArticleFilterSessionString =~ m{ ArticleSubjectFilter < ( [^<>]+ ) > }xms
-            ) {
+        ) {
             $Self->{ArticleFilter}->{Subject} = $1;
         }
 
@@ -706,7 +706,7 @@ sub Run {
         if (
             $ArticleFilterSessionString
             && $ArticleFilterSessionString =~ m{ ArticleBodyFilter < ( [^<>]+ ) > }xms
-            ) {
+        ) {
             $Self->{ArticleFilter}->{Body} = $1;
         }
 
@@ -714,7 +714,7 @@ sub Run {
         if (
             $ArticleFilterSessionString
             && $ArticleFilterSessionString =~ m{ ArticleFlagFilter < ( [^<>]+ ) > }xms
-            ) {
+        ) {
             my @IDs = split( /[,]/smx, $1);
             $Self->{ArticleFilter}->{ArticleFlag} = { map { $_ => 1 } @IDs };
         }
@@ -723,7 +723,7 @@ sub Run {
         if (
             $ArticleFilterSessionString
             && $ArticleFilterSessionString =~ m{ ArticleFlagTextFilter < ( [^<>]+ ) > }xms
-            ) {
+        ) {
             $Self->{ArticleFilter}->{ArticleFlagText} = $1;
         }
     }
@@ -852,10 +852,10 @@ sub MaskAgentZoom {
 
     my @NewArticleBoxAll = ();
     # remember shown article ids if article filter is activated in sysconfig
-                if (
+    if (
         $Self->{ArticleFilterActive}
         && $Self->{ArticleFilter}
-                ) {
+    ) {
 
         # reset shown article ids
         $Self->{ArticleFilter}->{ShownArticleIDs} = undef;
@@ -961,8 +961,8 @@ sub MaskAgentZoom {
                         FLAGCHECK:
                         for my $Key ( qw(Subject Keywords Note)  ) {
                             if (
-                                    defined $ArticleFlagData{$Key}
-                                    && $ArticleFlagData{$Key} =~ m/$ArticleFilterFlagText/smx
+                                defined $ArticleFlagData{$Key}
+                                && $ArticleFlagData{$Key} =~ m/$ArticleFilterFlagText/smx
                             ) {
                                 $FoundFlagText = 1;
                                 last FLAGCHECK;

@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2022 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. This program is
 # licensed under the AGPL-3.0 with patches licensed under the GPL-3.0.
@@ -805,9 +805,9 @@ sub XMLParse {
                 Start     => sub { $Self->_HS(@_); },
                 End       => sub { $Self->_ES(@_); },
                 Char      => sub { $Self->_CS(@_); },
-### Patch licensed under the GPL-3.0, Copyright (C) 2001-2022 OTRS AG, https://otrs.com/ ###
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2023 OTRS AG, https://otrs.com/ ###
                 ExternEnt => sub { return '' },         # suppress loading of external entities
-### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2022 OTRS AG, https://otrs.com/ ###
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2023 OTRS AG, https://otrs.com/ ###
             },
         );
 
@@ -842,9 +842,9 @@ sub XMLParse {
                 Start     => sub { $Self->_HS(@_); },
                 End       => sub { $Self->_ES(@_); },
                 Char      => sub { $Self->_CS(@_); },
-### Patch licensed under the GPL-3.0, Copyright (C) 2001-2022 OTRS AG, https://otrs.com/ ###
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2023 OTRS AG, https://otrs.com/ ###
                 ExternEnt => sub { return '' },         # suppress loading of external entities
-### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2022 OTRS AG, https://otrs.com/ ###
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2023 OTRS AG, https://otrs.com/ ###
             },
         );
         $Parser->parse( $Param{String} );
