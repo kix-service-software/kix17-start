@@ -935,8 +935,9 @@ sub _RecipientCountCheck{
             Priority => 'info',
             Message =>
                 "Ignored Email (From: $Param{GetParam}->{'From'}, Message-ID: $Param{GetParam}->{'Message-ID'}) "
-                . "because the X-KIX-Ignore is set (X-KIX-Ignore: $Param{GetParam}->{'X-KIX-Ignore'})."
+                . "because the email has more than $Self->{PostmasterRecipientCount} recipients."
         );
+        return;
     }
 
     return 1;
