@@ -69,7 +69,7 @@ sub new {
     bless( $Self, $Type );
 
     if ( !$Kernel::OM ) {
-        Carp::confess('$Kernel::OM is not defined, please initialize your object manager')
+        Carp::confess('$Kernel::OM is not defined, please initialize your object manager');
     }
 
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
@@ -109,7 +109,10 @@ sub new {
 
         # If direct creation fails, try more gently, allocate a small segment first and the reset/resize it
         $Self->{IPCSHMKey} = shmget( $Self->{IPCKey}, 1, oct(1777) );
-        if ( !shmctl( $Self->{IPCSHMKey}, 0, 0 ) ) {
+        if (
+            !defined( $Self->{IPCSHMKey} )
+            || !shmctl( $Self->{IPCSHMKey}, 0, 0 )
+        ) {
             $Self->Log(
                 Priority => 'notice',
                 Message  => "Can't remove shm for log: $!",
@@ -171,7 +174,7 @@ sub Log {
     my ( $Self, %Param ) = @_;
 
     my $Priority    = lc( $Param{Priority} ) || 'debug';
-    my $PriorityNum = $LogLevel{$Priority} || $LogLevel{debug};
+    my $PriorityNum = $LogLevel{$Priority}   || $LogLevel{debug};
 
     return 1 if $PriorityNum < $Self->{MinimumLevelNum};
 
@@ -217,7 +220,7 @@ sub Log {
 
             my ( $TracePackage1, $TraceFilename1, $TraceLine1, $TraceSubroutine1 ) = caller( $Caller + $Count );
 
-            last COUNT if !$TraceLine1;
+            last COUNT if ( !$TraceLine1 );
 
             my ( $TracePackage2, $TraceFilename2, $TraceLine2, $TraceSubroutine2 ) = caller( $Caller + 1 + $Count );
 
