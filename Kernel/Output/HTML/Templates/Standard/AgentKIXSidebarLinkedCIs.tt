@@ -62,7 +62,7 @@
             }
         });
 
-        $('input[name=LinkAssignedConfigItems]').click(function() {
+        $('input[name=LinkAssignedConfigItems]').off('click.LinkAssigned').on('click.LinkAssigned',function() {
             if ($(this).prop('checked')) {
                 if ( CallingAction == 'CustomerTicketMessage') {
                     URL = 'Action=CustomerLinkObject;SubAction=SingleLinkAdd;TargetKey=' + $('#LinkedTicketID').val() +';TargetObject=Ticket;SourceObject=ITSMConfigItem;SourceKey=' + $(this).val() +';Mode='+ $('#LinkMode').val();
