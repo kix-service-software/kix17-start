@@ -55,13 +55,18 @@ Core.KIX4OTRS = (function(TargetNS) {
         var $Tabs = $(".ui-tabs-tab"),
             $CurrentTab;
 
-        $.each($Tabs, function() {
-            if ($(this).attr('aria-expanded') == 'true') {
-                var TabID = $(this).attr('aria-controls');
-                $CurrentTab = $('#' + TabID);
-                return false;
-            }
-        });
+        if ( Action === 'AgentLinkObject' ) {
+            $CurrentTab = $('#AppWrapper');
+        }
+        else {
+            $.each($Tabs, function() {
+                if ($(this).attr('aria-expanded') == 'true') {
+                    var TabID = $(this).attr('aria-controls');
+                    $CurrentTab = $('#' + TabID);
+                    return false;
+                }
+            });
+        }
 
         // bind delete button
         $CurrentTab.find('.Primary').on('click', function() {

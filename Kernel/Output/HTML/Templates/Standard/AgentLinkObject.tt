@@ -175,5 +175,18 @@
         </form>
     </div>
 </div>
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    Core.KIX4OTRS.SelectLinkedObjects('AgentLinkObject','[% Data.UserLanguage %]');
+
+    // add some translations
+    Core.Config.AddConfig({
+        DeleteLinksQuestion: [% Translate("Do you really want to delete the selected links?") | JSON %],
+        Question: [% Translate("Question") | JSON %],
+        Yes: [% Translate("Yes") | JSON %],
+        No: [% Translate("No") | JSON %]
+    });
+//]]></script>
+[% END %]
 [% RenderBlockEnd("Delete") %]
 [% Data.PreferencesLinkTableStrg %]
