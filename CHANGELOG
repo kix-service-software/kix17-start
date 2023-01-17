@@ -1,6 +1,11 @@
 # Change log of KIX
 * Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.20.0-RC11 (2023/01/17)
+ * (2023/01/16) - Bugfix: KIX17-3372 (fixed double click event of the LinkedCI sidebar) (fjacquemin)
+ * (2023/01/13) - Bugfix: KIX17-3374 (fix deletion of linked objects in popup) (mbauer)
+ * (2023/01/11) - Bugfix: KIX17-3360 (prevent uninitialized value message for shared memory error) (mbauer)
+
 # 17.20.0-RC10 (2023/01/10)
  * (2023/01/10) - Bugfix: KIX17-3360 (reduced log level for shared memory error to notice) (mbauer)
  * (2023/01/10) - Bugfix: KIX17-3258 (fixed missing error return of the email recipients count check) (fjacquemin)
