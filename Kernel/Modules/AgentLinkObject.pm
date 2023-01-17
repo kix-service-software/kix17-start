@@ -243,6 +243,17 @@ sub Run {
             );
         }
 
+        for my $LinkObject ( keys %{ $LinkListWithData } ) {
+            for my $LinkType ( keys %{ $LinkListWithData->{ $LinkObject } } ) {
+                for my $LinkDirection ( keys %{ $LinkListWithData->{ $LinkObject }->{ $LinkType } } ) {
+                    for my $LinkItem ( keys %{ $LinkListWithData->{ $LinkObject }->{ $LinkType }->{ $LinkDirection } } ) {
+                        $LinkListWithData->{ $LinkObject }->{ $LinkType }->{ $LinkDirection }->{ $LinkItem }->{SourceObject} = $Form{SourceObject};
+                        $LinkListWithData->{ $LinkObject }->{ $LinkType }->{ $LinkDirection }->{ $LinkItem }->{SourceKey}    = $Form{SourceKey};
+                    }
+                }
+            }
+        }
+
         # create the link table
         my $LinkTableStrg = $LayoutObject->LinkObjectTableCreateComplex(
             LinkListWithData => $LinkListWithData,
