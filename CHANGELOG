@@ -1,6 +1,9 @@
 # Change log of KIX
 * Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.20.0 (2023/01/18)
+ * (2023/01/18) - productive release
+
 # 17.20.0-RC11 (2023/01/17)
  * (2023/01/16) - Bugfix: KIX17-3372 (fixed double click event of the LinkedCI sidebar) (fjacquemin)
  * (2023/01/13) - Bugfix: KIX17-3374 (fix deletion of linked objects in popup) (mbauer)
