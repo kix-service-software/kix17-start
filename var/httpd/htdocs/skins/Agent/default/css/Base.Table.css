@@ -1,6 +1,6 @@
 /**
  * This software is part of the KIX project, https://www.kixdesk.com/
- * Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
+ * Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
  * --
  * @project KIX (https://www.kixdesk.com) <https://www.kixdesk.com> - Agent Frontend
  * @copyright c.a.p.e. IT GmbH
@@ -425,6 +425,32 @@
         max-width: 0;
         text-overflow: ellipsis;
         white-space: nowrap;
+    }
+
+
+    /**
+    *   @subsection sticky table
+    */
+    .TableContent {
+        overflow: auto;
+        max-height: 800px;
+    }
+    .DataTable.StickyTable > thead > tr > th {
+        z-index: 1;
+        position: sticky;
+        top: 0;
+    }
+    .DataTable.StickyTable > thead > tr > th.StickyCol1,
+    .DataTable.StickyTable > thead > tr > th.StickyCol2{
+        z-index: 2;
+        left: 0;
+        position: sticky;
+    }
+    .DataTable.StickyTable > tbody > tr > td.StickyCol1,
+    .DataTable.StickyTable > tbody > tr > td.StickyCol2 {
+        z-index: 1;
+        left: 0;
+        position: sticky;
     }
 
 

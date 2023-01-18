@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -97,13 +97,13 @@ sub Run {
                 PostMasterSearch => $CurrEmailAddress,
             );
             next MAILADDRESS if (%UserListCustomer);
-            
+
             # check address book
             my %AddressList = $Self->{AddressBookObject}->AddressList(
                 Search => $CurrEmailAddress,
             );
             next MAILADDRESS if (%AddressList);
-            
+
             # nothing found => add this email address to the address book
             my $Result = $Self->{AddressBookObject}->AddAddress(
                 Email => $CurrEmailAddress,

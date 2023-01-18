@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2022 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -92,6 +92,9 @@ sub AgentCustomerViewTable {
     my $HTMLUtilsObject = $Kernel::OM->Get('Kernel::System::HTMLUtils');
     my $MainObject      = $Kernel::OM->Get('Kernel::System::Main');
 
+    # get isolated layout object for link safety checks
+    my $HTMLLinkLayoutObject = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout');
+
     # check Frontend::CustomerUser::Image
     my $CustomerImage = $ConfigObject->Get('Frontend::CustomerUser::Image');
     if ($CustomerImage) {
@@ -173,7 +176,7 @@ sub AgentCustomerViewTable {
                         Max  => $Param{Max}
                     );
                 }
-                $Record{Entry} = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout')->Output(
+                $Record{Entry} = $HTMLLinkLayoutObject->Output(
                     Template => '[% Data.LinkStart | Interpolate %][% Data.ValueShort %][% Data.LinkStop %]',
                     Data     => \%Record,
                 );

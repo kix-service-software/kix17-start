@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2022 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -1423,6 +1423,9 @@ sub AjaxUpdate {
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
     my $ParamObject  = $Kernel::OM->Get('Kernel::System::Web::Request');
 
+    # get config for frontend module
+    my $Config = $ConfigObject->Get("Ticket::Frontend::$Self->{Action}");
+
     # run compose modules
     if ( ref $ConfigObject->Get('Ticket::Frontend::ArticleComposeModule') eq 'HASH' ) {
         my %Jobs = %{ $ConfigObject->Get('Ticket::Frontend::ArticleComposeModule') };
@@ -1465,7 +1468,7 @@ sub AjaxUpdate {
 
     # get needed objects
     my $BackendObject = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
-    my $LayoutObject              = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $LayoutObject  = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
     # cycle through the activated Dynamic Fields for this screen
     DYNAMICFIELD:
@@ -1497,8 +1500,24 @@ sub AjaxUpdate {
         %ACLCompatGetParam,
     );
 
+    # run acl to prepare TicketAclFormData
+    my $ShownDFACL = $Kernel::OM->Get('Kernel::System::Ticket')->TicketAcl(
+        %GetParam,
+        %ACLCompatGetParam,
+        Action        => $Self->{Action},
+        TicketID      => $Self->{TicketID},
+        ReturnType    => 'Ticket',
+        ReturnSubType => '-',
+        Data          => {},
+        UserID        => $Self->{UserID},
+    );
+
+    # update 'Shown' for $Self->{DynamicField}
+    $Self->_GetShownDynamicFields();
+
     # update Dynamic Fields Possible Values via AJAX
     my @DynamicFieldAJAX;
+    my %DynamicFieldHTML;
 
     # cycle through the activated Dynamic Fields for this screen
     DYNAMICFIELD:
@@ -1509,7 +1528,19 @@ sub AjaxUpdate {
             DynamicFieldConfig => $DynamicFieldConfig,
             Behavior           => 'IsACLReducible',
         );
-        next DYNAMICFIELD if !$IsACLReducible;
+
+        if ( !$IsACLReducible ) {
+            $DynamicFieldHTML{ $DynamicFieldConfig->{Name} } = $BackendObject->EditFieldRender(
+                DynamicFieldConfig => $DynamicFieldConfig,
+                Mandatory          => $Config->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
+                LayoutObject       => $LayoutObject,
+                ParamObject        => $ParamObject,
+                AJAXUpdate         => 0,
+                UpdatableFields    => $Self->_GetFieldsToUpdate(),
+            );
+
+            next DYNAMICFIELD;
+        }
 
         my $PossibleValues = $BackendObject->PossibleValuesGet(
             DynamicFieldConfig => $DynamicFieldConfig,
@@ -1558,6 +1589,47 @@ sub AjaxUpdate {
                 Max         => 100,
             }
         );
+
+        $DynamicFieldHTML{ $DynamicFieldConfig->{Name} } = $BackendObject->EditFieldRender(
+            DynamicFieldConfig   => $DynamicFieldConfig,
+            PossibleValuesFilter => $DynamicFieldConfig->{ShownPossibleValues},
+            Mandatory            => $Config->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
+            LayoutObject         => $LayoutObject,
+            ParamObject          => $ParamObject,
+            AJAXUpdate           => 1,
+            UpdatableFields      => $Self->_GetFieldsToUpdate(),
+        );
+    }
+
+    # if we have DynamicFields use just those that are OK by ACL Rules
+    my %Output;
+    DYNAMICFIELD:
+    for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
+
+        for my $DynamicFieldHTMLKey ( ('Label', 'Field') ) {
+            my $CurrentDynamicFieldHTML = $DynamicFieldHTML{ $DynamicFieldConfig->{Name} }->{ $DynamicFieldHTMLKey };
+            $DynamicFieldHTML{ $DynamicFieldConfig->{Name} }->{ $DynamicFieldHTMLKey } = $CurrentDynamicFieldHTML;
+        }
+        if ( $DynamicFieldConfig->{Shown} == 1 ) {
+            $Output{ ( "DynamicField_" . $DynamicFieldConfig->{Name} ) } = (
+                $DynamicFieldHTML{ $DynamicFieldConfig->{Name} }->{Label}
+                    . qq~\n<div class="Field">~
+                    . $DynamicFieldHTML{ $DynamicFieldConfig->{Name} }->{Field}
+                    . qq~\n</div>\n<div class="Clear"></div>\n~
+            );
+        }
+        else {
+            $Output{ ( "DynamicField_" . $DynamicFieldConfig->{Name} ) } = "";
+        }
+    }
+
+    my @FormDisplayOutput;
+    if ( IsHashRefWithData( \%Output ) ) {
+        push @FormDisplayOutput, {
+            Name => 'FormDisplay',
+            Data => \%Output,
+            Max  => 10000,
+        };
     }
 
     my $JSON = $LayoutObject->BuildSelectionJSON(
@@ -1572,6 +1644,7 @@ sub AjaxUpdate {
             },
             @ExtendedData,
             @DynamicFieldAJAX,
+            @FormDisplayOutput,
         ],
     );
     return $LayoutObject->Attachment(
@@ -1886,11 +1959,13 @@ sub _Mask {
         # get the html strings form $Param
         my $DynamicFieldHTML = $Param{DynamicFieldHTML}->{ $DynamicFieldConfig->{Name} };
 
-        my $Class = "";
         if ( !$DynamicFieldConfig->{Shown} ) {
-            $Class = " Hidden";
-            $DynamicFieldHTML->{Field} =~ s/Validate_Required//ig;
-            $DynamicFieldHTML->{Field} =~ s/<(input|select|textarea)(.*?)(!?|\/)>/<$1$2 disabled="disabled"$3>/g;
+            my $DynamicFieldName = $DynamicFieldConfig->{Name};
+
+            $LayoutObject->AddJSOnDocumentComplete( Code => <<"END");
+Core.Form.Validate.DisableValidation(\$('.Row_DynamicField_$DynamicFieldName'));
+\$('.Row_DynamicField_$DynamicFieldName').addClass('Hidden');
+END
         }
 
         $LayoutObject->Block(
@@ -1899,7 +1974,6 @@ sub _Mask {
                 Name  => $DynamicFieldConfig->{Name},
                 Label => $DynamicFieldHTML->{Label},
                 Field => $DynamicFieldHTML->{Field},
-                Class => $Class,
             },
         );
 

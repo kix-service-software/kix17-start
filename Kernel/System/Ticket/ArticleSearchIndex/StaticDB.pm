@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2022 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -187,6 +187,15 @@ sub _ArticleIndexQuerySQLExt {
 
         next KEY if !$Param{Data}->{$Key};
 
+        # prepare search string
+        $Param{Data}->{$Key} = eval {
+            $Self->_ArticleIndexString(
+                String => $Param{Data}->{$Key},
+            );
+        };
+
+        next KEY if !$Param{Data}->{$Key};
+
         # replace * by % for SQL like
         $Param{Data}->{$Key} =~ s/\*/%/gi;
 
@@ -197,42 +206,15 @@ sub _ArticleIndexQuerySQLExt {
             $FullTextSQL .= ' ' . $Param{Data}->{ContentSearch} . ' ';
         }
 
-        # check if search condition extension is used
-        if ( $Param{Data}->{ConditionInline} ) {
-            $FullTextSQL .= $DBObject->QueryCondition(
-                Key           => $FieldSQLMapFullText{$Key},
-                Value         => lc $Param{Data}->{$Key},
-                SearchPrefix  => $Param{Data}->{ContentSearchPrefix},
-                SearchSuffix  => $Param{Data}->{ContentSearchSuffix},
-                Extended      => 1,
-                CaseSensitive => 1,    # data in article_search are already stored in lower cases
-                StaticDB      => 1,    # tell QueryCondition method to regard StaticDB advantages
-            );
-        }
-        else {
-
-            my $Field = $FieldSQLMapFullText{$Key};
-            my $Value = $Param{Data}->{$Key};
-
-            if ( $Param{Data}->{ContentSearchPrefix} ) {
-                $Value = $Param{Data}->{ContentSearchPrefix} . $Value;
-            }
-            if ( $Param{Data}->{ContentSearchSuffix} ) {
-                $Value .= $Param{Data}->{ContentSearchSuffix};
-            }
-
-            # replace %% by % for SQL
-            $Param{Data}->{$Key} =~ s/%%/%/gi;
-
-            # replace * with % (for SQL)
-            $Value =~ s/\*/%/g;
-
-            # db quote
-            $Value = lc $DBObject->Quote( $Value, 'Like' );
-
-            # Lower conversion is already done, don't use LOWER()/LCASE()
-            $FullTextSQL .= " $Field LIKE '$Value'";
-        }
+        $FullTextSQL .= $DBObject->QueryCondition(
+            Key           => $FieldSQLMapFullText{$Key},
+            Value         => lc $Param{Data}->{$Key},
+            SearchPrefix  => $Param{Data}->{ContentSearchPrefix} || '*',
+            SearchSuffix  => $Param{Data}->{ContentSearchSuffix} || '*',
+            Extended      => 1,
+            CaseSensitive => 1,    # data in article_search are already stored in lower cases
+            StaticDB      => 1,    # tell QueryCondition method to regard StaticDB advantages
+        );
     }
 
     if ($FullTextSQL) {

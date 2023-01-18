@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2022 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -147,22 +147,26 @@ sub ObjectPermission {
         }
     }
 
+    my $UserType = $Kernel::OM->Get('Kernel::Output::HTML::Layout')->{UserType} || q{};
+    my $UserID   = $Param{UserID};
+
+    if ( $UserType eq 'Customer') {
+        $UserID = $Kernel::OM->Get('Kernel::Config')->Get('CustomerPanelUserID') || 1;
+    }
     # grant access for root@localhost
-    return 1 if ( $Param{UserID} == 1 );
+    return 1 if ( $UserID == 1 );
 
     # get config of configitem zoom frontend module
     $Self->{Config} = $Kernel::OM->Get('Kernel::Config')->Get('ITSMConfigItem::Frontend::AgentITSMConfigItemZoom');
 
     # check for access rights
-    my $Access = $Kernel::OM->Get('Kernel::System::ITSMConfigItem')->Permission(
+    return $Kernel::OM->Get('Kernel::System::ITSMConfigItem')->Permission(
         Scope  => 'Item',
         ItemID => $Param{Key},
-        UserID => $Param{UserID},
+        UserID => $UserID,
         Type   => $Self->{Config}->{Permission},
         LogNo  => 1,
     );
-
-    return $Access;
 }
 
 =item ObjectDescriptionGet()
@@ -360,52 +364,6 @@ sub ObjectSearch {
     return \%SearchList;
 }
 
-=item LinkAddPre()
-
-link add pre event module
-
-    $True = $LinkObject->LinkAddPre(
-        Key          => 123,
-        SourceObject => 'ITSMConfigItem',
-        SourceKey    => 321,
-        Type         => 'Normal',
-        State        => 'Valid',
-        UserID       => 1,
-    );
-
-    or
-
-    $True = $LinkObject->LinkAddPre(
-        Key          => 123,
-        TargetObject => 'ITSMConfigItem',
-        TargetKey    => 321,
-        Type         => 'Normal',
-        State        => 'Valid',
-        UserID       => 1,
-    );
-
-=cut
-
-sub LinkAddPre {
-    my ( $Self, %Param ) = @_;
-
-    # check needed stuff
-    for my $Argument (qw(Key Type State UserID)) {
-        if ( !$Param{$Argument} ) {
-            $Kernel::OM->Get('Kernel::System::Log')->Log(
-                Priority => 'error',
-                Message  => "Need $Argument!",
-            );
-            return;
-        }
-    }
-
-    # do not trigger event for temporary links
-    return 1 if $Param{State} eq 'Temporary';
-
-    return 1;
-}
-
 =item LinkAddPost()
 
 link add pre event module
@@ -467,52 +425,6 @@ sub LinkAddPost {
         },
         UserID => $Param{UserID},
     );
-
-    return 1;
-}
-
-=item LinkDeletePre()
-
-link delete pre event module
-
-    $True = $LinkObject->LinkDeletePre(
-        Key          => 123,
-        SourceObject => 'ITSMConfigItem',
-        SourceKey    => 321,
-        Type         => 'Normal',
-        State        => 'Valid',
-        UserID       => 1,
-    );
-
-    or
-
-    $True = $LinkObject->LinkDeletePre(
-        Key          => 123,
-        TargetObject => 'ITSMConfigItem',
-        TargetKey    => 321,
-        Type         => 'Normal',
-        State        => 'Valid',
-        UserID       => 1,
-    );
-
-=cut
-
-sub LinkDeletePre {
-    my ( $Self, %Param ) = @_;
-
-    # check needed stuff
-    for my $Argument (qw(Key Type State UserID)) {
-        if ( !$Param{$Argument} ) {
-            $Kernel::OM->Get('Kernel::System::Log')->Log(
-                Priority => 'error',
-                Message  => "Need $Argument!",
-            );
-            return;
-        }
-    }
-
-    # do not trigger event for temporary links
-    return 1 if $Param{State} eq 'Temporary';
 
     return 1;
 }

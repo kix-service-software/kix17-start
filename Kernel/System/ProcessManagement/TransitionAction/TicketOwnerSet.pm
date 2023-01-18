@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2022 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -116,30 +116,19 @@ sub Run {
 
     $Success = 0;
 
-    if (
-        defined $Param{Config}->{Owner}
-        && $Param{Config}->{Owner} ne $Param{Ticket}->{Owner}
-    ) {
+    if ( defined( $Param{Config}->{Owner} ) ) {
         $Success = $Kernel::OM->Get('Kernel::System::Ticket')->TicketOwnerSet(
             TicketID => $Param{Ticket}->{TicketID},
             NewUser  => $Param{Config}->{Owner},
             UserID   => $Param{UserID},
         );
     }
-    elsif (
-        defined $Param{Config}->{OwnerID}
-        && $Param{Config}->{OwnerID} ne $Param{Ticket}->{OwnerID}
-    ) {
+    elsif ( defined( $Param{Config}->{OwnerID} ) ) {
         $Success = $Kernel::OM->Get('Kernel::System::Ticket')->TicketOwnerSet(
             TicketID  => $Param{Ticket}->{TicketID},
             NewUserID => $Param{Config}->{OwnerID},
             UserID    => $Param{UserID},
         );
-    }
-    else {
-
-        # data is the same as in ticket nothing to do
-        $Success = 1;
     }
 
     if ( !$Success ) {

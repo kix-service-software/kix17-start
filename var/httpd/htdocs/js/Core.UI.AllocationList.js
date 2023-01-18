@@ -1,7 +1,7 @@
 // --
-// Modified version of the work: Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
+// Modified version of the work: Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
 // based on the original work of:
-// Copyright (C) 2001-2022 OTRS AG, https://otrs.com/
+// Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
 // --
 // This software comes with ABSOLUTELY NO WARRANTY. For details, see
 // the enclosed file LICENSE for license information (AGPL). If you
@@ -39,11 +39,11 @@ Core.UI.AllocationList = (function (TargetNS) {
         var $List = $(ResultListSelector),
             Result = [];
 
-        if (!$List.length || !$List.find('li').length) {
+        if (!$List.length || !$List.children('li').length) {
             return [];
         }
 
-        $List.find('li').each(function () {
+        $List.children('li').each(function () {
             var Value = $(this).data(DataAttribute);
             if (typeof Value !== 'undefined') {
                 Result.push(Value);
@@ -72,34 +72,32 @@ Core.UI.AllocationList = (function (TargetNS) {
             return;
         }
 
-        $Lists
-            .find('li').removeClass('Even').end()
-            .sortable({
-                connectWith: ConnectorSelector,
-                items: '.sorting-initialize',
-                receive: function (Event, UI) {
-                    if ($.isFunction(ReceiveCallback)) {
-                        ReceiveCallback(Event, UI);
-                    }
-                },
-                remove: function (Event, UI) {
-                    if ($.isFunction(RemoveCallback)) {
-                        RemoveCallback(Event, UI);
-                    }
-                },
-                stop: function (Event, UI) {
-                    if ($.isFunction(SortStopCallback)) {
-                        SortStopCallback(Event, UI);
-                    }
+        $Lists.children('li').removeClass('Even').end().sortable({
+            connectWith: ConnectorSelector,
+            items: '.sorting-initialize',
+            receive: function (Event, UI) {
+                if ($.isFunction(ReceiveCallback)) {
+                    ReceiveCallback(Event, UI);
                 }
-            }).disableSelection();
+            },
+            remove: function (Event, UI) {
+                if ($.isFunction(RemoveCallback)) {
+                    RemoveCallback(Event, UI);
+                }
+            },
+            stop: function (Event, UI) {
+                if ($.isFunction(SortStopCallback)) {
+                    SortStopCallback(Event, UI);
+                }
+            }
+        }).disableSelection();
 
-        $Lists.find('li').one("mouseover",function(){
+        $Lists.children('li').one("mouseover",function(){
             if ( !$(this).hasClass('sorting-initialize') ) {
                 $(this).prev('li').addClass("sorting-initialize");
                 $(this).addClass("sorting-initialize");
                 $(this).next('li').addClass("sorting-initialize");
-                $Lists.find('li').off('remove');
+                $Lists.children('li').off('remove');
                 $Lists.sortable('refresh');
             }
         });

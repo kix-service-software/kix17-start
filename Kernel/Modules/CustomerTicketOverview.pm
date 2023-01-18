@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2022 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -598,7 +598,12 @@ sub ShowTicketStatus {
     my $LayoutObject       = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my $DynamicFieldObject = $Kernel::OM->Get('Kernel::System::DynamicField');
     my $BackendObject      = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
+    my $HTMLUtilsObject    = $Kernel::OM->Get('Kernel::System::HTMLUtils');
     my $TicketObject       = $Kernel::OM->Get('Kernel::System::Ticket');
+    my $UserObject         = $Kernel::OM->Get('Kernel::System::User');
+
+    # get isolated layout object for link safety checks
+    my $HTMLLinkLayoutObject = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout');
 
     my $TicketID = $Param{TicketID} || return;
 
@@ -711,7 +716,7 @@ sub ShowTicketStatus {
     my $Queue = $ConfigObject->Get('Ticket::Frontend::CustomerTicketOverview')->{Queue};
 
     if ($Owner) {
-        my $OwnerName = $Kernel::OM->Get('Kernel::System::User')->UserName( UserID => $Ticket{OwnerID} );
+        my $OwnerName = $UserObject->UserName( UserID => $Ticket{OwnerID} );
         $LayoutObject->Block(
             Name => 'RecordOwner',
             Data => {
@@ -780,6 +785,30 @@ sub ShowTicketStatus {
         );
 
         if ( $ValueStrg->{Link} ) {
+            my $HTMLLink = $HTMLLinkLayoutObject->Output(
+                Template => '<a href="[% Data.Link | Interpolate %]" class="DynamicFieldLink">[% Data.Value %]</a>',
+                Data     => {
+                    Value                       => $ValueStrg->{Value},
+                    Title                       => $ValueStrg->{Title},
+                    Link                        => $ValueStrg->{Link},
+                    $DynamicFieldConfig->{Name} => $ValueStrg->{Title},
+                },
+            );
+            my %Safe = $HTMLUtilsObject->Safety(
+                String       => $HTMLLink,
+                NoApplet     => 1,
+                NoObject     => 1,
+                NoEmbed      => 1,
+                NoSVG        => 1,
+                NoImg        => 1,
+                NoIntSrcLoad => 0,
+                NoExtSrcLoad => 1,
+                NoJavaScript => 1,
+            );
+            if ( $Safe{Replace} ) {
+                $HTMLLink = $Safe{String};
+            }
+
             $LayoutObject->Block(
                 Name => 'RecordDynamicFieldLink',
                 Data => {
@@ -787,6 +816,7 @@ sub ShowTicketStatus {
                     Title                       => $ValueStrg->{Title},
                     Link                        => $ValueStrg->{Link},
                     $DynamicFieldConfig->{Name} => $ValueStrg->{Title},
+                    HTMLLink                    => $HTMLLink,
                 },
             );
         }

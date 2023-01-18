@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2022 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -1514,6 +1514,25 @@ sub _OutputActivityDialog {
             Message => $Message,
         );
     }
+    if (
+        !IsHashRefWithData( $Activity->{ActivityDialog} )
+        || !grep { $_ eq $ActivityActivityDialog->{ActivityDialog} } values( %{ $Activity->{ActivityDialog} } )
+    ) {
+        my $Message = $LayoutObject->{LanguageObject}->Translate(
+            'ActivityDialog does not belong to Activity!',
+        );
+
+        # does not show header and footer again
+        if ( $Self->{IsMainWindow} ) {
+            return $LayoutObject->Error(
+                Message => $Message,
+            );
+        }
+
+        $LayoutObject->FatalError(
+            Message => $Message,
+        );
+    }
 
     my $ActivityDialog = $ActivityDialogObject->ActivityDialogGet(
         ActivityDialogEntityID => $ActivityActivityDialog->{ActivityDialog},
@@ -1534,23 +1553,6 @@ sub _OutputActivityDialog {
 
         $LayoutObject->FatalError(
             Message => $Message,
-        );
-    }
-
-    # grep out Overwrites if defined on the Activity
-    my @OverwriteActivityDialogNumber = grep {
-        ref $Activity->{ActivityDialog}{$_} eq 'HASH'
-            && $Activity->{ActivityDialog}{$_}{ActivityDialogEntityID}
-            && $Activity->{ActivityDialog}{$_}{ActivityDialogEntityID} eq
-            $ActivityActivityDialog->{ActivityDialog}
-            && IsHashRefWithData( $Activity->{ActivityDialog}{$_}{Overwrite} )
-    } keys %{ $Activity->{ActivityDialog} };
-
-    # let the Overwrites Overwrite the ActivityDialog's Hash values
-    if ( $OverwriteActivityDialogNumber[0] ) {
-        %{$ActivityDialog} = (
-            %{$ActivityDialog},
-            %{ $Activity->{ActivityDialog}{ $OverwriteActivityDialogNumber[0] }{Overwrite} }
         );
     }
 
@@ -5971,7 +5973,7 @@ sub _GetResponsibles {
                 for my $UID (@UserIDs) {
                     if ( $UID eq $GroupMemberKey ) {
                         $Hit = 1;
-    
+
                         last USERID;
                     }
                 }
@@ -6097,7 +6099,7 @@ sub _GetOwners {
                 for my $UID (@UserIDs) {
                     if ( $UID eq $GroupMemberKey ) {
                         $Hit = 1;
-    
+
                         last USERID;
                     }
                 }

@@ -1,7 +1,7 @@
 // --
-// Modified version of the work: Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
+// Modified version of the work: Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
 // based on the original work of:
-// Copyright (C) 2001-2022 OTRS AG, https://otrs.com/
+// Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
 // --
 // This software comes with ABSOLUTELY NO WARRANTY. For details, see
 // the enclosed file LICENSE for license information (AGPL). If you
@@ -309,7 +309,6 @@ Core.Agent.TicketZoom = (function (TargetNS) {
                 // if URL hash is empty, set it initially to the active article for working browser history
                 if (URLHash === '') {
                     InitialArticleID = $('#ArticleTable tr.Active input.ArticleID').val();
-                    //location.hash = '#' + $('#ArticleTable tr.Active input.ArticleID').val();
                 }
                 else {
                     // if article ID is found in article list (= article id is valid)
@@ -322,6 +321,15 @@ Core.Agent.TicketZoom = (function (TargetNS) {
                         // Load content of new article
                         LoadArticle($ArticleElement.closest('td').find('input.ArticleInfo').val(), URLHash);
                     }
+                }
+            }
+            else {
+                var search  = location.search.replaceAll(';', '&'),
+                    sParams = new URLSearchParams(search),
+                    articleID;
+                if ( sParams.get('ArticleID') ) {
+                    articleID = sParams.get('ArticleID').replace(/#Article\d+/,'');
+                    location.hash = '#Article' + articleID;
                 }
             }
             $('a.Timeline').on('click', function() {
@@ -347,7 +355,18 @@ Core.Agent.TicketZoom = (function (TargetNS) {
 
                 // Mode: show all articles - jump to the selected article
                 else {
-                    location.href = '#Article' + $(this).find('input.ArticleID').val();
+                    var search    = location.search.replaceAll(';', '&'),
+                        origin    = location.origin,
+                        pathname  = location.pathname,
+                        sParams   = new URLSearchParams(search),
+                        articleID = $(this).find('input.ArticleID').val(),
+                        nURL;
+
+                    sParams.set('ArticleID',articleID);
+                    nURL = origin + pathname + '?' + sParams.toString();
+                    window.history.pushState({},'', nURL);
+
+                    location.hash = '#Article' + articleID;
                 }
 
                 return false;

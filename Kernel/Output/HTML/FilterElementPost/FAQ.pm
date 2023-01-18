@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2022 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -38,29 +38,18 @@ sub Run {
     return if !${ $Param{Data} };
     return if !$Param{TemplateFile};
 
-    # get layout object
+    # get needed objects
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
     # check permission
     return if !$LayoutObject->{EnvRef}->{'UserIsGroupRo[faq]'};
-
-    # get config object
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
     # get allowed template names
     my $ValidTemplates = $ConfigObject->Get('Frontend::Output::FilterElementPost')->{FAQ}->{Templates};
 
     # check template name
     return if !$ValidTemplates->{ $Param{TemplateFile} };
-
-    # if no session cookies are used we attach the session as URL parameter
-    my $SessionString = '';
-    if ( !$ConfigObject->Get('SessionUseCookie') ) {
-        my $SessionID = $Param{SessionID}
-            || $Kernel::OM->Get('Kernel::System::Web::Request')->GetParam( Param => $ConfigObject->Get('SessionName') )
-            || '';
-        $SessionString = $ConfigObject->Get('SessionName') . '=' . $SessionID . ';';
-    }
 
     my $StartPattern    = '<!-- [ ] OutputFilterHook_TicketOptionsEnd [ ] --> .+?';
     my $FAQTranslatable = $LayoutObject->{LanguageObject}->Translate('FAQ');
@@ -80,11 +69,6 @@ END
         $LayoutObject->AddJSOnDocumentComplete( Code => <<"EOF");
 /*global FAQ: true */
 FAQ.Agent.TicketCompose.InitFAQTicketCompose(\$('#RichText'));
-\$('#OptionFAQ').on('click', function (event) {
-    var FAQIFrame = '<iframe class=\"TextOption FAQ\" src=\"' + Core.Config.Get('CGIHandle') + '?' + '$SessionString' + 'Action=AgentFAQExplorer;Nav=None;Subject=;What=\"></iframe>';
-    Core.UI.Dialog.ShowContentDialog(FAQIFrame, '', '10px', 'Center', true);
-    return false;
-});
 EOF
 
         return 1;
@@ -106,11 +90,6 @@ END
     $LayoutObject->AddJSOnDocumentComplete( Code => <<"EOF");
 /*global FAQ: true */
 FAQ.Agent.TicketCompose.InitFAQTicketCompose(\$('#RichText'));
-\$('#OptionFAQ').on('click', function (event) {
-    var FAQIFrame = '<iframe class="TextOption FAQ" src="' + Core.Config.Get('CGIHandle') + '?' + '$SessionString' + 'Action=AgentFAQExplorer;Nav=None;Subject=;What="></iframe>';
-    Core.UI.Dialog.ShowContentDialog(FAQIFrame, '', '10px', 'Center', true);
-    return false;
-});
 EOF
 
     return 1;

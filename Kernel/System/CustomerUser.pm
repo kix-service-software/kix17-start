@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2022 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. This program is
 # licensed under the AGPL-3.0 with patches licensed under the GPL-3.0.
@@ -704,9 +704,9 @@ sub SetPreferences {
     );
 
     return 0 if $Blacklisted{ $Param{Key} };
-### Patch licensed under the GPL-3.0, Copyright (C) 2001-2022 OTRS AG, https://otrs.com/ ###
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2023 OTRS AG, https://otrs.com/ ###
     return 0 if substr( $Param{Key}, 0, 11 ) eq 'UserIsGroup';
-### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2022 OTRS AG, https://otrs.com/ ###
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2023 OTRS AG, https://otrs.com/ ###
 
     # check if user exists
     my %User = $Self->CustomerUserDataGet( User => $Param{UserID} );

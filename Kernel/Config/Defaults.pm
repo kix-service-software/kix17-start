@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2022 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -844,10 +844,10 @@ sub LoadDefaults {
     # --------------------------------------------------- #
     # Customer Common JS
     $Self->{'Loader::Customer::CommonJS'}->{'000-Framework'} =  [
-        'thirdparty/jquery-3.6/jquery.min.js',
+        'thirdparty/jquery-3.6.1/jquery.min.js',
         'thirdparty/jquery-browser-detection/jquery-browser-detection.js',
-        'thirdparty/jquery-validate-1.19.3/jquery.validate.min.js',
-        'thirdparty/jquery-ui-1.13.1/jquery-ui.min.js',
+        'thirdparty/jquery-validate-1.19.5/jquery.validate.min.js',
+        'thirdparty/jquery-ui-1.13.2/jquery-ui.min.js',
         'thirdparty/stacktrace-2.0.2/stacktrace-with-promises-and-json-polyfills.min.js',
         'thirdparty/jquery-pubsub/pubsub.js',
         'thirdparty/jstree-3.3.12/jstree.min.js',
@@ -879,16 +879,16 @@ sub LoadDefaults {
     ];
     # Agent Common JS
     $Self->{'Loader::Agent::CommonJS'}->{'000-Framework'} =  [
-        'thirdparty/jquery-3.6/jquery.min.js',
+        'thirdparty/jquery-3.6.1/jquery.min.js',
         'thirdparty/jquery-browser-detection/jquery-browser-detection.js',
-        'thirdparty/jquery-ui-1.13.1/jquery-ui.min.js',
+        'thirdparty/jquery-ui-1.13.2/jquery-ui.min.js',
         'thirdparty/jquery-ui-touch-punch-0.2.3/jquery.ui.touch-punch.js',
-        'thirdparty/jquery-validate-1.19.3/jquery.validate.min.js',
+        'thirdparty/jquery-validate-1.19.5/jquery.validate.min.js',
         'thirdparty/stacktrace-2.0.2/stacktrace-with-promises-and-json-polyfills.min.js',
         'thirdparty/jquery-pubsub/pubsub.js',
         'thirdparty/jstree-3.3.12/jstree.min.js',
         'thirdparty/jquery-tablesorter-2.31.3/jquery.tablesorter.min.js',
-        'thirdparty/jscolor-2.4.7/jscolor.min.js',
+        'thirdparty/jscolor-2.5.0/jscolor.min.js',
         'Core.JavaScriptEnhancements.js',
         'Core.Debug.js',
         'Core.Exception.js',

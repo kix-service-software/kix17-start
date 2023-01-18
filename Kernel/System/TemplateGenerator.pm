@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2022 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -434,6 +434,32 @@ sub Template {
         }
     }
 
+    # get user language
+    my $Language;
+    if ( defined $Param{TicketID} ) {
+
+        # get ticket data
+        my %Ticket = $TicketObject->TicketGet(
+            TicketID => $Param{TicketID},
+        );
+
+        # check if template is member of ticket queue
+        my %StandardTemplates = $Kernel::OM->Get('Kernel::System::Queue')->QueueStandardTemplateMemberList(
+            QueueID       => $Ticket{QueueID},
+            TemplateTypes => 0,
+        );
+        return '' if ( !$StandardTemplates{ $Param{TemplateID} } );
+
+        # get recipient
+        my %User = $CustomerUserObject->CustomerUserDataGet(
+            User => $Ticket{CustomerUserID},
+        );
+        $Language = $User{UserLanguage};
+    }
+
+    # if customer language is not defined, set default language
+    $Language //= $ConfigObject->Get('DefaultLanguage') || 'en';
+
     my %Template = $TemplateObject->StandardTemplateGet(
         ID => $Param{TemplateID},
     );
@@ -461,25 +487,6 @@ sub Template {
             String => $Template{Template},
         );
     }
-
-    # get user language
-    my $Language;
-    if ( defined $Param{TicketID} ) {
-
-        # get ticket data
-        my %Ticket = $TicketObject->TicketGet(
-            TicketID => $Param{TicketID},
-        );
-
-        # get recipient
-        my %User = $CustomerUserObject->CustomerUserDataGet(
-            User => $Ticket{CustomerUserID},
-        );
-        $Language = $User{UserLanguage};
-    }
-
-    # if customer language is not defined, set default language
-    $Language //= $ConfigObject->Get('DefaultLanguage') || 'en';
 
     # replace place holder stuff
     my @ListOfUnSupportedTag = qw/KIX_AGENT_SUBJECT KIX_AGENT_BODY KIX_CUSTOMER_BODY KIX_CUSTOMER_SUBJECT OTRS_AGENT_SUBJECT OTRS_AGENT_BODY OTRS_CUSTOMER_BODY OTRS_CUSTOMER_SUBJECT/;
@@ -1528,7 +1535,7 @@ sub _Replace {
 
             # prepare body (insert old email) <KIX_CUSTOMER_EMAIL[n]>, <KIX_CUSTOMER_NOTE[n]>
             #   <KIX_CUSTOMER_BODY[n]>, <KIX_AGENT_EMAIL[n]>..., <KIX_COMMENT>
-            my $Pattern = "$Start(?:(?:$DataType(EMAIL|NOTE|BODY)\\[(.+?)\\])|(?:KIX_COMMENT))$End";
+            my $Pattern = "$Start(?:(?:$DataType(EMAIL|NOTE|BODY)\\[(\\d+?)\\])|(?:KIX_COMMENT))$End";
             if ( $Param{Text} =~ /$Pattern/g ) {
 
                 my $Line       = $2 || 2500;
@@ -1581,16 +1588,16 @@ sub _Replace {
 
             # replace <KIX_CUSTOMER_SUBJECT[]>  and  <KIX_AGENT_SUBJECT[]> tags
             $Tag = "$Start$DataType" . 'SUBJECT';
-            if ( $Param{Text} =~ /$Tag\[(.+?)\]$End/g ) {
+            if ( $Param{Text} =~ /$Tag\[(\d+?)\]$End/g ) {
 
-                my $SubjectChar = $1;
+                my $SubjectChar = $1 || 50;
                 my $Subject     = $TicketObject->TicketSubjectClean(
                     TicketNumber => $Ticket{TicketNumber},
                     Subject      => $Data{Subject},
                 );
 
                 $Subject =~ s/^(.{$SubjectChar}).*$/$1 [...]/;
-                $Param{Text} =~ s/$Tag\[.+?\]$End/$Subject/g;
+                $Param{Text} =~ s/$Tag\[\d+?\]$End/$Subject/g;
             }
 
             # replace <KIX_> tags
@@ -1675,10 +1682,12 @@ sub _Replace {
         || ( defined $Param{Frontend} && $Param{Frontend} eq 'Customer' )
     ) {
 
-        my $CustomerUserID = $Param{Data}->{CustomerUserID} || $Ticket{CustomerUserID};
+        my $CustomerUserID    = $Param{Data}->{CustomerUserID} || $Ticket{CustomerUserID};
+        my $CustomerCompanyID = $Param{Data}->{CustomerID}     || $Ticket{CustomerID};
 
         my %CustomerUser = $CustomerUserObject->CustomerUserDataGet(
-            User => $CustomerUserID,
+            User       => $CustomerUserID,
+            CustomerID => $CustomerCompanyID,
         );
 
         # HTML quoting of content
@@ -1902,7 +1911,7 @@ sub _Replace {
 
         # replace <KIX_FIRST_EMAIL[]> tags
         $Tag2 = $Start . 'KIX_FIRST_EMAIL';
-        if ( $Param{Text} =~ /$Tag2\[(.+?)\]$End/g ) {
+        if ( $Param{Text} =~ /$Tag2\[(\d+?)\]$End/g ) {
             my $Line       = $1;
             my @Body       = split( /\n/, $FirstArticle{Body} );
             my $NewOldBody = '';
@@ -1945,19 +1954,19 @@ sub _Replace {
             }
 
             # replace tag
-            $Param{Text} =~ s/$Tag2\[.+?\]$End/$NewOldBody/g;
+            $Param{Text} =~ s/$Tag2\[\d+?\]$End/$NewOldBody/g;
         }
 
         # replace <KIX_FIRST_SUBJECT[]> tags
         $Tag2 = $Start . 'KIX_FIRST_SUBJECT';
-        if ( $Param{Text} =~ /$Tag2\[(.+?)\]$End/g ) {
-            my $SubjectChar = $1;
+        if ( $Param{Text} =~ /$Tag2\[(\d+?)\]$End/g ) {
+            my $SubjectChar = $1 || 50;
             my $Subject     = $TicketObject->TicketSubjectClean(
                 TicketNumber => $Ticket{TicketNumber},
                 Subject      => $FirstArticle{Subject},
             );
             $Subject =~ s/^(.{$SubjectChar}).*$/$1 [...]/;
-            $Param{Text} =~ s/$Tag2\[.+?\]$End/$Subject/g;
+            $Param{Text} =~ s/$Tag2\[\d+?\]$End/$Subject/g;
         }
 
         # html quoteing of content

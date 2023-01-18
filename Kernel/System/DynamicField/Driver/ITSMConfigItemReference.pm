@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -13,6 +13,7 @@ use warnings;
 
 use base qw(Kernel::System::DynamicField::Driver::Base);
 
+use URI::Escape;
 use Kernel::System::VariableCheck qw(:all);
 
 our @ObjectDependencies = (
@@ -730,6 +731,19 @@ sub EditFieldValueGet {
     my $FieldName = 'DynamicField_' . $Param{DynamicFieldConfig}->{Name};
 
     my $Value;
+    my $PossibleValues;
+
+    # prepare frontend
+    my $Frontend = 'Public';
+    if ( $Self->{UserType} eq 'User' ) {
+        $Frontend = 'Agent';
+    }
+    elsif ( $Self->{UserType} eq 'Customer' ) {
+        $Frontend = 'Customer';
+    }
+
+    # get ussed permission check
+    my $PermissionCheck = $Param{DynamicFieldConfig}->{Config}->{PermissionCheck};
 
     # check if there is a Template and retrieve the dynamic field value from there
     if ( IsHashRefWithData( $Param{Template} ) ) {
@@ -751,6 +765,238 @@ sub EditFieldValueGet {
             if ( !$Item ) {
                 splice( @Data, $Index, 1 );
                 next ITEM;
+            }
+
+            if ( !$Param{SkipCheck} ) {
+                if ( ref( $PossibleValues ) ne 'ARRAY' ) {
+                    my $TicketID       = $Param{ParamObject}->GetParam( Param => 'TicketID' ) || '';
+                    my $CustomerUserID = $Param{ParamObject}->GetParam( Param => 'CustomerUserID' )
+                                        || uri_unescape($Param{ParamObject}->GetParam( Param => 'SelectedCustomerUser' ))
+                                        || '';
+
+                    if (
+                        $CustomerUserID
+                        && $CustomerUserID =~ m/<(.*)>/
+                    ) {
+                        my %List = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerSearch(
+                            PostMasterSearch => $1,
+                            Valid            => 1,
+                        );
+                        for my $Key ( keys %List ) {
+                            if ( $List{$Key} eq $CustomerUserID ) {
+                                $CustomerUserID = $Key;
+                                last;
+                            }
+                        }
+                    }
+
+                    if ( $Self->{UserType} eq 'Customer' ) {
+                        $CustomerUserID = $Self->{UserID};
+                    }
+
+                    my %TicketData;
+                    if ($TicketID =~ /^\d+$/) {
+                        %TicketData = $Kernel::OM->Get('Kernel::System::Ticket')->TicketGet(
+                            TicketID      => $TicketID,
+                            DynamicFields => 1,
+                            Extended      => 1,
+                            UserID        => 1,
+                            Silent        => 1,
+                        );
+                        $CustomerUserID = $TicketData{CustomerUserID} if ( $TicketData{CustomerUserID} );
+                    }
+
+                    my %CustomerUserData;
+                    if ( $CustomerUserID ) {
+                        %CustomerUserData = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerUserDataGet(
+                            User => $CustomerUserID,
+                        );
+                    }
+
+                    # get used Constrictions
+                    my $Constrictions = $Param{DynamicFieldConfig}->{Config}->{Constrictions};
+
+                    # get attributes from web request
+                    my @ParamNames = $Param{ParamObject}->GetParamNames();
+                    my %WebParams  = map { $_ => 1 } @ParamNames;
+
+                    # build search params from constrictions...
+                    my @SearchParamsWhat;
+
+                    # prepare constrictions
+                    my %Constrictions = ();
+                    my $ConstrictionsCheck = 1;
+                    if ( $Constrictions ) {
+                        my @Constrictions = split(/[\n\r]+/, $Constrictions);
+                        CONSTRICTION:
+                        for my $Constriction ( @Constrictions ) {
+                            my @ConstrictionRule = split(/::/, $Constriction);
+                            my $ConstrictionCheck = 1;
+                            # check for valid constriction
+                            next CONSTRICTION if (
+                                scalar(@ConstrictionRule) != 4
+                                || $ConstrictionRule[0] eq ""
+                                || $ConstrictionRule[1] eq ""
+                                || $ConstrictionRule[2] eq ""
+                            );
+
+                            # mandatory constriction
+                            if ($ConstrictionRule[3]) {
+                                $ConstrictionCheck = 0;
+                            }
+
+                            # only handle static constrictions in admininterface
+                            if (
+                                $ConstrictionRule[1] eq 'Configuration'
+                            ) {
+                                $Constrictions{$ConstrictionRule[0]} = $ConstrictionRule[2];
+                                $ConstrictionCheck = 1;
+                            } elsif (
+                                $ConstrictionRule[1] eq 'Ticket'
+                                && (
+                                    $WebParams{ $ConstrictionRule[2] }
+                                    || defined( $TicketData{ $ConstrictionRule[2] } )
+                                )
+                            ) {
+                                # get value from ticket data
+                                $Constrictions{$ConstrictionRule[0]} = $TicketData{ $ConstrictionRule[2] };
+                                # use only first entry if array is given
+                                if ( ref($Constrictions{$ConstrictionRule[0]}) eq 'ARRAY' ) {
+                                    $Constrictions{$ConstrictionRule[0]} = $Constrictions{$ConstrictionRule[0]}->[0];
+                                }
+                                # check if attribute is in web params
+                                if ( $WebParams{ $ConstrictionRule[2] } ) {
+                                    $Constrictions{$ConstrictionRule[0]} = $Param{ParamObject}->GetParam( Param => $ConstrictionRule[2] ) || '';
+                                }
+                                # mark check success if value is not empty
+                                if ( $Constrictions{$ConstrictionRule[0]} ) {
+                                    $ConstrictionCheck = 1;
+                                }
+                                # set constriction value undef if empty
+                                else {
+                                    delete( $Constrictions{$ConstrictionRule[0]} );
+                                }
+                            } elsif (
+                                $ConstrictionRule[1] eq 'CustomerUser'
+                                && $CustomerUserData{ $ConstrictionRule[2] }
+                            ) {
+                                $Constrictions{$ConstrictionRule[0]} = $CustomerUserData{ $ConstrictionRule[2] };
+                                $ConstrictionCheck = 1;
+                            }
+
+                            # stop if mandatory constriction not valid
+                            if ( !$ConstrictionCheck ) {
+                                $ConstrictionsCheck = 0;
+                                last CONSTRICTION;
+                            }
+                        }
+                    }
+
+                    if ($ConstrictionsCheck) {
+
+                        my @ITSMConfigItemClasses = ();
+                        if(
+                            defined( $Param{DynamicFieldConfig}->{Config}->{ITSMConfigItemClasses} )
+                            && IsArrayRefWithData( $Param{DynamicFieldConfig}->{Config}->{ITSMConfigItemClasses} )
+                        ) {
+                            CLASSID:
+                            for my $ClassID ( @{$Param{DynamicFieldConfig}->{Config}->{ITSMConfigItemClasses}} ) {
+                                # check read permission for config item class
+                                if (
+                                    IsArrayRefWithData($PermissionCheck)
+                                    && grep( { $_ eq $Frontend } @{$PermissionCheck} )
+                                ) {
+                                    my $HasAccess = $Self->_PermissionCheck(
+                                        Frontend => $Frontend,
+                                        Scope    => 'Class',
+                                        ClassID  => $ClassID,
+                                    );
+                                    next CLASSID if (!$HasAccess );
+                                }
+
+                                # add config item class
+                                push ( @ITSMConfigItemClasses, $ClassID );
+                            }
+                        }
+                        else {
+                            my $ClassRef = $Self->{GeneralCatalogObject}->ItemList(
+                                Class => 'ITSM::ConfigItem::Class',
+                            );
+                            CLASSID:
+                            for my $ClassID ( keys ( %{$ClassRef} ) ) {
+                                # check read permission for config item class
+                                if (
+                                    IsArrayRefWithData($PermissionCheck)
+                                    && grep( { $_ eq $Frontend } @{$PermissionCheck} )
+                                ) {
+                                    my $HasAccess = $Self->_PermissionCheck(
+                                        Frontend => $Frontend,
+                                        Scope    => 'Class',
+                                        ClassID  => $ClassID,
+                                    );
+                                    next CLASSID if ( !$HasAccess );
+                                }
+
+                                # add config item class
+                                push ( @ITSMConfigItemClasses, $ClassID );
+                            }
+                        }
+
+                        if ( @ITSMConfigItemClasses ) {
+                            for my $ClassID ( @ITSMConfigItemClasses ) {
+                                # get current definition
+                                my $XMLDefinition = $Self->{ITSMConfigItemObject}->DefinitionGet(
+                                    ClassID => $ClassID,
+                                );
+
+                                # prepare seach
+                                $Self->_ExportXMLSearchDataPrepare(
+                                    XMLDefinition => $XMLDefinition->{DefinitionRef},
+                                    What          => \@SearchParamsWhat,
+                                    SearchData    => {
+                                        %Constrictions,
+                                    },
+                                );
+                            }
+
+                            if ( !scalar( @SearchParamsWhat ) ) {
+                                @SearchParamsWhat = undef;
+                            }
+
+                            $PossibleValues = $Self->{ITSMConfigItemObject}->ConfigItemSearchExtended(
+                                Number       => '*',
+                                ClassIDs     => \@ITSMConfigItemClasses,
+                                DeplStateIDs => $Param{DynamicFieldConfig}->{Config}->{DeploymentStates},
+                                What         => \@SearchParamsWhat,
+                            );
+                        }
+                    }
+                }
+
+                if (
+                    ref( $PossibleValues ) ne 'ARRAY'
+                    || !grep { /^$Item$/ } @{$PossibleValues}
+                ) {
+                    splice( @Data, $Index, 1 );
+                    next ITEM;
+                }
+                else {
+                    # check read permission for config item
+                    if (
+                        IsArrayRefWithData($PermissionCheck)
+                        && grep( { $_ eq $Frontend } @{$PermissionCheck} )
+                    ) {
+                        my $HasAccess = $Self->_PermissionCheck(
+                            Frontend => $Frontend,
+                            Scope    => 'Item',
+                            ItemID   => $Item,
+                        );
+                        if ( !$HasAccess ) {
+                            splice( @Data, $Index, 1 );
+                            next ITEM;
+                        }
+                    }
+                }
             }
             $Index++;
         }
@@ -775,6 +1021,7 @@ sub EditFieldValueValidate {
     my $Values = $Self->EditFieldValueGet(
         DynamicFieldConfig => $Param{DynamicFieldConfig},
         ParamObject        => $Param{ParamObject},
+        SkipCheck          => 1,
 
         # not necessary for this Driver but place it for consistency reasons
         ReturnValueStructure => 1,
@@ -797,19 +1044,264 @@ sub EditFieldValueValidate {
                 ConfigItemID => $Item,
             );
             if ( !$Number ) {
-                $ServerError  = 1;
-                $ErrorMessage = 'The field content is invalid';
+                return {
+                    ServerError  => 1,
+                    ErrorMessage => 'The field content is invalid',
+                };
             }
         }
     }
 
-    # create resulting structure
-    my $Result = {
-        ServerError  => $ServerError,
-        ErrorMessage => $ErrorMessage,
-    };
+    if ( IsArrayRefWithData($Values) ) {
+        my $TicketID       = $Param{ParamObject}->GetParam( Param => 'TicketID' ) || '';
+        my $CustomerUserID = $Param{ParamObject}->GetParam( Param => 'CustomerUserID' )
+                            || uri_unescape($Param{ParamObject}->GetParam( Param => 'SelectedCustomerUser' ))
+                            || '';
 
-    return $Result;
+        if (
+            $CustomerUserID
+            && $CustomerUserID =~ m/<(.*)>/
+        ) {
+            my %List = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerSearch(
+                PostMasterSearch => $1,
+                Valid            => 1,
+            );
+            for my $Key ( keys %List ) {
+                if ( $List{$Key} eq $CustomerUserID ) {
+                    $CustomerUserID = $Key;
+                    last;
+                }
+            }
+        }
+
+        if ( $Self->{UserType} eq 'Customer' ) {
+            $CustomerUserID = $Self->{UserID};
+        }
+
+        my %TicketData;
+        if ($TicketID =~ /^\d+$/) {
+            %TicketData = $Kernel::OM->Get('Kernel::System::Ticket')->TicketGet(
+                TicketID      => $TicketID,
+                DynamicFields => 1,
+                Extended      => 1,
+                UserID        => 1,
+                Silent        => 1,
+            );
+            $CustomerUserID = $TicketData{CustomerUserID} if ( $TicketData{CustomerUserID} );
+        }
+
+        my %CustomerUserData;
+        if ( $CustomerUserID ) {
+            %CustomerUserData = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerUserDataGet(
+                User => $CustomerUserID,
+            );
+        }
+
+        # prepare frontend
+        my $Frontend = 'Public';
+        if ( $Self->{UserType} eq 'User' ) {
+            $Frontend = 'Agent';
+        }
+        elsif ( $Self->{UserType} eq 'Customer' ) {
+            $Frontend = 'Customer';
+        }
+
+        # get ussed permission check
+        my $PermissionCheck = $Param{DynamicFieldConfig}->{Config}->{PermissionCheck};
+
+        # get used Constrictions
+        my $Constrictions = $Param{DynamicFieldConfig}->{Config}->{Constrictions};
+
+        # get attributes from web request
+        my @ParamNames = $Param{ParamObject}->GetParamNames();
+        my %WebParams  = map { $_ => 1 } @ParamNames;
+
+        # build search params from constrictions...
+        my @SearchParamsWhat;
+
+        # prepare constrictions
+        my %Constrictions = ();
+        my $ConstrictionsCheck = 1;
+        if ( $Constrictions ) {
+            my @Constrictions = split(/[\n\r]+/, $Constrictions);
+            CONSTRICTION:
+            for my $Constriction ( @Constrictions ) {
+                my @ConstrictionRule = split(/::/, $Constriction);
+                my $ConstrictionCheck = 1;
+                # check for valid constriction
+                next CONSTRICTION if (
+                    scalar(@ConstrictionRule) != 4
+                    || $ConstrictionRule[0] eq ""
+                    || $ConstrictionRule[1] eq ""
+                    || $ConstrictionRule[2] eq ""
+                );
+
+                # mandatory constriction
+                if ($ConstrictionRule[3]) {
+                    $ConstrictionCheck = 0;
+                }
+
+                # only handle static constrictions in admininterface
+                if (
+                    $ConstrictionRule[1] eq 'Configuration'
+                ) {
+                    $Constrictions{$ConstrictionRule[0]} = $ConstrictionRule[2];
+                    $ConstrictionCheck = 1;
+                } elsif (
+                    $ConstrictionRule[1] eq 'Ticket'
+                    && (
+                        $WebParams{ $ConstrictionRule[2] }
+                        || defined( $TicketData{ $ConstrictionRule[2] } )
+                    )
+                ) {
+                    # get value from ticket data
+                    $Constrictions{$ConstrictionRule[0]} = $TicketData{ $ConstrictionRule[2] };
+                    # use only first entry if array is given
+                    if ( ref($Constrictions{$ConstrictionRule[0]}) eq 'ARRAY' ) {
+                        $Constrictions{$ConstrictionRule[0]} = $Constrictions{$ConstrictionRule[0]}->[0];
+                    }
+                    # check if attribute is in web params
+                    if ( $WebParams{ $ConstrictionRule[2] } ) {
+                        $Constrictions{$ConstrictionRule[0]} = $Param{ParamObject}->GetParam( Param => $ConstrictionRule[2] ) || '';
+                    }
+                    # mark check success if value is not empty
+                    if ( $Constrictions{$ConstrictionRule[0]} ) {
+                        $ConstrictionCheck = 1;
+                    }
+                    # set constriction value undef if empty
+                    else {
+                        delete( $Constrictions{$ConstrictionRule[0]} );
+                    }
+                } elsif (
+                    $ConstrictionRule[1] eq 'CustomerUser'
+                    && $CustomerUserData{ $ConstrictionRule[2] }
+                ) {
+                    $Constrictions{$ConstrictionRule[0]} = $CustomerUserData{ $ConstrictionRule[2] };
+                    $ConstrictionCheck = 1;
+                }
+
+                # stop if mandatory constriction not valid
+                if ( !$ConstrictionCheck ) {
+                    $ConstrictionsCheck = 0;
+                    last CONSTRICTION;
+                }
+            }
+        }
+
+        if ($ConstrictionsCheck) {
+
+            my @ITSMConfigItemClasses = ();
+            if(
+                defined( $Param{DynamicFieldConfig}->{Config}->{ITSMConfigItemClasses} )
+                && IsArrayRefWithData( $Param{DynamicFieldConfig}->{Config}->{ITSMConfigItemClasses} )
+            ) {
+                CLASSID:
+                for my $ClassID ( @{$Param{DynamicFieldConfig}->{Config}->{ITSMConfigItemClasses}} ) {
+                    # check read permission for config item class
+                    if (
+                        IsArrayRefWithData($PermissionCheck)
+                        && grep( { $_ eq $Frontend } @{$PermissionCheck} )
+                    ) {
+                        my $HasAccess = $Self->_PermissionCheck(
+                            Frontend => $Frontend,
+                            Scope    => 'Class',
+                            ClassID  => $ClassID,
+                        );
+                        next CLASSID if (!$HasAccess );
+                    }
+
+                    # add config item class
+                    push ( @ITSMConfigItemClasses, $ClassID );
+                }
+            }
+            else {
+                my $ClassRef = $Self->{GeneralCatalogObject}->ItemList(
+                    Class => 'ITSM::ConfigItem::Class',
+                );
+                CLASSID:
+                for my $ClassID ( keys ( %{$ClassRef} ) ) {
+                    # check read permission for config item class
+                    if (
+                        IsArrayRefWithData($PermissionCheck)
+                        && grep( { $_ eq $Frontend } @{$PermissionCheck} )
+                    ) {
+                        my $HasAccess = $Self->_PermissionCheck(
+                            Frontend => $Frontend,
+                            Scope    => 'Class',
+                            ClassID  => $ClassID,
+                        );
+                        next CLASSID if ( !$HasAccess );
+                    }
+
+                    # add config item class
+                    push ( @ITSMConfigItemClasses, $ClassID );
+                }
+            }
+
+            if ( @ITSMConfigItemClasses ) {
+                for my $ClassID ( @ITSMConfigItemClasses ) {
+                    # get current definition
+                    my $XMLDefinition = $Self->{ITSMConfigItemObject}->DefinitionGet(
+                        ClassID => $ClassID,
+                    );
+
+                    # prepare seach
+                    $Self->_ExportXMLSearchDataPrepare(
+                        XMLDefinition => $XMLDefinition->{DefinitionRef},
+                        What          => \@SearchParamsWhat,
+                        SearchData    => {
+                            %Constrictions,
+                        },
+                    );
+                }
+
+                if ( !scalar( @SearchParamsWhat ) ) {
+                    @SearchParamsWhat = undef;
+                }
+
+                my $ConfigItemIDs = $Self->{ITSMConfigItemObject}->ConfigItemSearchExtended(
+                    Number       => '*',
+                    ClassIDs     => \@ITSMConfigItemClasses,
+                    DeplStateIDs => $Param{DynamicFieldConfig}->{Config}->{DeploymentStates},
+                    What         => \@SearchParamsWhat,
+                );
+
+                for my $Key ( @{$Values} ) {
+                    if ( grep { /^$Key$/ } @{$ConfigItemIDs} ) {
+
+                        # check read permission for config item
+                        if (
+                            IsArrayRefWithData($PermissionCheck)
+                            && grep( { $_ eq $Frontend } @{$PermissionCheck} )
+                        ) {
+                            my $HasAccess = $Self->_PermissionCheck(
+                                Frontend => $Frontend,
+                                Scope    => 'Item',
+                                ItemID   => $Key,
+                            );
+                            if ( !$HasAccess ) {
+                                return {
+                                    ServerError  => 1,
+                                    ErrorMessage => 'Missing permission for selected value(s)',
+                                };
+                            }
+                        }
+                    }
+                    else {
+                        return {
+                            ServerError  => 1,
+                            ErrorMessage => 'Invalid selected value(s)',
+                        };
+                    }
+                }
+            }
+        }
+    }
+
+    return {
+        ServerError  => undef,
+        ErrorMessage => undef,
+    };
 }
 
 sub SearchFieldRender {

@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2022 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -2030,39 +2030,33 @@ sub _TicketUpdate {
         }
 
         my $Success;
-        if (
-            defined $Ticket->{Owner}
-            && $Ticket->{Owner} ne $TicketData{Owner}
-        ) {
+        if ( defined( $Ticket->{Owner} ) ) {
             $Success = $TicketObject->TicketOwnerSet(
                 NewUser  => $Ticket->{Owner},
                 TicketID => $TicketID,
                 UserID   => $Param{UserID},
             );
-            $UnlockOnAway = 0;
+
+            if ( $Ticket->{Owner} ne $TicketData{Owner} ) {
+                $UnlockOnAway = 0;
+            }
         }
-        elsif (
-            defined $Ticket->{OwnerID}
-            && $Ticket->{OwnerID} ne $TicketData{OwnerID}
-        ) {
+        elsif ( defined( $Ticket->{OwnerID} ) ) {
             $Success = $TicketObject->TicketOwnerSet(
                 NewUserID => $Ticket->{OwnerID},
                 TicketID  => $TicketID,
                 UserID    => $Param{UserID},
             );
-            $UnlockOnAway = 0;
-        }
-        else {
 
-            # data is the same as in ticket nothing to do
-            $Success = 1;
+            if ( $Ticket->{OwnerID} ne $TicketData{OwnerID} ) {
+                $UnlockOnAway = 0;
+            }
         }
 
         if ( !$Success ) {
             return {
-                Success => 0,
-                Errormessage =>
-                    'Ticket owner could not be updated, please contact system administrator!',
+                Success      => 0,
+                Errormessage => 'Ticket owner could not be updated, please contact system administrator!',
             };
         }
     }

@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -91,7 +91,7 @@ sub Run {
         # next if in the existing ticket the dynamic field is not empty
         next if ( %ExistingTicket
                 && ref %ExistingTicket eq 'HASH'
-                && $ExistingTicket{ 'DynamicField-' . $DynamicField }
+                && $ExistingTicket{ 'DynamicField_' . $DynamicField }
         );
 
         # sender email doesnt match

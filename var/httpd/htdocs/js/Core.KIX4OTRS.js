@@ -1,5 +1,5 @@
 // --
-// Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
+// Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
 // --
 // This software comes with ABSOLUTELY NO WARRANTY. For details, see
 // the enclosed file LICENSE for license information (AGPL). If you
@@ -55,13 +55,18 @@ Core.KIX4OTRS = (function(TargetNS) {
         var $Tabs = $(".ui-tabs-tab"),
             $CurrentTab;
 
-        $.each($Tabs, function() {
-            if ($(this).attr('aria-expanded') == 'true') {
-                var TabID = $(this).attr('aria-controls');
-                $CurrentTab = $('#' + TabID);
-                return false;
-            }
-        });
+        if ( Action === 'AgentLinkObject' ) {
+            $CurrentTab = $('#AppWrapper');
+        }
+        else {
+            $.each($Tabs, function() {
+                if ($(this).attr('aria-expanded') == 'true') {
+                    var TabID = $(this).attr('aria-controls');
+                    $CurrentTab = $('#' + TabID);
+                    return false;
+                }
+            });
+        }
 
         // bind delete button
         $CurrentTab.find('.Primary').on('click', function() {

@@ -1,8 +1,8 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2022 OTRS AG, https://otrs.com/
-# Copyright (C) 2019-2022 Rother OSS GmbH, https://otobo.de/
+# Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
+# Copyright (C) 2019-2023 Rother OSS GmbH, https://otobo.de/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. This program is
 # licensed under the AGPL-3.0 with patches licensed under the GPL-3.0.
@@ -516,6 +516,11 @@ $('.DashboardHeader').off('click').on('click', '.ColumnSettingsTrigger', functio
                     <div title="[% Data.WholeTitle | html %]">[% Data.Title | html %]</div>
                 </td>
 [% RenderBlockEnd("ContentLargeTicketTitle") %]
+[% RenderBlockStart("ContentLargeTicketGenericLink") %]
+                <td>
+                    <a href="[% Data.Link %]" title="[% Data.Title | html %]" class="GenericLink" target="_blank">[% Data.Value %]</a>
+                </td>
+[% RenderBlockEnd("ContentLargeTicketGenericLink") %]
 [% RenderBlockStart("ContentLargeTicketGenericColumnTranslatable") %]
                 <td>
                     <div title="[% Translate(Data.GenericValue) | html %]">[% Translate(Data.GenericValue) | html %]</div>
@@ -523,10 +528,10 @@ $('.DashboardHeader').off('click').on('click', '.ColumnSettingsTrigger', functio
 [% RenderBlockEnd("ContentLargeTicketGenericColumnTranslatable") %]
 [% RenderBlockStart("ContentLargeTicketGenericColumnTime") %]
                 <td>
-### Patch licensed under the GPL-3.0, Copyright (C) 2019-2022 Rother OSS GmbH, https://otobo.de/ ###
+### Patch licensed under the GPL-3.0, Copyright (C) 2019-2023 Rother OSS GmbH, https://otobo.de/ ###
 #                    <div title="[% Data.GenericValue | Localize("TimeShort") | html %]">[% Data.GenericValue | Localize("TimeShort") %]</div>
                     <div title="[% Data.GenericValue | Localize("TimeShort") | html %]">[% Data.GenericValue | Localize("TimeShort") | html %]</div>
-### Patch licensed under the GPL-3.0, Copyright (C) 2019-2022 Rother OSS GmbH, https://otobo.de/ ###
+### Patch licensed under the GPL-3.0, Copyright (C) 2019-2023 Rother OSS GmbH, https://otobo.de/ ###
                 </td>
 [% RenderBlockEnd("ContentLargeTicketGenericColumnTime") %]
 [% RenderBlockStart("ContentLargeTicketGenericColumnEscalation") %]
@@ -540,7 +545,7 @@ $('.DashboardHeader').off('click').on('click', '.ColumnSettingsTrigger', functio
                 <td>
                     <div title="[% Data.Title | html %]">
 [% RenderBlockStart("ContentLargeTicketGenericDynamicFieldLink") %]
-                        <a href="[% Data.Link | Interpolate %]"  target="_blank" class="DynamicFieldLink">[% Data.Value %]</a>
+                        [% Data.HTMLLink %]
 [% RenderBlockEnd("ContentLargeTicketGenericDynamicFieldLink") %]
 [% RenderBlockStart("ContentLargeTicketGenericDynamicFieldPlain") %]
                         [% Data.Value %]
@@ -640,7 +645,7 @@ $('#Dashboard' + Core.App.EscapeSelector('[% Data.Name | html %]') + '-box').fin
     $('.MasterAction').on('click', function (Event) {
         var $MasterActionLink = $(this).find('.MasterActionLink');
         // prevent MasterAction on Dynamic Fields links
-        if ($(Event.target).hasClass('DynamicFieldLink')) {
+        if ($(Event.target).hasClass('GenericLink')) {
             return true;
         }
         // only act if the link was not clicked directly

@@ -1,8 +1,8 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
 # Copyright (C) 2019–2021 Efflux GmbH, https://efflux.de/
-# Copyright (C) 2019-2022 Rother OSS GmbH, https://otobo.de/
+# Copyright (C) 2019-2023 Rother OSS GmbH, https://otobo.de/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. This program is
 # licensed under the AGPL-3.0 with code licensed under the GPL-3.0.
@@ -522,7 +522,7 @@ sub TokenAdd {
 
     # get needed objects
     my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
-    
+
     # delete old token
     return if !$DBObject->Do(
         SQL  => 'DELETE FROM oauth2_token WHERE profile_id = ? AND token_type = ?',
@@ -711,7 +711,7 @@ returns
 sub PrepareAuthURL {
     my ( $Self, %Param ) = @_;
 
-### Code licensed under the GPL-3.0, Copyright (C) 2019-2022 Rother OSS GmbH, https://otobo.de/ ###
+### Code licensed under the GPL-3.0, Copyright (C) 2019-2023 Rother OSS GmbH, https://otobo.de/ ###
     # check needed stuff
     for (qw(URLAuth URLRedirect ClientID Scope)) {
         if ( !$Param{$_} ) {
@@ -736,7 +736,7 @@ sub PrepareAuthURL {
     $URL->query_param_append( 'response_type', 'code' );
     $URL->query_param_append( 'response_mode', 'query' );
     $URL->query_param_append( 'state',         $RandomString );
-### EO Code licensed under the GPL-3.0, Copyright (C) 2019-2022 Rother OSS GmbH, https://otobo.de/ ###
+### EO Code licensed under the GPL-3.0, Copyright (C) 2019-2023 Rother OSS GmbH, https://otobo.de/ ###
 
     return (
         State => $RandomString,
@@ -763,7 +763,7 @@ Returns:
 sub RequestAccessToken {
     my ( $Self, %Param ) = @_;
 
-### Code licensed under the GPL-3.0, Copyright (C) 2019-2022 Rother OSS GmbH, https://otobo.de/ ###
+### Code licensed under the GPL-3.0, Copyright (C) 2019-2023 Rother OSS GmbH, https://otobo.de/ ###
     # check needed stuff
     for (qw(ProfileID GrantType)) {
         if ( !$Param{$_} ) {
@@ -864,7 +864,7 @@ sub RequestAccessToken {
             Token     => $ResponseData->{refresh_token},
         );
     }
-### EO Code licensed under the GPL-3.0, Copyright (C) 2019-2022 Rother OSS GmbH, https://otobo.de/ ###
+### EO Code licensed under the GPL-3.0, Copyright (C) 2019-2023 Rother OSS GmbH, https://otobo.de/ ###
 
     # Cache the access token until it expires.
     $Kernel::OM->Get('Kernel::System::Cache')->Set(

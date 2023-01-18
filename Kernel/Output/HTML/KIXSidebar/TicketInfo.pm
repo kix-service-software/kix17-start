@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -42,6 +42,9 @@ sub Run {
     my $TicketObject       = $Kernel::OM->Get('Kernel::System::Ticket');
     my $TimeObject         = $Kernel::OM->Get('Kernel::System::Time');
     my $UserObject         = $Kernel::OM->Get('Kernel::System::User');
+
+    # get isolated layout object for link safety checks
+    my $HTMLLinkLayoutObject = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout');
 
     my %Ticket = $TicketObject->TicketGet(
         TicketID      => $Param{TicketID},
@@ -136,6 +139,31 @@ sub Run {
         );
 
         if ( $ValueStrg->{Link} ) {
+            my $HTMLLink = $HTMLLinkLayoutObject->Output(
+                Template => '<a href="[% Data.Link | Interpolate %]" target="_blank" class="DynamicFieldLink">[% Data.Value %]</a>',
+                Data     => {
+                    %Ticket,
+                    Value                       => $ValueStrg->{Value},
+                    Title                       => $ValueStrg->{Title},
+                    Link                        => $ValueStrg->{Link},
+                    $DynamicFieldConfig->{Name} => $ValueStrg->{Title},
+                },
+            );
+            my %Safe = $HTMLUtilsObject->Safety(
+                String       => $HTMLLink,
+                NoApplet     => 1,
+                NoObject     => 1,
+                NoEmbed      => 1,
+                NoSVG        => 1,
+                NoImg        => 1,
+                NoIntSrcLoad => 0,
+                NoExtSrcLoad => 1,
+                NoJavaScript => 1,
+            );
+            if ( $Safe{Replace} ) {
+                $HTMLLink = $Safe{String};
+            }
+
             $LayoutObject->Block(
                 Name => 'DynamicFieldContentLink',
                 Data => {
@@ -144,6 +172,7 @@ sub Run {
                     Title                       => $ValueStrg->{Title},
                     Link                        => $ValueStrg->{Link},
                     $DynamicFieldConfig->{Name} => $ValueStrg->{Title},
+                    HTMLLink                    => $HTMLLink,
                 },
             );
         }

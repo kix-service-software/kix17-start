@@ -1,7 +1,7 @@
 // --
-// Modified version of the work: Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
+// Modified version of the work: Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
 // based on the original work of:
-// Copyright (C) 2001-2022 OTRS AG, https://otrs.com/
+// Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
 // --
 // This software comes with ABSOLUTELY NO WARRANTY. For details, see
 // the enclosed file LICENSE for license information (AGPL). If you
@@ -20,6 +20,21 @@ Core.KIX4OTRS = Core.KIX4OTRS || {};
  *              TicketZoomTab.
  */
 Core.KIX4OTRS.TicketZoomTabs = (function(TargetNS) {
+
+    TargetNS.InitMarkTicketAsSeen = function (TicketID) {
+
+        $('#TicketMarkAsRead').on('click', function(Event) {
+            TargetNS.MarkTicketAsSeen(TicketID,0);
+            return false;
+        });
+
+        if (
+            $('.ArticleTicketMarkAsRead').hasClass('Hidden')
+            && $('td span.UnreadArticles').length
+        ) {
+            $('.ArticleTicketMarkAsRead').removeClass('Hidden');
+        }
+    }
 
     /**
      * @function
@@ -40,7 +55,6 @@ Core.KIX4OTRS.TicketZoomTabs = (function(TargetNS) {
 
             // Mark article as seen in backend
             var Data = {
-                // Action: 'AgentTicketZoom',
                 Action : 'AgentTicketZoomTabArticle',
                 Subaction: 'TicketMarkAsSeen',
                 TicketID: TicketID
@@ -48,7 +62,11 @@ Core.KIX4OTRS.TicketZoomTabs = (function(TargetNS) {
             Core.AJAX.FunctionCall(
                 Core.Config.Get('CGIHandle'),
                 Data,
-                function () {}
+                function (Response) {
+                    if ( Response ) {
+                        $('.ArticleTicketMarkAsRead').addClass('Hidden');
+                    }
+                }
             );
         }, Timeout);
     };
@@ -76,7 +94,14 @@ Core.KIX4OTRS.TicketZoomTabs = (function(TargetNS) {
             Core.AJAX.FunctionCall(
                 Core.Config.Get('CGIHandle'),
                 Data,
-                function () {}
+                function (Response) {
+                    if (
+                        Response
+                        && !$('td span.UnreadArticles').length
+                    ) {
+                        $('.ArticleTicketMarkAsRead').addClass('Hidden');
+                    }
+                }
             );
         }, 3000);
     };

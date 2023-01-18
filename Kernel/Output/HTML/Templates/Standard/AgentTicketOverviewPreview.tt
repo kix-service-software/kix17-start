@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2022 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -106,7 +106,7 @@
                     <a href="[% Env("Baselink") %]Action=AgentTicketZoom;TicketID=[% Data.TicketID | uri %]" title="[% Data.Title | html %]" class="MasterActionLink">[% Config("Ticket::Hook") %][% Config("Ticket::HookDivider") %][% Data.TicketNumber %] &ndash; [% Data.Title | html %]</a>
                 </h2>
 [% RenderBlockStart("MenuItem") %]
-                <a href="[% Env("Baselink") %][% Data.Link %]" [% Data.LinkParam %] class="menuitem" title="[% Translate(Data.Description) | html %]">[% Translate(Data.Name) | html %]</a>
+                [% Data.HTMLLink %]
 [% RenderBlockEnd("MenuItem") %]
                 <table>
                     <tbody>
@@ -218,7 +218,7 @@
                             <td>
                                 <label>[% Translate(Data.Label) | html %]</label>
 [% RenderBlockStart("DynamicFieldTableRowRecordLink") %]
-                                <div title="[% Data.Title | html %]"><a href="[% Data.Link | Interpolate %]" target="_blank" class="DynamicFieldLink">[% Data.Value %]</a></div>
+                                <div title="[% Data.Title | html %]">[% Data.HTMLLink %]</div>
 [% RenderBlockEnd("DynamicFieldTableRowRecordLink") %]
 [% RenderBlockStart("DynamicFieldTableRowRecordPlain") %]
                                 <div title="[% Data.Title | html %]"><span>[% Data.Value %]</span></div>
