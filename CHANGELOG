@@ -1,6 +1,90 @@
 # Change log of KIX
 * Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.20.0 (2023/01/18)
+ * (2023/01/18) - productive release
+
+# 17.20.0-RC11 (2023/01/17)
+ * (2023/01/16) - Bugfix: KIX17-3372 (fixed double click event of the LinkedCI sidebar) (fjacquemin)
+ * (2023/01/13) - Bugfix: KIX17-3374 (fix deletion of linked objects in popup) (mbauer)
+ * (2023/01/11) - Bugfix: KIX17-3360 (prevent uninitialized value message for shared memory error) (mbauer)
+
+# 17.20.0-RC10 (2023/01/10)
+ * (2023/01/10) - Bugfix: KIX17-3360 (reduced log level for shared memory error to notice) (mbauer)
+ * (2023/01/10) - Bugfix: KIX17-3258 (fixed missing error return of the email recipients count check) (fjacquemin)
+ * (2023/01/09) - CR: KIX17-3279 (updated depends and copy right) (fjacquemin)
+
+# 17.20.0-RC9 (2023/01/05)
+ * (2023/01/04) - Bugfix: KIX17-3360 (prevent internal server error when shared memory can not be used) (mbauer)
+
+# 17.20.0-RC8 (2023/01/04)
+ * (2023/01/04) - Bugfix: KIX17-3353 (check queue membership of selected templates) (mbauer)
+
+# 17.20.0-RC7 (2023/01/04)
+ * (2023/01/04) - release candidate
+
+# 17.20.0-RC6 (2023/01/04)
+ * (2023/01/03) - Bugfix: KIX17-3357 (fix placeholder for customer company data) (mbauer)
+ * (2023/01/02) - Bugfix: KIX17-3350 (server side validation of config item dynamic field values) (mbauer)
+ * (2022/12/16) - Bugfix: KIX17-3323 (fix sort of custom config item overview columns) (mbauer)
+
+# 17.20.0-RC5 (2022/12/14)
+ * (2022/12/14) - Bugfix: KIX17-3347 (use correct SearchLimit for fulltext ticket search) (mbauer)
+ * (2022/12/09) - Bugfix: KIX17-3345 (fixed missing display queue in ticket dashboard) (fjacquemin)
+ * (2022/12/09) - Bugfix: KIX17-3307 (fixed non-performant CryptKey update when adding several To, Cc, Bcc) (fjacquemin)
+ * (2022/12/01) - Bugfix: KIX17-3323 (fixed missing handling of not valid OrderBy by VersionSearch) (fjacquemin)
+ * (2022/12/01) - Bugfix: KIX17-2995 (added function to hide MarkTicketAsSeen if no unseen exists) (fjacquemin)
+ * (2022/11/30) - Bugfix: KIX17-2995 (implemented sticky table for queues-groups-roles) (fjacquemin)
+ * (2022/11/30) - Bugfix: KIX17-2995 (fixed invalid css arguments) (fjacquemin)
+ * (2022/11/30) - Bugfix: KIX17-2995 (fixed missing and correcting existing translations) (fjacquemin)
+ * (2022/11/29) - Bugfix: KIX17-3258 (fixed OSA-2022-13 DoS attack using email) (fjacquemin)
+ * (2022/11/28) - Bugfix: KIX17-3240 (Fixed encoding of sysconfig log output) (mbauer)
+ * (2022/11/24) - Bugfix: KIX17-3323 (fixed sortable column in AgentITSMConfigItem) (fjacquemin)
+ * (2022/11/11) - Bugfix: KIX17-3114 (fixed check of ArticleID on initial load in zoom) (fjacquemin)
+
+# 17.20.0-RC4 (2022/11/11)
+ * (2022/11/10) - Bugfix: KIX17-3314 (prevent overwrite of existing extended followup reference) (mbauer)
+ * (2022/11/10) - Bugfix: KIX17-3114 (changed article list handling when pagination) (fjacquemin)
+ * (2022/11/08) - Bugfix: KIX17-3311 (fix ticket action popups) (mbauer)
+ * (2022/11/07) - Bugfix: KIX17-3181 (fix check for allowed activity dialog) (mbauer)
+ * (2022/08/12) - CR: KIX17-3245 (renewing of used objects) (mbauer)
+
+# 17.20.0-RC3 (2022/11/07)
+ * (2022/11/04) - Bugfix: KIX17-3271 (fixed missing handling of customer user of link object permission) (fjacquemin)
+ * (2022/11/04) - Bugfix: KIX17-3270 (fixed missing handling of customer user for popup size) (fjacquemin)
+ * (2022/11/04) - Bugfix: KIX17-3227 (optimized ticket deletion by generic agent) (mbauer)
+ * (2022/11/02) - CR: KIX17-3130 (update distributed CPAN modules) (mbauer)
+ * (2022/11/01) - Bugfix: KIX17-3268 (changed dialog size of ticket option FAQ and Contact) (fjacquemin)
+
+# 17.20.0-RC2 (2022/11/01)
+ * (2022/10/28) - Bugfix: KIX17-3265 (fixed handling of disabled dynamic fields for AgentTicketForward) (mbauer)
+ * (2022/10/28) - Bugfix: KIX17-3264 (fix customer company name in ticket overview small) (mbauer)
+ * (2022/10/27) - Bugfix: KIX17-3267 (use customer id of selected customer user for splitted tickets) (mbauer)
+ * (2022/10/24) - Bugfix: KIX17-2982 (removed column setting and sortable/filterable of link objects in FAQ) (fjacquemin)
+ * (2022/10/24) - CR: KIX17-3131 (fixed image path of jstree css) (fjacquemin)
+ * (2022/10/24) - Bugfix: KIX17-3100 (fixed allocation list handling) (fjacquemin)
+ * (2022/10/19) - Bugfix: KIX17-3259 (fix performance issues after security fix) (mbauer)
+ * (2022/10/17) - Bugfix: KIX17-3255 (keep customer user in config item attribute, when login is not search attribute) (mbauer)
+ * (2022/10/17) - Bugfix: KIX17-3252 (fix filter condition when using static search index) (mbauer)
+ * (2022/10/14) - Bugfix: KIX17-3224 (prevent owner reset, when owner was set by current action) (mbauer)
+ * (2022/10/14) - Bugfix: KIX17-3181 (check correlation for called activity dialog to current activity) (mbauer)
+ * (2022/10/10) - CR: KIX17-3131 (fixed missing script changes) (fjacquemin)
+ * (2022/10/10) - CR: KIX17-3131 (removed depricated ckeditor plugin) (fjacquemin)
+ * (2022/08/22) - Bugfix: KIX17-3114 (fixed article pagination) (fjacquemin)
+
+# 17.20.0-RC1 (2022/10/07)
+ * (2022/10/07) - CR: KIX17-3131 (updated JavaScript libraries) (fjacquemin)
+ * (2022/10/06) - Bugfix: KIX17-3186 (remove js-code from links in dynamic field display) (mbauer)
+ * (2022/10/06) - Bugfix: KIX17-3240 (Fixed encoding of log output. Thanks to Roland Jäger and Bernhard Schmalhofer) (mbauer)
+ * (2022/10/05) - Bugfix: KIX17-3186 (remove js-code from links in customer user items) (mbauer)
+ * (2022/10/05) - Bugfix: KIX17-3186 (remove js-code from links in menu modules) (mbauer)
+ * (2022/10/05) - Bugfix: KIX17-3185 (prevent error on missformed placeholder) (mbauer)
+ * (2022/10/05) - Bugfix: KIX17-3214 (clarified MaxArticlesZoomExpand) (mbauer)
+ * (2022/09/28) - Bugfix: KIX17-3213 (fixed incorrect display of value of dynamic field in the ColumnFilter) (fjacquemin)
+ * (2022/09/26) - Bugfix: KIX17-3218 (fixed status from response template is not set correctly when PGP or SMIME is active) (fjacquemin)
+ * (2022/08/25) - Bugfix: KIX17-3177 (fixed handling of type based Ticket::StateAfterPending) (mbauer)
+ * (2022/08/05) - CR: KIX17-3244 (autofocus on login) (mbauer)
+
 # 17.19.1 (2022/09/29)
  * (2022/09/29) - productive release
  * (2022/07/13) - Bugfix: KIX17-3065 (extract inline images from internal sources) (mbauer)
