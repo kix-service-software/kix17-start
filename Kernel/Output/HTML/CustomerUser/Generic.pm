@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2022 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -60,6 +60,33 @@ sub Run {
 
     my $IconName = $Param{Config}->{IconName};
 
+    my $HTMLLink = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout')->Output(
+        Template => <<'END',
+<a class="[% Data.CSSClass %]" [% FOREACH Attribute IN Data.HTMLData %]data-[% Attribute.key | html %]="[% Attribute.value | html %]" [% END %]href="[% Data.URL %]" target="[% Data.Target %]" title="[% Translate(Data.Text) | html %]">
+    [% Translate(Data.Text) | html %][% Data.Extension | html %]
+</a>
+END
+        Data     => {
+            %{ $Param{Config} },
+            URL      => $URL,
+            IconName => $IconName,
+        },
+    );
+    my %Safe = $Kernel::OM->Get('Kernel::System::HTMLUtils')->Safety(
+        String       => $HTMLLink,
+        NoApplet     => 1,
+        NoObject     => 1,
+        NoEmbed      => 1,
+        NoSVG        => 1,
+        NoImg        => 1,
+        NoIntSrcLoad => 0,
+        NoExtSrcLoad => 1,
+        NoJavaScript => 1,
+    );
+    if ( $Safe{Replace} ) {
+        $HTMLLink = $Safe{String};
+    }
+
     # generate block
     $LayoutObject->Block(
         Name => 'CustomerItemRow',
@@ -67,6 +94,7 @@ sub Run {
             %{ $Param{Config} },
             URL      => $URL,
             IconName => $IconName,
+            HTMLLink => $HTMLLink,
         },
     );
 

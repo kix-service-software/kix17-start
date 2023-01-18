@@ -1,7 +1,7 @@
 // --
-// Modified version of the work: Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
+// Modified version of the work: Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
 // based on the original work of:
-// Copyright (C) 2001-2022 OTRS AG, https://otrs.com/
+// Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
 // --
 // This software comes with ABSOLUTELY NO WARRANTY. For details, see
 // the enclosed file LICENSE for license information (AGPL). If you
@@ -42,8 +42,16 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
      * @description
      *      Needed for the change event of customer fields, if ActiveAutoComplete is false (disabled).
      */
-        CustomerFieldChangeRunCount = {};
-
+        CustomerFieldChangeRunCount = {},
+    /**
+     * @private
+     * @name CustomerTicketCount
+     * @memberof Core.Agent.CustomerSearch
+     * @member {Object}
+     * @description
+     *      Parameter that counts the number of AddTicketCustomer calls to regulate the FormUpdate.
+     */
+        CustomerTicketCount = 0;
     /**
      * @name ExistsCustomerUser
      * @memberof Core.Agent.CustomerSearch
@@ -434,7 +442,7 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
             }, 'CustomerSearch');
 
             if (
-                $Element.attr('name') != undefined 
+                $Element.attr('name') != undefined
                 && $Element.attr('name').substr(0, 13) !== 'DynamicField_'
                 && Core.Config.Get('Action') !== 'AgentBook'
                 && Core.Config.Get('Action') !== 'AgentTicketCustomer'
@@ -521,8 +529,8 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
         }
 
         if (CustomerValue === '') {
-            return false;
             Core.App.Publish('Core.Agent.CustomerSearch.AddTicketCustomer', [false, CustomerValue, CustomerKey]);
+            return false;
         }
 
         // check for duplicated entries
@@ -542,6 +550,7 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
 
         // increment customer counter
         CustomerTicketCounter++;
+        CustomerTicketCount++;
 
         // set sufix
         Suffix = '_' + CustomerTicketCounter;
@@ -648,8 +657,9 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
                 || Core.Config.Get('Action') === 'AgentTicketEmailOutbound'
             )
             && $('#CryptKeyID').length
+            && CustomerTicketCount < 3
         ) {
-            Core.AJAX.FormUpdate($('#' + Field).closest('form'), 'AJAXUpdate', '', [ 'CryptKeyID' ]);
+            Core.AJAX.FormUpdate($('#' + Field).closest('form'), 'AJAXUpdate', '', [ 'CryptKeyID' ], undefined ,undefined, false);
         }
 
         // now that we know that at least one customer has been added,
@@ -676,8 +686,10 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
      */
     TargetNS.RemoveCustomerTicket = function (Object) {
         var TicketCustomerIDs = 0,
-        $Field = Object.closest('.Field'),
-        $Form;
+            $Field = Object.closest('.Field'),
+            $Form;
+
+        CustomerTicketCount--;
 
         if (
             Core.Config.Get('Action') === 'AgentTicketEmail'
@@ -710,8 +722,9 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
                 || Core.Config.Get('Action') === 'AgentTicketEmailOutbound'
             )
             && $('#CryptKeyID').length
+            && CustomerTicketCount < 2
         ) {
-            Core.AJAX.FormUpdate($Form, 'AJAXUpdate', '', ['CryptKeyID']);
+            Core.AJAX.FormUpdate($Form, 'AJAXUpdate', '', ['CryptKeyID'],undefined,undefined,false);
         }
 
         if(!$('.CustomerContainer input[type="radio"]').is(':checked')) {
@@ -738,7 +751,7 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
     TargetNS.ResetCustomerInfo = function () {
             $('#SelectedCustomerUser').val('');
             $('#CustomerUserID').val('');
-            $('#CustomerID').val('');
+            $('#CustomerID').val('').attr('value','');
             $('#CustomerUserOption').val('');
             $('#ShowCustomerID').html('');
 

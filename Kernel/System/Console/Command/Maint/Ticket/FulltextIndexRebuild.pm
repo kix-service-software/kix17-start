@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2022 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -40,6 +40,10 @@ sub Configure {
 sub Run {
     my ( $Self, %Param ) = @_;
 
+    # Refresh common objects after a certain number of loop iterations.
+    #   This will call event handlers and clean up caches to avoid excessive mem usage.
+    my $CommonObjectRefresh = 50;
+
     $Self->Print("<yellow>Rebuilding article search index...</yellow>\n");
 
     # disable ticket events
@@ -64,7 +68,16 @@ sub Run {
     TICKETID:
     for my $TicketID (@TicketIDs) {
 
-        $Count++;
+        if ( $Count++ % $CommonObjectRefresh == 0 ) {
+            $Kernel::OM->ObjectsDiscard(
+                Objects => [
+                    'Kernel::System::DB',
+                    'Kernel::System::Ticket'
+                ],
+            );
+
+            $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
+        }
 
         # get articles
         my @ArticleIndex = $TicketObject->ArticleIndex(

@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2022 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -38,26 +38,29 @@ sub new {
 sub Run {
     my ( $Self, %Param ) = @_;
 
-    # get log object
-    my $LogObject = $Kernel::OM->Get('Kernel::System::Log');
-
     # check needed stuff
     if ( !$Param{Ticket} ) {
-        $LogObject->Log(
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => 'Need Ticket!'
         );
         return;
     }
 
+    # get needed objects
+    my $ConfigObject    = $Kernel::OM->Get('Kernel::Config');
+    my $GroupObject     = $Kernel::OM->Get('Kernel::System::Group');
+    my $HTMLUtilsObject = $Kernel::OM->Get('Kernel::System::HTMLUtils');
+    my $TicketObject    = $Kernel::OM->Get('Kernel::System::Ticket');
+
+    # get isolated layout object for link safety checks
+    my $HTMLLinkLayoutObject = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout');
+
     # check if frontend module registered, if not, do not show action
     if ( $Param{Config}->{Action} ) {
-        my $Module = $Kernel::OM->Get('Kernel::Config')->Get('Frontend::Module')->{ $Param{Config}->{Action} };
+        my $Module = $ConfigObject->Get('Frontend::Module')->{ $Param{Config}->{Action} };
         return if !$Module;
     }
-
-    # get ticket object
-    my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
 
     # check lock permission
     my $AccessOk = $TicketObject->TicketPermission(
@@ -89,14 +92,14 @@ sub Run {
             my ( $Permission, $Name ) = split /:/, $Item;
 
             if ( !$Permission || !$Name ) {
-                $LogObject->Log(
+                $Kernel::OM->Get('Kernel::System::Log')->Log(
                     Priority => 'error',
                     Message  => "Invalid config for Key Group: '$Item'! "
                         . "Need something like '\$Permission:\$Group;'",
                 );
             }
 
-            my %Groups = $Kernel::OM->Get('Kernel::System::Group')->PermissionUserGet(
+            my %Groups = $GroupObject->PermissionUserGet(
                 UserID => $Self->{UserID},
                 Type   => $Permission,
             );
@@ -125,6 +128,32 @@ sub Run {
         # if it is locked for somebody else
         return if $Param{Ticket}->{OwnerID} ne $Self->{UserID};
 
+        my $HTMLLink = $HTMLLinkLayoutObject->Output(
+            Template => '<a href="[% Env("Baselink") %][% Data.Link | Interpolate %]" class="[% Data.Class %]" [% Data.LinkParam %] title="[% Translate(Data.Description) | html %]">[% Translate(Data.Name) | html %]</a>',
+            Data     => {
+                %{ $Param{Config} },
+                %{ $Param{Ticket} },
+                %Param,
+                Name        => Translatable('Unlock'),
+                Description => Translatable('Unlock to give it back to the queue'),
+                Link        => 'Action=AgentTicketLock;Subaction=Unlock;TicketID=[% Data.TicketID | uri %];[% Env("ChallengeTokenParam") | html %]',
+            },
+        );
+        my %Safe = $HTMLUtilsObject->Safety(
+            String       => $HTMLLink,
+            NoApplet     => 1,
+            NoObject     => 1,
+            NoEmbed      => 1,
+            NoSVG        => 1,
+            NoImg        => 1,
+            NoIntSrcLoad => 0,
+            NoExtSrcLoad => 1,
+            NoJavaScript => 1,
+        );
+        if ( $Safe{Replace} ) {
+            $HTMLLink = $Safe{String};
+        }
+
         # show unlock action
         return {
             %{ $Param{Config} },
@@ -132,9 +161,35 @@ sub Run {
             %Param,
             Name        => Translatable('Unlock'),
             Description => Translatable('Unlock to give it back to the queue'),
-            Link =>
-                'Action=AgentTicketLock;Subaction=Unlock;TicketID=[% Data.TicketID | uri %];[% Env("ChallengeTokenParam") | html %]',
+            Link        => 'Action=AgentTicketLock;Subaction=Unlock;TicketID=[% Data.TicketID | uri %];[% Env("ChallengeTokenParam") | html %]',
+            HTMLLink    => $HTMLLink,
         };
+    }
+
+    my $HTMLLink = $HTMLLinkLayoutObject->Output(
+        Template => '<a href="[% Env("Baselink") %][% Data.Link | Interpolate %]" class="[% Data.Class %]" [% Data.LinkParam %] title="[% Translate(Data.Description) | html %]">[% Translate(Data.Name) | html %]</a>',
+        Data     => {
+            %{ $Param{Config} },
+            %{ $Param{Ticket} },
+            %Param,
+            Name        => Translatable('Lock'),
+            Description => Translatable('Lock it to work on it'),
+            Link        => 'Action=AgentTicketLock;Subaction=Lock;TicketID=[% Data.TicketID | uri %];[% Env("ChallengeTokenParam") | html %]',
+        },
+    );
+    my %Safe = $HTMLUtilsObject->Safety(
+        String       => $HTMLLink,
+        NoApplet     => 1,
+        NoObject     => 1,
+        NoEmbed      => 1,
+        NoSVG        => 1,
+        NoImg        => 1,
+        NoIntSrcLoad => 0,
+        NoExtSrcLoad => 1,
+        NoJavaScript => 1,
+    );
+    if ( $Safe{Replace} ) {
+        $HTMLLink = $Safe{String};
     }
 
     # if ticket is unlocked
@@ -144,8 +199,8 @@ sub Run {
         %Param,
         Name        => Translatable('Lock'),
         Description => Translatable('Lock it to work on it'),
-        Link =>
-            'Action=AgentTicketLock;Subaction=Lock;TicketID=[% Data.TicketID | uri %];[% Env("ChallengeTokenParam") | html %]',
+        Link        => 'Action=AgentTicketLock;Subaction=Lock;TicketID=[% Data.TicketID | uri %];[% Env("ChallengeTokenParam") | html %]',
+        HTMLLink    => $HTMLLink,
     };
 }
 

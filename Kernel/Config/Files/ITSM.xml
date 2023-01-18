@@ -389,29 +389,6 @@
             </Hash>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="ITSMConfigItem::EventModulePre###999-Test" Required="0" Valid="0">
-        <Description Translatable="1">Config item event module that shows passed parameters BEFORE action is perdormed. May be used as template for own CI-events.</Description>
-        <Group>ITSM</Group>
-        <SubGroup>Core::ITSMConfigItem</SubGroup>
-        <Setting>
-            <Hash>
-                <Item Key="Module">Kernel::System::ITSMConfigItem::Event::Test</Item>
-                <Item Key="Event">(ConfigItemCreate|VersionCreate|DeploymentStateUpdate|IncidentStateUpdate|ConfigItemDelete|LinkAdd|LinkDelete|DefinitionUpdate|NameUpdate|ValueUpdate|DefinitionCreate|VersionDelete)</Item>
-            </Hash>
-        </Setting>
-    </ConfigItem>
-    <ConfigItem Name="ITSMConfigItem::EventModulePost###999-Test" Required="0" Valid="0">
-        <Description Translatable="1">Config item event module that shows passed parameters AFTER action is performed. May be used as template for own CI-events.</Description>
-        <Group>ITSM</Group>
-        <SubGroup>Core::ITSMConfigItem</SubGroup>
-        <Setting>
-            <Hash>
-                <Item Key="Module">Kernel::System::ITSMConfigItem::Event::Test</Item>
-                <Item Key="Event">(ConfigItemCreate|VersionCreate|DeploymentStateUpdate|IncidentStateUpdate|ConfigItemDelete|LinkAdd|LinkDelete|DefinitionUpdate|NameUpdate|ValueUpdate|DefinitionCreate|VersionDelete)</Item>
-                <Item Key="Transaction">0</Item>
-            </Hash>
-        </Setting>
-    </ConfigItem>
     <ConfigItem Name="Frontend::Module###AgentITSMService" Required="0" Valid="1">
         <Description Translatable="1">Frontend module registration for the AgentITSMService object in the agent interface.</Description>
         <Group>ITSM</Group>

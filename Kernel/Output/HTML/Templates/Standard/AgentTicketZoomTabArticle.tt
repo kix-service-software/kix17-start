@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2022 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -239,19 +239,11 @@ $(document.body).on('change', '.ArticleFlagSelection', function() {
             [% Translate("Article Overview") | html %] - [% Data.ArticleCount | html %] [% Translate("Article(s)") | html %]
         </span></h2>
         <div class="AdditionalInformation ControlRow">
-
-[% RenderBlockStart("ArticlePages") %]
-            <div class="ArticlePages Icons">
-[% FOREACH page IN [1 .. Data.Pages]; %]
-                <a href="[% Env("Baselink") %]Action=AgentTicketZoom;TicketID=[% Data.TicketID | uri %];ArticlePage=[% page %]" title="[% Translate('Page') %] [% page %]" data-page="[% page %]" [% IF page == Data.CurrentPage %]class="Active"[% END %]>[% page %]</a>
-[% END; %]
-            </div>
-[% RenderBlockEnd("ArticlePages") %]
             <div class="ResetColumnWidth Icons Hidden">
                 <span class="InvisibleText">[% Translate("Reset Columns Width") | html %]:</span>
                 <a id="ResetColumnWidth" href="#" title="[% Translate("Reset columns width") | html %]"><i class="fa fa-columns"></i><span>[% Translate("Reset columns width") | html %]</span></a>
             </div>
-            <div class="ArticleTicketMarkAsRead Icons">
+            <div class="ArticleTicketMarkAsRead Icons Hidden">
                 <span class="InvisibleText">[% Translate("Mark") | html %]:</span>
                 <a id="TicketMarkAsRead" href="#" title="[% Translate("Mark this ticket as read") | html %]"><i class="fa fa-eye"></i><span>[% Translate("Mark this ticket as read") | html %]</span></a>
             </div>
@@ -267,8 +259,8 @@ $(document.body).on('change', '.ArticleFlagSelection', function() {
             <div class="ArticleView Icons">
                 <span class="InvisibleText">[% Translate("Article") | html %] [% Translate("View") | html %]:</span>
 [% RenderBlockStart("Expand") %]
-                <a class="OneArticle Active" href="[% Env("Baselink") %]Action=AgentTicketZoom;TicketID=[% Data.TicketID | uri %];ArticleID=[% Data.ArticleID | uri %];ZoomExpand=0;SelectedTab=[% Data.SelectedTab | uri %];ArticlePage=[% Data.Page | uri %]" title="[% Translate("Show one article") | html %]"><i class="fa fa-minus"></i><span>[% Translate("Show one article") | html %]</span></a>
-                <a class="AllArticles" href="[% Env("Baselink") %]Action=AgentTicketZoom;TicketID=[% Data.TicketID | uri %];ArticleID=[% Data.ArticleID | uri %];ZoomExpand=1;SelectedTab=[% Data.SelectedTab | uri %];ArticlePage=[% Data.Page | uri %]" title="[% Translate("Show all articles") | html %]"><i class="fa fa-bars"></i><span>[% Translate("Show all articles") | html %]</span></a>
+                <a class="OneArticle Active" href="[% Env("Baselink") %]Action=AgentTicketZoom;TicketID=[% Data.TicketID | uri %];ArticleID=[% Data.ArticleID | uri %];ZoomExpand=0;SelectedTab=[% Data.SelectedTab | uri %];StartHit=[% Data.StartHit | uri %];HasFilter=[% Data.HasFilter | uri %]" title="[% Translate("Show one article") | html %]"><i class="fa fa-minus"></i><span>[% Translate("Show one article") | html %]</span></a>
+                <a class="AllArticles" href="[% Env("Baselink") %]Action=AgentTicketZoom;TicketID=[% Data.TicketID | uri %];ArticleID=[% Data.ArticleID | uri %];ZoomExpand=1;SelectedTab=[% Data.SelectedTab | uri %];StartHit=[% Data.StartHit | uri %];HasFilter=[% Data.HasFilter | uri %]" title="[% Translate("Show all articles") | html %]"><i class="fa fa-bars"></i><span>[% Translate("Show all articles") | html %]</span></a>
 [% RenderBlockEnd("Expand") %]
 [% RenderBlockStart("Collapse") %]
                 <a class="OneArticle" href="[% Env("Baselink") %]Action=AgentTicketZoom;TicketID=[% Data.TicketID | uri %];ArticleID=[% Data.ArticleID | uri %];ZoomExpand=0;SelectedTab=[% Data.SelectedTab | uri %]" title="[% Translate("Show one article") | html %]"><i class="fa fa-minus"></i><span>[% Translate("Show one article") | html %]</span></a>
@@ -279,7 +271,12 @@ $(document.body).on('change', '.ArticleFlagSelection', function() {
         </div>
     </div>
     <div class="Content">
-
+[% RenderBlockStart("ArticlePages") %]
+        <div class="Pagination">
+            <strong>[% Data.Result | html %]</strong> [% Translate("of") | html %] <strong>[% Data.TotalHits | html %]</strong> - [% Translate("Page") | html %]: [% Data.SiteNavBar %]
+        </div>
+        <div class="Clear"></div>
+[% RenderBlockEnd("ArticlePages") %]
 [% RenderBlockStart("ArticleList") %]
         <div class="TicketList">
             <div id="ArticleTableBody" class="ActionRow">
@@ -429,6 +426,13 @@ $(document.body).on('change', '.ArticleFlagSelection', function() {
                                 </td>
                             </tr>
 [% RenderBlockEnd("TreeItem") %]
+[% RenderBlockStart("TreeNoItem") %]
+                            <tr>
+                                <td colspan="[% Data.Colspan %]">
+                                    [% Translate("No articles were found with the defined filter.") %]
+                                </td>
+                            </tr>
+[% RenderBlockEnd("TreeNoItem") %]
                         </tbody>
                     </table>
                 </div>
@@ -485,7 +489,7 @@ $(document.body).on('change', '.ArticleFlagSelection', function() {
 [% RenderBlockStart("ArticleDynamicField") %]
                     <label>[% Translate(Data.Label) | html %]:</label>
 [% RenderBlockStart("ArticleDynamicFieldLink") %]
-                    <p class="Value" title="[% Data.Title %]"><a href="[% Data.Link | Interpolate %]" target="_blank" class="DynamicFieldLink">[% Data.Value %]</a></p>
+                    <p class="Value" title="[% Data.Title %]">[% Data.HTMLLink %]</p>
 [% RenderBlockEnd("ArticleDynamicFieldLink") %]
 [% RenderBlockStart("ArticleDynamicFieldPlain") %]
                     <p class="Value" title="[% Data.Title %]">[% Data.Value %]</p>
@@ -628,19 +632,14 @@ function CheckIFrameHeight(IFrameID) {
     Core.KIX4OTRS.TicketZoomTabs.ShowArticleFlagOptionsDialog('[% Translate("Article Flag Options") | html %]');
     Core.KIX4OTRS.TicketZoomTabs.ArticleFlagOptions([% Data.TicketID | html %],'[% Translate("Apply") | html %]','[% Translate("Set article flag") | html %]','[% Translate("for Article") | html %]');
     Core.KIX4OTRS.TicketZoomTabs.PopUpInit();
+    Core.KIX4OTRS.TicketZoomTabs.InitMarkTicketAsSeen([% Data.TicketID | html %]);
     Core.Agent.TicketZoom.Init({ ArticleTableHeight: parseInt('[% Env("UserTicketZoomArticleTableHeight") %]',10)},'AgentTicketZoomTabArticle');
     Core.Config.Set('Ticket::Frontend::HTMLArticleHeightDefault', parseInt("[% Config("Ticket::Frontend::HTMLArticleHeightDefault") %]" || 0, 10));
     Core.Config.Set('Ticket::Frontend::HTMLArticleHeightMax', parseInt("[% Config("Ticket::Frontend::HTMLArticleHeightMax") %]" || 0, 10));
     Core.Config.Set('Language.AttachmentViewMessage', [% Translate('Article could not be opened! Perhaps it is on another article page?') | JSON %]);
-
     if (typeof Core.UI.Floater !== 'undefined') {
         Core.UI.Floater.Init();
     }
-
-    $('#TicketMarkAsRead').on('click', function(Event) {
-        Core.KIX4OTRS.TicketZoomTabs.MarkTicketAsSeen([% Data.TicketID | html %],0);
-        return false;
-    });
 //]]></script>
 [% END %]
 [% RenderBlockEnd("TicketZoomInit") %]

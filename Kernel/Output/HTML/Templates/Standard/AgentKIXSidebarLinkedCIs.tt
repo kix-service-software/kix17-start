@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -62,7 +62,7 @@
             }
         });
 
-        $('input[name=LinkAssignedConfigItems]').click(function() {
+        $('input[name=LinkAssignedConfigItems]').off('click.LinkAssigned').on('click.LinkAssigned',function() {
             if ($(this).prop('checked')) {
                 if ( CallingAction == 'CustomerTicketMessage') {
                     URL = 'Action=CustomerLinkObject;SubAction=SingleLinkAdd;TargetKey=' + $('#LinkedTicketID').val() +';TargetObject=Ticket;SourceObject=ITSMConfigItem;SourceKey=' + $(this).val() +';Mode='+ $('#LinkMode').val();

@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -273,6 +273,21 @@ END
                 $MenuHTML =~ s/\n+//g;
                 $MenuHTML =~ s/\s+/ /g;
                 $MenuHTML =~ s/<\!--.+?-->//g;
+
+                my %Safe = $Kernel::OM->Get('Kernel::System::HTMLUtils')->Safety(
+                    String       => $MenuHTML,
+                    NoApplet     => 1,
+                    NoObject     => 1,
+                    NoEmbed      => 1,
+                    NoSVG        => 1,
+                    NoImg        => 1,
+                    NoIntSrcLoad => 0,
+                    NoExtSrcLoad => 1,
+                    NoJavaScript => 1,
+                );
+                if ( $Safe{Replace} ) {
+                    $MenuHTML = $Safe{String};
+                }
 
                 $Menus{$MenuKey}->{ID} = $Menus{$MenuKey}->{Name};
                 $Menus{$MenuKey}->{ID} =~ s/(\s|&|;)//ig;

@@ -1,7 +1,7 @@
 // --
-// Modified version of the work: Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
+// Modified version of the work: Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
 // based on the original work of:
-// Copyright (C) 2001-2022 OTRS AG, https://otrs.com/
+// Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
 // --
 // This software comes with ABSOLUTELY NO WARRANTY. For details, see
 // the enclosed file LICENSE for license information (AGPL). If you
@@ -107,6 +107,58 @@ FAQ.Agent.TicketCompose = (function (TargetNS) {
                 GetCursorPosition();
             });
         }
+
+        function GetSize() {
+            var wWidth      = $(window).width(),
+                wHeight     = $(window).height(),
+                wScrollTop  = $(window).scrollTop(),
+                wScrollLeft = $(window).scrollLeft(),
+                dHeight     = wHeight - ((10 - wScrollTop) * 2) - 100,
+                dWidth      = wWidth - ((10 - wScrollLeft) * 2) - 100;
+
+                return {
+                    width: dWidth,
+                    height: dHeight
+                };
+        }
+
+        $('#OptionFAQ').on('click', function () {
+            var FAQIFrame   = '',
+                SessionData = Core.App.GetSessionInformation(),
+                data        = GetSize();
+
+            FAQIFrame = '<iframe id="OptionFAQIframe" width="' + data.width + '" height="' + data.height + '" src="' + Core.Config.Get('CGIHandle') + '?' + 'Action=AgentFAQExplorer;Nav=None';
+
+            if (
+                !Core.Config.Get('SessionIDCookie')
+                && FAQIFrame.indexOf(SessionData[Core.Config.Get('SessionName')]) === -1
+            ) {
+                FAQIFrame += ';' + encodeURIComponent(Core.Config.Get('SessionName')) + '=' + encodeURIComponent(SessionData[Core.Config.Get('SessionName')]);
+            }
+
+            FAQIFrame += '"></iframe>';
+
+            Core.UI.Dialog.ShowContentDialog(FAQIFrame, '', '10px', 'Center', true, []);
+
+            return false;
+        });
+
+        $(window).on('resize',function() {
+            if (
+                $('#OptionFAQIframe').length
+                && !$('.Dialog:visible').hasClass('Fullsize')
+            ) {
+                var data      = GetSize(),
+                    ScrollTop = $(window).scrollTop();
+                $('#OptionFAQIframe').width(data.width);
+                $('#OptionFAQIframe').height(data.height);
+
+                $('.Dialog:visible').css({
+                    top: (10 + ScrollTop) + 'px',
+                    left: Math.round(($(window).width() - $('.Dialog:visible').width()) / 2) + 'px'
+                });
+            }
+        });
     };
 
     /**

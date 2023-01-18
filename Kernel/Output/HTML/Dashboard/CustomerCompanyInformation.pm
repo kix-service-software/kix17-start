@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2022 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -71,9 +71,12 @@ sub Run {
     my $LayoutObject    = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my $HTMLUtilsObject = $Kernel::OM->Get('Kernel::System::HTMLUtils');
     my $ValidObject     = $Kernel::OM->Get('Kernel::System::Valid');
-    my $CompanyIsValid;
+
+    # get isolated layout object for link safety checks
+    my $HTMLLinkLayoutObject = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout');
 
     # make ValidID readable
+    my $CompanyIsValid;
     if ( $CustomerCompany{ValidID} ) {
         my @ValidIDs = $ValidObject->ValidIDsGet();
         $CompanyIsValid = grep { $CustomerCompany{ValidID} == $_ } @ValidIDs;
@@ -115,7 +118,7 @@ sub Run {
 
         # check if a link must be placed
         if ( $Entry->[6] ) {
-            my $Link = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout')->Output(
+            my $Link = $HTMLLinkLayoutObject->Output(
                 Template => '<a href="[% Data.URL | Interpolate %]" target="[% Data.Target | html %]">[% Data.Value | html %]</a>',
                 Data     => {
                     %CustomerCompany,

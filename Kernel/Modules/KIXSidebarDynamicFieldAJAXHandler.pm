@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -309,15 +309,6 @@ sub Run {
                         . $ValueStrg->{Value}
                         . ' disabled="disabled"></input>'
                         . '</p>';
-                }
-                elsif ( $ValueStrg->{Link} ) {
-                    $JSON .= '<p class="Value" title="'
-                        . $ValueStrg->{Title}
-                        . '"><a href="'
-                        . $ValueStrg->{Link}
-                        . '" target="_blank" class="DynamicFieldLink">'
-                        . $ValueStrg->{Value}
-                        . '</a></p>';
                 }
                 else {
                     $JSON .= '<p class="Value" title="'

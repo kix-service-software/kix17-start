@@ -537,7 +537,7 @@
         <Setting>
             <Hash>
                 <Item Key="Module">Kernel::System::Ticket::Event::ForceOwnerReset</Item>
-                <Item Key="Event">Ticket(Owner|Queue)Update</Item>
+                <Item Key="Event">TicketQueueUpdate</Item>
             </Hash>
         </Setting>
     </ConfigItem>
@@ -10845,6 +10845,14 @@
             <String Regex="^[0-9]{1,3}$">1</String>
         </Setting>
     </ConfigItem>
+    <ConfigItem Name="PostmasterRecipientCount" Required="1" Valid="1">
+        <Description Translatable="1">Defines the maximum number of recipients allowed for each incoming email.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Core::PostMaster</SubGroup>
+        <Setting>
+            <String Regex="^[0-9]+$">1000</String>
+        </Setting>
+    </ConfigItem>
     <ConfigItem Name="PostmasterDefaultQueue" Required="1" Valid="1">
         <Description Translatable="1">Defines the postmaster default queue.</Description>
         <Group>Ticket</Group>
@@ -11449,7 +11457,7 @@ Thanks for your help!
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::MaxArticlesZoomExpand" Required="1" Valid="1">
-        <Description Translatable="1">The maximal number of articles expanded on a single page in AgentTicketZoom.</Description>
+        <Description Translatable="1">The maximal number of articles expanded on a single page in AgentTicketZoom. If this number is exceeded, expanded view can not be used.</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewZoom</SubGroup>
         <Setting>
@@ -14676,7 +14684,7 @@ Thanks for your help!
         <SubGroup>Frontend::Agent::Ticket::AgentTicketZoomTab</SubGroup>
         <Setting>
             <Hash>
-                <Item Key="Link">Action=AgentTicketZoomTabArticle;TicketID=$Param{"TicketID"};ArticleID=$Param{"ArticleID"};ZoomExpand=$Param{"ZoomExpand"};ArticlePage=$Param{"ArticlePage"};CallingAction=[% Env("Action") %]</Item>
+                <Item Key="Link">Action=AgentTicketZoomTabArticle;TicketID=$Param{"TicketID"};ArticleID=$Param{"ArticleID"}$Param{"Link"};CallingAction=[% Env("Action") %]</Item>
                 <Item Key="Title">Articles</Item>
                 <Item Key="Description">Shows all article of this ticket</Item>
                 <Item Key="Block">ContentItem</Item>

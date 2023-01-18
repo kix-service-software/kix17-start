@@ -1,6 +1,6 @@
 /**
  * This software is part of the KIX project, https://www.kixdesk.com/
- * Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
+ * Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
  * --
  * @project KIX (https://www.kixdesk.com) <https://www.kixdesk.com> - Agent Frontend
  * @copyright c.a.p.e. IT GmbH
@@ -52,7 +52,6 @@
         content: "\f0d7";
         font: normal normal normal 14px/1 FontAwesome;
         text-align: center;
-        vertical-align: middle;
         padding: 3px;
         display: block;
     }
@@ -73,7 +72,6 @@
     .WidgetAction i {
         display: block;
         margin: 2px 0px 0px 2px;
-        vertical-align: middle;
     }
     .WidgetAction.Toggle i {
         font-size: 17px;
@@ -146,7 +144,6 @@
         text-decoration: none;
         overflow: hidden;
         padding: 5px 60px 5px 10px;
-        vertical-align: top;
         display: block;
     }
     .WidgetSimple > .Header h2.WithToggle,

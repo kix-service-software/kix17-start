@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2022 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -654,15 +654,17 @@ sub TicketDelete {
         $DynamicFieldBackendObject->ValueDelete(
             DynamicFieldConfig => $DynamicFieldConfig,
             ObjectID           => $Param{TicketID},
+            NoPostValueSet     => 1,
             UserID             => $Param{UserID},
         );
     }
 
     # delete ticket links
     $Kernel::OM->Get('Kernel::System::LinkObject')->LinkDeleteAll(
-        Object => 'Ticket',
-        Key    => $Param{TicketID},
-        UserID => $Param{UserID},
+        Object       => 'Ticket',
+        Key          => $Param{TicketID},
+        DeleteObject => 1,
+        UserID       => $Param{UserID},
     );
 
     # update ticket index
@@ -705,8 +707,9 @@ sub TicketDelete {
     my @Articles = $Self->ArticleIndex( TicketID => $Param{TicketID} );
     for my $ArticleID (@Articles) {
         return if !$Self->ArticleDelete(
-            ArticleID => $ArticleID,
             %Param,
+            ArticleID    => $ArticleID,
+            TicketDelete => 1,
         );
     }
 
@@ -4751,6 +4754,9 @@ sub TicketOwnerSet {
         return;
     }
 
+    # remember that owner should be set for ticket
+    $Self->{'_TicketOwnerSet'}->{ $Param{TicketID} } = 1;
+
     # check if update is needed!
     my ( $OwnerID, $Owner ) = $Self->OwnerCheck( TicketID => $Param{TicketID} );
     if ( $OwnerID eq $Param{NewUserID} ) {
@@ -6263,13 +6269,18 @@ END
 
     # get config object
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-
-    my $Body = $ConfigObject->Get('Ticket::Frontend::AutomaticMergeText');
+    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $Body = $LayoutObject->{LanguageObject}->Translate(
+        $ConfigObject->Get('Ticket::Frontend::AutomaticMergeText')
+    );
     $Body =~ s{<(KIX|OTRS)_TICKET>}{$MergeTicket{TicketNumber}}xms;
 
     $Body =~
         s{<(KIX|OTRS)_MERGE_TO_TICKET>}{<!-- KIX4OTRS MergeTargetLinkStart ::$Param{MainTicketID}:: -->$MainTicket{TicketNumber}<!-- KIX4OTRS MergeTargetLinkEnd -->}xms;
 
+    my $Subject = $LayoutObject->{LanguageObject}->Translate(
+        ($ConfigObject->Get('Ticket::Frontend::AutomaticMergeSubject') || 'Ticket Merged')
+    );
     # add merge article to merge ticket
     $Self->ArticleCreate(
         TicketID       => $Param{MergeTicketID},
@@ -6279,10 +6290,9 @@ END
         UserID         => $Param{UserID},
         HistoryType    => 'AddNote',
         HistoryComment => '%%Note',
-        Subject        => $ConfigObject->Get('Ticket::Frontend::AutomaticMergeSubject')
-            || 'Ticket Merged',
-        Body          => $Body,
-        NoAgentNotify => 1,
+        Subject        => $Subject,
+        Body           => $Body,
+        NoAgentNotify  => 1,
     );
 
     # add merge history to merge ticket

@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -289,6 +289,9 @@ sub AgentCustomerDetailsViewTable {
     # get needed objects
     my $HTMLUtilsObject = $Kernel::OM->Get('Kernel::System::HTMLUtils');
 
+    # get isolated layout object for link safety checks
+    my $HTMLLinkLayoutObject = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout');
+
     # add ticket params if given
     if ( $Param{Ticket} ) {
         %{ $Param{Data} } = ( %{ $Param{Data} }, %{ $Param{Ticket} } );
@@ -342,7 +345,7 @@ sub AgentCustomerDetailsViewTable {
                     Max  => $Param{Max},
                 );
             }
-            $Record{Entry} = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout')->Output(
+            $Record{Entry} = $HTMLLinkLayoutObject->Output(
                 Template => '[% Data.LinkStart | Interpolate %][% Data.ValueShort %][% Data.LinkStop %]',
                 Data     => \%Record,
             );

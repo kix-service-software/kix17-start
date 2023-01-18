@@ -1,6 +1,6 @@
 /**
  * This software is part of the KIX project, https://www.kixdesk.com/
- * Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
+ * Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
  * --
  * @project KIX (https://www.kixdesk.com) <https://www.kixdesk.com> - Agent Frontend
  * @copyright c.a.p.e. IT GmbH
@@ -217,7 +217,6 @@
         font-family: tahoma;
         font-size: 12px;
         line-height: 19px;
-        vertical-align: middle;
         font-weight: bold;
         height: 20px;
         width: 20px;
@@ -366,7 +365,6 @@
         font-family: tahoma;
         font-size: 12px;
         line-height: 19px;
-        vertical-align: middle;
         height: 20px;
         width: 20px;
         text-align: center;

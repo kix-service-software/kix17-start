@@ -1,6 +1,6 @@
 /**
  * This software is part of the KIX project, https://www.kixdesk.com/
- * Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
+ * Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
  * --
  * @project KIX (https://www.kixdesk.com) <https://www.kixdesk.com> - Agent Frontend
  * @copyright c.a.p.e. IT GmbH
@@ -439,6 +439,26 @@
     }
     .table-resizable.resizing th.moved {
         border-right-color: #78BE5A;
+    }
+
+
+    /**
+    *   @subsection sticky table
+    */
+    .DataTable.StickyTable > thead > tr > th {
+        background-color: #F0F0F0;
+    }
+    .DataTable.StickyTable > tbody > tr > td.StickyCol1,
+    .DataTable.StickyTable > tbody > tr > td.StickyCol2 {
+        background-color: #FDFDFD;
+    }
+    .DataTable.StickyTable > tbody > tr:nth-child(2n) > td.StickyCol1,
+    .DataTable.StickyTable > tbody > tr:nth-child(2n) > td.StickyCol2 {
+        background-color: #F5F5F5;
+    }
+    .DataTable.StickyTable > tbody > tr:hover > td.StickyCol1,
+    .DataTable.StickyTable > tbody > tr:hover > td.StickyCol2 {
+        background-color: #78BE5A;
     }
 
 

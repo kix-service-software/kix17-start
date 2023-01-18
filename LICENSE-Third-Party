@@ -180,16 +180,6 @@ o Name:      JSON::PP
   Authors:   Makamaka Hannyaharamitu <makamaka@cpan.org>
   Note:      This library is free software; you can redistribute it and/or modify it under the same terms as Perl itself.
 
-o Name:      Lingua::Translit
-  Copyright: Copyright 2007-2008, Alex Linke and Rona Linke
-             Copyright 2009-2016, Lingua-Systems Software GmbH
-             Copyright 2016-2017, Netzum Sorglos, Lingua-Systems Software GmbH
-             Copyright 2017, Netzum Sorglos Software GmbH
-  License:   Perl5 - https://dev.perl.org/licenses/
-  Authors:   Alex Linke <alinke@netzum-sorglos.de>
-             Rona Linke <rlinke@netzum-sorglos.de>
-  Note:      This module is free software; you can redistribute it and/or modify it under the same terms as Perl itself.
-
 o Name:      Linux::Distribution
   License:   Perl5 - https://dev.perl.org/licenses/
   Authors:   Alexandr Ciornii <alexchorny@gmail.com>
@@ -201,7 +191,7 @@ o Name:      Locale::Codes
   Copyright: Copyright 1997-2001, Canon Research Centre Europe (CRE)
              Copyright 2001, Michael Hennecke
              Copyright 2001-2010, Neil Bowers
-             Copyright 2010-2021, Sullivan Beck
+             Copyright 2010-2022, Sullivan Beck
   License:   Perl5 - https://dev.perl.org/licenses/
   Authors:   Neil Bowers
              Michael Hennecke
@@ -233,6 +223,7 @@ o Name:      MailTools
 o Name:      MIME::Tools
   Copyright: Copyright 1998-1999, ZeeGee Software Inc (www.zeegee.com)
              Copyright 2004, Roaring Penguin Software Inc (www.roaringpenguin.com)
+             Copyright 2022, Dianne Skoll
   License:   Perl5 - https://dev.perl.org/licenses/
   Authors:   Eryq <eryq@zeegee.com>
              Dianne Skoll <dfs@roaringpenguin.com>
@@ -283,13 +274,6 @@ o Name:      PDF::API2
              Martin Hosken
   Note:      This program is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either version 2.1 of the License, or (at your option) any later version.
 
-o Name:      Pod::Strip
-  Web:       https://github.com/domm/Pod-Strip
-  Copyright: copyright 2004-2021, Thomas Klausner
-  License:   Perl5 - https://dev.perl.org/licenses/
-  Authors:   Thomas Klausner <domm@plix.at>
-  Note:      This is free software; you can redistribute it and/or modify it under the same terms as the Perl 5 programming language system itself.
-
 o Name:      REST::Client
   Web:       https://github.com/milescrawford/cpan-rest-client
   Copyright: copyright 2008, Miles Crawford
@@ -333,7 +317,7 @@ o Name:      Sys::Hostname::Long
 o Name:      Text::CSV
   Copyright: Copyright 1997, Alan Citterman. All rights reserved
              Copyright 2007-2015, Makamaka Hannyaharamitu
-             Copyright 2017-2021, Kenichi Ishigaki
+             Copyright 2017-2022, Kenichi Ishigaki
   License:   Perl5 - https://dev.perl.org/licenses/
   Authors:   Alan Citterman <alan[at]mfgrtl.com>
              Jochen Wiedmann <joe[at]ispsoft.de>

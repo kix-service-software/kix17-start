@@ -1,6 +1,6 @@
 /**
  * This software is part of the KIX project, https://www.kixdesk.com/
- * Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
+ * Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
  * --
  * @project KIX (https://www.kixdesk.com) <https://www.kixdesk.com> - Agent Frontend
  * @copyright c.a.p.e. IT GmbH
@@ -85,7 +85,6 @@
     div.InputField_ToolbarContainer ul li::after {
         content: "|";
         display: inline-block;
-        float: right;
         cursor: default;
         width: 0;
     }
@@ -390,7 +389,6 @@
         width: 22px;
         height: 20px;
         line-height: 20px;
-        vertical-align: middle;
         display: block;
         float: left;
     }

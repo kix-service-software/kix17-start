@@ -1,8 +1,8 @@
 #!/usr/bin/perl
 # --
-# Modified version of the work: Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2022 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -29,7 +29,7 @@ my $DBDump = '';
 getopt( 'hbd', \%Opts );
 if ( exists $Opts{h} ) {
     print "restore.pl - restore script\n";
-    print "Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de\n";
+    print "Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de\n";
     print "usage: restore.pl -b /data_backup/<TIME>/ -d /opt/kix17/\n";
     exit 1;
 }

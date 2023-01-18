@@ -1,8 +1,8 @@
 #!/usr/bin/perl
 # --
-# Modified version of the work: Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2022 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -131,6 +131,16 @@ if ( $ENV{nocolors} || $Options =~ m{\A nocolors}msxi ) {
 # config
 my @NeededModules = (
     {
+        Module    => 'Algorithm::Diff',
+        Required  => 1,
+        Comment   => 'Compute \'intelligent\' differences between two files / lists.',
+        InstTypes => {
+            aptget => 'libalgorithm-diff-perl',
+            emerge => undef,
+            zypper => 'perl-Algorithm-Diff',
+        },
+    },
+    {
         Module    => 'Apache::DBI',
         Required  => 0,
         Comment   => 'Improves Performance on Apache webservers with mod_perl enabled.',
@@ -171,6 +181,46 @@ my @NeededModules = (
         },
     },
     {
+        Module    => 'Bytes::Random::Secure::Tiny',
+        Required  => 1,
+        Comment   => 'A tiny Perl extension to generate cryptographically-secure random bytes.',
+        InstTypes => {
+            aptget => undef,
+            emerge => undef,
+            zypper => undef,
+        },
+    },
+    {
+        Module    => 'CGI',
+        Required  => 1,
+        Comment   => 'Handle Common Gateway Interface requests and responses.',
+        InstTypes => {
+            aptget => 'libcgi-pm-perl',
+            emerge => undef,
+            zypper => 'perl-CGI',
+        },
+    },
+    {
+        Module    => 'CGI::Fast',
+        Required  => 0,
+        Comment   => 'CGI Interface for Fast CGI.',
+        InstTypes => {
+            aptget => 'libcgi-fast-perl',
+            emerge => undef,
+            zypper => 'perl-cgi-fast',
+        },
+    },
+    {
+        Module    => 'Class::Inspector',
+        Required  => 0,
+        Comment   => 'Get information about a class and its structure.',
+        InstTypes => {
+            aptget => 'libclass-inspector-perl',
+            emerge => undef,
+            zypper => 'perl-class-inspector',
+        },
+    },
+    {
         Module    => 'Crypt::Eksblowfish::Bcrypt',
         Required  => 0,
         Comment   => 'For strong password hashing.',
@@ -181,12 +231,57 @@ my @NeededModules = (
         },
     },
     {
+        Module    => 'Crypt::PasswdMD5',
+        Required  => 1,
+        Comment   => 'Provide interoperable MD5-based crypt() functions.',
+        InstTypes => {
+            aptget => 'libcrypt-passwdmd5-perl',
+            emerge => undef,
+            zypper => 'perl-crypt-passwdMD5',
+        },
+    },
+    {
+        Module    => 'Crypt::SSLeay',
+        Required  => 0,
+        Comment   => 'OpenSSL support for LWP.',
+        InstTypes => {
+            aptget => 'libcrypt-ssleay-perl',
+            emerge => undef,
+            zypper => 'perl-crypt-ssleay',
+        },
+    },
+    {
+        Module    => 'CSS::Minifier',
+        Required  => 0,
+        Comment   => 'Perl extension for minifying CSS.',
+        InstTypes => {
+            aptget => 'libcss-minifier-perl',
+            emerge => undef,
+            zypper => 'perl-css-minifier-xs',
+        },
+    },
+    {
+        Module   => 'Data::Compare',
+        Required => 0,
+        Comment  => 'Required to track SysConfig changes.',
+    },
+    {
         Module    => 'Date::Format',
         Required  => 1,
         InstTypes => {
             aptget => 'libtimedate-perl',
             emerge => 'dev-perl/TimeDate',
             zypper => 'perl-TimeDate',
+        },
+    },
+    {
+        Module    => 'Date::Pcalc',
+        Required  => 1,
+        Comment   => 'Gregorian calendar date calculations.',
+        InstTypes => {
+            aptget => 'libdate-pcalc-perl',
+            emerge => undef,
+            zypper => undef,
         },
     },
     {
@@ -248,6 +343,16 @@ my @NeededModules = (
         },
     },
     {
+        Module    => 'Email::Valid',
+        Required  => 1,
+        Comment   => 'Check validity of Internet email addresses.',
+        InstTypes => {
+            aptget => 'libemail-valid-perl',
+            emerge => undef,
+            zypper => 'perl-Email-Valid',
+        },
+    },
+    {
         Module    => 'Encode::HanExtra',
         Version   => '0.23',
         Required  => 0,
@@ -256,6 +361,106 @@ my @NeededModules = (
             aptget => 'libencode-hanextra-perl',
             emerge => 'dev-perl/Encode-HanExtra',
             zypper => 'perl-Encode-HanExtra',
+        },
+    },
+    {
+        Module    => 'Encode::Locale',
+        Version   => '1.05',
+        Required  => 1,
+        Comment   => 'Determine the locale encoding.',
+        InstTypes => {
+            aptget => 'libencode-locale-perl',
+            emerge => undef,
+            zypper => 'perl-Encode-Locale',
+        },
+    },
+    {
+        Module    => 'Excel::Writer::XLSX',
+        Required  => 1,
+        Comment   => 'Create a new file in the Excel 2007+ XLSX format.',
+        InstTypes => {
+            aptget => 'libexcel-writer-xlsx-perl',
+            emerge => undef,
+            zypper => undef,
+        },
+    },
+    {
+        Module    => 'Font::TTF',
+        Required  => 1,
+        Comment   => 'Perl module for TrueType Font hacking.',
+        InstTypes => {
+            aptget => 'libfont-ttf-perl',
+            emerge => undef,
+            zypper => 'perl-Font-TTF',
+        },
+    },
+    {
+        Module    => 'GD',
+        Required  => 1,
+        Comment   => 'Interface to Gd Graphics Library.',
+        InstTypes => {
+            aptget => 'libgd-perl',
+            emerge => undef,
+            zypper => 'perl-gd',
+        },
+    },
+    {
+        Module    => 'GD::SecurityImage',
+        Required  => 1,
+        InstTypes => {
+            aptget => 'libgd-securityimage-perl',
+            emerge => undef,
+            zypper => 'perl-gd-securityimage',
+        },
+    },
+    {
+        Module    => 'HTML::Tagset',
+        Required  => 1,
+        Comment   => 'data tables useful in parsing HTML.',
+        InstTypes => {
+            aptget => 'libhtml-tagset-perl',
+            emerge => undef,
+            zypper => 'perl-HTML-Tagset',
+        },
+    },
+    {
+        Module    => 'HTML::Truncate',
+        Required  => 1,
+        Comment   => 'truncate HTML by percentage or character count while preserving well-formedness.',
+        InstTypes => {
+            aptget => undef,
+            emerge => undef,
+            zypper => undef,
+        },
+    },
+    {
+        Module    => 'HTTP::Date',
+        Required  => 1,
+        Comment   => 'date conversion routines.',
+        InstTypes => {
+            aptget => 'libhttp-date-perl',
+            emerge => undef,
+            zypper => 'perl-http-date',
+        },
+    },
+    {
+        Module    => 'HTTP::Message',
+        Required  => 1,
+        Comment   => 'HTTP style message (base class).',
+        InstTypes => {
+            aptget => 'libhttp-message-perl',
+            emerge => undef,
+            zypper => 'perl-http-message',
+        },
+    },
+    {
+        Module    => 'IO::Interactive',
+        Required  => 1,
+        Comment   => 'Utilities for interactive I/O.',
+        InstTypes => {
+            aptget => undef,
+            emerge => undef,
+            zypper => undef,
         },
     },
     {
@@ -269,6 +474,36 @@ my @NeededModules = (
         },
     },
     {
+        Module    => 'JavaScript::Minifier',
+        Required  => 1,
+        Comment   => 'Perl extension for minifying JavaScript code.',
+        InstTypes => {
+            aptget => 'libjavascript-minifier-perl',
+            emerge => undef,
+            zypper => 'perl-javascript-minifier',
+        },
+    },
+    {
+        Module    => 'JSON',
+        Required  => 1,
+        Comment   => 'JSON (JavaScript Object Notation) encoder/decoder.',
+        InstTypes => {
+            aptget => 'libjson-perl',
+            emerge => undef,
+            zypper => 'perl-JSON',
+        },
+    },
+    {
+        Module    => 'JSON::PP',
+        Required  => 1,
+        Comment   => 'JSON::XS compatible pure-Perl module.',
+        InstTypes => {
+            aptget => 'libjson-pp-perl',
+            emerge => undef,
+            zypper => 'perl-JSON-PP',
+        },
+    },
+    {
         Module    => 'JSON::XS',
         Required  => 0,
         Comment   => 'Recommended for faster AJAX/JavaScript handling.',
@@ -276,6 +511,16 @@ my @NeededModules = (
             aptget => 'libjson-xs-perl',
             emerge => 'dev-perl/JSON-XS',
             zypper => 'perl-JSON-XS',
+        },
+    },
+    {
+        Module    => 'Linux::Distribution',
+        Required  => 1,
+        Comment   => 'Perl extension to detect on which Linux distribution we are running.',
+        InstTypes => {
+            aptget => 'liblinux-distribution-perl',
+            emerge => undef,
+            zypper => undef,
         },
     },
     {
@@ -290,12 +535,52 @@ my @NeededModules = (
         },
     },
     {
+        Module    => 'Locale::Codes',
+        Required  => 1,
+        Comment   => 'a distribution of modules to handle locale codes.',
+        InstTypes => {
+            aptget => 'liblocale-codes-perl',
+            emerge => undef,
+            zypper => 'perl-locale-codes',
+        },
+    },
+    {
+        Module    => 'LWP',
+        Required  => 1,
+        Comment   => 'The World-Wide Web library for Perl.',
+        InstTypes => {
+            aptget => 'libwww-perl',
+            emerge => 'dev-perl/libwww-perl',
+            zypper => 'perl-libwww-perl',
+        },
+    },
+    {
+        Module    => 'LWP::Protocol::https',
+        Required  => 1,
+        Comment   => 'Provide https support for LWP::UserAgent.',
+        InstTypes => {
+            aptget => 'liblwp-protocol-https-perl',
+            emerge => undef,
+            zypper => 'perl-lwp-protocol-https',
+        },
+    },
+    {
         Module    => 'LWP::UserAgent',
         Required  => 1,
         InstTypes => {
             aptget => 'libwww-perl',
             emerge => 'dev-perl/libwww-perl',
             zypper => 'perl-libwww-perl',
+        },
+    },
+    {
+        Module    => 'MailTools',
+        Required  => 1,
+        Comment   => 'bundle of ancient email modules.',
+        InstTypes => {
+            aptget => 'libmailtools-perl',
+            emerge => undef,
+            zypper => 'perl-mailtools',
         },
     },
     {
@@ -322,6 +607,16 @@ my @NeededModules = (
         ],
     },
     {
+        Module    => 'MIME::Tools',
+        Required  => 1,
+        Comment   => 'modules for parsing (and creating!) MIME entities.',
+        InstTypes => {
+            aptget => 'libmime-tools-perl',
+            emerge => undef,
+            zypper => 'perl-mime-tools',
+        },
+    },
+    {
         Module    => 'ModPerl::Util',
         Required  => 0,
         Comment   => 'Improves Performance on Apache webservers dramatically.',
@@ -329,6 +624,16 @@ my @NeededModules = (
             aptget => 'libapache2-mod-perl2',
             emerge => 'www-apache/mod_perl',
             zypper => 'apache2-mod_perl',
+        },
+    },
+    {
+        Module    => 'Mozilla::CA',
+        Required  => 1,
+        Comment   => 'Mozilla\'s CA cert bundle in PEM format.',
+        InstTypes => {
+            aptget => undef,
+            emerge => undef,
+            zypper => 'perl-mozilla-ca',
         },
     },
     {
@@ -348,6 +653,36 @@ my @NeededModules = (
         },
     },
     {
+        Module    => 'Net::HTTP',
+        Required  => 1,
+        Comment   => 'Low-level HTTP connection (client).',
+        InstTypes => {
+            aptget => 'libnet-http-perl',
+            emerge => undef,
+            zypper => 'perl-net-http',
+        },
+    },
+    {
+        Module    => 'Net::HTTPS',
+        Required  => 1,
+        Comment   => 'Low-level HTTP connection (client).',
+        InstTypes => {
+            aptget => 'libnet-http-perl',
+            emerge => undef,
+            zypper => 'perl-net-http',
+        },
+    },
+    {
+        Module    => 'Net::IMAP::Simple',
+        Required  => 0,
+        Comment   => 'Perl extension for simple IMAP account handling.',
+        InstTypes => {
+            aptget => 'libnet-imap-simple-perl',
+            emerge => undef,
+            zypper => 'perl-net-imap-simple',
+        },
+    },
+    {
         Module    => 'Net::LDAP',
         Required  => 0,
         Comment   => 'Required for directory authentication.',
@@ -355,6 +690,76 @@ my @NeededModules = (
             aptget => 'libnet-ldap-perl',
             emerge => 'dev-perl/perl-ldap',
             zypper => 'perl-ldap',
+        },
+    },
+    {
+        Module    => 'Net::SSLGlue',
+        Required  => 1,
+        Comment   => 'add/extend SSL support for common perl modules.',
+        InstTypes => {
+            aptget => 'libnet-sslglue-perl',
+            emerge => undef,
+            zypper => 'perl-net-sslglue',
+        },
+    },
+    {
+        Module    => 'PDF::API2',
+        Required  => 1,
+        Comment   => 'Create, modify, and examine PDF files.',
+        InstTypes => {
+            aptget => 'libpdf-api2-perl',
+            emerge => undef,
+            zypper => 'perl-pdf-api2',
+        },
+    },
+    {
+        Module    => 'REST::Client',
+        Required  => 1,
+        Comment   => 'A simple client for interacting with RESTful http/https resources.',
+        InstTypes => {
+            aptget => 'librest-client-perl',
+            emerge => undef,
+            zypper => 'perl-rest-client',
+        },
+    },
+    {
+        Module    => 'Schedule::Cron::Events',
+        Required  => 1,
+        Comment   => 'take a line from a crontab and find out when events will occur.',
+        InstTypes => {
+            aptget => 'libschedule-cron-events-perl',
+            emerge => undef,
+            zypper => 'perl-schedule-cron-events',
+        },
+    },
+    {
+        Module    => 'Set::Crontab',
+        Required  => 1,
+        Comment   => 'Expand crontab(5)-style integer lists.',
+        InstTypes => {
+            aptget => 'libset-crontab-perl',
+            emerge => undef,
+            zypper => 'perl-set-crontab',
+        },
+    },
+    {
+        Module    => 'SOAP::Lite',
+        Required  => 1,
+        Comment   => 'Perl\'s Web Services Toolkit.',
+        InstTypes => {
+            aptget => 'libsoap-lite-perl',
+            emerge => undef,
+            zypper => 'perl-soap-lite',
+        },
+    },
+    {
+        Module    => 'Sys::Hostname::Long',
+        Required  => 1,
+        Comment   => 'Try every conceivable way to get full hostname.',
+        InstTypes => {
+            aptget => 'libsys-hostname-long-perl',
+            emerge => undef,
+            zypper => 'perl-sys-hostname-long',
         },
     },
     {
@@ -377,6 +782,17 @@ my @NeededModules = (
             zypper => 'perl-Template-Toolkit',
         },
     },
+    {
+        Module    => 'Text::CSV',
+        Required  => 1,
+        Comment   => 'comma-separated values manipulator (using XS or PurePerl).',
+        InstTypes => {
+            aptget => 'libtext-csv-perl',
+            emerge => undef,
+            zypper => 'perl-Text-CSV',
+        },
+    },
+
     {
         Module    => 'Text::CSV_XS',
         Required  => 0,
@@ -414,6 +830,26 @@ my @NeededModules = (
         Comment  => 'Required for statistics.',
     },
     {
+        Module    => 'URI',
+        Required  => 1,
+        Comment   => 'Uniform Resource Identifiers (absolute and relative).',
+        InstTypes => {
+            aptget => 'liburi-perl',
+            emerge => undef,
+            zypper => 'perl-uri',
+        },
+    },
+    {
+        Module    => 'XML::FeedPP',
+        Required  => 1,
+        Comment   => 'Parse/write/merge/edit RSS/RDF/Atom syndication feeds.',
+        InstTypes => {
+            aptget => 'libxml-feedpp-perl',
+            emerge => undef,
+            zypper => 'perl-xml-feedpp',
+        },
+    },
+    {
         Module    => 'XML::LibXML',
         Required  => 0,
         Comment   => 'Required for Generic Interface XSLT mapping module.',
@@ -442,6 +878,46 @@ my @NeededModules = (
         },
     },
     {
+        Module    => 'XML::Parser::Lite',
+        Required  => 1,
+        Comment   => 'Lightweight pure-perl XML Parser (based on regexps).',
+        InstTypes => {
+            aptget => 'libxml-parser-lite-perl',
+            emerge => undef,
+            zypper => 'perl-XML-Parser-Lite',
+        },
+    },
+    {
+        Module    => 'XML::RSS::SimpleGen',
+        Required  => 1,
+        Comment   => 'for writing RSS files.',
+        InstTypes => {
+            aptget => 'libxml-rss-simplegen-perl',
+            emerge => undef,
+            zypper => 'perl-XML-RSS-SimpleGen',
+        },
+    },
+    {
+        Module    => 'XML::Simple',
+        Required  => 1,
+        Comment   => 'An API for simple XML files.',
+        InstTypes => {
+            aptget => 'libxml-simple-perl',
+            emerge => undef,
+            zypper => 'perl-XML-Simple',
+        },
+    },
+    {
+        Module    => 'YAML',
+        Required  => 1,
+        Comment   => 'YAML Ain\'t Markup Language.',
+        InstTypes => {
+            aptget => 'libyaml-perl',
+            emerge => undef,
+            zypper => 'perl-YAML',
+        },
+    },
+    {
         Module    => 'YAML::XS',
         Required  => 1,
         Comment   => 'Very important',
@@ -452,11 +928,15 @@ my @NeededModules = (
         },
     },
     {
-        Module   => 'Data::Compare',
-        Required => 0,
-        Comment  => 'Required to track SysConfig changes.',
+        Module    => 'parent',
+        Required  => 1,
+        Comment   => 'Establish an ISA relationship with base classes at compile time.',
+        InstTypes => {
+            aptget => undef,
+            emerge => undef,
+            zypper => 'perl-parent',
+        },
     },
-
 );
 
 if ($NeedPackageList) {

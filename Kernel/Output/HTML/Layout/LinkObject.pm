@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2022 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2022 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -485,6 +485,8 @@ sub LinkObjectTableCreateComplex {
     my $BlockDescription = $Param{ViewMode} eq 'ComplexAdd' ? Translatable('Search Result') : Translatable('Linked');
     my $BlockCounter     = 0;
 
+    my $NoSortFilter = $Self->{Action} =~ 'Agent(?:FAQZoom|LinkObject)' ? 1 : 0;
+
     BLOCK:
     for my $Block (@OutputData) {
 
@@ -502,7 +504,7 @@ sub LinkObjectTableCreateComplex {
                     && IsHashRefWithData($Filters{$Block->{Object}}->{GetColumnFilterSelect})
                 )
             )
-            && $Self->{Action} ne 'AgentLinkObject'
+            && !$NoSortFilter
         ) {
             $UsedFilter = 1;
         }
@@ -519,9 +521,16 @@ sub LinkObjectTableCreateComplex {
         my $UseFilter = 0;
         if (
             $Block->{Behaviors}->{IsFiltrable}
-            && $Self->{Action} ne 'AgentLinkObject'
+            && !$NoSortFilter
         ) {
             $UseFilter = 1;
+        }
+
+        my $CanDrag       = q{};
+        my $ColumnSetting = 0;
+        if ( $Self->{Action} ne 'AgentFAQZoom' ) {
+            $CanDrag       = 'CanDrag';
+            $ColumnSetting = 1;
         }
 
         # output the block
@@ -529,7 +538,7 @@ sub LinkObjectTableCreateComplex {
             Name => 'TableComplexBlock',
             Data => {
                 BlockDescription => $BlockDescription,
-                Blockname        => $Block->{Blockname} || '',
+                Blockname        => $Block->{Blockname} || q{},
                 Name             => $Block->{Blockname},
                 NameForm         => $Block->{Blockname},
                 AJAX             => $Param{AJAX},
@@ -537,10 +546,12 @@ sub LinkObjectTableCreateComplex {
                 PreferencesID    => $Block->{Object} . $Placeholder2 . $Class,
                 Source           => $LinkObjectList{SourceObject},
                 Target           => $Block->{Object},
-                ClassID          => $Block->{ClassID} || '',
+                ClassID          => $Block->{ClassID} || q{},
                 CallingAction    => $Self->{Action},
                 ItemID           => $LinkObjectList{SourceKey},
-                UseFilter        => $UseFilter
+                UseFilter        => $UseFilter,
+                CanDrag          => $CanDrag,
+                ColumnSetting    => $ColumnSetting
             },
         );
 
@@ -551,8 +562,8 @@ sub LinkObjectTableCreateComplex {
                 Name => 'TableComplexBlockColumn',
                 Data => {
                     %{$HeadlineColumn},
-                    Sortable   => $Self->{Action} ne 'AgentLinkObject' ? $HeadlineColumn->{Sortable} : 0,
-                    Filterable => $Self->{Action} ne 'AgentLinkObject' ? $HeadlineColumn->{Filterable} : 0
+                    Sortable   => !$NoSortFilter ? $HeadlineColumn->{Sortable} : 0,
+                    Filterable => !$NoSortFilter ? $HeadlineColumn->{Filterable} : 0
                 }
             );
         }
@@ -1562,18 +1573,20 @@ sub _PreferencesLinkObject {
                 . ';SEARCH::TicketNumber=***;'
         }
 
-        $LayoutObject->Block(
-            Name => 'FilterColumnSettings',
-            Data => {
-                ColumnsEnabled   => $JSONObject->Encode( Data => \@ColumnsEnabled ),
-                ColumnsAvailable => $JSONObject->Encode( Data => \@ColumnsAvailable ),
-                Desc             => 'Shown Columns',
-                Name             => $Self->{Action} . '-' . $Block->{Object} . $Placeholder1 . $Class,
-                GroupName        => 'LinkedObjectFilterSettings',
-                PreferencesID    => $Block->{Object} . $Placeholder2 . $Class,
-                %Param,
-            },
-        );
+        if ( $Self->{Action} ne 'AgentFAQZoom' ) {
+            $LayoutObject->Block(
+                Name => 'FilterColumnSettings',
+                Data => {
+                    ColumnsEnabled   => $JSONObject->Encode( Data => \@ColumnsEnabled ),
+                    ColumnsAvailable => $JSONObject->Encode( Data => \@ColumnsAvailable ),
+                    Desc             => 'Shown Columns',
+                    Name             => $Self->{Action} . '-' . $Block->{Object} . $Placeholder1 . $Class,
+                    GroupName        => 'LinkedObjectFilterSettings',
+                    PreferencesID    => $Block->{Object} . $Placeholder2 . $Class,
+                    %Param,
+                },
+            );
+        }
 
         for my $Column ( keys %ColumnTranslations ) {
             $LayoutObject->Block(
