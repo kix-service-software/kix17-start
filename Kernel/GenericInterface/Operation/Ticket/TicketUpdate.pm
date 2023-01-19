@@ -2216,13 +2216,17 @@ sub _TicketUpdate {
         if ( $Article->{To} ) {
             $To = $Article->{To};
         }
-        elsif ( $Ticket->{Queue} ) {
-            $To = $Ticket->{Queue};
-        }
-        else {
-            $To = $Kernel::OM->Get('Kernel::System::Queue')->QueueLookup(
-                QueueID => $Ticket->{QueueID},
-            );
+
+        # use data from updated queue if article should NOT be send
+        elsif ( !$Article->{ArticleSend} ) {
+            if ( $Ticket->{Queue} ) {
+                $To = $Ticket->{Queue};
+            }
+            elsif ( $Ticket->{QueueID} ) {
+                $To = $Kernel::OM->Get('Kernel::System::Queue')->QueueLookup(
+                    QueueID => $Ticket->{QueueID},
+                );
+            }
         }
 
         # check if subject should be build like outgoing email
