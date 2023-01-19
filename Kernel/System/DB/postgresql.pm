@@ -13,6 +13,8 @@ package Kernel::System::DB::postgresql;
 use strict;
 use warnings;
 
+use Encode ();
+
 our @ObjectDependencies = (
     'Kernel::Config',
     'Kernel::System::Log',
@@ -56,6 +58,10 @@ sub LoadPreferences {
         $Self->{'DB::LikeQuoteBack'}    = '\\';
     }
 
+    # needs to proprocess the data to fix UTF-16 surrogate pairs issues
+    $Self->{'DB::PreProcessSQL'}      = 1;
+    $Self->{'DB::PreProcessBindData'} = 1;
+
     # how to determine server version
     # version string can contain a suffix, we only need what's on the left of it
     # example of full string: "PostgreSQL 9.2.4, compiled by Visual C++ build 1600, 64-bit"
@@ -79,6 +85,34 @@ sub LoadPreferences {
 
     # init sql setting on db connect
     $Self->{'DB::Connect'} = "SET standard_conforming_strings TO ON;\n SET NAMES 'utf8';";
+    return 1;
+}
+
+sub PreProcessSQL {
+    my ( $Self, $SQLRef ) = @_;
+    $Self->_FixedSurrogatePairs($SQLRef);
+    return;
+}
+
+sub PreProcessBindData {
+    my ( $Self, $BindRef ) = @_;
+
+    my $Size = scalar @{ $BindRef // [] };
+
+    for ( my $I = 0; $I < $Size; $I++ ) {
+        $Self->_FixedSurrogatePairs( \$BindRef->[$I] );
+    }
+    return;
+}
+
+sub _FixedSurrogatePairs {
+    my ( $Self, $StringRef ) = @_;
+
+    return if !$$StringRef;
+    return if !Encode::is_utf8($$StringRef);
+
+    $$StringRef =~ s/[\x{D800}-\x{DBFF}][\x{DC00}-\x{DFFF}]/"\x{FFFD}"/eg;
+
     return 1;
 }
 
