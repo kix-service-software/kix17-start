@@ -2594,7 +2594,7 @@ sub _RenderDynamicField {
 
         $LayoutObject->AddJSOnDocumentComplete( Code => <<"END");
 Core.Form.Validate.DisableValidation(\$('.Row_DynamicField_$DynamicFieldName'));
-\$('.Row_DynamicField_$DynamicFieldName').addClass('Hidden');
+\$('.Row_DynamicField_$DynamicFieldName').addClass('Hidden hiddenFormField').find('select').prop('disabled', true);
 END
     }
 

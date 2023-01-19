@@ -293,11 +293,12 @@ Core.AJAX = (function (TargetNS) {
                         var $Element = $('div.Row_'+Value[0]);
                         if ( Value[1] == "" ) {
                             Core.Form.Validate.DisableValidation($Element);
-                            $Element.addClass('Hidden');
+                            $Element.addClass('Hidden hiddenFormField')
+                            .find('select').prop('disabled', true);
                         }
                         else {
-                            $Element.removeClass('Hidden hiddenFormField');
-                            $Element.css({"display" : ""});
+                            $Element.removeClass('Hidden hiddenFormField')
+                            .find('select').prop('disabled', false);
                             Core.Form.Validate.EnableValidation($Element);
                         }
                     });
@@ -418,17 +419,8 @@ Core.AJAX = (function (TargetNS) {
             // Select elements
             if ($Element.is('select')) {
                 $Element.empty();
+
                 $.each(DataValue, function (Index, Value) {
-
-                    if ( $('.Row_' + DataKey).length && $('.Row_' + DataKey).hasClass('Hidden') ) {
-
-                        // hide dynamic fields which are marked as disabled
-                        $Element.prop('readonly', false);
-                        Core.Form.Validate.DisableValidation($('.Row_' + DataKey));
-                        $('.Row_' + DataKey).css({
-                            "display" : "none"
-                        }).addClass('hiddenFormField');
-                    }
 
                     var NewOption,
                         OptionText = Core.App.EscapeHTML(Value[1]);
@@ -464,35 +456,6 @@ Core.AJAX = (function (TargetNS) {
             // direct container replacing
             else if ($Element.is('div,label,p,li') && DataValue) {
                 $Element.html(DataValue);
-                return;
-            }
-            else if ($Element.is('input,textarea')) {
-                if ($.isArray(DataValue)) {
-                    $.each(DataValue, function(Index, DataValue) {
-                        // hide dynamic fields which are marked as disabled
-                        if (!($.isArray(DataValue))) {
-                            $Element.prop('readonly', false);
-                            Core.Form.Validate.DisableValidation($('.Row_' + Key));
-                            $('.Row_' + Key).css({
-                                "display" : "none"
-                            }).addClass('hiddenFormField');
-                        } else {
-                            if ($Element.is('input'))
-                                $Element.val(DataValue);
-                            if ($Element.is('textarea'))
-                                $Element.html(DataValue);
-                        }
-                    });
-                } else {
-                    if ($Element.is('input')) {
-                        $Element.val(DataValue);
-                    }
-                    // text area elements like the ticket body
-                    if ($Element.is('textarea')) {
-                        UpdateTextarea($Element, DataValue);
-                        return;
-                    }
-                }
                 return;
             }
             // Other form elements
