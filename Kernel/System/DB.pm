@@ -1221,7 +1221,7 @@ sub QueryCondition {
     $Param{Value} =~ s/\%!/!%/g;
 
     # remove leading/trailing conditions
-    $Param{Value} =~ s/(&&|\|\|)(?<!\\)\)$/)/g;
+    $Param{Value} =~ s/(&&|\|\|)+(?<!\\)\)$/)/g;
     $Param{Value} =~ s/^(?<!\\)\((&&|\|\|)/(/g;
 
     # clean up not needed spaces in condistions
