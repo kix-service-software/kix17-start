@@ -869,7 +869,11 @@ sub CustomerUserDataGet {
             Type => $Self->{CacheType},
             Key  => 'CustomerUserDataGet::' . $Param{User},
         );
-        return %{$Data} if ref $Data eq 'HASH';
+        return %{ $Data } if (
+            ref( $Data ) eq 'HASH'
+            && %{ $Data }
+        );
+        return if ( ref( $Data ) eq 'HASH' );
     }
 
     # create ldap connect
@@ -895,6 +899,13 @@ sub CustomerUserDataGet {
     # get first entry
     my $Result2 = $Result->entry(0);
     if ( !$Result2 ) {
+        # cache request for not found entry
+        $Self->{CacheObject}->Set(
+            Type  => $Self->{CacheType},
+            Key   => 'CustomerUserDataGet::' . $Param{User},
+            Value => {},
+            TTL   => $Self->{CustomerUserMap}->{CacheTTL},
+        );
         return;
     }
 
