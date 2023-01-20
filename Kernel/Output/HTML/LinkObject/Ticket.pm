@@ -414,8 +414,9 @@ sub TableCreateComplex {
                     my $Valuetrg = $BackendObject->DisplayValueRender(
                         DynamicFieldConfig => $DynamicFieldConfig,
                         Value              => $Value,
-                        ValueMaxChars      => 20,
+                        ValueMaxChars      => 0,
                         LayoutObject       => $LayoutObject,
+                        HTMLOutput         => 0,
                     );
 
                     $TmpHash{Content} = $Valuetrg->{Value} || '';
