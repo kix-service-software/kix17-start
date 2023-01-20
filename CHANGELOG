@@ -1,6 +1,14 @@
 # Change log of KIX
 * Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.21.0-RC1 (2023/01/20)
+ * (2023/01/20) - Bugfix: KIX17-3376 (fix output of dynamic field values in link tables) (mbauer)
+ * (2023/01/18) - Bugfix: KIX17-3377 (prevent sql syntax error for faq sidebar search) (mbauer)
+ * (2023/01/11) - Bugfix: KIX17-3344 (fixed postgres invalid byte sequence for encoding) (fjacquemin)
+ * (2023/01/06) - CR: KIX17-3366 (cache not existing users for ldap customer user backend) (mbauer)
+ * (2023/01/05) - Bugfix: KIX17-3364 (prevent queue lookup without data for TicketUpdate operation) (mbauer)
+ * (2023/01/02) - Bugfix: KIX17-3355 (ignore values of hidden dynamic fields) (mbauer)
+
 # 17.20.0 (2023/01/18)
  * (2023/01/18) - productive release
 
