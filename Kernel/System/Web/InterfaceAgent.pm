@@ -478,6 +478,29 @@ sub Run {
 
         my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
+        # check for given session id
+        if ( !$Param{SessionID} ) {
+
+            # redirect to alternate login
+            if ( $ConfigObject->Get('LoginURL') ) {
+                $Param{RequestedURL} = $LayoutObject->LinkEncode( $Param{RequestedURL} );
+                print $LayoutObject->Redirect(
+                    ExtURL => $ConfigObject->Get('LoginURL')
+                        . "?RequestedURL=$Param{RequestedURL}",
+                );
+                return;
+            }
+
+            # show login screen
+            $LayoutObject->Print(
+                Output => \$LayoutObject->Login(
+                    Title => 'Logout',
+                    %Param,
+                ),
+            );
+            return;
+        }
+
         # check session id
         if ( !$SessionObject->CheckSessionID( SessionID => $Param{SessionID} ) ) {
 
