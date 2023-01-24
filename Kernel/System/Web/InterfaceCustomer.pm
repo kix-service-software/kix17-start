@@ -457,11 +457,32 @@ sub Run {
     # logout
     elsif ( $Param{Action} eq 'Logout' ) {
 
+        # new layout object
+        my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+
+        # check for given session id
+        if ( !$Param{SessionID} ) {
+
+            # redirect to alternate login
+            if ( $ConfigObject->Get('CustomerPanelLoginURL') ) {
+                $Param{RequestedURL} = $LayoutObject->LinkEncode( $Param{RequestedURL} );
+                print $LayoutObject->Redirect(
+                    ExtURL => $ConfigObject->Get('CustomerPanelLoginURL')
+                        . "?Reason=InvalidSessionID;RequestedURL=$Param{RequestedURL}",
+                );
+            }
+
+            # show login screen
+            print $LayoutObject->CustomerLogin(
+                Title   => 'Logout',
+                Message => Translatable('Session invalid. Please log in again.'),
+                %Param,
+            );
+            return;
+        }
+
         # check session id
         if ( !$SessionObject->CheckSessionID( SessionID => $Param{SessionID} ) ) {
-
-            # new layout object
-            my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
             # redirect to alternate login
             if ( $ConfigObject->Get('CustomerPanelLoginURL') ) {
@@ -503,7 +524,6 @@ sub Run {
                 %UserData,
             },
         );
-
         $Kernel::OM->ObjectsDiscard( Objects => ['Kernel::Output::HTML::Layout'] );
         my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
