@@ -493,7 +493,7 @@ sub TicketSearch {
         $SQLSelect = 'SELECT COUNT(DISTINCT(st.id))';
     }
     else {
-        $SQLSelect = 'SELECT DISTINCT st.id, st.tn';
+        $SQLSelect = 'SELECT st.id, st.tn';
     }
 
     my $SQLFrom = ' FROM ticket st INNER JOIN queue sq ON sq.id = st.queue_id ';
@@ -2178,18 +2178,12 @@ sub TicketSearch {
                     TableAlias         => $DynamicFieldJoinTables{$DynamicFieldName},
                 );
 
-                $SQLSelect .= ", $SQLOrderField ";
-                $SQLExt    .= " $SQLOrderField ";
+                $SQLExt .= " $SQLOrderField ";
             }
             elsif (
                 $SortByArray[$Count] eq 'Owner'
                 || $SortByArray[$Count] eq 'Responsible'
             ) {
-                # include first and last name in select
-                $SQLSelect
-                    .= ', ' . $SortOptions{ $SortByArray[$Count] }
-                    . ", u.first_name, u.last_name ";
-
                 # join the users table on user's id
                 $SQLFrom
                     .= ' JOIN users u '
@@ -2201,8 +2195,7 @@ sub TicketSearch {
             }
             else {
                 # regular sort
-                $SQLSelect .= ', ' . $SortOptions{ $SortByArray[$Count] };
-                $SQLExt    .= ' ' . $SortOptions{ $SortByArray[$Count] };
+                $SQLExt .= ' ' . $SortOptions{ $SortByArray[$Count] };
             }
 
             if ( $OrderByArray[$Count] eq 'Up' ) {
@@ -2670,7 +2663,7 @@ sub TicketSearchOR {
         $SQLSelect = 'SELECT COUNT(DISTINCT(st.id))';
     }
     else {
-        $SQLSelect = 'SELECT DISTINCT st.id, st.tn';
+        $SQLSelect = 'SELECT st.id, st.tn';
     }
 
     my $SQLFrom = ' FROM ticket st INNER JOIN queue sq ON sq.id = st.queue_id ';
