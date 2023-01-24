@@ -314,31 +314,7 @@ sub LinkAddPre {
         }
     }
 
-    # delete old existing link if new link should be added
-    if ( $Param{TargetObject} && $Param{TargetObject} eq 'Ticket' ) {
-        my $LinkList = $Self->{LinkObject}->LinkList(
-            Object  => 'Ticket',
-            Key     => $Param{TargetKey},
-            Object2 => 'Person',
-            State   => 'Valid',
-            UserID  => 1,
-        );
-
-        for my $LinkType ( keys %{ $LinkList->{Person} } ) {
-            next
-                if !$LinkList->{Person}->{$LinkType}->{Source}->{ $Param{Key} };
-
-            my $True = $Self->{LinkObject}->LinkDelete(
-                Object1 => 'Person',
-                Key1    => $Param{Key},
-                Object2 => 'Ticket',
-                Key2    => $Param{TargetKey},
-                Type    => 'Normal',
-                UserID  => 1,
-            );
-        }
-
-    }
+    return 1 if $Param{State} eq 'Temporary';
 
     return 1;
 }
