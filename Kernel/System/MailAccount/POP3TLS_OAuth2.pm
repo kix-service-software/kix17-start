@@ -40,6 +40,9 @@ BEGIN {
 sub Connect {
     my ( $Self, %Param ) = @_;
 
+    # get needed objects
+    my $OAuth2Object = $Kernel::OM->Get('Kernel::System::OAuth2');
+
     my $Type = 'POP3TLS_OAuth2';
 
     # check needed stuff
@@ -47,19 +50,19 @@ sub Connect {
         if ( !defined $Param{$_} ) {
             return (
                 Successful => 0,
-                Message    => "Type: Need $_!",
+                Message    => $Type . ': Need ' . $_ . '!',
             );
         }
     }
 
     # get access token
-    my $AccessToken = $Kernel::OM->Get('Kernel::System::OAuth2')->GetAccessToken(
-        ProfileID => $Param{OAuth2_ProfileID}
+    my $AccessToken = $OAuth2Object->GetAccessToken(
+        ProfileID => $Param{OAuth2_ProfileID},
     );
     if ( !$AccessToken ) {
         return (
             Successful => 0,
-            Message    => "$Type: Could not request access token for $Param{Login}/$Param{Host}'. The refresh token could be expired or invalid."
+            Message    => $Type . ': Could not request access token for ' . $Param{Login} . '/' . $Param{Host} . '. The refresh token could be expired or invalid.'
         );
     }
 
@@ -73,7 +76,7 @@ sub Connect {
     if ( !$PopObject ) {
         return (
             Successful => 0,
-            Message    => "$Type: Can't connect to $Param{Host}: $!!"
+            Message    => $Type . ': Could not connect to ' . $Param{Host} . ': ' . $! . '!'
         );
     }
 
@@ -82,16 +85,39 @@ sub Connect {
         SSL_verify_mode => 0,
     );
 
-    # auth via SASL XOAUTH2
-    my $SASLXOAUTH2 = encode_base64( 'user=' . $Param{Login} . "\x01auth=Bearer " . $AccessToken . "\x01\x01" );
-    $PopObject->command( 'AUTH', 'XOAUTH2' )->response();
-    my $NOM = $PopObject->command($SASLXOAUTH2)->response();
+    # try it 2 times to authenticate with the SMTP server
+    my $NOM;
+    TRY:
+    for my $Try ( 1 .. 2 ) {
+        # auth via SASL XOAUTH2
+        my $SASLXOAUTH2 = encode_base64( 'user=' . $Param{Login} . "\x01auth=Bearer " . $AccessToken . "\x01\x01" );
+        $PopObject->command( 'AUTH', 'XOAUTH2' )->response();
+        $NOM = $PopObject->command($SASLXOAUTH2)->response();
+
+        last TRY if ( defined $NOM );
+
+        # sleep 0,3 seconds;
+        sleep( 0.3 );
+
+        # get a new access token
+        $AccessToken = $OAuth2Object->RequestAccessToken(
+            ProfileID => $Param{OAuth2_ProfileID},
+            GrantType => 'refresh_token'
+        );
+        if ( !$AccessToken ) {
+            $PopObject->quit();
+            return (
+                Successful => 0,
+                Message    => $Type . ': Could not request access token for ' . $Param{Login} . '/' . $Param{Host} . '. The refresh token could be expired or invalid.'
+            );
+        }
+    }
 
     if ( !defined $NOM ) {
         $PopObject->quit();
         return (
             Successful => 0,
-            Message    => "$Type: Auth for user $Param{Login}/$Param{Host} failed!"
+            Message    => $Type . ': Auth for user ' . $Param{Login} . '/' . $Param{Host} . ' failed!'
         );
     }
 

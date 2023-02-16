@@ -866,15 +866,18 @@ sub RequestAccessToken {
     }
 ### EO Code licensed under the GPL-3.0, Copyright (C) 2019-2023 Rother OSS GmbH, https://otobo.de/ ###
 
-    # Cache the access token until it expires.
-    $Kernel::OM->Get('Kernel::System::Cache')->Set(
-        Type           => $Self->{CacheType},
-        TTL            => ( $ResponseData->{expires_in} - 90 ),               # Add a buffer for latency reasons.
-        Key            => "AccessToken::$Param{ProfileID}",
-        Value          => $ResponseData->{access_token},
-        CacheInMemory  => 0,                                            # Cache in Backend only to enforce TTL
-        CacheInBackend => 1,
-    );
+    # Cache the access token until it expires - add a buffer (90 seconds) for latency reasons
+    my $TTL = ( $ResponseData->{expires_in} || 0 ) - 90;
+    if ( $TTL > 0 ) {
+        $Kernel::OM->Get('Kernel::System::Cache')->Set(
+            Type           => $Self->{CacheType},
+            TTL            => $TTL,
+            Key            => "AccessToken::$Param{ProfileID}",
+            Value          => $ResponseData->{access_token},
+            CacheInMemory  => 0,                                            # Cache in Backend only to enforce TTL
+            CacheInBackend => 1,
+        );
+    }
 
     return $ResponseData->{access_token};
 }
