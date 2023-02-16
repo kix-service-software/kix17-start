@@ -1426,17 +1426,19 @@ sub Run {
                 Behavior           => 'IsACLReducible',
             );
 
-            if ( !$IsACLReducible ) {
+            if (
+                !$IsACLReducible
+                || $DynamicFieldConfig->{Config}->{DisplayFieldType} eq 'AutoComplete'
+            ) {
                 $DynamicFieldHTML{ $DynamicFieldConfig->{Name} } =
                     $DynamicFieldBackendObject->EditFieldRender(
                     DynamicFieldConfig => $DynamicFieldConfig,
-                    Mandatory =>
-                        $Config->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
-                    LayoutObject    => $LayoutObject,
-                    ParamObject     => $ParamObject,
-                    AJAXUpdate      => 0,
-                    UpdatableFields => $Self->_GetFieldsToUpdate(),
-                    );
+                    Mandatory          => $Config->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
+                    LayoutObject       => $LayoutObject,
+                    ParamObject        => $ParamObject,
+                    AJAXUpdate         => 0,
+                    UpdatableFields    => $Self->_GetFieldsToUpdate(),
+                );
 
                 next DYNAMICFIELD;
             }
