@@ -75,6 +75,7 @@ sub Run {
 
     my %CustomerUserData = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerUserDataGet(
         User          => $Ticket{CustomerUserID},
+        CustomerID    => $Ticket{CustomerID},
         DynamicFields => 1,
     );
     return if (
