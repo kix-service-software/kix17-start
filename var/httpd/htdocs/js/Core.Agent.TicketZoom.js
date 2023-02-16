@@ -437,6 +437,12 @@ Core.Agent.TicketZoom = (function (TargetNS) {
         if (!$TBodyElements.length) {
             return;
         }
+        else if (
+            $THeadElements.length
+            && $TBodyElements.length != $THeadElements.length
+        ) {
+            return;
+        }
 
         $THead.width($TBody.outerWidth() + 'px');
 
