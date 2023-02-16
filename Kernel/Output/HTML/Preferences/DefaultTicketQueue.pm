@@ -79,8 +79,9 @@ sub Param {
             Translation => 0,
             Data        => \%Queue,
             HTMLQuote   => 0,
-            SelectedID  => $ParamObject->GetParam( Param => 'UserDefaultTicketQueue' )
-                || $Param{UserData}->{UserDefaultTicketQueue}
+            SelectedID  => $ParamObject->GetParam( Param => $Self->{ConfigItem}->{PrefKey} )
+                || $Param{UserData}->{ $Self->{ConfigItem}->{PrefKey} }
+                || $Self->{ConfigItem}->{DataSelected}
                 || $Self->{Config}->{QueueDefault},
             Block => 'Option',
             Max   => 100,

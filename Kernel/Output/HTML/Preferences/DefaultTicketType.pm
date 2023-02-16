@@ -57,8 +57,9 @@ sub Param {
             HTMLQuote   => 0,
             Block       => 'Option',
             Max         => 100,
-            SelectedID  => $ParamObject->GetParam( Param => 'UserDefaultTicketType' )
-                || $Param{UserData}->{UserDefaultTicketType}
+            SelectedID  => $ParamObject->GetParam( Param => $Self->{ConfigItem}->{PrefKey} )
+                || $Param{UserData}->{ $Self->{ConfigItem}->{PrefKey} }
+                || $Self->{ConfigItem}->{DataSelected}
                 || $Self->{Config}->{TicketTypeDefault},
         },
     );

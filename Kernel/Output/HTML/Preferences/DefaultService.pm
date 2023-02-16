@@ -21,8 +21,7 @@ sub new {
     bless( $Self, $Type );
 
     # get config
-    $Self->{Config}
-        = $Kernel::OM->Get('Kernel::Config')->Get("Ticket::Frontend::CustomerTicketMessage");
+    $Self->{Config} = $Kernel::OM->Get('Kernel::Config')->Get("Ticket::Frontend::CustomerTicketMessage");
 
     return $Self;
 }
@@ -56,8 +55,9 @@ sub Param {
             Data        => \%Service,
             Translation => 0,
             HTMLQuote   => 0,
-            SelectedID  => $ParamObject->GetParam( Param => 'UserDefaultService' )
-                || $Param{UserData}->{UserDefaultService}
+            SelectedID  => $ParamObject->GetParam( Param => $Self->{ConfigItem}->{PrefKey} )
+                || $Param{UserData}->{ $Self->{ConfigItem}->{PrefKey} }
+                || $Self->{ConfigItem}->{DataSelected}
                 || $Self->{Config}->{ServiceDefault},
             Block => 'Option',
             Max   => 100,
