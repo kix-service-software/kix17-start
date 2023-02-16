@@ -1054,7 +1054,7 @@ sub MaskAgentZoom {
         if ( $NewStartHit ) {
             $StartHit = $NewStartHit;
         }
-        else {
+        elsif ( scalar(@ArticleBoxAll) ) {
             # show first article
             if (
                 $Preferences{ShownArticle}
@@ -1125,6 +1125,9 @@ sub MaskAgentZoom {
                 }
             }
         }
+        else {
+            $StartHit = 1;
+        }
     }
 
     my $Start = $StartHit-1;
@@ -1153,7 +1156,10 @@ sub MaskAgentZoom {
     }
 
     # use fallback if no customer article found - show last article
-    if ( !defined $ArticleID ) {
+    if (
+        !defined $ArticleID
+        && scalar(@ArticleBox)
+    ) {
         if ( $Self->{ZoomExpandSort} ne 'reverse' ) {
             $ArticleID = $ArticleBox[-1]->{ArticleID};
         }
