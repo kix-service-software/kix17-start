@@ -94,7 +94,6 @@ sub ToAscii {
     # get parser object
     my $Parser = HTML::Parser->new(
         api_version        => 3,
-        declaration_h      => [ \&_AsciiDeclarationHandler, 'self, text' ],
         start_h            => [ \&_AsciiTagStartHandler, 'self, tagname, attr, attrseq' ],
         end_h              => [ \&_AsciiTagEndHandler, 'self, tagname' ],
         text_h             => [ \&_AsciiTextHandler, 'self, text, is_cdata' ],
@@ -160,18 +159,15 @@ sub ToAscii {
     return $Param{String};
 }
 
-sub _AsciiDeclarationHandler {
-    my ( $Self, $Text ) = @_;
-
-    # ignore declarations
-    return;
-}
-
 sub _AsciiTagStartHandler {
     my ( $Self, $TagName, $Attributes, $AttributeSequence ) = @_;
 
+    # cleanup tag name
+    $TagName = lc($TagName);
+    $TagName =~ s/[^a-z0-9]+//g;
+
     # check style element
-    if ( lc($TagName) eq 'style' ) {
+    if ( $TagName eq 'style' ) {
         if ( $Self->{Flag}->{Style} ) {
             # increment flag count
             $Self->{Flag}->{Style} += 1;
@@ -185,7 +181,7 @@ sub _AsciiTagStartHandler {
     }
 
     # check preformat element
-    if ( $Self->{PreformatTags}->{ lc($TagName) } ) {
+    if ( $Self->{PreformatTags}->{ $TagName } ) {
         if ( $Self->{Flag}->{Preformat} ) {
             # increment flag count
             $Self->{Flag}->{Preformat} += 1;
@@ -198,10 +194,20 @@ sub _AsciiTagStartHandler {
         return;
     }
 
+    # get currently trailing linebreaks
+    my $AsciiEnd   = substr( $Self->{Ascii}, -2 );
+    my $BreakCount = 0;
+    if ( $AsciiEnd eq "\n\n" ) {
+        $BreakCount = 2;
+    }
+    elsif ( $AsciiEnd =~ m/\n\z/ ) {
+        $BreakCount = 1;
+    }
+
     # check for lists
     if (
-        lc($TagName) eq 'ol'
-        || lc($TagName) eq 'ul'
+        $TagName eq 'ol'
+        || $TagName eq 'ul'
     ) {
         if ( $Self->{Flag}->{List} ) {
             # increment flag level
@@ -209,7 +215,7 @@ sub _AsciiTagStartHandler {
 
             # push tagname to stack
             push( @{ $Self->{Flag}->{List}->{Stack} }, {
-                Tag     => lc($TagName),
+                Tag     => $TagName,
                 Counter => 0,
             } );
         }
@@ -219,13 +225,16 @@ sub _AsciiTagStartHandler {
 
             # init stack
             $Self->{Flag}->{List}->{Stack} = [ {
-                Tag     => lc($TagName),
+                Tag     => $TagName,
                 Counter => 0,
             } ];
 
             if (
                 $Self->{Flag}->{Preformat}
-                || $Self->{Ascii} !~ m/(?:^$|\n\n\z)/
+                || (
+                    $Self->{Ascii} ne ''
+                    && $BreakCount != 2
+                )
             ) {
                 # append single line break
                 $Self->{Ascii} .= "\n";
@@ -236,7 +245,7 @@ sub _AsciiTagStartHandler {
     }
 
     # check for blockquote
-    if ( lc($TagName) eq 'blockquote' ) {
+    if ( $TagName eq 'blockquote' ) {
         if ( $Self->{Flag}->{Quote} ) {
             # increment flag level
             $Self->{Flag}->{Quote}->{QuoteLevel} += 1;
@@ -254,7 +263,10 @@ sub _AsciiTagStartHandler {
 
         if (
             $Self->{Flag}->{Preformat}
-            || $Self->{Ascii} !~ m/(?:^$|\n\n\z)/
+            || (
+                $Self->{Ascii} ne ''
+                && $BreakCount != 2
+            )
         ) {
             # append single line break
             $Self->{Ascii} .= "\n";
@@ -264,7 +276,7 @@ sub _AsciiTagStartHandler {
     }
 
     # replace li tags
-    if ( lc($TagName) eq 'li' ) {
+    if ( $TagName eq 'li' ) {
         # check for current list tag
         if ( $Self->{Flag}->{List} ) {
             # get current list element
@@ -275,7 +287,10 @@ sub _AsciiTagStartHandler {
 
             if (
                 $Self->{Flag}->{Preformat}
-                || $Self->{Ascii} !~ m/(?:^$|\n\n\z)/
+                || (
+                    $Self->{Ascii} ne ''
+                    && $BreakCount != 2
+                )
             ) {
                 # append single line break
                 $Self->{Ascii} .= "\n";
@@ -316,7 +331,7 @@ sub _AsciiTagStartHandler {
     for my $Attribute ( @{ $AttributeSequence } ) {
         # check for links
         if (
-            lc($TagName) eq 'a'
+            $TagName eq 'a'
             && lc( $Attribute ) eq 'href'
         ) {
             # increment counter
@@ -332,7 +347,7 @@ sub _AsciiTagStartHandler {
         }
         # check for quotation
         if (
-            lc($TagName) eq 'div'
+            $TagName eq 'div'
             && lc( $Attribute ) eq 'type'
             && lc( $Attributes->{ $Attribute } ) eq 'cite'
         ) {
@@ -359,7 +374,10 @@ sub _AsciiTagStartHandler {
 
             if (
                 $Self->{Flag}->{Preformat}
-                || $Self->{Ascii} !~ m/(?:^$|\n\n\z)/
+                || (
+                    $Self->{Ascii} ne ''
+                    && $BreakCount != 2
+                )
             ) {
                 # append single line break
                 $Self->{Ascii} .= "\n";
@@ -371,7 +389,7 @@ sub _AsciiTagStartHandler {
 
     # check for div while quotation is active
     if (
-        lc($TagName) eq 'div'
+        $TagName eq 'div'
         && $Self->{Flag}->{Quote}
     ) {
         # increment flag level of div element
@@ -380,16 +398,22 @@ sub _AsciiTagStartHandler {
 
     # check for replacement with single line break
     if (
-        $Self->{SingleBreakStartTags}->{ lc($TagName) }
+        $Self->{SingleBreakStartTags}->{ $TagName }
         && (
             $Self->{Flag}->{Preformat}
-            || $Self->{Ascii} !~ m/(?:^$|\n\n\z)/
+            || (
+                $Self->{Ascii} ne ''
+                && $BreakCount != 2
+            )
         )
     ) {
         # append quotation at begin of line
         if (
-            $Self->{Ascii} =~ m/(?:^$|\n\z)/
-            && $Self->{Flag}->{Quote}
+            $Self->{Flag}->{Quote}
+            && (
+                $Self->{Ascii} eq ''
+                || $BreakCount >= 1
+            )
         ) {
             my $Quotation = 0;
 
@@ -410,16 +434,22 @@ sub _AsciiTagStartHandler {
 
     # check for replacement with double line break
     if (
-        $Self->{DoubleBreakTags}->{ lc($TagName) }
+        $Self->{DoubleBreakTags}->{ $TagName }
         && (
             $Self->{Flag}->{Preformat}
-            || $Self->{Ascii} !~ m/(?:^$|\n\n\z)/
+            || (
+                $Self->{Ascii} ne ''
+                && $BreakCount != 2
+            )
         )
     ) {
         # append quotation at begin of line
         if (
-            $Self->{Ascii} =~ m/(?:^$|\n\z)/
-            && $Self->{Flag}->{Quote}
+            $Self->{Flag}->{Quote}
+            && (
+                $Self->{Ascii} eq ''
+                || $BreakCount >= 1
+            )
         ) {
             my $Quotation = 0;
 
@@ -439,11 +469,14 @@ sub _AsciiTagStartHandler {
     }
 
     # check for replacement with white space
-    if ( $Self->{WhitespaceStartTags}->{ lc($TagName) } ) {
+    if ( $Self->{WhitespaceStartTags}->{ $TagName } ) {
         # append quotation at begin of line
         if (
-            $Self->{Ascii} =~ m/(?:^$|\n\z)/
-            && $Self->{Flag}->{Quote}
+            $Self->{Flag}->{Quote}
+            && (
+                $Self->{Ascii} eq ''
+                || $BreakCount == 1
+            )
         ) {
             my $Quotation = 0;
 
@@ -468,9 +501,13 @@ sub _AsciiTagStartHandler {
 sub _AsciiTagEndHandler {
     my ( $Self, $TagName ) = @_;
 
+    # cleanup tag name
+    $TagName = lc($TagName);
+    $TagName =~ s/[^a-z0-9]+//g;
+
     # check style element
     if ( $Self->{Flag}->{Style} ) {
-        if ( lc($TagName) eq 'style' ) {
+        if ( $TagName eq 'style' ) {
             # reduce flag count
             $Self->{Flag}->{Style} -= 1;
 
@@ -486,7 +523,7 @@ sub _AsciiTagEndHandler {
     # check preformat element
     if ( $Self->{Flag}->{Preformat} ) {
         # check for closing of preformat tag
-        if ( $Self->{PreformatTags}->{ lc($TagName) } ) {
+        if ( $Self->{PreformatTags}->{ $TagName } ) {
             # reduce flag count
             $Self->{Flag}->{Preformat} -= 1;
 
@@ -499,11 +536,21 @@ sub _AsciiTagEndHandler {
         }
     }
 
+    # get currently trailing linebreaks
+    my $AsciiEnd   = substr( $Self->{Ascii}, -2 );
+    my $BreakCount = 0;
+    if ( $AsciiEnd eq "\n\n" ) {
+        $BreakCount = 2;
+    }
+    elsif ( $AsciiEnd =~ m/\n\z/ ) {
+        $BreakCount = 1;
+    }
+
     # check for lists
     if ( $Self->{Flag}->{List} ) {
         if (
-            lc($TagName) eq 'ol'
-            || lc($TagName) eq 'ul'
+            $TagName eq 'ol'
+            || $TagName eq 'ul'
         ) {
             # reduce flag level
             $Self->{Flag}->{List}->{Level} -= 1;
@@ -517,7 +564,10 @@ sub _AsciiTagEndHandler {
 
                 if (
                     $Self->{Flag}->{Preformat}
-                    || $Self->{Ascii} !~ m/(?:^$|\n\n\z)/
+                    || (
+                        $Self->{Ascii} ne ''
+                        && $BreakCount != 2
+                    )
                 ) {
                     # append single line break
                     $Self->{Ascii} .= "\n";
@@ -531,12 +581,12 @@ sub _AsciiTagEndHandler {
     # check for quotation
     if ( $Self->{Flag}->{Quote} ) {
         # check for ending blockquote
-        if ( lc($TagName) eq 'blockquote' ) {
+        if ( $TagName eq 'blockquote' ) {
             # reduce flag level of quotation
             $Self->{Flag}->{Quote}->{QuoteLevel} -= 1;
         }
         # check for ending div
-        elsif ( lc($TagName) eq 'div' ) {
+        elsif ( $TagName eq 'div' ) {
             # check if current div is part of the stack
             if (
                 $Self->{Flag}->{Quote}->{Stack}->[-1]
@@ -559,7 +609,10 @@ sub _AsciiTagEndHandler {
 
             if (
                 $Self->{Flag}->{Preformat}
-                || $Self->{Ascii} !~ m/(?:^$|\n\n\z)/
+                || (
+                    $Self->{Ascii} ne ''
+                    && $BreakCount != 2
+                )
             ) {
                 # append single line break
                 $Self->{Ascii} .= "\n";
@@ -571,16 +624,22 @@ sub _AsciiTagEndHandler {
 
     # check for replacement with single line break
     if (
-        $Self->{SingleBreakEndTags}->{ lc($TagName) }
+        $Self->{SingleBreakEndTags}->{ $TagName }
         && (
             $Self->{Flag}->{Preformat}
-            || $Self->{Ascii} !~ m/(?:^$|\n\n\z)/
+            || (
+                $Self->{Ascii} ne ''
+                && $BreakCount != 2
+            )
         )
     ) {
         # append quotation at begin of line
         if (
-            $Self->{Ascii} =~ m/(?:^$|\n\z)/
-            && $Self->{Flag}->{Quote}
+            $Self->{Flag}->{Quote}
+            && (
+                $Self->{Ascii} eq ''
+                || $BreakCount >= 1
+            )
         ) {
             my $Quotation = 0;
 
@@ -601,16 +660,22 @@ sub _AsciiTagEndHandler {
 
     # check for replacement with double line break
     if (
-        $Self->{DoubleBreakTags}->{ lc($TagName) }
+        $Self->{DoubleBreakTags}->{ $TagName }
         && (
             $Self->{Flag}->{Preformat}
-            || $Self->{Ascii} !~ m/(?:^$|\n\n\z)/
+            || (
+                $Self->{Ascii} ne ''
+                && $BreakCount != 2
+            )
         )
     ) {
         # append quotation at begin of line
         if (
-            $Self->{Ascii} =~ m/(?:^$|\n\z)/
-            && $Self->{Flag}->{Quote}
+            $Self->{Flag}->{Quote}
+            && (
+                $Self->{Ascii} eq ''
+                || $BreakCount >= 1
+            )
         ) {
             my $Quotation = 0;
 
@@ -630,11 +695,14 @@ sub _AsciiTagEndHandler {
     }
 
     # check for replacement with white space
-    if ( $Self->{WhitespaceEndTags}->{ lc($TagName) } ) {
+    if ( $Self->{WhitespaceEndTags}->{ $TagName } ) {
         # append quotation at begin of line
         if (
-            $Self->{Ascii} =~ m/(?:^$|\n\z)/
-            && $Self->{Flag}->{Quote}
+            $Self->{Flag}->{Quote}
+            && (
+                $Self->{Ascii} eq ''
+                || $BreakCount >= 1
+            )
         ) {
             my $Quotation = 0;
 
@@ -679,8 +747,11 @@ sub _AsciiTextHandler {
 
     # append quotation at begin of line
     if (
-        $Self->{Ascii} =~ m/(?:^$|\n\z)/
-        && $Self->{Flag}->{Quote}
+        $Self->{Flag}->{Quote}
+        && (
+            $Self->{Ascii} eq ''
+            || substr( $Self->{Ascii}, -1 ) eq "\n"
+        )
     ) {
         my $Quotation = 0;
 
