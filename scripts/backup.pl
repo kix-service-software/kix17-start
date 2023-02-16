@@ -28,11 +28,12 @@ my $Compress    = '';
 my $CompressCMD = '';
 my $DB          = '';
 my $DBDump      = '';
-getopt( 'hcrtd', \%Opts );
+getopt( 'hcrtdn', \%Opts );
 if ( exists $Opts{h} ) {
     print "backup.pl - backup script\n";
     print "Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de\n";
-    print "usage: backup.pl -d /data_backup_dir/ [-c gzip|bzip2] [-r 30] [-t fullbackup|nofullbackup|dbonly]\n";
+    print "usage: backup.pl -d /data_backup_dir/ [-c gzip|bzip2] [-r 30] [-t fullbackup|nofullbackup|dbonly] [-n]\n";
+    print "additional: -n   ignore the PROCESS (only for mysql >= 5.7.31)"
     exit 1;
 }
 
@@ -203,7 +204,12 @@ if ( $DB =~ m/mysql/i ) {
     if ($DatabasePw) {
         $DatabasePw = "-p'$DatabasePw'";
     }
-    if ( !system("$DBDump -u $DatabaseUser $DatabasePw -h $DatabaseHost $Database > $Directory/DatabaseBackup.sql") ) {
+    my $NoTablespaces = q{};
+    if ( exists $Opts{n} ) {
+        $NoTablespaces = '--no-tablespaces';
+    }
+
+    if ( !system("$DBDump -u $DatabaseUser $DatabasePw -h $DatabaseHost $Database > $Directory/DatabaseBackup.sql $NoTablespaces") ) {
         print "done\n";
     }
     else {
