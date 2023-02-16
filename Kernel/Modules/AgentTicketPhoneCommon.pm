@@ -180,6 +180,14 @@ sub Run {
         $GetParam{$Key} = $ParamObject->GetParam( Param => $Key );
     }
 
+    # set default state, if no next state id given
+    if (
+        !$GetParam{NextStateID}
+        && $Config->{State}
+    ) {
+        $GetParam{State} = $Config->{State};
+    }
+
     # MultipleCustomer From-field
     my @MultipleCustomer;
     if ( $Config->{CallContact} ) {
