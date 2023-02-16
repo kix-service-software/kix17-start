@@ -1770,13 +1770,6 @@ sub _ImportXMLDataMerge {
                 next COUNTER;
             }
 
-            # dummy attribute does not need any value
-            next COUNTER if (
-                IsHashRefWithData($Item->{Input})
-                && $Item->{Input}->{Type}
-                && $Item->{Input}->{Type} eq 'Dummy'
-            );
-
             # prepare value
             my $Value = $Kernel::OM->Get('Kernel::System::ITSMConfigItem')->XMLImportValuePrepare(
                 Item  => $Item,
