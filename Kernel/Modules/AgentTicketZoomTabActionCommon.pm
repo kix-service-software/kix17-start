@@ -849,7 +849,10 @@ sub Run {
 
         # set new owner
         my @NotifyDone;
-        if ( $Config->{Owner} ) {
+        if (
+            $Config->{Owner}
+            && $GetParam{NewOwnerID}
+        ) {
             my $BodyText = $LayoutObject->RichText2Ascii(
                 String => $GetParam{Body} || '',
             );
@@ -861,10 +864,7 @@ sub Run {
                 Comment   => $BodyText,
             );
 
-            if (
-                $GetParam{NewOwnerID}
-                && $GetParam{NewOwnerID} != $Ticket{OwnerID}
-            ) {
+            if ( $GetParam{NewOwnerID} != $Ticket{OwnerID} ) {
                 $TicketObject->TicketLockSet(
                     TicketID => $Self->{TicketID},
                     Lock     => 'lock',
@@ -883,25 +883,27 @@ sub Run {
         }
 
         # set new responsible
-        if ( $ConfigObject->Get('Ticket::Responsible') && $Config->{Responsible} ) {
-            if ( $GetParam{NewResponsibleID} ) {
-                my $BodyText = $LayoutObject->RichText2Ascii(
-                    String => $GetParam{Body} || '',
-                );
-                my $Success = $TicketObject->TicketResponsibleSet(
-                    TicketID  => $Self->{TicketID},
-                    UserID    => $Self->{UserID},
-                    NewUserID => $GetParam{NewResponsibleID},
-                    Comment   => $BodyText,
-                );
+        if (
+            $ConfigObject->Get('Ticket::Responsible')
+            && $Config->{Responsible}
+            && $GetParam{NewResponsibleID}
+        ) {
+            my $BodyText = $LayoutObject->RichText2Ascii(
+                String => $GetParam{Body} || '',
+            );
+            my $Success = $TicketObject->TicketResponsibleSet(
+                TicketID  => $Self->{TicketID},
+                UserID    => $Self->{UserID},
+                NewUserID => $GetParam{NewResponsibleID},
+                Comment   => $BodyText,
+            );
 
-                # remember to not notify responsible twice
-                if (
-                    defined $Success
-                    && $Success eq '1'
-                ) {
-                    push @NotifyDone, $GetParam{NewResponsibleID};
-                }
+            # remember to not notify responsible twice
+            if (
+                defined $Success
+                && $Success eq '1'
+            ) {
+                push @NotifyDone, $GetParam{NewResponsibleID};
             }
         }
 
