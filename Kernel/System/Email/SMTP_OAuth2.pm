@@ -84,7 +84,7 @@ sub Check {
             SMTPDebug => $Self->{SMTPDebug},
         );
 
-        last TRY if $SMTP;
+        last TRY if ( $SMTP );
 
         # sleep 0,3 seconds;
         sleep( 0.3 );
@@ -98,16 +98,42 @@ sub Check {
         );
     }
 
-    # prepare authentication with sasl
-    my $SASL = Authen::SASL->new(
-        mechanism => 'XOAUTH2',
-        callback => {
-            user         => $ConfigData{AuthUser},
-            auth         => 'Bearer',
-            access_token => $AccessToken,
+    # try it 2 times to authenticate with the SMTP server
+    my $AuthSuccess;
+    TRY:
+    for my $Try ( 1 .. 2 ) {
+        # prepare authentication with sasl
+        my $SASL = Authen::SASL->new(
+            mechanism => 'XOAUTH2',
+            callback => {
+                user         => $ConfigData{AuthUser},
+                auth         => 'Bearer',
+                access_token => $AccessToken,
+            }
+        );
+
+        # try to authenticate
+        $AuthSuccess = $SMTP->auth($SASL);
+
+        last TRY if ( $AuthSuccess );
+
+        # sleep 0,3 seconds;
+        sleep( 0.3 );
+
+        # get a new access token
+        $AccessToken = $OAuth2Object->RequestAccessToken(
+            ProfileID => $ProfileID,
+            GrantType => 'refresh_token'
+        );
+        if ( !$AccessToken ) {
+            $SMTP->quit();
+            return (
+                Successful => 0,
+                Message    => 'Could not request access token for ' . $ConfigData{AuthUser} . '/' . $ConfigData{Host} . '. The refresh token could be expired or invalid.'
+            );
         }
-    );
-    my $AuthSuccess = $SMTP->auth($SASL);
+    }
+
     if ( !$AuthSuccess ) {
         $SMTP->quit();
         return (
