@@ -1,6 +1,23 @@
 # Change log of KIX
 * Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.21.0-RC3 (2023/02/17)
+ * (2023/02/16) - Bugfix: KIX17-3404 (added check of ignoring autocomplete dynamic fields before selection build) (fjacquemin)
+ * (2023/02/16) - Bugfix: KIX17-416 (do not fill queue without user selection) (mbauer)
+ * (2023/02/16) - Bugfix: KIX17-3402 (prevent error log when owner is not given) (mbauer)
+ * (2023/02/13) - Bugfix: KIX17-3351 (more stringent date validation for ticket search) (mbauer)
+ * (2023/02/10) - Bugfix: KIX17-3400 (preference module use configured pref keys) (mbauer)
+ * (2023/02/09) - Bugfix: KIX17-3399 (accelerate ToAscii for extensive html) (mbauer)
+ * (2023/02/08) - Bugfix: KIX17-3354 (retry oauth authentification when token was invalid) (mbauer)
+ * (2023/02/08) - Bugfix: KIX17-3395 (use Net::SSLGlue only if really needed) (mbauer)
+ * (2023/02/06) - Bugfix: KIX17-2360 (fixed missing initial configured state for acl check) (fjacquemin)
+ * (2023/02/03) - Bugfix: KIX17-3394 (fixed set incorrect customer ID when switching contact in ticket creation) (fjacquemin)
+ * (2023/02/02) - Bugfix: KIX17-3389 (fixed missing article table loading when using ZoomExpandSort "normal") (fjacquemin)
+ * (2023/02/01) - Bugfix: KIX17-3392 (fixed error of PROCESS by using mysql (>=5.7.31) backup) (fjacquemin)
+ * (2023/02/01) - Bugfix: KIX17-3384 (fixed missing handling of multiple customer support on event DynamicFieldFromCustomerUser) (fjacquemin)
+ * (2023/02/01) - Bugfix: KIX17-3383 (removed skipping of config item attribute dummy on import) (fjacquemin)
+ * (2023/01/27) - Bugfix: KIX17-3348 (added deleting of merged ticket on delete parent ticket) (fjacquemin)
+
 # 17.21.0-RC2 (2023/01/30)
  * (2023/01/24) - Bugfix: KIX17-3375 (fixed incorrect reload after popup close) (fjacquemin)
  * (2023/01/20) - Bugfix: KIX17-3379 (fix error message on logout page reload) (mbauer)
