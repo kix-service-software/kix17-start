@@ -13,13 +13,20 @@ package Kernel::System::MailAccount::POP3TLS;
 use strict;
 use warnings;
 
-use Net::SSLGlue::POP3;
+use Net::POP3;
 
 use base qw(Kernel::System::MailAccount::POP3);
 
 our @ObjectDependencies = (
     'Kernel::System::Log',
 );
+
+# Use Net::SSLGlue::POP3 on systems with older Net::POP3 modules that do not provide starttls
+BEGIN {
+    if ( !defined &Net::POP3::starttls ) {
+        require Net::SSLGlue::POP3;
+    }
+}
 
 sub Connect {
     my ( $Self, %Param ) = @_;

@@ -582,7 +582,7 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
                     // remove row
                     if ($(this).prop('checked')){
                         // reset selected customer id
-                        $('#CustomerID').val('');
+                        $('#CustomerID').val('').attr('value', '');
 
                         // reload information
                         TargetNS.ReloadCustomerInfo(CustomerKey);

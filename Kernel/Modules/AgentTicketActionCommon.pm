@@ -854,7 +854,10 @@ sub Run {
 
         # set new owner
         my @NotifyDone;
-        if ( $Config->{Owner} ) {
+        if (
+            $Config->{Owner}
+            && $GetParam{NewOwnerID}
+        ) {
             my $BodyText = $LayoutObject->RichText2Ascii(
                 String => $GetParam{Body} || '',
             );
@@ -866,10 +869,7 @@ sub Run {
                 Comment   => $BodyText,
             );
 
-            if (
-                $GetParam{NewOwnerID}
-                && $GetParam{NewOwnerID} != $Ticket{OwnerID}
-            ) {
+            if ( $GetParam{NewOwnerID} != $Ticket{OwnerID} ) {
                 $TicketObject->TicketLockSet(
                     TicketID => $Self->{TicketID},
                     Lock     => 'lock',
@@ -888,25 +888,27 @@ sub Run {
         }
 
         # set new responsible
-        if ( $ConfigObject->Get('Ticket::Responsible') && $Config->{Responsible} ) {
-            if ( $GetParam{NewResponsibleID} ) {
-                my $BodyText = $LayoutObject->RichText2Ascii(
-                    String => $GetParam{Body} || '',
-                );
-                my $Success = $TicketObject->TicketResponsibleSet(
-                    TicketID  => $Self->{TicketID},
-                    UserID    => $Self->{UserID},
-                    NewUserID => $GetParam{NewResponsibleID},
-                    Comment   => $BodyText,
-                );
+        if (
+            $ConfigObject->Get('Ticket::Responsible')
+            && $Config->{Responsible}
+            && $GetParam{NewResponsibleID}
+        ) {
+            my $BodyText = $LayoutObject->RichText2Ascii(
+                String => $GetParam{Body} || '',
+            );
+            my $Success = $TicketObject->TicketResponsibleSet(
+                TicketID  => $Self->{TicketID},
+                UserID    => $Self->{UserID},
+                NewUserID => $GetParam{NewResponsibleID},
+                Comment   => $BodyText,
+            );
 
-                # remember to not notify responsible twice
-                if (
-                    defined $Success
-                    && $Success eq '1'
-                ) {
-                    push @NotifyDone, $GetParam{NewResponsibleID};
-                }
+            # remember to not notify responsible twice
+            if (
+                defined $Success
+                && $Success eq '1'
+            ) {
+                push @NotifyDone, $GetParam{NewResponsibleID};
             }
         }
 
@@ -1256,13 +1258,47 @@ sub Run {
             $ServiceID = $Ticket{ServiceID} || '';
         }
 
-        my $QueueID = $GetParam{NewQueueID} || $Ticket{QueueID};
-        my $StateID = $GetParam{NewStateID} || $Ticket{StateID};
+        my $QueueID    = $GetParam{NewQueueID} || $Ticket{QueueID};
+        my $NewQueueID = $GetParam{NewQueueID};
+        my $StateID    = $GetParam{NewStateID} || $Ticket{StateID};
 
         # get list type
         my $TreeView = 0;
         if ( $ConfigObject->Get('Ticket::Frontend::ListType') eq 'tree' ) {
             $TreeView = 1;
+        }
+
+        my $Services = $Self->_GetServices(
+            %GetParam,
+            %ACLCompatGetParam,
+            CustomerUserID => $CustomerUser,
+            QueueID        => $QueueID,
+            StateID        => $StateID,
+        );
+
+        # reset previous ServiceID to reset SLA-List if no service is selected
+        if ( !defined $ServiceID || !$Services->{$ServiceID} ) {
+            $ServiceID = '';
+        }
+
+        # get assigned queue if set
+        if (
+            $ServiceID
+            && $GetParam{ElementChanged} eq 'ServiceID'
+        ) {
+            # retrieve service data...
+            my %ServiceData = $Kernel::OM->Get('Kernel::System::Service')->ServiceGet(
+                ServiceID => $ServiceID,
+                UserID    => 1,
+            );
+
+            if (
+                %ServiceData
+                && $ServiceData{AssignedQueueID} 
+            ) {
+                $QueueID    = $ServiceData{AssignedQueueID};
+                $NewQueueID = $ServiceData{AssignedQueueID};
+            }
         }
 
         my $Owners = $Self->_GetOwners(
@@ -1290,13 +1326,6 @@ sub Run {
             %GetParam,
             %ACLCompatGetParam,
         );
-        my $Services = $Self->_GetServices(
-            %GetParam,
-            %ACLCompatGetParam,
-            CustomerUserID => $CustomerUser,
-            QueueID        => $QueueID,
-            StateID        => $StateID,
-        );
         my $Types = $Self->_GetTypes(
             %GetParam,
             %ACLCompatGetParam,
@@ -1304,7 +1333,6 @@ sub Run {
             QueueID        => $QueueID,
             StateID        => $StateID,
         );
-
         my %MoveQueues = $TicketObject->TicketMoveList(
             %GetParam,
             %ACLCompatGetParam,
@@ -1313,49 +1341,6 @@ sub Run {
             Action   => $Self->{Action},
             Type     => 'move_into',
         );
-
-        # reset previous ServiceID to reset SLA-List if no service is selected
-        if ( !defined $ServiceID || !$Services->{$ServiceID} ) {
-            $ServiceID = '';
-        }
-
-        # get assigned queue if set
-        if ( $ServiceID && $GetParam{ElementChanged} eq 'ServiceID' ) {
-
-            # retrieve service data...
-            my %ServiceData = $Kernel::OM->Get('Kernel::System::Service')->ServiceGet(
-                ServiceID => $ServiceID,
-                UserID    => 1,
-            );
-
-            if ( %ServiceData && $ServiceData{AssignedQueueID} ) {
-                $QueueID = $ServiceData{AssignedQueueID};
-
-                # re-evaluate owners and responsible
-                $Owners = $Self->_GetOwners(
-                    %GetParam,
-                     %ACLCompatGetParam,
-                    QueueID  => $QueueID,
-                    NewQueueID => $QueueID,
-                    AllUsers => $GetParam{OwnerAll},
-                );
-                $OldOwners = $Self->_GetOldOwners(
-                    %GetParam,
-                    %ACLCompatGetParam,
-                    QueueID  => $QueueID,
-                    NewQueueID => $QueueID,
-                    AllUsers => $GetParam{OwnerAll},
-                );
-                $ResponsibleUsers = $Self->_GetResponsibles(
-                    %GetParam,
-                    %ACLCompatGetParam,
-                    QueueID  => $QueueID,
-                    NewQueueID => $QueueID,
-                    AllUsers => $GetParam{OwnerAll},
-                );
-            }
-        }
-
         my $SLAs = $Self->_GetSLAs(
             %GetParam,
             %ACLCompatGetParam,
@@ -1609,7 +1594,7 @@ sub Run {
                 {
                     Name            => 'NewQueueID',
                     Data            => $ListOptionJson->{NewQueueID}->{Data},
-                    SelectedID      => $QueueID,
+                    SelectedID      => $NewQueueID,
                     Translation     => 0,
                     PossibleNone    => 1,
                     TreeView        => $TreeView,

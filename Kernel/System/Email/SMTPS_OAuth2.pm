@@ -11,7 +11,7 @@ package Kernel::System::Email::SMTPS_OAuth2;
 use strict;
 use warnings;
 
-use Net::SSLGlue::SMTP;
+use Net::SMTP;
 
 use parent qw(Kernel::System::Email::SMTP_OAuth2);
 
@@ -20,6 +20,13 @@ our @ObjectDependencies = (
 );
 
 ## no critic qw(Subroutines::ProhibitUnusedPrivateSubroutines)
+
+# Use Net::SSLGlue::SMTP on systems with older Net::SMTP modules that do not provide starttls
+BEGIN {
+    if ( !defined &Net::SMTP::starttls ) {
+        require Net::SSLGlue::SMTP;
+    }
+}
 
 sub _Connect {
     my ( $Self, %Param ) = @_;
