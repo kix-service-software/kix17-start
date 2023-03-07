@@ -44,20 +44,20 @@ sub Param {
             delete $Type{$_};
         }
     }
-    $Type{'-'} = '-';
 
     my @Params;
     push(
         @Params,
         {
             %Param,
-            Name        => $Self->{ConfigItem}->{PrefKey},
-            Translation => 0,
-            Data        => \%Type,
-            HTMLQuote   => 0,
-            Block       => 'Option',
-            Max         => 100,
-            SelectedID  => $ParamObject->GetParam( Param => $Self->{ConfigItem}->{PrefKey} )
+            Name         => $Self->{ConfigItem}->{PrefKey},
+            Data         => \%Type,
+            Translation  => 0,
+            HTMLQuote    => 0,
+            PossibleNone => 1,
+            Block        => 'Option',
+            Max          => 100,
+            SelectedID   => $ParamObject->GetParam( Param => $Self->{ConfigItem}->{PrefKey} )
                 || $Param{UserData}->{ $Self->{ConfigItem}->{PrefKey} }
                 || $Self->{ConfigItem}->{DataSelected}
                 || $Self->{Config}->{TicketTypeDefault},
