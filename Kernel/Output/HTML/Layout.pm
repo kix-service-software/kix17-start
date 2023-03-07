@@ -441,7 +441,7 @@ END
     my $Home          = $ConfigObject->Get('Home');
     my $LayoutPathKIX = $LayoutPath;
     $LayoutPathKIX =~ s/$Home//g;
-    my %LayoutFiles = ();
+    my %ISAMap = map { $_ => 1 } @ISA;
 
     for my $INCDir ( reverse @INC ) {
         my $LayoutDir = $INCDir;
@@ -453,17 +453,19 @@ END
                 Filter    => '*.pm',
             );
             for my $NewFile (@NewFiles) {
-                if ( ( $NewFile !~ /Layout.pm$/ ) && !exists( $LayoutFiles{$NewFile} ) ) {
-
+                if ( $NewFile !~ /Layout.pm$/ ) {
                     $NewFile =~ s{\A.*\/(.+?).pm\z}{$1}xms;
                     my $NewClassName = "Kernel::Output::HTML::Layout::$NewFile";
-                    if ( !$MainObject->RequireBaseClass($NewClassName) ) {
-                        $Self->FatalDie(
-                            Message => "Could not load class Kernel::Output::HTML::Layout::$NewFile.",
-                        );
+
+                    if ( !$ISAMap{ $NewClassName } ) {
+                        if ( !$MainObject->RequireBaseClass($NewClassName) ) {
+                            $Self->FatalDie(
+                                Message => "Could not load class $NewClassName.",
+                            );
+                        }
+
+                        $ISAMap{ $NewClassName } = 1;
                     }
-                    $LayoutFiles{$NewFile} = $NewFile;
-                    push( @ISA, "Kernel::Output::HTML::Layout::$NewFile" );
                 }
             }
         }
@@ -477,18 +479,19 @@ END
         );
         for my $NewFile (@NewFiles) {
 
-            if ( ( $NewFile !~ /Layout.pm$/ ) && !exists( $LayoutFiles{$NewFile} ) ) {
-
+            if ( ( $NewFile !~ /Layout.pm$/ ) ) {
                 $NewFile =~ s{\A.*\/(.+?).pm\z}{$1}xms;
                 my $NewClassName = "Kernel::Output::HTML::Layout::$NewFile";
-                if ( !$MainObject->RequireBaseClass($NewClassName) ) {
-                    $Self->FatalDie(
-                        Message => "Could not load class Kernel::Output::HTML::Layout::$NewFile.",
-                    );
-                }
 
-                $LayoutFiles{$NewFile} = $NewFile;
-                push( @ISA, "Kernel::Output::HTML::Layout::$NewFile" );
+                if ( !$ISAMap{ $NewClassName } ) {
+                    if ( !$MainObject->RequireBaseClass($NewClassName) ) {
+                        $Self->FatalDie(
+                            Message => "Could not load class $NewClassName.",
+                        );
+                    }
+
+                    $ISAMap{ $NewClassName } = 1;
+                }
             }
         }
     }
