@@ -44,23 +44,23 @@ sub Param {
             delete $Service{$_};
         }
     }
-    $Service{'-'} = '-';
 
     my @Params;
     push(
         @Params,
         {
             %Param,
-            Name        => $Self->{ConfigItem}->{PrefKey},
-            Data        => \%Service,
-            Translation => 0,
-            HTMLQuote   => 0,
-            SelectedID  => $ParamObject->GetParam( Param => $Self->{ConfigItem}->{PrefKey} )
+            Name         => $Self->{ConfigItem}->{PrefKey},
+            Data         => \%Service,
+            Translation  => 0,
+            HTMLQuote    => 0,
+            PossibleNone => 1,
+            Block        => 'Option',
+            Max          => 100,
+            SelectedID   => $ParamObject->GetParam( Param => $Self->{ConfigItem}->{PrefKey} )
                 || $Param{UserData}->{ $Self->{ConfigItem}->{PrefKey} }
                 || $Self->{ConfigItem}->{DataSelected}
                 || $Self->{Config}->{ServiceDefault},
-            Block => 'Option',
-            Max   => 100,
         },
     );
     return @Params;
