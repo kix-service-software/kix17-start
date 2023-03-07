@@ -642,6 +642,13 @@ sub CustomerIDs {
         push @CustomerIDs, $Data{UserCustomerID};
     }
 
+    # removed duplicates
+    if ( scalar( @CustomerIDs ) ) {
+        my %TempCustomerIDs = map { $_ => 1 } @CustomerIDs;
+
+        @CustomerIDs = sort( keys( %TempCustomerIDs ) );
+    }
+
     # cache request
     if ( $Self->{CacheObject} ) {
         $Self->{CacheObject}->Set(

@@ -105,6 +105,25 @@ sub new {
     return $Self;
 }
 
+sub HasBehavior {
+    my ( $Self, %Param ) = @_;
+
+    # return fail if Behaviors hash does not exists
+    return if !IsHashRefWithData( $Self->{Behaviors} );
+
+    # field has not 'IsACLReducible' if DisplayFieldType 'AutoComplete' is used
+    if (
+        $Param{Behavior} eq 'IsACLReducible'
+        && $Param{DynamicFieldConfig}->{Config}->{DisplayFieldType}
+        && $Param{DynamicFieldConfig}->{Config}->{DisplayFieldType} eq 'AutoComplete'
+    ) {
+        return;
+    }
+
+    # return success if the dynamic field has the expected behavior
+    return IsPositiveInteger( $Self->{Behaviors}->{ $Param{Behavior} } );
+}
+
 sub ValueGet {
     my ( $Self, %Param ) = @_;
 

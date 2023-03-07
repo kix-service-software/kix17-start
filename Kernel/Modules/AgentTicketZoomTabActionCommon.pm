@@ -1426,10 +1426,7 @@ sub Run {
                 Behavior           => 'IsACLReducible',
             );
 
-            if (
-                !$IsACLReducible
-                || $DynamicFieldConfig->{Config}->{DisplayFieldType} eq 'AutoComplete'
-            ) {
+            if ( !$IsACLReducible ) {
                 $DynamicFieldHTML{ $DynamicFieldConfig->{Name} } =
                     $DynamicFieldBackendObject->EditFieldRender(
                     DynamicFieldConfig => $DynamicFieldConfig,
