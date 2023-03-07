@@ -777,10 +777,14 @@ sub AgentListOptionJSON {
                             if ( !$UsedData{$Value} ) {
                                 my $HashKey = '';
                                 if ( $Param{Name} eq 'Services' ) {
-                                    $HashKey = $Kernel::OM->Get('Kernel::System::Service')
-                                        ->ServiceLookup(
+                                    $HashKey = $Kernel::OM->Get('Kernel::System::Service')->ServiceLookup(
                                         Name => $Value
                                         );
+                                }
+                                elsif ( $Param{Name} eq 'NewQueueID' ) {
+                                    $HashKey = $Kernel::OM->Get('Kernel::System::Queue')->QueueLookup(
+                                        Queue => $Value
+                                    );
                                 }
                                 elsif ( $Param{Name} eq 'Dest' ) {
                                     $HashKey = $Key . "||" . $Value;
