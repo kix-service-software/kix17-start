@@ -1,6 +1,13 @@
 # Change log of KIX
 * Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.21.0-RC4 (2023/03/07)
+ * (2023/03/07) - Bugfix: KIX17-3416 (allow possible none for queue, service and type preferences) (mbauer)
+ * (2023/03/03) - Bugfix: KIX17-3392 (fixed missing semicolon in backup script) (mbauer)
+ * (2023/03/02) - Bugfix: KIX17-3413 (prevend unnecessary expansion of ISA for layout object) (mbauer)
+ * (2023/02/20) - Bugfix: KIX17-416 (fix preparation of AgentListOptionJSON for invalid parent queues) (mbauer)
+ * (2023/02/17) - Bugfix: KIX17-3403 (remove duplicates from customer ids list) (mbauer)
+
 # 17.21.0-RC3 (2023/02/17)
  * (2023/02/16) - Bugfix: KIX17-3404 (added check of ignoring autocomplete dynamic fields before selection build) (fjacquemin)
  * (2023/02/16) - Bugfix: KIX17-416 (do not fill queue without user selection) (mbauer)
