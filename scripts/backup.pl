@@ -33,7 +33,7 @@ if ( exists $Opts{h} ) {
     print "backup.pl - backup script\n";
     print "Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de\n";
     print "usage: backup.pl -d /data_backup_dir/ [-c gzip|bzip2] [-r 30] [-t fullbackup|nofullbackup|dbonly] [-n]\n";
-    print "additional: -n   ignore the PROCESS (only for mysql >= 5.7.31)"
+    print "additional: -n   ignore the PROCESS (only for mysql >= 5.7.31)";
     exit 1;
 }
 
