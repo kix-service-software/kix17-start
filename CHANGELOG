@@ -1,6 +1,12 @@
 # Change log of KIX
 * Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.21.0-RC5 (2023/03/31)
+ * (2023/03/30) - Bugfix: KIX17-3434 (prevent loop on dynamic field value delete) (mbauer)
+ * (2023/03/27) - Bugfix: KIX17-3430 (do not block ForceOwnerResetOnMove by RequiredLock) (mbauer)
+ * (2023/03/22) - Bugfix: KIX17-3426 (handle system monitoring emails without body) (mbauer)
+ * (2023/03/21) - Bugfix: KIX17-3423 (fixed incomplete subject prepare if RecipientSubject is set WithOutTicketNumber) (fjacquemin)
+
 # 17.21.0-RC4 (2023/03/07)
  * (2023/03/07) - Bugfix: KIX17-3416 (allow possible none for queue, service and type preferences) (mbauer)
  * (2023/03/03) - Bugfix: KIX17-3392 (fixed missing semicolon in backup script) (mbauer)
