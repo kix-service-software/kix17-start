@@ -122,6 +122,7 @@ sub Run {
                 TicketID  => $Self->{TicketID},
                 UserID    => $Self->{UserID},
                 NewUserID => $Self->{UserID},
+                NoFlag    => 1,
             );
 
             # show lock state
