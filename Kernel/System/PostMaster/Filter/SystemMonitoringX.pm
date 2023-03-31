@@ -323,64 +323,73 @@ sub _MailParse {
         return;
     }
 
+    # get configured items
     my @DynamicFieldContentTicket  = split( ',', $Self->{Config}->{'DynamicFieldContent::Ticket'} );
     my @DynamicFieldContentArticle = split( ',', $Self->{Config}->{'DynamicFieldContent::Article'} );
     my @DynamicFieldContent        = ( @DynamicFieldContentTicket, @DynamicFieldContentArticle );
 
-    my $Subject = $Param{GetParam}->{Subject};
+    # init hash to remember matched items
+    my %AlreadyMatched;
 
-    # Try to get State, Host and Service from email SUBJECT
+    # Try to get configured items by pattern from email SUBJECT
+    my $Subject      = $Param{GetParam}->{Subject};
     my @SubjectLines = split( /\n/, $Subject );
-    for my $Line (@SubjectLines) {
-        for my $Item (@DynamicFieldContent) {
-            if (
-                $Self->{Config}->{ $Item . 'RegExp' }
-                && $Line =~ /$Self->{Config}->{ $Item . 'RegExp' }/
-            ) {
-                $Self->{$Item} = $1;
+    ITEM:
+    for my $Item ( @DynamicFieldContent ) {
+        # skip items without pattern
+        next ITEM if ( !$Self->{Config}->{ $Item . 'RegExp' } );
+
+        # isolate regex
+        my $Regex = $Self->{Config}->{ $Item . 'RegExp' };
+
+        # process subject lines
+        for my $Line ( @SubjectLines ) {
+            if ( $Line =~ /$Regex/ ) {
+                # get first capture group for item
+                $Self->{ $Item } = $1;
+
+                # remember matched item
+                $AlreadyMatched{ $Item } = 1;
+
+                # only get first match
+                next ITEM;
             }
         }
     }
 
-    # split the body into separate lines
-    my $Body      = $Param{GetParam}->{Body} || die "Message has no Body";
-    my @BodyLines = split /\n/, $Body;
+    # check for existing body
+    if ( $Param{GetParam}->{Body} ) {
+        my $Body      = $Param{GetParam}->{Body};
+        my @BodyLines = split( /\n/, $Body );
 
-    # to remember if an element was found before
-    my %AlreadyMatched;
+        # Try to get configured items by pattern from email BODY
+        ITEM:
+        for my $Item ( @DynamicFieldContent ) {
+            # skip already matched items
+            next ITEM if ( $AlreadyMatched{ $Item } );
 
-    # prepare regex
-    my %Pattern;
-    for my $Element (@DynamicFieldContent) {
-        next if !$Self->{Config}->{ $Element . 'RegExp' };
+            # skip items without pattern
+            next ITEM if ( !$Self->{Config}->{ $Item . 'RegExp' } );
 
-        my $Regex = $Self->{Config}->{ $Element . 'RegExp' };
-        if (
-            $Regex =~ m/^\.\+/
-            || $Regex =~ m/^\(\.\+/
-            || $Regex =~ m/^\(\?\:\.\+/
-        ) {
-            $Regex = '^' . $Regex;
-        }
-        $Pattern{$Element} = $Regex;
-    }
+            # isolate and prepare regex
+            my $Regex = $Self->{Config}->{ $Item . 'RegExp' };
+            if (
+                $Regex =~ m/^\.\+/
+                || $Regex =~ m/^\(\.\+/
+                || $Regex =~ m/^\(\?\:\.\+/
+            ) {
+                $Regex = '^' . $Regex;
+            }
 
-    LINE:
-    for my $Line (@BodyLines) {
-        # Try to get State, Host and Service from email BODY
-        ELEMENT:
-        for my $Element (@DynamicFieldContent) {
-            next ELEMENT if !$Pattern{$Element};
-            next ELEMENT if $AlreadyMatched{$Element};
+            # process body lines
+            for my $Line ( @BodyLines ) {
+                if ( $Line =~ /$Regex/ ) {
+                    # get first capture group for item
+                    $Self->{ $Item } = $1;
 
-            my $Regex = $Pattern{$Element};
-
-            if ( $Line =~ /$Regex/ ) {
-
-                # get the found element value
-                $Self->{$Element} = $1;
-                # remember that we found this element already
-                $AlreadyMatched{$Element} = 1;
+                    # only get first match
+                    next ITEM;
+                }
             }
         }
     }
