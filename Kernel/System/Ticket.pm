@@ -4841,7 +4841,9 @@ sub TicketOwnerSet {
     }
 
     # remember that owner should be set for ticket
-    $Self->{'_TicketOwnerSet'}->{ $Param{TicketID} } = 1;
+    if ( !$Param{NoFlag} ) {
+        $Self->{'_TicketOwnerSet'}->{ $Param{TicketID} } = 1;
+    }
 
     # check if update is needed!
     my ( $OwnerID, $Owner ) = $Self->OwnerCheck( TicketID => $Param{TicketID} );
