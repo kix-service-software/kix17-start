@@ -627,6 +627,11 @@ sub ValueDelete {
         ObjectID           => $Param{ObjectID},
     );
 
+    # do not proceed if there is nothing to delete
+    if ( !defined( $OldValue ) ) {
+        return 1;
+    }
+
     # set the dynamic field specific backend
     my $DynamicFieldBackend = 'DynamicField' . $Param{DynamicFieldConfig}->{FieldType} . 'Object';
 
@@ -650,7 +655,7 @@ sub ValueDelete {
     }
 
     # skip PostValueSet when param is set
-    return 1 if ( !$Param{NoPostValueSet} );
+    return 1 if ( $Param{NoPostValueSet} );
 
     # set the dyanamic field object handler
     my $DynamicFieldObjectHandler =
