@@ -47,7 +47,7 @@
     #TextModulesSelectionContainer > .TextModule,
     #BulkTextModulesSelectionContainer > .TextModule {
         line-height: 17px;
-        height: 15px;
+        min-height: 15px;
         padding: 2px 10px;
         cursor: pointer;
     }
