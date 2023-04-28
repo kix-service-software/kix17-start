@@ -689,7 +689,7 @@ L<HTML::Scrubber> and L<HTML::Sanitizer>.
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright (E<copy>) 2005-2009 Ashley Pond V.
+Copyright (E<copy>) 2005-2023 Ashley Pond V.
 
 This program is free software; you can redistribute it or modify it or both under the same terms as Perl itself.
 

@@ -1,5 +1,5 @@
 // --
-// Modified version of the work: Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
+// Modified version of the work: Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
 // based on the original work of:
 // Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
 // --
@@ -92,9 +92,9 @@ ITSM.Agent.ConfigItem.Search = (function (TargetNS) {
                         return false;
                     });
                 });
-// ITSM-CIAttributeCollection-capeIT
+// ITSM-CIAttributeCollection-kix
                 TargetNS.EnableAutocomplete($('#SearchInsert > div:last > input:last') );
-// EO ITSM-CIAttributeCollection-capeIT
+// EO ITSM-CIAttributeCollection-kix
             }
 
         Core.UI.InputFields.Activate($('#SearchInsert'));
@@ -102,7 +102,7 @@ ITSM.Agent.ConfigItem.Search = (function (TargetNS) {
         return false;
     };
 
-// ITSM-CIAttributeCollection-capeIT
+// ITSM-CIAttributeCollection-kix
     /**
      * @function
      * @param {jQueryObject} $Element The jQuery object of the form  or any element
@@ -160,7 +160,7 @@ ITSM.Agent.ConfigItem.Search = (function (TargetNS) {
                 return false;
             });
     };
-// EO ITSM-CIAttributeCollection-capeIT
+// EO ITSM-CIAttributeCollection-kix
 
     /**
      * @function

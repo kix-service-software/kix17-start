@@ -19,7 +19,7 @@ You can find documentation on our [website](https://kixdesk.com/dokumentation.ht
 
 # KIX Professional and Services for KIX
 
-If you require professional services like consulting, support or maintenance for your KIX installation, just contact us. [cape IT](https://www.cape-it.de) offers all of theses services as well as custom extensions for KIX and training for you as the upcoming KIX administrator and power user.
+If you require professional services like consulting, support or maintenance for your KIX installation, just contact us. [KIX Service Software](https://www.kixdesk.com) offers all of theses services as well as custom extensions for KIX and training for you as the upcoming KIX administrator and power user.
 
 The more grown up sibling of KIX17 Start is [KIX Pro](https://kixdesk.com/kix-pro.html). It provides extended functionalities, included services as training support and bug escalation (depending on your desired support level). Furthermore you may choose to add some addtional [functionalities](https://kixdesk.com/module.html), as Kanban-Board, maintenance planner, JIRA-, i-doit- or other Connectors, etc.
 

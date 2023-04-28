@@ -1,5 +1,5 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
 # based on the original work of:
 # Copyright (C) 2019–2021 Efflux GmbH, https://efflux.de/
 # Copyright (C) 2019-2023 Rother OSS GmbH, https://otobo.de/
@@ -78,14 +78,14 @@ sub Connect {
         Ignoresizeerrors => 1,
     );
 
-# KIX-capeIT, Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
+# KIX-kix, Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
     if ( !$IMAPObject ) {
         return (
             Successful => 0,
             Message    => $Type . ': Could not connect to ' . $Param{Host} . ': ' . $! . '!'
         );
     }
-# EO KIX-capeIT, Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
+# EO KIX-kix, Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
 
     # try it 2 times to authenticate with the IMAP server
     TRY:
@@ -124,9 +124,9 @@ sub Connect {
     return (
         Successful => 1,
         IMAPObject => $IMAPObject,
-# KIX-capeIT, Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
+# KIX-kix, Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
         Type       => $Type,
-# EO KIX-capeIT, Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
+# EO KIX-kix, Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
     );
 ### EO Code licensed under the GPL-3.0, Copyright (C) 2019-2023 Rother OSS GmbH, https://otobo.de/ ###
 }
