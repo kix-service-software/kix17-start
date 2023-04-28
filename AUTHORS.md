@@ -73,7 +73,7 @@ The following persons contributed to OTRS:
 * Theo van Hoesel <Th.J.v.Hoesel+GitHub@gmail.com>
 * Thomas Raith <thomas.raith@otrs.com>
 * Thorsten Eckel <thorsten.eckel@otrs.com>
-* Torsten Thau <Torsten.Thau@cape-it.de>
+* Torsten Thau <Torsten.Thau@kixdesk.com>
 * Udo Bretz <udo.bretz@otrs.com>
 * Uwe Dieckmann <uwe.dieckmann@otrs.com>
 * Walter Souto <walter.souto@saude.go.gov.br>

@@ -1,5 +1,5 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
 # based on the original work of:
 # Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
 # --
@@ -702,11 +702,11 @@ sub Run {
                 FunctionName   => 'Run',
                 TaskName       => $Self->{Action} . '-' . $Token . '-Run',
                 FunctionParams => {
-                    CallAction => 'Run',
-                    Token    => $Token,
-                    UserData => \%UserData,
-                    User     => $User,
-                    Type     => 'User',
+                    Subaction => 'PasswordSend',
+                    Token     => $Token,
+                    UserData  => \%UserData,
+                    User      => $User,
+                    Type      => 'User',
                 },
                 Attempts       => 1,
             );
@@ -745,9 +745,9 @@ sub Run {
                     TaskName       => 'LostPasswordToken-' . $UserData{UserID} . '-Run',
                     FunctionParams => {
                         Subaction => 'TokenSend',
-                        UserData => \%UserData,
-                        User     => $User,
-                        Type     => 'User',
+                        UserData  => \%UserData,
+                        User      => $User,
+                        Type      => 'User',
                     },
                     Attempts       => 1,
                 );

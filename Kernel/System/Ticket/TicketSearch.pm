@@ -1,5 +1,5 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
 # based on the original work of:
 # Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
 # --
@@ -559,6 +559,25 @@ sub TicketSearch {
     # Limit the search to just one (or a list) TicketID (used by the GenericAgent
     #   to filter for events on single tickets with the job's ticket filter).
     if ( $Param{TicketID} ) {
+        if (
+            ref( $Param{TicketID} ) eq 'ARRAY'
+            && !defined( $Param{TicketID}->[0] )
+        ) {
+            if ( $Result eq 'COUNT' ) {
+                return 0;
+            }
+            # return HASH
+            elsif ( $Result eq 'HASH' ) {
+                my %EmptyHash = ();
+                return %EmptyHash;
+            }
+            # return ARRAY
+            else {
+                my @EmptyArray = ();
+                return @EmptyArray;
+            }
+        }
+
         $SQLExt .= $Self->_InConditionGet(
             TableColumn => 'st.id',
             IDRef       => ref( $Param{TicketID} ) && ref( $Param{TicketID} ) eq 'ARRAY'

@@ -1,5 +1,5 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
 # based on the original work of:
 # Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
 # --
@@ -2186,16 +2186,20 @@ sub _ArticleItem {
     }
 
     # get dynamic field config for frontend module
-    my $DynamicFieldFilter = {
-        %{ $ConfigObject->Get("Ticket::Frontend::AgentTicketZoom")->{DynamicField} || {} },
-        %{ $ConfigObject->Get("Ticket::Frontend::AgentTicketZoom")->{ProcessWidgetDynamicField} || {} },
-    };
+    my $DynamicFieldFilter  = $ConfigObject->Get("Ticket::Frontend::AgentTicketZoom")->{DynamicField} || {};
+    my $TempProcessDFFilter = $ConfigObject->Get("Ticket::Frontend::AgentTicketZoom")->{ProcessWidgetDynamicField} || {};
+    FILTER:
+    for my $Field ( keys( %{ $TempProcessDFFilter } ) ) {
+        next FILTER if ( $DynamicFieldFilter->{ $Field } );
+
+        $DynamicFieldFilter->{ $Field } = $TempProcessDFFilter->{ $Field };
+    }
 
     # get the dynamic fields for article object
     my $DynamicField = $DynamicFieldObject->DynamicFieldListGet(
         Valid       => 1,
         ObjectType  => ['Article'],
-        FieldFilter => $DynamicFieldFilter || {},
+        FieldFilter => $DynamicFieldFilter,
     );
 
     # cycle trough the activated Dynamic Fields

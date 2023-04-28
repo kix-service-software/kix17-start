@@ -1833,7 +1833,7 @@ Kenichi Ishigaki, E<lt>ishigaki[at]cpan.orgE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2005-2013 by Makamaka Hannyaharamitu
+Copyright 2005-2023 by Makamaka Hannyaharamitu
 
 Most of the documentation is taken from JSON::XS by Marc Lehmann
 

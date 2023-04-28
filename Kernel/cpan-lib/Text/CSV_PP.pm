@@ -5906,13 +5906,13 @@ Text::CSV was written by E<lt>alan[at]mfgrtl.comE<gt>.
 =head1 COPYRIGHT AND LICENSE
 
 Copyright 2017- by Kenichi Ishigaki, E<lt>ishigaki[at]cpan.orgE<gt>
-Copyright 2005-2015 by Makamaka Hannyaharamitu, E<lt>makamaka[at]cpan.orgE<gt>
+Copyright 2005-2023 by Makamaka Hannyaharamitu, E<lt>makamaka[at]cpan.orgE<gt>
 
 Most of the code and doc is directly taken from the pure perl part of
 Text::CSV_XS.
 
-Copyright (C) 2007-2016 H.Merijn Brand.  All rights reserved.
-Copyright (C) 1998-2001 Jochen Wiedmann. All rights reserved.
+Copyright (C) 2007-2023 H.Merijn Brand.  All rights reserved.
+Copyright (C) 1998-2023 Jochen Wiedmann. All rights reserved.
 Copyright (C) 1997      Alan Citterman.  All rights reserved.
 
 This library is free software; you can redistribute it and/or modify

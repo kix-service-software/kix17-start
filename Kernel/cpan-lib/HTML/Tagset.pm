@@ -439,11 +439,11 @@ L<HTML::Element>, L<HTML::TreeBuilder>, L<HTML::LinkExtor>
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 1995-2000 Gisle Aas.
+Copyright 1995-2023 Gisle Aas.
 
-Copyright 2000-2005 Sean M. Burke.
+Copyright 2000-2023 Sean M. Burke.
 
-Copyright 2005-2008 Andy Lester.
+Copyright 2005-2023 Andy Lester.
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
