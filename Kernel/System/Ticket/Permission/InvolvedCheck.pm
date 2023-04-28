@@ -51,8 +51,8 @@ sub Run {
     my %Ticket = $TicketObject->TicketGet(
         TicketID      => $Param{TicketID},
         DynamicFields => 0,
+        Silent        => 1,
     );
-
     return if !%Ticket;
 
     # get queue config
