@@ -2,7 +2,7 @@ package LWP::Protocol;
 
 use parent 'LWP::MemberMixin';
 
-our $VERSION = '6.67';
+our $VERSION = '6.68';
 
 use strict;
 use Carp ();
@@ -313,7 +313,7 @@ for examples of usage.
 
 =head1 COPYRIGHT
 
-Copyright 1995-2023 Gisle Aas.
+Copyright 1995-2001 Gisle Aas.
 
 This library is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.

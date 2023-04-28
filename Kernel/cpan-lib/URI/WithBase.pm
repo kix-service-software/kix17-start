@@ -6,7 +6,7 @@ use warnings;
 use URI ();
 use Scalar::Util qw(blessed);
 
-our $VERSION = '5.16';
+our $VERSION = '5.17';
 
 use overload '""' => "as_string", fallback => 1;
 
@@ -169,6 +169,6 @@ L<URI>
 
 =head1 COPYRIGHT
 
-Copyright 1998-2023 Gisle Aas.
+Copyright 1998-2002 Gisle Aas.
 
 =cut
