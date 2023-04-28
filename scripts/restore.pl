@@ -20,8 +20,6 @@ use lib dirname($RealBin) . "/Kernel/cpan-lib";
 
 use Getopt::Std;
 
-use Kernel::System::ObjectManager;
-
 # get options
 my %Opts;
 my $DB     = '';
@@ -58,6 +56,7 @@ if ( -e "$Opts{b}/Config.tar.gz" ) {
 }
 
 # create common objects
+require Kernel::System::ObjectManager;
 local $Kernel::OM = Kernel::System::ObjectManager->new(
     'Kernel::System::Log' => {
         LogPrefix => 'KIX-restore.pl',
