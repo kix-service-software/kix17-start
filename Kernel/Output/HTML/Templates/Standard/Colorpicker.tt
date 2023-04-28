@@ -13,7 +13,7 @@
 <script type="text/javascript">//<![CDATA[
 
     /*global jscolor: true */
-    jscolor.dir = '[% Config("Frontend::JavaScriptPath") %]' + 'thirdparty/jscolor-2.4.7/';
+    jscolor.dir = '[% Config("Frontend::JavaScriptPath") %]' + 'thirdparty/jscolor-2.5.1/';
     jscolor.bindClass = 'JSColorPicker';
     jscolor.install();
 
