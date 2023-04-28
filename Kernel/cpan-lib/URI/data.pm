@@ -5,7 +5,7 @@ use warnings;
 
 use parent 'URI';
 
-our $VERSION = '5.16';
+our $VERSION = '5.17';
 
 use MIME::Base64 qw(decode_base64 encode_base64);
 use URI::Escape qw(uri_unescape);
@@ -134,7 +134,7 @@ L<URI>
 
 =head1 COPYRIGHT
 
-Copyright 1995-2023 Gisle Aas.
+Copyright 1995-1998 Gisle Aas.
 
 This library is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.

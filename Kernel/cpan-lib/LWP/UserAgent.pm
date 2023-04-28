@@ -17,7 +17,7 @@ use LWP::Protocol ();
 use Scalar::Util qw(blessed openhandle);
 use Try::Tiny qw(try catch);
 
-our $VERSION = '6.67';
+our $VERSION = '6.68';
 
 sub new
 {
@@ -2175,7 +2175,7 @@ specialized user agents based on L<LWP::UserAgent>.
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 1995-2023 Gisle Aas.
+Copyright 1995-2009 Gisle Aas.
 
 This library is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.

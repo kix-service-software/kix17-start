@@ -137,7 +137,7 @@ L<URI>
 
 =head1 COPYRIGHT
 
-Copyright 1995-2023 Gisle Aas.
+Copyright 1995-2004 Gisle Aas.
 
 This program is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
@@ -148,7 +148,7 @@ use Exporter 5.57 'import';
 our %escapes;
 our @EXPORT = qw(uri_escape uri_unescape uri_escape_utf8);
 our @EXPORT_OK = qw(%escapes);
-our $VERSION = '5.16';
+our $VERSION = '5.17';
 
 use Carp ();
 

@@ -2,7 +2,7 @@ package LWP::RobotUA;
 
 use parent qw(LWP::UserAgent);
 
-our $VERSION = '6.67';
+our $VERSION = '6.68';
 
 require WWW::RobotRules;
 require HTTP::Request;
@@ -304,7 +304,7 @@ L<LWP::UserAgent>, L<WWW::RobotRules>
 
 =head1 COPYRIGHT
 
-Copyright 1996-2023 Gisle Aas.
+Copyright 1996-2004 Gisle Aas.
 
 This library is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
