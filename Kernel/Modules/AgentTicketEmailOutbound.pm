@@ -133,7 +133,7 @@ sub Run {
             qw(
                 NewStateID NewPriorityID TimeUnits ArticleTypeID Title Body Subject NewQueueID
                 Year Month Day Hour Minute NewOwnerID NewOwnerType OldOwnerID NewResponsibleID
-                TypeID ServiceID SLAID Expand ReplyToArticle StandardTemplateID CreateArticle
+                ComposeStateID TypeID ServiceID SLAID Expand ReplyToArticle StandardTemplateID CreateArticle
                 FormID ElementChanged
             )
         ) {
@@ -338,7 +338,7 @@ sub Run {
                     Data         => $NextStates,
                     SelectedID   => $GetParam{ComposeStateID},
                     Translation  => 1,
-                    PossibleNone => $Config->{StateDefault} ? 0 : 1,
+                    PossibleNone => 1,
                     Max          => 100,
                 },
                 {
