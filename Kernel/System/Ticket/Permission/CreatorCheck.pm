@@ -48,8 +48,8 @@ sub Run {
     my %Ticket = $Kernel::OM->Get('Kernel::System::Ticket')->TicketGet(
         TicketID      => $Param{TicketID},
         DynamicFields => 0,
+        Silent        => 1,
     );
-
     return if !%Ticket;
     return if !$Ticket{CreateBy};
 
