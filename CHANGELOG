@@ -1,5 +1,17 @@
 # Change log of KIX
-* Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com/
+* Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
+
+# 17.21.0-RC6 (2023/04/28)
+ * (2023/04/28) - Bugfix: KIX17-3445 (keep state after loading a template in agent ticket email outbound) (mbauer)
+ * (2023/04/28) - Bugfix: KIX17-3446 (prevent error log on permission check for deleted tickets) (mbauer)
+ * (2023/04/28) - CR: KIX17-3442 (updated CPAN modules) (mbauer)
+ * (2023/04/27) - CR: KIX17-3443 (updated javascript libaries) (fjacquemin)
+ * (2023/04/24) - CR: KIX17-3418 (update copyrights) (mbauer)
+ * (2023/04/24) - Bugfix: KIX17-3429 (TicketSearch provides empty result if empty list of TicketIDs is given) (mbauer)
+ * (2023/04/19) - Bugfix: KIX17-3437 (fixed overlapping text module title when ShowCategorie is deactivated) (fjacquemin)
+ * (2023/04/19) - Bugfix: KIX17-3439 (show article dynamic field activated in AgentTicketZoom) (mbauer)
+ * (2023/04/04) - Bugfix: KIX17-3436 (use restored config for database restore) (mbauer)
+ * (2023/03/20) - Bugfix: KIX17-3425 (fixed missing set subaction to send new password) (fjacquemin)
 
 # 17.21.0-RC5 (2023/03/31)
  * (2023/03/30) - Bugfix: KIX17-3434 (prevent loop on dynamic field value delete) (mbauer)
