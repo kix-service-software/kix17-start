@@ -1,5 +1,5 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
 # based on the original work of:
 # Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
 # --
@@ -2172,11 +2172,11 @@ sub Data {
         'The email address for this user is invalid, this option has been disabled.' =>
             'Die E-Mailadresse für diesen Benutzer ist ungültig, Die Auswahl wurde deaktivert.',
         'Sending' => 'Wird gesendet',
-        'The support bundle will be sent to the c.a.p.e. IT GmbH Support via email automatically' =>
-            'Das Supportpaket wird automatisch per E-Mail an den Support der c.a.p.e. IT GmbH gesendet.',
+        'The support bundle will be sent to the KIX Service Software GmbH Support via email automatically' =>
+            'Das Supportpaket wird automatisch per E-Mail an den Support der KIX Service Software GmbH gesendet.',
         'Download File' => 'Datei herunterladen',
-        'A file containing the support bundle will be downloaded to the local system. Please save the file and send it to the c.a.p.e. IT GmbH Support, using an alternate method.' =>
-            'Das Supportpaket wird als Datei ins lokale Dateisystem heruntergeladen. Bitte speichern Sie die Datei und senden Sie diese auf anderen Wegen an den Support der c.a.p.e. IT GmbH.',
+        'A file containing the support bundle will be downloaded to the local system. Please save the file and send it to the KIX Service Software GmbH Support, using an alternate method.' =>
+            'Das Supportpaket wird als Datei ins lokale Dateisystem heruntergeladen. Bitte speichern Sie die Datei und senden Sie diese auf anderen Wegen an den Support der KIX Service Software GmbH.',
         'Error: Support data could not be collected (%s).' => 'Fehler: Supportdaten konnten nicht ermittelt werden (%s).',
         'Details' => 'Details',
 

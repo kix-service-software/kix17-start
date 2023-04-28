@@ -1,5 +1,5 @@
 // --
-// Modified version of the work: Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
+// Modified version of the work: Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
 // based on the original work of:
 // Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
 // --
@@ -25,7 +25,7 @@ Core.JSON = (function (TargetNS) {
     // let you see a javascript error message instead of the 'old browser' warning box.
     // Therefore we do the dependency check silent in this case.
     if (!Core.Debug.CheckDependency('Core.JSON', 'JSON.parse', 'JSON parser', true)) {
-        // KIX4OTRS-capeIT
+        // KIX4OTRS-kix
         // return;
         // check with top prefix for IE8 iframes (i.e. CI Graph)
         if (!Core.Debug.CheckDependency('Core.JSON', 'top.JSON.parse', 'JSON parser', true)) {
@@ -34,7 +34,7 @@ Core.JSON = (function (TargetNS) {
         else {
             JSON = top.JSON;
         }
-        // EO KIX4OTRS-capeIT
+        // EO KIX4OTRS-kix
     }
 
     /**

@@ -1293,7 +1293,7 @@ L<http://www.w3.org/Addressing/>
 
 =head1 COPYRIGHT
 
-Copyright 1995-2009 Gisle Aas.
+Copyright 1995-2023 Gisle Aas.
 
 Copyright 1995 Martijn Koster.
 

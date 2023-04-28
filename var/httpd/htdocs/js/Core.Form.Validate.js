@@ -1,5 +1,5 @@
 // --
-// Modified version of the work: Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
+// Modified version of the work: Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
 // based on the original work of:
 // Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
 // --
@@ -108,22 +108,22 @@ Core.Form.Validate = (function (TargetNS) {
         if ($Element.hasClass(Options.ErrorClass)) {
             return false;
         }
-// KIXBase-capeIT
+// KIXBase-kix
         else if ($('#cke_' + Core.App.EscapeSelector(Element.id)).length && $('#cke_' + Core.App.EscapeSelector(Element.id)).hasClass(Options.ErrorClass)) {
             return false;
         }
-// EO KIXBase-capeIT
+// EO KIXBase-kix
 
         // Add error class to field and its label
         $Element.addClass(Options.ErrorClass).triggerHandler('error.InputField');
         $(Element.form).find("label[for=" + Core.App.EscapeSelector(Element.id) + "]").addClass(Options.ErrorLabelClass);
 
-// KIXBase-capeIT
+// KIXBase-kix
         // Add error class to richtext div element
         if ($('#cke_' + Core.App.EscapeSelector(Element.id)).length && !$('#cke_' + Core.App.EscapeSelector(Element.id)).hasClass(Options.ErrorClass)) {
             $('#cke_' + Core.App.EscapeSelector(Element.id)).addClass(Options.ErrorClass);
         }
-// EO KIXBase-capeIT
+// EO KIXBase-kix
 
         // mark field as invalid for screenreader users
         $Element.attr('aria-invalid', true);

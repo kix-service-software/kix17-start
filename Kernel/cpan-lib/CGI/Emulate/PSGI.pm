@@ -160,7 +160,7 @@ Tatsuhiko Miyagawa
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (c) 2009-2010 by tokuhirom.
+Copyright (c) 2009-2023 by tokuhirom.
 
 This program is free software; you can redistribute
 it and/or modify it under the same terms as Perl itself.

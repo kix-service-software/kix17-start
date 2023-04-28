@@ -298,6 +298,6 @@ L<URI>, L<URI::WithBase>
 
 =head1 COPYRIGHT
 
-Copyright 1998-2000 Gisle Aas.
+Copyright 1998-2023 Gisle Aas.
 
 =cut

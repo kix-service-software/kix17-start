@@ -521,11 +521,11 @@ maintained by Joshua Chamas, David Landgren, brian d foy and Sinan Unur.
 
 =head1 COPYRIGHT
 
-Copyright (c) 2010-2014 A. Sinan Unur
+Copyright (c) 2010-2023 A. Sinan Unur
 
-Copyright (c) 2006-2007 David Landgren
+Copyright (c) 2006-2023 David Landgren
 
-Copyright (c) 1999-2003 Joshua Chamas
+Copyright (c) 1999-2023 Joshua Chamas
 
 Copyright (c) 1998 Gisle Aas
 

@@ -1,5 +1,5 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
 # based on the original work of:
 # Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
 # --
@@ -430,10 +430,10 @@ sub _FormIDValidate {
 
     return if !$FormID;
 
-# KIX-capeIT
+# KIX-kix
 #    if ( $FormID !~ m{^ \d+ \. \d+ \. \d+ $}xms ) {
     if ( $FormID !~ m{^ \d+ \. (?: \d+ | \w+ \. \w+ \. \d+ | \w+ (?:\. \d+)+ \. \w+ ) \. \d+ $}xms ) {
-# EO KIX-capeIT
+# EO KIX-kix
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => 'Invalid FormID!',

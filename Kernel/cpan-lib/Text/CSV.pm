@@ -2994,20 +2994,20 @@ since 1.91.
 Text::CSV
 
 Copyright (C) 1997 Alan Citterman. All rights reserved.
-Copyright (C) 2007-2015 Makamaka Hannyaharamitu.
+Copyright (C) 2007-2023 Makamaka Hannyaharamitu.
 Copyright (C) 2017- Kenichi Ishigaki
 A large portion of the doc is taken from Text::CSV_XS. See below.
 
 Text::CSV_PP:
 
-Copyright (C) 2005-2015 Makamaka Hannyaharamitu.
+Copyright (C) 2005-2023 Makamaka Hannyaharamitu.
 Copyright (C) 2017- Kenichi Ishigaki
 A large portion of the code/doc are also taken from Text::CSV_XS. See below.
 
 Text:CSV_XS:
 
-Copyright (C) 2007-2016 H.Merijn Brand for PROCURA B.V.
-Copyright (C) 1998-2001 Jochen Wiedmann. All rights reserved.
+Copyright (C) 2007-2023 H.Merijn Brand for PROCURA B.V.
+Copyright (C) 1998-2023 Jochen Wiedmann. All rights reserved.
 Portions Copyright (C) 1997 Alan Citterman. All rights reserved.
 
 

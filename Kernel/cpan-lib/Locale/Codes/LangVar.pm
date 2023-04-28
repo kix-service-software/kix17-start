@@ -1,7 +1,7 @@
 package Locale::Codes::LangVar;
 # Copyright (C) 2001      Canon Research Centre Europe (CRE).
-# Copyright (C) 2002-2009 Neil Bowers
-# Copyright (c) 2010-2022 Sullivan Beck
+# Copyright (C) 2002-2023 Neil Bowers
+# Copyright (c) 2010-2023 Sullivan Beck
 # This program is free software; you can redistribute it and/or modify it
 # under the same terms as Perl itself.
 

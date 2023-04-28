@@ -1342,8 +1342,8 @@ Currently maintained by Sullivan Beck (sbeck@cpan.org).
 
 =head1 COPYRIGHT
 
-   Copyright (c) 2001-2010 Neil Bowers
-   Copyright (c) 2010-2022 Sullivan Beck
+   Copyright (c) 2001-2023 Neil Bowers
+   Copyright (c) 2010-2023 Sullivan Beck
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
