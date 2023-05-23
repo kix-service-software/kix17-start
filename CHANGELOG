@@ -1,6 +1,9 @@
 # Change log of KIX
 * Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
 
+# 17.21.0-RC7 (2023/05/23)
+ * (2023/05/10) - Bugfix: KIX17-3452 (fix article filter for article sender type) (mbauer)
+
 # 17.21.0-RC6 (2023/04/28)
  * (2023/04/28) - Bugfix: KIX17-3445 (keep state after loading a template in agent ticket email outbound) (mbauer)
  * (2023/04/28) - Bugfix: KIX17-3446 (prevent error log on permission check for deleted tickets) (mbauer)
