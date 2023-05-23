@@ -865,8 +865,8 @@ sub MaskAgentZoom {
            %FilterArticleTypeIDs = map { $_ => 1 } @{$Self->{ArticleFilter}->{ArticleTypeID}};
         }
         my %FilterSenderTypeIDs;
-        if ( $Self->{ArticleFilter}->{SenderTypeID} ) {
-           %FilterSenderTypeIDs = map { $_ => 1 } @{$Self->{ArticleFilter}->{SenderTypeID}};
+        if ( $Self->{ArticleFilter}->{ArticleSenderTypeID} ) {
+           %FilterSenderTypeIDs = map { $_ => 1 } @{$Self->{ArticleFilter}->{ArticleSenderTypeID}};
         }
 
         ARTICLE:
@@ -903,7 +903,7 @@ sub MaskAgentZoom {
             # article sender type id does not match
             if (
                 %FilterSenderTypeIDs
-                && !$FilterSenderTypeIDs{$Article->{ArticleSenderTypeID}}
+                && !$FilterSenderTypeIDs{$Article->{SenderTypeID}}
             ) {
                 next ARTICLE;
             }
