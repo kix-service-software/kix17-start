@@ -107,7 +107,7 @@ o Name:      Encode::Locale
 
 o Name:      Excel::Writer::XLSX
   Web:       http://jmcnamara.github.com/excel-writer-xlsx/
-  Copyright: Copyright 2000-2021, John McNamara
+  Copyright: Copyright 2000-2023, John McNamara
   License:   Artistic License (Perl) 1.0 - https://opensource.org/licenses/Artistic-Perl-1.0
   Authors:   John McNamara <jmcnamara@cpan.org>
   Note:      All Rights Reserved. This module is free software. It may be used, redistributed and/or modified under the same terms as Perl itself.
@@ -191,7 +191,7 @@ o Name:      Locale::Codes
   Copyright: Copyright 1997-2001, Canon Research Centre Europe (CRE)
              Copyright 2001, Michael Hennecke
              Copyright 2001-2010, Neil Bowers
-             Copyright 2010-2022, Sullivan Beck
+             Copyright 2010-2023, Sullivan Beck
   License:   Perl5 - https://dev.perl.org/licenses/
   Authors:   Neil Bowers
              Michael Hennecke
