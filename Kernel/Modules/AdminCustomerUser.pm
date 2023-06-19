@@ -306,10 +306,10 @@ sub Run {
                 $Entry->[5] eq 'array'
                 && $Entry->[0] =~ /^UserCustomerIDs$/i
             ) {
-                $GetParam{ $Entry->[0] } = join( ', ', $ParamObject->GetArray( Param => 'CustomerCompanyKey' ) );
+                $GetParam{ $Entry->[0] } = join( ',', $ParamObject->GetArray( Param => 'CustomerCompanyKey' ) );
             }
             elsif ( $Entry->[5] eq 'array' ) {
-                $GetParam{ $Entry->[0] } = join( ', ', $ParamObject->GetArray( Param => $Entry->[0] ) );
+                $GetParam{ $Entry->[0] } = join( ',', $ParamObject->GetArray( Param => $Entry->[0] ) );
             }
 
             # check mandatory fields
@@ -489,10 +489,10 @@ sub Run {
                 $Entry->[5] eq 'array'
                 && $Entry->[0] =~ /^UserCustomerIDs$/i
             ) {
-                $GetParam{ $Entry->[0] } = join( ', ', $ParamObject->GetArray( Param => 'CustomerCompanyKey' ) );
+                $GetParam{ $Entry->[0] } = join( ',', $ParamObject->GetArray( Param => 'CustomerCompanyKey' ) );
             }
             elsif ( $Entry->[5] eq 'array' ) {
-                $GetParam{ $Entry->[0] } = join( ', ', $ParamObject->GetArray( Param => $Entry->[0] ) );
+                $GetParam{ $Entry->[0] } = join( ',', $ParamObject->GetArray( Param => $Entry->[0] ) );
             }
 
             # don't validate UserLogin if AutoLoginCreation is configured

@@ -129,7 +129,7 @@ sub Run {
             Name            => $Name,
             Configs         => $Config,
             PreferencesOnly => 1,
-            CustomerID      => $Self->{CusomerID},
+            CustomerID      => $Self->{CustomerID},
             CustomerLogin   => $Self->{CustomerLogin},
         );
         if ( !@PreferencesOnly ) {
@@ -169,7 +169,7 @@ sub Run {
             Name            => $Name,
             Configs         => $Config,
             AJAX            => 1,
-            CustomerID      => $Self->{CusomerID},
+            CustomerID      => $Self->{CustomerID},
             CustomerLogin   => $Self->{CustomerLogin},
         );
         if ( !%ElementReload ) {
@@ -348,7 +348,7 @@ sub Run {
             ColumnFilter          => \%ColumnFilter,
             GetColumnFilter       => \%GetColumnFilter,
             GetColumnFilterSelect => \%GetColumnFilterSelect,
-            CustomerID            => $Self->{CusomerID},
+            CustomerID            => $Self->{CustomerID},
             CustomerLogin         => $Self->{CustomerLogin},
         );
 
@@ -381,7 +381,7 @@ sub Run {
             FilterColumn      => $Column,
             ElementChanged    => $ElementChanged,
             Configs           => $Config,
-            CustomerID        => $Self->{CusomerID},
+            CustomerID        => $Self->{CustomerID},
             CustomerLogin     => $Self->{CustomerLogin},
         );
 
@@ -527,7 +527,7 @@ sub Run {
             Name          => $Name,
             Configs       => $Config,
             Backends      => \%Backends,
-            CustomerID    => $Self->{CusomerID},
+            CustomerID    => $Self->{CustomerID},
             CustomerLogin => $Self->{CustomerLogin},
         );
         next NAME if !%Element;
