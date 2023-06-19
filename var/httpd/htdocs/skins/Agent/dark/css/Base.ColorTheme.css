@@ -191,6 +191,12 @@
     .ui-widget-content a {
         color:  #FFFFFF;
     }
+    .ui-widget-content .ArticleBody a:link {
+        color:  inherit;
+    }
+    .ui-widget-content .ArticleBody a:link:hover {
+        color:  #0A7CB3;
+    }
     div.ui-tabs > div.ui-tabs-panel {
         border-color: #676766;
         background-color: #676766;
