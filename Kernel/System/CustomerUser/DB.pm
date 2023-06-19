@@ -311,13 +311,18 @@ sub CustomerSearch {
         $CustomerID =~ s/\*/%/g;
         push @Bind, \$CustomerID;
 
+        my $Operator = '=';
+        if ( $CustomerID =~ m/%/ ) {
+            $Operator = 'LIKE';
+        }
+
         $SQL .= '(';
 
         if ( $Self->{CaseSensitive} ) {
-            $SQL .= "$Self->{CustomerID} LIKE ? $LikeEscapeString";
+            $SQL .= "$Self->{CustomerID} $Operator ? $LikeEscapeString";
         }
         else {
-            $SQL .= "LOWER($Self->{CustomerID}) LIKE LOWER(?) $LikeEscapeString";
+            $SQL .= "LOWER($Self->{CustomerID}) $Operator LOWER(?) $LikeEscapeString";
         }
 
         # if multiple customer ids used
@@ -335,18 +340,26 @@ sub CustomerSearch {
                 my $MultipleCustomerID2 = $CustomerID . ',%';
                 my $MultipleCustomerID3 = '%,' . $CustomerID;
                 my $MultipleCustomerID4 = '%,' . $CustomerID . ',%';
+                my $MultipleCustomerID5 = '%, ' . $CustomerID;          # with whitespace after comma
+                my $MultipleCustomerID6 = '%, ' . $CustomerID . ',%';   # with whitespace after comma
                 push( @Bind, \$MultipleCustomerID1 );
                 push( @Bind, \$MultipleCustomerID2 );
                 push( @Bind, \$MultipleCustomerID3 );
                 push( @Bind, \$MultipleCustomerID4 );
+                push( @Bind, \$MultipleCustomerID5 );
+                push( @Bind, \$MultipleCustomerID6 );
                 if ( $Self->{CaseSensitive} ) {
-                    $SQL .= " OR $CustomerIDsMap[2] LIKE ? $LikeEscapeString"
+                    $SQL .= " OR $CustomerIDsMap[2] $Operator ? $LikeEscapeString"
+                          . " OR $CustomerIDsMap[2] LIKE ? $LikeEscapeString"
+                          . " OR $CustomerIDsMap[2] LIKE ? $LikeEscapeString"
                           . " OR $CustomerIDsMap[2] LIKE ? $LikeEscapeString"
                           . " OR $CustomerIDsMap[2] LIKE ? $LikeEscapeString"
                           . " OR $CustomerIDsMap[2] LIKE ? $LikeEscapeString";
                 }
                 else {
-                    $SQL .= " OR LOWER($CustomerIDsMap[2]) LIKE LOWER(?) $LikeEscapeString"
+                    $SQL .= " OR LOWER($CustomerIDsMap[2]) $Operator LOWER(?) $LikeEscapeString"
+                          . " OR LOWER($CustomerIDsMap[2]) LIKE LOWER(?) $LikeEscapeString"
+                          . " OR LOWER($CustomerIDsMap[2]) LIKE LOWER(?) $LikeEscapeString"
                           . " OR LOWER($CustomerIDsMap[2]) LIKE LOWER(?) $LikeEscapeString"
                           . " OR LOWER($CustomerIDsMap[2]) LIKE LOWER(?) $LikeEscapeString"
                           . " OR LOWER($CustomerIDsMap[2]) LIKE LOWER(?) $LikeEscapeString";

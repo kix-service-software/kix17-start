@@ -1421,6 +1421,17 @@ sub Run {
         for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
             next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
+            # to store dynamic field value from database (or undefined)
+            my $Value;
+
+            # only get values for Ticket fields (all screens based on AgentTickeActionCommon
+            # generates a new article, then article fields will be always empty at the beginning)
+            if ( $DynamicFieldConfig->{ObjectType} eq 'Ticket' ) {
+
+                # get value stored on the database from Ticket
+                $Value = $Ticket{ 'DynamicField_' . $DynamicFieldConfig->{Name} };
+            }
+
             my $IsACLReducible = $DynamicFieldBackendObject->HasBehavior(
                 DynamicFieldConfig => $DynamicFieldConfig,
                 Behavior           => 'IsACLReducible',
@@ -1430,6 +1441,7 @@ sub Run {
                 $DynamicFieldHTML{ $DynamicFieldConfig->{Name} } =
                     $DynamicFieldBackendObject->EditFieldRender(
                     DynamicFieldConfig => $DynamicFieldConfig,
+                    Value              => $Value,
                     Mandatory          => $Config->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
                     LayoutObject       => $LayoutObject,
                     ParamObject        => $ParamObject,
@@ -1476,6 +1488,7 @@ sub Run {
             $DynamicFieldHTML{ $DynamicFieldConfig->{Name} } = $DynamicFieldBackendObject->EditFieldRender(
                 DynamicFieldConfig   => $DynamicFieldConfig,
                 PossibleValuesFilter => $PossibleValues,
+                Value                => $Value,
                 Mandatory            => $Config->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
                 LayoutObject         => $LayoutObject,
                 ParamObject          => $ParamObject,
@@ -1489,7 +1502,7 @@ sub Run {
                 {
                     Name        => 'DynamicField_' . $DynamicFieldConfig->{Name},
                     Data        => $DataValues,
-                    SelectedID  => $DynamicFieldValues{ $DynamicFieldConfig->{Name} },
+                    SelectedID  => $DynamicFieldValues{ $DynamicFieldConfig->{Name} } // $Value,
                     Translation => $DynamicFieldConfig->{Config}->{TranslatableValues} || 0,
                     Max         => 100,
                 }
@@ -1700,7 +1713,7 @@ sub Run {
                     Data            => $ListOptionJson->{Services}->{Data},
                     SelectedID      => $GetParam{ServiceID},
                     PossibleNone    => 1,
-                    Translation     => 0,
+                    Translation     => $ConfigObject->Get('Ticket::ServiceTranslation') || 0,
                     TreeView        => $TreeView,
                     DisabledOptions => $ListOptionJson->{Services}->{DisabledOptions} || 0,
                     Max             => 100,
@@ -1710,7 +1723,7 @@ sub Run {
                     Data         => $SLAs,
                     SelectedID   => $GetParam{SLAID},
                     PossibleNone => 1,
-                    Translation  => 0,
+                    Translation  => $ConfigObject->Get('Ticket::SLATranslation') || 0,
                     Max          => 100,
                 },
                 {

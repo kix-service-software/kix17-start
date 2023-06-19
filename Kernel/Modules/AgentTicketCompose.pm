@@ -107,7 +107,7 @@ sub Run {
 
     my %Ticket = $TicketObject->TicketGet(
         TicketID      => $Self->{TicketID},
-        DynamicFields => 1
+        DynamicFields => 1,
     );
 
     # get lock state
@@ -698,6 +698,8 @@ sub Run {
             next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
             my $ValidationResult;
+
+            # do not validate on attachment upload or if field is disabled
             if (
                 !$IsUpload
                 && $DynamicFieldConfig->{Shown}
@@ -893,7 +895,7 @@ sub Run {
         }
 
         # set dynamic fields
-        # cycle trough the activated Dynamic Fields for this screen
+        # cycle through the activated Dynamic Fields for this screen
         DYNAMICFIELD:
         for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
             next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
@@ -1029,7 +1031,7 @@ sub Run {
             %GetParam,
         );
 
-        # update Dynamc Fields Possible Values via AJAX
+        # update Dynamic Fields Possible Values via AJAX
         my @DynamicFieldAJAX;
         my %DynamicFieldHTML;
 
@@ -1037,6 +1039,17 @@ sub Run {
         DYNAMICFIELD:
         for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
             next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
+
+            # to store dynamic field value from database (or undefined)
+            my $Value;
+
+            # only get values for Ticket fields (all screens based on AgentTickeActionCommon
+            # generates a new article, then article fields will be always empty at the beginning)
+            if ( $DynamicFieldConfig->{ObjectType} eq 'Ticket' ) {
+
+                # get value stored on the database from Ticket
+                $Value = $Ticket{ 'DynamicField_' . $DynamicFieldConfig->{Name} };
+            }
 
             my $IsACLReducible = $BackendObject->HasBehavior(
                 DynamicFieldConfig => $DynamicFieldConfig,
@@ -1046,6 +1059,7 @@ sub Run {
             if ( !$IsACLReducible ) {
                 $DynamicFieldHTML{ $DynamicFieldConfig->{Name} } = $BackendObject->EditFieldRender(
                     DynamicFieldConfig => $DynamicFieldConfig,
+                    Value              => $Value,
                     Mandatory          => $Config->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
                     LayoutObject       => $LayoutObject,
                     ParamObject        => $ParamObject,
@@ -1094,7 +1108,7 @@ sub Run {
                 {
                     Name        => 'DynamicField_' . $DynamicFieldConfig->{Name},
                     Data        => $DataValues,
-                    SelectedID  => $DynamicFieldValues{ $DynamicFieldConfig->{Name} },
+                    SelectedID  => $DynamicFieldValues{ $DynamicFieldConfig->{Name} } // $Value,
                     Translation => $DynamicFieldConfig->{Config}->{TranslatableValues} || 0,
                     Max         => 100,
                 }
@@ -1103,6 +1117,7 @@ sub Run {
             $DynamicFieldHTML{ $DynamicFieldConfig->{Name} } = $BackendObject->EditFieldRender(
                 DynamicFieldConfig   => $DynamicFieldConfig,
                 PossibleValuesFilter => $DynamicFieldConfig->{ShownPossibleValues},
+                Value                => $Value,
                 Mandatory            => $Config->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
                 LayoutObject         => $LayoutObject,
                 ParamObject          => $ParamObject,
