@@ -74,6 +74,14 @@
         font-weight: bold;
         margin-left: 10px;
     }
+    #TextModulePreviewContainer ul,
+    #BulkModulePreviewContainer ul,
+    #TextModulePreviewContainer ol,
+    #BulktModulePreviewContainer ol {
+        list-style: revert;
+        margin: 8px 0;
+        padding: 0 0 0 15px;
+    }
 
 
     /**
