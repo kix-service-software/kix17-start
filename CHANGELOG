@@ -1,6 +1,13 @@
 # Change log of KIX
 * Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
 
+# 17.21.0-RC8 (2023/06/20)
+ * (2023/06/09) - Bugfix: KIX17-3457 (fixed incorrect display of list elements in the text module preview) (fjacquemin)
+ * (2023/06/09) - Bugfix: KIX17-3460 (fixed incorrect display of links in article body when using dark mode) (fjacquemin)
+ * (2023/06/08) - Bugfix: KIX17-3462 (use ticket value of dynamic field after acl based hiding) (mbauer)
+ * (2023/06/07) - Bugfix: KIX17-3461 (fix handling of customer ids in customer information center) (mbauer)
+ * (2023/06/06) - Bugfix: KIX17-3458 (fixed QGR handling for failed parent queues) (mbauer)
+
 # 17.21.0-RC7 (2023/05/23)
  * (2023/05/10) - Bugfix: KIX17-3452 (fix article filter for article sender type) (mbauer)
 
