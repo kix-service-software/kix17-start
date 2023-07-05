@@ -421,6 +421,13 @@ sub ArticleCreate {
         Bind => [ \$Param{MessageID}, \$ArticleID ],
     );
 
+    # update change time of ticket
+    return if !$DBObject->Do(
+        SQL => 'UPDATE ticket SET change_time = current_timestamp, '
+            . ' change_by = ? WHERE id = ?',
+        Bind => [ \$Param{UserID}, \$Param{TicketID} ],
+    );
+
     # check for base64 encoded images in html body and upload them
     for my $Attachment (@AttachmentConvert) {
 
