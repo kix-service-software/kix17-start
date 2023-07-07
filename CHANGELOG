@@ -1,6 +1,11 @@
 # Change log of KIX
 * Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
 
+# 17.21.0-RC9 (2023/07/07)
+ * (2023/06/30) - Bugfix: KIX17-3467 (improve webservice debugger entry deletion) (mbauer)
+ * (2023/06/27) - CR: KIX17-3476 (implemented oauth2 for imaps) (fjacquemin)
+ * (2023/06/07) - Bugfix: KIX17-3455 (update ticket change time on ticket create) (mbauer)
+
 # 17.21.0-RC8 (2023/06/20)
  * (2023/06/09) - Bugfix: KIX17-3457 (fixed incorrect display of list elements in the text module preview) (fjacquemin)
  * (2023/06/09) - Bugfix: KIX17-3460 (fixed incorrect display of links in article body when using dark mode) (fjacquemin)
