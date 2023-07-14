@@ -525,7 +525,7 @@ sub Run {
             },
         );
         $Kernel::OM->ObjectsDiscard( Objects => ['Kernel::Output::HTML::Layout'] );
-        my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+        $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
         # remove session id
         if ( !$SessionObject->RemoveSessionID( SessionID => $Param{SessionID} ) ) {
