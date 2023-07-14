@@ -1394,6 +1394,7 @@ sub _MaskNew {
         # build to string
         if (%NewTos) {
             for ( sort keys %NewTos ) {
+                next if ( !$_ );
                 $NewTos{"$_||$NewTos{$_}"} = $NewTos{$_};
 
                 if ( $Param{QueueID} && $_ && $_ == $Param{QueueID} ) {
