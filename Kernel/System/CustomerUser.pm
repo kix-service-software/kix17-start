@@ -626,7 +626,7 @@ sub SetPassword {
                 OldData => \%User,
                 Result  => $Result,
             },
-            UserID => $Param{UserID},
+            UserID => $Param{UserID} || 1,
         );
     }
     return $Result;
