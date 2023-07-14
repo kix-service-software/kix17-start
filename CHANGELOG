@@ -1,6 +1,11 @@
 # Change log of KIX
 * Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
 
+# 17.21.0-RC10 (2023/07/14)
+ * (2023/07/12) - CR: KIX17-3475 (added console commands for migration preparation) (mbauer)
+ * (2023/07/11) - Bugfix: KIX17-3468 (prevent log messages) (mbauer)
+ * (2023/07/11) - Bugfix: KIX17-3379 (fix repeated variable declaration) (mbauer)
+
 # 17.21.0-RC9 (2023/07/07)
  * (2023/06/30) - Bugfix: KIX17-3467 (improve webservice debugger entry deletion) (mbauer)
  * (2023/06/27) - CR: KIX17-3476 (implemented oauth2 for imaps) (fjacquemin)
