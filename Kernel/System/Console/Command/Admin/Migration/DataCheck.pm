@@ -112,7 +112,8 @@ sub Run {
 
     # check placeholder data
     $Success = $Self->_CheckPlaceholderData(
-        Fixes => \%Fixes,
+        Fixes   => \%Fixes,
+        Verbose => $Verbose,
     );
     if ( !$Success ) {
         return $Self->ExitCodeError();
@@ -369,9 +370,41 @@ sub _CheckPlaceholderData {
 
     $Self->Print('<yellow>Placeholder</yellow> - Check placeholder data' . "\n");
 
-    # prepare pattern
-    my $CheckPattern   = 'OTRS_';
-    my $ReplacePattern = 'KIX_';
+    # prepare patterns
+    my @PatternArray = (
+        {
+            Check   => 'OTRS_',
+            Replace => 'KIX_',
+        },
+        {
+            Check   => 'KIX_ARTICLE_DATA_',
+            Replace => 'KIX_ARTICLE_',
+        },
+        {
+            Check   => 'KIX_CUSTOMERDATA_User',
+            Replace => 'KIX_CONTACT_',
+        },
+        {
+            Check   => 'KIX_CUSTOMERDATA_CustomerCompany',
+            Replace => 'KIX_ORG_',
+        },
+        {
+            Check   => 'KIX_CUSTOMER_DATA_User',
+            Replace => 'KIX_CONTACT_',
+        },
+        {
+            Check   => 'KIX_CUSTOMER_DATA_CustomerCompany',
+            Replace => 'KIX_ORG_',
+        },
+        {
+            Check   => 'KIX_NOTIFICATION_RECIPIENT_',
+            Replace => 'KIX_NOTIFICATIONRECIPIENT_',
+        },
+        {
+            Check   => 'KIX_TICKET_OWNER_',
+            Replace => 'KIX_TICKETOWNER_',
+        },
+    );
 
     # process queries
     for my $Query ( sort( keys( %QueryMap ) ) ) {
@@ -396,27 +429,36 @@ sub _CheckPlaceholderData {
         }
 
         # process data
-        my $Count = 0;
+        my $Count        = 0;
+        my %PatternCount = ();
         for my $DataID ( keys( %Data ) ) {
             next if ( !$Data{ $DataID } );
 
-            if ( $Data{ $DataID } =~ m/$CheckPattern/ ) {
-                # increment count
-                $Count += 1;
+            for my $PatternEntry ( @PatternArray ) {
+                if ( $Data{ $DataID } =~ m/$PatternEntry->{Check}/ ) {
+                    # increment count
+                    $Count += 1;
+                    if ( $PatternCount{ $PatternEntry->{Check} } ) {
+                        $PatternCount{ $PatternEntry->{Check} } += 1;
+                    }
+                    else {
+                        $PatternCount{ $PatternEntry->{Check} } = 1;
+                    }
 
-                # check if entry should be fixed
-                if ( $Param{Fixes}->{'Placeholder'} ) {
-                    # replace obsolete placeholder
-                    $Data{ $DataID } =~ s/$CheckPattern/$ReplacePattern/g;
+                    # check if entry should be fixed
+                    if ( $Param{Fixes}->{'Placeholder'} ) {
+                        # replace obsolete placeholder
+                        $Data{ $DataID } =~ s/$PatternEntry->{Check}/$PatternEntry->{Replace}/g;
 
-                    # prepare bind parameter
-                    my @FixBind = ( \$Data{ $DataID }, \$DataID );
+                        # prepare bind parameter
+                        my @FixBind = ( \$Data{ $DataID }, \$DataID );
 
-                    # execute fix statement
-                    return if !$DBObject->Do(
-                        SQL  => $QueryMap{ $Query }->{FixSQL},
-                        Bind => \@FixBind,
-                    );
+                        # execute fix statement
+                        return if !$DBObject->Do(
+                            SQL  => $QueryMap{ $Query }->{FixSQL},
+                            Bind => \@FixBind,
+                        );
+                    }
                 }
             }
         }
@@ -424,10 +466,30 @@ sub _CheckPlaceholderData {
         # check process result
         if ( $Count ) {
             if ( $Param{Fixes}->{'Placeholder'} ) {
-                $Self->Print('<green>' . $Count . ' entries fixed</green>' . "\n");
+                if ( $Param{Verbose} ) {
+                    $Self->Print("\n");
+                    for my $PatternEntry ( @PatternArray ) {
+                        if ( $PatternCount{ $PatternEntry->{Check} } ) {
+                            $Self->Print('<green> - - /' . $PatternEntry->{Check} . '/' . $PatternEntry->{Replace} . '/:' . $PatternCount{ $PatternEntry->{Check} } . ' entries fixed</green>' . "\n");
+                        }
+                    }
+                }
+                else {
+                    $Self->Print('<green>' . $Count . ' entries fixed</green>' . "\n");
+                }
             }
             else {
-                $Self->Print('<red>' . $Count . ' entries should be fixed</red>' . "\n");
+                if ( $Param{Verbose} ) {
+                    $Self->Print("\n");
+                    for my $PatternEntry ( @PatternArray ) {
+                        if ( $PatternCount{ $PatternEntry->{Check} } ) {
+                            $Self->Print('<red> - - /' . $PatternEntry->{Check} . '/' . $PatternEntry->{Replace} . '/:' . $PatternCount{ $PatternEntry->{Check} } . ' entries should be fixed</red>' . "\n");
+                        }
+                    }
+                }
+                else {
+                    $Self->Print('<red>' . $Count . ' entries should be fixed</red>' . "\n");
+                }
             }
         }
         else {
