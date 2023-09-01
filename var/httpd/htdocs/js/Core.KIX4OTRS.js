@@ -1,5 +1,5 @@
 // --
-// Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
+// Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
 // --
 // This software comes with ABSOLUTELY NO WARRANTY. For details, see
 // the enclosed file LICENSE for license information (AGPL). If you
@@ -53,20 +53,32 @@ Core.KIX4OTRS = (function(TargetNS) {
     TargetNS.SelectLinkedObjects = function(Action) {
 
         var $Tabs = $(".ui-tabs-tab"),
-            $CurrentTab;
+            $CurrentTab,
+            TabIndex,
+            search    = window.location.search,
+            hash      = window.location.hash,
+            origin    = window.location.origin,
+            path      = window.location.pathname,
+            patternST = /.*SelectedTab=\d+/g,
+            hasST     = patternST.exec(search),
+            uri;
 
-        if ( Action === 'AgentLinkObject' ) {
-            $CurrentTab = $('#AppWrapper');
-        }
-        else {
-            $.each($Tabs, function() {
-                if ($(this).attr('aria-expanded') == 'true') {
-                    var TabID = $(this).attr('aria-controls');
-                    $CurrentTab = $('#' + TabID);
-                    return false;
+        $.each($Tabs, function() {
+            if ($(this).attr('aria-expanded') == 'true') {
+                var TabID   = $(this).attr('aria-controls'),
+                    Link    = $(this).children().attr('href'),
+                    patternTI = /.*TabIndex=(\d+)/g;
+
+                $CurrentTab = $('#' + TabID);
+                if ( hasST == null ) {
+                    TabIndex = patternTI.exec(Link);
+                    if (TabIndex.length == 2) {
+                        uri = origin + path + search + ';SelectedTab=' + TabIndex[1] + hash;
+                    }
                 }
-            });
-        }
+                return false;
+            }
+        });
 
         // bind delete button
         $CurrentTab.find('.Primary').on('click', function() {
@@ -92,10 +104,12 @@ Core.KIX4OTRS = (function(TargetNS) {
 
                     // synchronous call
                     Core.AJAX.FunctionCall(Core.Config.Get('CGIHandle'), URL, function() {}, 'text', false);
-
-                    // reload tab - this is just a little hack but it works ;)
-                    window.location = $CurrentTab;
-                    location.reload();
+                    if ( uri ) {
+                        location.replace(uri);
+                    }
+                    else {
+                        location.reload();
+                    }
                 });
             }, No, function() {
                 // No

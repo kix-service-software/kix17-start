@@ -1,5 +1,5 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
 # based on the original work of:
 # Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
 # --
@@ -457,11 +457,32 @@ sub Run {
     # logout
     elsif ( $Param{Action} eq 'Logout' ) {
 
+        # new layout object
+        my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+
+        # check for given session id
+        if ( !$Param{SessionID} ) {
+
+            # redirect to alternate login
+            if ( $ConfigObject->Get('CustomerPanelLoginURL') ) {
+                $Param{RequestedURL} = $LayoutObject->LinkEncode( $Param{RequestedURL} );
+                print $LayoutObject->Redirect(
+                    ExtURL => $ConfigObject->Get('CustomerPanelLoginURL')
+                        . "?Reason=InvalidSessionID;RequestedURL=$Param{RequestedURL}",
+                );
+            }
+
+            # show login screen
+            print $LayoutObject->CustomerLogin(
+                Title   => 'Logout',
+                Message => Translatable('Session invalid. Please log in again.'),
+                %Param,
+            );
+            return;
+        }
+
         # check session id
         if ( !$SessionObject->CheckSessionID( SessionID => $Param{SessionID} ) ) {
-
-            # new layout object
-            my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
             # redirect to alternate login
             if ( $ConfigObject->Get('CustomerPanelLoginURL') ) {
@@ -503,9 +524,8 @@ sub Run {
                 %UserData,
             },
         );
-
         $Kernel::OM->ObjectsDiscard( Objects => ['Kernel::Output::HTML::Layout'] );
-        my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+        $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
         # remove session id
         if ( !$SessionObject->RemoveSessionID( SessionID => $Param{SessionID} ) ) {

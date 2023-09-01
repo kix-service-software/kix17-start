@@ -1,5 +1,5 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
 # based on the original work of:
 # Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
 # --
@@ -419,6 +419,13 @@ sub ArticleCreate {
     return if !$DBObject->Do(
         SQL  => 'UPDATE article SET a_message_id = ? WHERE id = ?',
         Bind => [ \$Param{MessageID}, \$ArticleID ],
+    );
+
+    # update change time of ticket
+    return if !$DBObject->Do(
+        SQL => 'UPDATE ticket SET change_time = current_timestamp, '
+            . ' change_by = ? WHERE id = ?',
+        Bind => [ \$Param{UserID}, \$Param{TicketID} ],
     );
 
     # check for base64 encoded images in html body and upload them

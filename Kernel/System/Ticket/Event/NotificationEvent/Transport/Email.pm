@@ -1,5 +1,5 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
 # based on the original work of:
 # Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
 # --
@@ -234,6 +234,23 @@ sub SendNotification {
     # get ticket object
     my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
 
+    # prepare subject
+    if (
+        defined( $Notification{Data}->{RecipientSubject} )
+        && defined( $Notification{Data}->{RecipientSubject}->[0] )
+        && !$Notification{Data}->{RecipientSubject}->[0]
+    ) {
+        my $TicketNumber = $TicketObject->TicketNumberLookup(
+            TicketID => $Param{TicketID},
+        );
+
+        $Notification{Subject} = $TicketObject->TicketSubjectClean(
+            TicketNumber => $TicketNumber,
+            Subject      => $Notification{Subject},
+            Size         => 0,
+        );
+    }
+
     if ( $Param{Notification}->{ContentType} && $Param{Notification}->{ContentType} eq 'text/html' ) {
 
         # Get configured template with fallback to Default.
@@ -308,24 +325,6 @@ sub SendNotification {
             # add attachment
             push( @{ $Param{Attachments} }, \%Data );
         }
-    }
-
-    # send notification
-    # prepare subject
-    if (
-        defined( $Notification{Data}->{RecipientSubject} )
-        && defined( $Notification{Data}->{RecipientSubject}->[0] )
-        && !$Notification{Data}->{RecipientSubject}->[0]
-    ) {
-        my $TicketNumber = $TicketObject->TicketNumberLookup(
-            TicketID => $Param{TicketID},
-        );
-
-        $Notification{Subject} = $TicketObject->TicketSubjectClean(
-            TicketNumber => $TicketNumber,
-            Subject      => $Notification{Subject},
-            Size         => 0,
-        );
     }
 
     # send notification

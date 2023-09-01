@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -71,6 +71,7 @@ sub Upload {
     my $currQueue      = undef;
     my $Message        = "";
 
+    LINE:
     for my $currLine ( @{ $Param{Content} } ) {
 
         $lineCounter++;
@@ -161,6 +162,31 @@ sub Upload {
             # handle queue...
             if ($currQueue) {
 
+                # check for sub queue
+                if ( $currQueue =~ m/^(.+)::.+?$/ ) {
+                    # check for missing parent queue
+                    if (
+                        exists( $RevQueueList{ $1 } )
+                        && !$RevQueueList{ $1 }
+                    ) {
+                        # remember queue as not created
+                        $RevQueueList{$currQueue} = '';
+
+                        $Message = "QGR-Import: Skipping QUEUE <$currQueue>, parent queue was not created ...";
+                        if ( $Param{MessageToSTDERR} ) {
+                            print STDERR "\n" . $Message;
+                        }
+                        else {
+                            $LogObject->Log(
+                                Priority => 'notice',
+                                Message  => $Message,
+                            );
+                        }
+
+                        next LINE;
+                    }
+                }
+
                 # using rev-list because there is no Silent option...
                 my $QueueID = $RevQueueList{$currQueue};
 
@@ -236,7 +262,7 @@ sub Upload {
                         );
                     }
 
-                    $QueueObject->QueueAdd(
+                    $QueueID = $QueueObject->QueueAdd(
                         Name    => $currQueue,
                         Comment => '',
                         GroupID => $GroupID,
@@ -246,7 +272,6 @@ sub Upload {
                         SystemAddressID => $SystemAddressID,
                     );
 
-                    $QueueID = $QueueObject->QueueLookup( Queue => $currQueue );
                     $RevQueueList{$currQueue} = $QueueID;
                 }
                 else {

@@ -946,7 +946,7 @@ require Exporter;
     "Hangul" => 'hngl',
     "Historical Forms" => 'hist',
     "Historical Ligatures" => 'hlig',
-    "Hojo Kanji Forms (JIS X 0212-1990 Kanji Forms)" => 'hojo',
+    "Hojo Kanji Forms (JIS X 0212-2023 Kanji Forms)" => 'hojo',
     "Horizontal Kana Alternates" => 'hkna',
     "Initial Forms" => 'init',
     "Isolated Forms" => 'isol',

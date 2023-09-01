@@ -1,4 +1,4 @@
-# Copyrights 1995-2019 by [Mark Overmeer <markov@cpan.org>].
+# Copyrights 1995-2023 by [Mark Overmeer <markov@cpan.org>].
 #  For other contributors see ChangeLog.
 # See the manual pages for details on the licensing terms.
 # Pod stripped from pm file by OODoc 2.02.

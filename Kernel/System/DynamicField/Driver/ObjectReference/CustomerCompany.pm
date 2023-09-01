@@ -1,5 +1,5 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
 # based on the original work of:
 # Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
 # --
@@ -103,6 +103,25 @@ sub new {
     }
 
     return $Self;
+}
+
+sub HasBehavior {
+    my ( $Self, %Param ) = @_;
+
+    # return fail if Behaviors hash does not exists
+    return if !IsHashRefWithData( $Self->{Behaviors} );
+
+    # field has not 'IsACLReducible' if DisplayFieldType 'AutoComplete' is used
+    if (
+        $Param{Behavior} eq 'IsACLReducible'
+        && $Param{DynamicFieldConfig}->{Config}->{DisplayFieldType}
+        && $Param{DynamicFieldConfig}->{Config}->{DisplayFieldType} eq 'AutoComplete'
+    ) {
+        return;
+    }
+
+    # return success if the dynamic field has the expected behavior
+    return IsPositiveInteger( $Self->{Behaviors}->{ $Param{Behavior} } );
 }
 
 sub ValueGet {

@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -38,7 +38,7 @@ sub Param {
     my $ParamObject  = $Kernel::OM->Get('Kernel::System::Web::Request');
     my $UserObject   = $Param{UserObject} || $Kernel::OM->Get('Kernel::System::CustomerUser');
 
-    my %Queue = ( '', '-' );
+    my %Queue = ();
 
     # load module
     my $Module = $Kernel::OM->Get('Kernel::Config')->Get('CustomerPanel::NewTicketQueueSelectionModule')
@@ -57,7 +57,7 @@ sub Param {
                 Message  => "Module: $Module loaded!",
             );
         }
-        %Queue = ( $Object->Run( Env => $Self ), ( '', => '-' ) );
+        %Queue = ( $Object->Run( Env => $Self ) );
     }
     else {
         return $LayoutObject->FatalError();
@@ -75,15 +75,17 @@ sub Param {
         @Params,
         {
             %Param,
-            Name        => $Self->{ConfigItem}->{PrefKey},
-            Translation => 0,
-            Data        => \%Queue,
-            HTMLQuote   => 0,
-            SelectedID  => $ParamObject->GetParam( Param => 'UserDefaultTicketQueue' )
-                || $Param{UserData}->{UserDefaultTicketQueue}
+            Name         => $Self->{ConfigItem}->{PrefKey},
+            Data         => \%Queue,
+            Translation  => 0,
+            HTMLQuote    => 0,
+            PossibleNone => 1,
+            Block        => 'Option',
+            Max          => 100,
+            SelectedID   => $ParamObject->GetParam( Param => $Self->{ConfigItem}->{PrefKey} )
+                || $Param{UserData}->{ $Self->{ConfigItem}->{PrefKey} }
+                || $Self->{ConfigItem}->{DataSelected}
                 || $Self->{Config}->{QueueDefault},
-            Block => 'Option',
-            Max   => 100,
         },
     );
     return @Params;

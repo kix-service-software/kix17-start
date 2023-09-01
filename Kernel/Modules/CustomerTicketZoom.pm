@@ -1,5 +1,5 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
 # based on the original work of:
 # Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
 # --
@@ -204,6 +204,17 @@ sub Run {
         for my $DynamicFieldConfig ( @{ $Self->{FollowUpDynamicField} } ) {
             next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
+            # to store dynamic field value from database (or undefined)
+            my $Value;
+
+            # only get values for Ticket fields (all screens based on AgentTickeActionCommon
+            # generates a new article, then article fields will be always empty at the beginning)
+            if ( $DynamicFieldConfig->{ObjectType} eq 'Ticket' ) {
+
+                # get value stored on the database from Ticket
+                $Value = $Ticket{ 'DynamicField_' . $DynamicFieldConfig->{Name} };
+            }
+
             my $IsACLReducible = $BackendObject->HasBehavior(
                 DynamicFieldConfig => $DynamicFieldConfig,
                 Behavior           => 'IsACLReducible',
@@ -213,6 +224,7 @@ sub Run {
                 $DynamicFieldHTML{ $DynamicFieldConfig->{Name} } = $BackendObject->EditFieldRender(
                     DynamicFieldConfig => $DynamicFieldConfig,
                     Mandatory          => $Config->{FollowUpDynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
+                    Value              => $Value,
                     LayoutObject       => $LayoutObject,
                     ParamObject        => $ParamObject,
                     AJAXUpdate         => 0,
@@ -259,7 +271,7 @@ sub Run {
                 {
                     Name        => 'DynamicField_' . $DynamicFieldConfig->{Name},
                     Data        => $DataValues,
-                    SelectedID  => $DynamicFieldValues{ $DynamicFieldConfig->{Name} } // $DynamicFieldConfig->{Config}->{DefaultValue},
+                    SelectedID  => $DynamicFieldValues{ $DynamicFieldConfig->{Name} } // $Value // $DynamicFieldConfig->{Config}->{DefaultValue},
                     Translation => $DynamicFieldConfig->{Config}->{TranslatableValues} || 0,
                     Max         => 100,
                 }
@@ -268,6 +280,7 @@ sub Run {
             $DynamicFieldHTML{ $DynamicFieldConfig->{Name} } = $BackendObject->EditFieldRender(
                 DynamicFieldConfig   => $DynamicFieldConfig,
                 PossibleValuesFilter => $PossibleValues,
+                Value                => $Value,
                 Mandatory            => $Config->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
                 LayoutObject         => $LayoutObject,
                 ParamObject          => $ParamObject,
@@ -1833,7 +1846,7 @@ sub _Mask {
 
                 $LayoutObject->AddJSOnDocumentComplete( Code => <<"END");
 Core.Form.Validate.DisableValidation(\$('.Row_DynamicField_$DynamicFieldName'));
-\$('.Row_DynamicField_$DynamicFieldName').addClass('Hidden');
+\$('.Row_DynamicField_$DynamicFieldName').addClass('Hidden hiddenFormField').find('select').prop('disabled', true);
 END
             }
 

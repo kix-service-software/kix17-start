@@ -1,5 +1,5 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
 # based on the original work of:
 # Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
 # --
@@ -826,6 +826,13 @@ sub CustomerIDs {
         push @CustomerIDs, $Data{UserCustomerID};
     }
 
+    # removed duplicates
+    if ( scalar( @CustomerIDs ) ) {
+        my %TempCustomerIDs = map { $_ => 1 } @CustomerIDs;
+
+        @CustomerIDs = sort( keys( %TempCustomerIDs ) );
+    }
+
     # cache request
     if ( $Self->{CacheObject} ) {
         $Self->{CacheObject}->Set(
@@ -869,7 +876,11 @@ sub CustomerUserDataGet {
             Type => $Self->{CacheType},
             Key  => 'CustomerUserDataGet::' . $Param{User},
         );
-        return %{$Data} if ref $Data eq 'HASH';
+        return %{ $Data } if (
+            ref( $Data ) eq 'HASH'
+            && %{ $Data }
+        );
+        return if ( ref( $Data ) eq 'HASH' );
     }
 
     # create ldap connect
@@ -895,6 +906,13 @@ sub CustomerUserDataGet {
     # get first entry
     my $Result2 = $Result->entry(0);
     if ( !$Result2 ) {
+        # cache request for not found entry
+        $Self->{CacheObject}->Set(
+            Type  => $Self->{CacheType},
+            Key   => 'CustomerUserDataGet::' . $Param{User},
+            Value => {},
+            TTL   => $Self->{CustomerUserMap}->{CacheTTL},
+        );
         return;
     }
 

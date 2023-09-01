@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -26,7 +26,7 @@ my %TestData = (
         'State'         => 'new',
         'Type'          => 'Incident',
         'CustomerID'    => 'TestCustomerCompany',
-        'CustomerUser'  => 'test@cape-it.de',
+        'CustomerUser'  => 'test@kixdesk.com',
         'OwnerID'       => 1,
         'ResponsibleID' => 1,
         'ArchiveFlag'   => 'n',

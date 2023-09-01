@@ -216,7 +216,7 @@ L<IO::Socket::SSL>, L<Crypt::SSLeay>, L<Mozilla::CA>
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright (c) 1997-2011 Gisle Aas.
+Copyright (c) 1997-2023 Gisle Aas.
 
 This library is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.

@@ -3380,7 +3380,7 @@ distribution as: L<XML::Simple::FAQ>
 
 =head1 COPYRIGHT
 
-Copyright 1999-2004 Grant McLean E<lt>grantm@cpan.orgE<gt>
+Copyright 1999-2023 Grant McLean E<lt>grantm@cpan.orgE<gt>
 
 This library is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.

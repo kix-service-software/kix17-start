@@ -1,5 +1,5 @@
 // --
-// Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
+// Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
 // --
 // This software comes with ABSOLUTELY NO WARRANTY. For details, see
 // the enclosed file LICENSE for license information (AGPL). If you
@@ -27,7 +27,7 @@ Core.KIX4OTRS.GenericAutoCompleteSearch = (function(TargetNS) {
         MayResultsDisplayed : 20 // neccessary because of Config reset in TabView
     };
 
-    // KIX4OTRS-capeIT
+    // KIX4OTRS-kix
 
     /**
      * @function
