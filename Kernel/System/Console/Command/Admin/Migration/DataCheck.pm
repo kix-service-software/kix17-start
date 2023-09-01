@@ -93,6 +93,7 @@ sub Run {
                 'TicketCustomerCompany'    => 1,
                 'TicketData'               => 1,
                 'ServiceNames'             => 1,
+                'DynamicFieldValues'       => 1,
             );
 
             last;
@@ -229,6 +230,14 @@ sub Run {
     $Success = $Self->_CheckServiceNames(
         Fixes   => \%Fixes,
         Verbose => $Verbose,
+    );
+    if ( !$Success ) {
+        return $Self->ExitCodeError();
+    }
+
+    # check dynamic field values
+    $Success = $Self->_CheckDynamicFieldValues(
+        Fixes   => \%Fixes,
     );
     if ( !$Success ) {
         return $Self->ExitCodeError();
@@ -851,6 +860,10 @@ sub _CheckCustomerUserData {
         '0006' => {
             'Label'     => 'customer user with same email as an user, but different firstname or lastname',
             'SelectSQL' => 'SELECT cu.login FROM customer_user cu, users u, user_preferences up WHERE cu.email = up.preferences_value AND up.preferences_key = \'UserEmail\' AND up.user_id = u.id AND (cu.first_name != u.first_name OR cu.last_name != u.last_name)',
+        },
+        '0007' => {
+            'Label'     => 'customer user with same email as an user, but different login',
+            'SelectSQL' => 'SELECT cu.login FROM customer_user cu, users u, user_preferences up WHERE cu.email = up.preferences_value AND up.preferences_key = \'UserEmail\' AND up.user_id = u.id AND cu.login != u.login',
         },
     );
 
@@ -2814,6 +2827,87 @@ sub _CheckServiceNames {
     }
     else {
         $Self->Print('<green> - No duplicated service names</green>' . "\n");
+    }
+
+    return 1;
+}
+
+sub _CheckDynamicFieldValues {
+    my ( $Self, %Param ) = @_;
+
+    # get needed objects
+    my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
+
+    # init query map
+    my %QueryMap = (
+        '0001' => {
+            'Label'     => 'orphaned ticket dynamic field values',
+            'SelectSQL' => 'SELECT dfv.id FROM dynamic_field_value dfv, dynamic_field df WHERE df.object_type = \'Ticket\' AND dfv.field_id = df.id AND dfv.object_id NOT IN ( SELECT id FROM ticket )',
+            'FixSQL'    => 'DELETE FROM dynamic_field_value dfv, dynamic_field df WHERE df.object_type = \'Ticket\' AND dfv.field_id = df.id AND dfv.object_id NOT IN ( SELECT id FROM ticket )',,
+        },
+        '0002' => {
+            'Label'     => 'orphaned article dynamic field values',
+            'SelectSQL' => 'SELECT dfv.id FROM dynamic_field_value dfv, dynamic_field df WHERE df.object_type = \'Article\' AND dfv.field_id = df.id AND dfv.object_id NOT IN ( SELECT id FROM article )',
+            'FixSQL'    => 'DELETE FROM dynamic_field_value dfv, dynamic_field df WHERE df.object_type = \'Article\' AND dfv.field_id = df.id AND dfv.object_id NOT IN ( SELECT id FROM article )',
+        },
+        '0003' => {
+            'Label'     => 'orphaned faq dynamic field values',
+            'SelectSQL' => 'SELECT dfv.id FROM dynamic_field_value dfv, dynamic_field df WHERE df.object_type = \'FAQ\' AND dfv.field_id = df.id AND dfv.object_id NOT IN ( SELECT id FROM faq_item )',
+            'FixSQL'    => 'DELETE FROM dynamic_field_value dfv, dynamic_field df WHERE df.object_type = \'FAQ\' AND dfv.field_id = df.id AND dfv.object_id NOT IN ( SELECT id FROM faq_item )',
+        },
+        '0004' => {
+            'Label'     => 'orphaned customer user dynamic field values',
+            'SelectSQL' => 'SELECT dfv.id FROM dynamic_field_value dfv, dynamic_field df WHERE df.object_type = \'CustomerUser\' AND dfv.field_id = df.id AND dfv.object_id_text NOT IN ( SELECT login FROM customer_user )',
+            'FixSQL'    => 'DELETE FROM dynamic_field_value dfv, dynamic_field df WHERE df.object_type = \'CustomerUser\' AND dfv.field_id = df.id AND dfv.object_id_text NOT IN ( SELECT login FROM customer_user )',
+        },
+        '0005' => {
+            'Label'     => 'orphaned customer company dynamic field values',
+            'SelectSQL' => 'SELECT dfv.id FROM dynamic_field_value dfv, dynamic_field df WHERE df.object_type = \'CustomerCompany\' AND dfv.field_id = df.id AND dfv.object_id_text NOT IN ( SELECT customer_id FROM customer_company )',
+            'FixSQL'    => 'DELETE FROM dynamic_field_value dfv, dynamic_field df WHERE df.object_type = \'CustomerCompany\' AND dfv.field_id = df.id AND dfv.object_id_text NOT IN ( SELECT customer_id FROM customer_company )',
+        },
+    );
+
+    $Self->Print('<yellow>DynamicFieldValues</yellow> - Check for orphaned dynamic field values' . "\n");
+
+    # process queries
+    for my $Query ( sort( keys( %QueryMap ) ) ) {
+        $Self->Print('<yellow> - ' . $QueryMap{ $Query }->{Label} . ': </yellow>');
+
+        # prepare db handle
+        return if !$DBObject->Prepare(
+            SQL => $QueryMap{ $Query }->{SelectSQL},
+        );
+
+        # fetch data
+        my %Data = ();
+        while ( my @Row = $DBObject->FetchrowArray() ) {
+            $Data{ $Row[0] } = 1;
+        }
+
+        # process result
+        if (
+            %Data
+            && scalar( keys( %Data ) )
+        ) {
+            # check if entry should be fixed
+            if (
+                $Param{Fixes}->{'DynamicFieldValues'}
+                && $QueryMap{ $Query }->{FixSQL}
+            ) {
+                # execute fix statement
+                return if !$DBObject->Do(
+                    SQL  => $QueryMap{ $Query }->{FixSQL},
+                );
+
+                $Self->Print('<green>' . scalar( keys( %Data ) ) . ' entries fixed</green>' . "\n");
+            }
+            else {
+                $Self->Print('<red>' . scalar( keys( %Data ) ) . ' entries should be fixed</red>' . "\n");
+            }
+        }
+        else {
+            $Self->Print('<green>Nothing to do</green>' . "\n");
+        }
     }
 
     return 1;
