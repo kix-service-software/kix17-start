@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -777,10 +777,14 @@ sub AgentListOptionJSON {
                             if ( !$UsedData{$Value} ) {
                                 my $HashKey = '';
                                 if ( $Param{Name} eq 'Services' ) {
-                                    $HashKey = $Kernel::OM->Get('Kernel::System::Service')
-                                        ->ServiceLookup(
+                                    $HashKey = $Kernel::OM->Get('Kernel::System::Service')->ServiceLookup(
                                         Name => $Value
                                         );
+                                }
+                                elsif ( $Param{Name} eq 'NewQueueID' ) {
+                                    $HashKey = $Kernel::OM->Get('Kernel::System::Queue')->QueueLookup(
+                                        Queue => $Value
+                                    );
                                 }
                                 elsif ( $Param{Name} eq 'Dest' ) {
                                     $HashKey = $Key . "||" . $Value;

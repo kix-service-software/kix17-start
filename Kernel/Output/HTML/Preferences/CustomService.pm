@@ -1,5 +1,5 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
 # based on the original work of:
 # Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
 # --
@@ -80,15 +80,16 @@ sub Param {
         {
             %Param,
             Option => $Kernel::OM->Get('Kernel::Output::HTML::Layout')->BuildSelection(
-                Data        => \%ServiceList,
-                Name        => 'ServiceID',
-                Class       => 'Modernize',
-                Multiple    => 1,
-                Size        => 10,
-                SelectedID  => \@CustomServiceIDs,
-                Sort        => 'AlphanumericValue',
-                Translation => 0,
-                TreeView    => 1,
+                Data         => \%ServiceList,
+                Name         => 'ServiceID',
+                Class        => 'Modernize',
+                Multiple     => 1,
+                Size         => 10,
+                PossibleNone => 1,
+                SelectedID   => \@CustomServiceIDs,
+                Sort         => 'AlphanumericValue',
+                Translation  => 0,
+                TreeView     => 1,
 
             ),
             Name => 'ServiceID',

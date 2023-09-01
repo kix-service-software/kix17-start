@@ -1,5 +1,5 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
 # based on the original work of:
 # Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
 # --
@@ -122,6 +122,7 @@ sub Run {
                 TicketID  => $Self->{TicketID},
                 UserID    => $Self->{UserID},
                 NewUserID => $Self->{UserID},
+                NoFlag    => 1,
             );
 
             # show lock state
@@ -1394,7 +1395,7 @@ sub AgentMove {
 
             $LayoutObject->AddJSOnDocumentComplete( Code => <<"END");
 Core.Form.Validate.DisableValidation(\$('.Row_DynamicField_$DynamicFieldName'));
-\$('.Row_DynamicField_$DynamicFieldName').addClass('Hidden');
+\$('.Row_DynamicField_$DynamicFieldName').addClass('Hidden hiddenFormField').find('select').prop('disabled', true);
 END
         }
 

@@ -1,5 +1,5 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
 # based on the original work of:
 # Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
 # --
@@ -13,7 +13,7 @@ package Kernel::System::Email::SMTPTLS;
 use strict;
 use warnings;
 
-use Net::SSLGlue::SMTP;
+use Net::SMTP;
 
 use base qw(Kernel::System::Email::SMTP);
 
@@ -22,6 +22,13 @@ our @ObjectDependencies = (
 );
 
 ## no critic qw(Subroutines::ProhibitUnusedPrivateSubroutines)
+
+# Use Net::SSLGlue::SMTP on systems with older Net::SMTP modules that do not provide starttls
+BEGIN {
+    if ( !defined &Net::SMTP::starttls ) {
+        require Net::SSLGlue::SMTP;
+    }
+}
 
 sub _Connect {
     my ( $Self, %Param ) = @_;

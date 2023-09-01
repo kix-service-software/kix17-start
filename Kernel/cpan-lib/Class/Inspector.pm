@@ -654,7 +654,7 @@ Kivanc Yazan (KYZN)
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2002-2019 by Adam Kennedy.
+This software is copyright (c) 2002-2023 by Adam Kennedy.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

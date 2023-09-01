@@ -1,5 +1,5 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
 # based on the original work of:
 # Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
 # --
@@ -455,34 +455,65 @@ sub LogDelete {
         }
     }
 
-    # delete individual entries first
-    my $SQLIndividual = 'DELETE FROM gi_debugger_entry_content'
-                      . ' WHERE gi_debugger_entry_id in( SELECT id FROM gi_debugger_entry';
-    my @BindIndividual;
-    if ($CommunicationIDValid) {
-        $SQLIndividual .= ' WHERE communication_id = ?';
-        push @BindIndividual, \$Param{CommunicationID};
-    }
-    else {
-        $SQLIndividual .= ' WHERE  webservice_id = ?';
-        push @BindIndividual, \$Param{WebserviceID};
-    }
-    $SQLIndividual .= ' )';
-
-    # get database object
+    # connect to database
     my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
 
+    # get relevant entries
+    my @EntryList    = ();
+    my $SQLEntryList = 'SELECT id FROM gi_debugger_entry WHERE ';
+    my @BindEntryList;
+    if ($CommunicationIDValid) {
+        $SQLEntryList .= 'communication_id = ?';
+        push( @BindEntryList, \$Param{CommunicationID} );
+    }
+    else {
+        $SQLEntryList .= 'webservice_id = ?';
+        push( @BindEntryList, \$Param{WebserviceID} );
+    }
+
     if (
-        !$DBObject->Do(
-            SQL  => $SQLIndividual,
-            Bind => \@BindIndividual,
+        !$DBObject->Prepare(
+            SQL  => $SQLEntryList,
+            Bind => \@BindEntryList,
         )
     ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
-            Message  => 'Could not remove entries of communication chain in db!',
+            Message  => 'Could not prepare db query!',
         );
         return;
+    }
+
+    while ( my @Row = $DBObject->FetchrowArray() ) {
+        next if ( !$Row[0] );
+
+        push( @EntryList, $Row[0] );
+    }
+
+    if ( @EntryList ) {
+        # prepare conditions
+        my $SQLConditions = $Self->_PrepareInConditions(
+            TableColumn => 'gi_debugger_entry_id',
+            IDRef       => \@EntryList,
+        );
+
+        if ( ref( $SQLConditions ) eq 'ARRAY' ) {
+            for my $SQLCondition ( @{ $SQLConditions } ) {
+                # delete content entries
+                if (
+                    !$DBObject->Do(
+                        SQL => 'DELETE FROM gi_debugger_entry_content WHERE ' . $SQLCondition,
+                    )
+                ) {
+                    $Kernel::OM->Get('Kernel::System::Log')->Log(
+                        Priority => 'error',
+                        Message  => 'Could not remove entries of communication chain in db!',
+                    );
+
+                    return;
+                }
+            }
+        }
     }
 
     # delete main entry
@@ -825,6 +856,44 @@ sub _LogAddChain {
     }
 
     return 1;
+}
+
+sub _PrepareInConditions {
+    my ( $Self, %Param ) = @_;
+
+    # check needed stuff
+    for my $Key (qw(TableColumn IDRef)) {
+        if ( !$Param{$Key} ) {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'error',
+                Message  => "Need $Key!",
+            );
+            return [];
+        }
+    }
+
+    # sort ids to cache the SQL query
+    my @SortedIDs = sort { $a <=> $b } @{ $Param{IDRef} };
+
+    # quote values
+    for my $Value (@SortedIDs) {
+        return [] if !defined $Kernel::OM->Get('Kernel::System::DB')->Quote( $Value, 'Integer' );
+    }
+
+    # split IN statement with more than 100 elements in own statements to process
+    my @SQLConditions = ();
+    while ( scalar @SortedIDs ) {
+        # remove section in the array
+        my @SortedIDsPart = splice @SortedIDs, 0, 100;
+
+        # link together IDs
+        my $IDString = join ', ', @SortedIDsPart;
+
+        # add new statement
+        push @SQLConditions, " $Param{TableColumn} IN ($IDString) ";
+    }
+
+    return \@SQLConditions;
 }
 
 1;

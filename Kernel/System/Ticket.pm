@@ -1,5 +1,5 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
 # based on the original work of:
 # Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
 # --
@@ -610,6 +610,20 @@ sub TicketDelete {
         }
     }
 
+    if (
+        !defined $Param{IsDeleted}
+        || !IsHashRefWithData($Param{IsDeleted})
+        || (
+            IsHashRefWithData($Param{IsDeleted})
+            && !$Param{IsDeleted}->{$Param{TicketID}}
+        )
+    ) {
+        $Param{IsDeleted}->{$Param{TicketID}} = 1;
+    }
+    else {
+        return 1;
+    }
+
     # trigger PreEvent TicketDelete
     my $Result = $Self->PreEventHandler(
         Event => 'TicketDelete',
@@ -665,6 +679,13 @@ sub TicketDelete {
         Key          => $Param{TicketID},
         DeleteObject => 1,
         UserID       => $Param{UserID},
+    );
+
+    # delete linked merge tickets
+    return if !$Self->DeleteLinkedMergeTickets(
+        TicketID  => $Param{TicketID},
+        UserID    => $Param{UserID},
+        IsDeleted => $Param{IsDeleted}
     );
 
     # update ticket index
@@ -730,6 +751,71 @@ sub TicketDelete {
         },
         UserID => $Param{UserID},
     );
+
+    return 1;
+}
+
+sub DeleteLinkedMergeTickets {
+    my ( $Self, %Param ) = @_;
+
+    # check needed stuff
+    for my $Needed (qw(TicketID UserID IsDeleted)) {
+        if ( !$Param{$Needed} ) {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'error',
+                Message  => "Need $Needed!"
+            );
+            return;
+        }
+    }
+
+    my $MainTicketID = $Param{TicketID};
+    return if !$Kernel::OM->Get('Kernel::System::DB')->Prepare(
+        SQL => <<'END',
+SELECT sh.name
+FROM ticket_history sh, ticket_history_type ht WHERE
+sh.ticket_id = ? AND sh.history_type_id = ht.id AND ht.name = 'Merged'
+ORDER BY sh.create_time, sh.id
+END
+        Bind => [ \$Param{TicketID} ]
+    );
+
+    my %TicketIDs;
+    while ( my @Row = $Kernel::OM->Get('Kernel::System::DB')->FetchrowArray() ) {
+        my @IDs = $Row[0] =~ m/Merged\sTicket\s\(\d+\/(\d+)\)\sto\s\(\d+\/(\d+)\)/smx;
+        for (@IDs) {
+            if (
+                $_ ne $MainTicketID
+                && !$TicketIDs{$_}
+            ) {
+                $TicketIDs{$_} = 1;
+            }
+        }
+    }
+
+    my %StateList = $Kernel::OM->Get('Kernel::System::State')->StateGetStatesByType(
+        StateType => ['merged'],
+        Result    => 'HASH'
+    );
+
+    for my $TicketID ( sort keys %TicketIDs ) {
+        my %Ticket = $Self->TicketGet(
+            TicketID => $TicketID,
+            Silent   => 1,
+        );
+
+        next if !%Ticket;
+        next if !$StateList{$Ticket{StateID}};
+        next if $Param{IsDeleted}->{$TicketID};
+
+        my $Success = $Self->TicketDelete(
+            TicketID  => $TicketID,
+            UserID    => $Param{UserID},
+            IsDeleted => $Param{IsDeleted}
+        );
+
+        return if !$Success;
+    }
 
     return 1;
 }
@@ -4755,7 +4841,9 @@ sub TicketOwnerSet {
     }
 
     # remember that owner should be set for ticket
-    $Self->{'_TicketOwnerSet'}->{ $Param{TicketID} } = 1;
+    if ( !$Param{NoFlag} ) {
+        $Self->{'_TicketOwnerSet'}->{ $Param{TicketID} } = 1;
+    }
 
     # check if update is needed!
     my ( $OwnerID, $Owner ) = $Self->OwnerCheck( TicketID => $Param{TicketID} );

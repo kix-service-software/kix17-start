@@ -1,5 +1,5 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
 # based on the original work of:
 # Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
 # --
@@ -311,13 +311,18 @@ sub CustomerSearch {
         $CustomerID =~ s/\*/%/g;
         push @Bind, \$CustomerID;
 
+        my $Operator = '=';
+        if ( $CustomerID =~ m/%/ ) {
+            $Operator = 'LIKE';
+        }
+
         $SQL .= '(';
 
         if ( $Self->{CaseSensitive} ) {
-            $SQL .= "$Self->{CustomerID} LIKE ? $LikeEscapeString";
+            $SQL .= "$Self->{CustomerID} $Operator ? $LikeEscapeString";
         }
         else {
-            $SQL .= "LOWER($Self->{CustomerID}) LIKE LOWER(?) $LikeEscapeString";
+            $SQL .= "LOWER($Self->{CustomerID}) $Operator LOWER(?) $LikeEscapeString";
         }
 
         # if multiple customer ids used
@@ -335,18 +340,26 @@ sub CustomerSearch {
                 my $MultipleCustomerID2 = $CustomerID . ',%';
                 my $MultipleCustomerID3 = '%,' . $CustomerID;
                 my $MultipleCustomerID4 = '%,' . $CustomerID . ',%';
+                my $MultipleCustomerID5 = '%, ' . $CustomerID;          # with whitespace after comma
+                my $MultipleCustomerID6 = '%, ' . $CustomerID . ',%';   # with whitespace after comma
                 push( @Bind, \$MultipleCustomerID1 );
                 push( @Bind, \$MultipleCustomerID2 );
                 push( @Bind, \$MultipleCustomerID3 );
                 push( @Bind, \$MultipleCustomerID4 );
+                push( @Bind, \$MultipleCustomerID5 );
+                push( @Bind, \$MultipleCustomerID6 );
                 if ( $Self->{CaseSensitive} ) {
-                    $SQL .= " OR $CustomerIDsMap[2] LIKE ? $LikeEscapeString"
+                    $SQL .= " OR $CustomerIDsMap[2] $Operator ? $LikeEscapeString"
+                          . " OR $CustomerIDsMap[2] LIKE ? $LikeEscapeString"
+                          . " OR $CustomerIDsMap[2] LIKE ? $LikeEscapeString"
                           . " OR $CustomerIDsMap[2] LIKE ? $LikeEscapeString"
                           . " OR $CustomerIDsMap[2] LIKE ? $LikeEscapeString"
                           . " OR $CustomerIDsMap[2] LIKE ? $LikeEscapeString";
                 }
                 else {
-                    $SQL .= " OR LOWER($CustomerIDsMap[2]) LIKE LOWER(?) $LikeEscapeString"
+                    $SQL .= " OR LOWER($CustomerIDsMap[2]) $Operator LOWER(?) $LikeEscapeString"
+                          . " OR LOWER($CustomerIDsMap[2]) LIKE LOWER(?) $LikeEscapeString"
+                          . " OR LOWER($CustomerIDsMap[2]) LIKE LOWER(?) $LikeEscapeString"
                           . " OR LOWER($CustomerIDsMap[2]) LIKE LOWER(?) $LikeEscapeString"
                           . " OR LOWER($CustomerIDsMap[2]) LIKE LOWER(?) $LikeEscapeString"
                           . " OR LOWER($CustomerIDsMap[2]) LIKE LOWER(?) $LikeEscapeString";
@@ -640,6 +653,13 @@ sub CustomerIDs {
     # use also the primary customer id
     if ( $Data{UserCustomerID} && !$Self->{ExcludePrimaryCustomerID} ) {
         push @CustomerIDs, $Data{UserCustomerID};
+    }
+
+    # removed duplicates
+    if ( scalar( @CustomerIDs ) ) {
+        my %TempCustomerIDs = map { $_ => 1 } @CustomerIDs;
+
+        @CustomerIDs = sort( keys( %TempCustomerIDs ) );
     }
 
     # cache request

@@ -1,5 +1,5 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
 # based on the original work of:
 # Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
 # --
@@ -1649,10 +1649,10 @@ build an opm package
             Content => '1.0',
         },
         Vendor => {
-            Content => 'c.a.p.e. IT GmbH',
+            Content => 'KIX Service Software GmbH',
         },
         URL => {
-            Content => 'L<https://www.cape-it.de/>',
+            Content => 'L<https://www.kixdesk.com/>',
         },
         License => {
             Content => 'GNU GENERAL PUBLIC LICENSE Version 2, June 1991',

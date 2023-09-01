@@ -1,5 +1,5 @@
 // --
-// Modified version of the work: Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
+// Modified version of the work: Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
 // based on the original work of:
 // Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
 // --
@@ -85,7 +85,7 @@ Core.Agent.Statistics = (function (TargetNS) {
                 $FormFieldsElement = $('#' + ConfigurationType + 'FormFields'),
                 $CloneFormFieldsElement;
 
-            // KIX4OTRS-capeIT
+            // KIX4OTRS-kix
             // handle date time fields with datepicker
             function HandleDatepickerFields(ElementName) {
                 var $RelElement = $('#EditDialog .Fields').find('fieldset.Element' + ElementName);
@@ -114,7 +114,7 @@ Core.Agent.Statistics = (function (TargetNS) {
                     });
                 }
             }
-            // EO KIX4OTRS-capeIT
+            // EO KIX4OTRS-kix
 
             function RebuildEditDialogAddSelection() {
                 $('#EditDialog .Add select').empty().append('<option>-</option>');
@@ -147,9 +147,9 @@ Core.Agent.Statistics = (function (TargetNS) {
                 RebuildEditDialogAddSelection();
                 Core.UI.InputFields.Activate($('#EditDialog .Fields'));
 
-                // KIX4OTRS-capeIT
+                // KIX4OTRS-kix
                 HandleDatepickerFields(ElementName);
-                // EO KIX4OTRS-capeIT
+                // EO KIX4OTRS-kix
             }
 
             function EditDialogDelete(ElementName) {
@@ -216,15 +216,15 @@ Core.Agent.Statistics = (function (TargetNS) {
             Core.UI.TreeSelection.InitTreeSelection();
 
             // Datepickers don't work if added dynamically atm, so hide for now.
-            // KIX4OTRS-capeIT
+            // KIX4OTRS-kix
             // $('a.DatepickerIcon').hide();
-            // EO KIX4OTRS-capeIT
+            // EO KIX4OTRS-kix
 
-            // KIX4OTRS-capeIT
+            // KIX4OTRS-kix
             $.each($('#EditDialog .Fields fieldset'), function(){
                 HandleDatepickerFields($(this).attr('data-element'));
             });
-            // EO KIX4OTRS-capeIT
+            // EO KIX4OTRS-kix
 
             return false;
         });

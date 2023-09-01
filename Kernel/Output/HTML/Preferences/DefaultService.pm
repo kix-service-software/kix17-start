@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -21,8 +21,7 @@ sub new {
     bless( $Self, $Type );
 
     # get config
-    $Self->{Config}
-        = $Kernel::OM->Get('Kernel::Config')->Get("Ticket::Frontend::CustomerTicketMessage");
+    $Self->{Config} = $Kernel::OM->Get('Kernel::Config')->Get("Ticket::Frontend::CustomerTicketMessage");
 
     return $Self;
 }
@@ -45,22 +44,23 @@ sub Param {
             delete $Service{$_};
         }
     }
-    $Service{'-'} = '-';
 
     my @Params;
     push(
         @Params,
         {
             %Param,
-            Name        => $Self->{ConfigItem}->{PrefKey},
-            Data        => \%Service,
-            Translation => 0,
-            HTMLQuote   => 0,
-            SelectedID  => $ParamObject->GetParam( Param => 'UserDefaultService' )
-                || $Param{UserData}->{UserDefaultService}
+            Name         => $Self->{ConfigItem}->{PrefKey},
+            Data         => \%Service,
+            Translation  => 0,
+            HTMLQuote    => 0,
+            PossibleNone => 1,
+            Block        => 'Option',
+            Max          => 100,
+            SelectedID   => $ParamObject->GetParam( Param => $Self->{ConfigItem}->{PrefKey} )
+                || $Param{UserData}->{ $Self->{ConfigItem}->{PrefKey} }
+                || $Self->{ConfigItem}->{DataSelected}
                 || $Self->{Config}->{ServiceDefault},
-            Block => 'Option',
-            Max   => 100,
         },
     );
     return @Params;

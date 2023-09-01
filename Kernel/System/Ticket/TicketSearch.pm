@@ -1,5 +1,5 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
 # based on the original work of:
 # Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
 # --
@@ -493,7 +493,7 @@ sub TicketSearch {
         $SQLSelect = 'SELECT COUNT(DISTINCT(st.id))';
     }
     else {
-        $SQLSelect = 'SELECT DISTINCT st.id, st.tn';
+        $SQLSelect = 'SELECT st.id, st.tn';
     }
 
     my $SQLFrom = ' FROM ticket st INNER JOIN queue sq ON sq.id = st.queue_id ';
@@ -559,6 +559,25 @@ sub TicketSearch {
     # Limit the search to just one (or a list) TicketID (used by the GenericAgent
     #   to filter for events on single tickets with the job's ticket filter).
     if ( $Param{TicketID} ) {
+        if (
+            ref( $Param{TicketID} ) eq 'ARRAY'
+            && !defined( $Param{TicketID}->[0] )
+        ) {
+            if ( $Result eq 'COUNT' ) {
+                return 0;
+            }
+            # return HASH
+            elsif ( $Result eq 'HASH' ) {
+                my %EmptyHash = ();
+                return %EmptyHash;
+            }
+            # return ARRAY
+            else {
+                my @EmptyArray = ();
+                return @EmptyArray;
+            }
+        }
+
         $SQLExt .= $Self->_InConditionGet(
             TableColumn => 'st.id',
             IDRef       => ref( $Param{TicketID} ) && ref( $Param{TicketID} ) eq 'ARRAY'
@@ -1482,7 +1501,7 @@ sub TicketSearch {
         my $CompareOlderNewerDate;
         if ( $Param{ $Key . 'OlderDate' } ) {
             my $SystemTime;
-            if ( $Param{ $Key . 'OlderDate' } =~ /(\d\d\d\d)-(\d\d|\d)-(\d\d|\d) (\d\d|\d):(\d\d|\d):(\d\d|\d)/ ) {
+            if ( $Param{ $Key . 'OlderDate' } =~ /^(\d{4})-(\d{1,2})-(\d{1,2}) (\d{1,2}):(\d{1,2}):(\d{1,2})$/ ) {
                 # convert param date to system time
                 $SystemTime = $TimeObject->Date2SystemTime(
                     Year   => $1,
@@ -1519,7 +1538,7 @@ sub TicketSearch {
         # get articles created newer than xxxx-xx-xx xx:xx date
         if ( $Param{ $Key . 'NewerDate' } ) {
             my $SystemTime;
-            if ( $Param{ $Key . 'NewerDate' } =~ /(\d\d\d\d)-(\d\d|\d)-(\d\d|\d) (\d\d|\d):(\d\d|\d):(\d\d|\d)/ ) {
+            if ( $Param{ $Key . 'NewerDate' } =~ /^(\d{4})-(\d{1,2})-(\d{1,2}) (\d{1,2}):(\d{1,2}):(\d{1,2})$/ ) {
                 # convert param date to system time
                 $SystemTime = $TimeObject->Date2SystemTime(
                     Year   => $1,
@@ -1610,7 +1629,7 @@ sub TicketSearch {
 
             # check time format
             if (
-                $Param{ $Key . 'OlderDate' } !~ /\d\d\d\d-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}/
+                $Param{ $Key . 'OlderDate' } !~ /^\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}$/
             ) {
                 $Kernel::OM->Get('Kernel::System::Log')->Log(
                     Priority => 'error',
@@ -1643,7 +1662,7 @@ sub TicketSearch {
         # get tickets created/escalated newer than xxxx-xx-xx xx:xx date
         if ( $Param{ $Key . 'NewerDate' } ) {
             if (
-                $Param{ $Key . 'NewerDate' } !~ /\d\d\d\d-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}/
+                $Param{ $Key . 'NewerDate' } !~ /^\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}$/
             ) {
                 $Kernel::OM->Get('Kernel::System::Log')->Log(
                     Priority => 'error',
@@ -1711,7 +1730,7 @@ sub TicketSearch {
 
         # check time format
         if (
-            $Param{TicketChangeTimeOlderDate} !~ /\d\d\d\d-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}/
+            $Param{TicketChangeTimeOlderDate} !~ /^\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}$/
         ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
@@ -1740,7 +1759,7 @@ sub TicketSearch {
     # get tickets based on ticket history changed newer than xxxx-xx-xx xx:xx date
     if ( $Param{TicketChangeTimeNewerDate} ) {
         if (
-            $Param{TicketChangeTimeNewerDate} !~ /\d\d\d\d-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}/
+            $Param{TicketChangeTimeNewerDate} !~ /^\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}$/
         ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
@@ -1803,7 +1822,7 @@ sub TicketSearch {
 
         # check time format
         if (
-            $Param{TicketLastChangeTimeOlderDate} !~ /\d\d\d\d-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}/
+            $Param{TicketLastChangeTimeOlderDate} !~ /^\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}$/
         ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
@@ -1832,7 +1851,7 @@ sub TicketSearch {
     # get tickets changed newer than xxxx-xx-xx xx:xx date
     if ( $Param{TicketLastChangeTimeNewerDate} ) {
         if (
-            $Param{TicketLastChangeTimeNewerDate} !~ /\d\d\d\d-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}/
+            $Param{TicketLastChangeTimeNewerDate} !~ /^\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}$/
         ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
@@ -1896,7 +1915,7 @@ sub TicketSearch {
 
         # check time format
         if (
-            $Param{TicketCloseTimeOlderDate} !~ /\d\d\d\d-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}/
+            $Param{TicketCloseTimeOlderDate} !~ /^\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}$/
         ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
@@ -1936,7 +1955,7 @@ sub TicketSearch {
     # get tickets closed newer than xxxx-xx-xx xx:xx date
     if ( $Param{TicketCloseTimeNewerDate} ) {
         if (
-            $Param{TicketCloseTimeNewerDate} !~ /\d\d\d\d-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}/
+            $Param{TicketCloseTimeNewerDate} !~ /^\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}$/
         ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
@@ -2033,7 +2052,7 @@ sub TicketSearch {
 
         # check time format
         if (
-            $Param{TicketPendingTimeOlderDate} !~ /\d\d\d\d-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}/
+            $Param{TicketPendingTimeOlderDate} !~ /^\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}$/
         ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
@@ -2061,7 +2080,7 @@ sub TicketSearch {
     # get pending tickets newer than xxxx-xx-xx xx:xx date
     if ( $Param{TicketPendingTimeNewerDate} ) {
         if (
-            $Param{TicketPendingTimeNewerDate} !~ /\d\d\d\d-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}/
+            $Param{TicketPendingTimeNewerDate} !~ /^\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}$/
         ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
@@ -2178,18 +2197,12 @@ sub TicketSearch {
                     TableAlias         => $DynamicFieldJoinTables{$DynamicFieldName},
                 );
 
-                $SQLSelect .= ", $SQLOrderField ";
-                $SQLExt    .= " $SQLOrderField ";
+                $SQLExt .= " $SQLOrderField ";
             }
             elsif (
                 $SortByArray[$Count] eq 'Owner'
                 || $SortByArray[$Count] eq 'Responsible'
             ) {
-                # include first and last name in select
-                $SQLSelect
-                    .= ', ' . $SortOptions{ $SortByArray[$Count] }
-                    . ", u.first_name, u.last_name ";
-
                 # join the users table on user's id
                 $SQLFrom
                     .= ' JOIN users u '
@@ -2201,8 +2214,7 @@ sub TicketSearch {
             }
             else {
                 # regular sort
-                $SQLSelect .= ', ' . $SortOptions{ $SortByArray[$Count] };
-                $SQLExt    .= ' ' . $SortOptions{ $SortByArray[$Count] };
+                $SQLExt .= ' ' . $SortOptions{ $SortByArray[$Count] };
             }
 
             if ( $OrderByArray[$Count] eq 'Up' ) {
@@ -2670,7 +2682,7 @@ sub TicketSearchOR {
         $SQLSelect = 'SELECT COUNT(DISTINCT(st.id))';
     }
     else {
-        $SQLSelect = 'SELECT DISTINCT st.id, st.tn';
+        $SQLSelect = 'SELECT st.id, st.tn';
     }
 
     my $SQLFrom = ' FROM ticket st INNER JOIN queue sq ON sq.id = st.queue_id ';
@@ -3578,7 +3590,7 @@ sub TicketSearchOR {
         my $CompareOlderNewerDate;
         if ( $Param{ $Key . 'OlderDate' } ) {
             my $SystemTime;
-            if ( $Param{ $Key . 'OlderDate' }= ~ /(\d\d\d\d)-(\d\d|\d)-(\d\d|\d) (\d\d|\d):(\d\d|\d):(\d\d|\d)/ ) {
+            if ( $Param{ $Key . 'OlderDate' }= ~ /^(\d{4})-(\d{1,2})-(\d{1,2}) (\d{1,2}):(\d{1,2}):(\d{1,2})$/ ) {
                 # convert param date to system time
                 $SystemTime = $TimeObject->Date2SystemTime(
                     Year   => $1,
@@ -3614,7 +3626,7 @@ sub TicketSearchOR {
         # get articles created newer than xxxx-xx-xx xx:xx date
         if ( $Param{ $Key . 'NewerDate' } ) {
             my $SystemTime;
-            if ( $Param{ $Key . 'NewerDate' } =~ /(\d\d\d\d)-(\d\d|\d)-(\d\d|\d) (\d\d|\d):(\d\d|\d):(\d\d|\d)/ ) {
+            if ( $Param{ $Key . 'NewerDate' } =~ /^(\d{4})-(\d{1,2})-(\d{1,2}) (\d{1,2}):(\d{1,2}):(\d{1,2})$/ ) {
                 # convert param date to system time
                 $SystemTime = $TimeObject->Date2SystemTime(
                     Year   => $1,
@@ -3705,7 +3717,7 @@ sub TicketSearchOR {
 
             # check time format
             if (
-                $Param{ $Key . 'OlderDate' } !~ /\d\d\d\d-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}/
+                $Param{ $Key . 'OlderDate' } !~ /^\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}$/
             ) {
                 $Kernel::OM->Get('Kernel::System::Log')->Log(
                     Priority => 'error',
@@ -3739,7 +3751,7 @@ sub TicketSearchOR {
         # get tickets created/escalated newer than xxxx-xx-xx xx:xx date
         if ( $Param{ $Key . 'NewerDate' } ) {
             if (
-                $Param{ $Key . 'NewerDate' } !~ /\d\d\d\d-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}/
+                $Param{ $Key . 'NewerDate' } !~ /^\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}$/
             ) {
                 $Kernel::OM->Get('Kernel::System::Log')->Log(
                     Priority => 'error',
@@ -3808,7 +3820,7 @@ sub TicketSearchOR {
 
         # check time format
         if (
-            $Param{TicketChangeTimeOlderDate} !~ /\d\d\d\d-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}/
+            $Param{TicketChangeTimeOlderDate} !~ /^\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}$/
         ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
@@ -3837,7 +3849,7 @@ sub TicketSearchOR {
     # get tickets based on ticket history changed newer than xxxx-xx-xx xx:xx date
     if ( $Param{TicketChangeTimeNewerDate} ) {
         if (
-            $Param{TicketChangeTimeNewerDate} !~ /\d\d\d\d-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}/
+            $Param{TicketChangeTimeNewerDate} !~ /^\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}$/
         ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
@@ -3900,7 +3912,7 @@ sub TicketSearchOR {
 
         # check time format
         if (
-            $Param{TicketLastChangeTimeOlderDate} !~ /\d\d\d\d-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}/
+            $Param{TicketLastChangeTimeOlderDate} !~ /^\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}$/
         ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
@@ -3929,7 +3941,7 @@ sub TicketSearchOR {
     # get tickets changed newer than xxxx-xx-xx xx:xx date
     if ( $Param{TicketLastChangeTimeNewerDate} ) {
         if (
-            $Param{TicketLastChangeTimeNewerDate} !~ /\d\d\d\d-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}/
+            $Param{TicketLastChangeTimeNewerDate} !~ /^\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}$/
         ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
@@ -3993,7 +4005,7 @@ sub TicketSearchOR {
 
         # check time format
         if (
-            $Param{TicketCloseTimeOlderDate} !~ /\d\d\d\d-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}/
+            $Param{TicketCloseTimeOlderDate} !~ /^\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}$/
         ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
@@ -4033,7 +4045,7 @@ sub TicketSearchOR {
     # get tickets closed newer than xxxx-xx-xx xx:xx date
     if ( $Param{TicketCloseTimeNewerDate} ) {
         if (
-            $Param{TicketCloseTimeNewerDate} !~ /\d\d\d\d-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}/
+            $Param{TicketCloseTimeNewerDate} !~ /^\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}$/
         ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
@@ -4130,7 +4142,7 @@ sub TicketSearchOR {
 
         # check time format
         if (
-            $Param{TicketPendingTimeOlderDate} !~ /\d\d\d\d-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}/
+            $Param{TicketPendingTimeOlderDate} !~ /^\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}$/
         ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
@@ -4158,7 +4170,7 @@ sub TicketSearchOR {
     # get pending tickets newer than xxxx-xx-xx xx:xx date
     if ( $Param{TicketPendingTimeNewerDate} ) {
         if (
-            $Param{TicketPendingTimeNewerDate} !~ /\d\d\d\d-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}/
+            $Param{TicketPendingTimeNewerDate} !~ /^\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}$/
         ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',

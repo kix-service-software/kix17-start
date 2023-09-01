@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -314,31 +314,7 @@ sub LinkAddPre {
         }
     }
 
-    # delete old existing link if new link should be added
-    if ( $Param{TargetObject} && $Param{TargetObject} eq 'Ticket' ) {
-        my $LinkList = $Self->{LinkObject}->LinkList(
-            Object  => 'Ticket',
-            Key     => $Param{TargetKey},
-            Object2 => 'Person',
-            State   => 'Valid',
-            UserID  => 1,
-        );
-
-        for my $LinkType ( keys %{ $LinkList->{Person} } ) {
-            next
-                if !$LinkList->{Person}->{$LinkType}->{Source}->{ $Param{Key} };
-
-            my $True = $Self->{LinkObject}->LinkDelete(
-                Object1 => 'Person',
-                Key1    => $Param{Key},
-                Object2 => 'Ticket',
-                Key2    => $Param{TargetKey},
-                Type    => 'Normal',
-                UserID  => 1,
-            );
-        }
-
-    }
+    return 1 if $Param{State} eq 'Temporary';
 
     return 1;
 }

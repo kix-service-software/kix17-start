@@ -1,5 +1,5 @@
 // --
-// Modified version of the work: Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
+// Modified version of the work: Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
 // based on the original work of:
 // Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
 // --
@@ -85,10 +85,10 @@ Core.UI.Accordion = (function (TargetNS) {
      * @description
      *      This function initializes the accordion effect on the specified list.
      */
-    // KIX4OTRS-capeIT
+    // KIX4OTRS-kix
     //TargetNS.Init = function ($Element, LinkSelector, ContentSelector) {
     TargetNS.Init = function ($Element, LinkSelector, ContentSelector, ToggleSpeed) {
-    // EO KIX4OTRS-capeIT
+    // EO KIX4OTRS-kix
 
         var $LinkSelectors = $Element.find(LinkSelector);
 
@@ -97,9 +97,9 @@ Core.UI.Accordion = (function (TargetNS) {
             return false;
         }
 
-        // KIX4OTRS-capeIT
+        // KIX4OTRS-kix
         if (ToggleSpeed == null) ToggleSpeed = "slow";
-        // EO KIX4OTRS-capeIT
+        // EO KIX4OTRS-kix
 
         // Stop, if no link selector is found
         if ($LinkSelectors.length === 0) {

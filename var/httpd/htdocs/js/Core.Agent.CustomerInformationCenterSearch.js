@@ -1,5 +1,5 @@
 // --
-// Modified version of the work: Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de
+// Modified version of the work: Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
 // based on the original work of:
 // Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
 // --
@@ -44,10 +44,10 @@ Core.Agent.CustomerInformationCenterSearch = (function (TargetNS) {
      * @description
      *      Redirect to Customer ID screen.
      */
-    // KIX4OTRS-capeIT
+    // KIX4OTRS-kix
     // function Redirect(CustomerID, Event) {
     function Redirect(CustomerID, Event, CustomerKey) {
-        // EO KIX4OTRS-capeIT
+        // EO KIX4OTRS-kix
         var Session = '';
 
         Event.preventDefault();
@@ -59,10 +59,10 @@ Core.Agent.CustomerInformationCenterSearch = (function (TargetNS) {
             Session = ';' + Core.Config.Get('SessionName') + '=' + Core.Config.Get('SessionID');
         }
 
-        // KIX4OTRS-capeIT
+        // KIX4OTRS-kix
         // window.location.href = Core.Config.Get('Baselink') + 'Action=AgentCustomerInformationCenter;CustomerID=' + encodeURIComponent(CustomerID) + Session;
         window.location.href = Core.Config.Get('Baselink') + 'Action=AgentCustomerInformationCenter;' + CustomerKey + '=' + encodeURIComponent(CustomerID) + Session;
-        // EO KIX4OTRS-capeIT
+        // EO KIX4OTRS-kix
     }
 
     /**
@@ -89,20 +89,20 @@ Core.Agent.CustomerInformationCenterSearch = (function (TargetNS) {
                     $.each(Result, function () {
                         ValueData.push({
                             label: this.Label,
-                            // KIX4OTRS-capeIT
+                            // KIX4OTRS-kix
                             // value: this.Value
                             value : this.Value,
                             key   : this.Key
-                            // EO KIX4OTRS-capeIT
+                            // EO KIX4OTRS-kix
                         });
                     });
                     Response(ValueData);
                 }));
         }, function (Event, UI) {
-            // KIX4OTRS-capeIT
+            // KIX4OTRS-kix
             // Redirect(UI.item.value, Event);
             Redirect(UI.item.value, Event, UI.item.key);
-            // EO KIX4OTRS-capeIT
+            // EO KIX4OTRS-kix
         }, 'CustomerSearch');
     };
 

@@ -1,5 +1,87 @@
 # Change log of KIX
-* Copyright (C) 2006-2023 c.a.p.e. IT GmbH, https://www.cape-it.de/
+* Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
+
+# 17.21.0 (2023/09/01)
+ * (2023/09/01) - productive release
+
+# 17.21.0-RC11 (2023/08/11)
+ * (2023/08/11) - release candidate
+
+# 17.21.0-RC10 (2023/07/14)
+ * (2023/07/12) - CR: KIX17-3475 (added console commands for migration preparation) (mbauer)
+ * (2023/07/11) - Bugfix: KIX17-3468 (prevent log messages) (mbauer)
+ * (2023/07/11) - Bugfix: KIX17-3379 (fix repeated variable declaration) (mbauer)
+
+# 17.21.0-RC9 (2023/07/07)
+ * (2023/06/30) - Bugfix: KIX17-3467 (improve webservice debugger entry deletion) (mbauer)
+ * (2023/06/27) - CR: KIX17-3476 (implemented oauth2 for imaps) (fjacquemin)
+ * (2023/06/07) - Bugfix: KIX17-3455 (update ticket change time on ticket create) (mbauer)
+
+# 17.21.0-RC8 (2023/06/20)
+ * (2023/06/09) - Bugfix: KIX17-3457 (fixed incorrect display of list elements in the text module preview) (fjacquemin)
+ * (2023/06/09) - Bugfix: KIX17-3460 (fixed incorrect display of links in article body when using dark mode) (fjacquemin)
+ * (2023/06/08) - Bugfix: KIX17-3462 (use ticket value of dynamic field after acl based hiding) (mbauer)
+ * (2023/06/07) - Bugfix: KIX17-3461 (fix handling of customer ids in customer information center) (mbauer)
+ * (2023/06/06) - Bugfix: KIX17-3458 (fixed QGR handling for failed parent queues) (mbauer)
+
+# 17.21.0-RC7 (2023/05/23)
+ * (2023/05/10) - Bugfix: KIX17-3452 (fix article filter for article sender type) (mbauer)
+
+# 17.21.0-RC6 (2023/04/28)
+ * (2023/04/28) - Bugfix: KIX17-3445 (keep state after loading a template in agent ticket email outbound) (mbauer)
+ * (2023/04/28) - Bugfix: KIX17-3446 (prevent error log on permission check for deleted tickets) (mbauer)
+ * (2023/04/28) - CR: KIX17-3442 (updated CPAN modules) (mbauer)
+ * (2023/04/27) - CR: KIX17-3443 (updated javascript libaries) (fjacquemin)
+ * (2023/04/24) - CR: KIX17-3418 (update copyrights) (mbauer)
+ * (2023/04/24) - Bugfix: KIX17-3429 (TicketSearch provides empty result if empty list of TicketIDs is given) (mbauer)
+ * (2023/04/19) - Bugfix: KIX17-3437 (fixed overlapping text module title when ShowCategorie is deactivated) (fjacquemin)
+ * (2023/04/19) - Bugfix: KIX17-3439 (show article dynamic field activated in AgentTicketZoom) (mbauer)
+ * (2023/04/04) - Bugfix: KIX17-3436 (use restored config for database restore) (mbauer)
+ * (2023/03/20) - Bugfix: KIX17-3425 (fixed missing set subaction to send new password) (fjacquemin)
+
+# 17.21.0-RC5 (2023/03/31)
+ * (2023/03/30) - Bugfix: KIX17-3434 (prevent loop on dynamic field value delete) (mbauer)
+ * (2023/03/27) - Bugfix: KIX17-3430 (do not block ForceOwnerResetOnMove by RequiredLock) (mbauer)
+ * (2023/03/22) - Bugfix: KIX17-3426 (handle system monitoring emails without body) (mbauer)
+ * (2023/03/21) - Bugfix: KIX17-3423 (fixed incomplete subject prepare if RecipientSubject is set WithOutTicketNumber) (fjacquemin)
+
+# 17.21.0-RC4 (2023/03/07)
+ * (2023/03/07) - Bugfix: KIX17-3416 (allow possible none for queue, service and type preferences) (mbauer)
+ * (2023/03/03) - Bugfix: KIX17-3392 (fixed missing semicolon in backup script) (mbauer)
+ * (2023/03/02) - Bugfix: KIX17-3413 (prevend unnecessary expansion of ISA for layout object) (mbauer)
+ * (2023/02/20) - Bugfix: KIX17-416 (fix preparation of AgentListOptionJSON for invalid parent queues) (mbauer)
+ * (2023/02/17) - Bugfix: KIX17-3403 (remove duplicates from customer ids list) (mbauer)
+
+# 17.21.0-RC3 (2023/02/17)
+ * (2023/02/16) - Bugfix: KIX17-3404 (added check of ignoring autocomplete dynamic fields before selection build) (fjacquemin)
+ * (2023/02/16) - Bugfix: KIX17-416 (do not fill queue without user selection) (mbauer)
+ * (2023/02/16) - Bugfix: KIX17-3402 (prevent error log when owner is not given) (mbauer)
+ * (2023/02/13) - Bugfix: KIX17-3351 (more stringent date validation for ticket search) (mbauer)
+ * (2023/02/10) - Bugfix: KIX17-3400 (preference module use configured pref keys) (mbauer)
+ * (2023/02/09) - Bugfix: KIX17-3399 (accelerate ToAscii for extensive html) (mbauer)
+ * (2023/02/08) - Bugfix: KIX17-3354 (retry oauth authentification when token was invalid) (mbauer)
+ * (2023/02/08) - Bugfix: KIX17-3395 (use Net::SSLGlue only if really needed) (mbauer)
+ * (2023/02/06) - Bugfix: KIX17-2360 (fixed missing initial configured state for acl check) (fjacquemin)
+ * (2023/02/03) - Bugfix: KIX17-3394 (fixed set incorrect customer ID when switching contact in ticket creation) (fjacquemin)
+ * (2023/02/02) - Bugfix: KIX17-3389 (fixed missing article table loading when using ZoomExpandSort "normal") (fjacquemin)
+ * (2023/02/01) - Bugfix: KIX17-3392 (fixed error of PROCESS by using mysql (>=5.7.31) backup) (fjacquemin)
+ * (2023/02/01) - Bugfix: KIX17-3384 (fixed missing handling of multiple customer support on event DynamicFieldFromCustomerUser) (fjacquemin)
+ * (2023/02/01) - Bugfix: KIX17-3383 (removed skipping of config item attribute dummy on import) (fjacquemin)
+ * (2023/01/27) - Bugfix: KIX17-3348 (added deleting of merged ticket on delete parent ticket) (fjacquemin)
+
+# 17.21.0-RC2 (2023/01/30)
+ * (2023/01/24) - Bugfix: KIX17-3375 (fixed incorrect reload after popup close) (fjacquemin)
+ * (2023/01/20) - Bugfix: KIX17-3379 (fix error message on logout page reload) (mbauer)
+ * (2023/01/20) - CR: KIX17-3341 (removed DISTINCT from ticket search sql and cleaned up select) (mbauer)
+ * (2022/09/26) - PR: KIX17-3382 (Optimizing LinkObject Person) (mbauer)
+
+# 17.21.0-RC1 (2023/01/20)
+ * (2023/01/20) - Bugfix: KIX17-3376 (fix output of dynamic field values in link tables) (mbauer)
+ * (2023/01/18) - Bugfix: KIX17-3377 (prevent sql syntax error for faq sidebar search) (mbauer)
+ * (2023/01/11) - Bugfix: KIX17-3344 (fixed postgres invalid byte sequence for encoding) (fjacquemin)
+ * (2023/01/06) - CR: KIX17-3366 (cache not existing users for ldap customer user backend) (mbauer)
+ * (2023/01/05) - Bugfix: KIX17-3364 (prevent queue lookup without data for TicketUpdate operation) (mbauer)
+ * (2023/01/02) - Bugfix: KIX17-3355 (ignore values of hidden dynamic fields) (mbauer)
 
 # 17.20.0 (2023/01/18)
  * (2023/01/18) - productive release
