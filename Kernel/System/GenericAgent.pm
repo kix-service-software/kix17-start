@@ -1190,7 +1190,7 @@ sub _JobRunTicket {
     }
 
     # set new service
-    if ( grep( { $_ =~ /ServiceID|Service/ } @{$Param{Config}->{Delete}} ) ) {
+    if ( grep( { $_ =~ /^(?:ServiceID|Service)$/ } @{$Param{Config}->{Delete}} ) ) {
         if ( $Self->{NoticeSTDOUT} ) {
             print "  - delete service id from Ticket $Ticket\n";
         }
@@ -1224,7 +1224,7 @@ sub _JobRunTicket {
     }
 
     # set new sla
-    if ( grep( { $_ =~ /SLAID|SLA/ } @{$Param{Config}->{Delete}} ) ) {
+    if ( grep( { $_ =~ /^(?:SLAID|SLA)$/ } @{$Param{Config}->{Delete}} ) ) {
         if ( $Self->{NoticeSTDOUT} ) {
             print "  - delete sla from Ticket $Ticket\n";
         }
