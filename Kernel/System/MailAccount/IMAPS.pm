@@ -57,7 +57,7 @@ sub Connect {
     # authentication
     my $Auth = $IMAPObject->login( $Param{Login}, $Param{Password} );
     if ( !defined $Auth ) {
-        $IMAPObject->quit();
+        $IMAPObject->quit(1);
         return (
             Successful => 0,
             Message    => "$Type: Auth for user $Param{Login}/$Param{Host} failed!"

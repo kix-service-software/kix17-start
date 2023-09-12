@@ -65,7 +65,7 @@ sub Connect {
     # authentication
     my $Auth = $IMAPObject->login( $Param{Login}, $Param{Password} );
     if ( !defined $Auth ) {
-        $IMAPObject->quit();
+        $IMAPObject->quit(1);
         return (
             Successful => 0,
             Message    => "$Type: Auth for user $Param{Login}/$Param{Host} failed!"
@@ -262,7 +262,7 @@ sub _Fetch {
         );
     }
     $IMAPObject->expunge_mailbox($IMAPFolder);
-    $IMAPObject->quit();
+    $IMAPObject->quit(1);
     if ($CMD) {
         print "$AuthType: Connection to $Param{Host} closed.\n\n";
     }
