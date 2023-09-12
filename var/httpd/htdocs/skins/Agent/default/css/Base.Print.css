@@ -185,4 +185,7 @@
     #Messages {
         padding: 0;
     }
+    .DontPrint {
+        display: none;
+    }
 }
