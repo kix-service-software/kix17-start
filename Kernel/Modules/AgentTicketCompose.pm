@@ -3,9 +3,12 @@
 # based on the original work of:
 # Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
 # --
-# This software comes with ABSOLUTELY NO WARRANTY. For details, see
-# the enclosed file LICENSE for license information (AGPL). If you
-# did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
+# This software comes with ABSOLUTELY NO WARRANTY. This program is
+# licensed under the AGPL-3.0 with patches licensed under the GPL-3.0.
+# For details, see the enclosed files LICENSE (AGPL) and
+# LICENSE-GPL3 (GPL3) for license information. If you did not receive
+# this files, see https://www.gnu.org/licenses/agpl.txt (APGL) and
+# https://www.gnu.org/licenses/gpl-3.0.txt (GPL3).
 # --
 
 package Kernel::Modules::AgentTicketCompose;
@@ -160,10 +163,16 @@ sub Run {
     # get params
     my %GetParam;
     for (
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2023 OTRS AG, https://otrs.com/ ###
+#        qw(
+#        From To Cc Bcc Subject Body InReplyTo References ResponseID ReplyArticleID StateID
+#        ArticleID ArticleTypeID TimeUnits Year Month Day Hour Minute FormID ReplyAll
+#        )
         qw(
-        From To Cc Bcc Subject Body InReplyTo References ResponseID ReplyArticleID StateID
+        To Cc Bcc Subject Body InReplyTo References ResponseID ReplyArticleID StateID
         ArticleID ArticleTypeID TimeUnits Year Month Day Hour Minute FormID ReplyAll
         )
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2023 OTRS AG, https://otrs.com/ ###
     ) {
         $GetParam{$_} = $ParamObject->GetParam( Param => $_ );
     }
@@ -857,6 +866,13 @@ sub Run {
             );
         }
 
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2023 OTRS AG, https://otrs.com/ ###
+        my $From = $Kernel::OM->Get('Kernel::System::TemplateGenerator')->Sender(
+            QueueID => $Ticket{QueueID},
+            UserID  => $Self->{UserID},
+        );
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2023 OTRS AG, https://otrs.com/ ###
+
         # send email
         my $ArticleID = $TicketObject->ArticleSend(
             ArticleTypeID  => $ArticleTypeID,
@@ -864,7 +880,10 @@ sub Run {
             TicketID       => $Self->{TicketID},
             HistoryType    => 'SendAnswer',
             HistoryComment => "\%\%$Recipients",
-            From           => $GetParam{From},
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2023 OTRS AG, https://otrs.com/ ###
+#            From           => $GetParam{From},
+            From           => $From,
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2023 OTRS AG, https://otrs.com/ ###
             To             => $GetParam{To},
             Cc             => $GetParam{Cc},
             Bcc            => $GetParam{Bcc},
