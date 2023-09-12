@@ -1,6 +1,17 @@
 # Change log of KIX
 * Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
 
+# 17.22.0-RC1 (2023/09/12)
+ * (2023/09/08) - Bugfix: KIX17-3502 (improved handling of uploaded inline images) (mbauer)
+ * (2023/09/08) - Bugfix: KIX17-3501 (improved handling for outgoing emails) (mbauer)
+ * (2023/09/06) - Bugfix: KIX17-3482 (adds css class "DontPrint" to popup close link to remove it on printing) (fjacquemin)
+ * (2023/09/05) - Bugfix: KIX17-3488 (fix attribute handling for generic agent attribute delete) (mbauer)
+ * (2023/09/05) - Bugfix: KIX17-3485 (do not wait for response when quitting imap connection) (mbauer)
+ * (2023/09/04) - Bugfix: KIX17-3496 (check for cache object in customer user ldap backend) (mbauer)
+ * (2023/08/24) - CR: KIX17-3483 (optimize handling of itsm config item reference dynamic field) (mbauer)
+ * (2023/08/14) - CR: KIX17-3491 (mail account module POP3S_OAuth2) (mbauer)
+ * (2023/08/02) - Bugfix: KIX17-3486 (more stringent ContentType validation) (mbauer)
+
 # 17.21.0 (2023/09/01)
  * (2023/09/01) - productive release
 
