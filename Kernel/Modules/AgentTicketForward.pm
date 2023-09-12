@@ -3,9 +3,12 @@
 # based on the original work of:
 # Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
 # --
-# This software comes with ABSOLUTELY NO WARRANTY. For details, see
-# the enclosed file LICENSE for license information (AGPL). If you
-# did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
+# This software comes with ABSOLUTELY NO WARRANTY. This program is
+# licensed under the AGPL-3.0 with patches licensed under the GPL-3.0.
+# For details, see the enclosed files LICENSE (AGPL) and
+# LICENSE-GPL3 (GPL3) for license information. If you did not receive
+# this files, see https://www.gnu.org/licenses/agpl.txt (APGL) and
+# https://www.gnu.org/licenses/gpl-3.0.txt (GPL3).
 # --
 
 package Kernel::Modules::AgentTicketForward;
@@ -33,8 +36,12 @@ sub new {
 
     # get params
     for (
-        qw(From To Cc Bcc Subject Body InReplyTo References ComposeStateID ArticleTypeID
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2023 OTRS AG, https://otrs.com/ ###
+#        qw(From To Cc Bcc Subject Body InReplyTo References ComposeStateID ArticleTypeID
+#        ArticleID TimeUnits Year Month Day Hour Minute FormID)
+        qw(To Cc Bcc Subject Body InReplyTo References ComposeStateID ArticleTypeID
         ArticleID TimeUnits Year Month Day Hour Minute FormID)
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2023 OTRS AG, https://otrs.com/ ###
     ) {
         my $Value = $ParamObject->GetParam( Param => $_ );
         if ( defined $Value ) {
@@ -1304,13 +1311,23 @@ sub SendEmail {
         );
     }
 
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2023 OTRS AG, https://otrs.com/ ###
+    my $From = $Kernel::OM->Get('Kernel::System::TemplateGenerator')->Sender(
+        QueueID => $Ticket{QueueID},
+        UserID  => $Self->{UserID},
+    );
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2023 OTRS AG, https://otrs.com/ ###
+
     my $ArticleID = $TicketObject->ArticleSend(
         ArticleTypeID  => $ArticleTypeID,
         SenderType     => 'agent',
         TicketID       => $Self->{TicketID},
         HistoryType    => 'Forward',
         HistoryComment => "\%\%$To",
-        From           => $GetParam{From},
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2023 OTRS AG, https://otrs.com/ ###
+#        From           => $GetParam{From},
+        From           => $From,
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2023 OTRS AG, https://otrs.com/ ###
         To             => $GetParam{To},
         Cc             => $GetParam{Cc},
         Bcc            => $GetParam{Bcc},

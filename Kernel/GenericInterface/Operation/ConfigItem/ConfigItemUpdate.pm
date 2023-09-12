@@ -631,6 +631,13 @@ sub _CheckAttachment {
     # check Article->ContentType
     if ( $Attachment->{ContentType} ) {
 
+        if ( $Attachment->{ContentType} =~ m/\R/ ) {
+            return {
+                ErrorCode    => "$Self->{OperationName}.InvalidParameter",
+                ErrorMessage => "$Self->{OperationName}: Attachment->ContentType is invalid! Line breaks are not allowed!",
+            };
+        }
+
         $Attachment->{ContentType} = lc $Attachment->{ContentType};
 
         # check Charset part
@@ -648,7 +655,7 @@ sub _CheckAttachment {
         ) {
             return {
                 ErrorCode    => "$Self->{OperationName}.InvalidParameter",
-                ErrorMessage => "$Self->{OperationName}: Attachment->ContentType is invalid!",
+                ErrorMessage => "$Self->{OperationName}: Attachment->ContentType is invalid! Invalid Charset!",
             };
         }
 
@@ -662,7 +669,7 @@ sub _CheckAttachment {
         if ( !$Self->ValidateMimeType( MimeType => $MimeType ) ) {
             return {
                 ErrorCode    => "$Self->{OperationName}.InvalidParameter",
-                ErrorMessage => "$Self->{OperationName}: Attachment->ContentType is invalid!",
+                ErrorMessage => "$Self->{OperationName}: Attachment->ContentType is invalid! Invalid MimeType!",
             };
         }
     }

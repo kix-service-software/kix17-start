@@ -3,9 +3,12 @@
 # based on the original work of:
 # Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
 # --
-# This software comes with ABSOLUTELY NO WARRANTY. For details, see
-# the enclosed file LICENSE for license information (AGPL). If you
-# did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
+# This software comes with ABSOLUTELY NO WARRANTY. This program is
+# licensed under the AGPL-3.0 with patches licensed under the GPL-3.0.
+# For details, see the enclosed files LICENSE (AGPL) and
+# LICENSE-GPL3 (GPL3) for license information. If you did not receive
+# this files, see https://www.gnu.org/licenses/agpl.txt (APGL) and
+# https://www.gnu.org/licenses/gpl-3.0.txt (GPL3).
 # --
 
 package Kernel::Modules::AgentTicketBounce;
@@ -329,7 +332,10 @@ END
         $LayoutObject->ChallengeTokenCheck();
 
         # get params
-        for my $Parameter (qw(From BounceTo To Subject Body InformSender BounceStateID)) {
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2023 OTRS AG, https://otrs.com/ ###
+#        for my $Parameter (qw(From BounceTo To Subject Body InformSender BounceStateID)) {
+        for my $Parameter (qw(BounceTo To Subject Body InformSender BounceStateID)) {
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2023 OTRS AG, https://otrs.com/ ###
             $Param{$Parameter}
                 = $Kernel::OM->Get('Kernel::System::Web::Request')->GetParam( Param => $Parameter ) || '';
         }
@@ -460,12 +466,22 @@ END
             return $Output;
         }
 
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2023 OTRS AG, https://otrs.com/ ###
+        my $From = $Kernel::OM->Get('Kernel::System::TemplateGenerator')->Sender(
+            QueueID => $Ticket{QueueID},
+            UserID  => $Self->{UserID},
+        );
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2023 OTRS AG, https://otrs.com/ ###
+
         my $Bounce = $TicketObject->ArticleBounce(
             TicketID    => $Self->{TicketID},
             ArticleID   => $Self->{ArticleID},
             UserID      => $Self->{UserID},
             To          => $Param{BounceTo},
-            From        => $Param{From},
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2023 OTRS AG, https://otrs.com/ ###
+#            From        => $Param{From},
+            From        => $From,
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2023 OTRS AG, https://otrs.com/ ###
             HistoryType => 'Bounce',
         );
 
@@ -502,7 +518,10 @@ END
                 TicketID       => $Self->{TicketID},
                 HistoryType    => 'Bounce',
                 HistoryComment => "Bounced info to '$Param{To}'.",
-                From           => $Param{From},
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2023 OTRS AG, https://otrs.com/ ###
+#                From           => $Param{From},
+                From           => $From,
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2023 OTRS AG, https://otrs.com/ ###
                 Email          => $Param{Email},
                 To             => $Param{To},
                 Subject        => $Param{Subject},

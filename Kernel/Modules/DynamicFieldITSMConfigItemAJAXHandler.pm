@@ -520,6 +520,15 @@ sub Run {
 
             if ($ConstrictionsCheck) {
 
+                my %EntryClassIDs = ();
+                for my $ConfigItemID ( @Entries ) {
+                    my $ConfigItem = $Self->{ITSMConfigItemObject}->ConfigItemGet(
+                        ConfigItemID => $ConfigItemID
+                    );
+
+                    $EntryClassIDs{ $ConfigItem->{ClassID} } = 1;
+                }
+
                 my @ITSMConfigItemClasses = ();
                 if(
                     defined( $DynamicFieldConfig->{Config}->{ITSMConfigItemClasses} )
@@ -527,6 +536,8 @@ sub Run {
                 ) {
                     CLASSID:
                     for my $ClassID ( @{$DynamicFieldConfig->{Config}->{ITSMConfigItemClasses}} ) {
+                        next CLASSID if ( !$EntryClassIDs{ $ClassID } );
+
                         # check read permission for config item class
                         if (
                             IsArrayRefWithData($PermissionCheck)
@@ -550,6 +561,8 @@ sub Run {
                     );
                     CLASSID:
                     for my $ClassID ( keys ( %{$ClassRef} ) ) {
+                        next CLASSID if ( !$EntryClassIDs{ $ClassID } );
+
                         # check read permission for config item class
                         if (
                             IsArrayRefWithData($PermissionCheck)

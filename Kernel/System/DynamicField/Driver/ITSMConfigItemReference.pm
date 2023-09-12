@@ -757,13 +757,12 @@ sub EditFieldValueGet {
     ) {
         my @Data = $Param{ParamObject}->GetArray( Param => $FieldName );
 
+        my @Values;
         # delete empty values (can happen if the user has selected the "-" entry)
-        my $Index = 0;
         ITEM:
         for my $Item ( sort @Data ) {
 
             if ( !$Item ) {
-                splice( @Data, $Index, 1 );
                 next ITEM;
             }
 
@@ -893,6 +892,12 @@ sub EditFieldValueGet {
                     }
 
                     if ($ConstrictionsCheck) {
+                        my $ConfigItem = $Self->{ITSMConfigItemObject}->ConfigItemGet(
+                            ConfigItemID => $Item
+                        );
+                        my %EntryClassIDs = (
+                            $ConfigItem->{ClassID} => 1
+                        );
 
                         my @ITSMConfigItemClasses = ();
                         if(
@@ -901,6 +906,8 @@ sub EditFieldValueGet {
                         ) {
                             CLASSID:
                             for my $ClassID ( @{$Param{DynamicFieldConfig}->{Config}->{ITSMConfigItemClasses}} ) {
+                                next CLASSID if ( !$EntryClassIDs{ $ClassID } );
+
                                 # check read permission for config item class
                                 if (
                                     IsArrayRefWithData($PermissionCheck)
@@ -924,6 +931,8 @@ sub EditFieldValueGet {
                             );
                             CLASSID:
                             for my $ClassID ( keys ( %{$ClassRef} ) ) {
+                                next CLASSID if ( !$EntryClassIDs{ $ClassID } );
+
                                 # check read permission for config item class
                                 if (
                                     IsArrayRefWithData($PermissionCheck)
@@ -977,7 +986,6 @@ sub EditFieldValueGet {
                     ref( $PossibleValues ) ne 'ARRAY'
                     || !grep { /^$Item$/ } @{$PossibleValues}
                 ) {
-                    splice( @Data, $Index, 1 );
                     next ITEM;
                 }
                 else {
@@ -992,16 +1000,15 @@ sub EditFieldValueGet {
                             ItemID   => $Item,
                         );
                         if ( !$HasAccess ) {
-                            splice( @Data, $Index, 1 );
                             next ITEM;
                         }
                     }
                 }
             }
-            $Index++;
+            push( @Values, $Item );
         }
 
-        $Value = \@Data;
+        $Value = \@Values;
     }
 
     if ( defined $Param{ReturnTemplateStructure} && $Param{ReturnTemplateStructure} eq "1" ) {

@@ -88,6 +88,24 @@ sub Run {
                     NoCache     => 1,
                 );
             }
+
+            if ( $Attachment->{ContentType} =~ /xml/i ) {
+
+                # Strip out file content first, escaping script tag.
+                my %SafetyCheckResult = $Kernel::OM->Get('Kernel::System::HTMLUtils')->Safety(
+                    String       => $Attachment->{Content},
+                    NoApplet     => 1,
+                    NoObject     => 1,
+                    NoEmbed      => 1,
+                    NoSVG        => 0,
+                    NoIntSrcLoad => 0,
+                    NoExtSrcLoad => 0,
+                    NoJavaScript => 1,
+                    Debug        => $Self->{Debug},
+                );
+
+                $Attachment->{Content} = $SafetyCheckResult{String};
+            }
 ### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2023 OTRS AG, https://otrs.com/ ###
             return $LayoutObject->Attachment(
                 Type => 'inline',
@@ -135,6 +153,26 @@ sub Run {
             NoCache     => 1,
         );
     }
+
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2023 OTRS AG, https://otrs.com/ ###
+    if ( $File{ContentType} =~ /xml/i ) {
+
+        # Strip out file content first, escaping script tag.
+        my %SafetyCheckResult = $Kernel::OM->Get('Kernel::System::HTMLUtils')->Safety(
+            String       => $File{Content},
+            NoApplet     => 1,
+            NoObject     => 1,
+            NoEmbed      => 1,
+            NoSVG        => 0,
+            NoIntSrcLoad => 0,
+            NoExtSrcLoad => 0,
+            NoJavaScript => 1,
+            Debug        => $Self->{Debug},
+        );
+
+        $File{Content} = $SafetyCheckResult{String};
+    }
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2023 OTRS AG, https://otrs.com/ ###
 
     # check if name already exists
     my @AttachmentMeta = $UploadCacheObject->FormIDGetAllFilesMeta(
