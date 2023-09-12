@@ -177,3 +177,9 @@
     }
 
 }/* end @media */
+
+@media print {
+    .DontPrint {
+        display: none;
+    }
+}
