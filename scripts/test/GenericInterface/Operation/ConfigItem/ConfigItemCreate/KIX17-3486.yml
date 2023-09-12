@@ -1,0 +1,66 @@
+---
+0001:
+  StepName: 'Check failed validation for attachment ContentType with line break'
+  InputData:
+    ConfigItem:
+      Class: 'Computer'
+      Name: 'Test'
+      DeplState: 'Production'
+      InciState: 'Operational'
+      CIXMLData:
+        Vendor: 'Vendor'
+      Attachment:
+        Content: 'VGVzdA=='
+        Filename: 'Test.txt'
+        ContentType: |-
+          text/plain; charset="utf8"
+          Host: www.kixdesk.com
+  CheckValue:
+    Success: 1
+    ErrorMessage: 'ConfigItemCreate.InvalidParameter: ConfigItemCreate: Attachment->ContentType is invalid! Line breaks are not allowed!'
+    Data:
+      Error:
+        ErrorCode: 'ConfigItemCreate.InvalidParameter'
+        ErrorMessage: 'ConfigItemCreate: Attachment->ContentType is invalid! Line breaks are not allowed!'
+0002:
+  StepName: 'Check failed validation for attachment ContentType invalid charset'
+  InputData:
+    ConfigItem:
+      Class: 'Computer'
+      Name: 'Test'
+      DeplState: 'Production'
+      InciState: 'Operational'
+      CIXMLData:
+        Vendor: 'Vendor'
+      Attachment:
+        Content: 'VGVzdA=='
+        Filename: 'Test.txt'
+        ContentType: 'text/plain; charset="utf08"'
+  CheckValue:
+    Success: 1
+    ErrorMessage: 'ConfigItemCreate.InvalidParameter: ConfigItemCreate: Attachment->ContentType is invalid! Invalid Charset!'
+    Data:
+      Error:
+        ErrorCode: 'ConfigItemCreate.InvalidParameter'
+        ErrorMessage: 'ConfigItemCreate: Attachment->ContentType is invalid! Invalid Charset!'
+0003:
+  StepName: 'Check failed validation for attachment ContentType with invalid mimetype'
+  InputData:
+    ConfigItem:
+      Class: 'Computer'
+      Name: 'Test'
+      DeplState: 'Production'
+      InciState: 'Operational'
+      CIXMLData:
+        Vendor: 'Vendor'
+      Attachment:
+        Content: 'VGVzdA=='
+        Filename: 'Test.txt'
+        ContentType: 'text /plain; charset="utf8"'
+  CheckValue:
+    Success: 1
+    ErrorMessage: 'ConfigItemCreate.InvalidParameter: ConfigItemCreate: Attachment->ContentType is invalid! Invalid MimeType!'
+    Data:
+      Error:
+        ErrorCode: 'ConfigItemCreate.InvalidParameter'
+        ErrorMessage: 'ConfigItemCreate: Attachment->ContentType is invalid! Invalid MimeType!'
