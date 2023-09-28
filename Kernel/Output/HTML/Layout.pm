@@ -82,7 +82,7 @@ sub new {
     delete $Self->{BlockData};
 
     # empty action if not defined
-    $Self->{Action} = '' if !defined $Self->{Action};
+    $Self->{Action} = q{} if !defined $Self->{Action};
 
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
@@ -99,13 +99,13 @@ sub new {
     }
     else {
         $Self->{UserTimeObject} = $Self->{TimeObject};
-        $Self->{UserTimeZone}   = '';
+        $Self->{UserTimeZone}   = q{};
     }
 
     # Determine the language to use based on the browser setting, if there
     #   is none yet.
     if ( !$Self->{UserLanguage} ) {
-        my @BrowserLanguages = split /\s*,\s*/, $Self->{Lang} || $ENV{HTTP_ACCEPT_LANGUAGE} || '';
+        my @BrowserLanguages = split( /\s*,\s*/, $Self->{Lang} || $ENV{HTTP_ACCEPT_LANGUAGE} || q{});
         my %Data = %{ $ConfigObject->Get('DefaultUsedLanguages') };
         LANGUAGE:
         for my $BrowserLang (@BrowserLanguages) {
@@ -148,12 +148,12 @@ sub new {
     # set charset if there is no charset given
     $Self->{UserCharset} = 'utf-8';
     $Self->{Charset}     = $Self->{UserCharset};                            # just for compat.
-    $Self->{SessionID}   = $Param{SessionID} || '';
+    $Self->{SessionID}   = $Param{SessionID} || q{};
     $Self->{SessionName} = $Param{SessionName} || 'SessionID';
     $Self->{CGIHandle}   = $ENV{SCRIPT_NAME} || 'No-$ENV{"SCRIPT_NAME"}';
 
     # baselink
-    $Self->{Baselink} = $Self->{CGIHandle} . '?';
+    $Self->{Baselink} = $Self->{CGIHandle} . q{?};
     $Self->{Time}     = $Self->{LanguageObject}->Time(
         Action => 'GET',
         Format => 'DateFormat',
@@ -206,13 +206,13 @@ EOF
     # check browser
     $Self->{Browser}        = 'Unknown';
     $Self->{BrowserVersion} = 0;
-    $Self->{Platform}       = '';
+    $Self->{Platform}       = q{};
     $Self->{IsMobile}       = 0;
 
     $Self->{BrowserJavaScriptSupport} = 1;
     $Self->{BrowserRichText}          = 1;
 
-    my $HttpUserAgent = ( defined $ENV{HTTP_USER_AGENT} ? lc $ENV{HTTP_USER_AGENT} : '' );
+    my $HttpUserAgent = ( defined $ENV{HTTP_USER_AGENT} ? lc $ENV{HTTP_USER_AGENT} : q{} );
 
     if ( !$HttpUserAgent ) {
         $Self->{Browser} = 'Unknown - no $ENV{"HTTP_USER_AGENT"}';
@@ -383,7 +383,7 @@ EOF
 
             # do not use empty regexp or theme directories
             next THEME if !$RegExp;
-            next THEME if $RegExp eq '';
+            next THEME if $RegExp eq q{};
             next THEME if !$DefaultThemeHostBased->{$RegExp};
 
             # check if regexp is matching
@@ -407,7 +407,7 @@ EOF
 
     my $ThemePath   = $Self->{TemplateDir};
     my $HomeDir     = $ConfigObject->Get('Home');
-    my $ThemeKIXDir = '';
+    my $ThemeKIXDir = q{};
     $ThemePath =~ s/$HomeDir//g;
 
     for my $ThemeDir (@INC) {
@@ -578,7 +578,7 @@ sub JSONEncode {
     my $JSON = $Kernel::OM->Get('Kernel::System::JSON')->Encode(
         Data => $Param{Data},
         %Options
-    ) || '""';
+    ) || q{""};
 
     # remove trailing and trailing double quotes if requested
     if ( $Param{NoQuotes} ) {
@@ -612,7 +612,7 @@ sub Redirect {
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
     # add cookies if exists
-    my $Cookies = '';
+    my $Cookies = q{};
     if ( $Self->{SetCookies} && $ConfigObject->Get('SessionUseCookie') ) {
         for ( sort keys %{ $Self->{SetCookies} } ) {
             $Cookies .= "Set-Cookie: $Self->{SetCookies}->{$_}\n";
@@ -669,7 +669,7 @@ sub Redirect {
     if ( $ENV{SERVER_SOFTWARE} =~ /^microsoft\-iis\/\d+/i ) {
         my $Host = $ENV{HTTP_HOST} || $ConfigObject->Get('FQDN');
         my $HttpType = $ConfigObject->Get('HttpType');
-        $Param{Redirect} = $HttpType . '://' . $Host . $Param{Redirect};
+        $Param{Redirect} = $HttpType . q{://} . $Host . $Param{Redirect};
     }
     my $Output = $Cookies
         . $Self->Output(
@@ -687,7 +687,7 @@ sub Redirect {
         {
             my $Start  = $1;
             my $Target = $2;
-            my $End = '';
+            my $End = q{};
             if ($Target =~ /^(.+?)#(|.+?)$/) {
                 $Target = $1;
                 $End = "#$2";
@@ -723,7 +723,7 @@ sub Login {
 
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
-    my $Output = '';
+    my $Output = q{};
     if ( $ConfigObject->Get('SessionUseCookie') ) {
 
         # always set a cookie, so that at the time the user submits
@@ -769,7 +769,7 @@ sub Login {
         next if !defined $ConfigObject->Get('Agent' . $Key );
 
         my %Logo = %{ $ConfigObject->Get('Agent' .  $Key) };
-        my $CSS  = '';
+        my $CSS  = q{};
 
         for my $CSSStatement ( sort keys %Logo ) {
             if ( $CSSStatement eq 'URL' ) {
@@ -840,18 +840,18 @@ sub Login {
             Data => \%Param,
         );
 
-        my $LoginHeader = '';
+        my $LoginHeader = q{};
         if ( $ConfigObject->Get('AgentLoginHeader') ) {
-            $LoginHeader = $ConfigObject->Get('ProductName') || '';
+            $LoginHeader = $ConfigObject->Get('ProductName') || q{};
 
             if ( $ConfigObject->Get('AgentPrefixProductName') ) {
                 $LoginHeader = $Self->{LanguageObject}->Translate($ConfigObject->Get('AgentPrefixProductName'))
-                    . ' '
+                    . q{ }
                     . $LoginHeader;
             }
 
             if ( $ConfigObject->Get('AgentSuffixProductName') ) {
-                $LoginHeader .= ' '
+                $LoginHeader .= q{ }
                     . $Self->{LanguageObject}->Translate($ConfigObject->Get('AgentSuffixProductName'));
             }
 
@@ -876,7 +876,7 @@ sub Login {
 
         # show 2 factor password input if we have at least one backend enabled
         COUNT:
-        for my $Count ( '', 1 .. 10 ) {
+        for my $Count ( q{}, 1 .. 10 ) {
             next COUNT if !$ConfigObject->Get("AuthTwoFactorModule$Count");
 
             # if no empty shared secrets are allowed, input is mandatory
@@ -956,7 +956,7 @@ sub ChallengeTokenCheck {
     return 1 if !$Kernel::OM->Get('Kernel::Config')->Get('SessionCSRFProtection');
 
     # get challenge token and check it
-    my $ChallengeToken = $Kernel::OM->Get('Kernel::System::Web::Request')->GetParam( Param => 'ChallengeToken' ) || '';
+    my $ChallengeToken = $Kernel::OM->Get('Kernel::System::Web::Request')->GetParam( Param => 'ChallengeToken' ) || q{};
 
     # check regular ChallengeToken
     return 1 if $ChallengeToken eq $Self->{UserChallengeToken};
@@ -1031,7 +1031,7 @@ sub FatalDie {
         $Param{$Backend} = $Kernel::OM->Get('Kernel::System::Log')->GetLogEntry(
             Type => 'Error',
             What => $_
-        ) || '';
+        ) || q{};
         $Param{$Backend} = $Self->Ascii2Html(
             Text           => $Param{$Backend},
             HTMLResultMode => 1,
@@ -1090,19 +1090,19 @@ sub Error {
         $Param{$Backend} = $Kernel::OM->Get('Kernel::System::Log')->GetLogEntry(
             Type => 'Error',
             What => $_
-        ) || '';
+        ) || q{};
     }
     if ( !$Param{BackendMessage} && !$Param{BackendTraceback} ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
-            Message  => $Param{Message} || '?',
+            Message  => $Param{Message} || q{?},
         );
         for (qw(Message Traceback)) {
             my $Backend = 'Backend' . $_;
             $Param{$Backend} = $Kernel::OM->Get('Kernel::System::Log')->GetLogEntry(
                 Type => 'Error',
                 What => $_
-            ) || '';
+            ) || q{};
         }
     }
 
@@ -1135,7 +1135,7 @@ sub Warning {
         || $Kernel::OM->Get('Kernel::System::Log')->GetLogEntry(
         Type => 'Error',
         What => 'Message',
-        ) || '';
+        ) || q{};
 
     if ( !$Param{Message} ) {
         $Param{Message} = $Param{BackendMessage};
@@ -1195,12 +1195,12 @@ sub Notify {
             || $Kernel::OM->Get('Kernel::System::Log')->GetLogEntry(
             Type => 'Error',
             What => 'Message',
-            ) || '';
+            ) || q{};
 
         $Param{Info} = $Param{BackendMessage};
 
         # return if we have nothing to show
-        return '' if !$Param{Info};
+        return q{} if !$Param{Info};
     }
 
     my $BoxClass = 'Notice';
@@ -1222,7 +1222,7 @@ sub Notify {
         my ( $CallerPackage, $CallerFilename, $CallerLine ) = caller;
         my %UserPreferences = $Kernel::OM->Get('Kernel::System::User')->GetPreferences( UserID => $Self->{UserID} );
 
-        my $CallerInfo = ( $CallerPackage || '' ) . '_' . ( $CallerLine || '' ) . '_' . ( $Param{Info} || '');
+        my $CallerInfo = ( $CallerPackage || q{} ) . '_' . ( $CallerLine || q{} ) . '_' . ( $Param{Info} || q{});
         $CallerInfo = Digest::MD5::md5_hex(utf8::is_utf8($CallerInfo) ? Encode::encode_utf8($CallerInfo) : $CallerInfo);
 
         $Param{NotifyID} = md5_hex($CallerInfo);
@@ -1237,7 +1237,7 @@ sub Notify {
             Name => 'LinkStart',
             Data => {
                 LinkStart => $Param{Link},
-                LinkClass => $Param{LinkClass} || '',
+                LinkClass => $Param{LinkClass} || q{},
             },
         );
     }
@@ -1290,7 +1290,7 @@ sub Header {
     my $ConfigObject            = $Kernel::OM->Get('Kernel::Config');
     my $TemplateGeneratorObject = $Kernel::OM->Get('Kernel::System::TemplateGenerator');
 
-    my $Type = $Param{Type} || '';
+    my $Type = $Param{Type} || q{};
 
     # check params
     if ( !defined $Param{ShowToolbarItems} ) {
@@ -1337,7 +1337,7 @@ sub Header {
         next if !defined $ConfigObject->Get('Agent' . $Key );
 
         my %Logo = %{ $ConfigObject->Get('Agent' .  $Key) };
-        my $CSS  = '';
+        my $CSS  = q{};
 
         if (
             $Key eq 'Logo'
@@ -1368,7 +1368,7 @@ sub Header {
     }
 
     # add cookies if exists
-    my $Output = '';
+    my $Output = q{};
     if ( $Self->{SetCookies} && $ConfigObject->Get('SessionUseCookie') ) {
         for ( sort keys %{ $Self->{SetCookies} } ) {
             $Output .= "Set-Cookie: $Self->{SetCookies}->{$_}\n";
@@ -1385,17 +1385,22 @@ sub Header {
         $Param{Area} = (
             defined $Self->{Action}
             ? $ConfigObject->Get('Frontend::Module')->{ $Self->{Action} }->{NavBarName}
-            : ''
+            : q{}
         );
     }
     if ( !$Param{Title} ) {
         $Param{Title} = $ConfigObject->Get('Frontend::Module')->{ $Self->{Action} }->{Title}
-            || '';
+            || q{};
     }
+
+    my @TitleArea;
     for my $Word (qw(Value Title Area)) {
-        if ( $Param{$Word} ) {
-            $Param{TitleArea} .= $Self->{LanguageObject}->Translate( $Param{$Word} ) . ' - ';
-        }
+        next if !$Param{$Word};
+        push (@TitleArea, $Self->{LanguageObject}->Translate( $Param{$Word} ));
+    }
+
+    if (@TitleArea) {
+        $Param{TitleArea} .= join(q{ - }, @TitleArea);
     }
 
     if ( $Self->{Action} eq 'AgentTicketZoom') {
@@ -1477,13 +1482,13 @@ sub Header {
                     $Jobs{$Job}->{Group} =~ s{\s}{}xmsg;
 
                     # get group configurations
-                    my @Items = split( ';', $Jobs{$Job}->{Group} );
+                    my @Items = split( /[;]/sm, $Jobs{$Job}->{Group} );
 
                     ITEM:
                     for my $Item (@Items) {
 
                         # split values into permission and group
-                        my ( $Permission, $GroupName ) = split( ':', $Item );
+                        my ( $Permission, $GroupName ) = split( /[:]/sm, $Item );
 
                         # log an error if not valid setting
                         if ( !$Permission || !$GroupName ) {
@@ -1530,7 +1535,7 @@ sub Header {
                         %{ $Modules{$Key} },
                         AccessKeyReference => $Modules{$Key}->{AccessKey}
                         ? " ($Modules{$Key}->{AccessKey})"
-                        : '',
+                        : q{},
                     },
                 );
             }
@@ -1560,10 +1565,10 @@ sub Header {
                 my %CSS;
                 for my $Elem ( qw(Toolbar Toggle) ) {
                     for my $Key ( qw(Top Left) ) {
-                        my $Value = $CustomCSSTop->{$Elem . '::' . $Key};
+                        my $Value = $CustomCSSTop->{$Elem . q{::} . $Key};
                         if (
                             defined $Value
-                            && $Value ne ''
+                            && $Value ne q{}
                         ) {
                             $CSS{'CSS' . $Elem} .= lc($Key) . ': ' . $Value . '; '
                         }
@@ -1622,7 +1627,7 @@ sub Header {
 sub Footer {
     my ( $Self, %Param ) = @_;
 
-    my $Type          = $Param{Type}           || '';
+    my $Type          = $Param{Type}           || q{};
     my $HasDatepicker = $Self->{HasDatepicker} || 0;
 
     # Generate the minified CSS and JavaScript files and the tags referencing them (see LayoutLoader)
@@ -1635,7 +1640,7 @@ sub Footer {
             Data => $VacationDays,
         );
 
-        my $TextDirection = $Self->{LanguageObject}->{TextDirection} || '';
+        my $TextDirection = $Self->{LanguageObject}->{TextDirection} || q{};
 
         $Self->Block(
             Name => 'DatepickerData',
@@ -1677,7 +1682,7 @@ sub Footer {
     my $SearchFrontendConfig = $ConfigObject->Get('Frontend::Search::JavaScript');
 
     # get target javascript function
-    my $JSCall = '';
+    my $JSCall = q{};
 
     if ( $SearchFrontendConfig && $Self->{Action} ) {
         for my $Group ( sort keys %{$SearchFrontendConfig} ) {
@@ -1772,7 +1777,7 @@ sub Print {
             $Object->Run(
                 %{$FilterConfig},
                 Data         => $Param{Output},
-                TemplateFile => $Param{TemplateFile} || '',
+                TemplateFile => $Param{TemplateFile} || q{},
             );
         }
     }
@@ -1816,7 +1821,7 @@ sub Ascii2Html {
     my ( $Self, %Param ) = @_;
 
     # check needed param
-    return '' if !defined $Param{Text};
+    return q{} if !defined $Param{Text};
 
     # check text
     my $TextScalar;
@@ -1833,7 +1838,7 @@ sub Ascii2Html {
             Priority => 'error',
             Message  => 'Invalid ref "' . ref( $Param{Text} ) . '" of Text param!',
         );
-        return '';
+        return q{};
     }
 
     # run output filter text
@@ -1928,7 +1933,7 @@ sub Ascii2Html {
     # max lines
     if ( $Param{VMax} ) {
         my @TextList = split( "\n", ${$Text} );
-        ${$Text} = '';
+        ${$Text} = q{};
         my $Counter = 1;
         for (@TextList) {
             if ( $Counter <= $Param{VMax} ) {
@@ -1989,7 +1994,7 @@ also string ref is possible
 sub LinkQuote {
     my ( $Self, %Param ) = @_;
 
-    my $Text   = $Param{Text}   || '';
+    my $Text   = $Param{Text}   || q{};
     my $Target = $Param{Target} || 'NewPage' . int( rand(199) );
 
     # check ref
@@ -2130,7 +2135,7 @@ sub CustomerAgeInHours {
 
     my $Age = defined( $Param{Age} ) ? $Param{Age} : return;
     my $Space     = $Param{Space} || '<br/>';
-    my $AgeStrg   = '';
+    my $AgeStrg   = q{};
     my $HourDsc   = Translatable('h');
     my $MinuteDsc = Translatable('m');
     if ( $Kernel::OM->Get('Kernel::Config')->Get('TimeShowCompleteDescription') ) {
@@ -2139,19 +2144,19 @@ sub CustomerAgeInHours {
     }
     if ( $Age =~ /^-(.*)/ ) {
         $Age     = $1;
-        $AgeStrg = '-';
+        $AgeStrg = q{-};
     }
 
     # get hours
     if ( $Age >= 3600 ) {
-        $AgeStrg .= int( ( $Age / 3600 ) ) . ' ';
+        $AgeStrg .= int( ( $Age / 3600 ) ) . q{ };
         $AgeStrg .= $Self->{LanguageObject}->Translate($HourDsc);
         $AgeStrg .= $Space;
     }
 
     # get minutes (just if age < 1 day)
     if ( $Age <= 3600 || int( ( $Age / 60 ) % 60 ) ) {
-        $AgeStrg .= int( ( $Age / 60 ) % 60 ) . ' ';
+        $AgeStrg .= int( ( $Age / 60 ) % 60 ) . q{ };
         $AgeStrg .= $Self->{LanguageObject}->Translate($MinuteDsc);
     }
     return $AgeStrg;
@@ -2164,7 +2169,7 @@ sub CustomerAge {
 
     my $Age = defined( $Param{Age} ) ? $Param{Age} : return;
     my $Space     = $Param{Space} || '<br/>';
-    my $AgeStrg   = '';
+    my $AgeStrg   = q{};
     my $DayDsc    = Translatable('d');
     my $HourDsc   = Translatable('h');
     my $MinuteDsc = Translatable('m');
@@ -2175,26 +2180,26 @@ sub CustomerAge {
     }
     if ( $Age =~ /^-(.*)/ ) {
         $Age     = $1;
-        $AgeStrg = '-';
+        $AgeStrg = q{-};
     }
 
     # get days
-    if ( $Age >= 86400 ) {
-        $AgeStrg .= int( ( $Age / 3600 ) / 24 ) . ' ';
+    if ( $Age >= 86_400 ) {
+        $AgeStrg .= int( ( $Age / 3600 ) / 24 ) . q{ };
         $AgeStrg .= $Self->{LanguageObject}->Translate($DayDsc);
         $AgeStrg .= $Space;
     }
 
     # get hours
     if ( $Age >= 3600 ) {
-        $AgeStrg .= int( ( $Age / 3600 ) % 24 ) . ' ';
+        $AgeStrg .= int( ( $Age / 3600 ) % 24 ) . q{ };
         $AgeStrg .= $Self->{LanguageObject}->Translate($HourDsc);
         $AgeStrg .= $Space;
     }
 
     # get minutes (just if age < 1 day)
-    if ( $ConfigObject->Get('TimeShowAlwaysLong') || $Age < 86400 ) {
-        $AgeStrg .= int( ( $Age / 60 ) % 60 ) . ' ';
+    if ( $ConfigObject->Get('TimeShowAlwaysLong') || $Age < 86_400 ) {
+        $AgeStrg .= int( ( $Age / 60 ) % 60 ) . q{ };
         $AgeStrg .= $Self->{LanguageObject}->Translate($MinuteDsc);
     }
     return $AgeStrg;
@@ -2408,7 +2413,7 @@ sub BuildSelection {
         my $DisabledOptions = $Param{DisabledOptions};
         for my $Item ( keys %{ $Param{DisabledOptions} } ) {
             my $ItemValue = $Param{DisabledOptions}->{$Item};
-            my @ItemArray = split( '::', $ItemValue );
+            my @ItemArray = split( /::/sm, $ItemValue );
             for ( my $Index = 0; $Index < scalar @{$DataRef}; $Index++ ) {
                 next
                     if (
@@ -2599,7 +2604,7 @@ sub Permission {
 sub CheckMimeType {
     my ( $Self, %Param ) = @_;
 
-    my $Output = '';
+    my $Output = q{};
     if ( !$Param{Action} ) {
         $Param{Action} = '[% Env("Action") %]';
     }
@@ -2822,8 +2827,8 @@ sub PageNavBar {
     $WindowStart = int( ( $WindowStart / $WindowSize ) ) + 1;
     $WindowStart = ( $WindowStart * $WindowSize ) - ($WindowSize);
 
-    my $Action   = $Param{Action} || '';
-    my $Link     = $Param{Link}   || '';
+    my $Action   = $Param{Action} || q{};
+    my $Link     = $Param{Link}   || q{};
     my $Baselink = "$Self->{Baselink}$Action;$Link";
     my $i        = 0;
 
@@ -2834,7 +2839,7 @@ sub PageNavBar {
             && !$Param{$Self->{SessionName}}
         ) {
             if ( $Param{AJAXReplace} ) {
-                $Baselink .= ';' . $Self->{SessionName} . '=' . $Self->{SessionID};
+                $Baselink .= q{;} . $Self->{SessionName} . q{=} . $Self->{SessionID};
             }
             else {
                 $Self->Block(
@@ -2867,7 +2872,7 @@ sub PageNavBar {
             && $Param{$Self->{SessionName}}
         ) {
             if ( $Param{AJAXReplace} ) {
-                $Baselink .= ';' . $Self->{SessionName} . '=' . $Self->{SessionID};
+                $Baselink .= q{;} . $Self->{SessionName} . q{=} . $Self->{SessionID};
             }
         }
     }
@@ -2972,7 +2977,7 @@ sub PageNavBar {
         }
     }
 
-    my $Wrapper = '';
+    my $Wrapper = q{};
     if ( $IDPrefix ne 'AgentCustomerSearch' ) {
         $Wrapper = 'Wrapper';
         $Self->Block(
@@ -2987,14 +2992,14 @@ sub PageNavBar {
     if ( $Pages > 1 ) {
         for my $Parameter ( qw(Action Link) ) {
             if ( $Param{$Parameter} ) {
-                my @Params = split(';', $Param{$Parameter});
+                my @Params = split(/[;]/sm, $Param{$Parameter});
                 for my $Item ( @Params ) {
-                    my @Items = split('=', $Item);
+                    my @Items = split(/[=]/sm, $Item);
                     $Self->Block(
                         Name => 'PageHiddenGeneric',
                         Data => {
                             Name    => $Items[0],
-                            Value   => $Items[1] || ''
+                            Value   => $Items[1] || q{}
                         }
                     );
                 }
@@ -3029,7 +3034,7 @@ sub PageNavBar {
             Name => 'PageHiddenGeneric',
             Data => {
                 Name    => $Key,
-                Value   => $Param{$Key} || '',
+                Value   => $Param{$Key} || q{},
             }
         );
     }
@@ -3091,7 +3096,7 @@ sub NavigationBar {
         ITEM:
         for my $Item (@Items) {
             next ITEM if !$Item->{NavBar};
-            $Item->{CSS} = '';
+            $Item->{CSS} = q{};
 
             # highlight active area link
             if (
@@ -3150,7 +3155,7 @@ sub NavigationBar {
             }
 
             # set prio of item
-            my $Key = ( $Item->{Block} || '' ) . sprintf( "%07d", $Item->{Prio} );
+            my $Key = ( $Item->{Block} || q{} ) . sprintf( "%07d", $Item->{Prio} );
 
             # show as main menu
             if ( $Item->{Type} eq 'Menu' ) {
@@ -3160,7 +3165,7 @@ sub NavigationBar {
                     $Item->{Prio} += 1;
 
                     # set new priority
-                    $Key = ( $Item->{Block} || '' ) . sprintf( "%07d", $Item->{Prio} );
+                    $Key = ( $Item->{Block} || q{} ) . sprintf( "%07d", $Item->{Prio} );
                 }
                 $NavBar{$Key} = $Item;
             }
@@ -3172,7 +3177,7 @@ sub NavigationBar {
                     $Item->{Prio} += 1;
 
                     # set new priority
-                    $Key = ( $Item->{Block} || '' ) . sprintf( "%07d", $Item->{Prio} );
+                    $Key = ( $Item->{Block} || q{} ) . sprintf( "%07d", $Item->{Prio} );
                 }
                 $NavBar{Sub}->{ $Item->{NavBar} }->{$Key} = $Item;
             }
@@ -3220,7 +3225,7 @@ sub NavigationBar {
             Template => '<a href="[% Env("Baselink") %][% Data.Link %]" title="[% Translate(Data.Name) | html %][% Data.AccessKeyReference | html %]" accesskey="[% Data.AccessKey | html %]" [% Data.LinkOption %]>[% Translate(Data.Name) | html %]</a>',
             Data     => {
                 %$Item,
-                AccessKeyReference => $Item->{AccessKey} ? " ($Item->{AccessKey})" : '',
+                AccessKeyReference => $Item->{AccessKey} ? " ($Item->{AccessKey})" : q{},
             },
         );
         my %Safe = $HTMLUtilsObject->Safety(
@@ -3242,7 +3247,7 @@ sub NavigationBar {
             Name => 'ItemArea',    #$NavBar{$_}->{Block} || 'Item',
             Data => {
                 %$Item,
-                AccessKeyReference => $Item->{AccessKey} ? " ($Item->{AccessKey})" : '',
+                AccessKeyReference => $Item->{AccessKey} ? " ($Item->{AccessKey})" : q{},
             },
         );
 
@@ -3266,7 +3271,7 @@ sub NavigationBar {
                 Template => '<a href="[% Env("Baselink") %][% Data.Link %]" title="[% Translate(Data.Description) | html %][% Data.AccessKeyReference | html %]" accesskey="[% Data.AccessKey | html %]" [% Data.LinkOption %]>[% Translate(Data.Name) | html %]</a>',
                 Data     => {
                     %$ItemSub,
-                    AccessKeyReference => $ItemSub->{AccessKey} ? " ($ItemSub->{AccessKey})" : '',
+                    AccessKeyReference => $ItemSub->{AccessKey} ? " ($ItemSub->{AccessKey})" : q{},
                 },
             );
             my %Safe = $HTMLUtilsObject->Safety(
@@ -3288,7 +3293,7 @@ sub NavigationBar {
                 Name => 'ItemAreaSubItem',    #$Item->{Block} || 'Item',
                 Data => {
                     %$ItemSub,
-                    AccessKeyReference => $ItemSub->{AccessKey} ? " ($ItemSub->{AccessKey})" : '',
+                    AccessKeyReference => $ItemSub->{AccessKey} ? " ($ItemSub->{AccessKey})" : q{},
                 },
             );
         }
@@ -3299,7 +3304,7 @@ sub NavigationBar {
         UserID => $Self->{UserID},
     );
 
-    my $NavbarOrderItems = $UserPreferences{'UserNavBarItemsOrder'} || '';
+    my $NavbarOrderItems = $UserPreferences{'UserNavBarItemsOrder'} || q{};
     $Self->Block(
         Name => 'NavbarOrderItems',
         Data => {
@@ -3392,15 +3397,15 @@ sub TransformDateSelection {
     my ( $Self, %Param ) = @_;
 
     # get key prefix
-    my $Prefix = $Param{Prefix} || '';
+    my $Prefix = $Param{Prefix} || q{};
 
     # time zone translation if needed
     if ( $Kernel::OM->Get('Kernel::Config')->Get('TimeZoneUser') && $Self->{UserTimeZone} ) {
         my $TimeStamp = $Self->{TimeObject}->TimeStamp2SystemTime(
-            String => $Param{ $Prefix . 'Year' } . '-'
-                . $Param{ $Prefix . 'Month' } . '-'
-                . $Param{ $Prefix . 'Day' } . ' '
-                . ( $Param{ $Prefix . 'Hour' }   || 0 ) . ':'
+            String => $Param{ $Prefix . 'Year' } . q{-}
+                . $Param{ $Prefix . 'Month' } . q{-}
+                . $Param{ $Prefix . 'Day' } . q{ }
+                . ( $Param{ $Prefix . 'Hour' }   || 0 ) . q{:}
                 . ( $Param{ $Prefix . 'Minute' } || 0 )
                 . ':00',
         );
@@ -3416,7 +3421,7 @@ sub TransformDateSelection {
     }
 
     # reset prefix
-    $Param{Prefix} = '';
+    $Param{Prefix} = q{};
 
     return %Param;
 }
@@ -3501,16 +3506,16 @@ sub BuildDateSelection {
     }
 
     my $DateInputStyle = $ConfigObject->Get('TimeInputFormat');
-    my $Prefix         = $Param{Prefix}   || '';
+    my $Prefix         = $Param{Prefix}   || q{};
     my $DiffTime       = $Param{DiffTime} || 0;
     my $Format         = defined( $Param{Format} ) ? $Param{Format} : 'DateInputFormatLong';
     my $Area           = $Param{Area} || 'Agent';
     my $Optional       = $Param{ $Prefix . 'Optional' } || 0;
     my $Required       = $Param{ $Prefix . 'Required' } || 0;
     my $Used           = $Param{ $Prefix . 'Used' }     || 0;
-    my $Class          = $Param{ $Prefix . 'Class' }    || '';
-    my $ClassDate      = $Param{ $Prefix . 'Class' }    || '';
-    my $ClassTime      = $Param{ $Prefix . 'Class' }    || '';
+    my $Class          = $Param{ $Prefix . 'Class' }    || q{};
+    my $ClassDate      = $Param{ $Prefix . 'Class' }    || q{};
+    my $ClassTime      = $Param{ $Prefix . 'Class' }    || q{};
 
     if ( $SmartStyleDate ) {
         $ClassDate .= ' Modernize';
@@ -3544,10 +3549,10 @@ sub BuildDateSelection {
         && !$Param{OverrideTimeZone}
     ) {
         my $TimeStamp = $Self->{TimeObject}->TimeStamp2SystemTime(
-            String => $Param{ $Prefix . 'Year' } . '-'
-                . $Param{ $Prefix . 'Month' } . '-'
-                . $Param{ $Prefix . 'Day' } . ' '
-                . ( $Param{ $Prefix . 'Hour' }   || 0 ) . ':'
+            String => $Param{ $Prefix . 'Year' } . q{-}
+                . $Param{ $Prefix . 'Month' } . q{-}
+                . $Param{ $Prefix . 'Day' } . q{ }
+                . ( $Param{ $Prefix . 'Hour' }   || 0 ) . q{:}
                 . ( $Param{ $Prefix . 'Minute' } || 0 )
                 . ':00',
         );
@@ -3562,7 +3567,7 @@ sub BuildDateSelection {
         ) = $Self->{UserTimeObject}->SystemTime2Date( SystemTime => $TimeStamp );
     }
 
-    my $DateValidateClasses = '';
+    my $DateValidateClasses = q{};
     if ($Validate) {
         $DateValidateClasses
             .= "Validate_DateDay Validate_DateYear_${Prefix}Year Validate_DateMonth_${Prefix}Month";
@@ -3595,9 +3600,9 @@ sub BuildDateSelection {
         my $Date = $Kernel::OM->Get('Kernel::Output::HTML::Layout')->{LanguageObject}
             ->FormatTimeString(
             sprintf( "%04d", ( $Param{ $Prefix . 'Year' } || $Y ) ) .
-                '-' .
+                q{-} .
                 sprintf( "%02d", ( $Param{ $Prefix . 'Month' } || $M ) ) .
-                '-' .
+                q{-} .
                 sprintf( "%02d", ( $Param{ $Prefix . 'Day' } || $D ) ) .
                 ' 00:00:00',
             'DateFormatShort',
@@ -3608,7 +3613,7 @@ sub BuildDateSelection {
             . "title=\""
             . $Kernel::OM->Get('Kernel::Output::HTML::Layout')->{LanguageObject}->Get('Date')
             . "\" value=\""
-            . ( $Param{ $Prefix . 'Date' } || $Date ) . "\" " . ( $Param{Disabled} ? 'readonly="readonly"' : '' ) ."/>";
+            . ( $Param{ $Prefix . 'Date' } || $Date ) . "\" " . ( $Param{Disabled} ? 'readonly="readonly"' : q{} ) ."/>";
         $Param{DateStr} .= "<input type=\"hidden\" "
             . "class=\"$Class\" "
             . "name=\"${Prefix}Year\" id=\"${Prefix}Year\" size=\"4\" maxlength=\"4\" "
@@ -3643,7 +3648,7 @@ sub BuildDateSelection {
             Data        => \%Year,
             SelectedID  => int( $Param{ $Prefix . 'Year' } || $Y ),
             Translation => 0,
-            Class       => $Validate ? 'Validate_DateYear' : '',
+            Class       => $Validate ? 'Validate_DateYear' : q{},
             Title       => $Self->{LanguageObject}->Translate('Year'),
             Disabled    =>  $Param{Disabled} || 0,
         );
@@ -3656,7 +3661,7 @@ sub BuildDateSelection {
             . $Self->{LanguageObject}->Translate('Year')
             . "\" value=\""
             . sprintf( "%02d", ( $Param{ $Prefix . 'Year' } || $Y ) ) . "\" "
-            . ( $Param{Disabled} ? 'readonly="readonly"' : '' ) . "/>";
+            . ( $Param{Disabled} ? 'readonly="readonly"' : q{} ) . "/>";
     }
 
     # month
@@ -3676,7 +3681,7 @@ sub BuildDateSelection {
             Data        => \%Month,
             SelectedID  => int( $Param{ $Prefix . 'Month' } || $M ),
             Translation => 0,
-            Class       => $Validate ? 'Validate_DateMonth' : '',
+            Class       => $Validate ? 'Validate_DateMonth' : q{},
             Title       => $Self->{LanguageObject}->Translate('Month'),
             Disabled    => $Param{Disabled},
         );
@@ -3689,7 +3694,7 @@ sub BuildDateSelection {
             . $Self->{LanguageObject}->Translate('Month')
             . "\" value=\""
             . sprintf( "%02d", ( $Param{ $Prefix . 'Month' } || $M ) ) . "\" "
-            . ( $Param{Disabled} ? 'readonly="readonly"' : '' ) . "/>";
+            . ( $Param{Disabled} ? 'readonly="readonly"' : q{} ) . "/>";
     }
 
     # day
@@ -3722,7 +3727,7 @@ sub BuildDateSelection {
             . $Self->{LanguageObject}->Translate('Day')
             . "\" value=\""
             . sprintf( "%02d", ( $Param{ $Prefix . 'Day' } || $D ) ) . "\" "
-            . ( $Param{Disabled} ? 'readonly="readonly"' : '' ) . "/>";
+            . ( $Param{Disabled} ? 'readonly="readonly"' : q{} ) . "/>";
 
     }
     if ( $Format eq 'DateInputFormatLong' ) {
@@ -3774,7 +3779,7 @@ sub BuildDateSelection {
             $Param{TimeStr} = $Self->BuildSelection(
                 Name                => $Prefix . 'Time',
                 Data                => \%TimeDef,
-                SelectedID          => $h . ':' . $m,
+                SelectedID          => $h . q{:} . $m,
                 LanguageTranslation => 0,
                 Class               => $Validate ? ( 'Validate_DateTime ' . $ClassTime ) : $ClassTime,
                 Title => $Kernel::OM->Get('Kernel::Output::HTML::Layout')->{LanguageObject}
@@ -3817,7 +3822,7 @@ sub BuildDateSelection {
                 ( defined( $Param{ $Prefix . 'Hour' } ) ? int( $Param{ $Prefix . 'Hour' } ) : $h )
                 )
                 . "\" "
-                . ( $Param{Disabled} ? 'readonly="readonly"' : '' ) . "/>";
+                . ( $Param{Disabled} ? 'readonly="readonly"' : q{} ) . "/>";
 
         }
 
@@ -3863,7 +3868,7 @@ sub BuildDateSelection {
                     : $m
                     )
                 ) . "\" "
-                . ( $Param{Disabled} ? 'readonly="readonly"' : '' ) . "/>";
+                . ( $Param{Disabled} ? 'readonly="readonly"' : q{} ) . "/>";
         }
     }
 
@@ -3882,7 +3887,7 @@ sub BuildDateSelection {
 
     # optional checkbox
     if ($Optional) {
-        my $Checked = '';
+        my $Checked = q{};
         if ($Used) {
             $Checked = ' checked="checked"';
         }
@@ -3894,7 +3899,7 @@ sub BuildDateSelection {
             . " title=\""
             . $Self->{LanguageObject}->Translate('Check to activate this date')
             . "\" "
-            . ( $Param{Disabled} ? 'disabled="disabled"' : '' )
+            . ( $Param{Disabled} ? 'disabled="disabled"' : q{} )
             . "/>&nbsp;";
     }
 
@@ -3906,14 +3911,14 @@ sub BuildDateSelection {
         $Output .= $Param{DateStr};
         if ( $Param{TimeStr} || $Param{Hour} ) {
             $Output .= ' - ';
-            $Output .= $Param{TimeStr} || ( $Param{Hour} . ':' . $Param{Minute} );
+            $Output .= $Param{TimeStr} || ( $Param{Hour} . q{:} . $Param{Minute} );
         }
     }
     elsif ( !$SmartStyleDate && $SmartStyleTime ) {
         $Output .= $Param{Day} . $Param{Month} . $Param{Year};
         if ( $Param{TimeStr} || $Param{Hour} ) {
             $Output .= ' - ';
-            $Output .= $Param{TimeStr} || ( $Param{Hour} . ':' . $Param{Minute} );
+            $Output .= $Param{TimeStr} || ( $Param{Hour} . q{:} . $Param{Minute} );
         }
     }
     else {
@@ -3926,7 +3931,7 @@ sub BuildDateSelection {
     }
 
     # prepare datepicker for specific calendar
-    my $VacationDays = '';
+    my $VacationDays = q{};
     if ( $Param{Calendar} ) {
         $VacationDays = $Self->DatepickerGetVacationDays(
             Calendar => $Param{Calendar},
@@ -3984,8 +3989,8 @@ END
 sub CustomerLogin {
     my ( $Self, %Param ) = @_;
 
-    my $Output = '';
-    $Param{TitleArea} = $Self->{LanguageObject}->Translate('Login') . ' - ';
+    my $Output = q{};
+    $Param{TitleArea} = $Self->{LanguageObject}->Translate('Login');
 
     # set Action parameter for the loader
     $Self->{Action}        = 'CustomerLogin';
@@ -4039,7 +4044,7 @@ sub CustomerLogin {
         next if !defined $ConfigObject->Get('Customer' . $Key );
 
         my %Logo = %{ $ConfigObject->Get('Customer' .  $Key) };
-        my $CSS  = '';
+        my $CSS  = q{};
 
         for my $CSSStatement ( sort keys %Logo ) {
             if ( $CSSStatement eq 'URL' ) {
@@ -4108,18 +4113,18 @@ sub CustomerLogin {
             Data => \%Param,
         );
 
-        my $LoginHeader = '';
+        my $LoginHeader = q{};
         if ( $ConfigObject->Get('CustomerLoginHeader') ) {
-            $LoginHeader = $ConfigObject->Get('ProductName') || '';
+            $LoginHeader = $ConfigObject->Get('ProductName') || q{};
 
             if ( $ConfigObject->Get('CustomerPrefixProductName') ) {
                 $LoginHeader = $Self->{LanguageObject}->Translate($ConfigObject->Get('CustomerPrefixProductName'))
-                    . ' '
+                    . q{ }
                     . $LoginHeader;
             }
 
             if ( $ConfigObject->Get('CustomerSuffixProductName') ) {
-                $LoginHeader .= ' '
+                $LoginHeader .= q{ }
                     . $Self->{LanguageObject}->Translate($ConfigObject->Get('CustomerSuffixProductName'));
             }
 
@@ -4144,7 +4149,7 @@ sub CustomerLogin {
 
         # show 2 factor password input if we have at least one backend enabled
         COUNT:
-        for my $Count ( '', 1 .. 10 ) {
+        for my $Count ( q{}, 1 .. 10 ) {
             next COUNT if !$ConfigObject->Get("Customer::AuthTwoFactorModule$Count");
 
             $Self->Block(
@@ -4229,10 +4234,10 @@ sub CustomerHeader {
     my $ConfigObject            = $Kernel::OM->Get('Kernel::Config');
     my $TemplateGeneratorObject = $Kernel::OM->Get('Kernel::System::TemplateGenerator');
 
-    my $Type = $Param{Type} || '';
+    my $Type = $Param{Type} || q{};
 
     # add cookies if exists
-    my $Output = '';
+    my $Output = q{};
     if ( $Self->{SetCookies} && $ConfigObject->Get('SessionUseCookie') ) {
         for ( sort keys %{ $Self->{SetCookies} } ) {
             $Output .= "Set-Cookie: $Self->{SetCookies}->{$_}\n";
@@ -4250,41 +4255,46 @@ sub CustomerHeader {
         && $ConfigObject->Get('CustomerFrontend::Module')->{ $Self->{Action} }
     ) {
         $Param{Area} = $ConfigObject->Get('CustomerFrontend::Module')->{ $Self->{Action} }
-            ->{NavBarName} || '';
+            ->{NavBarName} || q{};
     }
     if (
         !$Param{Title}
         && $ConfigObject->Get('CustomerFrontend::Module')->{ $Self->{Action} }
     ) {
         $Param{Title} = $ConfigObject->Get('CustomerFrontend::Module')->{ $Self->{Action} }->{Title}
-            || '';
+            || q{};
     }
     if (
         !$Param{Area}
         && $ConfigObject->Get('PublicFrontend::Module')->{ $Self->{Action} }
     ) {
         $Param{Area} = $ConfigObject->Get('PublicFrontend::Module')->{ $Self->{Action} }
-            ->{NavBarName} || '';
+            ->{NavBarName} || q{};
     }
     if (
         !$Param{Title}
         && $ConfigObject->Get('PublicFrontend::Module')->{ $Self->{Action} }
     ) {
         $Param{Title} = $ConfigObject->Get('PublicFrontend::Module')->{ $Self->{Action} }->{Title}
-            || '';
+            || q{};
     }
+
+    my @TitleArea;
     for my $Word (qw(Value Title Area)) {
-        if ( $Param{$Word} ) {
-            $Param{TitleArea} .= $Self->{LanguageObject}->Translate( $Param{$Word} ) . ' - ';
-        }
+        next if !$Param{$Word};
+        push (@TitleArea, $Self->{LanguageObject}->Translate( $Param{$Word} ));
+    }
+
+    if (@TitleArea) {
+        $Param{TitleArea} .= join(q{ - }, @TitleArea);
     }
 
     if ( $Self->{Action} eq 'CustomerTicketZoom'
         || $Self->{Action} eq 'PublicTicketZoom'
     ) {
         my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
-        my $TicketNumber = $Kernel::OM->Get('Kernel::System::Web::Request')->GetParam( Param => 'TicketNumber' ) || '';
-        my $TicketToken  = $Kernel::OM->Get('Kernel::System::Web::Request')->GetParam( Param => 'TicketToken' ) || '';
+        my $TicketNumber = $Kernel::OM->Get('Kernel::System::Web::Request')->GetParam( Param => 'TicketNumber' ) || q{};
+        my $TicketToken  = $Kernel::OM->Get('Kernel::System::Web::Request')->GetParam( Param => 'TicketToken' ) || q{};
 
         if ( !$Self->{TicketID} && $TicketNumber ) {
             $Self->{TicketID} = $TicketObject->TicketIDLookup(
@@ -4374,7 +4384,7 @@ sub CustomerHeader {
         next if !defined $ConfigObject->Get('Customer' . $Key );
 
         my %Logo = %{ $ConfigObject->Get('Customer' .  $Key) };
-        my $CSS  = '';
+        my $CSS  = q{};
 
         for my $CSSStatement ( sort keys %Logo ) {
             if ( $CSSStatement eq 'URL' ) {
@@ -4415,7 +4425,7 @@ sub CustomerHeader {
 sub CustomerFooter {
     my ( $Self, %Param ) = @_;
 
-    my $Type          = $Param{Type}           || '';
+    my $Type          = $Param{Type}           || q{};
     my $HasDatepicker = $Self->{HasDatepicker} || 0;
 
     # Generate the minified CSS and JavaScript files
@@ -4429,7 +4439,7 @@ sub CustomerFooter {
             Data => $VacationDays,
         );
 
-        my $TextDirection = $Self->{LanguageObject}->{TextDirection} || '';
+        my $TextDirection = $Self->{LanguageObject}->{TextDirection} || q{};
 
         $Self->Block(
             Name => 'DatepickerData',
@@ -4676,7 +4686,7 @@ sub CustomerNavigationBar {
         $NavBarModule{$Item}->{NameForID} =~ s/[ &;]//ig;
 
         # highlight active link
-        $NavBarModule{$Item}->{Class} = '';
+        $NavBarModule{$Item}->{Class} = q{};
         if ( $NavBarModule{$Item}->{Link} ) {
             if (
                 !$SelectedFlag
@@ -4743,7 +4753,7 @@ sub CustomerNavigationBar {
                 Template => '<a class="[% Data.Class | html %]" href="[% Env("Baselink") %][% Data.Link %]" accesskey="[% Data.AccessKey | html %]" title="[% Translate(Data.Description || Data.Name) | html %] ([% Data.AccessKey | html %])"  [% Data.LinkOption %]>[% Translate(Data.Name) | html %]</a>',
                 Data     => {
                     %$ItemSub,
-                    AccessKeyReference => $ItemSub->{AccessKey} ? " ($ItemSub->{AccessKey})" : '',
+                    AccessKeyReference => $ItemSub->{AccessKey} ? " ($ItemSub->{AccessKey})" : q{},
                 },
             );
             my %Safe = $HTMLUtilsObject->Safety(
@@ -4765,7 +4775,7 @@ sub CustomerNavigationBar {
                 Name => 'ItemAreaSubItem',
                 Data => {
                     %$ItemSub,
-                    AccessKeyReference => $ItemSub->{AccessKey} ? " ($ItemSub->{AccessKey})" : '',
+                    AccessKeyReference => $ItemSub->{AccessKey} ? " ($ItemSub->{AccessKey})" : q{},
                 },
             );
         }
@@ -4841,18 +4851,18 @@ sub CustomerError {
         $Param{ 'Backend' . $_ } = $Kernel::OM->Get('Kernel::System::Log')->GetLogEntry(
             Type => 'Error',
             What => $_
-        ) || '';
+        ) || q{};
     }
     if ( !$Param{BackendMessage} && !$Param{BackendTraceback} ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
-            Message  => $Param{Message} || '?',
+            Message  => $Param{Message} || q{?},
         );
         for (qw(Message Traceback)) {
             $Param{ 'Backend' . $_ } = $Kernel::OM->Get('Kernel::System::Log')->GetLogEntry(
                 Type => 'Error',
                 What => $_
-            ) || '';
+            ) || q{};
         }
     }
 
@@ -4887,7 +4897,7 @@ sub CustomerWarning {
         || $Kernel::OM->Get('Kernel::System::Log')->GetLogEntry(
         Type => 'Error',
         What => 'Message',
-        ) || '';
+        ) || q{};
 
     if ( !$Param{Message} ) {
         $Param{Message} = $Param{BackendMessage};
@@ -5207,9 +5217,9 @@ sub RichTextDocumentServe {
     }
 
     # build base url for inline images
-    my $SessionID = '';
+    my $SessionID = q{};
     if ( $Self->{SessionID} && !$Self->{SessionIDCookie} ) {
-        $SessionID = ';' . $Self->{SessionName} . '=' . $Self->{SessionID};
+        $SessionID = q{;} . $Self->{SessionName} . q{=} . $Self->{SessionID};
     }
 
     # replace inline images in content with runtime url to images
@@ -5223,11 +5233,11 @@ sub RichTextDocumentServe {
         my $End = $3;
 
         # improve html quality
-        if ( $Start ne '"' && $Start ne '\'' ) {
-            $Start .= '"';
+        if ( $Start ne q{"} && $Start ne q{'} ) {
+            $Start .= q{"};
         }
-        if ( $End ne '"' && $End ne '\'' ) {
-            $End = '"' . $End;
+        if ( $End ne q{"} && $End ne q{'} ) {
+            $End = q{"} . $End;
         }
 
         # find matching attachment and replace it with runtime url to image
@@ -5266,11 +5276,11 @@ sub RichTextDocumentServe {
         my $End = $3;
 
         # improve html quality
-        if ( $Start ne '"' && $Start ne '\'' ) {
-            $Start .= '"';
+        if ( $Start ne q{"} && $Start ne q{'} ) {
+            $Start .= q{"};
         }
-        if ( $End ne '"' && $End ne '\'' ) {
-            $End = '"' . $End;
+        if ( $End ne q{"} && $End ne q{'} ) {
+            $End = q{"} . $End;
         }
 
         # return new runtime url
@@ -5391,11 +5401,11 @@ sub _BuildSelectionOptionRefCreate {
     ) {
         my %SelectedValueNew;
         for my $OriginalKey ( sort keys %{ $OptionRef->{SelectedValue} } ) {
-            my @Values = split('::', $OriginalKey);
+            my @Values = split(/::/sm, $OriginalKey);
             for my $Value ( @Values ) {
                 $Value = $Self->{LanguageObject}->Translate($Value);
             }
-            my $TranslatedKey = join('::', @Values);
+            my $TranslatedKey = join(q{::}, @Values);
 
             $SelectedValueNew{$TranslatedKey} = 1;
         }
@@ -5538,10 +5548,10 @@ sub _BuildSelectionDataRefCreate {
 
             # get each data value
             for my $Key ( sort keys %List ) {
-                my $Parents = '';
+                my $Parents = q{};
 
                 # try to split its parents (e.g. Queue or Service) GrandParent::Parent::Son
-                my @Elements = split /::/, $Key;
+                my @Elements = split( /::/sm, $Key);
 
                 # get each element in the hierarchy
                 for my $Element (@Elements) {
@@ -5558,7 +5568,7 @@ sub _BuildSelectionDataRefCreate {
                         # add the element to the original data to be disabled later
                         $DataLocal->{ $ElementLongName . '_Disabled' } = $ElementLongName;
                     }
-                    $Parents .= $Element . '::';
+                    $Parents .= $Element . q{::};
                 }
             }
         }
@@ -5580,12 +5590,12 @@ sub _BuildSelectionDataRefCreate {
         if ( $OptionRef->{Translation} ) {
             for my $Row ( sort keys %{$DataLocal} ) {
                 # try to split its parents (e.g. Queue or Service) GrandParent::Parent::Son
-                my @Elements = split /::/, $DataLocal->{$Row};
+                my @Elements = split( /::/sm, $DataLocal->{$Row});
                 for my $Value ( @Elements ) {
                     $Value = $Self->{LanguageObject}->Translate( $Value )
                 }
 
-                $DataLocal->{$Row} = join('::', @Elements );
+                $DataLocal->{$Row} = join(q{::}, @Elements );
             }
         }
 
@@ -5604,7 +5614,7 @@ sub _BuildSelectionDataRefCreate {
             # add suffix for correct sorting
             my %SortHash;
             for ( sort keys %{$DataLocal} ) {
-                $SortHash{$_} = $DataLocal->{$_} . '::';
+                $SortHash{$_} = $DataLocal->{$_} . q{::};
             }
             @SortKeys = sort { lc $SortHash{$a} cmp lc $SortHash{$b} } ( keys %SortHash );
         }
@@ -5652,10 +5662,10 @@ sub _BuildSelectionDataRefCreate {
             # get each data value hash
             for my $ValueHash ( @{$DataLocal} ) {
 
-                my $Parents = '';
+                my $Parents = q{};
 
                 # try to split its parents (e.g. Queue or Service) GrandParent::Parent::Son
-                my @Elements = split /::/, $ValueHash->{Value};
+                my @Elements = split( /::/sm, $ValueHash->{Value});
 
                 # get each element in the hierarchy
                 for my $Element (@Elements) {
@@ -5676,7 +5686,7 @@ sub _BuildSelectionDataRefCreate {
                             Disabled => 1,
                         };
                     }
-                    $Parents .= $Element . '::';
+                    $Parents .= $Element . q{::};
                 }
 
                 # push the element to the data local array
@@ -5701,12 +5711,12 @@ sub _BuildSelectionDataRefCreate {
                 # translate value
                 if ( $OptionRef->{Translation} ) {
                     # try to split its parents (e.g. Queue or Service) GrandParent::Parent::Son
-                    my @Elements = split /::/, $DataRef->[$Counter]->{Value};
+                    my @Elements = split( /::/sm, $DataRef->[$Counter]->{Value});
                     for my $Value ( @Elements ) {
                         $Value = $Self->{LanguageObject}->Translate( $Value )
                     }
 
-                    $DataRef->[$Counter]->{Value} = join('::', @Elements );
+                    $DataRef->[$Counter]->{Value} = join(q{::}, @Elements );
                 }
 
                 # set Selected and Disabled options
@@ -5730,10 +5740,10 @@ sub _BuildSelectionDataRefCreate {
 
             # get each data value
             for my $Key ( sort keys %List ) {
-                my $Parents = '';
+                my $Parents = q{};
 
                 # try to split its parents (e.g. Queue or Service) GrandParent::Parent::Son
-                my @Elements = split /::/, $Key;
+                my @Elements = split( /::/sm, $Key);
 
                 # get each element in the hierarchy
                 for my $Element (@Elements) {
@@ -5750,7 +5760,7 @@ sub _BuildSelectionDataRefCreate {
                         # add the element to the original data to be disabled later
                         push @{$DataLocal}, $ElementLongName;
                     }
-                    $Parents .= $Element . '::';
+                    $Parents .= $Element . q{::};
                 }
             }
         }
@@ -5774,12 +5784,12 @@ sub _BuildSelectionDataRefCreate {
             my @TranslateArray;
             for my $Row ( @{$DataLocal} ) {
                 # try to split its parents (e.g. Queue or Service) GrandParent::Parent::Son
-                my @Elements = split /::/, $Row;
+                my @Elements = split( /::/sm, $Row);
                 for my $Value ( @Elements ) {
                     $Value = $Self->{LanguageObject}->Translate( $Value )
                 }
 
-                my $TranslateString = join('::', @Elements );
+                my $TranslateString = join(q{::}, @Elements );
 
                 push @TranslateArray, $TranslateString;
                 $ReverseHash{$TranslateString} = $Row;
@@ -5804,7 +5814,7 @@ sub _BuildSelectionDataRefCreate {
         elsif ( $OptionRef->{Sort} eq 'TreeView' ) {
 
             # sort array, add '::' in the comparison, for proper sort of Items with Items::SubItems
-            my @SortArray = sort { $a . '::' cmp $b . '::' } @{$DataLocal};
+            my @SortArray = sort { $a . q{::} cmp $b . q{::} } @{$DataLocal};
             $DataLocal = \@SortArray;
         }
 
@@ -5823,7 +5833,7 @@ sub _BuildSelectionDataRefCreate {
     ) {
         for my $Row ( @{$DataRef} ) {
             if ( $DisabledElements{ $Row->{Value} } ) {
-                $Row->{Key}      = '-';
+                $Row->{Key}      = q{-};
                 $Row->{Disabled} = 1;
             }
         }
@@ -5863,8 +5873,8 @@ sub _BuildSelectionDataRefCreate {
     # PossibleNone option
     if ( $OptionRef->{PossibleNone} ) {
         my %None;
-        $None{Key}   = '';
-        $None{Value} = '-';
+        $None{Key}   = q{};
+        $None{Value} = q{-};
 
         unshift( @{$DataRef}, \%None );
     }
@@ -5877,7 +5887,7 @@ sub _BuildSelectionDataRefCreate {
 
             next ROW if !$Row->{Value};
 
-            my @Fragment = split( '::', $Row->{Value});
+            my @Fragment = split( /::/sm, $Row->{Value});
             $Row->{Value} = pop @Fragment;
 
             # TODO: Here we are combining Max with HTMLQuote, check below for the REMARK:
@@ -5899,7 +5909,7 @@ sub _BuildSelectionDataRefCreate {
             # Previously, we used '&nbsp;' and we had issue that Option needs to be html encoded
             # in AJAX, and it was causing issues.
             my $Space = "\xA0\xA0" x scalar @Fragment;
-            $Space ||= '';
+            $Space ||= q{};
 
             $Row->{Value} = $Space . $Row->{Value};
         }
@@ -6006,10 +6016,10 @@ sub _BuildSelectionOutput {
             );
             $String .= " data-filters=\"$JSONEscaped\"";
             if ( $Param{FilterActive} ) {
-                $String .= ' data-filtered="' . int( $Param{FilterActive} ) . '"';
+                $String .= ' data-filtered="' . int( $Param{FilterActive} ) . q{"};
             }
             if ( $Param{ExpandFilters} ) {
-                $String .= ' data-expand-filters="' . int( $Param{ExpandFilters} ) . '"';
+                $String .= ' data-expand-filters="' . int( $Param{ExpandFilters} ) . q{"};
             }
         }
 
@@ -6022,24 +6032,24 @@ sub _BuildSelectionOutput {
 
         # generate <option> rows
         for my $Row ( @{ $Param{DataRef} } ) {
-            my $Key = '';
+            my $Key = q{};
             if ( defined $Row->{Key} ) {
                 $Key = $Row->{Key};
             }
-            my $Value = '';
+            my $Value = q{};
             if ( defined $Row->{Value} ) {
                 $Value = $Row->{Value};
             }
-            my $SelectedDisabled = '';
+            my $SelectedDisabled = q{};
             if ( $Row->{Selected} ) {
                 $SelectedDisabled = ' selected="selected"';
             }
             elsif ( $Row->{Disabled} ) {
                 $SelectedDisabled = ' disabled="disabled"';
             }
-            my $OptionTitle = '';
+            my $OptionTitle = q{};
             if ( $Param{OptionTitle} ) {
-                $OptionTitle = ' title="' . $Value . '"';
+                $OptionTitle = ' title="' . $Value . q{"};
             }
             $String .= "  <option value=\"$Key\"$SelectedDisabled$OptionTitle>$Value</option>\n";
         }
@@ -6083,7 +6093,7 @@ piece of JavaScript code, if they are present, and return the result.
 sub _RemoveScriptTags {
     my ( $Self, %Param ) = @_;
 
-    my $Code = $Param{Code} || '';
+    my $Code = $Param{Code} || q{};
 
     if ( $Code =~ m/<script/ ) {
 
@@ -6218,7 +6228,7 @@ sub ProgressBar {
     if ( !$Self->{SessionIDCookie}
         && $Self->{SessionID}
     ) {
-        $Param{Session} = ';' . $Self->{SessionName} . '=' . $Self->{SessionID};
+        $Param{Session} = q{;} . $Self->{SessionName} . q{=} . $Self->{SessionID};
     }
 
     if ( $Param{EndParam}
@@ -6264,11 +6274,11 @@ sub ProgressBar {
             );
         }
 
-        my $ParamStrg = '';
+        my $ParamStrg = q{};
         for my $Key ( keys %{$Param{Params}} ) {
             next if $Key eq 'Subaction';
-            $ParamStrg .= ';' if $ParamStrg;
-            $ParamStrg .= $Key . '=' . $Param{Params}->{$Key};
+            $ParamStrg .= q{;} if $ParamStrg;
+            $ParamStrg .= $Key . q{=} . $Param{Params}->{$Key};
         }
 
         $Self->Block(
@@ -6418,7 +6428,7 @@ sub _BuildCustomFooter{
                 next;
             }
 
-            my ($Prio, $Title) = split('::', $Entry);
+            my ($Prio, $Title) = split(/::/sm, $Entry);
 
             # get target
             my $Target;
@@ -6477,12 +6487,12 @@ sub _BuildCustomHighlight{
 
         CONFIG:
         for my $Key ( sort keys %{$Config} ) {
-            next CONFIG if $Config->{$Key} eq '';
+            next CONFIG if $Config->{$Key} eq q{};
 
             my $Selector = $Key;
 
-            if ( $Key =~ /###/ ) {
-                my ($Prio, $Restrictions) = split(/###/, $Key);
+            if ( $Key =~ /###/sm ) {
+                my ($Prio, $Restrictions) = split(/###/sm, $Key);
                 $Selector = $Prio;
             }
 

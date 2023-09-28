@@ -13,7 +13,7 @@
 <html>
 [% InsertTemplate("Copyright.tt") %]
 <head>
-    <title>[% Config("ProductName") %] [% Data.TitleArea | html %]</title>
+    <title>[% Config("ProductName") %] - [% Data.TitleArea | html %]</title>
 <style type="text/css">
 body {
     font-family: Geneva, Helvetica, Arial, sans-serif;
