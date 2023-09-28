@@ -440,19 +440,39 @@ sub Run {
 
                     # add search profile to share list
                     $SearchProfileObject->SearchProfileCategoryAdd(
-                        Name     => 'TicketSearch::' . $Self->{UserLogin} . '::' . $Self->{Profile},
-                        Category => $Category,
-                        State    => 'owner',
+                        Name      => 'TicketSearch::' . $Self->{UserLogin} . '::' . $Self->{Profile},
+                        Category  => $Category,
+                        State     => 'owner',
                         UserLogin => $Self->{UserLogin},
                     );
 
                     # auto-subscribe
                     $SearchProfileObject->SearchProfileAutoSubscribe(
-                        Name => 'TicketSearch::' . $Self->{UserLogin} . '::' . $Self->{Profile},
-                        UserLogin => $Self->{UserLogin},
+                        Name       => 'TicketSearch::' . $Self->{UserLogin} . '::' . $Self->{Profile},
+                        UserLogin  => $Self->{UserLogin},
                         UserObject => $Kernel::OM->Get('Kernel::System::User'),
                         %{$Self},
                     );
+
+                    # restore previous subscribers
+                    if ( ref( $SearchProfileCategory{Subscribers} ) eq 'ARRAY' ) {
+                        for my $Subscriber ( @{ $SearchProfileCategory{Subscribers} } ) {
+                            # check if subscription already exists
+                            my %SubscriberSearchProfileCategory = $SearchProfileObject->SearchProfileCategoryGet(
+                                Name      => $SearchProfileName,
+                                UserLogin => $Subscriber,
+                            );
+
+                            if ( !%SubscriberSearchProfileCategory ) {
+                                $SearchProfileObject->SearchProfileCategoryAdd(
+                                    Name      => 'TicketSearch::' . $Self->{UserLogin} . '::' . $Self->{Profile},
+                                    Category  => $Category,
+                                    State     => 'subscriber',
+                                    UserLogin => $Subscriber,
+                                );
+                            }
+                        }
+                    }
                 }
             }
         }
