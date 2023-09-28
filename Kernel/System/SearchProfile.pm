@@ -595,21 +595,36 @@ sub SearchProfileCategoryGet {
         }
     }
 
-    # get searech profile
+    # get search profile category data
     return
         if !$Self->{DBObject}->Prepare(
-        SQL =>
-            "SELECT * FROM kix_search_profile WHERE name = ? AND $Self->{Lower}(login) = $Self->{Lower}(?)",
+        SQL  => "SELECT * FROM kix_search_profile WHERE name = ? AND $Self->{Lower}(login) = $Self->{Lower}(?)",
         Bind => [ \$Param{Name}, \$Param{UserLogin} ],
-        );
+    );
 
     my %Result;
     while ( my @Data = $Self->{DBObject}->FetchrowArray() ) {
-
         $Result{Category}  = $Data[0];
         $Result{Name}      = $Data[1];
         $Result{State}     = $Data[2];
         $Result{UserLogin} = $Data[3];
+    }
+
+    # get search profile subscribers, if data for owner is requested
+    if (
+        $Result{State}
+        && $Result{State} eq 'owner'
+    ) {
+        return
+            if !$Self->{DBObject}->Prepare(
+            SQL  => "SELECT login FROM kix_search_profile WHERE name = ? AND state = 'subscriber'",
+            Bind => [ \$Param{Name} ],
+        );
+
+        $Result{Subscribers} = [];
+        while ( my @Data = $Self->{DBObject}->FetchrowArray() ) {
+            push( @{ $Result{Subscribers} }, $Data[0] );
+        }
     }
 
     return %Result;
