@@ -98,19 +98,22 @@ Core.KIX4OTRS = (function(TargetNS) {
                 // Yes - delete links
                 Core.UI.Dialog.CloseDialog($('.Dialog:visible'));
                 $SelectedLinks.each(function() {
-                    var LinkDef = $(this).val().split(/::/), URL = 'Action=AgentLinkObjectUtils;Subaction=DeleteLink;IsAJAXCall=1;OrgAction=' + Action
+                    var LinkDef = $(this).val().split(/::/),
+                        URL = 'Action=AgentLinkObjectUtils;Subaction=DeleteLink;IsAJAXCall=1;OrgAction=' + Action
                         + ';SourceObject=' + LinkDef[0] + ';SourceKey=' + LinkDef[1] + ';TargetObject=' + LinkDef[2] + ';TargetKey=' + LinkDef[3]
                         + ';LinkType=' + LinkDef[4];
-
+                    if ( LinkDef[0] === 'on' ) {
+                        return true;
+                    }
                     // synchronous call
                     Core.AJAX.FunctionCall(Core.Config.Get('CGIHandle'), URL, function() {}, 'text', false);
-                    if ( uri ) {
-                        location.replace(uri);
-                    }
-                    else {
-                        location.reload();
-                    }
                 });
+                if ( uri ) {
+                    location.replace(uri);
+                }
+                else {
+                    location.reload();
+                }
             }, No, function() {
                 // No
                 Core.UI.Dialog.CloseDialog($('.Dialog:visible'));
