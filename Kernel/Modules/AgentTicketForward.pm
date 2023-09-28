@@ -49,13 +49,13 @@ sub new {
         }
     }
 
-    $Self->{GetParam}->{ForwardTemplateID} = $ParamObject->GetParam( Param => 'ForwardTemplateID' ) || '';
+    $Self->{GetParam}->{ForwardTemplateID} = $ParamObject->GetParam( Param => 'ForwardTemplateID' ) || q{};
 
     # ACL compatibility translation
     $Self->{ACLCompatGetParam}->{NextStateID} = $Self->{GetParam}->{ComposeStateID};
 
     my $UserObject = $Kernel::OM->Get('Kernel::System::User');
-    $Self->{GetParam}->{SubjectNoFwd} = $ParamObject->GetParam( Param => 'SubjectNoFwd' ) || '';
+    $Self->{GetParam}->{SubjectNoFwd} = $ParamObject->GetParam( Param => 'SubjectNoFwd' ) || q{};
 
     # create form id
     if ( !$Self->{GetParam}->{FormID} ) {
@@ -90,7 +90,7 @@ sub Run {
         Action        => $Self->{Action},
         TicketID      => $Self->{TicketID},
         ReturnType    => 'Action',
-        ReturnSubType => '-',
+        ReturnSubType => q{-},
         UserID        => $Self->{UserID},
     );
     my %AclAction = $TicketObject->TicketAclActionData();
@@ -140,9 +140,9 @@ sub Run {
 
         # get new order
         my $Key  = $Self->{Action} . 'Position';
-        my $Data = '';
+        my $Data = q{};
         for my $Backend (@Backends) {
-            $Data .= $Backend . ';';
+            $Data .= $Backend . q{;};
         }
 
         # update ssession
@@ -165,7 +165,7 @@ sub Run {
         return $LayoutObject->Attachment(
             ContentType => 'text/html',
             Charset     => $LayoutObject->{UserCharset},
-            Content     => '',
+            Content     => q{},
         );
     }
 
@@ -227,7 +227,7 @@ sub Form {
     my @MultipleCustomerBcc = @{ $GetParamExtended{MultipleCustomerBcc} };
 
     # get lock state
-    my $Output = '';
+    my $Output = q{};
     if ( $Config->{RequiredLock} ) {
         if ( !$TicketObject->TicketLockGet( TicketID => $Self->{TicketID} ) ) {
 
@@ -345,7 +345,7 @@ sub Form {
     }
 
     # prepare default body...
-    $Data{ForwardBody} = $Config->{DefaultTextTicketForwardBody} || '';
+    $Data{ForwardBody} = $Config->{DefaultTextTicketForwardBody} || q{};
     if ( $Data{ForwardBody} ) {
         $Data{ForwardBody} = $TemplateGenerator->ReplacePlaceHolder(
             Text     => $Data{ForwardBody},
@@ -397,7 +397,7 @@ sub Form {
         }
 
         my $Quote = $LayoutObject->Ascii2RichText(
-            String => $ConfigObject->Get('Ticket::Frontend::Quote') || '',
+            String => $ConfigObject->Get('Ticket::Frontend::Quote') || q{},
         );
         if ($Quote) {
 
@@ -554,7 +554,7 @@ sub Form {
         Action        => $Self->{Action},
         TicketID      => $Self->{TicketID},
         ReturnType    => 'Ticket',
-        ReturnSubType => '-',
+        ReturnSubType => q{-},
         Data          => {},
         UserID        => $Self->{UserID},
     );
@@ -647,8 +647,8 @@ sub Form {
     );
 
     # build references string
-    my $References = defined $Data{References} ? $Data{References} . ' ' : '';
-    $References .= defined $Data{MessageID} ? $Data{MessageID} : '';
+    my $References = defined $Data{References} ? $Data{References} . q{ } : q{};
+    $References .= defined $Data{MessageID} ? $Data{MessageID} : q{};
 
     $Output .= $Self->_Mask(
         TicketNumber => $Ticket{TicketNumber},
@@ -663,7 +663,7 @@ sub Form {
         TimeUnitsRequired => (
             $ConfigObject->Get('Ticket::Frontend::NeedAccountedTime')
             ? 'Validate_Required'
-            : ''
+            : q{}
         ),
         Errors              => \%Error,
         MultipleCustomer    => \@MultipleCustomer,
@@ -715,12 +715,11 @@ sub SendEmail {
         next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
         # extract the dynamic field value form the web request
-        $DynamicFieldValues{ $DynamicFieldConfig->{Name} } =
-            $BackendObject->EditFieldValueGet(
+        $DynamicFieldValues{ $DynamicFieldConfig->{Name} } = $BackendObject->EditFieldValueGet(
             DynamicFieldConfig => $DynamicFieldConfig,
             ParamObject        => $ParamObject,
             LayoutObject       => $LayoutObject,
-            );
+        );
     }
 
     # convert dynamic field values into a structure for ACLs
@@ -779,7 +778,7 @@ sub SendEmail {
     if (
         $ConfigObject->Get('Ticket::Frontend::AccountTime')
         && $ConfigObject->Get('Ticket::Frontend::NeedAccountedTime')
-        && $GetParam{TimeUnits} eq ''
+        && $GetParam{TimeUnits} eq q{}
     ) {
         $Error{'TimeUnitsInvalid'} = 'ServerError';
     }
@@ -796,8 +795,14 @@ sub SendEmail {
     $GetParam{Subject} = $TicketObject->TicketSubjectBuild(
         TicketNumber => $Ticket{TicketNumber},
         Action       => 'Forward',
-        Subject      => $GetParam{Subject} || '',
+        Subject      => $GetParam{Subject} || q{}
     );
+
+    if ( $GetParam{SubjectNoFwd} ) {
+        my $FwdPrefix = $ConfigObject->Get('Ticket::SubjectFwd');
+        $GetParam{Subject} =~ s/^($FwdPrefix(\[\d+\])?: )+//sm;
+        $Param{IsChecked} = 'checked="checked"';
+    }
 
     # create html strings for all dynamic fields
     my %DynamicFieldHTML;
@@ -809,7 +814,7 @@ sub SendEmail {
         Action        => $Self->{Action},
         TicketID      => $Self->{TicketID},
         ReturnType    => 'Ticket',
-        ReturnSubType => '-',
+        ReturnSubType => q{-},
         Data          => {},
         UserID        => $Self->{UserID},
     );
@@ -873,18 +878,15 @@ sub SendEmail {
                 DynamicFieldConfig   => $DynamicFieldConfig,
                 PossibleValuesFilter => $PossibleValuesFilter,
                 ParamObject          => $ParamObject,
-                Mandatory =>
-                    $Config->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
+                Mandatory            => $Config->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
             );
 
             if ( !IsHashRefWithData($ValidationResult) ) {
                 return $LayoutObject->ErrorScreen(
-                    Message =>
-                        $LayoutObject->{LanguageObject}
-                        ->Translate(
+                    Message => $LayoutObject->{LanguageObject}->Translate(
                         'Could not perform validation on field %s!',
                         $DynamicFieldConfig->{Label}
-                        ),
+                    ),
                     Comment => Translatable('Please contact the administrator.'),
                 );
             }
@@ -900,8 +902,8 @@ sub SendEmail {
             DynamicFieldConfig   => $DynamicFieldConfig,
             PossibleValuesFilter => $PossibleValuesFilter,
             Mandatory            => $Config->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
-            ServerError          => $ValidationResult->{ServerError}  || '',
-            ErrorMessage         => $ValidationResult->{ErrorMessage} || '',
+            ServerError          => $ValidationResult->{ServerError}  || q{},
+            ErrorMessage         => $ValidationResult->{ErrorMessage} || q{},
             LayoutObject         => $LayoutObject,
             ParamObject          => $ParamObject,
             AJAXUpdate           => 1,
@@ -1081,7 +1083,7 @@ sub SendEmail {
         }
 
         # prepare default body...
-        $Data{ForwardBody} = $Self->{Config}->{DefaultTextTicketForwardBody} || '';
+        $Data{ForwardBody} = $Self->{Config}->{DefaultTextTicketForwardBody} || q{};
         if ( $Data{ForwardBody} ) {
             $Data{ForwardBody} = $TemplateGeneratorObject->ReplacePlaceHolder(
                 Text     => $Data{ForwardBody},
@@ -1121,7 +1123,7 @@ sub SendEmail {
             }
 
             my $Quote = $LayoutObject->Ascii2RichText(
-                String => $ConfigObject->Get('Ticket::Frontend::Quote') || '',
+                String => $ConfigObject->Get('Ticket::Frontend::Quote') || q{},
             );
             if ($Quote) {
 
@@ -1288,7 +1290,7 @@ sub SendEmail {
     }
 
     # send email
-    my $To = '';
+    my $To = q{};
     KEY:
     for my $Key (qw(To Cc Bcc)) {
         next KEY if !$GetParam{$Key};
@@ -1524,7 +1526,7 @@ sub AjaxUpdate {
         Action        => $Self->{Action},
         TicketID      => $Self->{TicketID},
         ReturnType    => 'Ticket',
-        ReturnSubType => '-',
+        ReturnSubType => q{-},
         Data          => {},
         UserID        => $Self->{UserID},
     );
@@ -1636,7 +1638,7 @@ sub AjaxUpdate {
             );
         }
         else {
-            $Output{ ( "DynamicField_" . $DynamicFieldConfig->{Name} ) } = "";
+            $Output{ ( "DynamicField_" . $DynamicFieldConfig->{Name} ) } = q{};
         }
     }
 
@@ -1645,7 +1647,7 @@ sub AjaxUpdate {
         push @FormDisplayOutput, {
             Name => 'FormDisplay',
             Data => \%Output,
-            Max  => 10000,
+            Max  => 10_000,
         };
     }
 
@@ -1695,7 +1697,7 @@ sub _Mask {
     # create a string with the quoted dynamic field names separated by commas
     if ( IsArrayRefWithData($DynamicFieldNames) ) {
         for my $Field ( @{$DynamicFieldNames} ) {
-            $Param{DynamicFieldNamesStrg} .= ", '" . $Field . "'";
+            $Param{DynamicFieldNamesStrg} .= ", '" . $Field . q{'};
         }
     }
 
@@ -1814,7 +1816,7 @@ sub _Mask {
         YearPeriodFuture     => 5,
         Format               => 'DateInputFormatLong',
         DiffTime             => $ConfigObject->Get('Ticket::Frontend::PendingDiffTime') || 0,
-        Class                => $Param{Errors}->{DateInvalid} || ' ',
+        Class                => $Param{Errors}->{DateInvalid} || q{ },
         Validate             => 1,
         ValidateDateInFuture => 1,
         Calendar             => $Calendar,
@@ -2123,7 +2125,7 @@ sub _GetExtendedParams {
 
     my @MultipleCustomer;
     my $CustomersNumber = $ParamObject->GetParam( Param => 'CustomerTicketCounterToCustomer' ) || 0;
-    my $Selected = $ParamObject->GetParam( Param => 'CustomerSelected' ) || '';
+    my $Selected = $ParamObject->GetParam( Param => 'CustomerSelected' ) || q{};
 
     # get check item object
     my $CheckItemObject = $Kernel::OM->Get('Kernel::System::CheckItem');
@@ -2132,11 +2134,11 @@ sub _GetExtendedParams {
         my $CustomerCounter = 1;
         for my $Count ( 1 ... $CustomersNumber ) {
             my $CustomerElement = $ParamObject->GetParam( Param => 'CustomerTicketText_' . $Count );
-            my $CustomerSelected = ( $Selected eq $Count ? 'checked="checked"' : '' );
+            my $CustomerSelected = ( $Selected eq $Count ? 'checked="checked"' : q{} );
             my $CustomerKey = $ParamObject->GetParam( Param => 'CustomerKey_' . $Count )
-                || '';
+                || q{};
             my $CustomerQueue = $ParamObject->GetParam( Param => 'CustomerQueue_' . $Count )
-                || '';
+                || q{};
             if ($CustomerElement) {
 
                 if ( $GetParam{To} ) {
@@ -2148,7 +2150,7 @@ sub _GetExtendedParams {
 
                 # check email address
                 my $CustomerErrorMsg = 'CustomerGenericServerErrorMsg';
-                my $CustomerError    = '';
+                my $CustomerError    = q{};
                 for my $Email ( Mail::Address->parse($CustomerElement) ) {
                     if ( !$CheckItemObject->CheckEmail( Address => $Email->address() ) ) {
                         $CustomerErrorMsg = $CheckItemObject->CheckErrorType()
@@ -2158,19 +2160,19 @@ sub _GetExtendedParams {
                 }
 
                 # check for duplicated entries
-                if ( defined $AddressesList{$CustomerElement} && $CustomerError eq '' ) {
+                if ( defined $AddressesList{$CustomerElement} && $CustomerError eq q{} ) {
                     $CustomerErrorMsg = 'IsDuplicatedServerErrorMsg';
                     $CustomerError    = 'ServerError';
                 }
 
-                my $CustomerDisabled = '';
+                my $CustomerDisabled = q{};
                 my $CountAux         = $CustomerCounter++;
-                if ( $CustomerError ne '' ) {
+                if ( $CustomerError ne q{} ) {
                     $CustomerDisabled = 'disabled="disabled"';
                     $CountAux         = $Count . 'Error';
                 }
 
-                if ( $CustomerQueue ne '' ) {
+                if ( $CustomerQueue ne q{} ) {
                     $CustomerQueue = $Count;
                 }
 
@@ -2197,9 +2199,9 @@ sub _GetExtendedParams {
         for my $Count ( 1 ... $CustomersNumberCc ) {
             my $CustomerElementCc = $ParamObject->GetParam( Param => 'CcCustomerTicketText_' . $Count );
             my $CustomerKeyCc     = $ParamObject->GetParam( Param => 'CcCustomerKey_' . $Count )
-                || '';
+                || q{};
             my $CustomerQueueCc = $ParamObject->GetParam( Param => 'CcCustomerQueue_' . $Count )
-                || '';
+                || q{};
 
             if ($CustomerElementCc) {
 
@@ -2212,7 +2214,7 @@ sub _GetExtendedParams {
 
                 # check email address
                 my $CustomerErrorMsgCc = 'CustomerGenericServerErrorMsg';
-                my $CustomerErrorCc    = '';
+                my $CustomerErrorCc    = q{};
                 for my $Email ( Mail::Address->parse($CustomerElementCc) ) {
                     if ( !$CheckItemObject->CheckEmail( Address => $Email->address() ) ) {
                         $CustomerErrorMsgCc = $CheckItemObject->CheckErrorType()
@@ -2222,19 +2224,19 @@ sub _GetExtendedParams {
                 }
 
                 # check for duplicated entries
-                if ( defined $AddressesList{$CustomerElementCc} && $CustomerErrorCc eq '' ) {
+                if ( defined $AddressesList{$CustomerElementCc} && $CustomerErrorCc eq q{} ) {
                     $CustomerErrorMsgCc = 'IsDuplicatedServerErrorMsg';
                     $CustomerErrorCc    = 'ServerError';
                 }
 
-                my $CustomerDisabledCc = '';
+                my $CustomerDisabledCc = q{};
                 my $CountAuxCc         = $CustomerCounterCc++;
-                if ( $CustomerErrorCc ne '' ) {
+                if ( $CustomerErrorCc ne q{} ) {
                     $CustomerDisabledCc = 'disabled="disabled"';
                     $CountAuxCc         = $Count . 'Error';
                 }
 
-                if ( $CustomerQueueCc ne '' ) {
+                if ( $CustomerQueueCc ne q{} ) {
                     $CustomerQueueCc = $Count;
                 }
 
@@ -2260,9 +2262,9 @@ sub _GetExtendedParams {
         for my $Count ( 1 ... $CustomersNumberBcc ) {
             my $CustomerElementBcc = $ParamObject->GetParam( Param => 'BccCustomerTicketText_' . $Count );
             my $CustomerKeyBcc     = $ParamObject->GetParam( Param => 'BccCustomerKey_' . $Count )
-                || '';
+                || q{};
             my $CustomerQueueBcc = $ParamObject->GetParam( Param => 'BccCustomerQueue_' . $Count )
-                || '';
+                || q{};
 
             if ($CustomerElementBcc) {
 
@@ -2275,7 +2277,7 @@ sub _GetExtendedParams {
 
                 # check email address
                 my $CustomerErrorMsgBcc = 'CustomerGenericServerErrorMsg';
-                my $CustomerErrorBcc    = '';
+                my $CustomerErrorBcc    = q{};
                 for my $Email ( Mail::Address->parse($CustomerElementBcc) ) {
                     if ( !$CheckItemObject->CheckEmail( Address => $Email->address() ) ) {
                         $CustomerErrorMsgBcc = $CheckItemObject->CheckErrorType()
@@ -2285,19 +2287,19 @@ sub _GetExtendedParams {
                 }
 
                 # check for duplicated entries
-                if ( defined $AddressesList{$CustomerElementBcc} && $CustomerErrorBcc eq '' ) {
+                if ( defined $AddressesList{$CustomerElementBcc} && $CustomerErrorBcc eq q{} ) {
                     $CustomerErrorMsgBcc = 'IsDuplicatedServerErrorMsg';
                     $CustomerErrorBcc    = 'ServerError';
                 }
 
-                my $CustomerDisabledBcc = '';
+                my $CustomerDisabledBcc = q{};
                 my $CountAuxBcc         = $CustomerCounterBcc++;
-                if ( $CustomerErrorBcc ne '' ) {
+                if ( $CustomerErrorBcc ne q{} ) {
                     $CustomerDisabledBcc = 'disabled="disabled"';
                     $CountAuxBcc         = $Count . 'Error';
                 }
 
-                if ( $CustomerQueueBcc ne '' ) {
+                if ( $CustomerQueueBcc ne q{} ) {
                     $CustomerQueueBcc = $Count;
                 }
 
