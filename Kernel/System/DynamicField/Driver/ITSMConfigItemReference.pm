@@ -690,19 +690,18 @@ END
 END
     }
 
-    if ( $Param{AJAXUpdate} ) {
-
+    if (
+        $Param{AJAXUpdate}
+        && IsArrayRefWithData( $Param{UpdatableFields} )
+    ) {
+        # prepare field selector
         my $FieldSelector = '#' . $FieldName;
 
-        my $FieldsToUpdate;
-        if ( IsArrayRefWithData( $Param{UpdatableFields} ) ) {
+        # Remove current field from updatable fields list
+        my @FieldsToUpdateList = grep { $_ ne $FieldName } @{ $Param{UpdatableFields} };
 
-            # Remove current field from updatable fields list
-            my @FieldsToUpdate = grep { $_ ne $FieldName } @{ $Param{UpdatableFields} };
-
-            # quote all fields, put commas in between them
-            $FieldsToUpdate = join( ', ', map {"'$_'"} @FieldsToUpdate );
-        }
+        # quote all fields, put commas in between them
+        my $FieldsToUpdate = join( ', ', map {"'$_'"} @FieldsToUpdateList );
 
         # add js to call FormUpdate()
         $Param{LayoutObject}->AddJSOnDocumentComplete( Code => <<"END");
