@@ -20,6 +20,7 @@ package Kernel::System::MailAccount::POP3S_OAuth2;
 use strict;
 use warnings;
 
+use IO::Socket::SSL qw( SSL_VERIFY_NONE SSL_VERIFY_PEER );
 use Net::POP3;
 use MIME::Base64;
 
@@ -72,7 +73,7 @@ sub Connect {
         Timeout         => $Param{Timeout},
         Debug           => $Param{Debug},
         SSL             => 1,
-        SSL_verify_mode => 0,
+        SSL_verify_mode => $Param{SSLVerify} ? SSL_VERIFY_PEER : SSL_VERIFY_NONE,
     );
 
     if ( !$PopObject ) {

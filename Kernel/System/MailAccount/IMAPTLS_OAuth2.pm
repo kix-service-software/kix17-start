@@ -17,6 +17,7 @@ package Kernel::System::MailAccount::IMAPTLS_OAuth2;
 use strict;
 use warnings;
 
+use IO::Socket::SSL qw( SSL_VERIFY_NONE SSL_VERIFY_PEER );
 use Mail::IMAPClient;
 use MIME::Base64;
 
@@ -70,7 +71,9 @@ sub Connect {
     # connect to host
     my $IMAPObject = Mail::IMAPClient->new(
         Server   => $Param{Host},
-        Starttls => [ SSL_verify_mode => 0 ],
+        Starttls => [
+            SSL_verify_mode => $Param{SSLVerify} ? SSL_VERIFY_PEER : SSL_VERIFY_NONE
+        ],
         Debug    => $Param{Debug},
         Uid      => 1,
 

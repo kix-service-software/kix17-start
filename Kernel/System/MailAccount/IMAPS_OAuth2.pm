@@ -17,7 +17,7 @@ package Kernel::System::MailAccount::IMAPS_OAuth2;
 use strict;
 use warnings;
 
-use IO::Socket::SSL;
+use IO::Socket::SSL qw( SSL_VERIFY_NONE SSL_VERIFY_PEER );
 use Mail::IMAPClient;
 use MIME::Base64;
 
@@ -78,7 +78,9 @@ sub Connect {
     # connect to host
     my $IMAPObject = Mail::IMAPClient->new(
         Server   => $Param{Host},
-        Ssl      => [ SSL_verify_mode => IO::Socket::SSL::SSL_VERIFY_NONE() ],
+        Ssl      => [
+            SSL_verify_mode => $Param{SSLVerify} ? SSL_VERIFY_PEER : SSL_VERIFY_NONE
+        ],
         Debug    => $Param{Debug},
         Uid      => 1,
 
@@ -196,6 +198,9 @@ sub _Fetch {
     # MaxPopEmailSession
     my $MaxPopEmailSession = $ConfigObject->Get('PostMasterReconnectMessage') || 20;
 
+    # SSLVerify
+    my $SSLVerify = $ConfigObject->Get('PostMasterSSLVerify');
+
     my $Timeout      = 60;
     my $FetchCounter = 0;
     my $AuthType     = 'IMAPS_OAuth2';
@@ -204,8 +209,9 @@ sub _Fetch {
 
     my %Connect = $Self->Connect(
         %Param,
-        Timeout => $Timeout,
-        Debug   => $Debug
+        Timeout   => $Timeout,
+        Debug     => $Debug,
+        SSLVerify => $SSLVerify,
     );
 
     if ( !$Connect{Successful} ) {
