@@ -1,6 +1,16 @@
 # Change log of KIX
 * Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
 
+# 17.22.0-RC2 (2023/11/03)
+ * (2023/10/30) - Bugfix: KIX17-3519 (option to verify incoming and outgoing email ssl connections) (mbauer)
+ * (2023/10/30) - Bugfix: KIX17-3522 (fixed handlnig of pending state check) (mbauer)
+ * (2023/10/13) - Bugfix: KIX17-3515 (consider dynamic field values of form for queue move) (mbauer)
+ * (2023/09/28) - Bugfix: KIX17-3504 (check for updatable fields) (mbauer)
+ * (2023/09/27) - Bugfix: KIX17-3514 (restore subscribers when changing shared search profile) (mbauer)
+ * (2023/09/25) - Bugfix: KIX17-3511 (fixed missing delete of all selected linked items) (fjacquemin)
+ * (2023/09/25) - Bugfix: KIX17-3510 (fixed missing handling to remove Fwd in subject if NoFwd checked) (fjacquemin)
+ * (2023/09/22) - Bugfix: KIX17-3503 (fixed page tilte building) (fjacquemin)
+
 # 17.22.0-RC1 (2023/09/12)
  * (2023/09/08) - Bugfix: KIX17-3502 (improved handling of uploaded inline images) (mbauer)
  * (2023/09/08) - Bugfix: KIX17-3501 (improved handling for outgoing emails) (mbauer)
