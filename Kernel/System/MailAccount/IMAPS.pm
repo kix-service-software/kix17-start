@@ -13,7 +13,7 @@ package Kernel::System::MailAccount::IMAPS;
 use strict;
 use warnings;
 
-use IO::Socket::SSL;
+use IO::Socket::SSL qw( SSL_VERIFY_NONE SSL_VERIFY_PEER );
 
 use base qw(Kernel::System::MailAccount::IMAP);
 
@@ -44,7 +44,7 @@ sub Connect {
         debug       => $Param{Debug},
         use_ssl     => 1,
         ssl_options => [
-            SSL_verify_mode => IO::Socket::SSL::SSL_VERIFY_NONE(),
+            SSL_verify_mode => $Param{SSLVerify} ? SSL_VERIFY_PEER : SSL_VERIFY_NONE
         ],
     );
     if ( !$IMAPObject ) {

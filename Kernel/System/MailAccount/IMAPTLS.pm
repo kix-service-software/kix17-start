@@ -13,6 +13,7 @@ package Kernel::System::MailAccount::IMAPTLS;
 use strict;
 use warnings;
 
+use IO::Socket::SSL qw( SSL_VERIFY_NONE SSL_VERIFY_PEER );
 use Mail::IMAPClient;
 
 use Kernel::System::PostMaster;
@@ -52,7 +53,9 @@ sub Connect {
         Server   => $Param{Host},
         User     => $Param{Login},
         Password => $Param{Password},
-        Starttls => [ SSL_verify_mode => 0 ],
+        Starttls => [
+            SSL_verify_mode => $Param{SSLVerify} ? SSL_VERIFY_PEER : SSL_VERIFY_NONE
+        ],
         Debug    => $Param{Debug},
         Uid      => 1,
 
@@ -121,6 +124,9 @@ sub _Fetch {
     # MaxPopEmailSession
     my $MaxPopEmailSession = $ConfigObject->Get('PostMasterReconnectMessage') || 20;
 
+    # SSLVerify
+    my $SSLVerify = $ConfigObject->Get('PostMasterSSLVerify');
+
     my $Timeout      = 60;
     my $FetchCounter = 0;
     my $AuthType     = 'IMAPTLS';
@@ -129,8 +135,9 @@ sub _Fetch {
 
     my %Connect = $Self->Connect(
         %Param,
-        Timeout => $Timeout,
-        Debug   => $Debug
+        Timeout   => $Timeout,
+        Debug     => $Debug,
+        SSLVerify => $SSLVerify,
     );
 
     if ( !$Connect{Successful} ) {
