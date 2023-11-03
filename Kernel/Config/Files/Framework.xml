@@ -5638,6 +5638,17 @@
             <String Regex="">Profile1</String>
         </Setting>
     </ConfigItem>
+    <ConfigItem Name="SendmailModule::SSLVerify" Required="1" Valid="1" ConfigLevel="200">
+        <Description Translatable="1">If any of the "SMTPS" or "SMTPTLS" mechanisms was selected as SendmailModule, this controls if the ssl connection will be verified.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Sendmail</SubGroup>
+        <Setting>
+            <Option SelectedID="0">
+                <Item Key="0" Translatable="1">No</Item>
+                <Item Key="1" Translatable="1">Yes</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
     <ConfigItem Name="SendmailBcc" Required="0" Valid="1" ConfigLevel="200">
         <Description Translatable="1">Sends all outgoing email via bcc to the specified address. Please use this only for backup reasons.</Description>
         <Group>Framework</Group>

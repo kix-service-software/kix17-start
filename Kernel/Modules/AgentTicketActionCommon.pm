@@ -935,9 +935,12 @@ sub Run {
                 TicketID           => $Self->{TicketID},
                 SendNoNotification => $GetParam{NewUserID},
                 Comment            => $BodyAsText,
+                DynamicField       => $GetParam{DynamicField},
             );
             if ( !$Move ) {
-                return $LayoutObject->ErrorScreen();
+                return $LayoutObject->ErrorScreen(
+                    Message => Translatable('Permission denied to move ticket to given queue!')
+                );
             }
         }
 
