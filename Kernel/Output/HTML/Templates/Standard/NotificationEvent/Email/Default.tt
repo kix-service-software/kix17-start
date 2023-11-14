@@ -86,10 +86,13 @@
             }
 
             .headerContent,
-            .bodyContent,
-            .bodyContent * {
+            .bodyContent {
                 font-family: Arial;
                 font-size: 13px;
+            }
+            .headerContent,
+            .bodyContent,
+            .bodyContent * {
                 line-height: 150%;
                 text-align: left;
             }
