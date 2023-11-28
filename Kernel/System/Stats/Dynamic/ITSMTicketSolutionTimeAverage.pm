@@ -686,7 +686,7 @@ sub GetStatElement {
             UserID   => 1,
             Extended => 1,
         );
-        return 'ERROR' if ( !%{ %Ticket } );
+        return 'ERROR' if ( !%Ticket );
 
         if ( $Ticket{SolutionInMin} ) {
             $Time += ( $Ticket{SolutionInMin} * 60 );
