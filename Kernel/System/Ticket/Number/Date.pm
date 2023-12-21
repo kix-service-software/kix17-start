@@ -42,7 +42,8 @@ sub TicketCreateNumber {
     );
 
     # read count
-    my $Count = 0;
+    my $Count      = 0;
+    my $LastModify = '';
     if ( -f $CounterLog ) {
 
         my $ContentSCALARRef = $MainObject->FileRead(
@@ -51,7 +52,7 @@ sub TicketCreateNumber {
 
         if ( $ContentSCALARRef && ${$ContentSCALARRef} ) {
 
-            ($Count) = split( /;/, ${$ContentSCALARRef} );
+            ( $Count, $LastModify ) = split( /;/, ${$ContentSCALARRef} );
 
             # just debug
             if ( $Self->{Debug} > 0 ) {
@@ -63,14 +64,20 @@ sub TicketCreateNumber {
         }
     }
 
+    # check if we need to reset the counter
+    if ( !$LastModify || $LastModify ne "$Year-$Month-$Day" ) {
+        $Count = 0;
+    }
+
     # count auto increment ($Count++)
     $Count++;
     $Count = $Count + $JumpCounter;
+    my $Content = $Count . ";$Year-$Month-$Day;";
 
     # write new count
     my $Write = $MainObject->FileWrite(
         Location => $CounterLog,
-        Content  => \$Count,
+        Content  => \$Content,
     );
 
     if ($Write) {
