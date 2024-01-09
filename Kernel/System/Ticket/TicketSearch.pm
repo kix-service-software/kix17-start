@@ -2260,12 +2260,16 @@ sub TicketSearch {
     return
         if !$DBObject->Prepare(
         SQL   => $SQLSelect . $SQLFrom . $SQLExt,
-        Limit => $Limit
         );
     while ( my @Row = $DBObject->FetchrowArray() ) {
         $Count = $Row[0];
         push @TicketIDs, $Row[0] if ( !$Tickets{ $Row[0] } );
         $Tickets{ $Row[0] } = $Row[1];
+
+        last if (
+            $Limit
+            && scalar( @TicketIDs ) == $Limit
+        );
     }
 
     # return COUNT
@@ -4341,12 +4345,16 @@ sub TicketSearchOR {
     return
         if !$DBObject->Prepare(
         SQL   => $SQLSelect . $SQLFrom . $SQLExt,
-        Limit => $Limit
         );
     while ( my @Row = $DBObject->FetchrowArray() ) {
         $Count = $Row[0];
         push( @TicketIDs, $Row[0] ) if ( !$Tickets{ $Row[0] } );
         $Tickets{ $Row[0] } = $Row[1];
+
+        last if (
+            $Limit
+            && scalar( @TicketIDs ) == $Limit
+        );
     }
 
     # return COUNT
