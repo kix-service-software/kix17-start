@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
+# Modified version of the work: Copyright (C) 2006-2024 KIX Service Software GmbH, https://www.kixdesk.com
 # based on the original work of:
-# Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2024 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. This program is
 # licensed under the AGPL-3.0 with patches licensed under the GPL-3.0.
@@ -163,7 +163,7 @@ sub Run {
     # get params
     my %GetParam;
     for (
-### Patch licensed under the GPL-3.0, Copyright (C) 2001-2023 OTRS AG, https://otrs.com/ ###
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2024 OTRS AG, https://otrs.com/ ###
 #        qw(
 #        From To Cc Bcc Subject Body InReplyTo References ResponseID ReplyArticleID StateID
 #        ArticleID ArticleTypeID TimeUnits Year Month Day Hour Minute FormID ReplyAll
@@ -172,7 +172,7 @@ sub Run {
         To Cc Bcc Subject Body InReplyTo References ResponseID ReplyArticleID StateID
         ArticleID ArticleTypeID TimeUnits Year Month Day Hour Minute FormID ReplyAll
         )
-### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2023 OTRS AG, https://otrs.com/ ###
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2024 OTRS AG, https://otrs.com/ ###
     ) {
         $GetParam{$_} = $ParamObject->GetParam( Param => $_ );
     }
@@ -866,12 +866,12 @@ sub Run {
             );
         }
 
-### Patch licensed under the GPL-3.0, Copyright (C) 2001-2023 OTRS AG, https://otrs.com/ ###
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2024 OTRS AG, https://otrs.com/ ###
         my $From = $Kernel::OM->Get('Kernel::System::TemplateGenerator')->Sender(
             QueueID => $Ticket{QueueID},
             UserID  => $Self->{UserID},
         );
-### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2023 OTRS AG, https://otrs.com/ ###
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2024 OTRS AG, https://otrs.com/ ###
 
         # send email
         my $ArticleID = $TicketObject->ArticleSend(
@@ -880,10 +880,10 @@ sub Run {
             TicketID       => $Self->{TicketID},
             HistoryType    => 'SendAnswer',
             HistoryComment => "\%\%$Recipients",
-### Patch licensed under the GPL-3.0, Copyright (C) 2001-2023 OTRS AG, https://otrs.com/ ###
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2024 OTRS AG, https://otrs.com/ ###
 #            From           => $GetParam{From},
             From           => $From,
-### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2023 OTRS AG, https://otrs.com/ ###
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2024 OTRS AG, https://otrs.com/ ###
             To             => $GetParam{To},
             Cc             => $GetParam{Cc},
             Bcc            => $GetParam{Bcc},
