@@ -1,6 +1,16 @@
 # Change log of KIX
 * Copyright (C) 2006-2024 KIX Service Software GmbH, https://www.kixdesk.com
 
+# 17.22.0-RC3 (2024/01/09)
+ * (2024/01/08) - CR: KIX17-3537 (Updated Javascript libaries) (fjacquemin)
+ * (2024/01/08) - CR: KIX17-3539 (update distributed CPAN modules) (mbauer)
+ * (2024/01/08) - CR: KIX17-3540 (update copyrights) (mbauer)
+ * (2024/01/02) - CR: KIX17-3536 (additional migration data check for custom state types) (mbauer)
+ * (2023/12/21) - Bugfix: KIX17-3535 (handle search limit outside of database request) (mbauer)
+ * (2023/12/20) - Bugfix: KIX17-3534 (fix number creation of ticket number generator Date) (mbauer)
+ * (2023/11/28) - Bugfix: KIX17-3526 (fix stat module ITSMTicketSolutionTimeAverage) (mbauer)
+ * (2023/11/10) - Bugfix: KIX17-3525 (fix style handling of ticket notifications) (mbauer)
+
 # 17.22.0-RC2 (2023/11/03)
  * (2023/10/30) - Bugfix: KIX17-3519 (option to verify incoming and outgoing email ssl connections) (mbauer)
  * (2023/10/30) - Bugfix: KIX17-3522 (fixed handlnig of pending state check) (mbauer)
