@@ -92,6 +92,7 @@ sub Run {
                 'TicketCustomerUser'       => 1,
                 'TicketCustomerCompany'    => 1,
                 'TicketData'               => 1,
+                'TicketStateTypes'         => 1,
                 'ServiceNames'             => 1,
                 'DynamicFieldValues'       => 1,
             );
@@ -219,6 +220,15 @@ sub Run {
 
     # check ticket customer user
     $Success = $Self->_CheckTicketCustomerCompany(
+        Fixes   => \%Fixes,
+        Verbose => $Verbose,
+    );
+    if ( !$Success ) {
+        return $Self->ExitCodeError();
+    }
+
+    # check ticket state types
+    $Success = $Self->_CheckTicketStateTypes(
         Fixes   => \%Fixes,
         Verbose => $Verbose,
     );
@@ -2721,6 +2731,112 @@ sub _CheckTicketCustomerCompany {
     }
     else {
         $Self->Print('<green>No unknown customer companies</green>' . "\n");
+    }
+
+    return 1;
+}
+
+sub _CheckTicketStateTypes {
+    my ( $Self, %Param ) = @_;
+
+    # get needed objects
+    my $DBObject    = $Kernel::OM->Get('Kernel::System::DB');
+    my $StateObject = $Kernel::OM->Get('Kernel::System::State');
+
+    # get state type list
+    my %StateTypeList = $StateObject->StateTypeList(
+        UserID => 1,
+    );
+
+    $Self->Print('<yellow>TicketStateTypes</yellow> - Check ticket state types' . "\n");
+
+    # process state type list
+    my @CustomStateTypes = ();
+    my $StateTypeIDOpen  = 0;
+    for my $StateTypeID ( sort( keys( %StateTypeList ) ) ) {
+        if (
+            $StateTypeList{ $StateTypeID } ne 'new'
+            && $StateTypeList{ $StateTypeID } ne 'open'
+            && $StateTypeList{ $StateTypeID } ne 'closed'
+            && $StateTypeList{ $StateTypeID } ne 'pending reminder'
+            && $StateTypeList{ $StateTypeID } ne 'pending auto'
+            && $StateTypeList{ $StateTypeID } ne 'removed'
+            && $StateTypeList{ $StateTypeID } ne 'merged'
+        ) {
+            push( @CustomStateTypes, $StateTypeID );
+        }
+        elsif ( $StateTypeList{ $StateTypeID } eq 'open' ) {
+            $StateTypeIDOpen = $StateTypeID;
+        }
+    }
+
+    # check that state type 'open' was found
+    if ( !$StateTypeIDOpen ) {
+        $Self->PrintError('State type "open" is missing!' . "\n");
+        return;
+    }
+
+    $Self->Print('<yellow> - Custom state types found: ' . scalar( @CustomStateTypes ) . '</yellow>' . "\n");
+
+    # process state type result
+    if (
+        @CustomStateTypes
+        && scalar( @CustomStateTypes )
+    ) {
+        # prepare select statement
+        my $SelectSQL = 'SELECT id, name FROM ticket_state WHERE type_id IN (' . join ( ',', @CustomStateTypes ) . ')';
+
+        # prepare db handle
+        return if !$DBObject->Prepare(
+            SQL => $SelectSQL,
+        );
+
+        # fetch data
+        my %Data = ();
+        while ( my @Row = $DBObject->FetchrowArray() ) {
+            $Data{ $Row[0] } = $Row[1];
+        }
+
+        # process state result
+        if (
+            %Data
+            && scalar( keys( %Data ) )
+        ) {
+            # check if entry should be fixed
+            if ( $Param{Fixes}->{'TicketStateTypes'} ) {
+                # convert hash to array
+                my @StateIDs = sort( keys( %Data ) );
+
+                # prepare fix statement
+                my $FixSQL = 'UPDATE ticket_state SET type_id = ? WHERE id IN (' . join ( ',', @StateIDs ) . ')';
+
+                # execute fix statement
+                return if !$DBObject->Do(
+                    SQL  => $FixSQL,
+                    Bind => [ \$StateTypeIDOpen ]
+                );
+
+                $Self->Print('<green>' . scalar( keys( %Data ) ) . ' entries fixed</green>' . "\n");
+            }
+            else {
+                if ( $Param{Verbose} ) {
+                    $Self->Print('<red> - Ticket states to fix:</red> (' . scalar( keys( %Data ) ) . ')' . "\n");
+
+                    for my $StateID ( sort { $a <=> $b } ( keys( %Data ) ) ) {
+                        $Self->Print($Data{ $StateID } . "\n");
+                    }
+                }
+                else {
+                    $Self->Print('<red> - ' . scalar( keys( %Data ) ) . ' entries should be fixed</red>' . "\n");
+                }
+            }
+        }
+        else {
+            $Self->Print('<green>Nothing to do</green>' . "\n");
+        }
+    }
+    else {
+        $Self->Print('<green>Nothing to do</green>' . "\n");
     }
 
     return 1;
