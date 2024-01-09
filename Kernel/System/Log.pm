@@ -1,8 +1,8 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
+# Modified version of the work: Copyright (C) 2006-2024 KIX Service Software GmbH, https://www.kixdesk.com
 # based on the original work of:
-# Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
-# Copyright (C) 2021-2023 Znuny GmbH, https://znuny.org/
+# Copyright (C) 2001-2024 OTRS AG, https://otrs.com/
+# Copyright (C) 2021-2024 Znuny GmbH, https://znuny.org/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. This program is
 # licensed under the AGPL-3.0 with patches licensed under the GPL-3.0.
@@ -263,7 +263,7 @@ sub Log {
         my $Data   = localtime() . ";;$Priority;;$Self->{LogPrefix};;$Message\n";
         my $String = $Self->GetLog();
 
-### Patch licensed under the GPL-3.0, Copyright (C) 2021-2023 Znuny GmbH, https://znuny.org/ ###
+### Patch licensed under the GPL-3.0, Copyright (C) 2021-2024 Znuny GmbH, https://znuny.org/ ###
 #        shmwrite( $Self->{IPCSHMKey}, $Data . $String, 0, $Self->{IPCSize} ) || die $!;
         # Fix for issue #286 (GitHub) / #328 (internal): Encode output.
         my $EncodeObject = $Kernel::OM->Get('Kernel::System::Encode');
@@ -272,7 +272,7 @@ sub Log {
         $EncodeObject->EncodeOutput( \$Output );
 
         shmwrite( $Self->{IPCSHMKey}, $Output, 0, $Self->{IPCSize} ) || die $!;
-### EO Patch licensed under the GPL-3.0, Copyright (C) 2021-2023 Znuny GmbH, https://znuny.org/ ###
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2021-2024 Znuny GmbH, https://znuny.org/ ###
     }
 
     return 1;

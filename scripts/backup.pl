@@ -1,8 +1,8 @@
 #!/usr/bin/perl
 # --
-# Modified version of the work: Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
+# Modified version of the work: Copyright (C) 2006-2024 KIX Service Software GmbH, https://www.kixdesk.com
 # based on the original work of:
-# Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2024 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -31,7 +31,7 @@ my $DBDump      = '';
 getopt( 'hcrtdn', \%Opts );
 if ( exists $Opts{h} ) {
     print "backup.pl - backup script\n";
-    print "Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com\n";
+    print "Copyright (C) 2006-2024 KIX Service Software GmbH, https://www.kixdesk.com\n";
     print "usage: backup.pl -d /data_backup_dir/ [-c gzip|bzip2] [-r 30] [-t fullbackup|nofullbackup|dbonly] [-n]\n";
     print "additional: -n   ignore the PROCESS (only for mysql >= 5.7.31)";
     exit 1;

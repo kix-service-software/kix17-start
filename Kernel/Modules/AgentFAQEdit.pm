@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
+# Modified version of the work: Copyright (C) 2006-2024 KIX Service Software GmbH, https://www.kixdesk.com
 # based on the original work of:
-# Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2024 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. This program is
 # licensed under the AGPL-3.0 with patches licensed under the GPL-3.0.
@@ -572,7 +572,7 @@ sub Run {
             FormID => $FormID,
         );
 
-### Patch licensed under the GPL-3.0, Copyright (C) 2001-2023 OTRS AG, https://otrs.com/ ###
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2024 OTRS AG, https://otrs.com/ ###
         # Get all existing attachments.
         my @ExistingAttachments = $FAQObject->AttachmentIndex(
             ItemID     => $GetParam{ItemID},
@@ -615,7 +615,7 @@ sub Run {
                 }
             }
         }
-### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2023 OTRS AG, https://otrs.com/ ###
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2024 OTRS AG, https://otrs.com/ ###
 
         # Build a lookup hash of the new attachments.
         my %NewAttachment;
@@ -642,9 +642,9 @@ sub Run {
             # the key is the filename + filesize + content type
             # (no content id, as existing attachments don't have it)
             my $Key = $Attachment->{Filename}
-### Patch licensed under the GPL-3.0, Copyright (C) 2001-2023 OTRS AG, https://otrs.com/ ###
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2024 OTRS AG, https://otrs.com/ ###
                 . $Attachment->{FilesizeRaw}
-### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2023 OTRS AG, https://otrs.com/ ###
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2024 OTRS AG, https://otrs.com/ ###
                 . $Attachment->{ContentType};
 
             # attachment is already existing, we can delete it from the new attachment hash
@@ -677,9 +677,9 @@ sub Run {
             my $Inline = 0;
             if (
                 $Attachment->{Disposition}
-### Patch licensed under the GPL-3.0, Copyright (C) 2001-2023 OTRS AG, https://otrs.com/ ###
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2024 OTRS AG, https://otrs.com/ ###
                 && $Attachment->{Disposition} eq 'inline'
-### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2023 OTRS AG, https://otrs.com/ ###
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2024 OTRS AG, https://otrs.com/ ###
             ) {
 
                 # remember that it is inline
@@ -698,7 +698,7 @@ sub Run {
                     # skip empty fields
                     next NUMBER if !$Field;
 
-### Patch licensed under the GPL-3.0, Copyright (C) 2001-2023 OTRS AG, https://otrs.com/ ###
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2024 OTRS AG, https://otrs.com/ ###
                     # Skip if the field is not new (added) or old (initially loaded) inline attachment.
                     if (
                         $Field !~ m{ $Attachment->{ContentID} }xms
@@ -707,7 +707,7 @@ sub Run {
                     ) {
                         next NUMBER;
                     }
-### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2023 OTRS AG, https://otrs.com/ ###
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2024 OTRS AG, https://otrs.com/ ###
 
                     # found the content id
                     $ContentIDFound = 1;

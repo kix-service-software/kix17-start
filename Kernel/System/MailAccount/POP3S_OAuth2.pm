@@ -1,9 +1,9 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
+# Modified version of the work: Copyright (C) 2006-2024 KIX Service Software GmbH, https://www.kixdesk.com
 # based on the original work of:
-# Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2024 OTRS AG, https://otrs.com/
 # Copyright (C) 2019–2021 Efflux GmbH, https://efflux.de/
-# Copyright (C) 2019-2023 Rother OSS GmbH, https://otobo.de/
+# Copyright (C) 2019-2024 Rother OSS GmbH, https://otobo.de/
 # --
 # This program is free software: you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software

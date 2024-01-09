@@ -1668,7 +1668,7 @@ This version released by Tye McQueen (http://perlmonks.org/?node=tye).
 
 =head1 LICENSE
 
-Parts Copyright (c) 2000-2023 Ned Konz.  All rights reserved.
+Parts Copyright (c) 2000-2024 Ned Konz.  All rights reserved.
 Parts by Tye McQueen.
 
 This program is free software; you can redistribute it and/or modify it
