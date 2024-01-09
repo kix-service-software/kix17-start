@@ -143,6 +143,9 @@ Core.UI.RichTextEditor = (function (TargetNS) {
         /*eslint-disable camelcase */
         Editor = CKEDITOR.replace(EditorID,
         {
+            versionCheck: false,  // From 4.22.1 (June 2023) there is no new version apart from the LTS
+                                  // (until 2026, but requires an extended support license key), so "false" must be set here,
+                                  // otherwise error messages will appear every time you call.
             customConfig: '', // avoid loading external config files
             defaultLanguage: 'en',
             language: UserLanguage,
