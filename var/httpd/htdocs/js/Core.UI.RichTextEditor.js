@@ -1,7 +1,7 @@
 // --
-// Modified version of the work: Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
+// Modified version of the work: Copyright (C) 2006-2024 KIX Service Software GmbH, https://www.kixdesk.com
 // based on the original work of:
-// Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
+// Copyright (C) 2001-2024 OTRS AG, https://otrs.com/
 // --
 // This software comes with ABSOLUTELY NO WARRANTY. For details, see
 // the enclosed file LICENSE for license information (AGPL). If you
@@ -143,6 +143,9 @@ Core.UI.RichTextEditor = (function (TargetNS) {
         /*eslint-disable camelcase */
         Editor = CKEDITOR.replace(EditorID,
         {
+            versionCheck: false,  // From 4.22.1 (June 2023) there is no new version apart from the LTS
+                                  // (until 2026, but requires an extended support license key), so "false" must be set here,
+                                  // otherwise error messages will appear every time you call.
             customConfig: '', // avoid loading external config files
             defaultLanguage: 'en',
             language: UserLanguage,

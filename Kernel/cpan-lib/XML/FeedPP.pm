@@ -401,7 +401,7 @@ The following copyright notice applies to all the files provided in
 this distribution, including binary files, unless explicitly noted
 otherwise.
 
-Copyright 2006-2023 Yusuke Kawasaki
+Copyright 2006-2024 Yusuke Kawasaki
 
 =head1 LICENSE
 
