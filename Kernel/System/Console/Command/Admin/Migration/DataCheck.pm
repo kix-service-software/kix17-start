@@ -27,7 +27,10 @@ our @ObjectDependencies = (
     'Kernel::System::CustomerUser',
     'Kernel::System::DB',
     'Kernel::System::Encode',
+    'Kernel::System::JSON',
     'Kernel::System::Log',
+    'Kernel::System::State',
+    'Kernel::System::SystemData',
     'Kernel::System::Ticket',
 );
 
@@ -80,21 +83,22 @@ sub Run {
     for my $Fix ( @Fixes ) {
         if ( $Fix eq 'All' ) {
             %Fixes = (
-                'Placeholder'              => 1,
-                'CustomerUserBackends'     => 1,
-                'CustomerCompanyBackends'  => 1,
-                'CustomerUserData'         => 1,
-                'CustomerUserEmail'        => 1,
-                'CustomerCompanyData'      => 1,
-                'UserExists'               => 1,
-                'UserEmail'                => 1,
-                'TicketCustomerUserUpdate' => 1,
-                'TicketCustomerUser'       => 1,
-                'TicketCustomerCompany'    => 1,
-                'TicketData'               => 1,
-                'TicketStateTypes'         => 1,
-                'ServiceNames'             => 1,
-                'DynamicFieldValues'       => 1,
+                'Placeholder'                 => 1,
+                'CustomerUserBackends'        => 1,
+                'CustomerCompanyBackends'     => 1,
+                'CustomerUserData'            => 1,
+                'CustomerUserEmail'           => 1,
+                'CustomerCompanyData'         => 1,
+                'UserExists'                  => 1,
+                'UserEmail'                   => 1,
+                'TicketCustomerUserUpdate'    => 1,
+                'TicketCustomerUser'          => 1,
+                'TicketCustomerCompany'       => 1,
+                'TicketData'                  => 1,
+                'TicketStateTypes'            => 1,
+                'ServiceNames'                => 1,
+                'DynamicFieldValues'          => 1,
+                'PrepareTicketEscalationData' => 1,
             );
 
             last;
@@ -247,6 +251,14 @@ sub Run {
 
     # check dynamic field values
     $Success = $Self->_CheckDynamicFieldValues(
+        Fixes   => \%Fixes,
+    );
+    if ( !$Success ) {
+        return $Self->ExitCodeError();
+    }
+
+    # prepare ticket escalation data
+    $Success = $Self->_PrepareTicketEscalationData(
         Fixes   => \%Fixes,
     );
     if ( !$Success ) {
@@ -3835,6 +3847,165 @@ sub _ProcessCustomerCompanyData {
     return 1;
 }
 ### EO Internal Functions of _CheckCustomerCompanyBackends ###
+
+sub _PrepareTicketEscalationData {
+    my ( $Self, %Param ) = @_;
+
+    # get needed objects
+    my $DBObject         = $Kernel::OM->Get('Kernel::System::DB');
+    my $JSONObject       = $Kernel::OM->Get('Kernel::System::JSON');
+    my $SystemDataObject = $Kernel::OM->Get('Kernel::System::SystemData');
+    my $TicketObject     = $Kernel::OM->Get('Kernel::System::Ticket');
+
+    $Self->Print('<yellow>PrepareTicketEscalationData</yellow> - prepare ticket escalation data' . "\n");
+
+    if ( $Param{Fixes}->{'PrepareTicketEscalationData'} ) {
+        $Self->Print('<yellow> - get all ticket ids: </yellow>');
+
+        # prepare sql statement to get ticket ids with SLA
+        $DBObject->Prepare(
+            SQL => "SELECT id FROM ticket WHERE sla_id IS NOT NULL ORDER BY id"
+        );
+
+        my @TicketIDs;
+        while ( my @Row = $DBObject->FetchrowArray() ) {
+            push @TicketIDs, $Row[0];
+        }
+        $Self->Print('<green>Done</green>' . "\n");
+
+        $Self->Print('<yellow> - calculate escalation data: </yellow>' . "\n");
+
+        my %Data;
+        my $Count = 0;
+        my $TicketCount = scalar @TicketIDs;
+        TICKETID:
+        for my $TicketID ( @TicketIDs ) {
+            $Count += 1;
+            if ( $Count % 2000 == 0 ) {
+                my $Percent = int( $Count / ( $TicketCount / 100 ) );
+                $Self->Print(' - - <yellow>' . $Count . '</yellow> of <yellow>' . $TicketCount . '</yellow> processed (<yellow>' . $Percent . '%</yellow>)' . "\n");
+            }
+
+            my %Ticket = $TicketObject->TicketGet(
+                TicketID => $TicketID,
+            );
+            next TICKETID if !%Ticket;
+
+            my $TotalTime = $TicketObject->GetTotalNonEscalationRelevantBusinessTime(
+                TicketID => $TicketID,
+            );
+
+            my %FirstResponseDone = $TicketObject->_TicketGetFirstResponse(
+                TicketID => $TicketID,
+                Ticket   => \%Ticket,
+            );
+
+            my %SolutionDone = $TicketObject->_TicketGetClosed(
+                TicketID => $TicketID,
+                Ticket   => \%Ticket,
+            );
+
+            my %LastSuspensionTimes = $Self->_GetTicketLastSuspension(
+                TicketID => $TicketID,
+            );
+
+            $Data{$TicketID} = {
+                %LastSuspensionTimes,
+                TotalSolutionSuspensionTime => $TotalTime / 60,
+                FirstResponse               => $FirstResponseDone{FirstResponse},
+                Solution                    => $SolutionDone{SolutionTime},
+            };
+        }
+
+        my $JSON = $JSONObject->Encode(
+            Data => \%Data
+        );
+
+        my $SystemDataKey = 'TicketEscalationDataForMigration';
+
+        my $Exists = $SystemDataObject->SystemDataGet( Key => $SystemDataKey );
+        if ( $Exists ) {
+            $SystemDataObject->SystemDataDelete(
+                Key    => $SystemDataKey,
+                UserID => 1,
+            );
+        }
+        my $Result = $SystemDataObject->SystemDataAdd(
+            Key    => $SystemDataKey,
+            Value  => $JSON,
+            UserID => 1,
+        );
+        if ( !$Result ) {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'error',
+                Message  => 'Can\'t store prepared ticket escalation data!',
+            );
+            return;
+        }
+
+        $Self->Print('<green>Done</green>' . "\n");
+        }
+    else {
+        $Self->Print('<green> - Only when using --fix</green>' . "\n");
+    }
+
+    return 1;
+}
+
+sub _GetTicketLastSuspension {
+    my ( $Self, %Param ) = @_;
+
+    my %StateListReverse = reverse $Kernel::OM->Get('Kernel::System::State')->StateList( UserID => 1 );
+
+    my $RelevantStates = $Kernel::OM->Get('Kernel::Config')->Get('Ticket::EscalationDisabled::RelevantStates');
+    my @RelevantStateIDs;
+    foreach my $State ( @{$RelevantStates||[]} ) {
+        push @RelevantStateIDs, $StateListReverse{$State}
+    }
+
+    my @Bind = map { \$_ } @RelevantStateIDs;
+
+    my %Result;
+
+    my $SQL = "SELECT max(th.create_time) FROM ticket_history th, ticket_history_type tht "
+            . "WHERE "
+            . "th.ticket_id = $Param{TicketID} AND "
+            . "th.history_type_id = tht.id AND "
+            . "tht.name IN ('StateUpdate', 'WebRequestCustomer', 'PhoneCallCustomer') AND "
+            . "th.state_id IN (".(join( ',', map { '?' } @RelevantStateIDs)).')';
+
+    # get last suspension start
+    return %Result if !$Kernel::OM->Get('Kernel::System::DB')->Prepare(
+        SQL => $SQL,
+        Bind => \@Bind,
+    );
+
+    while ( my @Row = $Kernel::OM->Get('Kernel::System::DB')->FetchrowArray() ) {
+        $Result{LastSolutionSuspensionStartTime} = $Row[0];
+    }
+
+    # get last suspension start
+    if ( $Result{LastSolutionSuspensionStartTime} ) {
+        $SQL = "SELECT max(th.create_time) FROM ticket_history th, ticket_history_type tht "
+             . "WHERE "
+             . "th.ticket_id = $Param{TicketID} AND "
+             . "th.history_type_id = tht.id AND "
+             . "tht.name IN ('StateUpdate', 'WebRequestCustomer', 'PhoneCallCustomer') AND "
+             . "th.state_id NOT IN (".(join( ',', map { '?' } @RelevantStateIDs)).') AND '
+             . "th.create_time > '$Result{LastSolutionSuspensionStartTime}'";
+
+        return %Result if !$Kernel::OM->Get('Kernel::System::DB')->Prepare(
+            SQL => $SQL,
+            Bind => \@Bind,
+        );
+
+        while ( my @Row = $Kernel::OM->Get('Kernel::System::DB')->FetchrowArray() ) {
+            $Result{LastSolutionSuspensionStopTime} = $Row[0];
+        }
+    }
+
+    return %Result;
+}
 
 1;
 
