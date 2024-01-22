@@ -1,6 +1,9 @@
 # Change log of KIX
 * Copyright (C) 2006-2024 KIX Service Software GmbH, https://www.kixdesk.com
 
+# 17.22.0-RC4 (2024/01/22)
+ * (2024/01/18) - CR: KK-199 (implemented type "sysconfig" in migration and SLA preparation in DataCheck) (mbauer)
+
 # 17.22.0-RC3 (2024/01/09)
  * (2024/01/08) - CR: KIX17-3537 (Updated Javascript libaries) (fjacquemin)
  * (2024/01/08) - CR: KIX17-3539 (update distributed CPAN modules) (mbauer)
