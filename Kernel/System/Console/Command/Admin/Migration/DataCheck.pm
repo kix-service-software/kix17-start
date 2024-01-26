@@ -2984,21 +2984,45 @@ sub _CheckDynamicFieldValues {
             'FixSQL'    => 'DELETE FROM dynamic_field_value dfv, dynamic_field df WHERE df.object_type = \'FAQ\' AND dfv.field_id = df.id AND dfv.object_id NOT IN ( SELECT id FROM faq_item )',
         },
         '0004' => {
-            'Label'     => 'orphaned customer user dynamic field values',
-            'SelectSQL' => 'SELECT dfv.id FROM dynamic_field_value dfv, dynamic_field df WHERE df.object_type = \'CustomerUser\' AND dfv.field_id = df.id AND dfv.object_id_text NOT IN ( SELECT login FROM customer_user )',
-            'FixSQL'    => 'DELETE FROM dynamic_field_value dfv, dynamic_field df WHERE df.object_type = \'CustomerUser\' AND dfv.field_id = df.id AND dfv.object_id_text NOT IN ( SELECT login FROM customer_user )',
+            'Label'        => 'orphaned customer user dynamic field values',
+            'SelectSQL'    => 'SELECT dfv.id FROM dynamic_field_value dfv, dynamic_field df WHERE df.object_type = \'CustomerUser\' AND dfv.field_id = df.id AND dfv.object_id_text NOT IN ( SELECT login FROM customer_user )',
+            'FixSQL'       => 'DELETE FROM dynamic_field_value dfv, dynamic_field df WHERE df.object_type = \'CustomerUser\' AND dfv.field_id = df.id AND dfv.object_id_text NOT IN ( SELECT login FROM customer_user )',
+            'ObjectIDText' => 1,
         },
         '0005' => {
-            'Label'     => 'orphaned customer company dynamic field values',
-            'SelectSQL' => 'SELECT dfv.id FROM dynamic_field_value dfv, dynamic_field df WHERE df.object_type = \'CustomerCompany\' AND dfv.field_id = df.id AND dfv.object_id_text NOT IN ( SELECT customer_id FROM customer_company )',
-            'FixSQL'    => 'DELETE FROM dynamic_field_value dfv, dynamic_field df WHERE df.object_type = \'CustomerCompany\' AND dfv.field_id = df.id AND dfv.object_id_text NOT IN ( SELECT customer_id FROM customer_company )',
+            'Label'        => 'orphaned customer company dynamic field values',
+            'SelectSQL'    => 'SELECT dfv.id FROM dynamic_field_value dfv, dynamic_field df WHERE df.object_type = \'CustomerCompany\' AND dfv.field_id = df.id AND dfv.object_id_text NOT IN ( SELECT customer_id FROM customer_company )',
+            'FixSQL'       => 'DELETE FROM dynamic_field_value dfv, dynamic_field df WHERE df.object_type = \'CustomerCompany\' AND dfv.field_id = df.id AND dfv.object_id_text NOT IN ( SELECT customer_id FROM customer_company )',
+            'ObjectIDText' => 1,
         },
     );
 
     $Self->Print('<yellow>DynamicFieldValues</yellow> - Check for orphaned dynamic field values' . "\n");
 
+    # init variables
+    my $ObjectIDText = 0;
+
+    # check for column customer_ids
+    $DBObject->Prepare(
+        SQL   => 'SELECT * FROM dynamic_field_value',
+        Limit => 1
+    );
+    my @ColumnNames = $DBObject->GetColumnNames();
+    for my $ColumnName ( @ColumnNames ) {
+        if ( $ColumnName eq 'object_id_text' ) {
+            $ObjectIDText = 1;
+
+            last;
+        }
+    }
+
     # process queries
     for my $Query ( sort( keys( %QueryMap ) ) ) {
+        next if (
+            $QueryMap{ $Query }->{ObjectIDText}
+            && !$ObjectIDText
+        );
+
         $Self->Print('<yellow> - ' . $QueryMap{ $Query }->{Label} . ': </yellow>');
 
         # prepare db handle
@@ -3572,6 +3596,15 @@ sub _ProcessCustomerUserData {
 
         if ( !defined( $Param{CustomerUser}->{ $UserLogin }->{ValidID} ) ) {
             $Param{CustomerUser}->{ $UserLogin }->{ValidID} = 1;
+        }
+
+        for my $Attribute ( qw(UserFirstname UserLastname) ) {
+            if (
+                defined( $Param{CustomerUser}->{ $UserLogin }->{ $Attribute } )
+                && length ( $Param{CustomerUser}->{ $UserLogin }->{ $Attribute } ) > 100
+            ) {
+                $Param{CustomerUser}->{ $UserLogin }->{ $Attribute } = substr( $Param{CustomerUser}->{ $UserLogin }->{ $Attribute }, 0, 97 ) . '...';
+            }
         }
 
         # prepare data for sql
