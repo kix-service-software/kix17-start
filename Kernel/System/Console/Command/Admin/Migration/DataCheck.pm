@@ -2971,28 +2971,28 @@ sub _CheckDynamicFieldValues {
         '0001' => {
             'Label'     => 'orphaned ticket dynamic field values',
             'SelectSQL' => 'SELECT dfv.id FROM dynamic_field_value dfv, dynamic_field df WHERE df.object_type = \'Ticket\' AND dfv.field_id = df.id AND dfv.object_id NOT IN ( SELECT id FROM ticket )',
-            'FixSQL'    => 'DELETE FROM dynamic_field_value dfv, dynamic_field df WHERE df.object_type = \'Ticket\' AND dfv.field_id = df.id AND dfv.object_id NOT IN ( SELECT id FROM ticket )',,
+            'FixSQL'    => 'DELETE FROM dynamic_field_value WHERE object_id NOT IN ( SELECT id FROM ticket ) AND field_id IN ( SELECT id FROM dynamic_field WHERE object_type = \'Ticket\' )',,
         },
         '0002' => {
             'Label'     => 'orphaned article dynamic field values',
             'SelectSQL' => 'SELECT dfv.id FROM dynamic_field_value dfv, dynamic_field df WHERE df.object_type = \'Article\' AND dfv.field_id = df.id AND dfv.object_id NOT IN ( SELECT id FROM article )',
-            'FixSQL'    => 'DELETE FROM dynamic_field_value dfv, dynamic_field df WHERE df.object_type = \'Article\' AND dfv.field_id = df.id AND dfv.object_id NOT IN ( SELECT id FROM article )',
+            'FixSQL'    => 'DELETE FROM dynamic_field_value WHERE object_id NOT IN ( SELECT id FROM article ) AND field_id IN ( SELECT id FROM dynamic_field WHERE object_type = \'Article\' )',
         },
         '0003' => {
             'Label'     => 'orphaned faq dynamic field values',
             'SelectSQL' => 'SELECT dfv.id FROM dynamic_field_value dfv, dynamic_field df WHERE df.object_type = \'FAQ\' AND dfv.field_id = df.id AND dfv.object_id NOT IN ( SELECT id FROM faq_item )',
-            'FixSQL'    => 'DELETE FROM dynamic_field_value dfv, dynamic_field df WHERE df.object_type = \'FAQ\' AND dfv.field_id = df.id AND dfv.object_id NOT IN ( SELECT id FROM faq_item )',
+            'FixSQL'    => 'DELETE FROM dynamic_field_value WHERE object_id NOT IN ( SELECT id FROM faq_item ) AND field_id IN ( SELECT id FROM dynamic_field WHERE object_type = \'FAQ\' )',
         },
         '0004' => {
             'Label'        => 'orphaned customer user dynamic field values',
             'SelectSQL'    => 'SELECT dfv.id FROM dynamic_field_value dfv, dynamic_field df WHERE df.object_type = \'CustomerUser\' AND dfv.field_id = df.id AND dfv.object_id_text NOT IN ( SELECT login FROM customer_user )',
-            'FixSQL'       => 'DELETE FROM dynamic_field_value dfv, dynamic_field df WHERE df.object_type = \'CustomerUser\' AND dfv.field_id = df.id AND dfv.object_id_text NOT IN ( SELECT login FROM customer_user )',
+            'FixSQL'       => 'DELETE FROM dynamic_field_value WHERE object_id_text NOT IN ( SELECT login FROM customer_user ) AND field_id IN ( SELECT id FROM dynamic_field WHERE object_type = \'CustomerUser\' )',
             'ObjectIDText' => 1,
         },
         '0005' => {
             'Label'        => 'orphaned customer company dynamic field values',
             'SelectSQL'    => 'SELECT dfv.id FROM dynamic_field_value dfv, dynamic_field df WHERE df.object_type = \'CustomerCompany\' AND dfv.field_id = df.id AND dfv.object_id_text NOT IN ( SELECT customer_id FROM customer_company )',
-            'FixSQL'       => 'DELETE FROM dynamic_field_value dfv, dynamic_field df WHERE df.object_type = \'CustomerCompany\' AND dfv.field_id = df.id AND dfv.object_id_text NOT IN ( SELECT customer_id FROM customer_company )',
+            'FixSQL'       => 'DELETE FROM dynamic_field_value WHERE object_id_text NOT IN ( SELECT customer_id FROM customer_company ) AND field_id IN ( SELECT id FROM dynamic_field WHERE object_type = \'CustomerCompany\' )',
             'ObjectIDText' => 1,
         },
     );
