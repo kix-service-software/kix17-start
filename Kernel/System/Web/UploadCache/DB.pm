@@ -13,6 +13,7 @@ package Kernel::System::Web::UploadCache::DB;
 use strict;
 use warnings;
 
+use Bytes::Random::Secure::Tiny;
 use MIME::Base64;
 
 our @ObjectDependencies = (
@@ -38,8 +39,14 @@ sub FormIDCreate {
     # cleanup temp form ids
     $Self->FormIDCleanUp();
 
+    # get CSPRNG
+    my $CSPRNGObject = Bytes::Random::Secure::Tiny->new(
+        bits        => 256,
+        nonblocking => 1,
+    );
+
     # return requested form id
-    return time() . '.' . rand(12341241);
+    return time() . '.' . $CSPRNGObject->string_from('0123456789', 8);
 }
 
 sub FormIDRemove {
