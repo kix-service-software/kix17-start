@@ -1,6 +1,9 @@
 # Change log of KIX
 * Copyright (C) 2006-2024 KIX Service Software GmbH, https://www.kixdesk.com
 
+# 17.22.0-RC5 (2024/02/26)
+ * (2024/02/05) - Bugfix: KIX17-3550 (use secure random generator for FormID) (mbauer)
+
 # 17.22.0-RC4 (2024/01/22)
  * (2024/01/18) - CR: KK-199 (implemented type "sysconfig" in migration and SLA preparation in DataCheck) (mbauer)
 
