@@ -46,7 +46,7 @@ sub FormIDCreate {
     );
 
     # return requested form id
-    return time() . '.' . $CSPRNGObject->string_from('0123456789', 8);
+    return time() . '.' . $CSPRNGObject->string_from('0123456789', 8) . '.' . $CSPRNGObject->string_from('0123456789', 8);
 }
 
 sub FormIDRemove {
