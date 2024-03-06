@@ -2483,6 +2483,7 @@ sub _CheckTicketCustomerUser {
     # get needed objects
     my $CustomerUserObject = $Kernel::OM->Get('Kernel::System::CustomerUser');
     my $DBObject           = $Kernel::OM->Get('Kernel::System::DB');
+    my $UserObject         = $Kernel::OM->Get('Kernel::System::User');
 
     # init variables
     my $UserCustomerIDs = 0;
@@ -2522,9 +2523,10 @@ sub _CheckTicketCustomerUser {
         %Data
         && scalar( keys( %Data ) )
     ) {
+        CUSTOMERUSER:
         for my $CustomerUserID ( sort( keys( %Data ) ) ) {
             # skip empty customer user id
-            next if ( !$CustomerUserID );
+            next CUSTOMERUSER if ( !$CustomerUserID );
 
             # get customer user data
             my %CustomerUserData = $CustomerUserObject->CustomerUserDataGet(
@@ -2539,30 +2541,107 @@ sub _CheckTicketCustomerUser {
                         Limit            => 1,
                     );
 
-                    # no customer user found
+                    # no customer user found in customer user backend, try agent data
                     if ( !%CustomerUserList ) {
-                        # split old mail
-                        my ( $Prefix, $Suffix ) = split( '@', $CustomerUserID, 2 );
+                        # init list
+                        my %CustomerUser;
+                        my $NewCustomerUserID;
 
-                        # prepare email
-                        my $CustomerUserEmail = $CustomerUserID;
-                        if ( $CustomerUserEmail !~ m/@/ ) {
-                            $CustomerUserEmail .= '@localhost';
+                        # try to find user via email
+                        my %UserList = $UserObject->UserSearch(
+                            PostMasterSearch => $CustomerUserID,
+                            Valid            => 0,
+                            Limit            => 1,
+                        );
+                        # found user via email
+                        if ( %UserList ) {
+                            for my $UserID ( keys( %UserList ) ) {
+                                # get user data
+                                my %UserData = $UserObject->GetUserData(
+                                    UserID => $UserID,
+                                );
+                                
+                                %CustomerUser = (
+                                    $UserData{UserLogin} => {
+                                        UserFirstname   => $UserData{UserFirstname},
+                                        UserLastname    => $UserData{UserLastname},
+                                        UserLogin       => $UserData{UserLogin},
+                                        UserEmail       => $UserData{UserEmail},
+                                        UserCustomerID  => 'Unbekannt',
+                                        ValidID         => '1',
+                                    }
+                                );
+                                if ( $UserCustomerIDs ) {
+                                    $CustomerUser{ $UserData{UserLogin} }->{UserCustomerIDs} = 'Unbekannt';
+                                }
+
+                                $NewCustomerUserID = $UserData{UserLogin};
+
+                                last;
+                            }
+                        }
+                        # try to find user via login
+                        else {
+                            %UserList = $UserObject->UserSearch(
+                                UserLogin => $CustomerUserID,
+                                Valid     => 0,
+                                Limit     => 1,
+                            );
+                            if ( %UserList ) {
+                                for my $UserID ( keys( %UserList ) ) {
+                                    # get user data
+                                    my %UserData = $UserObject->GetUserData(
+                                        UserID => $UserID,
+                                    );
+                                    
+                                    %CustomerUser = (
+                                        $UserData{UserLogin} => {
+                                            UserFirstname   => $UserData{UserFirstname},
+                                            UserLastname    => $UserData{UserLastname},
+                                            UserLogin       => $UserData{UserLogin},
+                                            UserEmail       => $UserData{UserEmail},
+                                            UserCustomerID  => 'Unbekannt',
+                                            ValidID         => '1',
+                                        }
+                                    );
+                                    if ( $UserCustomerIDs ) {
+                                        $CustomerUser{ $UserData{UserLogin} }->{UserCustomerIDs} = 'Unbekannt';
+                                    }
+
+                                    $NewCustomerUserID = $UserData{UserLogin};
+
+                                    last;
+                                }
+                            }
                         }
 
-                        # prepare data
-                        my %CustomerUser = (
-                            $CustomerUserID => {
-                                UserFirstname   => $Prefix || $CustomerUserID,
-                                UserLastname    => $Prefix || $CustomerUserID,
-                                UserLogin       => $CustomerUserID,
-                                UserEmail       => $CustomerUserEmail,
-                                UserCustomerID  => 'Unbekannt',
-                                ValidID         => '1',
+                        # try to find user via login
+                        if ( !%CustomerUser ) { 
+                            # split old mail
+                            my ( $Prefix, $Suffix ) = split( '@', $CustomerUserID, 2 );
+
+                            # prepare email
+                            my $CustomerUserEmail = $CustomerUserID;
+                            if ( $CustomerUserEmail !~ m/@/ ) {
+                                $CustomerUserEmail .= '@localhost';
                             }
-                        );
-                        if ( $UserCustomerIDs ) {
-                            $CustomerUser{ $CustomerUserID }->{UserCustomerIDs} = 'Unbekannt';
+
+                            # prepare data
+                            %CustomerUser = (
+                                $CustomerUserID => {
+                                    UserFirstname   => $Prefix || $CustomerUserID,
+                                    UserLastname    => $Prefix || $CustomerUserID,
+                                    UserLogin       => $CustomerUserID,
+                                    UserEmail       => $CustomerUserEmail,
+                                    UserCustomerID  => 'Unbekannt',
+                                    ValidID         => '1',
+                                }
+                            );
+                            if ( $UserCustomerIDs ) {
+                                $CustomerUser{ $CustomerUserID }->{UserCustomerIDs} = 'Unbekannt';
+                            }
+
+                            $NewCustomerUserID = $CustomerUserID;
                         }
 
                         # add customer user
@@ -2590,12 +2669,13 @@ sub _CheckTicketCustomerUser {
 
                         # prepare bind
                         my @Bind = (
-                            \$CustomerUser{ $CustomerUserID }->{UserCustomerID},
+                            \$NewCustomerUserID,
+                            \$CustomerUser{ $NewCustomerUserID }->{UserCustomerID},
                             \$CustomerUserID
                         );
                         # execute fix statement
                         return if !$DBObject->Do(
-                            SQL  => 'UPDATE ticket SET customer_id = ? WHERE LOWER(customer_user_id) = LOWER(?)',
+                            SQL  => 'UPDATE ticket SET customer_user_id = ?, customer_id = ? WHERE LOWER(customer_user_id) = LOWER(?)',
                             Bind => \@Bind,
                         );
 
