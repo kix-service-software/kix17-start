@@ -1,6 +1,9 @@
 # Change log of KIX
 * Copyright (C) 2006-2024 KIX Service Software GmbH, https://www.kixdesk.com
 
+# 17.22.0-RC7 (2024/03/06)
+ * (2024/03/06) - Bugfix: KIX17-3555 (fix generation of FormID) (mbauer)
+
 # 17.22.0-RC6 (2024/03/06)
  * (2024/03/06) - release candidate
 
