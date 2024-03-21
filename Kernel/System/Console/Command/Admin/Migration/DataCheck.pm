@@ -124,6 +124,7 @@ sub Run {
     $Success = $Self->_CheckCustomerUserBackends(
         Fixes    => \%Fixes,
         PageSize => $PageSize,
+        Internal => $Internal,
     );
     if ( !$Success ) {
         return $Self->ExitCodeError();
@@ -131,7 +132,8 @@ sub Run {
 
     # check customer company backends
     $Success = $Self->_CheckCustomerCompanyBackends(
-        Fixes => \%Fixes,
+        Fixes    => \%Fixes,
+        Internal => $Internal,
     );
     if ( !$Success ) {
         return $Self->ExitCodeError();
@@ -518,6 +520,12 @@ sub _CheckCustomerUserBackends {
 
     $Self->Print('<yellow>CustomerUserBackends</yellow> - Check customer user backends' . "\n");
 
+    if ( $Param{Internal} ) {
+        $Self->Print('<green> - Do nothing, when internal flag is set</green>' . "\n");
+
+        return 1;
+    }
+
     # init variables
     my $FixBackendFound = 0;
     my $UserCustomerIDs = 0;
@@ -635,6 +643,12 @@ sub _CheckCustomerCompanyBackends {
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
     $Self->Print('<yellow>CustomerCompanyBackends</yellow> - Check customer company backends' . "\n");
+
+    if ( $Param{Internal} ) {
+        $Self->Print('<green> - Do nothing, when internal flag is set</green>' . "\n");
+
+        return 1;
+    }
 
     # init variables
     my $FixBackendFound = 0;
