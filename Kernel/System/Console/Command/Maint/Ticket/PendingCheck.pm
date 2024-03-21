@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
+# Modified version of the work: Copyright (C) 2006-2024 KIX Service Software GmbH, https://www.kixdesk.com
 # based on the original work of:
-# Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2024 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -58,9 +58,12 @@ sub Run {
 
         # do ticket auto jobs
         @TicketIDs = $TicketObject->TicketSearch(
-            Result   => 'ARRAY',
-            StateIDs => \@PendingAutoStateIDs,
-            UserID   => 1,
+            Result                        => 'ARRAY',
+            StateIDs                      => \@PendingAutoStateIDs,
+            TicketPendingTimeOlderMinutes => 0,
+            UserID                        => 1,
+            SortBy                        => 'PendingTime',
+            OrderBy                       => 'Up',
         );
 
         my %States = %{ $ConfigObject->Get('Ticket::StateAfterPending') };
@@ -128,9 +131,12 @@ sub Run {
     if (@PendingReminderStateIDs) {
         # do ticket reminder notification jobs
         @TicketIDs = $TicketObject->TicketSearch(
-            Result   => 'ARRAY',
-            StateIDs => \@PendingReminderStateIDs,
-            UserID   => 1,
+            Result                        => 'ARRAY',
+            StateIDs                      => \@PendingReminderStateIDs,
+            TicketPendingTimeOlderMinutes => 0,
+            UserID                        => 1,
+            SortBy                        => 'PendingTime',
+            OrderBy                       => 'Up',
         );
 
         TICKETID:
@@ -162,6 +168,10 @@ sub Run {
                 next TICKETID;
             }
 
+            $Self->Print(
+                " Trigger reminder for ticket $Ticket{TicketNumber} ($TicketID)..."
+            );
+
             # trigger notification event
             $TicketObject->EventHandler(
                 Event => 'NotificationPendingReminder',
@@ -173,6 +183,8 @@ sub Run {
                 },
                 UserID => 1,
             );
+
+            $Self->Print(" done.\n");
         }
     }
     else {

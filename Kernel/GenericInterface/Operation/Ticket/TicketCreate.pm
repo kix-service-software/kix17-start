@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
+# Modified version of the work: Copyright (C) 2006-2024 KIX Service Software GmbH, https://www.kixdesk.com
 # based on the original work of:
-# Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2024 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -937,6 +937,13 @@ sub _CheckArticle {
     # check Article->ContentType
     if ( $Article->{ContentType} ) {
 
+        if ( $Article->{ContentType} =~ m/\R/ ) {
+            return {
+                ErrorCode    => 'TicketCreate.InvalidParameter',
+                ErrorMessage => "TicketCreate: Article->ContentType is invalid! Line breaks are not allowed!",
+            };
+        }
+
         $Article->{ContentType} = lc $Article->{ContentType};
 
         # check Charset part
@@ -951,7 +958,7 @@ sub _CheckArticle {
         if ( !$Self->ValidateCharset( Charset => $Charset ) ) {
             return {
                 ErrorCode    => 'TicketCreate.InvalidParameter',
-                ErrorMessage => "TicketCreate: Article->ContentType is invalid!",
+                ErrorMessage => "TicketCreate: Article->ContentType is invalid! Invalid Charset!",
             };
         }
 
@@ -965,7 +972,7 @@ sub _CheckArticle {
         if ( !$Self->ValidateMimeType( MimeType => $MimeType ) ) {
             return {
                 ErrorCode    => 'TicketCreate.InvalidParameter',
-                ErrorMessage => "TicketCreate: Article->ContentType is invalid!",
+                ErrorMessage => "TicketCreate: Article->ContentType is invalid! Invalid MimeType!",
             };
         }
     }
@@ -1193,6 +1200,13 @@ sub _CheckAttachment {
     # check Article->ContentType
     if ( $Attachment->{ContentType} ) {
 
+        if ( $Attachment->{ContentType} =~ m/\R/ ) {
+            return {
+                ErrorCode    => 'TicketCreate.InvalidParameter',
+                ErrorMessage => "TicketCreate: Attachment->ContentType is invalid! Line breaks are not allowed!",
+            };
+        }
+
         $Attachment->{ContentType} = lc $Attachment->{ContentType};
 
         # check Charset part
@@ -1207,7 +1221,7 @@ sub _CheckAttachment {
         if ( $Charset && !$Self->ValidateCharset( Charset => $Charset ) ) {
             return {
                 ErrorCode    => 'TicketCreate.InvalidParameter',
-                ErrorMessage => "TicketCreate: Attachment->ContentType is invalid!",
+                ErrorMessage => "TicketCreate: Attachment->ContentType is invalid! Invalid Charset!",
             };
         }
 
@@ -1221,7 +1235,7 @@ sub _CheckAttachment {
         if ( !$Self->ValidateMimeType( MimeType => $MimeType ) ) {
             return {
                 ErrorCode    => 'TicketCreate.InvalidParameter',
-                ErrorMessage => "TicketCreate: Attachment->ContentType is invalid!",
+                ErrorMessage => "TicketCreate: Attachment->ContentType is invalid! Invalid MimeType!",
             };
         }
     }

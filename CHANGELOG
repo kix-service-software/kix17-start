@@ -1,5 +1,48 @@
 # Change log of KIX
-* Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
+* Copyright (C) 2006-2024 KIX Service Software GmbH, https://www.kixdesk.com
+
+# 17.22.0-RC7 (2024/03/06)
+ * (2024/03/06) - Bugfix: KIX17-3555 (fix generation of FormID) (mbauer)
+
+# 17.22.0-RC6 (2024/03/06)
+ * (2024/03/06) - release candidate
+
+# 17.22.0-RC5 (2024/02/26)
+ * (2024/02/05) - Bugfix: KIX17-3550 (use secure random generator for FormID) (mbauer)
+
+# 17.22.0-RC4 (2024/01/22)
+ * (2024/01/18) - CR: KK-199 (implemented type "sysconfig" in migration and SLA preparation in DataCheck) (mbauer)
+
+# 17.22.0-RC3 (2024/01/09)
+ * (2024/01/08) - CR: KIX17-3537 (Updated Javascript libaries) (fjacquemin)
+ * (2024/01/08) - CR: KIX17-3539 (update distributed CPAN modules) (mbauer)
+ * (2024/01/08) - CR: KIX17-3540 (update copyrights) (mbauer)
+ * (2024/01/02) - CR: KIX17-3536 (additional migration data check for custom state types) (mbauer)
+ * (2023/12/21) - Bugfix: KIX17-3535 (handle search limit outside of database request) (mbauer)
+ * (2023/12/20) - Bugfix: KIX17-3534 (fix number creation of ticket number generator Date) (mbauer)
+ * (2023/11/28) - Bugfix: KIX17-3526 (fix stat module ITSMTicketSolutionTimeAverage) (mbauer)
+ * (2023/11/10) - Bugfix: KIX17-3525 (fix style handling of ticket notifications) (mbauer)
+
+# 17.22.0-RC2 (2023/11/03)
+ * (2023/10/30) - Bugfix: KIX17-3519 (option to verify incoming and outgoing email ssl connections) (mbauer)
+ * (2023/10/30) - Bugfix: KIX17-3522 (fixed handlnig of pending state check) (mbauer)
+ * (2023/10/13) - Bugfix: KIX17-3515 (consider dynamic field values of form for queue move) (mbauer)
+ * (2023/09/28) - Bugfix: KIX17-3504 (check for updatable fields) (mbauer)
+ * (2023/09/27) - Bugfix: KIX17-3514 (restore subscribers when changing shared search profile) (mbauer)
+ * (2023/09/25) - Bugfix: KIX17-3511 (fixed missing delete of all selected linked items) (fjacquemin)
+ * (2023/09/25) - Bugfix: KIX17-3510 (fixed missing handling to remove Fwd in subject if NoFwd checked) (fjacquemin)
+ * (2023/09/22) - Bugfix: KIX17-3503 (fixed page tilte building) (fjacquemin)
+
+# 17.22.0-RC1 (2023/09/12)
+ * (2023/09/08) - Bugfix: KIX17-3502 (improved handling of uploaded inline images) (mbauer)
+ * (2023/09/08) - Bugfix: KIX17-3501 (improved handling for outgoing emails) (mbauer)
+ * (2023/09/06) - Bugfix: KIX17-3482 (adds css class "DontPrint" to popup close link to remove it on printing) (fjacquemin)
+ * (2023/09/05) - Bugfix: KIX17-3488 (fix attribute handling for generic agent attribute delete) (mbauer)
+ * (2023/09/05) - Bugfix: KIX17-3485 (do not wait for response when quitting imap connection) (mbauer)
+ * (2023/09/04) - Bugfix: KIX17-3496 (check for cache object in customer user ldap backend) (mbauer)
+ * (2023/08/24) - CR: KIX17-3483 (optimize handling of itsm config item reference dynamic field) (mbauer)
+ * (2023/08/14) - CR: KIX17-3491 (mail account module POP3S_OAuth2) (mbauer)
+ * (2023/08/02) - Bugfix: KIX17-3486 (more stringent ContentType validation) (mbauer)
 
 # 17.21.0 (2023/09/01)
  * (2023/09/01) - productive release

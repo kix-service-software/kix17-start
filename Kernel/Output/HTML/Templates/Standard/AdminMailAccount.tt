@@ -1,8 +1,8 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
+# Modified version of the work: Copyright (C) 2006-2024 KIX Service Software GmbH, https://www.kixdesk.com
 # based on the original work of:
-# Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
-# Copyright (C) 2019-2023 Rother OSS GmbH, https://otobo.de/
+# Copyright (C) 2001-2024 OTRS AG, https://otrs.com/
+# Copyright (C) 2019-2024 Rother OSS GmbH, https://otobo.de/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. This program is
 # licensed under the AGPL-3.0 with code licensed under the GPL-3.0.
@@ -127,7 +127,7 @@
                         </div>
                         <div class="Clear"></div>
 
-### Code licensed under the GPL-3.0, Copyright (C) 2019-2023 Rother OSS GmbH, https://otobo.de/ ###
+### Code licensed under the GPL-3.0, Copyright (C) 2019-2024 Rother OSS GmbH, https://otobo.de/ ###
                         <div class="Row Row_OAuth2_Profile Hidden">
                             <label class="Mandatory" for="OAuth2_Profile"><span class="Marker">*</span> [% Translate("OAuth2 Profile") | html %]:</label>
                             <div class="Field">
@@ -141,7 +141,7 @@
                             </div>
                             <div class="Clear"></div>
                         </div>
-### EO Code licensed under the GPL-3.0, Copyright (C) 2019-2023 Rother OSS GmbH, https://otobo.de/ ###
+### EO Code licensed under the GPL-3.0, Copyright (C) 2019-2024 Rother OSS GmbH, https://otobo.de/ ###
 
                         <label class="Mandatory" for="LoginAdd"><span class="Marker">*</span> [% Translate("Username") | html %]:</label>
                         <div class="Field">
@@ -264,7 +264,7 @@
                         </div>
                         <div class="Clear"></div>
 
-### Code licensed under the GPL-3.0, Copyright (C) 2019-2023 Rother OSS GmbH, https://otobo.de/ ###
+### Code licensed under the GPL-3.0, Copyright (C) 2019-2024 Rother OSS GmbH, https://otobo.de/ ###
                         <div class="Row Row_OAuth2_Profile Hidden">
                             <label class="Mandatory" for="OAuth2_Profile"><span class="Marker">*</span> [% Translate("OAuth2 Profile") | html %]:</label>
                             <div class="Field">
@@ -278,7 +278,7 @@
                             </div>
                             <div class="Clear"></div>
                         </div>
-### EO Code licensed under the GPL-3.0, Copyright (C) 2019-2023 Rother OSS GmbH, https://otobo.de/ ###
+### EO Code licensed under the GPL-3.0, Copyright (C) 2019-2024 Rother OSS GmbH, https://otobo.de/ ###
 
                         <label class="Mandatory" for="LoginEdit"><span class="Marker">*</span> [% Translate("Username") | html %]:</label>
                         <div class="Field">

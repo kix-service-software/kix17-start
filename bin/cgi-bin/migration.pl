@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 # --
-# Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
+# Copyright (C) 2006-2024 KIX Service Software GmbH, https://www.kixdesk.com
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -49,6 +49,7 @@ my %Special = (
     'article_attachment'    => \&_GetArticleAttachments,
     'article_plain'         => \&_GetArticlePlain,
     'faq_attachment'        => \&_GetFAQAttachments,
+    'sysconfig'             => \&_GetSysConfig,
 );
 
 # get all table names from DB
@@ -310,6 +311,23 @@ sub _GetFAQAttachments {
         foreach my $Item (@{$Data}) {
             $Kernel::OM->Get('Kernel::System::Encode')->EncodeOutput(\$Item->{content});
             $Item->{content} = MIME::Base64::encode_base64($Item->{content});
+        }
+    }
+
+    return $Data;
+}
+
+sub _GetSysConfig {
+    my %Param = @_;
+    my $Data;
+
+    if ($Where) {
+        $Data = $Kernel::OM->Get('Kernel::Config')->Get($Where);
+    }
+    else {
+        $Data = {};
+        foreach my $Key ( keys %{$Kernel::OM->Get('Kernel::Config')} ) {
+            $Data->{$Key} = $Kernel::OM->Get('Kernel::Config')->Get($Key);
         }
     }
 

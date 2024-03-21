@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
+# Modified version of the work: Copyright (C) 2006-2024 KIX Service Software GmbH, https://www.kixdesk.com
 # based on the original work of:
-# Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2024 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -13,6 +13,7 @@ package Kernel::System::Web::UploadCache::DB;
 use strict;
 use warnings;
 
+use Bytes::Random::Secure::Tiny;
 use MIME::Base64;
 
 our @ObjectDependencies = (
@@ -38,8 +39,14 @@ sub FormIDCreate {
     # cleanup temp form ids
     $Self->FormIDCleanUp();
 
+    # get CSPRNG
+    my $CSPRNGObject = Bytes::Random::Secure::Tiny->new(
+        bits        => 256,
+        nonblocking => 1,
+    );
+
     # return requested form id
-    return time() . '.' . rand(12341241);
+    return time() . '.' . $CSPRNGObject->string_from('0123456789', 8) . '.' . $CSPRNGObject->string_from('0123456789', 8);
 }
 
 sub FormIDRemove {

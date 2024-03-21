@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
+# Modified version of the work: Copyright (C) 2006-2024 KIX Service Software GmbH, https://www.kixdesk.com
 # based on the original work of:
-# Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2024 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -935,9 +935,12 @@ sub Run {
                 TicketID           => $Self->{TicketID},
                 SendNoNotification => $GetParam{NewUserID},
                 Comment            => $BodyAsText,
+                DynamicField       => $GetParam{DynamicField},
             );
             if ( !$Move ) {
-                return $LayoutObject->ErrorScreen();
+                return $LayoutObject->ErrorScreen(
+                    Message => Translatable('Permission denied to move ticket to given queue!')
+                );
             }
         }
 

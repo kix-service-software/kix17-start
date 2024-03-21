@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
+# Copyright (C) 2006-2024 KIX Service Software GmbH, https://www.kixdesk.com
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -27,7 +27,10 @@ our @ObjectDependencies = (
     'Kernel::System::CustomerUser',
     'Kernel::System::DB',
     'Kernel::System::Encode',
+    'Kernel::System::JSON',
     'Kernel::System::Log',
+    'Kernel::System::State',
+    'Kernel::System::SystemData',
     'Kernel::System::Ticket',
 );
 
@@ -80,20 +83,22 @@ sub Run {
     for my $Fix ( @Fixes ) {
         if ( $Fix eq 'All' ) {
             %Fixes = (
-                'Placeholder'              => 1,
-                'CustomerUserBackends'     => 1,
-                'CustomerCompanyBackends'  => 1,
-                'CustomerUserData'         => 1,
-                'CustomerUserEmail'        => 1,
-                'CustomerCompanyData'      => 1,
-                'UserExists'               => 1,
-                'UserEmail'                => 1,
-                'TicketCustomerUserUpdate' => 1,
-                'TicketCustomerUser'       => 1,
-                'TicketCustomerCompany'    => 1,
-                'TicketData'               => 1,
-                'ServiceNames'             => 1,
-                'DynamicFieldValues'       => 1,
+                'Placeholder'                 => 1,
+                'CustomerUserBackends'        => 1,
+                'CustomerCompanyBackends'     => 1,
+                'CustomerUserData'            => 1,
+                'CustomerUserEmail'           => 1,
+                'CustomerCompanyData'         => 1,
+                'UserExists'                  => 1,
+                'UserEmail'                   => 1,
+                'TicketCustomerUserUpdate'    => 1,
+                'TicketCustomerUser'          => 1,
+                'TicketCustomerCompany'       => 1,
+                'TicketData'                  => 1,
+                'TicketStateTypes'            => 1,
+                'ServiceNames'                => 1,
+                'DynamicFieldValues'          => 1,
+                'PrepareTicketEscalationData' => 1,
             );
 
             last;
@@ -228,6 +233,15 @@ sub Run {
         return $Self->ExitCodeError();
     }
 
+    # check ticket state types
+    $Success = $Self->_CheckTicketStateTypes(
+        Fixes   => \%Fixes,
+        Verbose => $Verbose,
+    );
+    if ( !$Success ) {
+        return $Self->ExitCodeError();
+    }
+
     # check service names
     $Success = $Self->_CheckServiceNames(
         Fixes   => \%Fixes,
@@ -239,6 +253,14 @@ sub Run {
 
     # check dynamic field values
     $Success = $Self->_CheckDynamicFieldValues(
+        Fixes   => \%Fixes,
+    );
+    if ( !$Success ) {
+        return $Self->ExitCodeError();
+    }
+
+    # prepare ticket escalation data
+    $Success = $Self->_PrepareTicketEscalationData(
         Fixes   => \%Fixes,
     );
     if ( !$Success ) {
@@ -2475,6 +2497,7 @@ sub _CheckTicketCustomerUser {
     # get needed objects
     my $CustomerUserObject = $Kernel::OM->Get('Kernel::System::CustomerUser');
     my $DBObject           = $Kernel::OM->Get('Kernel::System::DB');
+    my $UserObject         = $Kernel::OM->Get('Kernel::System::User');
 
     # init variables
     my $UserCustomerIDs = 0;
@@ -2514,9 +2537,10 @@ sub _CheckTicketCustomerUser {
         %Data
         && scalar( keys( %Data ) )
     ) {
+        CUSTOMERUSER:
         for my $CustomerUserID ( sort( keys( %Data ) ) ) {
             # skip empty customer user id
-            next if ( !$CustomerUserID );
+            next CUSTOMERUSER if ( !$CustomerUserID );
 
             # get customer user data
             my %CustomerUserData = $CustomerUserObject->CustomerUserDataGet(
@@ -2531,30 +2555,107 @@ sub _CheckTicketCustomerUser {
                         Limit            => 1,
                     );
 
-                    # no customer user found
+                    # no customer user found in customer user backend, try agent data
                     if ( !%CustomerUserList ) {
-                        # split old mail
-                        my ( $Prefix, $Suffix ) = split( '@', $CustomerUserID, 2 );
+                        # init list
+                        my %CustomerUser;
+                        my $NewCustomerUserID;
 
-                        # prepare email
-                        my $CustomerUserEmail = $CustomerUserID;
-                        if ( $CustomerUserEmail !~ m/@/ ) {
-                            $CustomerUserEmail .= '@localhost';
+                        # try to find user via email
+                        my %UserList = $UserObject->UserSearch(
+                            PostMasterSearch => $CustomerUserID,
+                            Valid            => 0,
+                            Limit            => 1,
+                        );
+                        # found user via email
+                        if ( %UserList ) {
+                            for my $UserID ( keys( %UserList ) ) {
+                                # get user data
+                                my %UserData = $UserObject->GetUserData(
+                                    UserID => $UserID,
+                                );
+                                
+                                %CustomerUser = (
+                                    $UserData{UserLogin} => {
+                                        UserFirstname   => $UserData{UserFirstname},
+                                        UserLastname    => $UserData{UserLastname},
+                                        UserLogin       => $UserData{UserLogin},
+                                        UserEmail       => $UserData{UserEmail},
+                                        UserCustomerID  => 'Unbekannt',
+                                        ValidID         => '1',
+                                    }
+                                );
+                                if ( $UserCustomerIDs ) {
+                                    $CustomerUser{ $UserData{UserLogin} }->{UserCustomerIDs} = 'Unbekannt';
+                                }
+
+                                $NewCustomerUserID = $UserData{UserLogin};
+
+                                last;
+                            }
+                        }
+                        # try to find user via login
+                        else {
+                            %UserList = $UserObject->UserSearch(
+                                UserLogin => $CustomerUserID,
+                                Valid     => 0,
+                                Limit     => 1,
+                            );
+                            if ( %UserList ) {
+                                for my $UserID ( keys( %UserList ) ) {
+                                    # get user data
+                                    my %UserData = $UserObject->GetUserData(
+                                        UserID => $UserID,
+                                    );
+                                    
+                                    %CustomerUser = (
+                                        $UserData{UserLogin} => {
+                                            UserFirstname   => $UserData{UserFirstname},
+                                            UserLastname    => $UserData{UserLastname},
+                                            UserLogin       => $UserData{UserLogin},
+                                            UserEmail       => $UserData{UserEmail},
+                                            UserCustomerID  => 'Unbekannt',
+                                            ValidID         => '1',
+                                        }
+                                    );
+                                    if ( $UserCustomerIDs ) {
+                                        $CustomerUser{ $UserData{UserLogin} }->{UserCustomerIDs} = 'Unbekannt';
+                                    }
+
+                                    $NewCustomerUserID = $UserData{UserLogin};
+
+                                    last;
+                                }
+                            }
                         }
 
-                        # prepare data
-                        my %CustomerUser = (
-                            $CustomerUserID => {
-                                UserFirstname   => $Prefix || $CustomerUserID,
-                                UserLastname    => $Prefix || $CustomerUserID,
-                                UserLogin       => $CustomerUserID,
-                                UserEmail       => $CustomerUserEmail,
-                                UserCustomerID  => 'Unbekannt',
-                                ValidID         => '1',
+                        # try to find user via login
+                        if ( !%CustomerUser ) { 
+                            # split old mail
+                            my ( $Prefix, $Suffix ) = split( '@', $CustomerUserID, 2 );
+
+                            # prepare email
+                            my $CustomerUserEmail = $CustomerUserID;
+                            if ( $CustomerUserEmail !~ m/@/ ) {
+                                $CustomerUserEmail .= '@localhost';
                             }
-                        );
-                        if ( $UserCustomerIDs ) {
-                            $CustomerUser{ $CustomerUserID }->{UserCustomerIDs} = 'Unbekannt';
+
+                            # prepare data
+                            %CustomerUser = (
+                                $CustomerUserID => {
+                                    UserFirstname   => $Prefix || $CustomerUserID,
+                                    UserLastname    => $Prefix || $CustomerUserID,
+                                    UserLogin       => $CustomerUserID,
+                                    UserEmail       => $CustomerUserEmail,
+                                    UserCustomerID  => 'Unbekannt',
+                                    ValidID         => '1',
+                                }
+                            );
+                            if ( $UserCustomerIDs ) {
+                                $CustomerUser{ $CustomerUserID }->{UserCustomerIDs} = 'Unbekannt';
+                            }
+
+                            $NewCustomerUserID = $CustomerUserID;
                         }
 
                         # add customer user
@@ -2582,12 +2683,13 @@ sub _CheckTicketCustomerUser {
 
                         # prepare bind
                         my @Bind = (
-                            \$CustomerUser{ $CustomerUserID }->{UserCustomerID},
+                            \$NewCustomerUserID,
+                            \$CustomerUser{ $NewCustomerUserID }->{UserCustomerID},
                             \$CustomerUserID
                         );
                         # execute fix statement
                         return if !$DBObject->Do(
-                            SQL  => 'UPDATE ticket SET customer_id = ? WHERE LOWER(customer_user_id) = LOWER(?)',
+                            SQL  => 'UPDATE ticket SET customer_user_id = ?, customer_id = ? WHERE LOWER(customer_user_id) = LOWER(?)',
                             Bind => \@Bind,
                         );
 
@@ -2740,6 +2842,112 @@ sub _CheckTicketCustomerCompany {
     return 1;
 }
 
+sub _CheckTicketStateTypes {
+    my ( $Self, %Param ) = @_;
+
+    # get needed objects
+    my $DBObject    = $Kernel::OM->Get('Kernel::System::DB');
+    my $StateObject = $Kernel::OM->Get('Kernel::System::State');
+
+    # get state type list
+    my %StateTypeList = $StateObject->StateTypeList(
+        UserID => 1,
+    );
+
+    $Self->Print('<yellow>TicketStateTypes</yellow> - Check ticket state types' . "\n");
+
+    # process state type list
+    my @CustomStateTypes = ();
+    my $StateTypeIDOpen  = 0;
+    for my $StateTypeID ( sort( keys( %StateTypeList ) ) ) {
+        if (
+            $StateTypeList{ $StateTypeID } ne 'new'
+            && $StateTypeList{ $StateTypeID } ne 'open'
+            && $StateTypeList{ $StateTypeID } ne 'closed'
+            && $StateTypeList{ $StateTypeID } ne 'pending reminder'
+            && $StateTypeList{ $StateTypeID } ne 'pending auto'
+            && $StateTypeList{ $StateTypeID } ne 'removed'
+            && $StateTypeList{ $StateTypeID } ne 'merged'
+        ) {
+            push( @CustomStateTypes, $StateTypeID );
+        }
+        elsif ( $StateTypeList{ $StateTypeID } eq 'open' ) {
+            $StateTypeIDOpen = $StateTypeID;
+        }
+    }
+
+    # check that state type 'open' was found
+    if ( !$StateTypeIDOpen ) {
+        $Self->PrintError('State type "open" is missing!' . "\n");
+        return;
+    }
+
+    $Self->Print('<yellow> - Custom state types found: ' . scalar( @CustomStateTypes ) . '</yellow>' . "\n");
+
+    # process state type result
+    if (
+        @CustomStateTypes
+        && scalar( @CustomStateTypes )
+    ) {
+        # prepare select statement
+        my $SelectSQL = 'SELECT id, name FROM ticket_state WHERE type_id IN (' . join ( ',', @CustomStateTypes ) . ')';
+
+        # prepare db handle
+        return if !$DBObject->Prepare(
+            SQL => $SelectSQL,
+        );
+
+        # fetch data
+        my %Data = ();
+        while ( my @Row = $DBObject->FetchrowArray() ) {
+            $Data{ $Row[0] } = $Row[1];
+        }
+
+        # process state result
+        if (
+            %Data
+            && scalar( keys( %Data ) )
+        ) {
+            # check if entry should be fixed
+            if ( $Param{Fixes}->{'TicketStateTypes'} ) {
+                # convert hash to array
+                my @StateIDs = sort( keys( %Data ) );
+
+                # prepare fix statement
+                my $FixSQL = 'UPDATE ticket_state SET type_id = ? WHERE id IN (' . join ( ',', @StateIDs ) . ')';
+
+                # execute fix statement
+                return if !$DBObject->Do(
+                    SQL  => $FixSQL,
+                    Bind => [ \$StateTypeIDOpen ]
+                );
+
+                $Self->Print('<green>' . scalar( keys( %Data ) ) . ' entries fixed</green>' . "\n");
+            }
+            else {
+                if ( $Param{Verbose} ) {
+                    $Self->Print('<red> - Ticket states to fix:</red> (' . scalar( keys( %Data ) ) . ')' . "\n");
+
+                    for my $StateID ( sort { $a <=> $b } ( keys( %Data ) ) ) {
+                        $Self->Print($Data{ $StateID } . "\n");
+                    }
+                }
+                else {
+                    $Self->Print('<red> - ' . scalar( keys( %Data ) ) . ' entries should be fixed</red>' . "\n");
+                }
+            }
+        }
+        else {
+            $Self->Print('<green>Nothing to do</green>' . "\n");
+        }
+    }
+    else {
+        $Self->Print('<green>Nothing to do</green>' . "\n");
+    }
+
+    return 1;
+}
+
 sub _CheckServiceNames {
     my ( $Self, %Param ) = @_;
 
@@ -2857,34 +3065,58 @@ sub _CheckDynamicFieldValues {
         '0001' => {
             'Label'     => 'orphaned ticket dynamic field values',
             'SelectSQL' => 'SELECT dfv.id FROM dynamic_field_value dfv, dynamic_field df WHERE df.object_type = \'Ticket\' AND dfv.field_id = df.id AND dfv.object_id NOT IN ( SELECT id FROM ticket )',
-            'FixSQL'    => 'DELETE FROM dynamic_field_value dfv, dynamic_field df WHERE df.object_type = \'Ticket\' AND dfv.field_id = df.id AND dfv.object_id NOT IN ( SELECT id FROM ticket )',,
+            'FixSQL'    => 'DELETE FROM dynamic_field_value WHERE object_id NOT IN ( SELECT id FROM ticket ) AND field_id IN ( SELECT id FROM dynamic_field WHERE object_type = \'Ticket\' )',,
         },
         '0002' => {
             'Label'     => 'orphaned article dynamic field values',
             'SelectSQL' => 'SELECT dfv.id FROM dynamic_field_value dfv, dynamic_field df WHERE df.object_type = \'Article\' AND dfv.field_id = df.id AND dfv.object_id NOT IN ( SELECT id FROM article )',
-            'FixSQL'    => 'DELETE FROM dynamic_field_value dfv, dynamic_field df WHERE df.object_type = \'Article\' AND dfv.field_id = df.id AND dfv.object_id NOT IN ( SELECT id FROM article )',
+            'FixSQL'    => 'DELETE FROM dynamic_field_value WHERE object_id NOT IN ( SELECT id FROM article ) AND field_id IN ( SELECT id FROM dynamic_field WHERE object_type = \'Article\' )',
         },
         '0003' => {
             'Label'     => 'orphaned faq dynamic field values',
             'SelectSQL' => 'SELECT dfv.id FROM dynamic_field_value dfv, dynamic_field df WHERE df.object_type = \'FAQ\' AND dfv.field_id = df.id AND dfv.object_id NOT IN ( SELECT id FROM faq_item )',
-            'FixSQL'    => 'DELETE FROM dynamic_field_value dfv, dynamic_field df WHERE df.object_type = \'FAQ\' AND dfv.field_id = df.id AND dfv.object_id NOT IN ( SELECT id FROM faq_item )',
+            'FixSQL'    => 'DELETE FROM dynamic_field_value WHERE object_id NOT IN ( SELECT id FROM faq_item ) AND field_id IN ( SELECT id FROM dynamic_field WHERE object_type = \'FAQ\' )',
         },
         '0004' => {
-            'Label'     => 'orphaned customer user dynamic field values',
-            'SelectSQL' => 'SELECT dfv.id FROM dynamic_field_value dfv, dynamic_field df WHERE df.object_type = \'CustomerUser\' AND dfv.field_id = df.id AND dfv.object_id_text NOT IN ( SELECT login FROM customer_user )',
-            'FixSQL'    => 'DELETE FROM dynamic_field_value dfv, dynamic_field df WHERE df.object_type = \'CustomerUser\' AND dfv.field_id = df.id AND dfv.object_id_text NOT IN ( SELECT login FROM customer_user )',
+            'Label'        => 'orphaned customer user dynamic field values',
+            'SelectSQL'    => 'SELECT dfv.id FROM dynamic_field_value dfv, dynamic_field df WHERE df.object_type = \'CustomerUser\' AND dfv.field_id = df.id AND dfv.object_id_text NOT IN ( SELECT login FROM customer_user )',
+            'FixSQL'       => 'DELETE FROM dynamic_field_value WHERE object_id_text NOT IN ( SELECT login FROM customer_user ) AND field_id IN ( SELECT id FROM dynamic_field WHERE object_type = \'CustomerUser\' )',
+            'ObjectIDText' => 1,
         },
         '0005' => {
-            'Label'     => 'orphaned customer company dynamic field values',
-            'SelectSQL' => 'SELECT dfv.id FROM dynamic_field_value dfv, dynamic_field df WHERE df.object_type = \'CustomerCompany\' AND dfv.field_id = df.id AND dfv.object_id_text NOT IN ( SELECT customer_id FROM customer_company )',
-            'FixSQL'    => 'DELETE FROM dynamic_field_value dfv, dynamic_field df WHERE df.object_type = \'CustomerCompany\' AND dfv.field_id = df.id AND dfv.object_id_text NOT IN ( SELECT customer_id FROM customer_company )',
+            'Label'        => 'orphaned customer company dynamic field values',
+            'SelectSQL'    => 'SELECT dfv.id FROM dynamic_field_value dfv, dynamic_field df WHERE df.object_type = \'CustomerCompany\' AND dfv.field_id = df.id AND dfv.object_id_text NOT IN ( SELECT customer_id FROM customer_company )',
+            'FixSQL'       => 'DELETE FROM dynamic_field_value WHERE object_id_text NOT IN ( SELECT customer_id FROM customer_company ) AND field_id IN ( SELECT id FROM dynamic_field WHERE object_type = \'CustomerCompany\' )',
+            'ObjectIDText' => 1,
         },
     );
 
     $Self->Print('<yellow>DynamicFieldValues</yellow> - Check for orphaned dynamic field values' . "\n");
 
+    # init variables
+    my $ObjectIDText = 0;
+
+    # check for column customer_ids
+    $DBObject->Prepare(
+        SQL   => 'SELECT * FROM dynamic_field_value',
+        Limit => 1
+    );
+    my @ColumnNames = $DBObject->GetColumnNames();
+    for my $ColumnName ( @ColumnNames ) {
+        if ( $ColumnName eq 'object_id_text' ) {
+            $ObjectIDText = 1;
+
+            last;
+        }
+    }
+
     # process queries
     for my $Query ( sort( keys( %QueryMap ) ) ) {
+        next if (
+            $QueryMap{ $Query }->{ObjectIDText}
+            && !$ObjectIDText
+        );
+
         $Self->Print('<yellow> - ' . $QueryMap{ $Query }->{Label} . ': </yellow>');
 
         # prepare db handle
@@ -3460,6 +3692,15 @@ sub _ProcessCustomerUserData {
             $Param{CustomerUser}->{ $UserLogin }->{ValidID} = 1;
         }
 
+        for my $Attribute ( qw(UserFirstname UserLastname) ) {
+            if (
+                defined( $Param{CustomerUser}->{ $UserLogin }->{ $Attribute } )
+                && length ( $Param{CustomerUser}->{ $UserLogin }->{ $Attribute } ) > 100
+            ) {
+                $Param{CustomerUser}->{ $UserLogin }->{ $Attribute } = substr( $Param{CustomerUser}->{ $UserLogin }->{ $Attribute }, 0, 97 ) . '...';
+            }
+        }
+
         # prepare data for sql
         my $SQLPre  = '';
         my $SQLPost = '';
@@ -3733,6 +3974,165 @@ sub _ProcessCustomerCompanyData {
     return 1;
 }
 ### EO Internal Functions of _CheckCustomerCompanyBackends ###
+
+sub _PrepareTicketEscalationData {
+    my ( $Self, %Param ) = @_;
+
+    # get needed objects
+    my $DBObject         = $Kernel::OM->Get('Kernel::System::DB');
+    my $JSONObject       = $Kernel::OM->Get('Kernel::System::JSON');
+    my $SystemDataObject = $Kernel::OM->Get('Kernel::System::SystemData');
+    my $TicketObject     = $Kernel::OM->Get('Kernel::System::Ticket');
+
+    $Self->Print('<yellow>PrepareTicketEscalationData</yellow> - prepare ticket escalation data' . "\n");
+
+    if ( $Param{Fixes}->{'PrepareTicketEscalationData'} ) {
+        $Self->Print('<yellow> - get all ticket ids: </yellow>');
+
+        # prepare sql statement to get ticket ids with SLA
+        $DBObject->Prepare(
+            SQL => "SELECT id FROM ticket WHERE sla_id IS NOT NULL ORDER BY id"
+        );
+
+        my @TicketIDs;
+        while ( my @Row = $DBObject->FetchrowArray() ) {
+            push @TicketIDs, $Row[0];
+        }
+        $Self->Print('<green>Done</green>' . "\n");
+
+        $Self->Print('<yellow> - calculate escalation data: </yellow>' . "\n");
+
+        my %Data;
+        my $Count = 0;
+        my $TicketCount = scalar @TicketIDs;
+        TICKETID:
+        for my $TicketID ( @TicketIDs ) {
+            $Count += 1;
+            if ( $Count % 2000 == 0 ) {
+                my $Percent = int( $Count / ( $TicketCount / 100 ) );
+                $Self->Print(' - - <yellow>' . $Count . '</yellow> of <yellow>' . $TicketCount . '</yellow> processed (<yellow>' . $Percent . '%</yellow>)' . "\n");
+            }
+
+            my %Ticket = $TicketObject->TicketGet(
+                TicketID => $TicketID,
+            );
+            next TICKETID if !%Ticket;
+
+            my $TotalTime = $TicketObject->GetTotalNonEscalationRelevantBusinessTime(
+                TicketID => $TicketID,
+            );
+
+            my %FirstResponseDone = $TicketObject->_TicketGetFirstResponse(
+                TicketID => $TicketID,
+                Ticket   => \%Ticket,
+            );
+
+            my %SolutionDone = $TicketObject->_TicketGetClosed(
+                TicketID => $TicketID,
+                Ticket   => \%Ticket,
+            );
+
+            my %LastSuspensionTimes = $Self->_GetTicketLastSuspension(
+                TicketID => $TicketID,
+            );
+
+            $Data{$TicketID} = {
+                %LastSuspensionTimes,
+                TotalSolutionSuspensionTime => $TotalTime / 60,
+                FirstResponse               => $FirstResponseDone{FirstResponse},
+                Solution                    => $SolutionDone{SolutionTime},
+            };
+        }
+
+        my $JSON = $JSONObject->Encode(
+            Data => \%Data
+        );
+
+        my $SystemDataKey = 'TicketEscalationDataForMigration';
+
+        my $Exists = $SystemDataObject->SystemDataGet( Key => $SystemDataKey );
+        if ( $Exists ) {
+            $SystemDataObject->SystemDataDelete(
+                Key    => $SystemDataKey,
+                UserID => 1,
+            );
+        }
+        my $Result = $SystemDataObject->SystemDataAdd(
+            Key    => $SystemDataKey,
+            Value  => $JSON,
+            UserID => 1,
+        );
+        if ( !$Result ) {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'error',
+                Message  => 'Can\'t store prepared ticket escalation data!',
+            );
+            return;
+        }
+
+        $Self->Print('<green>Done</green>' . "\n");
+        }
+    else {
+        $Self->Print('<green> - Only when using --fix</green>' . "\n");
+    }
+
+    return 1;
+}
+
+sub _GetTicketLastSuspension {
+    my ( $Self, %Param ) = @_;
+
+    my %StateListReverse = reverse $Kernel::OM->Get('Kernel::System::State')->StateList( UserID => 1 );
+
+    my $RelevantStates = $Kernel::OM->Get('Kernel::Config')->Get('Ticket::EscalationDisabled::RelevantStates');
+    my @RelevantStateIDs;
+    foreach my $State ( @{$RelevantStates||[]} ) {
+        push @RelevantStateIDs, $StateListReverse{$State}
+    }
+
+    my @Bind = map { \$_ } @RelevantStateIDs;
+
+    my %Result;
+
+    my $SQL = "SELECT max(th.create_time) FROM ticket_history th, ticket_history_type tht "
+            . "WHERE "
+            . "th.ticket_id = $Param{TicketID} AND "
+            . "th.history_type_id = tht.id AND "
+            . "tht.name IN ('StateUpdate', 'WebRequestCustomer', 'PhoneCallCustomer') AND "
+            . "th.state_id IN (".(join( ',', map { '?' } @RelevantStateIDs)).')';
+
+    # get last suspension start
+    return %Result if !$Kernel::OM->Get('Kernel::System::DB')->Prepare(
+        SQL => $SQL,
+        Bind => \@Bind,
+    );
+
+    while ( my @Row = $Kernel::OM->Get('Kernel::System::DB')->FetchrowArray() ) {
+        $Result{LastSolutionSuspensionStartTime} = $Row[0];
+    }
+
+    # get last suspension start
+    if ( $Result{LastSolutionSuspensionStartTime} ) {
+        $SQL = "SELECT max(th.create_time) FROM ticket_history th, ticket_history_type tht "
+             . "WHERE "
+             . "th.ticket_id = $Param{TicketID} AND "
+             . "th.history_type_id = tht.id AND "
+             . "tht.name IN ('StateUpdate', 'WebRequestCustomer', 'PhoneCallCustomer') AND "
+             . "th.state_id NOT IN (".(join( ',', map { '?' } @RelevantStateIDs)).') AND '
+             . "th.create_time > '$Result{LastSolutionSuspensionStartTime}'";
+
+        return %Result if !$Kernel::OM->Get('Kernel::System::DB')->Prepare(
+            SQL => $SQL,
+            Bind => \@Bind,
+        );
+
+        while ( my @Row = $Kernel::OM->Get('Kernel::System::DB')->FetchrowArray() ) {
+            $Result{LastSolutionSuspensionStopTime} = $Row[0];
+        }
+    }
+
+    return %Result;
+}
 
 1;
 

@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
+# Copyright (C) 2006-2024 KIX Service Software GmbH, https://www.kixdesk.com
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -36,6 +36,7 @@ sub Check {
     $ConfigData{SMTPPort}       = $ConfigObject->Get('SendmailModule::Port');
     $ConfigData{AuthUser}       = $ConfigObject->Get('SendmailModule::AuthUser');
     $ConfigData{OAuth2_Profile} = $ConfigObject->Get('SendmailModule::OAuth2_Profile');
+    $ConfigData{SSLVerify}      = $ConfigObject->Get('SendmailModule::SSLVerify');
 
     # check needed stuff
     for (qw(Host AuthUser OAuth2_Profile)) {
@@ -82,6 +83,7 @@ sub Check {
             FQDN      => $ConfigData{FQDN},
             SMTPPort  => $ConfigData{SMTPPort},
             SMTPDebug => $Self->{SMTPDebug},
+            SSLVerify => $ConfigData{SSLVerify},
         );
 
         last TRY if ( $SMTP );

@@ -1,8 +1,8 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
+# Modified version of the work: Copyright (C) 2006-2024 KIX Service Software GmbH, https://www.kixdesk.com
 # based on the original work of:
 # Copyright (C) 2019–2021 Efflux GmbH, https://efflux.de/
-# Copyright (C) 2019-2023 Rother OSS GmbH, https://otobo.de/
+# Copyright (C) 2019-2024 Rother OSS GmbH, https://otobo.de/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. This program is
 # licensed under the AGPL-3.0 with code licensed under the GPL-3.0.
@@ -17,7 +17,7 @@ package Kernel::System::MailAccount::IMAPS_OAuth2;
 use strict;
 use warnings;
 
-use IO::Socket::SSL;
+use IO::Socket::SSL qw( SSL_VERIFY_NONE SSL_VERIFY_PEER );
 use Mail::IMAPClient;
 use MIME::Base64;
 
@@ -48,7 +48,7 @@ sub Connect {
 
     my $Type = 'IMAPS_OAuth2';
 
-### Code licensed under the GPL-3.0, Copyright (C) 2019-2023 Rother OSS GmbH, https://otobo.de/ ###
+### Code licensed under the GPL-3.0, Copyright (C) 2019-2024 Rother OSS GmbH, https://otobo.de/ ###
     # check needed stuff
     for (qw(OAuth2_ProfileID Login Password Host Timeout Debug)) {
         if ( !defined $Param{$_} ) {
@@ -78,7 +78,9 @@ sub Connect {
     # connect to host
     my $IMAPObject = Mail::IMAPClient->new(
         Server   => $Param{Host},
-        Ssl      => [ SSL_verify_mode => IO::Socket::SSL::SSL_VERIFY_NONE() ],
+        Ssl      => [
+            SSL_verify_mode => $Param{SSLVerify} ? SSL_VERIFY_PEER : SSL_VERIFY_NONE
+        ],
         Debug    => $Param{Debug},
         Uid      => 1,
 
@@ -86,14 +88,14 @@ sub Connect {
         Ignoresizeerrors => 1,
     );
 
-# KIX-kix, Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
+# KIX-kix, Copyright (C) 2006-2024 KIX Service Software GmbH, https://www.kixdesk.com
     if ( !$IMAPObject ) {
         return (
             Successful => 0,
             Message    => "$Type: Can't connect to $Param{Host}: $!!"
         );
     }
-# EO KIX-kix, Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
+# EO KIX-kix, Copyright (C) 2006-2024 KIX Service Software GmbH, https://www.kixdesk.com
     # try it 2 times to authenticate with the IMAP server
     TRY:
     for my $Try ( 1 .. 2 ) {
@@ -141,11 +143,11 @@ sub Connect {
     return (
         Successful => 1,
         IMAPObject => $IMAPObject,
-# KIX-kix, Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
+# KIX-kix, Copyright (C) 2006-2024 KIX Service Software GmbH, https://www.kixdesk.com
         Type       => $Type,
-# EO KIX-kix, Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
+# EO KIX-kix, Copyright (C) 2006-2024 KIX Service Software GmbH, https://www.kixdesk.com
     );
-### EO Code licensed under the GPL-3.0, Copyright (C) 2019-2023 Rother OSS GmbH, https://otobo.de/ ###
+### EO Code licensed under the GPL-3.0, Copyright (C) 2019-2024 Rother OSS GmbH, https://otobo.de/ ###
 }
 
 sub Fetch {
@@ -196,6 +198,9 @@ sub _Fetch {
     # MaxPopEmailSession
     my $MaxPopEmailSession = $ConfigObject->Get('PostMasterReconnectMessage') || 20;
 
+    # SSLVerify
+    my $SSLVerify = $ConfigObject->Get('PostMasterSSLVerify');
+
     my $Timeout      = 60;
     my $FetchCounter = 0;
     my $AuthType     = 'IMAPS_OAuth2';
@@ -204,8 +209,9 @@ sub _Fetch {
 
     my %Connect = $Self->Connect(
         %Param,
-        Timeout => $Timeout,
-        Debug   => $Debug
+        Timeout   => $Timeout,
+        Debug     => $Debug,
+        SSLVerify => $SSLVerify,
     );
 
     if ( !$Connect{Successful} ) {
