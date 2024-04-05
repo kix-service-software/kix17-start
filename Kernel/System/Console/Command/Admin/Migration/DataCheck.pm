@@ -895,11 +895,11 @@ sub _CheckCustomerUserData {
         },
         '0006' => {
             'Label'     => 'customer user with same email as an user, but different firstname or lastname',
-            'SelectSQL' => 'SELECT cu.login FROM customer_user cu, users u, user_preferences up WHERE cu.email = up.preferences_value AND up.preferences_key = \'UserEmail\' AND up.user_id = u.id AND (cu.first_name != u.first_name OR cu.last_name != u.last_name)',
+            'SelectSQL' => 'SELECT cu.login FROM customer_user cu, users u, user_preferences up WHERE lower(cu.email) = lower(up.preferences_value) AND up.preferences_key = \'UserEmail\' AND up.user_id = u.id AND (cu.first_name != u.first_name OR cu.last_name != u.last_name)',
         },
         '0007' => {
             'Label'     => 'customer user with same email as an user, but different login',
-            'SelectSQL' => 'SELECT cu.login FROM customer_user cu, users u, user_preferences up WHERE cu.email = up.preferences_value AND up.preferences_key = \'UserEmail\' AND up.user_id = u.id AND cu.login != u.login',
+            'SelectSQL' => 'SELECT cu.login FROM customer_user cu, users u, user_preferences up WHERE lower(cu.email) = lower(up.preferences_value) AND up.preferences_key = \'UserEmail\' AND up.user_id = u.id AND cu.login != u.login',
         },
     );
 
@@ -988,7 +988,7 @@ sub _CheckCustomerUserEmail {
 
     # prepare db handle
     return if !$DBObject->Prepare(
-        SQL => 'SELECT id, email FROM customer_user',
+        SQL => 'SELECT id, lower(email) FROM customer_user',
     );
 
     # fetch data
@@ -2096,7 +2096,7 @@ sub _CheckUserEmail {
     my $PrefKey    = 'UserEmail';
     my @SelectBind = ( \$PrefKey );
     return if !$DBObject->Prepare(
-        SQL  => 'SELECT user_id, preferences_value FROM user_preferences WHERE preferences_key = ?',
+        SQL  => 'SELECT user_id, lower(preferences_value) FROM user_preferences WHERE preferences_key = ?',
         Bind => \@SelectBind,
     );
 
