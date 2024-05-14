@@ -1,6 +1,9 @@
 # Change log of KIX
 * Copyright (C) 2006-2024 KIX Service Software GmbH, https://www.kixdesk.com
 
+# 17.22.0-RC8 (2024/05/14)
+ * (2024/05/06) - Bugfix: KIX17-3564 (encode contact entry before adding as ticket customer) (mbauer)
+
 # 17.22.0-RC7 (2024/03/06)
  * (2024/03/06) - Bugfix: KIX17-3555 (fix generation of FormID) (mbauer)
 
