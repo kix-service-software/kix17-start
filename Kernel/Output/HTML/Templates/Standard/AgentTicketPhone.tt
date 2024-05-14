@@ -186,7 +186,7 @@
 [% RenderBlockStart("FromExternalCustomer") %]
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    Core.Agent.CustomerSearch.AddTicketCustomer( 'FromCustomer', "[% Data.Email | html %]", "[% Data.Customer | html %]", true );
+    Core.Agent.CustomerSearch.AddTicketCustomer( 'FromCustomer', [% Data.Email | JSON %], [% Data.Customer | JSON %], true );
 //]]></script>
 [% END %]
 [% RenderBlockEnd("FromExternalCustomer") %]
