@@ -118,7 +118,7 @@
 [% RenderBlockStart("PrepopulatedCallContact") %]
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    Core.Agent.CustomerSearch.AddTicketCustomer( 'FromCustomer', '"[% Data.Firstname | html %] [% Data.Lastname | html %]" <[% Data.Email | html %]>', "[% Data.Customer | html %]", true );
+    Core.Agent.CustomerSearch.AddTicketCustomer( 'FromCustomer', [% Data.Entry | JSON %], [% Data.Customer | JSON %], true );
 //]]></script>
 [% END %]
 [% RenderBlockEnd("PrepopulatedCallContact") %]
