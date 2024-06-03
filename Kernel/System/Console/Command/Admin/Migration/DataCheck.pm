@@ -2341,8 +2341,6 @@ sub _UpdateTicketCustomerUser {
                 $Kernel::OM->ObjectsDiscard(
                     Objects => ['Kernel::System::Ticket'],
                 );
-
-                $Kernel::OM->Get('Kernel::System::Ticket') = $Kernel::OM->Get('Kernel::System::Ticket');
             }
         }
 
