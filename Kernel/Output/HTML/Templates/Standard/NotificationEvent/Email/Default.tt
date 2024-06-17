@@ -170,7 +170,7 @@
 #   for best mail client compatibility. In particular, KIX uses <div> elements with inline CSS instead of <blockquote>.
 #   Here we also change the inline style of this <div> to match with the current design.
                             [% Data.Body
-                            .replace('<p>', '<div>')
+                            .replace('<p(|\s[^>]*)>', '<div$1>')
                             .replace('</p>', '</div>')
                             .replace('<div\s+type="cite"[^>]*>', '<div type="cite" style="background: #f5f5f5; border: 1px solid #e0e0e0; color: #555; margin: 10px 0px 0px 0px; padding: 10px;">')
                             .replace('border:none;border-left:solid\s+blue\s+1.5pt;padding:0cm\s+0cm\s+0cm\s+4.0pt', 'border: none; border-left: 1px solid #f92; color: #555; margin: 10px 5px 10px 0px; padding: 0px 10px;')
