@@ -1,6 +1,11 @@
 # Change log of KIX
 * Copyright (C) 2006-2024 KIX Service Software GmbH, https://www.kixdesk.com
 
+# 17.22.0-RC9 (2024/06/17)
+ * (2024/06/17) - Bugfix: KIX17-3568 (fix creation of invalid html for notifications) (mbauer)
+ * (2024/06/06) - CR: KIX17-3512 (command to cleanup config items before migration) (mbauer)
+ * (2024/04/24) - Bugfix: KIX17-3561 (use encoding for data check ldap sync) (mbauer)
+
 # 17.22.0-RC8 (2024/05/14)
  * (2024/05/06) - Bugfix: KIX17-3564 (encode contact entry before adding as ticket customer) (mbauer)
 
