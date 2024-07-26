@@ -89,6 +89,10 @@ elsif ( $Special{$ObjectType} ) {
     $Output = $Special{$ObjectType}->(
         ObjectType => $ObjectType,
         ObjectID   => $ObjectID,
+        What       => $What,
+        Where      => $Where,
+        Limit      => $Limit,
+        OrderBy    => $OrderBy,
     );
 }
 elsif ( $Tables{$ObjectType} ) {
@@ -321,8 +325,8 @@ sub _GetSysConfig {
     my %Param = @_;
     my $Data;
 
-    if ($Where) {
-        $Data = $Kernel::OM->Get('Kernel::Config')->Get($Where);
+    if ($Param{Where}) {
+        $Data = $Kernel::OM->Get('Kernel::Config')->Get($Param{Where});
     }
     else {
         $Data = {};
