@@ -2207,7 +2207,7 @@ sub _FetchAttributesFromCert {
     my %Filters = (
         Hash        => '(\w{8})',
         Issuer      => 'issuer=\s*(.*)',
-        Fingerprint => 'SHA1\sFingerprint=(.*)',
+        Fingerprint => '(?:(?:SHA|sha)1\sFingerprint|\(stdin\))=(?:\s+|)(.*)',
         Serial      => 'serial=(.*)',
         Subject     => 'subject=\s*(.*)',
         StartDate   => 'notBefore=(.*)',
