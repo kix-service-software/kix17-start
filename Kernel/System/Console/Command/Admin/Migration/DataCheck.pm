@@ -16,6 +16,7 @@ use Net::LDAP::Control::Paged;
 use Net::LDAP::Constant qw(LDAP_CONTROL_PAGED);
 use Net::LDAP::Util qw(escape_filter_value);
 
+use Kernel::System::EmailParser;
 use Kernel::System::VariableCheck qw(:all);
 
 use base qw(Kernel::System::Console::BaseCommand);
@@ -129,6 +130,7 @@ sub Run {
     $Success = $Self->_CheckCustomerUserBackends(
         Fixes    => \%Fixes,
         PageSize => $PageSize,
+        Internal => $Internal,
     );
     if ( !$Success ) {
         return $Self->ExitCodeError();
@@ -136,7 +138,8 @@ sub Run {
 
     # check customer company backends
     $Success = $Self->_CheckCustomerCompanyBackends(
-        Fixes => \%Fixes,
+        Fixes    => \%Fixes,
+        Internal => $Internal,
     );
     if ( !$Success ) {
         return $Self->ExitCodeError();
@@ -280,12 +283,19 @@ sub Run {
 sub _CheckPlaceholderData {
     my ( $Self, %Param ) = @_;
 
-    # get needed objects
-    my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
+    $Self->Print('<yellow>Placeholder</yellow> - Check placeholder data' . "\n");
+
+    # skip this step if fixes are given, but this one is irrelevant
+    if (
+        IsHashRefWithData( $Param{Fixes} )
+        && !$Param{Fixes}->{'Placeholder'}
+    ) {
+        $Self->Print('<green> - Skip, irrelevant step for this fix run</green>' . "\n");
+        return 1;
+    }
 
     # get all table names from DB
-    $DBObject->Connect() || die "Unable to connect to database!";
-    my %Tables = map { my $Table = (split(/\./, $_))[1]; $Table =~ s/\`//g; $Table => 1 } $DBObject->{dbh}->tables('', $DBObject->{'DB::Type'} eq 'postgresql' ? 'public' : '', '', 'TABLE');
+    my $TablesRef = $Self->_GetDBTables();
 
     # init query map
     my %QueryMap = (
@@ -399,8 +409,6 @@ sub _CheckPlaceholderData {
         },
     );
 
-    $Self->Print('<yellow>Placeholder</yellow> - Check placeholder data' . "\n");
-
     # prepare patterns
     my @PatternArray = (
         {
@@ -442,20 +450,20 @@ sub _CheckPlaceholderData {
         $Self->Print('<yellow> - ' . $QueryMap{ $Query }->{Label} . ': </yellow>');
 
         # check if table exists
-        if ( !$Tables{ $QueryMap{ $Query }->{Table} } ) {
+        if ( !$TablesRef->{ $QueryMap{ $Query }->{Table} } ) {
             $Self->Print('<yellow>table does not exist</yellow>' . "\n");
 
             next;
         }
 
         # prepare db handle
-        return if !$DBObject->Prepare(
+        return if !$Kernel::OM->Get('Kernel::System::DB')->Prepare(
             SQL => $QueryMap{ $Query }->{DataSQL},
         );
 
         # fetch data
         my %Data = ();
-        while ( my @Row = $DBObject->FetchrowArray() ) {
+        while ( my @Row = $Kernel::OM->Get('Kernel::System::DB')->FetchrowArray() ) {
             $Data{ $Row[0] } = $Row[1];
         }
 
@@ -485,7 +493,7 @@ sub _CheckPlaceholderData {
                         my @FixBind = ( \$Data{ $DataID }, \$DataID );
 
                         # execute fix statement
-                        return if !$DBObject->Do(
+                        return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
                             SQL  => $QueryMap{ $Query }->{FixSQL},
                             Bind => \@FixBind,
                         );
@@ -534,37 +542,37 @@ sub _CheckPlaceholderData {
 sub _CheckCustomerUserBackends {
     my ( $Self, %Param ) = @_;
 
-    # get needed objects
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-    my $DBObject     = $Kernel::OM->Get('Kernel::System::DB');
-
     $Self->Print('<yellow>CustomerUserBackends</yellow> - Check customer user backends' . "\n");
+
+    # skip this step if fixes are given, but this one is irrelevant
+    if (
+        IsHashRefWithData( $Param{Fixes} )
+        && !$Param{Fixes}->{'CustomerUserBackends'}
+    ) {
+        $Self->Print('<green> - Skip, irrelevant step for this fix run</green>' . "\n");
+        return 1;
+    }
+
+    if ( $Param{Internal} ) {
+        $Self->Print('<green> - Do nothing, when internal flag is set</green>' . "\n");
+
+        return 1;
+    }
 
     # init variables
     my $FixBackendFound = 0;
-    my $UserCustomerIDs = 0;
 
     # check for column customer_ids
-    $DBObject->Prepare(
-        SQL   => 'SELECT * FROM customer_user',
-        Limit => 1
-    );
-    my @ColumnNames = $DBObject->GetColumnNames();
-    for my $ColumnName ( @ColumnNames ) {
-        if ( $ColumnName eq 'customer_ids' ) {
-            $UserCustomerIDs = 1;
-
-            $Self->Print('<red> - UserCustomerIDs is used. Check that all entries are synced before fix.</red>' . "\n");
-
-            last;
-        }
+    my $UserCustomerIDs = $Self->_ExistsDBCustomerIDsColumn();
+    if ( $UserCustomerIDs ) {
+        $Self->Print('<red> - UserCustomerIDs is used. Check that all entries are synced before fix.</red>' . "\n");
     }
 
     # process customer user backends
     COUNT:
     for my $Count ( '', 1 .. 10 ) {
 
-        my $BackendConfiguration = $ConfigObject->Get( 'CustomerUser' . $Count );
+        my $BackendConfiguration = $Kernel::OM->Get('Kernel::Config')->Get( 'CustomerUser' . $Count );
 
         next COUNT if ( !$BackendConfiguration->{Module} );
 
@@ -653,10 +661,22 @@ sub _CheckCustomerUserBackends {
 sub _CheckCustomerCompanyBackends {
     my ( $Self, %Param ) = @_;
 
-    # get needed objects
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-
     $Self->Print('<yellow>CustomerCompanyBackends</yellow> - Check customer company backends' . "\n");
+
+    # skip this step if fixes are given, but this one is irrelevant
+    if (
+        IsHashRefWithData( $Param{Fixes} )
+        && !$Param{Fixes}->{'CustomerCompanyBackends'}
+    ) {
+        $Self->Print('<green> - Skip, irrelevant step for this fix run</green>' . "\n");
+        return 1;
+    }
+
+    if ( $Param{Internal} ) {
+        $Self->Print('<green> - Do nothing, when internal flag is set</green>' . "\n");
+
+        return 1;
+    }
 
     # init variables
     my $FixBackendFound = 0;
@@ -665,7 +685,7 @@ sub _CheckCustomerCompanyBackends {
     COUNT:
     for my $Count ( '', 1 .. 10 ) {
 
-        my $BackendConfiguration = $ConfigObject->Get( 'CustomerCompany' . $Count );
+        my $BackendConfiguration = $Kernel::OM->Get('Kernel::Config')->Get( 'CustomerCompany' . $Count );
 
         next COUNT if ( !$BackendConfiguration->{Module} );
 
@@ -722,26 +742,8 @@ sub _CheckCustomerCompanyBackends {
 sub _SetInternalCustomerBackends {
     my ( $Self, %Param ) = @_;
 
-    # get needed objects
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-    my $DBObject     = $Kernel::OM->Get('Kernel::System::DB');
-
-    # init variables
-    my $UserCustomerIDs = 0;
-
     # check for column customer_ids
-    $DBObject->Prepare(
-        SQL   => 'SELECT * FROM customer_user',
-        Limit => 1
-    );
-    my @ColumnNames = $DBObject->GetColumnNames();
-    for my $ColumnName ( @ColumnNames ) {
-        if ( $ColumnName eq 'customer_ids' ) {
-            $UserCustomerIDs = 1;
-
-            last;
-        }
-    }
+    my $UserCustomerIDs = $Self->_ExistsDBCustomerIDsColumn();
 
     if (
         $Param{Internal}
@@ -765,7 +767,7 @@ sub _SetInternalCustomerBackends {
         }
 
         # overwrite customer user backends
-        $ConfigObject->Set(
+        $Kernel::OM->Get('Kernel::Config')->Set(
             Key   => 'CustomerUser',
             Value => {
                 Name   => 'Temp Database Backend',
@@ -794,7 +796,7 @@ sub _SetInternalCustomerBackends {
             },
         );
         for my $Count ( 1 .. 10 ) {
-            $ConfigObject->Set(
+            $Kernel::OM->Get('Kernel::Config')->Set(
                 Key   => 'CustomerUser' . $Count,
                 Value => undef,
             );
@@ -814,7 +816,7 @@ sub _SetInternalCustomerBackends {
         ];
 
         # overwrite customer user backends
-        $ConfigObject->Set(
+        $Kernel::OM->Get('Kernel::Config')->Set(
             Key   => 'CustomerCompany',
             Value => {
                 Name   => 'Database Backend',
@@ -836,7 +838,7 @@ sub _SetInternalCustomerBackends {
             },
         );
         for my $Count ( 1 .. 10 ) {
-            $ConfigObject->Set(
+            $Kernel::OM->Get('Kernel::Config')->Set(
                 Key   => 'CustomerCompany' . $Count,
                 Value => undef,
             );
@@ -849,8 +851,16 @@ sub _SetInternalCustomerBackends {
 sub _CheckCustomerUserData {
     my ( $Self, %Param ) = @_;
 
-    # get needed objects
-    my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
+    $Self->Print('<yellow>CustomerUserData</yellow> - Check customer user data of internal database table' . "\n");
+
+    # skip this step if fixes are given, but this one is irrelevant
+    if (
+        IsHashRefWithData( $Param{Fixes} )
+        && !$Param{Fixes}->{'CustomerUserData'}
+    ) {
+        $Self->Print('<green> - Skip, irrelevant step for this fix run</green>' . "\n");
+        return 1;
+    }
 
     # init query map
     my %QueryMap = (
@@ -881,28 +891,26 @@ sub _CheckCustomerUserData {
         },
         '0006' => {
             'Label'     => 'customer user with same email as an user, but different firstname or lastname',
-            'SelectSQL' => 'SELECT cu.login FROM customer_user cu, users u, user_preferences up WHERE cu.email = up.preferences_value AND up.preferences_key = \'UserEmail\' AND up.user_id = u.id AND (cu.first_name != u.first_name OR cu.last_name != u.last_name)',
+            'SelectSQL' => 'SELECT cu.login FROM customer_user cu, users u, user_preferences up WHERE lower(cu.email) = lower(up.preferences_value) AND up.preferences_key = \'UserEmail\' AND up.user_id = u.id AND (cu.first_name != u.first_name OR cu.last_name != u.last_name)',
         },
         '0007' => {
             'Label'     => 'customer user with same email as an user, but different login',
-            'SelectSQL' => 'SELECT cu.login FROM customer_user cu, users u, user_preferences up WHERE cu.email = up.preferences_value AND up.preferences_key = \'UserEmail\' AND up.user_id = u.id AND cu.login != u.login',
+            'SelectSQL' => 'SELECT cu.login FROM customer_user cu, users u, user_preferences up WHERE lower(cu.email) = lower(up.preferences_value) AND up.preferences_key = \'UserEmail\' AND up.user_id = u.id AND cu.login != u.login',
         },
     );
-
-    $Self->Print('<yellow>CustomerUserData</yellow> - Check customer user data of internal database table' . "\n");
 
     # process queries
     for my $Query ( sort( keys( %QueryMap ) ) ) {
         $Self->Print('<yellow> - ' . $QueryMap{ $Query }->{Label} . ': </yellow>');
 
         # prepare db handle
-        return if !$DBObject->Prepare(
+        return if !$Kernel::OM->Get('Kernel::System::DB')->Prepare(
             SQL => $QueryMap{ $Query }->{SelectSQL},
         );
 
         # fetch data
         my %Data = ();
-        while ( my @Row = $DBObject->FetchrowArray() ) {
+        while ( my @Row = $Kernel::OM->Get('Kernel::System::DB')->FetchrowArray() ) {
             $Data{ $Row[0] } = 1;
         }
 
@@ -917,7 +925,7 @@ sub _CheckCustomerUserData {
                 && $QueryMap{ $Query }->{FixSQL}
             ) {
                 # execute fix statement
-                return if !$DBObject->Do(
+                return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
                     SQL  => $QueryMap{ $Query }->{FixSQL},
                 );
 
@@ -967,20 +975,26 @@ sub _CheckCustomerUserData {
 sub _CheckCustomerUserEmail {
     my ( $Self, %Param ) = @_;
 
-    # get needed objects
-    my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
-
     $Self->Print('<yellow>CustomerUserEmail</yellow> - Check customer user email of internal database table to be unique' . "\n");
 
+    # skip this step if fixes are given, but this one is irrelevant
+    if (
+        IsHashRefWithData( $Param{Fixes} )
+        && !$Param{Fixes}->{'CustomerUserEmail'}
+    ) {
+        $Self->Print('<green> - Skip, irrelevant step for this fix run</green>' . "\n");
+        return 1;
+    }
+
     # prepare db handle
-    return if !$DBObject->Prepare(
-        SQL => 'SELECT id, email FROM customer_user',
+    return if !$Kernel::OM->Get('Kernel::System::DB')->Prepare(
+        SQL => 'SELECT id, lower(email) FROM customer_user',
     );
 
     # fetch data
     my %Data  = ();
     my %Exist = ();
-    while ( my @Row = $DBObject->FetchrowArray() ) {
+    while ( my @Row = $Kernel::OM->Get('Kernel::System::DB')->FetchrowArray() ) {
         $Data{ $Row[0] }  = lc( $Row[1] );
         $Exist{ lc( $Row[1] ) } = 1;
     }
@@ -1039,7 +1053,7 @@ sub _CheckCustomerUserEmail {
                 my @Bind = ( \$NewEmail, \$DataID );
 
                 # execute fix statement
-                return if !$DBObject->Do(
+                return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
                     SQL  => 'UPDATE customer_user SET email = ? WHERE id = ?',
                     Bind => \@Bind,
                 );
@@ -1069,21 +1083,26 @@ sub _CheckCustomerUserEmail {
 sub _CheckCustomerCompanyData {
     my ( $Self, %Param ) = @_;
 
-    # get needed objects
-    my $CustomerCompanyObject = $Kernel::OM->Get('Kernel::System::CustomerCompany');
-    my $CustomerUserObject    = $Kernel::OM->Get('Kernel::System::CustomerUser');
-
     $Self->Print('<yellow>CustomerCompanyData</yellow> - Check customer company data of backends' . "\n");
+
+    # skip this step if fixes are given, but this one is irrelevant
+    if (
+        IsHashRefWithData( $Param{Fixes} )
+        && !$Param{Fixes}->{'CustomerCompanyData'}
+    ) {
+        $Self->Print('<green> - Skip, irrelevant step for this fix run</green>' . "\n");
+        return 1;
+    }
 
     $Self->Print('<yellow> - unknown customer companies in customer user backends: </yellow>');
 
     # get list of customer company ids from customer user backends
-    my @CustomerCompanyIDsByCustomerUser = $CustomerUserObject->CustomerIDList(
+    my @CustomerCompanyIDsByCustomerUser = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerIDList(
         Valid => 0,
     );
 
     # get list of customer company ids from customer company backends
-    my %CustomerCompanyIDsByCustomerCompany = $CustomerCompanyObject->CustomerCompanyList(
+    my %CustomerCompanyIDsByCustomerCompany = $Kernel::OM->Get('Kernel::System::CustomerCompany')->CustomerCompanyList(
         Valid => 0,
         Limit => 0,
     );
@@ -1098,7 +1117,7 @@ sub _CheckCustomerCompanyData {
         # check if entry should be fixed
         if ( $Param{Fixes}->{'CustomerCompanyData'} ) {
             # add customer company
-            return if !$CustomerCompanyObject->CustomerCompanyAdd(
+            return if !$Kernel::OM->Get('Kernel::System::CustomerCompany')->CustomerCompanyAdd(
                 CustomerID          => $CustomerCompanyID,
                 CustomerCompanyName => $CustomerCompanyID,
                 ValidID             => 1,
@@ -1135,12 +1154,19 @@ sub _CheckCustomerCompanyData {
 sub _CheckUserExists {
     my ( $Self, %Param ) = @_;
 
-    # get needed objects
-    my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
+    $Self->Print('<yellow>UserExists</yellow> - Check all used users exist' . "\n");
+
+    # skip this step if fixes are given, but this one is irrelevant
+    if (
+        IsHashRefWithData( $Param{Fixes} )
+        && !$Param{Fixes}->{'UserExists'}
+    ) {
+        $Self->Print('<green> - Skip, irrelevant step for this fix run</green>' . "\n");
+        return 1;
+    }
 
     # get all table names from DB
-    $DBObject->Connect() || die "Unable to connect to database!";
-    my %Tables = map { my $Table = (split(/\./, $_))[1]; $Table =~ s/\`//g; $Table => 1 } $DBObject->{dbh}->tables('', $DBObject->{'DB::Type'} eq 'postgresql' ? 'public' : '', '', 'TABLE');
+    my $TablesRef = $Self->_GetDBTables();
 
     # init map to fix by deleting entries
     my %DeleteMap = (
@@ -1902,16 +1928,14 @@ sub _CheckUserExists {
         },
     );
 
-    $Self->Print('<yellow>UserExists</yellow> - Check all used users exist' . "\n");
-
     # prepare db handle
-    return if !$DBObject->Prepare(
+    return if !$Kernel::OM->Get('Kernel::System::DB')->Prepare(
         SQL => 'SELECT id FROM users ORDER BY id ASC',
     );
 
     # fetch data
     my @UserIDs = ();
-    while ( my @Row = $DBObject->FetchrowArray() ) {
+    while ( my @Row = $Kernel::OM->Get('Kernel::System::DB')->FetchrowArray() ) {
         push( @UserIDs, $Row[0] );
     }
 
@@ -1921,7 +1945,7 @@ sub _CheckUserExists {
     # process delete queries
     for my $Query ( sort( keys( %DeleteMap ) ) ) {
         # check if table exists
-        next if ( !$Tables{ $DeleteMap{ $Query }->{Table} } );
+        next if ( !$TablesRef->{ $DeleteMap{ $Query }->{Table} } );
 
         if ( !defined( $ConditionHash{ $DeleteMap{ $Query }->{Column} } ) ) {
             my @SQLStrings  = ();
@@ -1950,13 +1974,13 @@ sub _CheckUserExists {
         my $SelectSQL = 'SELECT ' . $DeleteMap{ $Query }->{Column} . ' FROM ' . $DeleteMap{ $Query }->{Table} . ' WHERE ' . $ConditionHash{ $DeleteMap{ $Query }->{Column} };
 
         # prepare db handle
-        return if !$DBObject->Prepare(
+        return if !$Kernel::OM->Get('Kernel::System::DB')->Prepare(
             SQL => $SelectSQL,
         );
 
         # fetch data
         my %Data = ();
-        while ( my @Row = $DBObject->FetchrowArray() ) {
+        while ( my @Row = $Kernel::OM->Get('Kernel::System::DB')->FetchrowArray() ) {
             $Data{ $Row[0] } = 1;
         }
 
@@ -1971,7 +1995,7 @@ sub _CheckUserExists {
                 my $FixSQL = 'DELETE FROM ' . $DeleteMap{ $Query }->{Table} . ' WHERE ' . $ConditionHash{ $DeleteMap{ $Query }->{Column} };
 
                 # execute fix statement
-                return if !$DBObject->Do(
+                return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
                     SQL  => $FixSQL,
                 );
 
@@ -1993,7 +2017,7 @@ sub _CheckUserExists {
     my $NewUserID = 1;
     for my $Query ( sort( keys( %SetRootMap ) ) ) {
         # check if table exists
-        next if ( !$Tables{ $SetRootMap{ $Query }->{Table} } );
+        next if ( !$TablesRef->{ $SetRootMap{ $Query }->{Table} } );
 
         if ( !defined( $ConditionHash{ $SetRootMap{ $Query }->{Column} } ) ) {
             my @SQLStrings  = ();
@@ -2022,13 +2046,13 @@ sub _CheckUserExists {
         my $SelectSQL = 'SELECT ' . $SetRootMap{ $Query }->{Column} . ' FROM ' . $SetRootMap{ $Query }->{Table} . ' WHERE ' . $ConditionHash{ $SetRootMap{ $Query }->{Column} };
 
         # prepare db handle
-        return if !$DBObject->Prepare(
+        return if !$Kernel::OM->Get('Kernel::System::DB')->Prepare(
             SQL => $SelectSQL,
         );
 
         # fetch data
         my %Data = ();
-        while ( my @Row = $DBObject->FetchrowArray() ) {
+        while ( my @Row = $Kernel::OM->Get('Kernel::System::DB')->FetchrowArray() ) {
             $Data{ $Row[0] } = 1;
         }
 
@@ -2046,7 +2070,7 @@ sub _CheckUserExists {
                 my @FixBind = ( \$NewUserID );
 
                 # execute fix statement
-                return if !$DBObject->Do(
+                return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
                     SQL  => $FixSQL,
                     Bind => \@FixBind,
                 );
@@ -2073,23 +2097,29 @@ sub _CheckUserExists {
 sub _CheckUserEmail {
     my ( $Self, %Param ) = @_;
 
-    # get needed objects
-    my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
-
     $Self->Print('<yellow>UserEmail</yellow> - Check user email of internal database table to be unique' . "\n");
+
+    # skip this step if fixes are given, but this one is irrelevant
+    if (
+        IsHashRefWithData( $Param{Fixes} )
+        && !$Param{Fixes}->{'UserEmail'}
+    ) {
+        $Self->Print('<green> - Skip, irrelevant step for this fix run</green>' . "\n");
+        return 1;
+    }
 
     # prepare db handle
     my $PrefKey    = 'UserEmail';
     my @SelectBind = ( \$PrefKey );
-    return if !$DBObject->Prepare(
-        SQL  => 'SELECT user_id, preferences_value FROM user_preferences WHERE preferences_key = ?',
+    return if !$Kernel::OM->Get('Kernel::System::DB')->Prepare(
+        SQL  => 'SELECT user_id, lower(preferences_value) FROM user_preferences WHERE preferences_key = ?',
         Bind => \@SelectBind,
     );
 
     # fetch data
     my %Data  = ();
     my %Exist = ();
-    while ( my @Row = $DBObject->FetchrowArray() ) {
+    while ( my @Row = $Kernel::OM->Get('Kernel::System::DB')->FetchrowArray() ) {
         $Data{ $Row[0] }  = lc( $Row[1] );
         $Exist{ lc( $Row[1] ) } = 1;
     }
@@ -2148,7 +2178,7 @@ sub _CheckUserEmail {
                 my @Bind = ( \$NewEmail, \$DataID, \$PrefKey );
 
                 # execute fix statement
-                return if !$DBObject->Do(
+                return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
                     SQL  => 'UPDATE user_preferences SET preferences_value = ? WHERE user_id = ? AND preferences_key = ?',
                     Bind => \@Bind,
                 );
@@ -2178,12 +2208,16 @@ sub _CheckUserEmail {
 sub _UpdateTicketCustomerUser {
     my ( $Self, %Param ) = @_;
 
-    # get needed objects
-    my $CustomerUserObject = $Kernel::OM->Get('Kernel::System::CustomerUser');
-    my $DBObject           = $Kernel::OM->Get('Kernel::System::DB');
-    my $TicketObject       = $Kernel::OM->Get('Kernel::System::Ticket');
-
     $Self->Print('<yellow>TicketCustomerUserUpdate</yellow> - Update ticket customer user' . "\n");
+
+    # skip this step if fixes are given, but this one is irrelevant
+    if (
+        IsHashRefWithData( $Param{Fixes} )
+        && !$Param{Fixes}->{'TicketCustomerUserUpdate'}
+    ) {
+        $Self->Print('<green> - Skip, irrelevant step for this fix run</green>' . "\n");
+        return 1;
+    }
 
     if ( $Param{Fixes}->{'TicketCustomerUserUpdate'} ) {
 
@@ -2191,13 +2225,13 @@ sub _UpdateTicketCustomerUser {
 
         # prepare sql statement to get ticket ids with customer user and customer company
         my $SQL = "SELECT id, customer_user_id, customer_id FROM ticket";
-        $DBObject->Prepare(
+        $Kernel::OM->Get('Kernel::System::DB')->Prepare(
             SQL => $SQL
         );
 
         # get ticket ids with customer user and customer company
         my %TicketCustomerHash;
-        while ( my @Row = $DBObject->FetchrowArray() ) {
+        while ( my @Row = $Kernel::OM->Get('Kernel::System::DB')->FetchrowArray() ) {
             $TicketCustomerHash{ $Row[0] } = {
                 CustomerUserID => $Row[1],
                 CustomerID     => $Row[2]
@@ -2232,13 +2266,13 @@ sub _UpdateTicketCustomerUser {
             # check if customer user is already cached
             if ( ref( $CustomerUserCache{ $CustomerUserID } ) ne 'HASH' ) {
                 # get customer user data
-                my %CustomerUserData = $CustomerUserObject->CustomerUserDataGet(
+                my %CustomerUserData = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerUserDataGet(
                     User => $CustomerUserID,
                 );
 
                 if ( !%CustomerUserData ) {
                     # try to find customer user via email
-                    my %CustomerUserList = $CustomerUserObject->CustomerSearch(
+                    my %CustomerUserList = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerSearch(
                         PostMasterSearch => $CustomerUserID,
                         Valid            => 0,
                         Limit            => 1,
@@ -2248,7 +2282,7 @@ sub _UpdateTicketCustomerUser {
                     if ( %CustomerUserList ) {
                         for my $EmailCustomerUserID ( keys( %CustomerUserList ) ) {
                             # get customer user data
-                            %CustomerUserData = $CustomerUserObject->CustomerUserDataGet(
+                            %CustomerUserData = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerUserDataGet(
                                 User => $EmailCustomerUserID,
                             );
 
@@ -2268,7 +2302,7 @@ sub _UpdateTicketCustomerUser {
                     $CustomerUserCache{ $CustomerUserID }->{CustomerIDs}->{ $CustomerUserData{UserCustomerID} } = 1;
 
                     # get customer ids
-                    my @CustomerIDs = $CustomerUserObject->CustomerIDs(
+                    my @CustomerIDs = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerIDs(
                         User => $CustomerUserData{UserLogin},
                     );
 
@@ -2295,7 +2329,7 @@ sub _UpdateTicketCustomerUser {
             );
 
             # update customer
-            $TicketObject->TicketCustomerSet(
+            $Kernel::OM->Get('Kernel::System::Ticket')->TicketCustomerSet(
                 User     => $CustomerUserCache{ $CustomerUserID }->{UserLogin},
                 No       => $CustomerUserCache{ $CustomerUserID }->{CustomerID},
                 TicketID => $TicketID,
@@ -2307,15 +2341,13 @@ sub _UpdateTicketCustomerUser {
                 $Kernel::OM->ObjectsDiscard(
                     Objects => ['Kernel::System::Ticket'],
                 );
-
-                $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
             }
         }
 
         $Self->Print('<green>Done</green>' . "\n");
     }
     else {
-        $Self->Print('<green> - Only when using --fix</green>' . "\n");
+        $Self->Print('<green> - Only when using --fix for this step</green>' . "\n");
     }
 
     return 1;
@@ -2324,25 +2356,19 @@ sub _UpdateTicketCustomerUser {
 sub _CheckTicketData {
     my ( $Self, %Param ) = @_;
 
-    # get needed objects
-    my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
+    $Self->Print('<yellow>TicketData</yellow> - Check ticket data' . "\n");
+
+    # skip this step if fixes are given, but this one is irrelevant
+    if (
+        IsHashRefWithData( $Param{Fixes} )
+        && !$Param{Fixes}->{'TicketData'}
+    ) {
+        $Self->Print('<green> - Skip, irrelevant step for this fix run</green>' . "\n");
+        return 1;
+    }
 
     # init variables
-    my $UserCustomerIDs = 0;
-
-    # check for column customer_ids
-    $DBObject->Prepare(
-        SQL   => 'SELECT * FROM customer_user',
-        Limit => 1
-    );
-    my @ColumnNames = $DBObject->GetColumnNames();
-    for my $ColumnName ( @ColumnNames ) {
-        if ( $ColumnName eq 'customer_ids' ) {
-            $UserCustomerIDs = 1;
-
-            last;
-        }
-    }
+    my $UserCustomerIDs = $Self->_ExistsDBCustomerIDsColumn();
 
     # init query map
     my %QueryMap = (
@@ -2364,20 +2390,18 @@ sub _CheckTicketData {
         },
     );
 
-    $Self->Print('<yellow>TicketData</yellow> - Check ticket data' . "\n");
-
     # process queries
     for my $Query ( sort( keys( %QueryMap ) ) ) {
         $Self->Print('<yellow> - ' . $QueryMap{ $Query }->{Label} . ': </yellow>');
 
         # prepare db handle
-        return if !$DBObject->Prepare(
+        return if !$Kernel::OM->Get('Kernel::System::DB')->Prepare(
             SQL => $QueryMap{ $Query }->{SelectSQL},
         );
 
         # fetch data
         my %Data = ();
-        while ( my @Row = $DBObject->FetchrowArray() ) {
+        while ( my @Row = $Kernel::OM->Get('Kernel::System::DB')->FetchrowArray() ) {
             $Data{ $Row[0] } = 1;
         }
         # process result
@@ -2391,7 +2415,7 @@ sub _CheckTicketData {
                 && $QueryMap{ $Query }->{FixSQL}
             ) {
                 # execute fix statement
-                return if !$DBObject->Do(
+                return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
                     SQL  => $QueryMap{ $Query }->{FixSQL},
                 );
 
@@ -2431,19 +2455,7 @@ sub _CheckTicketData {
                         }
 
                         # check for column customer_ids
-                        my $UserCustomerIDs = 0;
-                        $DBObject->Prepare(
-                            SQL   => 'SELECT * FROM customer_user',
-                            Limit => 1
-                        );
-                        my @ColumnNames = $DBObject->GetColumnNames();
-                        for my $ColumnName ( @ColumnNames ) {
-                            if ( $ColumnName eq 'customer_ids' ) {
-                                $UserCustomerIDs = 1;
-
-                                last;
-                            }
-                        }
+                        my $UserCustomerIDs = $Self->_ExistsDBCustomerIDsColumn();
                         if ( $UserCustomerIDs ) {
                             $CustomerUser{'Unbekannt'}->{UserCustomerIDs} = 'Unbekannt';
                         }
@@ -2480,42 +2492,36 @@ sub _CheckTicketData {
 sub _CheckTicketCustomerUser {
     my ( $Self, %Param ) = @_;
 
-    # get needed objects
-    my $CustomerUserObject = $Kernel::OM->Get('Kernel::System::CustomerUser');
-    my $DBObject           = $Kernel::OM->Get('Kernel::System::DB');
-    my $UserObject         = $Kernel::OM->Get('Kernel::System::User');
-
-    # init variables
-    my $UserCustomerIDs = 0;
-
-    # check for column customer_ids
-    $DBObject->Prepare(
-        SQL   => 'SELECT * FROM customer_user',
-        Limit => 1
-    );
-    my @ColumnNames = $DBObject->GetColumnNames();
-    for my $ColumnName ( @ColumnNames ) {
-        if ( $ColumnName eq 'customer_ids' ) {
-            $UserCustomerIDs = 1;
-
-            last;
-        }
-    }
-
     $Self->Print('<yellow>TicketCustomerUser</yellow> - Check tickets for unknown customer users' . "\n");
 
+    # skip this step if fixes are given, but this one is irrelevant
+    if (
+        IsHashRefWithData( $Param{Fixes} )
+        && !$Param{Fixes}->{'TicketCustomerUser'}
+    ) {
+        $Self->Print('<green> - Skip, irrelevant step for this fix run</green>' . "\n");
+        return 1;
+    }
+
+    # check for column customer_ids
+    my $UserCustomerIDs = $Self->_ExistsDBCustomerIDsColumn();
+
+    $Self->Print('<yellow> - get unknown customer_user_id entries from ticket table: </yellow>');
+
     # prepare db handle
-    return if !$DBObject->Prepare(
+    return if !$Kernel::OM->Get('Kernel::System::DB')->Prepare(
         SQL => 'SELECT DISTINCT customer_user_id FROM ticket WHERE customer_user_id NOT IN (SELECT login FROM customer_user)',
     );
 
     # fetch data
     my %Data = ();
-    while ( my @Row = $DBObject->FetchrowArray() ) {
+    while ( my @Row = $Kernel::OM->Get('Kernel::System::DB')->FetchrowArray() ) {
         if ( $Row[0] ) {
             $Data{ $Row[0] } = 1;
         }
     }
+
+    $Self->Print('<green>Done</green>' . "\n");
 
     # process result
     my $Count = 0;
@@ -2523,20 +2529,57 @@ sub _CheckTicketCustomerUser {
         %Data
         && scalar( keys( %Data ) )
     ) {
+        # create email parser object
+        my $EmailParserObject = Kernel::System::EmailParser->new(
+            Mode  => 'Standalone',
+            Debug => 0,
+        );
+
+        my $Counter           = 0;
+        my $CustomerUserCount = scalar( keys( %Data ) );
         CUSTOMERUSER:
         for my $CustomerUserID ( sort( keys( %Data ) ) ) {
+            $Counter += 1;
+            if ( $Counter % 2000 == 0 ) {
+                my $Percent = int( $Counter / ( $CustomerUserCount / 100 ) );
+                $Self->Print(' - <yellow>' . $Counter . '</yellow> of <yellow>' . $CustomerUserCount . '</yellow> processed (<yellow>' . $Percent . '%</yellow>)' . "\n");
+            }
+
             # skip empty customer user id
             next CUSTOMERUSER if ( !$CustomerUserID );
 
             # get customer user data
-            my %CustomerUserData = $CustomerUserObject->CustomerUserDataGet(
+            my %CustomerUserData = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerUserDataGet(
                 User => $CustomerUserID,
             );
             if ( !%CustomerUserData ) {
                 if ( $Param{Fixes}->{'TicketCustomerUser'} ) {
+
+                    # prepare data
+                    my $CustomerUserEmail;
+                    my $CustomerUserName;
+                    if ( $CustomerUserID !~ m/@/ ) {
+                        $CustomerUserEmail = $CustomerUserID . '@localhost';
+                        $CustomerUserName  = $CustomerUserID;
+                    }
+                    else {
+                        my @EmailParts = $EmailParserObject->SplitAddressLine(
+                            Line => $CustomerUserID,
+                        );
+
+                        for my $EmailPart (@EmailParts) {
+                            $CustomerUserEmail = $EmailParserObject->GetEmailAddress(
+                                Email => $EmailPart,
+                            );
+
+                            $CustomerUserName = $CustomerUserEmail;
+                            $CustomerUserName =~ s/@.+$//;
+                        }
+                    }
+
                     # try to find customer user via email
-                    my %CustomerUserList = $CustomerUserObject->CustomerSearch(
-                        PostMasterSearch => $CustomerUserID,
+                    my %CustomerUserList = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerSearch(
+                        PostMasterSearch => $CustomerUserEmail,
                         Valid            => 0,
                         Limit            => 1,
                     );
@@ -2548,8 +2591,8 @@ sub _CheckTicketCustomerUser {
                         my $NewCustomerUserID;
 
                         # try to find user via email
-                        my %UserList = $UserObject->UserSearch(
-                            PostMasterSearch => $CustomerUserID,
+                        my %UserList = $Kernel::OM->Get('Kernel::System::User')->UserSearch(
+                            PostMasterSearch => $CustomerUserEmail,
                             Valid            => 0,
                             Limit            => 1,
                         );
@@ -2557,7 +2600,7 @@ sub _CheckTicketCustomerUser {
                         if ( %UserList ) {
                             for my $UserID ( keys( %UserList ) ) {
                                 # get user data
-                                my %UserData = $UserObject->GetUserData(
+                                my %UserData = $Kernel::OM->Get('Kernel::System::User')->GetUserData(
                                     UserID => $UserID,
                                 );
                                 
@@ -2582,7 +2625,7 @@ sub _CheckTicketCustomerUser {
                         }
                         # try to find user via login
                         else {
-                            %UserList = $UserObject->UserSearch(
+                            %UserList = $Kernel::OM->Get('Kernel::System::User')->UserSearch(
                                 UserLogin => $CustomerUserID,
                                 Valid     => 0,
                                 Limit     => 1,
@@ -2590,7 +2633,7 @@ sub _CheckTicketCustomerUser {
                             if ( %UserList ) {
                                 for my $UserID ( keys( %UserList ) ) {
                                     # get user data
-                                    my %UserData = $UserObject->GetUserData(
+                                    my %UserData = $Kernel::OM->Get('Kernel::System::User')->GetUserData(
                                         UserID => $UserID,
                                     );
                                     
@@ -2616,32 +2659,24 @@ sub _CheckTicketCustomerUser {
                         }
 
                         # try to find user via login
-                        if ( !%CustomerUser ) { 
-                            # split old mail
-                            my ( $Prefix, $Suffix ) = split( '@', $CustomerUserID, 2 );
-
-                            # prepare email
-                            my $CustomerUserEmail = $CustomerUserID;
-                            if ( $CustomerUserEmail !~ m/@/ ) {
-                                $CustomerUserEmail .= '@localhost';
-                            }
+                        if ( !%CustomerUser ) {
 
                             # prepare data
                             %CustomerUser = (
-                                $CustomerUserID => {
-                                    UserFirstname   => $Prefix || $CustomerUserID,
-                                    UserLastname    => $Prefix || $CustomerUserID,
-                                    UserLogin       => $CustomerUserID,
+                                $CustomerUserEmail => {
+                                    UserFirstname   => $CustomerUserName,
+                                    UserLastname    => $CustomerUserName,
+                                    UserLogin       => $CustomerUserEmail,
                                     UserEmail       => $CustomerUserEmail,
                                     UserCustomerID  => 'Unbekannt',
                                     ValidID         => '1',
                                 }
                             );
                             if ( $UserCustomerIDs ) {
-                                $CustomerUser{ $CustomerUserID }->{UserCustomerIDs} = 'Unbekannt';
+                                $CustomerUser{ $CustomerUserEmail }->{UserCustomerIDs} = 'Unbekannt';
                             }
 
-                            $NewCustomerUserID = $CustomerUserID;
+                            $NewCustomerUserID = $CustomerUserEmail;
                         }
 
                         # add customer user
@@ -2674,7 +2709,7 @@ sub _CheckTicketCustomerUser {
                             \$CustomerUserID
                         );
                         # execute fix statement
-                        return if !$DBObject->Do(
+                        return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
                             SQL  => 'UPDATE ticket SET customer_user_id = ?, customer_id = ? WHERE LOWER(customer_user_id) = LOWER(?)',
                             Bind => \@Bind,
                         );
@@ -2690,7 +2725,7 @@ sub _CheckTicketCustomerUser {
                     else {
                         for my $EmailCustomerUserID ( keys( %CustomerUserList ) ) {
                             # get customer user data
-                            my %EmailCustomerUserData = $CustomerUserObject->CustomerUserDataGet(
+                            my %EmailCustomerUserData = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerUserDataGet(
                                 User => $EmailCustomerUserID,
                             );
 
@@ -2701,7 +2736,7 @@ sub _CheckTicketCustomerUser {
                                 \$CustomerUserID
                             );
                             # execute fix statement
-                            return if !$DBObject->Do(
+                            return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
                                 SQL  => 'UPDATE ticket SET customer_user_id = ?, customer_id = ? WHERE LOWER(customer_user_id) = LOWER(?)',
                                 Bind => \@Bind,
                             );
@@ -2751,24 +2786,33 @@ sub _CheckTicketCustomerUser {
 sub _CheckTicketCustomerCompany {
     my ( $Self, %Param ) = @_;
 
-    # get needed objects
-    my $CustomerCompanyObject = $Kernel::OM->Get('Kernel::System::CustomerCompany');
-    my $DBObject              = $Kernel::OM->Get('Kernel::System::DB');
-
     $Self->Print('<yellow>TicketCustomerCompany</yellow> - Check tickets for unknown customer companies' . "\n");
 
+    # skip this step if fixes are given, but this one is irrelevant
+    if (
+        IsHashRefWithData( $Param{Fixes} )
+        && !$Param{Fixes}->{'TicketCustomerCompany'}
+    ) {
+        $Self->Print('<green> - Skip, irrelevant step for this fix run</green>' . "\n");
+        return 1;
+    }
+
+    $Self->Print('<yellow> - get unknown customer_id entries from ticket table: </yellow>');
+
     # prepare db handle
-    return if !$DBObject->Prepare(
+    return if !$Kernel::OM->Get('Kernel::System::DB')->Prepare(
         SQL => 'SELECT DISTINCT customer_id FROM ticket WHERE customer_id NOT IN (SELECT customer_id FROM customer_company)',
     );
 
     # fetch data
     my %Data = ();
-    while ( my @Row = $DBObject->FetchrowArray() ) {
+    while ( my @Row = $Kernel::OM->Get('Kernel::System::DB')->FetchrowArray() ) {
         if ( $Row[0] ) {
             $Data{ $Row[0] } = 1;
         }
     }
+
+    $Self->Print('<green>Done</green>' . "\n");
 
     # process result
     my $Count = 0;
@@ -2776,9 +2820,21 @@ sub _CheckTicketCustomerCompany {
         %Data
         && scalar( keys( %Data ) )
     ) {
+        my $Counter              = 0;
+        my $CustomerCompanyCount = scalar( keys( %Data ) );
+        CUSTOMERCOMPANY:
         for my $CustomerCompanyID ( sort( keys( %Data ) ) ) {
+            $Counter += 1;
+            if ( $Counter % 2000 == 0 ) {
+                my $Percent = int( $Counter / ( $CustomerCompanyCount / 100 ) );
+                $Self->Print(' - <yellow>' . $Counter . '</yellow> of <yellow>' . $CustomerCompanyCount . '</yellow> processed (<yellow>' . $Percent . '%</yellow>)' . "\n");
+            }
+
+            # skip empty customer company id
+            next CUSTOMERCOMPANY if ( !$CustomerCompanyID );
+
             # get customer company data
-            my %CustomerCompanyData = $CustomerCompanyObject->CustomerCompanyGet(
+            my %CustomerCompanyData = $Kernel::OM->Get('Kernel::System::CustomerCompany')->CustomerCompanyGet(
                 CustomerID => $CustomerCompanyID,
             );
             if ( !%CustomerCompanyData ) {
@@ -2831,16 +2887,21 @@ sub _CheckTicketCustomerCompany {
 sub _CheckTicketStateTypes {
     my ( $Self, %Param ) = @_;
 
-    # get needed objects
-    my $DBObject    = $Kernel::OM->Get('Kernel::System::DB');
-    my $StateObject = $Kernel::OM->Get('Kernel::System::State');
+    $Self->Print('<yellow>TicketStateTypes</yellow> - Check ticket state types' . "\n");
+
+    # skip this step if fixes are given, but this one is irrelevant
+    if (
+        IsHashRefWithData( $Param{Fixes} )
+        && !$Param{Fixes}->{'TicketStateTypes'}
+    ) {
+        $Self->Print('<green> - Skip, irrelevant step for this fix run</green>' . "\n");
+        return 1;
+    }
 
     # get state type list
-    my %StateTypeList = $StateObject->StateTypeList(
+    my %StateTypeList = $Kernel::OM->Get('Kernel::System::State')->StateTypeList(
         UserID => 1,
     );
-
-    $Self->Print('<yellow>TicketStateTypes</yellow> - Check ticket state types' . "\n");
 
     # process state type list
     my @CustomStateTypes = ();
@@ -2879,13 +2940,13 @@ sub _CheckTicketStateTypes {
         my $SelectSQL = 'SELECT id, name FROM ticket_state WHERE type_id IN (' . join ( ',', @CustomStateTypes ) . ')';
 
         # prepare db handle
-        return if !$DBObject->Prepare(
+        return if !$Kernel::OM->Get('Kernel::System::DB')->Prepare(
             SQL => $SelectSQL,
         );
 
         # fetch data
         my %Data = ();
-        while ( my @Row = $DBObject->FetchrowArray() ) {
+        while ( my @Row = $Kernel::OM->Get('Kernel::System::DB')->FetchrowArray() ) {
             $Data{ $Row[0] } = $Row[1];
         }
 
@@ -2903,7 +2964,7 @@ sub _CheckTicketStateTypes {
                 my $FixSQL = 'UPDATE ticket_state SET type_id = ? WHERE id IN (' . join ( ',', @StateIDs ) . ')';
 
                 # execute fix statement
-                return if !$DBObject->Do(
+                return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
                     SQL  => $FixSQL,
                     Bind => [ \$StateTypeIDOpen ]
                 );
@@ -2937,21 +2998,26 @@ sub _CheckTicketStateTypes {
 sub _CheckServiceNames {
     my ( $Self, %Param ) = @_;
 
-    # get needed objects
-    my $DBObject      = $Kernel::OM->Get('Kernel::System::DB');
-    my $ServiceObject = $Kernel::OM->Get('Kernel::System::Service');
-
     $Self->Print('<yellow>ServiceNames</yellow> - Check service names to be unique on every level' . "\n");
 
+    # skip this step if fixes are given, but this one is irrelevant
+    if (
+        IsHashRefWithData( $Param{Fixes} )
+        && !$Param{Fixes}->{'ServiceNames'}
+    ) {
+        $Self->Print('<green> - Skip, irrelevant step for this fix run</green>' . "\n");
+        return 1;
+    }
+
     # prepare db handle
-    return if !$DBObject->Prepare(
+    return if !$Kernel::OM->Get('Kernel::System::DB')->Prepare(
         SQL => 'SELECT id, name FROM service',
     );
 
     # fetch data
     my %Data  = ();
     my %Exist = ();
-    while ( my @Row = $DBObject->FetchrowArray() ) {
+    while ( my @Row = $Kernel::OM->Get('Kernel::System::DB')->FetchrowArray() ) {
         my $TopLevelName = $Row[1];
         $TopLevelName =~ s/.+:://;
         $Data{ $Row[0] }              = lc( $TopLevelName );
@@ -2991,7 +3057,7 @@ sub _CheckServiceNames {
             $Lookup{ $Data{ $DataID } } += 1;
 
             if ( $Param{Fixes}->{'ServiceNames'} ) {
-                my %ServiceData = $ServiceObject->ServiceGet(
+                my %ServiceData = $Kernel::OM->Get('Kernel::System::Service')->ServiceGet(
                     ServiceID => $DataID,
                     UserID    => 1,
                 );
@@ -3011,7 +3077,7 @@ sub _CheckServiceNames {
                 );
 
                 # update service
-                my $Success = $ServiceObject->ServiceUpdate(
+                my $Success = $Kernel::OM->Get('Kernel::System::Service')->ServiceUpdate(
                     %ServiceData,
                     ServiceID => $DataID,
                     Name      => $NewServiceName,
@@ -3043,8 +3109,16 @@ sub _CheckServiceNames {
 sub _CheckDynamicFieldValues {
     my ( $Self, %Param ) = @_;
 
-    # get needed objects
-    my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
+    $Self->Print('<yellow>DynamicFieldValues</yellow> - Check for orphaned dynamic field values' . "\n");
+
+    # skip this step if fixes are given, but this one is irrelevant
+    if (
+        IsHashRefWithData( $Param{Fixes} )
+        && !$Param{Fixes}->{'DynamicFieldValues'}
+    ) {
+        $Self->Print('<green> - Skip, irrelevant step for this fix run</green>' . "\n");
+        return 1;
+    }
 
     # init query map
     my %QueryMap = (
@@ -3077,17 +3151,15 @@ sub _CheckDynamicFieldValues {
         },
     );
 
-    $Self->Print('<yellow>DynamicFieldValues</yellow> - Check for orphaned dynamic field values' . "\n");
-
     # init variables
     my $ObjectIDText = 0;
 
     # check for column customer_ids
-    $DBObject->Prepare(
+    $Kernel::OM->Get('Kernel::System::DB')->Prepare(
         SQL   => 'SELECT * FROM dynamic_field_value',
         Limit => 1
     );
-    my @ColumnNames = $DBObject->GetColumnNames();
+    my @ColumnNames = $Kernel::OM->Get('Kernel::System::DB')->GetColumnNames();
     for my $ColumnName ( @ColumnNames ) {
         if ( $ColumnName eq 'object_id_text' ) {
             $ObjectIDText = 1;
@@ -3106,13 +3178,13 @@ sub _CheckDynamicFieldValues {
         $Self->Print('<yellow> - ' . $QueryMap{ $Query }->{Label} . ': </yellow>');
 
         # prepare db handle
-        return if !$DBObject->Prepare(
+        return if !$Kernel::OM->Get('Kernel::System::DB')->Prepare(
             SQL => $QueryMap{ $Query }->{SelectSQL},
         );
 
         # fetch data
         my %Data = ();
-        while ( my @Row = $DBObject->FetchrowArray() ) {
+        while ( my @Row = $Kernel::OM->Get('Kernel::System::DB')->FetchrowArray() ) {
             $Data{ $Row[0] } = 1;
         }
 
@@ -3127,7 +3199,7 @@ sub _CheckDynamicFieldValues {
                 && $QueryMap{ $Query }->{FixSQL}
             ) {
                 # execute fix statement
-                return if !$DBObject->Do(
+                return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
                     SQL  => $QueryMap{ $Query }->{FixSQL},
                 );
 
@@ -3145,20 +3217,125 @@ sub _CheckDynamicFieldValues {
     return 1;
 }
 
+sub _PrepareTicketEscalationData {
+    my ( $Self, %Param ) = @_;
+
+    $Self->Print('<yellow>PrepareTicketEscalationData</yellow> - prepare ticket escalation data' . "\n");
+
+    # skip this step if fixes are given, but this one is irrelevant
+    if (
+        IsHashRefWithData( $Param{Fixes} )
+        && !$Param{Fixes}->{'PrepareTicketEscalationData'}
+    ) {
+        $Self->Print('<green> - Skip, irrelevant step for this fix run</green>' . "\n");
+        return 1;
+    }
+
+    if ( $Param{Fixes}->{'PrepareTicketEscalationData'} ) {
+        $Self->Print('<yellow> - get all ticket ids: </yellow>');
+
+        # prepare sql statement to get ticket ids with SLA
+        $Kernel::OM->Get('Kernel::System::DB')->Prepare(
+            SQL => "SELECT id FROM ticket WHERE sla_id IS NOT NULL ORDER BY id"
+        );
+
+        my @TicketIDs;
+        while ( my @Row = $Kernel::OM->Get('Kernel::System::DB')->FetchrowArray() ) {
+            push @TicketIDs, $Row[0];
+        }
+        $Self->Print('<green>Done</green>' . "\n");
+
+        $Self->Print('<yellow> - calculate escalation data: </yellow>' . "\n");
+
+        my %Data;
+        my $Count = 0;
+        my $TicketCount = scalar @TicketIDs;
+        TICKETID:
+        for my $TicketID ( @TicketIDs ) {
+            $Count += 1;
+            if ( $Count % 2000 == 0 ) {
+                my $Percent = int( $Count / ( $TicketCount / 100 ) );
+                $Self->Print(' - - <yellow>' . $Count . '</yellow> of <yellow>' . $TicketCount . '</yellow> processed (<yellow>' . $Percent . '%</yellow>)' . "\n");
+            }
+
+            my %Ticket = $Kernel::OM->Get('Kernel::System::Ticket')->TicketGet(
+                TicketID => $TicketID,
+            );
+            next TICKETID if !%Ticket;
+
+            my %FirstResponseDone = $Kernel::OM->Get('Kernel::System::Ticket')->_TicketGetFirstResponse(
+                TicketID => $TicketID,
+                Ticket   => \%Ticket,
+            );
+
+            my %SolutionDone = $Kernel::OM->Get('Kernel::System::Ticket')->_TicketGetClosed(
+                TicketID => $TicketID,
+                Ticket   => \%Ticket,
+            );
+
+            my $TotalSolutionSuspensionTime = $Kernel::OM->Get('Kernel::System::Ticket')->GetTotalNonEscalationRelevantBusinessTime(
+                TicketID      => $TicketID,
+                StopTimestamp => $SolutionDone{SolutionTime},
+            );
+
+            my %LastSuspensionTimes = $Self->_GetTicketLastSuspension(
+                TicketID => $TicketID,
+            );
+
+            $Data{$TicketID} = {
+                %LastSuspensionTimes,
+                TotalSolutionSuspensionTime => $TotalSolutionSuspensionTime / 60,
+                FirstResponse               => $FirstResponseDone{FirstResponse},
+                Solution                    => $SolutionDone{SolutionTime},
+            };
+        }
+
+        my $JSON = $Kernel::OM->Get('Kernel::System::JSON')->Encode(
+            Data => \%Data
+        );
+
+        my $SystemDataKey = 'TicketEscalationDataForMigration';
+
+        my $Exists = $Kernel::OM->Get('Kernel::System::SystemData')->SystemDataGet( Key => $SystemDataKey );
+        if ( $Exists ) {
+            $Kernel::OM->Get('Kernel::System::SystemData')->SystemDataDelete(
+                Key    => $SystemDataKey,
+                UserID => 1,
+            );
+        }
+        my $Result = $Kernel::OM->Get('Kernel::System::SystemData')->SystemDataAdd(
+            Key    => $SystemDataKey,
+            Value  => $JSON,
+            UserID => 1,
+        );
+        if ( !$Result ) {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'error',
+                Message  => 'Can\'t store prepared ticket escalation data!',
+            );
+            return;
+        }
+
+        $Self->Print('<green>Done</green>' . "\n");
+        }
+    else {
+        $Self->Print('<green> - Only when using --fix for this step</green>' . "\n");
+    }
+
+    return 1;
+}
+
 sub _ClearCache {
     my ( $Self, %Param ) = @_;
 
-    # get needed objects
-    my $CacheObject = $Kernel::OM->Get('Kernel::System::Cache');
-
     $Self->Print('<yellow>Clear cache before/after fix</yellow>' . "\n");
 
-    if ( %{ $Param{Fixes} } ) {
+    if ( IsHashRefWithData( $Param{Fixes} ) ) {
 
         $Self->Print('<yellow> - Cleanup: </yellow>');
 
         # cleanup cache
-        my $Success = $CacheObject->CleanUp();
+        my $Success = $Kernel::OM->Get('Kernel::System::Cache')->CleanUp();
         if ( !$Success ) {
             $Self->PrintError('Error occurred.' . "\n");
             return;
@@ -3641,9 +3818,6 @@ sub _FilterCustomerUserByGroupDN {
 sub _ProcessCustomerUserData {
     my ( $Self, %Param ) = @_;
 
-    # get needed objects
-    my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
-
     # init db attribute mapping
     my %DBAttributeMap = (
         UserFirstname   => 'first_name',
@@ -3659,12 +3833,12 @@ sub _ProcessCustomerUserData {
     for my $UserLogin ( sort( keys( %{ $Param{CustomerUser} } ) ) ) {
         # check if login exists in db
         my $Type = 'INSERT';
-        return if !$DBObject->Prepare(
+        return if !$Kernel::OM->Get('Kernel::System::DB')->Prepare(
             SQL   => 'SELECT login FROM customer_user WHERE login = ?',
             Bind  => [ \$UserLogin ],
             Limit => 1,
         );
-        while ( my @Row = $DBObject->FetchrowArray() ) {
+        while ( my @Row = $Kernel::OM->Get('Kernel::System::DB')->FetchrowArray() ) {
             $Type = 'UPDATE';
         }
         if (
@@ -3692,7 +3866,7 @@ sub _ProcessCustomerUserData {
         my $SQLPost = '';
         my @SQLBind = ();
         for my $Key ( sort( keys( %{ $Param{CustomerUser}->{ $UserLogin } } ) ) ) {
-            my $Value = $DBObject->Quote( $Param{CustomerUser}->{ $UserLogin }->{ $Key } );
+            my $Value = $Kernel::OM->Get('Kernel::System::DB')->Quote( $Param{CustomerUser}->{ $UserLogin }->{ $Key } );
 
             if ( $Type eq 'UPDATE' ) {
                 if ($SQLPre) {
@@ -3734,7 +3908,7 @@ sub _ProcessCustomerUserData {
         }
 
         # execut sql
-        return if !$DBObject->Do(
+        return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
             SQL  => $SQL,
             Bind => \@SQLBind,
         );
@@ -3749,8 +3923,6 @@ sub _ConvertLDAPData {
     return '' if( !$Param{Text} );
 
     return $Param{Text} if( !$Param{LDAPCharset} );
-
-    return $Param{Text} if( $Param{LDAPCharset} eq 'utf-8' );
 
     return $Kernel::OM->Get('Kernel::System::Encode')->Convert(
         Text => $Param{Text},
@@ -3871,9 +4043,6 @@ sub _GetCustomerCompanyDBData {
 sub _ProcessCustomerCompanyData {
     my ( $Self, %Param ) = @_;
 
-    # get needed objects
-    my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
-
     # init db attribute mapping
     my %DBAttributeMap = (
         CustomerID          => 'customer_id',
@@ -3885,12 +4054,12 @@ sub _ProcessCustomerCompanyData {
     for my $CustomerID ( sort( keys( %{ $Param{CustomerCompany} } ) ) ) {
         # check if customer id exists in db
         my $Type = 'INSERT';
-        return if !$DBObject->Prepare(
+        return if !$Kernel::OM->Get('Kernel::System::DB')->Prepare(
             SQL   => 'SELECT customer_id FROM customer_company WHERE customer_id = ?',
             Bind  => [ \$CustomerID ],
             Limit => 1,
         );
-        while ( my @Row = $DBObject->FetchrowArray() ) {
+        while ( my @Row = $Kernel::OM->Get('Kernel::System::DB')->FetchrowArray() ) {
             $Type = 'UPDATE';
         }
         if (
@@ -3909,7 +4078,7 @@ sub _ProcessCustomerCompanyData {
         my $SQLPost = '';
         my @SQLBind = ();
         for my $Key ( sort( keys( %{ $Param{CustomerCompany}->{ $CustomerID } } ) ) ) {
-            my $Value = $DBObject->Quote( $Param{CustomerCompany}->{ $CustomerID }->{ $Key } );
+            my $Value = $Kernel::OM->Get('Kernel::System::DB')->Quote( $Param{CustomerCompany}->{ $CustomerID }->{ $Key } );
 
             if ( $Type eq 'UPDATE' ) {
                 if ($SQLPre) {
@@ -3951,7 +4120,7 @@ sub _ProcessCustomerCompanyData {
         }
 
         # execut sql
-        return if !$DBObject->Do(
+        return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
             SQL  => $SQL,
             Bind => \@SQLBind,
         );
@@ -3961,110 +4130,7 @@ sub _ProcessCustomerCompanyData {
 }
 ### EO Internal Functions of _CheckCustomerCompanyBackends ###
 
-sub _PrepareTicketEscalationData {
-    my ( $Self, %Param ) = @_;
-
-    # get needed objects
-    my $DBObject         = $Kernel::OM->Get('Kernel::System::DB');
-    my $JSONObject       = $Kernel::OM->Get('Kernel::System::JSON');
-    my $SystemDataObject = $Kernel::OM->Get('Kernel::System::SystemData');
-    my $TicketObject     = $Kernel::OM->Get('Kernel::System::Ticket');
-
-    $Self->Print('<yellow>PrepareTicketEscalationData</yellow> - prepare ticket escalation data' . "\n");
-
-    if ( $Param{Fixes}->{'PrepareTicketEscalationData'} ) {
-        $Self->Print('<yellow> - get all ticket ids: </yellow>');
-
-        # prepare sql statement to get ticket ids with SLA
-        $DBObject->Prepare(
-            SQL => "SELECT id FROM ticket WHERE sla_id IS NOT NULL ORDER BY id"
-        );
-
-        my @TicketIDs;
-        while ( my @Row = $DBObject->FetchrowArray() ) {
-            push @TicketIDs, $Row[0];
-        }
-        $Self->Print('<green>Done</green>' . "\n");
-
-        $Self->Print('<yellow> - calculate escalation data: </yellow>' . "\n");
-
-        my %Data;
-        my $Count = 0;
-        my $TicketCount = scalar @TicketIDs;
-        TICKETID:
-        for my $TicketID ( @TicketIDs ) {
-            $Count += 1;
-            if ( $Count % 2000 == 0 ) {
-                my $Percent = int( $Count / ( $TicketCount / 100 ) );
-                $Self->Print(' - - <yellow>' . $Count . '</yellow> of <yellow>' . $TicketCount . '</yellow> processed (<yellow>' . $Percent . '%</yellow>)' . "\n");
-            }
-
-            my %Ticket = $TicketObject->TicketGet(
-                TicketID => $TicketID,
-            );
-            next TICKETID if !%Ticket;
-
-            my $TotalTime = $TicketObject->GetTotalNonEscalationRelevantBusinessTime(
-                TicketID => $TicketID,
-            );
-
-            my %FirstResponseDone = $TicketObject->_TicketGetFirstResponse(
-                TicketID => $TicketID,
-                Ticket   => \%Ticket,
-            );
-
-            my %SolutionDone = $TicketObject->_TicketGetClosed(
-                TicketID => $TicketID,
-                Ticket   => \%Ticket,
-            );
-
-            my %LastSuspensionTimes = $Self->_GetTicketLastSuspension(
-                TicketID => $TicketID,
-            );
-
-            $Data{$TicketID} = {
-                %LastSuspensionTimes,
-                TotalSolutionSuspensionTime => $TotalTime / 60,
-                FirstResponse               => $FirstResponseDone{FirstResponse},
-                Solution                    => $SolutionDone{SolutionTime},
-            };
-        }
-
-        my $JSON = $JSONObject->Encode(
-            Data => \%Data
-        );
-
-        my $SystemDataKey = 'TicketEscalationDataForMigration';
-
-        my $Exists = $SystemDataObject->SystemDataGet( Key => $SystemDataKey );
-        if ( $Exists ) {
-            $SystemDataObject->SystemDataDelete(
-                Key    => $SystemDataKey,
-                UserID => 1,
-            );
-        }
-        my $Result = $SystemDataObject->SystemDataAdd(
-            Key    => $SystemDataKey,
-            Value  => $JSON,
-            UserID => 1,
-        );
-        if ( !$Result ) {
-            $Kernel::OM->Get('Kernel::System::Log')->Log(
-                Priority => 'error',
-                Message  => 'Can\'t store prepared ticket escalation data!',
-            );
-            return;
-        }
-
-        $Self->Print('<green>Done</green>' . "\n");
-        }
-    else {
-        $Self->Print('<green> - Only when using --fix</green>' . "\n");
-    }
-
-    return 1;
-}
-
+### Internal Functions of _PrepareTicketEscalationData ###
 sub _GetTicketLastSuspension {
     my ( $Self, %Param ) = @_;
 
@@ -4076,9 +4142,11 @@ sub _GetTicketLastSuspension {
         push @RelevantStateIDs, $StateListReverse{$State}
     }
 
-    my @Bind = map { \$_ } @RelevantStateIDs;
+    my %Result = ();
 
-    my %Result;
+    return %Result if ( !@RelevantStateIDs );
+
+    my @Bind = map { \$_ } @RelevantStateIDs;
 
     my $SQL = "SELECT max(th.create_time) FROM ticket_history th, ticket_history_type tht "
             . "WHERE "
@@ -4119,6 +4187,37 @@ sub _GetTicketLastSuspension {
 
     return %Result;
 }
+### EO Internal Functions of _PrepareTicketEscalationData ###
+
+### Other Internal Functions ###
+sub _GetDBTables {
+    my ( $Self, %Param ) = @_;
+
+    # get all table names from DB
+    $Kernel::OM->Get('Kernel::System::DB')->Connect() || die "Unable to connect to database!";
+    my %Tables = map { my $Table = (split(/\./, $_))[1]; $Table =~ s/\`//g; $Table => 1 } $Kernel::OM->Get('Kernel::System::DB')->{dbh}->tables('', $Kernel::OM->Get('Kernel::System::DB')->{'DB::Type'} eq 'postgresql' ? 'public' : '', '', 'TABLE');
+
+    return \%Tables;
+}
+
+sub _ExistsDBCustomerIDsColumn {
+    my ( $Self, %Param ) = @_;
+
+    # check for column customer_ids
+    $Kernel::OM->Get('Kernel::System::DB')->Prepare(
+        SQL   => 'SELECT * FROM customer_user',
+        Limit => 1
+    );
+    my @ColumnNames = $Kernel::OM->Get('Kernel::System::DB')->GetColumnNames();
+    for my $ColumnName ( @ColumnNames ) {
+        if ( $ColumnName eq 'customer_ids' ) {
+            return 1;
+        }
+    }
+
+    return 0;
+}
+### EO Other Internal Functions ###
 
 1;
 
