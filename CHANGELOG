@@ -1,6 +1,9 @@
 # Change log of KIX
 * Copyright (C) 2006-2024 KIX Service Software GmbH, https://www.kixdesk.com
 
+# 17.22.0-RC11 (2024/07/26)
+ * (2024/07/26) - release candidate
+
 # 17.22.0-RC10 (2024/07/26)
  * (2024/07/26) - Bugfix: KIX17-3577 (handle Where parameter correctly fetching sysconfig) (mbauer)
  * (2024/07/11) - Bugfix: KIX17-3575 (do not redirect to CustomerLostPassword on login) (mbauer)
