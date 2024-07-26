@@ -48,9 +48,6 @@ deploy:TARBuild:Branch:
   allow_failure: false
   dependencies:
   - build:TARBuild
-  environment:
-    name: $CI_BUILD_REF_NAME
-    url: http://git.intra.cape-it.de:8088/builds/$CI_PROJECT_PATH/$CI_BUILD_REF_NAME/
   except:
   - tags
   only:
@@ -67,9 +64,6 @@ deploy:TARBuild:Release:
   allow_failure: false
   dependencies:
   - build:TARBuild
-  environment:
-    name: Release
-    url: http://git.intra.cape-it.de:8088/builds/$CI_PROJECT_PATH/Release/
   except:
   - branch
   only:
