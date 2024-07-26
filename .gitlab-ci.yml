@@ -53,8 +53,8 @@ deploy:TARBuild:Branch:
   only:
   - /^(Branch_Pub_|rel-)\d+(_\d+)?(_(DEVELOPMENT|TEST)|)$/
   script:
-  - mkdir -p /opt/opmbuild/builds/$CI_PROJECT_PATH/$CI_BUILD_REF_NAME
-  - cp -f $CI_PROJECT_DIR/$CI_PROJECT_NAME.tar.gz /opt/opmbuild/builds/$CI_PROJECT_PATH/$CI_BUILD_REF_NAME/
+  - mkdir -p /opt/opmbuild/builds/$CI_PROJECT_PATH/$CI_COMMIT_REF_NAME
+  - cp -f $CI_PROJECT_DIR/$CI_PROJECT_NAME.tar.gz /opt/opmbuild/builds/$CI_PROJECT_PATH/$CI_COMMIT_REF_NAME/
   stage: deploy
   tags:
   - Shell
@@ -70,8 +70,8 @@ deploy:TARBuild:Release:
   - /^rel-[0-9]+_[0-9]+_[0-9]+(-.+)?$/
   script:
   - mkdir -p /opt/opmbuild/builds/$CI_PROJECT_PATH/Release
-  - cp -f $CI_PROJECT_DIR/$CI_PROJECT_NAME.tar.gz /opt/opmbuild/builds/$CI_PROJECT_PATH/Release/$CI_PROJECT_NAME-$CI_BUILD_REF_NAME.tar.gz
-  - deploydb "$CI_PROJECT_NAME" "$CI_BUILD_REF_NAME"
+  - cp -f $CI_PROJECT_DIR/$CI_PROJECT_NAME.tar.gz /opt/opmbuild/builds/$CI_PROJECT_PATH/Release/$CI_PROJECT_NAME-$CI_COMMIT_REF_NAME.tar.gz
+  - deploydb "$CI_PROJECT_NAME" "$CI_COMMIT_REF_NAME"
   stage: deploy
   tags:
   - Shell
