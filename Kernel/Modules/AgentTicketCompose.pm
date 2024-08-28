@@ -177,6 +177,14 @@ sub Run {
         $GetParam{$_} = $ParamObject->GetParam( Param => $_ );
     }
 
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2024 OTRS AG, https://otrs.com/ ###
+    # Make sure sender is correct one. See bug#14872 ( https://bugs.otrs.org/show_bug.cgi?id=14872 ).
+    $GetParam{From} = $Kernel::OM->Get('Kernel::System::TemplateGenerator')->Sender(
+        QueueID => $Ticket{QueueID},
+        UserID  => $Self->{UserID},
+    );
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2024 OTRS AG, https://otrs.com/ ###
+
     $GetParam{SubjectNoRe} = $ParamObject->GetParam( Param => 'SubjectNoRe' ) || '';
 
     # hash for check duplicated entries
@@ -184,7 +192,7 @@ sub Run {
 
     my @MultipleCustomer;
     my $CustomersNumber = $ParamObject->GetParam( Param => 'CustomerTicketCounterToCustomer' ) || 0;
-    my $Selected = $ParamObject->GetParam( Param => 'CustomerSelected' ) || '';
+    my $Selected        = $ParamObject->GetParam( Param => 'CustomerSelected' ) || '';
 
     # get check item object
     my $CheckItemObject = $Kernel::OM->Get('Kernel::System::CheckItem');
@@ -193,9 +201,9 @@ sub Run {
 
         my $CustomerCounter = 1;
         for my $Count ( 1 ... $CustomersNumber ) {
-            my $CustomerElement = $ParamObject->GetParam( Param => 'CustomerTicketText_' . $Count );
+            my $CustomerElement  = $ParamObject->GetParam( Param => 'CustomerTicketText_' . $Count );
             my $CustomerSelected = ( $Selected eq $Count ? 'checked="checked"' : '' );
-            my $CustomerKey = $ParamObject->GetParam( Param => 'CustomerKey_' . $Count )
+            my $CustomerKey      = $ParamObject->GetParam( Param => 'CustomerKey_' . $Count )
                 || '';
             my $CustomerQueue = $ParamObject->GetParam( Param => 'CustomerQueue_' . $Count )
                 || '';
@@ -866,13 +874,6 @@ sub Run {
             );
         }
 
-### Patch licensed under the GPL-3.0, Copyright (C) 2001-2024 OTRS AG, https://otrs.com/ ###
-        my $From = $Kernel::OM->Get('Kernel::System::TemplateGenerator')->Sender(
-            QueueID => $Ticket{QueueID},
-            UserID  => $Self->{UserID},
-        );
-### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2024 OTRS AG, https://otrs.com/ ###
-
         # send email
         my $ArticleID = $TicketObject->ArticleSend(
             ArticleTypeID  => $ArticleTypeID,
@@ -880,10 +881,7 @@ sub Run {
             TicketID       => $Self->{TicketID},
             HistoryType    => 'SendAnswer',
             HistoryComment => "\%\%$Recipients",
-### Patch licensed under the GPL-3.0, Copyright (C) 2001-2024 OTRS AG, https://otrs.com/ ###
-#            From           => $GetParam{From},
-            From           => $From,
-### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2024 OTRS AG, https://otrs.com/ ###
+            From           => $GetParam{From},
             To             => $GetParam{To},
             Cc             => $GetParam{Cc},
             Bcc            => $GetParam{Bcc},
@@ -1027,7 +1025,7 @@ sub Run {
 
                 # get AJAX param values
                 if ( $Object->can('GetParamAJAX') ) {
-                    %GetParam = ( %GetParam, $Object->GetParamAJAX(%GetParam) )
+                    %GetParam = ( %GetParam, $Object->GetParamAJAX(%GetParam) );
                 }
 
                 my $Key = $Object->Option( %GetParam, Config => $Jobs{$Job} );
@@ -2052,12 +2050,12 @@ sub _Mask {
     # Multiple-Autocomplete
     $Param{To} = ( scalar @{ $Param{MultipleCustomer} } ? '' : $Param{To} );
     if ( defined $Param{To} && $Param{To} ne '' ) {
-        $Param{ToInvalid} = ''
+        $Param{ToInvalid} = '';
     }
 
     $Param{Cc} = ( scalar @{ $Param{MultipleCustomerCc} } ? '' : $Param{Cc} );
     if ( defined $Param{Cc} && $Param{Cc} ne '' ) {
-        $Param{CcInvalid} = ''
+        $Param{CcInvalid} = '';
     }
 
     # Cc
@@ -2171,7 +2169,7 @@ sub _Mask {
             Name => 'PreFilledCc',
         );
 
-        # split To values
+        # split Cc values
         for my $Email ( Mail::Address->parse( $Param{Cc} ) ) {
             $LayoutObject->Block(
                 Name => 'PreFilledCcRow',
