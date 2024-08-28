@@ -1,6 +1,9 @@
 # Change log of KIX
 * Copyright (C) 2006-2024 KIX Service Software GmbH, https://www.kixdesk.com
 
+# 17.22.0-RC12 (2024/08/28)
+ * (2024/08/26) - Bugfix: KIX17-3571 (provide certificate list for signing) (mbauer)
+
 # 17.22.0-RC11 (2024/07/26)
  * (2024/07/26) - release candidate
 
