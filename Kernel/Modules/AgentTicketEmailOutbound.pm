@@ -131,6 +131,10 @@ sub Run {
 
     elsif ( $Self->{Subaction} eq 'AJAXUpdateTemplate' ) {
 
+        my %Ticket       = $TicketObject->TicketGet( TicketID => $Self->{TicketID} );
+        my $CustomerUser = $Ticket{CustomerUserID};
+        my $QueueID      = $Ticket{QueueID};
+
         my %GetParam;
         for my $Key (
             qw(
@@ -143,9 +147,10 @@ sub Run {
             $GetParam{$Key} = $Kernel::OM->Get('Kernel::System::Web::Request')->GetParam( Param => $Key );
         }
 
-        my %Ticket       = $TicketObject->TicketGet( TicketID => $Self->{TicketID} );
-        my $CustomerUser = $Ticket{CustomerUserID};
-        my $QueueID      = $Ticket{QueueID};
+        $GetParam{From} = $Kernel::OM->Get('Kernel::System::TemplateGenerator')->Sender(
+            QueueID => $Ticket{QueueID},
+            UserID  => $Self->{UserID},
+        );
 
         # get dynamic field values form http request
         my %DynamicFieldValues;
@@ -1227,23 +1232,13 @@ sub SendEmail {
     # get article type ID param
     my $ArticleTypeID = $ParamObject->GetParam( Param => 'ArticleTypeID' );
 
-### Patch licensed under the GPL-3.0, Copyright (C) 2001-2024 OTRS AG, https://otrs.com/ ###
-    my $From = $Kernel::OM->Get('Kernel::System::TemplateGenerator')->Sender(
-        QueueID => $Ticket{QueueID},
-        UserID  => $Self->{UserID},
-    );
-### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2024 OTRS AG, https://otrs.com/ ###
-
     my $ArticleID = $TicketObject->ArticleSend(
         ArticleTypeID  => $ArticleTypeID,
         SenderType     => 'agent',
         TicketID       => $Self->{TicketID},
         HistoryType    => 'EmailAgent',
         HistoryComment => "\%\%$To",
-### Patch licensed under the GPL-3.0, Copyright (C) 2001-2024 OTRS AG, https://otrs.com/ ###
-#        From           => $GetParam{From},
-        From           => $From,
-### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2024 OTRS AG, https://otrs.com/ ###
+        From           => $GetParam{From},
         To             => $GetParam{To},
         Cc             => $GetParam{Cc},
         Bcc            => $GetParam{Bcc},
@@ -2043,6 +2038,13 @@ sub _GetExtendedParams {
             $GetParam{$Key} = $Value;
         }
     }
+
+    my %Ticket = $Kernel::OM->Get('Kernel::System::Ticket')->TicketGet( TicketID => $Self->{TicketID} );
+
+    $GetParam{From} = $Kernel::OM->Get('Kernel::System::TemplateGenerator')->Sender(
+        QueueID => $Ticket{QueueID},
+        UserID  => $Self->{UserID},
+    );
 
     $GetParam{EmailTemplateID} = $ParamObject->GetParam( Param => 'EmailTemplateID' ) || '';
 
