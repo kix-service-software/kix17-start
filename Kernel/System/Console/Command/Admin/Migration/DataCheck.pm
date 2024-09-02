@@ -73,6 +73,9 @@ sub Configure {
 sub Run {
     my ( $Self, %Param ) = @_;
 
+    # get start time
+    my $StartTime = time();
+
     # get options
     my @Fixes = @{ $Self->GetOption('fix') // [] };
     my $Fix      = $Self->GetOption('fix');
@@ -80,6 +83,7 @@ sub Run {
     my $Verbose  = $Self->GetOption('verbose');
     my $Internal = $Self->GetOption('internal');
 
+    # prepare fixes
     my %Fixes = ();
     for my $Fix ( @Fixes ) {
         if ( $Fix eq 'All' ) {
@@ -275,6 +279,9 @@ sub Run {
     if ( !$Success ) {
         return $Self->ExitCodeError();
     }
+
+    # print time taken
+    $Self->Print('DataCheck took ' . sprintf( '%.2f', ( ( time() - $StartTime ) / 60.0 ) ) . 'min' . "\n");
 
     return $Self->ExitCodeOk();
 }
