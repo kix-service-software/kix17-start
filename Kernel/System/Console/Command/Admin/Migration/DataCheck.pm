@@ -66,6 +66,12 @@ sub Configure {
         Required    => 0,
         HasValue    => 0,
     );
+    $Self->AddOption(
+        Name        => 'timing',
+        Description => "Print taken time for all steps",
+        Required    => 0,
+        HasValue    => 0,
+    );
 
     return;
 }
@@ -82,6 +88,7 @@ sub Run {
     my $PageSize = $Self->GetOption('ldap-pagesize');
     my $Verbose  = $Self->GetOption('verbose');
     my $Internal = $Self->GetOption('internal');
+    my $Timing   = $Self->GetOption('timing');
 
     # prepare fixes
     my %Fixes = ();
@@ -114,168 +121,244 @@ sub Run {
     }
 
     # clear cache before fix
+    my $SubStartTime = time();
     my $Success = $Self->_ClearCache(
         Fixes => \%Fixes,
     );
+    if ( $Timing ) {
+        $Self->Print('> took ' . sprintf( '%.2f', ( ( time() - $SubStartTime ) / 60.0 ) ) . 'min' . "\n");
+    }
     if ( !$Success ) {
         return $Self->ExitCodeError();
     }
 
     # check placeholder data
+    $SubStartTime = time();
     $Success = $Self->_CheckPlaceholderData(
         Fixes   => \%Fixes,
         Verbose => $Verbose,
     );
+    if ( $Timing ) {
+        $Self->Print('> took ' . sprintf( '%.2f', ( ( time() - $SubStartTime ) / 60.0 ) ) . 'min' . "\n");
+    }
     if ( !$Success ) {
         return $Self->ExitCodeError();
     }
 
     # check customer user backends
+    $SubStartTime = time();
     $Success = $Self->_CheckCustomerUserBackends(
         Fixes    => \%Fixes,
         PageSize => $PageSize,
         Internal => $Internal,
     );
+    if ( $Timing ) {
+        $Self->Print('> took ' . sprintf( '%.2f', ( ( time() - $SubStartTime ) / 60.0 ) ) . 'min' . "\n");
+    }
     if ( !$Success ) {
         return $Self->ExitCodeError();
     }
 
     # check customer company backends
+    $SubStartTime = time();
     $Success = $Self->_CheckCustomerCompanyBackends(
         Fixes    => \%Fixes,
         Internal => $Internal,
     );
+    if ( $Timing ) {
+        $Self->Print('> took ' . sprintf( '%.2f', ( ( time() - $SubStartTime ) / 60.0 ) ) . 'min' . "\n");
+    }
     if ( !$Success ) {
         return $Self->ExitCodeError();
     }
 
     # change customer user and customer company backends to internal database table
+    $SubStartTime = time();
     $Success = $Self->_SetInternalCustomerBackends(
         Fixes    => \%Fixes,
         Internal => $Internal,
     );
+    if ( $Timing ) {
+        $Self->Print('> took ' . sprintf( '%.2f', ( ( time() - $SubStartTime ) / 60.0 ) ) . 'min' . "\n");
+    }
     if ( !$Success ) {
         return $Self->ExitCodeError();
     }
 
     # check customer user data
+    $SubStartTime = time();
     $Success = $Self->_CheckCustomerUserData(
         Fixes   => \%Fixes,
         Verbose => $Verbose,
     );
+    if ( $Timing ) {
+        $Self->Print('> took ' . sprintf( '%.2f', ( ( time() - $SubStartTime ) / 60.0 ) ) . 'min' . "\n");
+    }
     if ( !$Success ) {
         return $Self->ExitCodeError();
     }
 
     # check customer user email
+    $SubStartTime = time();
     $Success = $Self->_CheckCustomerUserEmail(
         Fixes   => \%Fixes,
         Verbose => $Verbose,
     );
+    if ( $Timing ) {
+        $Self->Print('> took ' . sprintf( '%.2f', ( ( time() - $SubStartTime ) / 60.0 ) ) . 'min' . "\n");
+    }
     if ( !$Success ) {
         return $Self->ExitCodeError();
     }
 
     # check customer company data
+    $SubStartTime = time();
     $Success = $Self->_CheckCustomerCompanyData(
         Fixes   => \%Fixes,
         Verbose => $Verbose,
     );
+    if ( $Timing ) {
+        $Self->Print('> took ' . sprintf( '%.2f', ( ( time() - $SubStartTime ) / 60.0 ) ) . 'min' . "\n");
+    }
     if ( !$Success ) {
         return $Self->ExitCodeError();
     }
 
     # check all relevant users exist
+    $SubStartTime = time();
     $Success = $Self->_CheckUserExists(
         Fixes   => \%Fixes,
         Verbose => $Verbose,
     );
+    if ( $Timing ) {
+        $Self->Print('> took ' . sprintf( '%.2f', ( ( time() - $SubStartTime ) / 60.0 ) ) . 'min' . "\n");
+    }
     if ( !$Success ) {
         return $Self->ExitCodeError();
     }
 
     # check user email
+    $SubStartTime = time();
     $Success = $Self->_CheckUserEmail(
         Fixes   => \%Fixes,
         Verbose => $Verbose,
     );
+    if ( $Timing ) {
+        $Self->Print('> took ' . sprintf( '%.2f', ( ( time() - $SubStartTime ) / 60.0 ) ) . 'min' . "\n");
+    }
     if ( !$Success ) {
         return $Self->ExitCodeError();
     }
 
     # check ticket customer user
+    $SubStartTime = time();
     $Success = $Self->_CheckTicketCustomerUser(
         Fixes   => \%Fixes,
         Verbose => $Verbose,
     );
+    if ( $Timing ) {
+        $Self->Print('> took ' . sprintf( '%.2f', ( ( time() - $SubStartTime ) / 60.0 ) ) . 'min' . "\n");
+    }
     if ( !$Success ) {
         return $Self->ExitCodeError();
     }
 
     # update ticket customer user
+    $SubStartTime = time();
     $Success = $Self->_UpdateTicketCustomerUser(
         Fixes => \%Fixes,
     );
+    if ( $Timing ) {
+        $Self->Print('> took ' . sprintf( '%.2f', ( ( time() - $SubStartTime ) / 60.0 ) ) . 'min' . "\n");
+    }
     if ( !$Success ) {
         return $Self->ExitCodeError();
     }
 
     # check ticket data
+    $SubStartTime = time();
     $Success = $Self->_CheckTicketData(
         Fixes   => \%Fixes,
         Verbose => $Verbose,
     );
+    if ( $Timing ) {
+        $Self->Print('> took ' . sprintf( '%.2f', ( ( time() - $SubStartTime ) / 60.0 ) ) . 'min' . "\n");
+    }
     if ( !$Success ) {
         return $Self->ExitCodeError();
     }
 
     # check ticket customer user
+    $SubStartTime = time();
     $Success = $Self->_CheckTicketCustomerCompany(
         Fixes   => \%Fixes,
         Verbose => $Verbose,
     );
+    if ( $Timing ) {
+        $Self->Print('> took ' . sprintf( '%.2f', ( ( time() - $SubStartTime ) / 60.0 ) ) . 'min' . "\n");
+    }
     if ( !$Success ) {
         return $Self->ExitCodeError();
     }
 
     # check ticket state types
+    $SubStartTime = time();
     $Success = $Self->_CheckTicketStateTypes(
         Fixes   => \%Fixes,
         Verbose => $Verbose,
     );
+    if ( $Timing ) {
+        $Self->Print('> took ' . sprintf( '%.2f', ( ( time() - $SubStartTime ) / 60.0 ) ) . 'min' . "\n");
+    }
     if ( !$Success ) {
         return $Self->ExitCodeError();
     }
 
     # check service names
+    $SubStartTime = time();
     $Success = $Self->_CheckServiceNames(
         Fixes   => \%Fixes,
         Verbose => $Verbose,
     );
+    if ( $Timing ) {
+        $Self->Print('> took ' . sprintf( '%.2f', ( ( time() - $SubStartTime ) / 60.0 ) ) . 'min' . "\n");
+    }
     if ( !$Success ) {
         return $Self->ExitCodeError();
     }
 
     # check dynamic field values
+    $SubStartTime = time();
     $Success = $Self->_CheckDynamicFieldValues(
         Fixes   => \%Fixes,
     );
+    if ( $Timing ) {
+        $Self->Print('> took ' . sprintf( '%.2f', ( ( time() - $SubStartTime ) / 60.0 ) ) . 'min' . "\n");
+    }
     if ( !$Success ) {
         return $Self->ExitCodeError();
     }
 
     # prepare ticket escalation data
+    $SubStartTime = time();
     $Success = $Self->_PrepareTicketEscalationData(
         Fixes   => \%Fixes,
     );
+    if ( $Timing ) {
+        $Self->Print('> took ' . sprintf( '%.2f', ( ( time() - $SubStartTime ) / 60.0 ) ) . 'min' . "\n");
+    }
     if ( !$Success ) {
         return $Self->ExitCodeError();
     }
 
     # clear cache after fix
+    $SubStartTime = time();
     $Success = $Self->_ClearCache(
         Fixes => \%Fixes,
     );
+    if ( $Timing ) {
+        $Self->Print('> took ' . sprintf( '%.2f', ( ( time() - $SubStartTime ) / 60.0 ) ) . 'min' . "\n");
+    }
     if ( !$Success ) {
         return $Self->ExitCodeError();
     }
@@ -1130,6 +1213,9 @@ sub _CheckCustomerCompanyData {
                 ValidID             => 1,
                 UserID              => 1,
             );
+            if ( $Kernel::OM->Get('Kernel::System::CustomerCompany')->EventHandlerHasQueuedTransactions() ) {
+                $Kernel::OM->Get('Kernel::System::CustomerCompany')->EventHandlerTransaction();
+            }
         }
         elsif( $Param{Verbose} ) {
             if ( $Count == 0 ) {
@@ -2342,12 +2428,8 @@ sub _UpdateTicketCustomerUser {
                 TicketID => $TicketID,
                 UserID   => 1,
             );
-
-            # discard ticket object to empty event queue every 100 changes
-            if ( $Count % 100 == 0 ) {
-                $Kernel::OM->ObjectsDiscard(
-                    Objects => ['Kernel::System::Ticket'],
-                );
+            if ( $Kernel::OM->Get('Kernel::System::Ticket')->EventHandlerHasQueuedTransactions() ) {
+                $Kernel::OM->Get('Kernel::System::Ticket')->EventHandlerTransaction();
             }
         }
 
