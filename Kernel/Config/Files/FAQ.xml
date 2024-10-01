@@ -1735,6 +1735,14 @@ Your KIX Notification Master
             <String Regex="^\d+%?$">320</String>
         </Setting>
     </ConfigItem>
+    <ConfigItem Name="FAQ::Frontend::AgentFAQEdit###Permission" Required="0" Valid="1">
+        <Description Translatable="1">Required permissions to edit faq articles.</Description>
+        <Group>FAQ</Group>
+        <SubGroup>Frontend::Agent::FAQ::ViewEdit</SubGroup>
+        <Setting>
+            <String Regex="">rw</String>
+        </Setting>
+    </ConfigItem>
     <ConfigItem Name="FAQ::Frontend::AgentFAQEdit###RichTextWidth" Required="0" Valid="1">
         <Description Translatable="1">Defines the width for the rich text editor component for this screen. Enter number (pixels) or percent value (relative).</Description>
         <Group>FAQ</Group>
@@ -1749,6 +1757,14 @@ Your KIX Notification Master
         <SubGroup>Frontend::Agent::FAQ::ViewEdit</SubGroup>
         <Setting>
             <String Regex="^\d+%?$">320</String>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="FAQ::Frontend::AgentFAQDelete###Permission" Required="0" Valid="1">
+        <Description Translatable="1">Required permissions to delete faq articles.</Description>
+        <Group>FAQ</Group>
+        <SubGroup>Frontend::Agent::FAQ::ViewDelete</SubGroup>
+        <Setting>
+            <String Regex="">rw</String>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Frontend::ToolBarModule###90-FAQ::AgentFAQAdd" Required="0" Valid="0">
