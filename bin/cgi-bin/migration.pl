@@ -46,6 +46,7 @@ if (
 my %Special = (
     'configitem_xmldata'    => \&_GetConfigItemXMLData,
     'configitem_attachment' => \&_GetConfigItemAttachments,
+    'attachment_storage'    => \&_GetConfigItemXMLAttachments,
     'article_attachment'    => \&_GetArticleAttachments,
     'article_plain'         => \&_GetArticlePlain,
     'faq_attachment'        => \&_GetFAQAttachments,
@@ -250,6 +251,25 @@ sub _GetConfigItemXMLData {
     return _GetData(
         SQL => $SQL
     );
+}
+
+sub _GetConfigItemXMLAttachments {
+    my %Param = @_;
+
+    my $Data = _GetData(
+        ObjectType => $Param{ObjectType},
+        Where      => $Param{Where} || '',
+    );
+
+    if ( IsArrayRefWithData($Data) && $Kernel::OM->Get('Kernel::System::DB')->GetDatabaseFunction('DirectBlob') ) {
+        # encode data to base64
+        foreach my $Item (@{$Data}) {
+            $Kernel::OM->Get('Kernel::System::Encode')->EncodeOutput(\$Item->{data});
+            $Item->{data} = MIME::Base64::encode_base64($Item->{data});
+        }
+    }
+
+    return $Data;
 }
 
 sub _GetArticleAttachments {
