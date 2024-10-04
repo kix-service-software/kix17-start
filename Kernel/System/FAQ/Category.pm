@@ -887,9 +887,9 @@ sub CategoryTreeList {
     }
 
     # check cache
-    if ( $Self->{Cache}->{GetCategoryTree}->{$Valid} ) {
+    if ( $Self->{Cache}->{GetCategoryTree}->{$Param{UserID} . '::' . $Valid} ) {
 
-        return $Self->{Cache}->{GetCategoryTree}->{$Valid};
+        return $Self->{Cache}->{GetCategoryTree}->{$Param{UserID} . '::' . $Valid};
     }
 
     # build SQL
@@ -928,6 +928,11 @@ sub CategoryTreeList {
 
         # get subcategories and names for this parent id
         while ( my ( $CategoryID, $CategoryName ) = each %{ $CategoryMap{$ParentID} } ) {
+            my $PermissionString = $Self->CheckCategoryUserPermission(
+                CategoryID => $CategoryID,
+                UserID     => $Param{UserID},
+            );
+            next if ( !$PermissionString );
 
             # lookup the parents name
             my $NewParentID = $ParentID;
@@ -948,7 +953,7 @@ sub CategoryTreeList {
     }
 
     # cache
-    $Self->{Cache}->{GetCategoryTree}->{$Valid} = \%CategoryTree;
+    $Self->{Cache}->{GetCategoryTree}->{$Param{UserID} . '::' . $Valid} = \%CategoryTree;
 
     return \%CategoryTree;
 }
@@ -1348,16 +1353,16 @@ sub GetUserCategories {
         UserID => $Param{UserID},
     );
     my %UserGroups;
-    if ( !$Self->{Cache}->{GetUserCategories}->{GroupMemberList} ) {
+    if ( !$Self->{Cache}->{GetUserCategories}->{GroupMemberList}->{ $Param{UserID} . '::' . $Param{Type} } ) {
         %UserGroups = $Kernel::OM->Get('Kernel::System::Group')->GroupMemberList(
             UserID => $Param{UserID},
             Type   => $Param{Type},
             Result => 'HASH',
         );
-        $Self->{Cache}->{GetUserCategories}->{GroupMemberList} = \%UserGroups;
+        $Self->{Cache}->{GetUserCategories}->{GroupMemberList}->{ $Param{UserID} . '::' . $Param{Type} } = \%UserGroups;
     }
     else {
-        %UserGroups = %{ $Self->{Cache}->{GetUserCategories}->{GroupMemberList} };
+        %UserGroups = %{ $Self->{Cache}->{GetUserCategories}->{GroupMemberList}->{ $Param{UserID} . '::' . $Param{Type} } };
     }
 
     my $UserCategories = $Self->_UserCategories(
@@ -1737,12 +1742,11 @@ sub CheckCategoryUserPermission {
         }
     }
 
-    my $UserCategories = $Self->GetUserCategories(
-        Type   => 'ro',
-        UserID => $Param{UserID},
-    );
-
     for my $Permission (qw(rw ro)) {
+        my $UserCategories = $Self->GetUserCategories(
+            Type   => $Permission,
+            UserID => $Param{UserID},
+        );
         for my $ParentID ( sort keys %{$UserCategories} ) {
             my $Categories = $UserCategories->{$ParentID};
             for my $CategoryID ( sort keys %{$Categories} ) {
