@@ -255,6 +255,7 @@ sub Run {
     $Success = $Self->_CheckTicketCustomerUser(
         Fixes   => \%Fixes,
         Verbose => $Verbose,
+        Timing  => $Timing,
     );
     if ( $Timing ) {
         $Self->Print('> took ' . sprintf( '%.2f', ( ( time() - $SubStartTime ) / 60.0 ) ) . 'min' . "\n");
@@ -266,7 +267,8 @@ sub Run {
     # update ticket customer user
     $SubStartTime = time();
     $Success = $Self->_UpdateTicketCustomerUser(
-        Fixes => \%Fixes,
+        Fixes  => \%Fixes,
+        Timing => $Timing,
     );
     if ( $Timing ) {
         $Self->Print('> took ' . sprintf( '%.2f', ( ( time() - $SubStartTime ) / 60.0 ) ) . 'min' . "\n");
@@ -293,6 +295,7 @@ sub Run {
     $Success = $Self->_CheckTicketCustomerCompany(
         Fixes   => \%Fixes,
         Verbose => $Verbose,
+        Timing  => $Timing,
     );
     if ( $Timing ) {
         $Self->Print('> took ' . sprintf( '%.2f', ( ( time() - $SubStartTime ) / 60.0 ) ) . 'min' . "\n");
@@ -2338,14 +2341,20 @@ sub _UpdateTicketCustomerUser {
         # process tickets
         my %CustomerUserCache;
         my %CustomerUserSkip;
-        my $Count = 0;
-        my $TicketCount = scalar( keys( %TicketCustomerHash ) );
+        my $Counter       = 0;
+        my $TicketCount   = scalar( keys( %TicketCustomerHash ) );
+        my $PartStartTime = time();
         TICKETID:
         for my $TicketID ( sort( keys( %TicketCustomerHash ) ) ) {
-            $Count += 1;
-            if ( $Count % 2000 == 0 ) {
-                my $Percent = int( $Count / ( $TicketCount / 100 ) );
-                $Self->Print(' - - <yellow>' . $Count . '</yellow> of <yellow>' . $TicketCount . '</yellow> processed (<yellow>' . $Percent . '%</yellow>)' . "\n");
+            $Counter += 1;
+            if ( $Counter % 2000 == 0 ) {
+                my $Percent = int( $Counter / ( $TicketCount / 100 ) );
+                $Self->Print(' - - <yellow>' . $Counter . '</yellow> of <yellow>' . $TicketCount . '</yellow> processed (<yellow>' . $Percent . '%</yellow>)' . "\n");
+
+                if ( $Param{Timing} ) {
+                    $Self->Print('> processing the last 2000 entries took ' . sprintf( '%.2f', ( ( time() - $PartStartTime ) / 60.0 ) ) . 'min' . "\n");
+                    $PartStartTime = time();
+                }
             }
 
             my $CustomerUserID = $TicketCustomerHash{ $TicketID }->{CustomerUserID};
@@ -2626,12 +2635,18 @@ sub _CheckTicketCustomerUser {
 
         my $Counter           = 0;
         my $CustomerUserCount = scalar( keys( %Data ) );
+        my $PartStartTime     = time();
         CUSTOMERUSER:
         for my $CustomerUserID ( sort( keys( %Data ) ) ) {
             $Counter += 1;
             if ( $Counter % 2000 == 0 ) {
                 my $Percent = int( $Counter / ( $CustomerUserCount / 100 ) );
                 $Self->Print(' - <yellow>' . $Counter . '</yellow> of <yellow>' . $CustomerUserCount . '</yellow> processed (<yellow>' . $Percent . '%</yellow>)' . "\n");
+
+                if ( $Param{Timing} ) {
+                    $Self->Print('> processing the last 2000 entries took ' . sprintf( '%.2f', ( ( time() - $PartStartTime ) / 60.0 ) ) . 'min' . "\n");
+                    $PartStartTime = time();
+                }
             }
 
             # skip empty customer user id
@@ -2747,7 +2762,7 @@ sub _CheckTicketCustomerUser {
                             }
                         }
 
-                        # try to find user via login
+                        # no matching user found in agent data, prepare fallback data
                         if ( !%CustomerUser ) {
 
                             # prepare data
@@ -2799,7 +2814,7 @@ sub _CheckTicketCustomerUser {
                         );
                         # execute fix statement
                         return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
-                            SQL  => 'UPDATE ticket SET customer_user_id = ?, customer_id = ? WHERE LOWER(customer_user_id) = LOWER(?)',
+                            SQL  => 'UPDATE ticket SET customer_user_id = ?, customer_id = ? WHERE customer_user_id = ?',
                             Bind => \@Bind,
                         );
 
@@ -2807,7 +2822,7 @@ sub _CheckTicketCustomerUser {
                             if ( $Count == 0 ) {
                                 $Self->Print('<red>Unknown customer user ids:</red>' . "\n");
                             }
-                            $Self->Print($CustomerUserID . ' - Created -' . "\n");
+                            $Self->Print($CustomerUserID . ' - Created' . "\n");
                         }
                     }
                     # unique customer user found
@@ -2826,7 +2841,7 @@ sub _CheckTicketCustomerUser {
                             );
                             # execute fix statement
                             return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
-                                SQL  => 'UPDATE ticket SET customer_user_id = ?, customer_id = ? WHERE LOWER(customer_user_id) = LOWER(?)',
+                                SQL  => 'UPDATE ticket SET customer_user_id = ?, customer_id = ? WHERE customer_user_id = ?',
                                 Bind => \@Bind,
                             );
 
@@ -2911,12 +2926,18 @@ sub _CheckTicketCustomerCompany {
     ) {
         my $Counter              = 0;
         my $CustomerCompanyCount = scalar( keys( %Data ) );
+        my $PartStartTime        = time();
         CUSTOMERCOMPANY:
         for my $CustomerCompanyID ( sort( keys( %Data ) ) ) {
             $Counter += 1;
             if ( $Counter % 2000 == 0 ) {
                 my $Percent = int( $Counter / ( $CustomerCompanyCount / 100 ) );
                 $Self->Print(' - <yellow>' . $Counter . '</yellow> of <yellow>' . $CustomerCompanyCount . '</yellow> processed (<yellow>' . $Percent . '%</yellow>)' . "\n");
+
+                if ( $Param{Timing} ) {
+                    $Self->Print('> processing the last 2000 entries took ' . sprintf( '%.2f', ( ( time() - $PartStartTime ) / 60.0 ) ) . 'min' . "\n");
+                    $PartStartTime = time();
+                }
             }
 
             # skip empty customer company id
