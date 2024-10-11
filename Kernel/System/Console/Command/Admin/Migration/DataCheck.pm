@@ -2704,7 +2704,8 @@ sub _CheckTicketCustomerUser {
                             for my $UserID ( keys( %UserList ) ) {
                                 # get user data
                                 my %UserData = $Kernel::OM->Get('Kernel::System::User')->GetUserData(
-                                    UserID => $UserID,
+                                    UserID        => $UserID,
+                                    NoOutOfOffice => 1,
                                 );
                                 
                                 %CustomerUser = (
@@ -2737,7 +2738,8 @@ sub _CheckTicketCustomerUser {
                                 for my $UserID ( keys( %UserList ) ) {
                                     # get user data
                                     my %UserData = $Kernel::OM->Get('Kernel::System::User')->GetUserData(
-                                        UserID => $UserID,
+                                        UserID        => $UserID,
+                                        NoOutOfOffice => 1,
                                     );
                                     
                                     %CustomerUser = (
