@@ -99,6 +99,7 @@ sub Run {
                 'CustomerUserBackends'        => 1,
                 'CustomerCompanyBackends'     => 1,
                 'CustomerUserData'            => 1,
+                'CustomerUserCompany'         => 1,
                 'CustomerUserEmail'           => 1,
                 'CustomerCompanyData'         => 1,
                 'UserExists'                  => 1,
@@ -188,6 +189,19 @@ sub Run {
     # check customer user data
     $SubStartTime = time();
     $Success = $Self->_CheckCustomerUserData(
+        Fixes   => \%Fixes,
+        Verbose => $Verbose,
+    );
+    if ( $Timing ) {
+        $Self->Print('> took ' . sprintf( '%.2f', ( ( time() - $SubStartTime ) / 60.0 ) ) . 'min' . "\n");
+    }
+    if ( !$Success ) {
+        return $Self->ExitCodeError();
+    }
+
+    # check customer user company
+    $SubStartTime = time();
+    $Success = $Self->_CheckCustomerUserCompany(
         Fixes   => \%Fixes,
         Verbose => $Verbose,
     );
@@ -1061,6 +1075,113 @@ sub _CheckCustomerUserData {
         else {
             $Self->Print('<green>Nothing to do</green>' . "\n");
         }
+    }
+
+    return 1;
+}
+
+sub _CheckCustomerUserCompany {
+    my ( $Self, %Param ) = @_;
+
+    $Self->Print('<yellow>CustomerUserCompany</yellow> - Check customer user for unknown customer companies' . "\n");
+
+    # skip this step if fixes are given, but this one is irrelevant
+    if (
+        IsHashRefWithData( $Param{Fixes} )
+        && !$Param{Fixes}->{'CustomerUserCompany'}
+    ) {
+        $Self->Print('<green> - Skip, irrelevant step for this fix run</green>' . "\n");
+        return 1;
+    }
+
+    $Self->Print('<yellow> - get unknown customer_id entries from customer_user table: </yellow>');
+
+    # prepare db handle
+    return if !$Kernel::OM->Get('Kernel::System::DB')->Prepare(
+        SQL => 'SELECT DISTINCT customer_id FROM customer_user WHERE customer_id NOT IN (SELECT customer_id FROM customer_company)',
+    );
+
+    # fetch data
+    my %Data = ();
+    while ( my @Row = $Kernel::OM->Get('Kernel::System::DB')->FetchrowArray() ) {
+        if ( $Row[0] ) {
+            $Data{ $Row[0] } = 1;
+        }
+    }
+
+    $Self->Print('<green>Done</green>' . "\n");
+
+    # process result
+    my $Count = 0;
+    if (
+        %Data
+        && scalar( keys( %Data ) )
+    ) {
+        my $Counter              = 0;
+        my $CustomerCompanyCount = scalar( keys( %Data ) );
+        my $PartStartTime        = time();
+        CUSTOMERCOMPANY:
+        for my $CustomerCompanyID ( sort( keys( %Data ) ) ) {
+            $Counter += 1;
+            if ( $Counter % 2000 == 0 ) {
+                my $Percent = int( $Counter / ( $CustomerCompanyCount / 100 ) );
+                $Self->Print(' - <yellow>' . $Counter . '</yellow> of <yellow>' . $CustomerCompanyCount . '</yellow> processed (<yellow>' . $Percent . '%</yellow>)' . "\n");
+
+                if ( $Param{Timing} ) {
+                    $Self->Print('> processing the last 2000 entries took ' . sprintf( '%.2f', ( ( time() - $PartStartTime ) / 60.0 ) ) . 'min' . "\n");
+                    $PartStartTime = time();
+                }
+            }
+
+            # skip empty customer company id
+            next CUSTOMERCOMPANY if ( !$CustomerCompanyID );
+
+            # get customer company data
+            my %CustomerCompanyData = $Kernel::OM->Get('Kernel::System::CustomerCompany')->CustomerCompanyGet(
+                CustomerID => $CustomerCompanyID,
+            );
+            if ( !%CustomerCompanyData ) {
+                if ( $Param{Fixes}->{'CustomerUserCompany'} ) {
+                    # prepare data
+                    my %CustomerCompany = (
+                        $CustomerCompanyID => {
+                            CustomerID          => $CustomerCompanyID,
+                            CustomerCompanyName => $CustomerCompanyID,
+                            ValidID             => '1',
+                        }
+                    );
+
+                    # add customer company 'Unbekannt'
+                    $Self->_ProcessCustomerCompanyData(
+                        CustomerCompany => \%CustomerCompany,
+                        SkipExisting    => 1,
+                        Silent          => 1,
+                    );
+                }
+                elsif ( $Param{Verbose} ) {
+                    if ( $Count == 0 ) {
+                        $Self->Print('<red>Unknown customer company ids:</red>' . "\n");
+                    }
+                    $Self->Print($CustomerCompanyID . "\n");
+                }
+
+                # increment count
+                $Count += 1;
+            }
+        }
+    }
+
+    # check process result
+    if ( $Count ) {
+        if ( $Param{Fixes}->{'CustomerUserCompany'} ) {
+            $Self->Print('<green>' . $Count . ' entries fixed</green>' . "\n");
+        }
+        else {
+            $Self->Print('<red>' . $Count . ' entries should be fixed</red>' . "\n");
+        }
+    }
+    else {
+        $Self->Print('<green>No unknown customer companies</green>' . "\n");
     }
 
     return 1;
