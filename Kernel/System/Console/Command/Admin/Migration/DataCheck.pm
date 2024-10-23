@@ -66,6 +66,12 @@ sub Configure {
         Required    => 0,
         HasValue    => 0,
     );
+    $Self->AddOption(
+        Name        => 'timing',
+        Description => "Print taken time for all steps",
+        Required    => 0,
+        HasValue    => 0,
+    );
 
     return;
 }
@@ -73,13 +79,18 @@ sub Configure {
 sub Run {
     my ( $Self, %Param ) = @_;
 
+    # get start time
+    my $StartTime = time();
+
     # get options
     my @Fixes = @{ $Self->GetOption('fix') // [] };
     my $Fix      = $Self->GetOption('fix');
     my $PageSize = $Self->GetOption('ldap-pagesize');
     my $Verbose  = $Self->GetOption('verbose');
     my $Internal = $Self->GetOption('internal');
+    my $Timing   = $Self->GetOption('timing');
 
+    # prepare fixes
     my %Fixes = ();
     for my $Fix ( @Fixes ) {
         if ( $Fix eq 'All' ) {
@@ -110,171 +121,254 @@ sub Run {
     }
 
     # clear cache before fix
+    my $SubStartTime = time();
     my $Success = $Self->_ClearCache(
         Fixes => \%Fixes,
     );
+    if ( $Timing ) {
+        $Self->Print('> took ' . sprintf( '%.2f', ( ( time() - $SubStartTime ) / 60.0 ) ) . 'min' . "\n");
+    }
     if ( !$Success ) {
         return $Self->ExitCodeError();
     }
 
     # check placeholder data
+    $SubStartTime = time();
     $Success = $Self->_CheckPlaceholderData(
         Fixes   => \%Fixes,
         Verbose => $Verbose,
     );
+    if ( $Timing ) {
+        $Self->Print('> took ' . sprintf( '%.2f', ( ( time() - $SubStartTime ) / 60.0 ) ) . 'min' . "\n");
+    }
     if ( !$Success ) {
         return $Self->ExitCodeError();
     }
 
     # check customer user backends
+    $SubStartTime = time();
     $Success = $Self->_CheckCustomerUserBackends(
         Fixes    => \%Fixes,
         PageSize => $PageSize,
         Internal => $Internal,
     );
+    if ( $Timing ) {
+        $Self->Print('> took ' . sprintf( '%.2f', ( ( time() - $SubStartTime ) / 60.0 ) ) . 'min' . "\n");
+    }
     if ( !$Success ) {
         return $Self->ExitCodeError();
     }
 
     # check customer company backends
+    $SubStartTime = time();
     $Success = $Self->_CheckCustomerCompanyBackends(
         Fixes    => \%Fixes,
         Internal => $Internal,
     );
+    if ( $Timing ) {
+        $Self->Print('> took ' . sprintf( '%.2f', ( ( time() - $SubStartTime ) / 60.0 ) ) . 'min' . "\n");
+    }
     if ( !$Success ) {
         return $Self->ExitCodeError();
     }
 
     # change customer user and customer company backends to internal database table
+    $SubStartTime = time();
     $Success = $Self->_SetInternalCustomerBackends(
         Fixes    => \%Fixes,
         Internal => $Internal,
     );
+    if ( $Timing ) {
+        $Self->Print('> took ' . sprintf( '%.2f', ( ( time() - $SubStartTime ) / 60.0 ) ) . 'min' . "\n");
+    }
     if ( !$Success ) {
         return $Self->ExitCodeError();
     }
 
     # check customer user data
+    $SubStartTime = time();
     $Success = $Self->_CheckCustomerUserData(
         Fixes   => \%Fixes,
         Verbose => $Verbose,
     );
+    if ( $Timing ) {
+        $Self->Print('> took ' . sprintf( '%.2f', ( ( time() - $SubStartTime ) / 60.0 ) ) . 'min' . "\n");
+    }
     if ( !$Success ) {
         return $Self->ExitCodeError();
     }
 
     # check customer user email
+    $SubStartTime = time();
     $Success = $Self->_CheckCustomerUserEmail(
         Fixes   => \%Fixes,
         Verbose => $Verbose,
     );
+    if ( $Timing ) {
+        $Self->Print('> took ' . sprintf( '%.2f', ( ( time() - $SubStartTime ) / 60.0 ) ) . 'min' . "\n");
+    }
     if ( !$Success ) {
         return $Self->ExitCodeError();
     }
 
     # check customer company data
+    $SubStartTime = time();
     $Success = $Self->_CheckCustomerCompanyData(
         Fixes   => \%Fixes,
         Verbose => $Verbose,
     );
+    if ( $Timing ) {
+        $Self->Print('> took ' . sprintf( '%.2f', ( ( time() - $SubStartTime ) / 60.0 ) ) . 'min' . "\n");
+    }
     if ( !$Success ) {
         return $Self->ExitCodeError();
     }
 
     # check all relevant users exist
+    $SubStartTime = time();
     $Success = $Self->_CheckUserExists(
         Fixes   => \%Fixes,
         Verbose => $Verbose,
     );
+    if ( $Timing ) {
+        $Self->Print('> took ' . sprintf( '%.2f', ( ( time() - $SubStartTime ) / 60.0 ) ) . 'min' . "\n");
+    }
     if ( !$Success ) {
         return $Self->ExitCodeError();
     }
 
     # check user email
+    $SubStartTime = time();
     $Success = $Self->_CheckUserEmail(
         Fixes   => \%Fixes,
         Verbose => $Verbose,
     );
+    if ( $Timing ) {
+        $Self->Print('> took ' . sprintf( '%.2f', ( ( time() - $SubStartTime ) / 60.0 ) ) . 'min' . "\n");
+    }
     if ( !$Success ) {
         return $Self->ExitCodeError();
     }
 
     # check ticket customer user
+    $SubStartTime = time();
     $Success = $Self->_CheckTicketCustomerUser(
         Fixes   => \%Fixes,
         Verbose => $Verbose,
+        Timing  => $Timing,
     );
+    if ( $Timing ) {
+        $Self->Print('> took ' . sprintf( '%.2f', ( ( time() - $SubStartTime ) / 60.0 ) ) . 'min' . "\n");
+    }
     if ( !$Success ) {
         return $Self->ExitCodeError();
     }
 
     # update ticket customer user
+    $SubStartTime = time();
     $Success = $Self->_UpdateTicketCustomerUser(
-        Fixes => \%Fixes,
+        Fixes  => \%Fixes,
+        Timing => $Timing,
     );
+    if ( $Timing ) {
+        $Self->Print('> took ' . sprintf( '%.2f', ( ( time() - $SubStartTime ) / 60.0 ) ) . 'min' . "\n");
+    }
     if ( !$Success ) {
         return $Self->ExitCodeError();
     }
 
     # check ticket data
+    $SubStartTime = time();
     $Success = $Self->_CheckTicketData(
         Fixes   => \%Fixes,
         Verbose => $Verbose,
     );
+    if ( $Timing ) {
+        $Self->Print('> took ' . sprintf( '%.2f', ( ( time() - $SubStartTime ) / 60.0 ) ) . 'min' . "\n");
+    }
     if ( !$Success ) {
         return $Self->ExitCodeError();
     }
 
     # check ticket customer user
+    $SubStartTime = time();
     $Success = $Self->_CheckTicketCustomerCompany(
         Fixes   => \%Fixes,
         Verbose => $Verbose,
+        Timing  => $Timing,
     );
+    if ( $Timing ) {
+        $Self->Print('> took ' . sprintf( '%.2f', ( ( time() - $SubStartTime ) / 60.0 ) ) . 'min' . "\n");
+    }
     if ( !$Success ) {
         return $Self->ExitCodeError();
     }
 
     # check ticket state types
+    $SubStartTime = time();
     $Success = $Self->_CheckTicketStateTypes(
         Fixes   => \%Fixes,
         Verbose => $Verbose,
     );
+    if ( $Timing ) {
+        $Self->Print('> took ' . sprintf( '%.2f', ( ( time() - $SubStartTime ) / 60.0 ) ) . 'min' . "\n");
+    }
     if ( !$Success ) {
         return $Self->ExitCodeError();
     }
 
     # check service names
+    $SubStartTime = time();
     $Success = $Self->_CheckServiceNames(
         Fixes   => \%Fixes,
         Verbose => $Verbose,
     );
+    if ( $Timing ) {
+        $Self->Print('> took ' . sprintf( '%.2f', ( ( time() - $SubStartTime ) / 60.0 ) ) . 'min' . "\n");
+    }
     if ( !$Success ) {
         return $Self->ExitCodeError();
     }
 
     # check dynamic field values
+    $SubStartTime = time();
     $Success = $Self->_CheckDynamicFieldValues(
         Fixes   => \%Fixes,
     );
+    if ( $Timing ) {
+        $Self->Print('> took ' . sprintf( '%.2f', ( ( time() - $SubStartTime ) / 60.0 ) ) . 'min' . "\n");
+    }
     if ( !$Success ) {
         return $Self->ExitCodeError();
     }
 
     # prepare ticket escalation data
+    $SubStartTime = time();
     $Success = $Self->_PrepareTicketEscalationData(
-        Fixes   => \%Fixes,
+        Fixes  => \%Fixes,
+        Timing => $Timing,
     );
+    if ( $Timing ) {
+        $Self->Print('> took ' . sprintf( '%.2f', ( ( time() - $SubStartTime ) / 60.0 ) ) . 'min' . "\n");
+    }
     if ( !$Success ) {
         return $Self->ExitCodeError();
     }
 
     # clear cache after fix
+    $SubStartTime = time();
     $Success = $Self->_ClearCache(
         Fixes => \%Fixes,
     );
+    if ( $Timing ) {
+        $Self->Print('> took ' . sprintf( '%.2f', ( ( time() - $SubStartTime ) / 60.0 ) ) . 'min' . "\n");
+    }
     if ( !$Success ) {
         return $Self->ExitCodeError();
     }
+
+    # print time taken
+    $Self->Print('DataCheck took ' . sprintf( '%.2f', ( ( time() - $StartTime ) / 60.0 ) ) . 'min' . "\n");
 
     return $Self->ExitCodeOk();
 }
@@ -1123,6 +1217,9 @@ sub _CheckCustomerCompanyData {
                 ValidID             => 1,
                 UserID              => 1,
             );
+            if ( $Kernel::OM->Get('Kernel::System::CustomerCompany')->EventHandlerHasQueuedTransactions() ) {
+                $Kernel::OM->Get('Kernel::System::CustomerCompany')->EventHandlerTransaction();
+            }
         }
         elsif( $Param{Verbose} ) {
             if ( $Count == 0 ) {
@@ -2208,7 +2305,7 @@ sub _CheckUserEmail {
 sub _UpdateTicketCustomerUser {
     my ( $Self, %Param ) = @_;
 
-    $Self->Print('<yellow>TicketCustomerUserUpdate</yellow> - Update ticket customer user' . "\n");
+    $Self->Print('<yellow>TicketCustomerUserUpdate</yellow> - Set assigned company of customer user for every ticket' . "\n");
 
     # skip this step if fixes are given, but this one is irrelevant
     if (
@@ -2221,50 +2318,39 @@ sub _UpdateTicketCustomerUser {
 
     if ( $Param{Fixes}->{'TicketCustomerUserUpdate'} ) {
 
-        $Self->Print('<yellow> - get all ticket ids: </yellow>');
+        $Self->Print('<yellow> - get all combinations of customer user and customer company from ticket table: </yellow>');
 
-        # prepare sql statement to get ticket ids with customer user and customer company
-        my $SQL = "SELECT id, customer_user_id, customer_id FROM ticket";
+        # prepare sql statement to get customer user and customer company combinations from ticket table
+        my $SQL = "SELECT DISTINCT customer_user_id, customer_id FROM ticket";
         $Kernel::OM->Get('Kernel::System::DB')->Prepare(
             SQL => $SQL
         );
 
-        # get ticket ids with customer user and customer company
-        my %TicketCustomerHash;
+        # get combinations of customer user and customer company
+        my %CombinationHash;
+        my $CombinationCount = 0;
         while ( my @Row = $Kernel::OM->Get('Kernel::System::DB')->FetchrowArray() ) {
-            $TicketCustomerHash{ $Row[0] } = {
-                CustomerUserID => $Row[1],
-                CustomerID     => $Row[2]
-            };
+            my $CustomerUserID    = $Row[0] || '';
+            my $CustomerCompanyID = $Row[1] || '';
+
+            next if ( $CombinationHash{ $CustomerUserID }->{ $CustomerCompanyID } );
+
+            $CombinationHash{ $CustomerUserID }->{ $CustomerCompanyID } = 1;
+            $CombinationCount += 1;
         }
 
         $Self->Print('<green>Done</green>' . "\n");
 
-        $Self->Print('<yellow> - update tickets: </yellow>' . "\n");
+        $Self->Print('<yellow> - process combinations: </yellow>' . "\n");
 
         # process tickets
-        my %CustomerUserCache;
-        my %CustomerUserSkip;
-        my $Count = 0;
-        my $TicketCount = scalar( keys( %TicketCustomerHash ) );
-        TICKETID:
-        for my $TicketID ( sort( keys( %TicketCustomerHash ) ) ) {
-            $Count += 1;
-            if ( $Count % 2000 == 0 ) {
-                my $Percent = int( $Count / ( $TicketCount / 100 ) );
-                $Self->Print(' - - <yellow>' . $Count . '</yellow> of <yellow>' . $TicketCount . '</yellow> processed (<yellow>' . $Percent . '%</yellow>)' . "\n");
-            }
-
-            my $CustomerUserID = $TicketCustomerHash{ $TicketID }->{CustomerUserID};
-
-            # check for empty customer user to skip
-            next TICKETID if ( !$CustomerUserID );
-
-            # check for unknown customer user to skip
-            next TICKETID if ( $CustomerUserSkip{ $CustomerUserID } );
-
-            # check if customer user is already cached
-            if ( ref( $CustomerUserCache{ $CustomerUserID } ) ne 'HASH' ) {
+        my $Counter       = 0;
+        my $PartStartTime = time();
+        CUSTOMERUSER:
+        for my $CustomerUserID ( sort( keys( %CombinationHash ) ) ) {
+            # prepare customer user data including assigned customer companies
+            my %CustomerUserHash;
+            if ( $CustomerUserID ) {
                 # get customer user data
                 my %CustomerUserData = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerUserDataGet(
                     User => $CustomerUserID,
@@ -2280,26 +2366,27 @@ sub _UpdateTicketCustomerUser {
 
                     # unique customer user found
                     if ( %CustomerUserList ) {
+                        ENTRY:
                         for my $EmailCustomerUserID ( keys( %CustomerUserList ) ) {
                             # get customer user data
                             %CustomerUserData = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerUserDataGet(
                                 User => $EmailCustomerUserID,
                             );
 
-                            last;
+                            last ENTRY;
                         }
                     }
                 }
 
                 if ( %CustomerUserData ) {
                     # cache customer user login to set for tickets
-                    $CustomerUserCache{ $CustomerUserID }->{UserLogin} = $CustomerUserData{UserLogin};
+                    $CustomerUserHash{UserLogin} = $CustomerUserData{UserLogin};
 
                     # cache main customer id to set for tickets
-                    $CustomerUserCache{ $CustomerUserID }->{CustomerID} = $CustomerUserData{UserCustomerID};
+                    $CustomerUserHash{CustomerID} = $CustomerUserData{UserCustomerID};
 
                     # cache main customer id as possible customer id
-                    $CustomerUserCache{ $CustomerUserID }->{CustomerIDs}->{ $CustomerUserData{UserCustomerID} } = 1;
+                    $CustomerUserHash{CustomerIDs}->{ $CustomerUserData{UserCustomerID} } = 1;
 
                     # get customer ids
                     my @CustomerIDs = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerIDs(
@@ -2308,38 +2395,48 @@ sub _UpdateTicketCustomerUser {
 
                     # add customer ids to possible list
                     for my $CustomerID ( @CustomerIDs ) {
-                        $CustomerUserCache{ $CustomerUserID }->{CustomerIDs}->{ $CustomerID } = 1;
+                        $CustomerUserHash{CustomerIDs}->{ $CustomerID } = 1;
                     }
                 }
-                # if no entry is found, remember to skip
                 else {
-                    $CustomerUserSkip{ $CustomerUserID } = 1;
-
-                    next TICKETID;
+                    $Self->Print('<red> - - ' . $CustomerUserID . ' - No data for customer user found!</red>' . "\n");
                 }
-
             }
 
-            # skip if ticket has already a valid customer set and correct customer user id
-            my $CustomerID = $TicketCustomerHash{ $TicketID }->{CustomerID} || '';
-            next TICKETID if (
-                $CustomerUserID eq $CustomerUserCache{ $CustomerUserID }->{UserLogin}
-                && $CustomerID
-                && $CustomerUserCache{ $CustomerUserID }->{CustomerIDs}->{ $CustomerID }
-            );
+            CUSTOMERCOMPANY:
+            for my $CustomerCompanyID ( sort( keys( %{ $CombinationHash{ $CustomerUserID } } ) ) ) {
+                $Counter += 1;
+                if ( $Counter % 2000 == 0 ) {
+                    my $Percent = int( $Counter / ( $CombinationCount / 100 ) );
+                    $Self->Print(' - - <yellow>' . $Counter . '</yellow> of <yellow>' . $CombinationCount . '</yellow> processed (<yellow>' . $Percent . '%</yellow>)' . "\n");
 
-            # update customer
-            $Kernel::OM->Get('Kernel::System::Ticket')->TicketCustomerSet(
-                User     => $CustomerUserCache{ $CustomerUserID }->{UserLogin},
-                No       => $CustomerUserCache{ $CustomerUserID }->{CustomerID},
-                TicketID => $TicketID,
-                UserID   => 1,
-            );
+                    if ( $Param{Timing} ) {
+                        $Self->Print('> processing the last 2000 entries took ' . sprintf( '%.2f', ( ( time() - $PartStartTime ) / 60.0 ) ) . 'min' . "\n");
+                        $PartStartTime = time();
+                    }
+                }
 
-            # discard ticket object to empty event queue every 100 changes
-            if ( $Count % 100 == 0 ) {
-                $Kernel::OM->ObjectsDiscard(
-                    Objects => ['Kernel::System::Ticket'],
+                next CUSTOMERCOMPANY if ( !$CustomerUserID );
+                next CUSTOMERCOMPANY if ( !%CustomerUserHash );
+
+                # skip if combination has already a valid customer set and correct customer user id
+                next CUSTOMERCOMPANY if (
+                    $CustomerUserID eq $CustomerUserHash{UserLogin}
+                    && $CustomerCompanyID
+                    && $CustomerUserHash{CustomerIDs}->{ $CustomerCompanyID }
+                );
+
+                # prepare bind
+                my @Bind = (
+                    \$CustomerUserHash{UserLogin},
+                    \$CustomerUserHash{CustomerIDs}->{ $CustomerCompanyID },
+                    \$CustomerUserID,
+                    \$CustomerCompanyID
+                );
+                # execute fix statement
+                return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
+                    SQL  => 'UPDATE ticket SET customer_user_id = ?, customer_id = ? WHERE customer_user_id = ? AND customer_id = ?',
+                    Bind => \@Bind,
                 );
             }
         }
@@ -2537,12 +2634,18 @@ sub _CheckTicketCustomerUser {
 
         my $Counter           = 0;
         my $CustomerUserCount = scalar( keys( %Data ) );
+        my $PartStartTime     = time();
         CUSTOMERUSER:
         for my $CustomerUserID ( sort( keys( %Data ) ) ) {
             $Counter += 1;
             if ( $Counter % 2000 == 0 ) {
                 my $Percent = int( $Counter / ( $CustomerUserCount / 100 ) );
                 $Self->Print(' - <yellow>' . $Counter . '</yellow> of <yellow>' . $CustomerUserCount . '</yellow> processed (<yellow>' . $Percent . '%</yellow>)' . "\n");
+
+                if ( $Param{Timing} ) {
+                    $Self->Print('> processing the last 2000 entries took ' . sprintf( '%.2f', ( ( time() - $PartStartTime ) / 60.0 ) ) . 'min' . "\n");
+                    $PartStartTime = time();
+                }
             }
 
             # skip empty customer user id
@@ -2601,7 +2704,8 @@ sub _CheckTicketCustomerUser {
                             for my $UserID ( keys( %UserList ) ) {
                                 # get user data
                                 my %UserData = $Kernel::OM->Get('Kernel::System::User')->GetUserData(
-                                    UserID => $UserID,
+                                    UserID        => $UserID,
+                                    NoOutOfOffice => 1,
                                 );
                                 
                                 %CustomerUser = (
@@ -2634,7 +2738,8 @@ sub _CheckTicketCustomerUser {
                                 for my $UserID ( keys( %UserList ) ) {
                                     # get user data
                                     my %UserData = $Kernel::OM->Get('Kernel::System::User')->GetUserData(
-                                        UserID => $UserID,
+                                        UserID        => $UserID,
+                                        NoOutOfOffice => 1,
                                     );
                                     
                                     %CustomerUser = (
@@ -2658,7 +2763,7 @@ sub _CheckTicketCustomerUser {
                             }
                         }
 
-                        # try to find user via login
+                        # no matching user found in agent data, prepare fallback data
                         if ( !%CustomerUser ) {
 
                             # prepare data
@@ -2710,7 +2815,7 @@ sub _CheckTicketCustomerUser {
                         );
                         # execute fix statement
                         return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
-                            SQL  => 'UPDATE ticket SET customer_user_id = ?, customer_id = ? WHERE LOWER(customer_user_id) = LOWER(?)',
+                            SQL  => 'UPDATE ticket SET customer_user_id = ?, customer_id = ? WHERE customer_user_id = ?',
                             Bind => \@Bind,
                         );
 
@@ -2718,7 +2823,7 @@ sub _CheckTicketCustomerUser {
                             if ( $Count == 0 ) {
                                 $Self->Print('<red>Unknown customer user ids:</red>' . "\n");
                             }
-                            $Self->Print($CustomerUserID . ' - Created -' . "\n");
+                            $Self->Print($CustomerUserID . ' - Created' . "\n");
                         }
                     }
                     # unique customer user found
@@ -2737,7 +2842,7 @@ sub _CheckTicketCustomerUser {
                             );
                             # execute fix statement
                             return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
-                                SQL  => 'UPDATE ticket SET customer_user_id = ?, customer_id = ? WHERE LOWER(customer_user_id) = LOWER(?)',
+                                SQL  => 'UPDATE ticket SET customer_user_id = ?, customer_id = ? WHERE customer_user_id = ?',
                                 Bind => \@Bind,
                             );
 
@@ -2822,12 +2927,18 @@ sub _CheckTicketCustomerCompany {
     ) {
         my $Counter              = 0;
         my $CustomerCompanyCount = scalar( keys( %Data ) );
+        my $PartStartTime        = time();
         CUSTOMERCOMPANY:
         for my $CustomerCompanyID ( sort( keys( %Data ) ) ) {
             $Counter += 1;
             if ( $Counter % 2000 == 0 ) {
                 my $Percent = int( $Counter / ( $CustomerCompanyCount / 100 ) );
                 $Self->Print(' - <yellow>' . $Counter . '</yellow> of <yellow>' . $CustomerCompanyCount . '</yellow> processed (<yellow>' . $Percent . '%</yellow>)' . "\n");
+
+                if ( $Param{Timing} ) {
+                    $Self->Print('> processing the last 2000 entries took ' . sprintf( '%.2f', ( ( time() - $PartStartTime ) / 60.0 ) ) . 'min' . "\n");
+                    $PartStartTime = time();
+                }
             }
 
             # skip empty customer company id
@@ -3248,14 +3359,20 @@ sub _PrepareTicketEscalationData {
         $Self->Print('<yellow> - calculate escalation data: </yellow>' . "\n");
 
         my %Data;
-        my $Count = 0;
-        my $TicketCount = scalar @TicketIDs;
+        my $Count         = 0;
+        my $TicketCount   = scalar( @TicketIDs );
+        my $PartStartTime = time();
         TICKETID:
         for my $TicketID ( @TicketIDs ) {
             $Count += 1;
             if ( $Count % 2000 == 0 ) {
                 my $Percent = int( $Count / ( $TicketCount / 100 ) );
                 $Self->Print(' - - <yellow>' . $Count . '</yellow> of <yellow>' . $TicketCount . '</yellow> processed (<yellow>' . $Percent . '%</yellow>)' . "\n");
+
+                if ( $Param{Timing} ) {
+                    $Self->Print('> processing the last 2000 entries took ' . sprintf( '%.2f', ( ( time() - $PartStartTime ) / 60.0 ) ) . 'min' . "\n");
+                    $PartStartTime = time();
+                }
             }
 
             my %Ticket = $Kernel::OM->Get('Kernel::System::Ticket')->TicketGet(
