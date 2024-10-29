@@ -961,6 +961,7 @@ sub _CheckCustomerUserData {
         '0001' => {
             'Label'     => 'customer user with same value for login and customer company',
             'SelectSQL' => 'SELECT login FROM customer_user WHERE login = customer_id AND login != \'Unbekannt\'',
+            'OnlyCheck' => 1,
         },
         '0002' => {
             'Label'     => 'customer user without customer company',
@@ -985,11 +986,11 @@ sub _CheckCustomerUserData {
         },
         '0006' => {
             'Label'     => 'customer user with same email as an user, but different firstname or lastname',
-            'SelectSQL' => 'SELECT cu.login FROM customer_user cu, users u, user_preferences up WHERE lower(cu.email) = lower(up.preferences_value) AND up.preferences_key = \'UserEmail\' AND up.user_id = u.id AND (cu.first_name != u.first_name OR cu.last_name != u.last_name)',
+            'SelectSQL' => 'SELECT CONCAT(cu.login, \' / \', u.login) FROM customer_user cu, users u, user_preferences up WHERE lower(cu.email) = lower(up.preferences_value) AND up.preferences_key = \'UserEmail\' AND up.user_id = u.id AND (cu.first_name != u.first_name OR cu.last_name != u.last_name)',
         },
         '0007' => {
             'Label'     => 'customer user with same email as an user, but different login',
-            'SelectSQL' => 'SELECT cu.login FROM customer_user cu, users u, user_preferences up WHERE lower(cu.email) = lower(up.preferences_value) AND up.preferences_key = \'UserEmail\' AND up.user_id = u.id AND cu.login != u.login',
+            'SelectSQL' => 'SELECT CONCAT(cu.login, \' / \', u.login) FROM customer_user cu, users u, user_preferences up WHERE lower(cu.email) = lower(up.preferences_value) AND up.preferences_key = \'UserEmail\' AND up.user_id = u.id AND cu.login != u.login',
         },
     );
 
@@ -1047,14 +1048,24 @@ sub _CheckCustomerUserData {
             }
             else {
                 if ( $Param{Verbose} ) {
-                    $Self->Print("\n" . '<red>Entries to fix:</red> (' . scalar( keys( %Data ) ) . ')' . "\n");
+                    if ( !$QueryMap{ $Query }->{OnlyCheck} ) {
+                        $Self->Print("\n" . '<red>Entries to fix:</red> (' . scalar( keys( %Data ) ) . ')' . "\n");
+                    }
+                    else {
+                        $Self->Print("\n" . '<yellow>Entries to check:</yellow> (' . scalar( keys( %Data ) ) . ')' . "\n");
+                    }
 
                     for my $CustomerUserLogin ( sort( keys( %Data ) ) ) {
                         $Self->Print($CustomerUserLogin . "\n");
                     }
                 }
                 else {
-                    $Self->Print('<red>' . scalar( keys( %Data ) ) . ' entries should be fixed</red>' . "\n");
+                    if ( !$QueryMap{ $Query }->{OnlyCheck} ) {
+                        $Self->Print('<red>' . scalar( keys( %Data ) ) . ' entries should be fixed</red>' . "\n");
+                    }
+                    else {
+                        $Self->Print('<yellow>' . scalar( keys( %Data ) ) . ' entries should be checked</yellow>' . "\n");
+                    }
                 }
             }
         }
@@ -1082,55 +1093,74 @@ sub _CheckCustomerUserEmail {
 
     # prepare db handle
     return if !$Kernel::OM->Get('Kernel::System::DB')->Prepare(
-        SQL => 'SELECT id, lower(email) FROM customer_user',
+        SQL => 'SELECT id, email, login FROM customer_user',
     );
 
     # fetch data
     my %Data  = ();
+    my %Fixes = ();
     my %Exist = ();
     while ( my @Row = $Kernel::OM->Get('Kernel::System::DB')->FetchrowArray() ) {
-        $Data{ $Row[0] }  = lc( $Row[1] );
         $Exist{ lc( $Row[1] ) } = 1;
+
+        if ( ref( $Data{ lc( $Row[1] ) } ) eq 'ARRAY' ) {
+            push(
+                @{ $Data{ lc( $Row[1] ) } },
+                {
+                    ID    => $Row[0],
+                    Login => $Row[2]
+                }
+            );
+
+            $Fixes{ lc( $Row[1] ) } = 1;
+        }
+        else {
+            $Data{ lc( $Row[1] ) } = [
+                {
+                    ID    => $Row[0],
+                    Login => $Row[2]
+                }
+            ];
+        }
     }
     
     # process data
-    my %Lookup = ();
-    my $Count  = 0;
-    for my $DataID ( sort( keys( %Data ) ) ) {
-        next if ( !$Data{ $DataID } );
-
-        if ( !$Lookup{ $Data{ $DataID } } ) {
-            $Lookup{ $Data{ $DataID } } = 1;
+    my $Count = 0;
+    for my $Email ( sort( keys( %Fixes ) ) ) {
+        if (
+            $Count == 0
+            && $Param{Verbose}
+        ) {
+            $Self->Print('<red> - Multiple used email addresses:</red>' . "\n");
         }
-        else {
-            if ( $Lookup{ $Data{ $DataID } } == 1 ) {
-                if (
-                    $Count == 0
-                    && $Param{Verbose}
-                ) {
-                    $Self->Print('<red> - Multiple used email addresses:</red>' . "\n");
-                }
-                $Count += 2;
+        $Count += scalar( @{ $Data{ $Email } } );
 
-                if (
-                    !$Param{Fixes}->{'CustomerUserEmail'}
-                    && $Param{Verbose}
-                ) {
-                    $Self->Print($Data{ $DataID } . "\n");
-                }
+        if (
+            !$Param{Fixes}->{'CustomerUserEmail'}
+            && $Param{Verbose}
+        ) {
+            $Self->Print($Email . "\n");
+            for my $Entry ( sort { $a->{ID} <=> $b->{ID} } ( @{ $Data{ $Email } } ) ) {
+                $Self->Print(' - ' . $Entry->{Login} . "\n");
             }
-            else {
-                $Count += 1;
-            }
+        }
 
-            $Lookup{ $Data{ $DataID } } += 1;
+        if ( $Param{Fixes}->{'CustomerUserEmail'} ) {
+            # init prefix count
+            my $PrefixCount = 1;
 
-            if ( $Param{Fixes}->{'CustomerUserEmail'} ) {
-                # init prefix count
-                my $PrefixCount = 1;
+            # split old mail
+            my ( $Prefix, $Suffix ) = split( '@', $Email, 2 );
 
-                # split old mail
-                my ( $Prefix, $Suffix ) = split( '@', $Data{ $DataID }, 2 );
+            # init flag to skip first entry
+            my $FirstEntry = 1;
+            for my $Entry ( sort { $a->{ID} <=> $b->{ID} } ( @{ $Data{ $Email } } ) ) {
+                # skip first entry
+                if ( $FirstEntry ) {
+                    $FirstEntry = 0;
+
+                    next;
+                }
 
                 # prepare new mail
                 my $NewEmail;
@@ -1138,13 +1168,10 @@ sub _CheckCustomerUserEmail {
                     $NewEmail = $Prefix . '-' . $PrefixCount . '@' . $Suffix;
 
                     $PrefixCount += 1;
-                } while (
-                    $Lookup{ $NewEmail }
-                    || $Exist{ $NewEmail }
-                );
+                } while ( $Exist{ $NewEmail } );
 
                 # prepare bind
-                my @Bind = ( \$NewEmail, \$DataID );
+                my @Bind = ( \$NewEmail, \$Entry->{ID} );
 
                 # execute fix statement
                 return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
@@ -1152,8 +1179,10 @@ sub _CheckCustomerUserEmail {
                     Bind => \@Bind,
                 );
 
+                $Self->Print($Entry->{Login} . ' > ' . $NewEmail . "\n");
+
                 # remember new email
-                $Lookup{ $NewEmail } = 1;
+                $Exist{ $NewEmail } = 1;
             }
         }
     }
@@ -2209,56 +2238,75 @@ sub _CheckUserEmail {
     my $PrefKey    = 'UserEmail';
     my @SelectBind = ( \$PrefKey );
     return if !$Kernel::OM->Get('Kernel::System::DB')->Prepare(
-        SQL  => 'SELECT user_id, lower(preferences_value) FROM user_preferences WHERE preferences_key = ?',
+        SQL  => 'SELECT up.user_id, up.preferences_value, u.login FROM users u, user_preferences up WHERE preferences_key = ? AND u.id = up.user_id',
         Bind => \@SelectBind,
     );
 
     # fetch data
     my %Data  = ();
+    my %Fixes = ();
     my %Exist = ();
     while ( my @Row = $Kernel::OM->Get('Kernel::System::DB')->FetchrowArray() ) {
-        $Data{ $Row[0] }  = lc( $Row[1] );
         $Exist{ lc( $Row[1] ) } = 1;
+
+        if ( ref( $Data{ lc( $Row[1] ) } ) eq 'ARRAY' ) {
+            push(
+                @{ $Data{ lc( $Row[1] ) } },
+                {
+                    ID    => $Row[0],
+                    Login => $Row[2]
+                }
+            );
+
+            $Fixes{ lc( $Row[1] ) } = 1;
+        }
+        else {
+            $Data{ lc( $Row[1] ) } = [
+                {
+                    ID    => $Row[0],
+                    Login => $Row[2]
+                }
+            ];
+        }
     }
     
     # process data
-    my %Lookup = ();
-    my $Count  = 0;
-    for my $DataID ( sort( keys( %Data ) ) ) {
-        next if ( !$Data{ $DataID } );
-
-        if ( !$Lookup{ $Data{ $DataID } } ) {
-            $Lookup{ $Data{ $DataID } } = 1;
+    my $Count = 0;
+    for my $Email ( sort( keys( %Fixes ) ) ) {
+        if (
+            $Count == 0
+            && $Param{Verbose}
+        ) {
+            $Self->Print('<red> - Multiple used email addresses:</red>' . "\n");
         }
-        else {
-            if ( $Lookup{ $Data{ $DataID } } == 1 ) {
-                if (
-                    $Count == 0
-                    && $Param{Verbose}
-                ) {
-                    $Self->Print('<red> - Multiple used email addresses:</red>' . "\n");
-                }
-                $Count += 2;
+        $Count += scalar( @{ $Data{ $Email } } );
 
-                if (
-                    !$Param{Fixes}->{'UserEmail'}
-                    && $Param{Verbose}
-                ) {
-                    $Self->Print($Data{ $DataID } . "\n");
-                }
+        if (
+            !$Param{Fixes}->{'UserEmail'}
+            && $Param{Verbose}
+        ) {
+            $Self->Print($Email . "\n");
+            for my $Entry ( sort { $a->{ID} <=> $b->{ID} } ( @{ $Data{ $Email } } ) ) {
+                $Self->Print(' - ' . $Entry->{Login} . "\n");
             }
-            else {
-                $Count += 1;
-            }
+        }
 
-            $Lookup{ $Data{ $DataID } } += 1;
+        if ( $Param{Fixes}->{'UserEmail'} ) {
+            # init prefix count
+            my $PrefixCount = 1;
 
-            if ( $Param{Fixes}->{'UserEmail'} ) {
-                # init prefix count
-                my $PrefixCount = 1;
+            # split old mail
+            my ( $Prefix, $Suffix ) = split( '@', $Email, 2 );
 
-                # split old mail
-                my ( $Prefix, $Suffix ) = split( '@', $Data{ $DataID }, 2 );
+            # init flag to skip first entry
+            my $FirstEntry = 1;
+            for my $Entry ( sort { $a->{ID} <=> $b->{ID} } ( @{ $Data{ $Email } } ) ) {
+                # skip first entry
+                if ( $FirstEntry ) {
+                    $FirstEntry = 0;
+
+                    next;
+                }
 
                 # prepare new mail
                 my $NewEmail;
@@ -2266,13 +2314,10 @@ sub _CheckUserEmail {
                     $NewEmail = $Prefix . '-' . $PrefixCount . '@' . $Suffix;
 
                     $PrefixCount += 1;
-                } while (
-                    $Lookup{ $NewEmail }
-                    || $Exist{ $NewEmail }
-                );
+                } while ( $Exist{ $NewEmail } );
 
                 # prepare bind
-                my @Bind = ( \$NewEmail, \$DataID, \$PrefKey );
+                my @Bind = ( \$NewEmail, \$Entry->{ID}, \$PrefKey );
 
                 # execute fix statement
                 return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
@@ -2280,8 +2325,10 @@ sub _CheckUserEmail {
                     Bind => \@Bind,
                 );
 
+                $Self->Print($Entry->{Login} . ' > ' . $NewEmail . "\n");
+
                 # remember new email
-                $Lookup{ $NewEmail } = 1;
+                $Exist{ $NewEmail } = 1;
             }
         }
     }
@@ -2472,6 +2519,7 @@ sub _CheckTicketData {
         '0001' => {
             'Label'     => 'tickets with same value for customer user and customer company',
             'SelectSQL' => 'SELECT id FROM ticket WHERE customer_user_id = customer_id AND customer_user_id != \'Unbekannt\'',
+            'OnlyCheck' => 1,
         },
         '0002' => {
             'Label'     => 'tickets without customer user',
@@ -2567,14 +2615,24 @@ sub _CheckTicketData {
             }
             else {
                 if ( $Param{Verbose} ) {
-                    $Self->Print("\n" . '<red>TicketIDs to fix:</red> (' . scalar( keys( %Data ) ) . ')' . "\n");
+                    if ( !$QueryMap{ $Query }->{OnlyCheck} ) {
+                        $Self->Print("\n" . '<red>TicketIDs to fix:</red> (' . scalar( keys( %Data ) ) . ')' . "\n");
+                    }
+                    else {
+                        $Self->Print("\n" . '<yellow>TicketIDs to check:</yellow> (' . scalar( keys( %Data ) ) . ')' . "\n");
+                    }
 
                     for my $TicketID ( sort { $a <=> $b } ( keys( %Data ) ) ) {
                         $Self->Print($TicketID . "\n");
                     }
                 }
                 else {
-                    $Self->Print('<red>' . scalar( keys( %Data ) ) . ' entries should be fixed</red>' . "\n");
+                    if ( !$QueryMap{ $Query }->{OnlyCheck} ) {
+                        $Self->Print('<red>' . scalar( keys( %Data ) ) . ' entries should be fixed</red>' . "\n");
+                    }
+                    else {
+                        $Self->Print('<yellow>' . scalar( keys( %Data ) ) . ' entries should be check</yellow>' . "\n");
+                    }
                 }
             }
         }
