@@ -2719,7 +2719,7 @@ sub _CheckTicketCustomerUser {
                     # prepare data
                     my $CustomerUserEmail;
                     my $CustomerUserName;
-                    if ( $CustomerUserID !~ m/@/ ) {
+                    if ( $CustomerUserID !~ m/^.+@.+$/ ) {
                         $CustomerUserEmail = $CustomerUserID . '@localhost';
                         $CustomerUserName  = $CustomerUserID;
                     }
@@ -2733,8 +2733,16 @@ sub _CheckTicketCustomerUser {
                                 Email => $EmailPart,
                             );
 
-                            $CustomerUserName = $CustomerUserEmail;
-                            $CustomerUserName =~ s/@.+$//;
+                            if ( $CustomerUserEmail ) {
+                                $CustomerUserName = $CustomerUserEmail;
+                                $CustomerUserName =~ s/@.+$//;
+                            }
+                            else {
+                                $CustomerUserEmail = $CustomerUserID;
+                                $CustomerUserEmail =~ s/@//g;
+                                $CustomerUserEmail .= '@localhost';
+                                $CustomerUserName  = $CustomerUserID;
+                            }
                         }
                     }
 
