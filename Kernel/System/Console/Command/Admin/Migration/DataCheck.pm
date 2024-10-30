@@ -2377,8 +2377,8 @@ sub _UpdateTicketCustomerUser {
         my %CombinationHash;
         my $CombinationCount = 0;
         while ( my @Row = $Kernel::OM->Get('Kernel::System::DB')->FetchrowArray() ) {
-            my $CustomerUserID    = $Row[0] || '';
-            my $CustomerCompanyID = $Row[1] || '';
+            my $CustomerUserID    = $Row[0] // '';
+            my $CustomerCompanyID = $Row[1] // '';
 
             next if ( $CombinationHash{ $CustomerUserID }->{ $CustomerCompanyID } );
 
@@ -2480,6 +2480,21 @@ sub _UpdateTicketCustomerUser {
                     \$CustomerUserID,
                     \$CustomerCompanyID
                 );
+                # prepare SQL
+                my $SQL = 'UPDATE ticket SET customer_user_id = ?, customer_id = ? WHERE ';
+                if ( $CustomerUserID eq '' ) {
+                    $SQL .= '(customer_user_id = ? OR customer_user_id IS NULL) ';
+                }
+                else {
+                    $SQL .= 'customer_user_id = ? ';
+                }
+                if ( $CustomerCompanyID eq '' ) {
+                    $SQL .= '(customer_id = ? OR customer_id IS NULL)
+                    ';
+                }
+                else {
+                    $SQL .= 'customer_id = ?';
+                }
                 # execute fix statement
                 return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
                     SQL  => 'UPDATE ticket SET customer_user_id = ?, customer_id = ? WHERE customer_user_id = ? AND customer_id = ?',
