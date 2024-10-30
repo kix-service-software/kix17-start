@@ -2483,21 +2483,21 @@ sub _UpdateTicketCustomerUser {
                 # prepare SQL
                 my $SQL = 'UPDATE ticket SET customer_user_id = ?, customer_id = ? WHERE ';
                 if ( $CustomerUserID eq '' ) {
-                    $SQL .= '(customer_user_id = ? OR customer_user_id IS NULL) ';
+                    $SQL .= '(customer_user_id = ? OR customer_user_id IS NULL)';
                 }
                 else {
-                    $SQL .= 'customer_user_id = ? ';
+                    $SQL .= 'customer_user_id = ?';
                 }
+                $SQL .= ' AND ';
                 if ( $CustomerCompanyID eq '' ) {
-                    $SQL .= '(customer_id = ? OR customer_id IS NULL)
-                    ';
+                    $SQL .= '(customer_id = ? OR customer_id IS NULL)';
                 }
                 else {
                     $SQL .= 'customer_id = ?';
                 }
                 # execute fix statement
                 return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
-                    SQL  => 'UPDATE ticket SET customer_user_id = ?, customer_id = ? WHERE customer_user_id = ? AND customer_id = ?',
+                    SQL  => $SQL,
                     Bind => \@Bind,
                 );
             }
