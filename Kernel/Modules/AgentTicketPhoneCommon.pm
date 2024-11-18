@@ -468,6 +468,7 @@ sub Run {
                 Email     => $CustomerData{UserEmail} || '',
                 Firstname => $CustomerData{UserFirstname},
                 Lastname  => $CustomerData{UserLastname},
+                Entry     => '"' . $CustomerData{UserFirstname} . ' ' . $CustomerData{UserLastname} . '" <' . $CustomerData{UserEmail} . '>',
             );
         }
 

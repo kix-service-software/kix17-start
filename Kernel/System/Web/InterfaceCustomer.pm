@@ -442,7 +442,7 @@ sub Run {
 
         # redirect with new session id and old params
         # prepare old redirect URL -- do not redirect to Login or Logout (loop)!
-        if ( $Param{RequestedURL} =~ /Action=(Logout|Login|LostPassword|PreLogin)/ ) {
+        if ( $Param{RequestedURL} =~ /Action=(Logout|Login|CustomerLostPassword|PreLogin)/ ) {
             $Param{RequestedURL} = '';
         }
 

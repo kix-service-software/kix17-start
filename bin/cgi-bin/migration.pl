@@ -46,6 +46,7 @@ if (
 my %Special = (
     'configitem_xmldata'    => \&_GetConfigItemXMLData,
     'configitem_attachment' => \&_GetConfigItemAttachments,
+    'attachment_storage'    => \&_GetConfigItemXMLAttachments,
     'article_attachment'    => \&_GetArticleAttachments,
     'article_plain'         => \&_GetArticlePlain,
     'faq_attachment'        => \&_GetFAQAttachments,
@@ -89,6 +90,10 @@ elsif ( $Special{$ObjectType} ) {
     $Output = $Special{$ObjectType}->(
         ObjectType => $ObjectType,
         ObjectID   => $ObjectID,
+        What       => $What,
+        Where      => $Where,
+        Limit      => $Limit,
+        OrderBy    => $OrderBy,
     );
 }
 elsif ( $Tables{$ObjectType} ) {
@@ -248,6 +253,25 @@ sub _GetConfigItemXMLData {
     );
 }
 
+sub _GetConfigItemXMLAttachments {
+    my %Param = @_;
+
+    my $Data = _GetData(
+        ObjectType => $Param{ObjectType},
+        Where      => $Param{Where} || '',
+    );
+
+    if ( IsArrayRefWithData($Data) && $Kernel::OM->Get('Kernel::System::DB')->GetDatabaseFunction('DirectBlob') ) {
+        # encode data to base64
+        foreach my $Item (@{$Data}) {
+            $Kernel::OM->Get('Kernel::System::Encode')->EncodeOutput(\$Item->{data});
+            $Item->{data} = MIME::Base64::encode_base64($Item->{data});
+        }
+    }
+
+    return $Data;
+}
+
 sub _GetArticleAttachments {
     my %Param = @_;
     my @Data;
@@ -321,8 +345,8 @@ sub _GetSysConfig {
     my %Param = @_;
     my $Data;
 
-    if ($Where) {
-        $Data = $Kernel::OM->Get('Kernel::Config')->Get($Where);
+    if ($Param{Where}) {
+        $Data = $Kernel::OM->Get('Kernel::Config')->Get($Param{Where});
     }
     else {
         $Data = {};

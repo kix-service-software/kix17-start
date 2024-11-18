@@ -16,6 +16,8 @@ use warnings;
 our @ObjectDependencies = (
     'Kernel::Config',
     'Kernel::Output::HTML::Layout',
+    'Kernel::System::FAQ',
+    'Kernel::System::HTMLUtils',
     'Kernel::System::Log',
 );
 
@@ -57,10 +59,11 @@ sub Run {
     }
 
     # get configuration settings for the specified action
-    my $Config = $Kernel::OM->Get('Kernel::Config')->Get('Frontend::Module')->{$Action};
+    my $Module = $Kernel::OM->Get('Kernel::Config')->Get('Frontend::Module')->{$Action};
+    return if !$Module;
 
-    my $GroupsRo = $Config->{GroupRo} || [];
-    my $GroupsRw = $Config->{Group}   || [];
+    my $GroupsRo = $Module->{GroupRo} || [];
+    my $GroupsRw = $Module->{Group}   || [];
 
     # get layout object
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
@@ -97,6 +100,22 @@ sub Run {
     }
 
     return $Param{Counter} if !$Access;
+
+    if ( $Param{FAQItem}->{CategoryID} ) {
+        my $Config = $Kernel::OM->Get('Kernel::Config')->Get("FAQ::Frontend::$Action");
+
+        if ( $Config->{Permission} ) {
+            # check user permission
+            my $Permission = $Kernel::OM->Get('Kernel::System::FAQ')->CheckCategoryUserPermission(
+                UserID     => $Self->{UserID},
+                CategoryID => $Param{FAQItem}->{CategoryID},
+            );
+            return $Param{Counter} if (
+                $Permission ne $Config->{Permission}
+                && $Permission ne 'rw'
+            );
+        }
+    }
 
     $Param{FAQItem}->{HTMLLink} = $Kernel::OM->GetNew('Kernel::Output::HTML::Layout')->Output(
         Template => '<a href="[% Env("Baselink") %][% Data.Link | Interpolate %]" id="[% Data.MenuID | html %]" class="[% Data.Class | html %]" [% Data.LinkParam %] title="[% Translate(Data.Description) | html %]">[% Translate(Data.Name) | html %]</a>',

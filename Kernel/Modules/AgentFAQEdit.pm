@@ -96,7 +96,7 @@ sub Run {
     );
 
     # show error message
-    if ( !$Permission ) {
+    if ( $Permission ne 'rw' ) {
         return $LayoutObject->NoPermission(
             Message    => 'You have no permission for this category!',
             WithHeader => 'yes',

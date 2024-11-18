@@ -120,7 +120,7 @@ sub Run {
     # MultipleCustomer To-field
     my @MultipleCustomer;
     my $CustomersNumber = $ParamObject->GetParam( Param => 'CustomerTicketCounterToCustomer' ) || 0;
-    my $Selected = $ParamObject->GetParam( Param => 'CustomerSelected' ) || '';
+    my $Selected        = $ParamObject->GetParam( Param => 'CustomerSelected' ) || '';
 
     # get check item object
     my $CheckItemObject = $Kernel::OM->Get('Kernel::System::CheckItem');
@@ -128,9 +128,9 @@ sub Run {
     if ($CustomersNumber) {
         my $CustomerCounter = 1;
         for my $Count ( 1 ... $CustomersNumber ) {
-            my $CustomerElement = $ParamObject->GetParam( Param => 'CustomerTicketText_' . $Count );
+            my $CustomerElement  = $ParamObject->GetParam( Param => 'CustomerTicketText_' . $Count );
             my $CustomerSelected = ( $Selected eq $Count ? 'checked="checked"' : '' );
-            my $CustomerKey = $ParamObject->GetParam( Param => 'CustomerKey_' . $Count )
+            my $CustomerKey      = $ParamObject->GetParam( Param => 'CustomerKey_' . $Count )
                 || '';
 
             if ($CustomerElement) {
@@ -975,7 +975,7 @@ sub Run {
                 TypeID         => $GetParam{TypeID}                || $GetParam{DefaultTypeID},
             );
             my $SLAs = $Self->_GetSLAs(
-                QueueID => $Self->{QueueID} || 1,
+                QueueID  => $Self->{QueueID} || 1,
                 Services => $Services,
                 %GetParam,
                 %ACLCompatGetParam,
@@ -1795,9 +1795,8 @@ sub Run {
                     : ''
                 ),
                 FromList => $Self->_GetTos(
-                    # QueueID => $NewQueueID
                     QueueID => $NewQueueID || $Self->{QueueID} || 1,
-                    TypeID => $GetParam{TypeID},
+                    TypeID  => $GetParam{TypeID},
                 ),
                 LinkTicketID => $GetParam{LinkTicketID} || '',
                 To  => $GetParam{To}  || '',
@@ -2315,7 +2314,7 @@ sub Run {
             %GetParam,
             %ACLCompatGetParam,
             CustomerUserID => $CustomerUser || '',
-            QueueID => $QueueID,
+            QueueID        => $QueueID,
         );
 
         my $NewTos;
@@ -2434,7 +2433,7 @@ sub Run {
                 %ACLCompatGetParam,
                 CustomerUserID => $CustomerUser || '',
                 Action         => $Self->{Action},
-                QueueID        => $QueueID      || 0,
+                QueueID        => $QueueID || 0,
                 ReturnType     => 'Ticket',
                 ReturnSubType  => 'DynamicField_' . $DynamicFieldConfig->{Name},
                 Data           => \%AclData,
@@ -2620,7 +2619,7 @@ sub Run {
 
                 # get AJAX param values
                 if ( $Object->can('GetParamAJAX') ) {
-                    %GetParam = ( %GetParam, $Object->GetParamAJAX(%GetParam) )
+                    %GetParam = ( %GetParam, $Object->GetParamAJAX(%GetParam) );
                 }
 
                 my $Key = $Object->Option( %GetParam, Config => $Jobs{$Job} );

@@ -49,6 +49,13 @@ sub new {
         }
     }
 
+    my %Ticket = $Kernel::OM->Get('Kernel::System::Ticket')->TicketGet( TicketID => $Self->{TicketID} );
+
+    $Self->{GetParam}->{From} = $Kernel::OM->Get('Kernel::System::TemplateGenerator')->Sender(
+        QueueID => $Ticket{QueueID},
+        UserID  => $Self->{UserID},
+    );
+
     $Self->{GetParam}->{ForwardTemplateID} = $ParamObject->GetParam( Param => 'ForwardTemplateID' ) || q{};
 
     # ACL compatibility translation
