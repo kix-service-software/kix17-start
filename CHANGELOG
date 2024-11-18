@@ -1,6 +1,9 @@
 # Change log of KIX
 * Copyright (C) 2006-2024 KIX Service Software GmbH, https://www.kixdesk.com
 
+# 17.22.0-RC15 (2024/11/18)
+ * (2024/11/18) - Bugfix: KIX17-3587 (provide only options for CustomerUserEmail selection) (mbauer)
+
 # 17.22.0-RC14 (2024/10/23)
  * (2024/10/23) - release candidate
 
