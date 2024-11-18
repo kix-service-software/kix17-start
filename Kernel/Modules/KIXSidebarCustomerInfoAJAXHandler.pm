@@ -349,6 +349,9 @@ sub _BuildTicketContactsSelection {
         PossibleNone => 0,
     );
 
+    # remove <select>-Tags
+    $Content =~ s/<\/?select.*?>//g;
+
     foreach my $ContactType ( sort { $ListPrio{$a} <=> $ListPrio{$b} } keys %EmailData ) {
         foreach my $Contact (
             sort { $EmailData{$ContactType}->{$a} cmp $EmailData{$ContactType}->{$b} }
