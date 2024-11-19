@@ -72,6 +72,13 @@ sub Configure {
         Required    => 0,
         HasValue    => 0,
     );
+    $Self->AddOption(
+        Name        => 'ticket-filter',
+        Description => "SQL-Condition to restrict relevant tickets for check and fix",
+        Required    => 0,
+        HasValue    => 1,
+        ValueRegex  => qr/.+/smx,
+    );
 
     return;
 }
@@ -83,12 +90,13 @@ sub Run {
     my $StartTime = time();
 
     # get options
-    my @Fixes = @{ $Self->GetOption('fix') // [] };
-    my $Fix      = $Self->GetOption('fix');
-    my $PageSize = $Self->GetOption('ldap-pagesize');
-    my $Verbose  = $Self->GetOption('verbose');
-    my $Internal = $Self->GetOption('internal');
-    my $Timing   = $Self->GetOption('timing');
+    my @Fixes        = @{ $Self->GetOption('fix') // [] };
+    my $Fix          = $Self->GetOption('fix');
+    my $PageSize     = $Self->GetOption('ldap-pagesize');
+    my $Verbose      = $Self->GetOption('verbose');
+    my $Internal     = $Self->GetOption('internal');
+    my $Timing       = $Self->GetOption('timing');
+    my $TicketFilter = $Self->GetOption('ticket-filter');
 
     # prepare fixes
     my %Fixes = ();
@@ -253,9 +261,10 @@ sub Run {
     # check ticket customer user
     $SubStartTime = time();
     $Success = $Self->_CheckTicketCustomerUser(
-        Fixes   => \%Fixes,
-        Verbose => $Verbose,
-        Timing  => $Timing,
+        Fixes        => \%Fixes,
+        TicketFilter => $TicketFilter,
+        Verbose      => $Verbose,
+        Timing       => $Timing,
     );
     if ( $Timing ) {
         $Self->Print('> took ' . sprintf( '%.2f', ( ( time() - $SubStartTime ) / 60.0 ) ) . 'min' . "\n");
@@ -267,8 +276,9 @@ sub Run {
     # update ticket customer user
     $SubStartTime = time();
     $Success = $Self->_UpdateTicketCustomerUser(
-        Fixes  => \%Fixes,
-        Timing => $Timing,
+        Fixes        => \%Fixes,
+        TicketFilter => $TicketFilter,
+        Timing       => $Timing,
     );
     if ( $Timing ) {
         $Self->Print('> took ' . sprintf( '%.2f', ( ( time() - $SubStartTime ) / 60.0 ) ) . 'min' . "\n");
@@ -280,8 +290,9 @@ sub Run {
     # check ticket data
     $SubStartTime = time();
     $Success = $Self->_CheckTicketData(
-        Fixes   => \%Fixes,
-        Verbose => $Verbose,
+        Fixes        => \%Fixes,
+        TicketFilter => $TicketFilter,
+        Verbose      => $Verbose,
     );
     if ( $Timing ) {
         $Self->Print('> took ' . sprintf( '%.2f', ( ( time() - $SubStartTime ) / 60.0 ) ) . 'min' . "\n");
@@ -293,9 +304,10 @@ sub Run {
     # check ticket customer user
     $SubStartTime = time();
     $Success = $Self->_CheckTicketCustomerCompany(
-        Fixes   => \%Fixes,
-        Verbose => $Verbose,
-        Timing  => $Timing,
+        Fixes        => \%Fixes,
+        TicketFilter => $TicketFilter,
+        Verbose      => $Verbose,
+        Timing       => $Timing,
     );
     if ( $Timing ) {
         $Self->Print('> took ' . sprintf( '%.2f', ( ( time() - $SubStartTime ) / 60.0 ) ) . 'min' . "\n");
@@ -2368,7 +2380,10 @@ sub _UpdateTicketCustomerUser {
         $Self->Print('<yellow> - get all combinations of customer user and customer company from ticket table: </yellow>');
 
         # prepare sql statement to get customer user and customer company combinations from ticket table
-        my $SQL = "SELECT DISTINCT customer_user_id, customer_id FROM ticket";
+        my $SQL = 'SELECT DISTINCT customer_user_id, customer_id FROM ticket';
+        if ( $Param{TicketFilter} ) {
+            $SQL .= ' WHERE (' . $Param{TicketFilter} . ')';
+        }
         $Kernel::OM->Get('Kernel::System::DB')->Prepare(
             SQL => $SQL
         );
@@ -2533,18 +2548,18 @@ sub _CheckTicketData {
     my %QueryMap = (
         '0001' => {
             'Label'     => 'tickets with same value for customer user and customer company',
-            'SelectSQL' => 'SELECT id FROM ticket WHERE customer_user_id = customer_id AND customer_user_id != \'Unbekannt\'',
+            'SelectSQL' => 'SELECT id FROM ticket WHERE (customer_user_id = customer_id AND customer_user_id != \'Unbekannt\')',
             'OnlyCheck' => 1,
         },
         '0002' => {
             'Label'     => 'tickets without customer user',
-            'SelectSQL' => 'SELECT id FROM ticket where customer_user_id = \'\' OR customer_user_id IS NULL',
+            'SelectSQL' => 'SELECT id FROM ticket WHERE (customer_user_id = \'\' OR customer_user_id IS NULL)',
             'FixSQL'    => 'UPDATE ticket SET customer_user_id = \'Unbekannt\' WHERE customer_user_id = \'\' OR customer_user_id IS NULL',
             'Create'    => 'CustomerUser',
         },
         '0003' => {
             'Label'     => 'tickets without customer company',
-            'SelectSQL' => 'SELECT id FROM ticket WHERE customer_id = \'\' OR customer_id IS NULL',
+            'SelectSQL' => 'SELECT id FROM ticket WHERE (customer_id = \'\' OR customer_id IS NULL)',
             'FixSQL'    => 'UPDATE ticket SET customer_id = \'Unbekannt\' WHERE customer_id = \'\' OR customer_id IS NULL',
             'Create'    => 'CustomerCompany',
         },
@@ -2555,8 +2570,12 @@ sub _CheckTicketData {
         $Self->Print('<yellow> - ' . $QueryMap{ $Query }->{Label} . ': </yellow>');
 
         # prepare db handle
+        my $SQL = $QueryMap{ $Query }->{SelectSQL};
+        if ( $Param{TicketFilter} ) {
+            $SQL .= ' AND (' . $Param{TicketFilter} . ')';
+        }
         return if !$Kernel::OM->Get('Kernel::System::DB')->Prepare(
-            SQL => $QueryMap{ $Query }->{SelectSQL},
+            SQL => $SQL,
         );
 
         # fetch data
@@ -2679,8 +2698,12 @@ sub _CheckTicketCustomerUser {
     $Self->Print('<yellow> - get unknown customer_user_id entries from ticket table: </yellow>');
 
     # prepare db handle
+    my $SQL = 'SELECT DISTINCT customer_user_id FROM ticket WHERE customer_user_id NOT IN (SELECT login FROM customer_user)';
+    if ( $Param{TicketFilter} ) {
+        $SQL .= ' AND (' . $Param{TicketFilter} . ')';
+    }
     return if !$Kernel::OM->Get('Kernel::System::DB')->Prepare(
-        SQL => 'SELECT DISTINCT customer_user_id FROM ticket WHERE customer_user_id NOT IN (SELECT login FROM customer_user)',
+        SQL => $SQL,
     );
 
     # fetch data
@@ -2986,8 +3009,12 @@ sub _CheckTicketCustomerCompany {
     $Self->Print('<yellow> - get unknown customer_id entries from ticket table: </yellow>');
 
     # prepare db handle
+    my $SQL = 'SELECT DISTINCT customer_id FROM ticket WHERE customer_id NOT IN (SELECT customer_id FROM customer_company)';
+    if ( $Param{TicketFilter} ) {
+        $SQL .= ' AND (' . $Param{TicketFilter} . ')';
+    }
     return if !$Kernel::OM->Get('Kernel::System::DB')->Prepare(
-        SQL => 'SELECT DISTINCT customer_id FROM ticket WHERE customer_id NOT IN (SELECT customer_id FROM customer_company)',
+        SQL => $SQL,
     );
 
     # fetch data
