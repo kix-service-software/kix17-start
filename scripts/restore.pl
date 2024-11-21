@@ -1,8 +1,8 @@
 #!/usr/bin/perl
 # --
-# Modified version of the work: Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
+# Modified version of the work: Copyright (C) 2006-2024 KIX Service Software GmbH, https://www.kixdesk.com
 # based on the original work of:
-# Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2024 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -27,7 +27,7 @@ my $DBDump = '';
 getopt( 'hbd', \%Opts );
 if ( exists $Opts{h} ) {
     print "restore.pl - restore script\n";
-    print "Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com\n";
+    print "Copyright (C) 2006-2024 KIX Service Software GmbH, https://www.kixdesk.com\n";
     print "usage: restore.pl -b /data_backup/<TIME>/ -d /opt/kix17/\n";
     exit 1;
 }

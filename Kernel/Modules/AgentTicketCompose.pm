@@ -1,11 +1,14 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
+# Modified version of the work: Copyright (C) 2006-2024 KIX Service Software GmbH, https://www.kixdesk.com
 # based on the original work of:
-# Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2024 OTRS AG, https://otrs.com/
 # --
-# This software comes with ABSOLUTELY NO WARRANTY. For details, see
-# the enclosed file LICENSE for license information (AGPL). If you
-# did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
+# This software comes with ABSOLUTELY NO WARRANTY. This program is
+# licensed under the AGPL-3.0 with patches licensed under the GPL-3.0.
+# For details, see the enclosed files LICENSE (AGPL) and
+# LICENSE-GPL3 (GPL3) for license information. If you did not receive
+# this files, see https://www.gnu.org/licenses/agpl.txt (APGL) and
+# https://www.gnu.org/licenses/gpl-3.0.txt (GPL3).
 # --
 
 package Kernel::Modules::AgentTicketCompose;
@@ -160,13 +163,27 @@ sub Run {
     # get params
     my %GetParam;
     for (
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2024 OTRS AG, https://otrs.com/ ###
+#        qw(
+#        From To Cc Bcc Subject Body InReplyTo References ResponseID ReplyArticleID StateID
+#        ArticleID ArticleTypeID TimeUnits Year Month Day Hour Minute FormID ReplyAll
+#        )
         qw(
-        From To Cc Bcc Subject Body InReplyTo References ResponseID ReplyArticleID StateID
+        To Cc Bcc Subject Body InReplyTo References ResponseID ReplyArticleID StateID
         ArticleID ArticleTypeID TimeUnits Year Month Day Hour Minute FormID ReplyAll
         )
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2024 OTRS AG, https://otrs.com/ ###
     ) {
         $GetParam{$_} = $ParamObject->GetParam( Param => $_ );
     }
+
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2024 OTRS AG, https://otrs.com/ ###
+    # Make sure sender is correct one. See bug#14872 ( https://bugs.otrs.org/show_bug.cgi?id=14872 ).
+    $GetParam{From} = $Kernel::OM->Get('Kernel::System::TemplateGenerator')->Sender(
+        QueueID => $Ticket{QueueID},
+        UserID  => $Self->{UserID},
+    );
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2024 OTRS AG, https://otrs.com/ ###
 
     $GetParam{SubjectNoRe} = $ParamObject->GetParam( Param => 'SubjectNoRe' ) || '';
 
@@ -175,7 +192,7 @@ sub Run {
 
     my @MultipleCustomer;
     my $CustomersNumber = $ParamObject->GetParam( Param => 'CustomerTicketCounterToCustomer' ) || 0;
-    my $Selected = $ParamObject->GetParam( Param => 'CustomerSelected' ) || '';
+    my $Selected        = $ParamObject->GetParam( Param => 'CustomerSelected' ) || '';
 
     # get check item object
     my $CheckItemObject = $Kernel::OM->Get('Kernel::System::CheckItem');
@@ -184,9 +201,9 @@ sub Run {
 
         my $CustomerCounter = 1;
         for my $Count ( 1 ... $CustomersNumber ) {
-            my $CustomerElement = $ParamObject->GetParam( Param => 'CustomerTicketText_' . $Count );
+            my $CustomerElement  = $ParamObject->GetParam( Param => 'CustomerTicketText_' . $Count );
             my $CustomerSelected = ( $Selected eq $Count ? 'checked="checked"' : '' );
-            my $CustomerKey = $ParamObject->GetParam( Param => 'CustomerKey_' . $Count )
+            my $CustomerKey      = $ParamObject->GetParam( Param => 'CustomerKey_' . $Count )
                 || '';
             my $CustomerQueue = $ParamObject->GetParam( Param => 'CustomerQueue_' . $Count )
                 || '';
@@ -1008,7 +1025,7 @@ sub Run {
 
                 # get AJAX param values
                 if ( $Object->can('GetParamAJAX') ) {
-                    %GetParam = ( %GetParam, $Object->GetParamAJAX(%GetParam) )
+                    %GetParam = ( %GetParam, $Object->GetParamAJAX(%GetParam) );
                 }
 
                 my $Key = $Object->Option( %GetParam, Config => $Jobs{$Job} );
@@ -2033,12 +2050,12 @@ sub _Mask {
     # Multiple-Autocomplete
     $Param{To} = ( scalar @{ $Param{MultipleCustomer} } ? '' : $Param{To} );
     if ( defined $Param{To} && $Param{To} ne '' ) {
-        $Param{ToInvalid} = ''
+        $Param{ToInvalid} = '';
     }
 
     $Param{Cc} = ( scalar @{ $Param{MultipleCustomerCc} } ? '' : $Param{Cc} );
     if ( defined $Param{Cc} && $Param{Cc} ne '' ) {
-        $Param{CcInvalid} = ''
+        $Param{CcInvalid} = '';
     }
 
     # Cc
@@ -2152,7 +2169,7 @@ sub _Mask {
             Name => 'PreFilledCc',
         );
 
-        # split To values
+        # split Cc values
         for my $Email ( Mail::Address->parse( $Param{Cc} ) ) {
             $LayoutObject->Block(
                 Name => 'PreFilledCcRow',

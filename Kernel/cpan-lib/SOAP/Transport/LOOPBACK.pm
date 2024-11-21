@@ -1,7 +1,7 @@
 # ======================================================================
 #
 # Copyright (C) 2007 Martin Kutter.
-# Part of SOAP-Lite, Copyright (C) 2000-2023 Paul Kulchenko
+# Part of SOAP-Lite, Copyright (C) 2000-2024 Paul Kulchenko
 #  (paulclinger@yahoo.com)
 # You may distribute/modify this file under the same terms as perl itself.
 #
@@ -68,7 +68,7 @@ following states:
 
 Copyright (C) 2007 Martin Kutter. All rights reserved.
 
-This file is part of SOAP-Lite, Copyright (C) 2000-2023 Paul Kulchenko.
+This file is part of SOAP-Lite, Copyright (C) 2000-2024 Paul Kulchenko.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

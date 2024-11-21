@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
+# Copyright (C) 2006-2024 KIX Service Software GmbH, https://www.kixdesk.com
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -577,19 +577,18 @@ END
 END
     }
 
-    if ( $Param{AJAXUpdate} ) {
-
+    if (
+        $Param{AJAXUpdate}
+        && IsArrayRefWithData( $Param{UpdatableFields} )
+    ) {
+        # prepare field selector
         my $FieldSelector = '#' . $FieldName;
 
-        my $FieldsToUpdate;
-        if ( IsArrayRefWithData( $Param{UpdatableFields} ) ) {
+        # Remove current field from updatable fields list
+        my @FieldsToUpdateList = grep { $_ ne $FieldName } @{ $Param{UpdatableFields} };
 
-            # Remove current field from updatable fields list
-            my @FieldsToUpdate = grep { $_ ne $FieldName } @{ $Param{UpdatableFields} };
-
-            # quote all fields, put commas in between them
-            $FieldsToUpdate = join( ', ', map {"'$_'"} @FieldsToUpdate );
-        }
+        # quote all fields, put commas in between them
+        my $FieldsToUpdate = join( ', ', map {"'$_'"} @FieldsToUpdateList );
 
         # add js to call FormUpdate()
         $Param{LayoutObject}->AddJSOnDocumentComplete( Code => <<"END");

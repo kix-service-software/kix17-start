@@ -1,11 +1,14 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
+# Modified version of the work: Copyright (C) 2006-2024 KIX Service Software GmbH, https://www.kixdesk.com
 # based on the original work of:
-# Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2024 OTRS AG, https://otrs.com/
 # --
-# This software comes with ABSOLUTELY NO WARRANTY. For details, see
-# the enclosed file LICENSE for license information (AGPL). If you
-# did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
+# This software comes with ABSOLUTELY NO WARRANTY. This program is
+# licensed under the AGPL-3.0 with patches licensed under the GPL-3.0.
+# For details, see the enclosed files LICENSE (AGPL) and
+# LICENSE-GPL3 (GPL3) for license information. If you did not receive
+# this files, see https://www.gnu.org/licenses/agpl.txt (APGL) and
+# https://www.gnu.org/licenses/gpl-3.0.txt (GPL3).
 # --
 
 package Kernel::Modules::AgentTicketEmailOutbound;
@@ -128,6 +131,10 @@ sub Run {
 
     elsif ( $Self->{Subaction} eq 'AJAXUpdateTemplate' ) {
 
+        my %Ticket       = $TicketObject->TicketGet( TicketID => $Self->{TicketID} );
+        my $CustomerUser = $Ticket{CustomerUserID};
+        my $QueueID      = $Ticket{QueueID};
+
         my %GetParam;
         for my $Key (
             qw(
@@ -140,9 +147,10 @@ sub Run {
             $GetParam{$Key} = $Kernel::OM->Get('Kernel::System::Web::Request')->GetParam( Param => $Key );
         }
 
-        my %Ticket       = $TicketObject->TicketGet( TicketID => $Self->{TicketID} );
-        my $CustomerUser = $Ticket{CustomerUserID};
-        my $QueueID      = $Ticket{QueueID};
+        $GetParam{From} = $Kernel::OM->Get('Kernel::System::TemplateGenerator')->Sender(
+            QueueID => $Ticket{QueueID},
+            UserID  => $Self->{UserID},
+        );
 
         # get dynamic field values form http request
         my %DynamicFieldValues;
@@ -2018,14 +2026,25 @@ sub _GetExtendedParams {
     # get params
     my %GetParam;
     for my $Key (
-        qw(From To Cc Bcc Subject Body ComposeStateID ArticleTypeID
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2024 OTRS AG, https://otrs.com/ ###
+#        qw(From To Cc Bcc Subject Body ComposeStateID ArticleTypeID
+#        ArticleID TimeUnits Year Month Day Hour Minute FormID)
+        qw(To Cc Bcc Subject Body ComposeStateID ArticleTypeID
         ArticleID TimeUnits Year Month Day Hour Minute FormID)
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2024 OTRS AG, https://otrs.com/ ###
     ) {
         my $Value = $ParamObject->GetParam( Param => $Key );
         if ( defined $Value ) {
             $GetParam{$Key} = $Value;
         }
     }
+
+    my %Ticket = $Kernel::OM->Get('Kernel::System::Ticket')->TicketGet( TicketID => $Self->{TicketID} );
+
+    $GetParam{From} = $Kernel::OM->Get('Kernel::System::TemplateGenerator')->Sender(
+        QueueID => $Ticket{QueueID},
+        UserID  => $Self->{UserID},
+    );
 
     $GetParam{EmailTemplateID} = $ParamObject->GetParam( Param => 'EmailTemplateID' ) || '';
 

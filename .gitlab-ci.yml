@@ -48,16 +48,13 @@ deploy:TARBuild:Branch:
   allow_failure: false
   dependencies:
   - build:TARBuild
-  environment:
-    name: $CI_BUILD_REF_NAME
-    url: http://git.intra.cape-it.de:8088/builds/$CI_PROJECT_PATH/$CI_BUILD_REF_NAME/
   except:
   - tags
   only:
   - /^(Branch_Pub_|rel-)\d+(_\d+)?(_(DEVELOPMENT|TEST)|)$/
   script:
-  - mkdir -p /opt/opmbuild/builds/$CI_PROJECT_PATH/$CI_BUILD_REF_NAME
-  - cp -f $CI_PROJECT_DIR/$CI_PROJECT_NAME.tar.gz /opt/opmbuild/builds/$CI_PROJECT_PATH/$CI_BUILD_REF_NAME/
+  - mkdir -p /opt/opmbuild/builds/$CI_PROJECT_PATH/$CI_COMMIT_REF_NAME
+  - cp -f $CI_PROJECT_DIR/$CI_PROJECT_NAME.tar.gz /opt/opmbuild/builds/$CI_PROJECT_PATH/$CI_COMMIT_REF_NAME/
   stage: deploy
   tags:
   - Shell
@@ -67,17 +64,14 @@ deploy:TARBuild:Release:
   allow_failure: false
   dependencies:
   - build:TARBuild
-  environment:
-    name: Release
-    url: http://git.intra.cape-it.de:8088/builds/$CI_PROJECT_PATH/Release/
   except:
   - branch
   only:
   - /^rel-[0-9]+_[0-9]+_[0-9]+(-.+)?$/
   script:
   - mkdir -p /opt/opmbuild/builds/$CI_PROJECT_PATH/Release
-  - cp -f $CI_PROJECT_DIR/$CI_PROJECT_NAME.tar.gz /opt/opmbuild/builds/$CI_PROJECT_PATH/Release/$CI_PROJECT_NAME-$CI_BUILD_REF_NAME.tar.gz
-  - deploydb "$CI_PROJECT_NAME" "$CI_BUILD_REF_NAME"
+  - cp -f $CI_PROJECT_DIR/$CI_PROJECT_NAME.tar.gz /opt/opmbuild/builds/$CI_PROJECT_PATH/Release/$CI_PROJECT_NAME-$CI_COMMIT_REF_NAME.tar.gz
+  - deploydb "$CI_PROJECT_NAME" "$CI_COMMIT_REF_NAME"
   stage: deploy
   tags:
   - Shell

@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
+# Modified version of the work: Copyright (C) 2006-2024 KIX Service Software GmbH, https://www.kixdesk.com
 # based on the original work of:
-# Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2024 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -13,7 +13,7 @@
 <html>
 [% InsertTemplate("Copyright.tt") %]
 <head>
-    <title>[% Config("ProductName") %] [% Data.TitleArea | html %]</title>
+    <title>[% Config("ProductName") %] - [% Data.TitleArea | html %]</title>
 <style type="text/css">
 body {
     font-family: Geneva, Helvetica, Arial, sans-serif;
@@ -261,12 +261,15 @@ fieldset.TableLike.FixedLabelSmall > .Value {
     margin-right: 100px;
 }
 
+.DontPrint {
+    display: none;
+}
 </style>
 </head>
 <body class="[% Data.BodyClass | html %]" onload="window.print();">
     <a name="top"></a>
     <p>
-        <a href="#" onclick="window.close();">[% Translate("Close window") | html %]</a>
+        <a href="#" class="DontPrint" onclick="window.close();">[% Translate("Close window") | html %]</a>
     </p>
     <table border="0" width="[% Data.Width %]" cellpadding="0" cellspacing="0" bgcolor="#000000" class="container">
         <tr>

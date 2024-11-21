@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
+# Copyright (C) 2006-2024 KIX Service Software GmbH, https://www.kixdesk.com
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -690,19 +690,18 @@ END
 END
     }
 
-    if ( $Param{AJAXUpdate} ) {
-
+    if (
+        $Param{AJAXUpdate}
+        && IsArrayRefWithData( $Param{UpdatableFields} )
+    ) {
+        # prepare field selector
         my $FieldSelector = '#' . $FieldName;
 
-        my $FieldsToUpdate;
-        if ( IsArrayRefWithData( $Param{UpdatableFields} ) ) {
+        # Remove current field from updatable fields list
+        my @FieldsToUpdateList = grep { $_ ne $FieldName } @{ $Param{UpdatableFields} };
 
-            # Remove current field from updatable fields list
-            my @FieldsToUpdate = grep { $_ ne $FieldName } @{ $Param{UpdatableFields} };
-
-            # quote all fields, put commas in between them
-            $FieldsToUpdate = join( ', ', map {"'$_'"} @FieldsToUpdate );
-        }
+        # quote all fields, put commas in between them
+        my $FieldsToUpdate = join( ', ', map {"'$_'"} @FieldsToUpdateList );
 
         # add js to call FormUpdate()
         $Param{LayoutObject}->AddJSOnDocumentComplete( Code => <<"END");
@@ -757,13 +756,12 @@ sub EditFieldValueGet {
     ) {
         my @Data = $Param{ParamObject}->GetArray( Param => $FieldName );
 
+        my @Values;
         # delete empty values (can happen if the user has selected the "-" entry)
-        my $Index = 0;
         ITEM:
         for my $Item ( sort @Data ) {
 
             if ( !$Item ) {
-                splice( @Data, $Index, 1 );
                 next ITEM;
             }
 
@@ -893,6 +891,12 @@ sub EditFieldValueGet {
                     }
 
                     if ($ConstrictionsCheck) {
+                        my $ConfigItem = $Self->{ITSMConfigItemObject}->ConfigItemGet(
+                            ConfigItemID => $Item
+                        );
+                        my %EntryClassIDs = (
+                            $ConfigItem->{ClassID} => 1
+                        );
 
                         my @ITSMConfigItemClasses = ();
                         if(
@@ -901,6 +905,8 @@ sub EditFieldValueGet {
                         ) {
                             CLASSID:
                             for my $ClassID ( @{$Param{DynamicFieldConfig}->{Config}->{ITSMConfigItemClasses}} ) {
+                                next CLASSID if ( !$EntryClassIDs{ $ClassID } );
+
                                 # check read permission for config item class
                                 if (
                                     IsArrayRefWithData($PermissionCheck)
@@ -924,6 +930,8 @@ sub EditFieldValueGet {
                             );
                             CLASSID:
                             for my $ClassID ( keys ( %{$ClassRef} ) ) {
+                                next CLASSID if ( !$EntryClassIDs{ $ClassID } );
+
                                 # check read permission for config item class
                                 if (
                                     IsArrayRefWithData($PermissionCheck)
@@ -977,7 +985,6 @@ sub EditFieldValueGet {
                     ref( $PossibleValues ) ne 'ARRAY'
                     || !grep { /^$Item$/ } @{$PossibleValues}
                 ) {
-                    splice( @Data, $Index, 1 );
                     next ITEM;
                 }
                 else {
@@ -992,16 +999,15 @@ sub EditFieldValueGet {
                             ItemID   => $Item,
                         );
                         if ( !$HasAccess ) {
-                            splice( @Data, $Index, 1 );
                             next ITEM;
                         }
                     }
                 }
             }
-            $Index++;
+            push( @Values, $Item );
         }
 
-        $Value = \@Data;
+        $Value = \@Values;
     }
 
     if ( defined $Param{ReturnTemplateStructure} && $Param{ReturnTemplateStructure} eq "1" ) {

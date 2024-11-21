@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
+# Modified version of the work: Copyright (C) 2006-2024 KIX Service Software GmbH, https://www.kixdesk.com
 # based on the original work of:
-# Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2024 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -2260,12 +2260,16 @@ sub TicketSearch {
     return
         if !$DBObject->Prepare(
         SQL   => $SQLSelect . $SQLFrom . $SQLExt,
-        Limit => $Limit
         );
     while ( my @Row = $DBObject->FetchrowArray() ) {
         $Count = $Row[0];
         push @TicketIDs, $Row[0] if ( !$Tickets{ $Row[0] } );
         $Tickets{ $Row[0] } = $Row[1];
+
+        last if (
+            $Limit
+            && scalar( @TicketIDs ) == $Limit
+        );
     }
 
     # return COUNT
@@ -4341,12 +4345,16 @@ sub TicketSearchOR {
     return
         if !$DBObject->Prepare(
         SQL   => $SQLSelect . $SQLFrom . $SQLExt,
-        Limit => $Limit
         );
     while ( my @Row = $DBObject->FetchrowArray() ) {
         $Count = $Row[0];
         push( @TicketIDs, $Row[0] ) if ( !$Tickets{ $Row[0] } );
         $Tickets{ $Row[0] } = $Row[1];
+
+        last if (
+            $Limit
+            && scalar( @TicketIDs ) == $Limit
+        );
     }
 
     # return COUNT

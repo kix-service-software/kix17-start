@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
+# Modified version of the work: Copyright (C) 2006-2024 KIX Service Software GmbH, https://www.kixdesk.com
 # based on the original work of:
-# Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2024 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -65,7 +65,7 @@ sub Connect {
     # authentication
     my $Auth = $IMAPObject->login( $Param{Login}, $Param{Password} );
     if ( !defined $Auth ) {
-        $IMAPObject->quit();
+        $IMAPObject->quit(1);
         return (
             Successful => 0,
             Message    => "$Type: Auth for user $Param{Login}/$Param{Host} failed!"
@@ -127,6 +127,9 @@ sub _Fetch {
     # MaxPopEmailSession
     my $MaxPopEmailSession = $ConfigObject->Get('PostMasterReconnectMessage') || 20;
 
+    # SSLVerify
+    my $SSLVerify = $ConfigObject->Get('PostMasterSSLVerify');
+
     my $Timeout      = 60;
     my $FetchCounter = 0;
 
@@ -134,8 +137,9 @@ sub _Fetch {
 
     my %Connect = $Self->Connect(
         %Param,
-        Timeout => $Timeout,
-        Debug   => $Debug
+        Timeout   => $Timeout,
+        Debug     => $Debug,
+        SSLVerify => $SSLVerify,
     );
 
     if ( !$Connect{Successful} ) {
@@ -262,7 +266,7 @@ sub _Fetch {
         );
     }
     $IMAPObject->expunge_mailbox($IMAPFolder);
-    $IMAPObject->quit();
+    $IMAPObject->quit(1);
     if ($CMD) {
         print "$AuthType: Connection to $Param{Host} closed.\n\n";
     }

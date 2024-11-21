@@ -1,0 +1,155 @@
+---
+0001:
+  StepName: 'Check failed validation for article ContentType with line break'
+  InputData:
+    Ticket:
+      Title: 'Test'
+      Queue: 'Misc'
+      Type: 'Unclassified'
+      State: 'new'
+      Priority: '3 normal'
+      CustomerUser: 'max.mustermann@kixdesk.com'
+    Article:
+      Subject: 'Test'
+      Body: 'Test'
+      ContentType: |-
+        text/plain; charset="utf8"
+        Host: www.kixdesk.com
+    Attachment:
+      Content: 'VGVzdA=='
+      Filename: 'Test.txt'
+      ContentType: 'text/plain; charset="utf8"'
+  CheckValue:
+    Success: 1
+    ErrorMessage: 'TicketUpdate.InvalidParameter: TicketUpdate: Article->ContentType is invalid! Line breaks are not allowed!'
+    Data:
+      Error:
+        ErrorCode: 'TicketUpdate.InvalidParameter'
+        ErrorMessage: 'TicketUpdate: Article->ContentType is invalid! Line breaks are not allowed!'
+0002:
+  StepName: 'Check failed validation for article ContentType invalid charset'
+  InputData:
+    Ticket:
+      Title: 'Test'
+      Queue: 'Misc'
+      Type: 'Unclassified'
+      State: 'new'
+      Priority: '3 normal'
+      CustomerUser: 'max.mustermann@kixdesk.com'
+    Article:
+      Subject: 'Test'
+      Body: 'Test'
+      ContentType: 'text/plain; charset="utf08"'
+    Attachment:
+      Content: 'VGVzdA=='
+      Filename: 'Test.txt'
+      ContentType: 'text/plain; charset="utf8"'
+  CheckValue:
+    Success: 1
+    ErrorMessage: 'TicketUpdate.InvalidParameter: TicketUpdate: Article->ContentType is invalid! Invalid Charset!'
+    Data:
+      Error:
+        ErrorCode: 'TicketUpdate.InvalidParameter'
+        ErrorMessage: 'TicketUpdate: Article->ContentType is invalid! Invalid Charset!'
+0003:
+  StepName: 'Check failed validation for article ContentType with invalid mimetype'
+  InputData:
+    Ticket:
+      Title: 'Test'
+      Queue: 'Misc'
+      Type: 'Unclassified'
+      State: 'new'
+      Priority: '3 normal'
+      CustomerUser: 'max.mustermann@kixdesk.com'
+    Article:
+      Subject: 'Test'
+      Body: 'Test'
+      ContentType: 'text /plain; charset="utf8"'
+    Attachment:
+      Content: 'VGVzdA=='
+      Filename: 'Test.txt'
+      ContentType: 'text/plain; charset="utf8"'
+  CheckValue:
+    Success: 1
+    ErrorMessage: 'TicketUpdate.InvalidParameter: TicketUpdate: Article->ContentType is invalid! Invalid MimeType!'
+    Data:
+      Error:
+        ErrorCode: 'TicketUpdate.InvalidParameter'
+        ErrorMessage: 'TicketUpdate: Article->ContentType is invalid! Invalid MimeType!'
+0004:
+  StepName: 'Check failed validation for attachment ContentType with line break'
+  InputData:
+    Ticket:
+      Title: 'Test'
+      Queue: 'Misc'
+      Type: 'Unclassified'
+      State: 'new'
+      Priority: '3 normal'
+      CustomerUser: 'max.mustermann@kixdesk.com'
+    Article:
+      Subject: 'Test'
+      Body: 'Test'
+      ContentType: 'text/plain; charset="utf8"'
+    Attachment:
+      Content: 'VGVzdA=='
+      Filename: 'Test.txt'
+      ContentType: |-
+        text/plain; charset="utf8"
+        Host: www.kixdesk.com
+  CheckValue:
+    Success: 1
+    ErrorMessage: 'TicketUpdate.InvalidParameter: TicketUpdate: Attachment->ContentType is invalid! Line breaks are not allowed!'
+    Data:
+      Error:
+        ErrorCode: 'TicketUpdate.InvalidParameter'
+        ErrorMessage: 'TicketUpdate: Attachment->ContentType is invalid! Line breaks are not allowed!'
+0005:
+  StepName: 'Check failed validation for attachment ContentType invalid charset'
+  InputData:
+    Ticket:
+      Title: 'Test'
+      Queue: 'Misc'
+      Type: 'Unclassified'
+      State: 'new'
+      Priority: '3 normal'
+      CustomerUser: 'max.mustermann@kixdesk.com'
+    Article:
+      Subject: 'Test'
+      Body: 'Test'
+      ContentType: 'text/plain; charset="utf8"'
+    Attachment:
+      Content: 'VGVzdA=='
+      Filename: 'Test.txt'
+      ContentType: 'text/plain; charset="utf08"'
+  CheckValue:
+    Success: 1
+    ErrorMessage: 'TicketUpdate.InvalidParameter: TicketUpdate: Attachment->ContentType is invalid! Invalid Charset!'
+    Data:
+      Error:
+        ErrorCode: 'TicketUpdate.InvalidParameter'
+        ErrorMessage: 'TicketUpdate: Attachment->ContentType is invalid! Invalid Charset!'
+0006:
+  StepName: 'Check failed validation for attachment ContentType with invalid mimetype'
+  InputData:
+    Ticket:
+      Title: 'Test'
+      Queue: 'Misc'
+      Type: 'Unclassified'
+      State: 'new'
+      Priority: '3 normal'
+      CustomerUser: 'max.mustermann@kixdesk.com'
+    Article:
+      Subject: 'Test'
+      Body: 'Test'
+      ContentType: 'text/plain; charset="utf8"'
+    Attachment:
+      Content: 'VGVzdA=='
+      Filename: 'Test.txt'
+      ContentType: 'text /plain; charset="utf8"'
+  CheckValue:
+    Success: 1
+    ErrorMessage: 'TicketUpdate.InvalidParameter: TicketUpdate: Attachment->ContentType is invalid! Invalid MimeType!'
+    Data:
+      Error:
+        ErrorCode: 'TicketUpdate.InvalidParameter'
+        ErrorMessage: 'TicketUpdate: Attachment->ContentType is invalid! Invalid MimeType!'

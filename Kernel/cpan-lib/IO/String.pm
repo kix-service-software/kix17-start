@@ -1,6 +1,6 @@
 package IO::String;
 
-# Copyright 1998-2023 Gisle Aas.
+# Copyright 1998-2024 Gisle Aas.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the same terms as Perl itself.
@@ -543,7 +543,7 @@ L<IO::File>, L<IO::Stringy>, L<perlfunc/open>
 
 =head1 COPYRIGHT
 
-Copyright 1998-2023 Gisle Aas.
+Copyright 1998-2024 Gisle Aas.
 
 This library is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.

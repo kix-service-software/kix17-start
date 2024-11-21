@@ -3,7 +3,7 @@ Locale::Codes::Country_Retired;
 
 # This file was automatically generated.  Any changes to this file will
 # be lost the next time 'deprecate_codes' is run.
-#    Generated on: Mon Mar  6 13:26:32 EST 2023
+#    Generated on: Fri Dec  1 15:38:44 EST 2023
 
 use strict;
 require 5.006;
@@ -11,7 +11,7 @@ use warnings;
 use utf8;
 
 our($VERSION);
-$VERSION='3.73';
+$VERSION='3.77';
 
 $Locale::Codes::Retired{'country'}{'alpha-2'}{'code'} = {
    q(an) => q(Netherlands Antilles),
@@ -310,13 +310,16 @@ $Locale::Codes::Retired{'country'}{'dom'}{'code'} = {
 
 $Locale::Codes::Retired{'country'}{'genc-alpha-2'}{'code'} = {
    q(A1) => q(Unknown),
+   q(A3) => q(Entity 6),
 };
 
 $Locale::Codes::Retired{'country'}{'genc-alpha-3'}{'code'} = {
    q(AX1) => q(Unknown),
+   q(AX3) => q(Entity 6),
 };
 
 $Locale::Codes::Retired{'country'}{'genc-numeric'}{'code'} = {
+   q(914) => q(Entity 6),
    q(932) => q(Unknown),
 };
 
@@ -343,6 +346,7 @@ $Locale::Codes::Retired{'country'}{'un-alpha-3'}{'code'} = {
 };
 
 $Locale::Codes::Retired{'country'}{'un-numeric'}{'code'} = {
+   q(680) => q(Sark),
    q(830) => q(Channel Islands),
 };
 
@@ -373,6 +377,7 @@ $Locale::Codes::Retired{'country'}{'alpha-2'}{'name'} = {
    q(micronesia, federated states of) => [ q(fm), q(Micronesia, Federated States of) ],
    q(micronesia, the federated states of) => [ q(fm), q(Micronesia, The Federated States of) ],
    q(moldova, republic of) => [ q(md), q(Moldova, Republic of) ],
+   q(netherlands) => [ q(nl), q(Netherlands) ],
    q(netherlands antilles) => [ q(an), q(Netherlands Antilles) ],
    q(saint helena) => [ q(sh), q(Saint Helena) ],
    q(saint martin) => [ q(mf), q(Saint Martin) ],
@@ -447,6 +452,7 @@ $Locale::Codes::Retired{'country'}{'alpha-3'}{'name'} = {
    q(micronesia, federated states of) => [ q(fsm), q(Micronesia, Federated States of) ],
    q(micronesia, the federated states of) => [ q(fsm), q(Micronesia, The Federated States of) ],
    q(moldova, republic of) => [ q(mda), q(Moldova, Republic of) ],
+   q(netherlands) => [ q(nld), q(Netherlands) ],
    q(netherlands antilles) => [ q(ant), q(Netherlands Antilles) ],
    q(palestinian territory, occupied) => [ q(pse), q(Palestinian Territory, Occupied) ],
    q(republic of korea) => [ q(kor), q(Republic of Korea) ],
@@ -508,6 +514,7 @@ $Locale::Codes::Retired{'country'}{'dom'}{'name'} = {
    q(micronesia, federated states of) => [ q(fm), q(Micronesia, Federated States of) ],
    q(micronesia, the federated states of) => [ q(fm), q(Micronesia, The Federated States of) ],
    q(moldova, republic of) => [ q(md), q(Moldova, Republic of) ],
+   q(netherlands) => [ q(nl), q(Netherlands) ],
    q(netherlands antilles) => [ q(an), q(Netherlands Antilles) ],
    q(portuguese timor) => [ q(TP), q(Portuguese Timor) ],
    q(portuguese timor ) => [ q(TP), q(Portuguese Timor ) ],
@@ -531,7 +538,9 @@ $Locale::Codes::Retired{'country'}{'dom'}{'name'} = {
 };
 
 $Locale::Codes::Retired{'country'}{'genc-alpha-2'}{'name'} = {
+   q(bonaire, sint eustatius, and saba) => [ q(BQ), q(Bonaire, Sint Eustatius, and Saba) ],
    q(czech republic) => [ q(CZ), q(Czech Republic) ],
+   q(entity 6) => [ q(A3), q(Entity 6) ],
    q(macedonia) => [ q(MK), q(MACEDONIA) ],
    q(macedonia, the former yugoslav republic of) => [ q(MK), q(Macedonia, The former Yugoslav Republic of) ],
    q(swaziland) => [ q(SZ), q(SWAZILAND) ],
@@ -539,7 +548,9 @@ $Locale::Codes::Retired{'country'}{'genc-alpha-2'}{'name'} = {
 };
 
 $Locale::Codes::Retired{'country'}{'genc-alpha-3'}{'name'} = {
+   q(bonaire, sint eustatius, and saba) => [ q(BES), q(Bonaire, Sint Eustatius, and Saba) ],
    q(czech republic) => [ q(CZE), q(Czech Republic) ],
+   q(entity 6) => [ q(AX3), q(Entity 6) ],
    q(macedonia) => [ q(MKD), q(MACEDONIA) ],
    q(macedonia, the former yugoslav republic of) => [ q(MKD), q(Macedonia, The former Yugoslav Republic of) ],
    q(swaziland) => [ q(SWZ), q(SWAZILAND) ],
@@ -547,7 +558,9 @@ $Locale::Codes::Retired{'country'}{'genc-alpha-3'}{'name'} = {
 };
 
 $Locale::Codes::Retired{'country'}{'genc-numeric'}{'name'} = {
+   q(bonaire, sint eustatius, and saba) => [ q(535), q(Bonaire, Sint Eustatius, and Saba) ],
    q(czech republic) => [ q(203), q(Czech Republic) ],
+   q(entity 6) => [ q(914), q(Entity 6) ],
    q(macedonia) => [ q(807), q(MACEDONIA) ],
    q(macedonia, the former yugoslav republic of) => [ q(807), q(Macedonia, The former Yugoslav Republic of) ],
    q(swaziland) => [ q(748), q(SWAZILAND) ],
@@ -602,6 +615,7 @@ $Locale::Codes::Retired{'country'}{'numeric'}{'name'} = {
    q(micronesia, federated states of) => [ q(583), q(Micronesia, Federated States of) ],
    q(micronesia, the federated states of) => [ q(583), q(Micronesia, The Federated States of) ],
    q(moldova, republic of) => [ q(498), q(Moldova, Republic of) ],
+   q(netherlands) => [ q(528), q(Netherlands) ],
    q(netherlands antilles) => [ q(530), q(Netherlands Antilles) ],
    q(palestinian territory, occupied) => [ q(275), q(Palestinian Territory, Occupied) ],
    q(republic of korea) => [ q(410), q(Republic of Korea) ],
@@ -645,6 +659,7 @@ $Locale::Codes::Retired{'country'}{'un-alpha-3'}{'name'} = {
    q(czech republic) => [ q(CZE), q(Czech Republic) ],
    q(korea, the democratic people's republic of) => [ q(PRK), q(Korea, The Democratic People's Republic of) ],
    q(macedonia, the former yugoslav republic of) => [ q(MKD), q(Macedonia, The former Yugoslav Republic of) ],
+   q(netherlands) => [ q(NLD), q(Netherlands) ],
    q(swaziland) => [ q(SWZ), q(Swaziland) ],
    q(tanzania, united republic of) => [ q(TZA), q(Tanzania, United Republic of) ],
    q(turkey) => [ q(TUR), q(Turkey) ],
@@ -655,6 +670,8 @@ $Locale::Codes::Retired{'country'}{'un-numeric'}{'name'} = {
    q(czech republic) => [ q(203), q(Czech Republic) ],
    q(korea, the democratic people's republic of) => [ q(408), q(Korea, The Democratic People's Republic of) ],
    q(macedonia, the former yugoslav republic of) => [ q(807), q(Macedonia, The former Yugoslav Republic of) ],
+   q(netherlands) => [ q(528), q(Netherlands) ],
+   q(sark) => [ q(680), q(Sark) ],
    q(swaziland) => [ q(748), q(Swaziland) ],
    q(tanzania, united republic of) => [ q(834), q(Tanzania, United Republic of) ],
    q(turkey) => [ q(792), q(Turkey) ],

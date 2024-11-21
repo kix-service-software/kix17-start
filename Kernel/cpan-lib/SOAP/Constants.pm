@@ -1,6 +1,6 @@
 # ======================================================================
 #
-# Copyright (C) 2000-2023 Paul Kulchenko (paulclinger@yahoo.com)
+# Copyright (C) 2000-2024 Paul Kulchenko (paulclinger@yahoo.com)
 #
 # SOAP::Lite is free software; you can redistribute it
 # and/or modify it under the same terms as Perl itself.
@@ -171,7 +171,7 @@ Special thanks to O'Reilly publishing which has graciously allowed SOAP::Lite to
 
 =head1 COPYRIGHT
 
-Copyright (C) 2000-2023 Paul Kulchenko. All rights reserved.
+Copyright (C) 2000-2024 Paul Kulchenko. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

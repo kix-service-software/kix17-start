@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
+# Copyright (C) 2006-2024 KIX Service Software GmbH, https://www.kixdesk.com
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -520,6 +520,15 @@ sub Run {
 
             if ($ConstrictionsCheck) {
 
+                my %EntryClassIDs = ();
+                for my $ConfigItemID ( @Entries ) {
+                    my $ConfigItem = $Self->{ITSMConfigItemObject}->ConfigItemGet(
+                        ConfigItemID => $ConfigItemID
+                    );
+
+                    $EntryClassIDs{ $ConfigItem->{ClassID} } = 1;
+                }
+
                 my @ITSMConfigItemClasses = ();
                 if(
                     defined( $DynamicFieldConfig->{Config}->{ITSMConfigItemClasses} )
@@ -527,6 +536,8 @@ sub Run {
                 ) {
                     CLASSID:
                     for my $ClassID ( @{$DynamicFieldConfig->{Config}->{ITSMConfigItemClasses}} ) {
+                        next CLASSID if ( !$EntryClassIDs{ $ClassID } );
+
                         # check read permission for config item class
                         if (
                             IsArrayRefWithData($PermissionCheck)
@@ -550,6 +561,8 @@ sub Run {
                     );
                     CLASSID:
                     for my $ClassID ( keys ( %{$ClassRef} ) ) {
+                        next CLASSID if ( !$EntryClassIDs{ $ClassID } );
+
                         # check read permission for config item class
                         if (
                             IsArrayRefWithData($PermissionCheck)

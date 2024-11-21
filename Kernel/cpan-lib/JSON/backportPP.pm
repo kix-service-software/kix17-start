@@ -3246,7 +3246,7 @@ Kenichi Ishigaki, E<lt>ishigaki[at]cpan.orgE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2007-2023 by Makamaka Hannyaharamitu
+Copyright 2007-2024 by Makamaka Hannyaharamitu
 
 Most of the documentation is taken from JSON::XS by Marc Lehmann
 

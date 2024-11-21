@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
+# Modified version of the work: Copyright (C) 2006-2024 KIX Service Software GmbH, https://www.kixdesk.com
 # based on the original work of:
-# Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2024 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. This program is
 # licensed under the AGPL-3.0 with patches licensed under the GPL-3.0.
@@ -70,7 +70,7 @@ sub Run {
         for my $Attachment (@AttachmentData) {
             next ATTACHMENT if !$Attachment->{ContentID};
             next ATTACHMENT if $Attachment->{ContentID} ne $ContentID;
-### Patch licensed under the GPL-3.0, Copyright (C) 2001-2023 OTRS AG, https://otrs.com/ ###
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2024 OTRS AG, https://otrs.com/ ###
             if (
                 $Attachment->{Filename} !~ /\.(png|gif|jpg|jpeg|bmp)$/i
                 || substr( $Attachment->{ContentType}, 0, 6 ) ne 'image/'
@@ -88,7 +88,25 @@ sub Run {
                     NoCache     => 1,
                 );
             }
-### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2023 OTRS AG, https://otrs.com/ ###
+
+            if ( $Attachment->{ContentType} =~ /xml/i ) {
+
+                # Strip out file content first, escaping script tag.
+                my %SafetyCheckResult = $Kernel::OM->Get('Kernel::System::HTMLUtils')->Safety(
+                    String       => $Attachment->{Content},
+                    NoApplet     => 1,
+                    NoObject     => 1,
+                    NoEmbed      => 1,
+                    NoSVG        => 0,
+                    NoIntSrcLoad => 0,
+                    NoExtSrcLoad => 0,
+                    NoJavaScript => 1,
+                    Debug        => $Self->{Debug},
+                );
+
+                $Attachment->{Content} = $SafetyCheckResult{String};
+            }
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2024 OTRS AG, https://otrs.com/ ###
             return $LayoutObject->Attachment(
                 Type => 'inline',
                 %{$Attachment},
@@ -118,10 +136,10 @@ sub Run {
     }
 
     # return error if file is not possible to show inline
-### Patch licensed under the GPL-3.0, Copyright (C) 2001-2023 OTRS AG, https://otrs.com/ ###
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2024 OTRS AG, https://otrs.com/ ###
 #    if ( $File{Filename} !~ /\.(png|gif|jpg|jpeg)$/i ) {
     if ( $File{Filename} !~ /\.(png|gif|jpg|jpeg|bmp)$/i || substr( $File{ContentType}, 0, 6 ) ne 'image/' ) {
-### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2023 OTRS AG, https://otrs.com/ ###
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2024 OTRS AG, https://otrs.com/ ###
         $LayoutObject->Block(
             Name => 'ErrorNoImageFile',
             Data => {
@@ -135,6 +153,26 @@ sub Run {
             NoCache     => 1,
         );
     }
+
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2024 OTRS AG, https://otrs.com/ ###
+    if ( $File{ContentType} =~ /xml/i ) {
+
+        # Strip out file content first, escaping script tag.
+        my %SafetyCheckResult = $Kernel::OM->Get('Kernel::System::HTMLUtils')->Safety(
+            String       => $File{Content},
+            NoApplet     => 1,
+            NoObject     => 1,
+            NoEmbed      => 1,
+            NoSVG        => 0,
+            NoIntSrcLoad => 0,
+            NoExtSrcLoad => 0,
+            NoJavaScript => 1,
+            Debug        => $Self->{Debug},
+        );
+
+        $File{Content} = $SafetyCheckResult{String};
+    }
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2024 OTRS AG, https://otrs.com/ ###
 
     # check if name already exists
     my @AttachmentMeta = $UploadCacheObject->FormIDGetAllFilesMeta(

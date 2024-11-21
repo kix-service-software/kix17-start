@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
+# Copyright (C) 2006-2024 KIX Service Software GmbH, https://www.kixdesk.com
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -348,6 +348,9 @@ sub _BuildTicketContactsSelection {
         Translation  => 0,
         PossibleNone => 0,
     );
+
+    # remove <select>-Tags
+    $Content =~ s/<\/?select.*?>//g;
 
     foreach my $ContactType ( sort { $ListPrio{$a} <=> $ListPrio{$b} } keys %EmailData ) {
         foreach my $Contact (

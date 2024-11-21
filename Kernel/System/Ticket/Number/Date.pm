@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2023 KIX Service Software GmbH, https://www.kixdesk.com
+# Modified version of the work: Copyright (C) 2006-2024 KIX Service Software GmbH, https://www.kixdesk.com
 # based on the original work of:
-# Copyright (C) 2001-2023 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2024 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -42,7 +42,8 @@ sub TicketCreateNumber {
     );
 
     # read count
-    my $Count = 0;
+    my $Count      = 0;
+    my $LastModify = '';
     if ( -f $CounterLog ) {
 
         my $ContentSCALARRef = $MainObject->FileRead(
@@ -51,7 +52,7 @@ sub TicketCreateNumber {
 
         if ( $ContentSCALARRef && ${$ContentSCALARRef} ) {
 
-            ($Count) = split( /;/, ${$ContentSCALARRef} );
+            ( $Count, $LastModify ) = split( /;/, ${$ContentSCALARRef} );
 
             # just debug
             if ( $Self->{Debug} > 0 ) {
@@ -63,14 +64,20 @@ sub TicketCreateNumber {
         }
     }
 
+    # check if we need to reset the counter
+    if ( !$LastModify || $LastModify ne "$Year-$Month-$Day" ) {
+        $Count = 0;
+    }
+
     # count auto increment ($Count++)
     $Count++;
     $Count = $Count + $JumpCounter;
+    my $Content = $Count . ";$Year-$Month-$Day;";
 
     # write new count
     my $Write = $MainObject->FileWrite(
         Location => $CounterLog,
-        Content  => \$Count,
+        Content  => \$Content,
     );
 
     if ($Write) {

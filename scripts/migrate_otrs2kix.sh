@@ -1,6 +1,6 @@
 #!/bin/bash
 # --
-# Copyright (C) 2006-2023 KIX Service Software GmbH, http://www.kixdesk.com
+# Copyright (C) 2006-2024 KIX Service Software GmbH, http://www.kixdesk.com
 #
 # --
 # This program is free software; you can redistribute it and/or modify
