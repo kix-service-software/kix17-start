@@ -48,6 +48,22 @@ sub Configure {
         Multiple    => 1,
     );
     $Self->AddOption(
+        Name        => 'only',
+        Description => "Specify one or more known issues to check.",
+        Required    => 0,
+        HasValue    => 1,
+        ValueRegex  => qr/.+/smx,
+        Multiple    => 1,
+    );
+    $Self->AddOption(
+        Name        => 'skip',
+        Description => "Specify one or more known issues to skip.",
+        Required    => 0,
+        HasValue    => 1,
+        ValueRegex  => qr/.+/smx,
+        Multiple    => 1,
+    );
+    $Self->AddOption(
         Name        => 'ldap-pagesize',
         Description => "Pagesize to use, when syncing ldap backends to database.",
         Required    => 0,
@@ -91,7 +107,8 @@ sub Run {
 
     # get options
     my @Fixes        = @{ $Self->GetOption('fix') // [] };
-    my $Fix          = $Self->GetOption('fix');
+    my @Only         = @{ $Self->GetOption('only') // [] };
+    my @Skip         = @{ $Self->GetOption('skip') // [] };
     my $PageSize     = $Self->GetOption('ldap-pagesize');
     my $Verbose      = $Self->GetOption('verbose');
     my $Internal     = $Self->GetOption('internal');
@@ -128,6 +145,18 @@ sub Run {
         }
     }
 
+    # prepare only
+    my %Only = ();
+    for my $OnlyEntry ( @Only ) {
+        $Only{ $OnlyEntry } = 1;
+    }
+
+    # prepare skip
+    my %Skip = ();
+    for my $SkipEntry ( @Skip ) {
+        $Skip{ $SkipEntry } = 1;
+    }
+
     # clear cache before fix
     my $SubStartTime = time();
     my $Success = $Self->_ClearCache(
@@ -144,6 +173,8 @@ sub Run {
     $SubStartTime = time();
     $Success = $Self->_CheckPlaceholderData(
         Fixes   => \%Fixes,
+        Only    => \%Only,
+        Skip    => \%Skip,
         Verbose => $Verbose,
     );
     if ( $Timing ) {
@@ -157,6 +188,8 @@ sub Run {
     $SubStartTime = time();
     $Success = $Self->_CheckCustomerUserBackends(
         Fixes    => \%Fixes,
+        Only     => \%Only,
+        Skip     => \%Skip,
         PageSize => $PageSize,
         Internal => $Internal,
     );
@@ -171,6 +204,8 @@ sub Run {
     $SubStartTime = time();
     $Success = $Self->_CheckCustomerCompanyBackends(
         Fixes    => \%Fixes,
+        Only     => \%Only,
+        Skip     => \%Skip,
         Internal => $Internal,
     );
     if ( $Timing ) {
@@ -184,6 +219,8 @@ sub Run {
     $SubStartTime = time();
     $Success = $Self->_SetInternalCustomerBackends(
         Fixes    => \%Fixes,
+        Only     => \%Only,
+        Skip     => \%Skip,
         Internal => $Internal,
     );
     if ( $Timing ) {
@@ -197,6 +234,8 @@ sub Run {
     $SubStartTime = time();
     $Success = $Self->_CheckCustomerUserData(
         Fixes   => \%Fixes,
+        Only    => \%Only,
+        Skip    => \%Skip,
         Verbose => $Verbose,
     );
     if ( $Timing ) {
@@ -210,6 +249,8 @@ sub Run {
     $SubStartTime = time();
     $Success = $Self->_CheckCustomerUserEmail(
         Fixes   => \%Fixes,
+        Only    => \%Only,
+        Skip    => \%Skip,
         Verbose => $Verbose,
     );
     if ( $Timing ) {
@@ -223,6 +264,8 @@ sub Run {
     $SubStartTime = time();
     $Success = $Self->_CheckCustomerCompanyData(
         Fixes   => \%Fixes,
+        Only    => \%Only,
+        Skip    => \%Skip,
         Verbose => $Verbose,
     );
     if ( $Timing ) {
@@ -236,6 +279,8 @@ sub Run {
     $SubStartTime = time();
     $Success = $Self->_CheckUserExists(
         Fixes   => \%Fixes,
+        Only    => \%Only,
+        Skip    => \%Skip,
         Verbose => $Verbose,
     );
     if ( $Timing ) {
@@ -249,6 +294,8 @@ sub Run {
     $SubStartTime = time();
     $Success = $Self->_CheckUserEmail(
         Fixes   => \%Fixes,
+        Only    => \%Only,
+        Skip    => \%Skip,
         Verbose => $Verbose,
     );
     if ( $Timing ) {
@@ -262,6 +309,8 @@ sub Run {
     $SubStartTime = time();
     $Success = $Self->_CheckTicketCustomerUser(
         Fixes        => \%Fixes,
+        Only         => \%Only,
+        Skip         => \%Skip,
         TicketFilter => $TicketFilter,
         Verbose      => $Verbose,
         Timing       => $Timing,
@@ -277,6 +326,8 @@ sub Run {
     $SubStartTime = time();
     $Success = $Self->_UpdateTicketCustomerUser(
         Fixes        => \%Fixes,
+        Only         => \%Only,
+        Skip         => \%Skip,
         TicketFilter => $TicketFilter,
         Timing       => $Timing,
     );
@@ -291,6 +342,8 @@ sub Run {
     $SubStartTime = time();
     $Success = $Self->_CheckTicketData(
         Fixes        => \%Fixes,
+        Only         => \%Only,
+        Skip         => \%Skip,
         TicketFilter => $TicketFilter,
         Verbose      => $Verbose,
     );
@@ -305,6 +358,8 @@ sub Run {
     $SubStartTime = time();
     $Success = $Self->_CheckTicketCustomerCompany(
         Fixes        => \%Fixes,
+        Only         => \%Only,
+        Skip         => \%Skip,
         TicketFilter => $TicketFilter,
         Verbose      => $Verbose,
         Timing       => $Timing,
@@ -320,6 +375,8 @@ sub Run {
     $SubStartTime = time();
     $Success = $Self->_CheckTicketStateTypes(
         Fixes   => \%Fixes,
+        Only    => \%Only,
+        Skip    => \%Skip,
         Verbose => $Verbose,
     );
     if ( $Timing ) {
@@ -333,6 +390,8 @@ sub Run {
     $SubStartTime = time();
     $Success = $Self->_CheckServiceNames(
         Fixes   => \%Fixes,
+        Only    => \%Only,
+        Skip    => \%Skip,
         Verbose => $Verbose,
     );
     if ( $Timing ) {
@@ -345,7 +404,9 @@ sub Run {
     # check dynamic field values
     $SubStartTime = time();
     $Success = $Self->_CheckDynamicFieldValues(
-        Fixes   => \%Fixes,
+        Fixes => \%Fixes,
+        Only  => \%Only,
+        Skip  => \%Skip,
     );
     if ( $Timing ) {
         $Self->Print('> took ' . sprintf( '%.2f', ( ( time() - $SubStartTime ) / 60.0 ) ) . 'min' . "\n");
@@ -358,6 +419,8 @@ sub Run {
     $SubStartTime = time();
     $Success = $Self->_PrepareTicketEscalationData(
         Fixes  => \%Fixes,
+        Only   => \%Only,
+        Skip   => \%Skip,
         Timing => $Timing,
     );
     if ( $Timing ) {
@@ -397,6 +460,24 @@ sub _CheckPlaceholderData {
         && !$Param{Fixes}->{'Placeholder'}
     ) {
         $Self->Print('<green> - Skip, irrelevant step for this fix run</green>' . "\n");
+        return 1;
+    }
+
+    # skip this step if only is given, but this one is irrelevant
+    if (
+        IsHashRefWithData( $Param{Only} )
+        && !$Param{Only}->{'Placeholder'}
+    ) {
+        $Self->Print('<green> - Skip, irrelevant step for this check run</green>' . "\n");
+        return 1;
+    }
+
+    # skip this step if skip is given for this one
+    if (
+        IsHashRefWithData( $Param{Skip} )
+        && $Param{Skip}->{'Placeholder'}
+    ) {
+        $Self->Print('<green> - Skip, irrelevant step for this check run</green>' . "\n");
         return 1;
     }
 
@@ -659,6 +740,24 @@ sub _CheckCustomerUserBackends {
         return 1;
     }
 
+    # skip this step if only is given, but this one is irrelevant
+    if (
+        IsHashRefWithData( $Param{Only} )
+        && !$Param{Only}->{'CustomerUserBackends'}
+    ) {
+        $Self->Print('<green> - Skip, irrelevant step for this check run</green>' . "\n");
+        return 1;
+    }
+
+    # skip this step if skip is given for this one
+    if (
+        IsHashRefWithData( $Param{Skip} )
+        && $Param{Skip}->{'CustomerUserBackends'}
+    ) {
+        $Self->Print('<green> - Skip, irrelevant step for this check run</green>' . "\n");
+        return 1;
+    }
+
     if ( $Param{Internal} ) {
         $Self->Print('<green> - Do nothing, when internal flag is set</green>' . "\n");
 
@@ -775,6 +874,24 @@ sub _CheckCustomerCompanyBackends {
         && !$Param{Fixes}->{'CustomerCompanyBackends'}
     ) {
         $Self->Print('<green> - Skip, irrelevant step for this fix run</green>' . "\n");
+        return 1;
+    }
+
+    # skip this step if only is given, but this one is irrelevant
+    if (
+        IsHashRefWithData( $Param{Only} )
+        && !$Param{Only}->{'CustomerCompanyBackends'}
+    ) {
+        $Self->Print('<green> - Skip, irrelevant step for this check run</green>' . "\n");
+        return 1;
+    }
+
+    # skip this step if skip is given for this one
+    if (
+        IsHashRefWithData( $Param{Skip} )
+        && $Param{Skip}->{'CustomerCompanyBackends'}
+    ) {
+        $Self->Print('<green> - Skip, irrelevant step for this check run</green>' . "\n");
         return 1;
     }
 
@@ -968,6 +1085,24 @@ sub _CheckCustomerUserData {
         return 1;
     }
 
+    # skip this step if only is given, but this one is irrelevant
+    if (
+        IsHashRefWithData( $Param{Only} )
+        && !$Param{Only}->{'CustomerUserData'}
+    ) {
+        $Self->Print('<green> - Skip, irrelevant step for this check run</green>' . "\n");
+        return 1;
+    }
+
+    # skip this step if skip is given for this one
+    if (
+        IsHashRefWithData( $Param{Skip} )
+        && $Param{Skip}->{'CustomerUserData'}
+    ) {
+        $Self->Print('<green> - Skip, irrelevant step for this check run</green>' . "\n");
+        return 1;
+    }
+
     # init query map
     my %QueryMap = (
         '0001' => {
@@ -1103,6 +1238,24 @@ sub _CheckCustomerUserEmail {
         return 1;
     }
 
+    # skip this step if only is given, but this one is irrelevant
+    if (
+        IsHashRefWithData( $Param{Only} )
+        && !$Param{Only}->{'CustomerUserEmail'}
+    ) {
+        $Self->Print('<green> - Skip, irrelevant step for this check run</green>' . "\n");
+        return 1;
+    }
+
+    # skip this step if skip is given for this one
+    if (
+        IsHashRefWithData( $Param{Skip} )
+        && $Param{Skip}->{'CustomerUserEmail'}
+    ) {
+        $Self->Print('<green> - Skip, irrelevant step for this check run</green>' . "\n");
+        return 1;
+    }
+
     # prepare db handle
     return if !$Kernel::OM->Get('Kernel::System::DB')->Prepare(
         SQL => 'SELECT id, email, login FROM customer_user',
@@ -1229,6 +1382,24 @@ sub _CheckCustomerCompanyData {
         return 1;
     }
 
+    # skip this step if only is given, but this one is irrelevant
+    if (
+        IsHashRefWithData( $Param{Only} )
+        && !$Param{Only}->{'CustomerCompanyData'}
+    ) {
+        $Self->Print('<green> - Skip, irrelevant step for this check run</green>' . "\n");
+        return 1;
+    }
+
+    # skip this step if skip is given for this one
+    if (
+        IsHashRefWithData( $Param{Skip} )
+        && $Param{Skip}->{'CustomerCompanyData'}
+    ) {
+        $Self->Print('<green> - Skip, irrelevant step for this check run</green>' . "\n");
+        return 1;
+    }
+
     $Self->Print('<yellow> - unknown customer companies in customer user backends: </yellow>');
 
     # get list of customer company ids from customer user backends
@@ -1300,6 +1471,24 @@ sub _CheckUserExists {
         && !$Param{Fixes}->{'UserExists'}
     ) {
         $Self->Print('<green> - Skip, irrelevant step for this fix run</green>' . "\n");
+        return 1;
+    }
+
+    # skip this step if only is given, but this one is irrelevant
+    if (
+        IsHashRefWithData( $Param{Only} )
+        && !$Param{Only}->{'UserExists'}
+    ) {
+        $Self->Print('<green> - Skip, irrelevant step for this check run</green>' . "\n");
+        return 1;
+    }
+
+    # skip this step if skip is given for this one
+    if (
+        IsHashRefWithData( $Param{Skip} )
+        && $Param{Skip}->{'UserExists'}
+    ) {
+        $Self->Print('<green> - Skip, irrelevant step for this check run</green>' . "\n");
         return 1;
     }
 
@@ -2246,6 +2435,24 @@ sub _CheckUserEmail {
         return 1;
     }
 
+    # skip this step if only is given, but this one is irrelevant
+    if (
+        IsHashRefWithData( $Param{Only} )
+        && !$Param{Only}->{'UserEmail'}
+    ) {
+        $Self->Print('<green> - Skip, irrelevant step for this check run</green>' . "\n");
+        return 1;
+    }
+
+    # skip this step if skip is given for this one
+    if (
+        IsHashRefWithData( $Param{Skip} )
+        && $Param{Skip}->{'UserEmail'}
+    ) {
+        $Self->Print('<green> - Skip, irrelevant step for this check run</green>' . "\n");
+        return 1;
+    }
+
     # prepare db handle
     my $PrefKey    = 'UserEmail';
     my @SelectBind = ( \$PrefKey );
@@ -2372,6 +2579,24 @@ sub _UpdateTicketCustomerUser {
         && !$Param{Fixes}->{'TicketCustomerUserUpdate'}
     ) {
         $Self->Print('<green> - Skip, irrelevant step for this fix run</green>' . "\n");
+        return 1;
+    }
+
+    # skip this step if only is given, but this one is irrelevant
+    if (
+        IsHashRefWithData( $Param{Only} )
+        && !$Param{Only}->{'TicketCustomerUserUpdate'}
+    ) {
+        $Self->Print('<green> - Skip, irrelevant step for this check run</green>' . "\n");
+        return 1;
+    }
+
+    # skip this step if skip is given for this one
+    if (
+        IsHashRefWithData( $Param{Skip} )
+        && $Param{Skip}->{'TicketCustomerUserUpdate'}
+    ) {
+        $Self->Print('<green> - Skip, irrelevant step for this check run</green>' . "\n");
         return 1;
     }
 
@@ -2541,6 +2766,24 @@ sub _CheckTicketData {
         return 1;
     }
 
+    # skip this step if only is given, but this one is irrelevant
+    if (
+        IsHashRefWithData( $Param{Only} )
+        && !$Param{Only}->{'TicketData'}
+    ) {
+        $Self->Print('<green> - Skip, irrelevant step for this check run</green>' . "\n");
+        return 1;
+    }
+
+    # skip this step if skip is given for this one
+    if (
+        IsHashRefWithData( $Param{Skip} )
+        && $Param{Skip}->{'TicketData'}
+    ) {
+        $Self->Print('<green> - Skip, irrelevant step for this check run</green>' . "\n");
+        return 1;
+    }
+
     # init variables
     my $UserCustomerIDs = $Self->_ExistsDBCustomerIDsColumn();
 
@@ -2689,6 +2932,24 @@ sub _CheckTicketCustomerUser {
         && !$Param{Fixes}->{'TicketCustomerUser'}
     ) {
         $Self->Print('<green> - Skip, irrelevant step for this fix run</green>' . "\n");
+        return 1;
+    }
+
+    # skip this step if only is given, but this one is irrelevant
+    if (
+        IsHashRefWithData( $Param{Only} )
+        && !$Param{Only}->{'TicketCustomerUser'}
+    ) {
+        $Self->Print('<green> - Skip, irrelevant step for this check run</green>' . "\n");
+        return 1;
+    }
+
+    # skip this step if skip is given for this one
+    if (
+        IsHashRefWithData( $Param{Skip} )
+        && $Param{Skip}->{'TicketCustomerUser'}
+    ) {
+        $Self->Print('<green> - Skip, irrelevant step for this check run</green>' . "\n");
         return 1;
     }
 
@@ -3006,6 +3267,24 @@ sub _CheckTicketCustomerCompany {
         return 1;
     }
 
+    # skip this step if only is given, but this one is irrelevant
+    if (
+        IsHashRefWithData( $Param{Only} )
+        && !$Param{Only}->{'TicketCustomerCompany'}
+    ) {
+        $Self->Print('<green> - Skip, irrelevant step for this check run</green>' . "\n");
+        return 1;
+    }
+
+    # skip this step if skip is given for this one
+    if (
+        IsHashRefWithData( $Param{Skip} )
+        && $Param{Skip}->{'TicketCustomerCompany'}
+    ) {
+        $Self->Print('<green> - Skip, irrelevant step for this check run</green>' . "\n");
+        return 1;
+    }
+
     $Self->Print('<yellow> - get unknown customer_id entries from ticket table: </yellow>');
 
     # prepare db handle
@@ -3114,6 +3393,24 @@ sub _CheckTicketStateTypes {
         && !$Param{Fixes}->{'TicketStateTypes'}
     ) {
         $Self->Print('<green> - Skip, irrelevant step for this fix run</green>' . "\n");
+        return 1;
+    }
+
+    # skip this step if only is given, but this one is irrelevant
+    if (
+        IsHashRefWithData( $Param{Only} )
+        && !$Param{Only}->{'TicketStateTypes'}
+    ) {
+        $Self->Print('<green> - Skip, irrelevant step for this check run</green>' . "\n");
+        return 1;
+    }
+
+    # skip this step if skip is given for this one
+    if (
+        IsHashRefWithData( $Param{Skip} )
+        && $Param{Skip}->{'TicketStateTypes'}
+    ) {
+        $Self->Print('<green> - Skip, irrelevant step for this check run</green>' . "\n");
         return 1;
     }
 
@@ -3228,6 +3525,24 @@ sub _CheckServiceNames {
         return 1;
     }
 
+    # skip this step if only is given, but this one is irrelevant
+    if (
+        IsHashRefWithData( $Param{Only} )
+        && !$Param{Only}->{'ServiceNames'}
+    ) {
+        $Self->Print('<green> - Skip, irrelevant step for this check run</green>' . "\n");
+        return 1;
+    }
+
+    # skip this step if skip is given for this one
+    if (
+        IsHashRefWithData( $Param{Skip} )
+        && $Param{Skip}->{'ServiceNames'}
+    ) {
+        $Self->Print('<green> - Skip, irrelevant step for this check run</green>' . "\n");
+        return 1;
+    }
+
     # prepare db handle
     return if !$Kernel::OM->Get('Kernel::System::DB')->Prepare(
         SQL => 'SELECT id, name FROM service',
@@ -3339,6 +3654,24 @@ sub _CheckDynamicFieldValues {
         return 1;
     }
 
+    # skip this step if only is given, but this one is irrelevant
+    if (
+        IsHashRefWithData( $Param{Only} )
+        && !$Param{Only}->{'DynamicFieldValues'}
+    ) {
+        $Self->Print('<green> - Skip, irrelevant step for this check run</green>' . "\n");
+        return 1;
+    }
+
+    # skip this step if skip is given for this one
+    if (
+        IsHashRefWithData( $Param{Skip} )
+        && $Param{Skip}->{'DynamicFieldValues'}
+    ) {
+        $Self->Print('<green> - Skip, irrelevant step for this check run</green>' . "\n");
+        return 1;
+    }
+
     # init query map
     my %QueryMap = (
         '0001' => {
@@ -3447,6 +3780,24 @@ sub _PrepareTicketEscalationData {
         && !$Param{Fixes}->{'PrepareTicketEscalationData'}
     ) {
         $Self->Print('<green> - Skip, irrelevant step for this fix run</green>' . "\n");
+        return 1;
+    }
+
+    # skip this step if only is given, but this one is irrelevant
+    if (
+        IsHashRefWithData( $Param{Only} )
+        && !$Param{Only}->{'PrepareTicketEscalationData'}
+    ) {
+        $Self->Print('<green> - Skip, irrelevant step for this check run</green>' . "\n");
+        return 1;
+    }
+
+    # skip this step if skip is given for this one
+    if (
+        IsHashRefWithData( $Param{Skip} )
+        && $Param{Skip}->{'PrepareTicketEscalationData'}
+    ) {
+        $Self->Print('<green> - Skip, irrelevant step for this check run</green>' . "\n");
         return 1;
     }
 
