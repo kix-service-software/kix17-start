@@ -2682,6 +2682,11 @@ sub _UpdateTicketCustomerUser {
 
                     # add customer ids to possible list
                     for my $CustomerID ( @CustomerIDs ) {
+                        next if (
+                            !defined( $CustomerID )
+                            || $CustomerID eq ''
+                        );
+
                         $CustomerUserHash{CustomerIDs}->{ $CustomerID } = 1;
                     }
                 }
@@ -2716,7 +2721,7 @@ sub _UpdateTicketCustomerUser {
                 # prepare bind
                 my @Bind = (
                     \$CustomerUserHash{UserLogin},
-                    \$CustomerUserHash{CustomerIDs}->{ $CustomerCompanyID },
+                    \$CustomerUserHash{CustomerID},
                     \$CustomerUserID,
                     \$CustomerCompanyID
                 );
