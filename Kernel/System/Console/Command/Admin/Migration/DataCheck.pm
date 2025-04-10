@@ -121,6 +121,7 @@ sub Run {
         if ( $Fix eq 'All' ) {
             %Fixes = (
                 'Placeholder'                 => 1,
+                'PostmasterHeader'            => 1,
                 'CustomerUserBackends'        => 1,
                 'CustomerCompanyBackends'     => 1,
                 'CustomerUserData'            => 1,
@@ -172,6 +173,21 @@ sub Run {
     # check placeholder data
     $SubStartTime = time();
     $Success = $Self->_CheckPlaceholderData(
+        Fixes   => \%Fixes,
+        Only    => \%Only,
+        Skip    => \%Skip,
+        Verbose => $Verbose,
+    );
+    if ( $Timing ) {
+        $Self->Print('> took ' . sprintf( '%.2f', ( ( time() - $SubStartTime ) / 60.0 ) ) . 'min' . "\n");
+    }
+    if ( !$Success ) {
+        return $Self->ExitCodeError();
+    }
+
+    # check postmaster header data
+    $SubStartTime = time();
+    $Success = $Self->_CheckPostmasterHeaderData(
         Fixes   => \%Fixes,
         Only    => \%Only,
         Skip    => \%Skip,
@@ -721,6 +737,88 @@ sub _CheckPlaceholderData {
         else {
             $Self->Print('<green>No obsolete placeholder</green>' . "\n");
         }
+    }
+
+    return 1;
+}
+sub _CheckPostmasterHeaderData {
+    my ( $Self, %Param ) = @_;
+
+    $Self->Print('<yellow>PostmasterHeader</yellow> - Check postmaster header data' . "\n");
+
+    # skip this step if fixes are given, but this one is irrelevant
+    if (
+        IsHashRefWithData( $Param{Fixes} )
+        && !$Param{Fixes}->{'PostmasterHeader'}
+    ) {
+        $Self->Print('<green> - Skip, irrelevant step for this fix run</green>' . "\n");
+        return 1;
+    }
+
+    # skip this step if only is given, but this one is irrelevant
+    if (
+        IsHashRefWithData( $Param{Only} )
+        && !$Param{Only}->{'PostmasterHeader'}
+    ) {
+        $Self->Print('<green> - Skip, irrelevant step for this check run</green>' . "\n");
+        return 1;
+    }
+
+    # skip this step if skip is given for this one
+    if (
+        IsHashRefWithData( $Param{Skip} )
+        && $Param{Skip}->{'PostmasterHeader'}
+    ) {
+        $Self->Print('<green> - Skip, irrelevant step for this check run</green>' . "\n");
+        return 1;
+    }
+
+    # prepare db handle
+    return if !$Kernel::OM->Get('Kernel::System::DB')->Prepare(
+        SQL => 'SELECT DISTINCT f_key FROM postmaster_filter WHERE f_key LIKE \'X-OTRS-%\'',
+    );
+
+    # fetch data
+    my %Data = ();
+    while ( my @Row = $Kernel::OM->Get('Kernel::System::DB')->FetchrowArray() ) {
+        $Data{ $Row[0] } = 1;
+    }
+
+    # process result
+    if (
+        %Data
+        && scalar( keys( %Data ) )
+    ) {
+        # check if entry should be fixed
+        if ( $Param{Fixes}->{'PostmasterHeader'} ) {
+            for my $DataID ( keys( %Data ) ) {
+                my $FixedValue = $DataID;
+                $FixedValue =~ s/^X-OTRS-/X-KIX-/;
+
+                # execute fix statement
+                return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
+                    SQL  => 'UPDATE postmaster_filter SET f_key = ? WHERE f_key = ?',
+                    Bind => [ \$FixedValue, \$DataID ]
+                );
+            }
+
+            $Self->Print('<green>' . scalar( keys( %Data ) ) . ' entries fixed</green>' . "\n");
+        }
+        else {
+            if ( $Param{Verbose} ) {
+                $Self->Print("\n" . '<red>Entries to fix:</red> (' . scalar( keys( %Data ) ) . ')' . "\n");
+
+                for my $PostmasterHeader ( sort( keys( %Data ) ) ) {
+                    $Self->Print($PostmasterHeader . "\n");
+                }
+            }
+            else {
+                $Self->Print('<red>' . scalar( keys( %Data ) ) . ' entries should be fixed</red>' . "\n");
+            }
+        }
+    }
+    else {
+        $Self->Print('<green>Nothing to do</green>' . "\n");
     }
 
     return 1;
