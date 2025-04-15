@@ -646,6 +646,18 @@ sub _CheckPlaceholderData {
             Check   => 'KIX_TICKET_OWNER_',
             Replace => 'KIX_TICKETOWNER_',
         },
+        {
+            Check   => 'KIX_CURRENT_User',
+            Replace => 'KIX_CURRENT_',
+        },
+        {
+            Check   => 'KIX_OWNER_User',
+            Replace => 'KIX_OWNER_',
+        },
+        {
+            Check   => 'KIX_RESPONSIBLE_User',
+            Replace => 'KIX_RESPONSIBLE_',
+        },
     );
 
     # process queries
