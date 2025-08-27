@@ -367,7 +367,7 @@ sub _GetVirtualFS {
         Mode     => 'binary',
     );
 
-    $File{Content} = MIME::Base64::encode_base64( $File{Content} );
+    $File{Content} = MIME::Base64::encode_base64( ${ $File{Content} } );
 
     return \%File;
 }
