@@ -51,6 +51,7 @@ my %Special = (
     'article_plain'         => \&_GetArticlePlain,
     'faq_attachment'        => \&_GetFAQAttachments,
     'sysconfig'             => \&_GetSysConfig,
+    'virtual_fs'            => \&_GetVirtualFS,
 );
 
 # get all table names from DB
@@ -356,6 +357,19 @@ sub _GetSysConfig {
     }
 
     return $Data;
+}
+
+sub _GetVirtualFS {
+    my %Param = @_;
+
+    my %File = $Kernel::OM->Get('Kernel::System::VirtualFS')->Read(
+        Filename => $Param{ObjectID},
+        Mode     => 'binary',
+    );
+
+    $File{Content} = MIME::Base64::encode_base64( $File{Content} );
+
+    return \%File;
 }
 
 =back
